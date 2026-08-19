@@ -63,23 +63,29 @@ Truth timeline carries *"DRAFT — Suzanne's words, awaiting her approval"* — 
 is binding. It does not go into `approved/`, into the CMS, or onto a staging
 URL until she has seen it and said yes.
 
+## These drafts are the source of truth for copy
+
+Decision **D5**: the draft documents in this folder govern page copy and
+content. They do **not** govern web design — the lo-fi and hi-fi wireframes are
+the source of truth for that. Where a draft implies a layout, treat it as a
+suggestion; where it states the words, treat it as the text.
+
 ## Getting approved copy into the site
 
-Most pages are **CMS-managed**: approved copy is entered by an editor, not
-committed as code. This folder is the source and the record, not the delivery
-mechanism.
+**Copy is CMS-managed, including the homepage** (decision D12). Approved copy is
+entered by an editor, not committed as code. This folder is the source and the
+record, not the delivery mechanism.
 
-The exceptions live in the repo, so they need a PR:
+What still lives in the repo and needs a PR:
 
-| Content | Lives in |
-| --- | --- |
-| Homepage copy | `src/content/homepage.ts` |
-| Navigation, org identity, IA | `src/content/site.ts` |
-| Page section outlines | `src/content/page-specs.ts` |
+| Content | Lives in | Note |
+| --- | --- | --- |
+| Homepage copy | `src/content/homepage.ts` | Seed/default only — the CMS is populated from it and then owns it |
+| Navigation, org identity, IA | `src/content/site.ts` | Structure, not copy |
+| Page section outlines | `src/content/page-specs.ts` | Build spec, never rendered as content |
 
-When homepage copy is approved, update `src/content/homepage.ts` in a commit
-that references the approved file — that link between the record and the code is
-what makes the copy auditable later.
+Design, motion and section structure stay in code either way. The CMS edits
+words, not layout.
 
 ## Sitemap
 

@@ -1,17 +1,21 @@
 /**
  * Homepage copy.
  *
- * The homepage is deliberately NOT CMS-managed — it is a single authored
- * narrative, not a collection of entries, and it changes rarely. It lives in
- * the repo so it is versioned, reviewable in PRs, and cannot be edited into
- * incoherence from the admin UI. Every other long-form page on the site comes
- * from the CMS (build documentation §8).
+ * Source of truth: docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v1.pdf
+ * (decision D5). The draft PDFs govern page copy. They do NOT govern web
+ * design — that is the wireframes' job.
  *
- * Structure: seven beats, one continuous scroll, no navigation choice until
- * beat 6 (§3). Order matters — it mirrors Suzanne Thompson's own framework.
+ * ⚠ This file is NOT the long-term home for this text. Homepage copy will be
+ * editable in the CMS (decision D12, superseding the earlier position that it
+ * stayed in git). What stays in code is the design, motion and section
+ * structure; the words become editable content. Treat what follows as the
+ * seed/default content the CMS is populated from, and do not build anything
+ * that assumes these strings are compile-time constants.
  *
- * ⚠ Copy status: drafted from the build documentation and the client's own
- * homepage-content slides. Not yet signed off by Suzanne / the client.
+ * Structure: seven beats, one continuous scroll (build documentation §3). The
+ * order mirrors Suzanne Thompson's own framework.
+ *
+ * ⚠ Copy status: draft, not approved. See docs/content/STATUS.md.
  */
 
 export type Beat = {
@@ -30,10 +34,14 @@ export type Beat = {
 export const beats: Beat[] = [
   {
     id: "welcome",
+    // The draft shows no eyebrow on the hero, unlike the other beats. Kept
+    // because build documentation §3 names this section and the client's own
+    // homepage slides label it — but it is a design-level call, so the
+    // wireframes decide whether it renders.
     eyebrow: "Welcome to Country",
     headline: "Reconnection — across time, across people.",
     body: [
-      "Turraburra. Eight and a half thousand hectares of central Queensland held by the Iningai Nation, where the story is kept in stone and in starlight.",
+      "You are entering Turraburra: story held in stone and starlight, still being lived today.",
     ],
     mediaNote:
       "Full-bleed hero video or still. Country at first light — landscape and sky, no cultural-site material. No button; a scroll cue only.",
@@ -44,8 +52,7 @@ export const beats: Beat[] = [
     eyebrow: "Wonder",
     headline: "The oldest sunrise you will ever stand under.",
     body: [
-      "Stars that have not moved in living memory. An escarpment that catches the first light the same way it always has.",
-      "Deep time is not an idea here. It is the ground you are standing on.",
+      "Deep time isn't a figure of speech here. The stars above the story wall are the same ones this Country has watched for longer than most of what humans call history.",
     ],
     mediaNote: "Deep time, sensory — night sky, sunrise, the escarpment.",
     tone: "midnight",
@@ -55,13 +62,15 @@ export const beats: Beat[] = [
     eyebrow: "Truth",
     headline: "What's etched in stone doesn't forget.",
     body: [
-      "At Marra Wonga, a wasp nest built over the engravings dates them to at least 55,000 years.",
-      "Lore and science, reading the same stone and arriving at the same place.",
+      "A wasp nest built over the story wall's markings let researchers date them — at least 55,000 years old, by the most conservative estimate. Lore and science, reading the same stone.",
     ],
-    // ⚠ Story-wall imagery is UNAVAILABLE — permission unresolved (motion
-    // skill, permissions.md). Treat as unavailable and build this beat
-    // typographically (B5 line-settle, Y2 word emphasis). No photograph of the
-    // engravings, and no motion applied to cultural-site imagery in any form.
+    // ⚠ The Truth timeline draft says "at least 5,000 years ago" for the same
+    // engravings. A factor of ten apart, unresolved — risk R2. This beat
+    // follows the homepage draft, which is its source of truth for copy.
+    //
+    // ⚠ Story-wall imagery permission is UNRESOLVED (motion skill,
+    // permissions.md). Treat as unavailable. No photograph of the engravings,
+    // and no motion applied to cultural-site imagery in any form.
     mediaNote:
       "No imagery. Typographic beat until story-wall permission is resolved. Carry it on the words and the ground colour alone.",
     tone: "oxide",
@@ -71,8 +80,7 @@ export const beats: Beat[] = [
     eyebrow: "Belonging",
     headline: "Some people never left. Everyone else can find their way back.",
     body: [
-      "The Iningai Nation never left this Country. That is the first meaning.",
-      "The second is an invitation: wherever you come from, there is a place you belong to as well, and it is worth remembering.",
+      "For the Iningai Nation, this has always been Country. For everyone else, belonging is something every person carries — even the ones who've forgotten where.",
     ],
     mediaNote:
       "Real, unlabelled imagery of people. No names, no bios — that is Connect's job. The feeling, not the directory.",
@@ -83,8 +91,7 @@ export const beats: Beat[] = [
     eyebrow: "Living Work",
     headline: "Caring for Country, in practice.",
     body: [
-      "Fire-stick farming. Carbon farming. Spring restoration. Biodiversity work that is measured, not asserted.",
-      "This is the Iningai Rangers' week, every week.",
+      "Fire-stick farming, carbon farming, spring restoration — work the Iningai Rangers do every week, by hand, not heritage kept behind glass.",
     ],
     mediaNote:
       "Hands-on ranger work. Right-way fire, restoration sites, the flux towers. Working imagery, not portraiture.",
@@ -95,31 +102,38 @@ export const beats: Beat[] = [
 /**
  * Beat 6 — The Invitation. The first point in the page where the visitor is
  * given a choice. Three cards, one per pillar.
+ *
+ * The draft titles each card with the pillar name and carries the descriptive
+ * phrase as an eyebrow above it — not the other way round.
  */
 export const invitation = {
   eyebrow: "The Invitation",
-  headline: "Every journey begins differently.",
-  body: "Whether you come to experience Country, deepen understanding, care for Country, or begin a conversation, we welcome you to walk alongside us.",
+  headline:
+    "Every journey begins differently — we welcome you to walk alongside us.",
+  body: "",
   cards: [
     {
-      title: "Experience Country",
+      eyebrow: "Guesting on Country",
+      title: "Wonder",
       description:
-        "Walk alongside us on Country through immersive Indigenous experiences, native foods, stories, and seasonal knowledge.",
-      cta: "Explore experiences",
+        "Walk alongside us on Country through immersive experiences, native foods, stories, and seasonal knowledge.",
+      cta: "Explore Experiences",
       href: "/wonder",
     },
     {
-      title: "Research Together",
+      eyebrow: "Research & Discovery",
+      title: "Truth",
       description:
-        "Partner with us on research, discovery and projects that honour both Indigenous knowledge and contemporary practice.",
-      cta: "Research & partnerships",
+        "Partner with us on research and discovery that honours both Indigenous knowledge and contemporary practice.",
+      cta: "Research & Partnerships",
       href: "/truth",
     },
     {
-      title: "Learn from Living Work",
+      eyebrow: "Caring for Country",
+      title: "Living Work",
       description:
-        "See Caring for Country in action: ranger programs, restoration, fire management, biodiversity and community-led practice.",
-      cta: "See the work",
+        "See Caring for Country in action — ranger programs, restoration, fire management, and community-led practice.",
+      cta: "See the Work",
       href: "/living-work",
     },
   ],
@@ -132,11 +146,11 @@ export const invitation = {
 export const wayForward = {
   eyebrow: "The Way Forward",
   headline: "A way forward, for whoever needs one.",
-  body: "What we are building here was built from nothing, and we would rather share the method than keep it. If your community is walking the same road, we would like to hear from you.",
+  body: "What's been rebuilt here — Country, culture, a way of working — is offered as one example, not the only one. Wherever you're standing, there's a way back to your own Country too.",
   signup: {
     label: "Stay connected",
     placeholder: "Your email address",
-    cta: "Sign up",
+    cta: "Stay connected",
     /** Not transactional. Explicitly not a booking or donation prompt (§4). */
     note: "Occasional updates from Country. No more than that.",
   },
@@ -146,10 +160,15 @@ export const wayForward = {
  * Acknowledgement / Welcome to Country — footer, text only, no ceremony
  * element and no popup (open decision 3).
  *
- * ⚠ BLOCKED: final wording must come from Suzanne Thompson before launch.
- * Suzanne is an actual Traditional Owner, so a genuine Welcome to Country is
- * possible here, in her own words — which is rarer than the Acknowledgement
- * most sites carry. Do not write it on her behalf.
+ * ⚠ BLOCKED, and deliberately NOT taken from the draft. The homepage draft
+ * acknowledges "the Aboriginal people of the Northern Territory" — the wrong
+ * jurisdiction. YACHATDAC is on Iningai Country, Central Western Queensland.
+ * See risk R1.
+ *
+ * Final wording must come from Suzanne Thompson. She is an actual Traditional
+ * Owner, so a genuine Welcome to Country is possible here, in her own words —
+ * which is rarer than the Acknowledgement most sites carry. Do not write it on
+ * her behalf, and do not paste the draft's version in as a stopgap.
  */
 export const welcomeToCountry = {
   status: "awaiting-suzanne" as const,

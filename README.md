@@ -72,7 +72,7 @@ src/
     sections/               homepage beats
     ui/                     Reveal, ThreadLine, PathCard, SignupField, Eyebrow
   content/
-    homepage.ts             homepage copy — versioned in git, NOT CMS
+    homepage.ts             homepage copy — seed for the CMS (D12)
     site.ts                 org identity + information architecture
     page-specs.ts           section outlines for pages not yet built
   lib/
@@ -90,12 +90,14 @@ public/
   brand/                    ⏳ awaiting logo vectors and commissioned artwork
 ```
 
-### Why the homepage copy is in the repo
+### The homepage
 
-The homepage is a single authored narrative, not a collection of entries, and
-it changes rarely. Keeping it in `src/content/homepage.ts` means it is
-versioned, reviewed in PRs, and cannot be edited into incoherence from the
-admin UI. Everything else long-form comes from the CMS.
+Homepage **copy is CMS-editable** (decision D12). What stays in code is the
+design, motion and section structure — the words are content.
+
+`src/content/homepage.ts` currently holds that copy as the seed the CMS will be
+populated from, so the page renders today. Don't write anything that assumes
+those strings are compile-time constants.
 
 The homepage is one continuous scroll through seven beats — Welcome to Country,
 Wonder, Truth, Belonging, Living Work, The Invitation, The Way Forward. Beats
