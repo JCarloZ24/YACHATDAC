@@ -11,11 +11,14 @@ it decides who has to sign off.
 
 | Document | Page | State | Circle | Blocked on |
 | --- | --- | --- | --- | --- |
-| `YACHATDAC-Homepage-Copy` | Homepage | ⏳ awaiting upload | open | — |
-| `YACHATDAC-Wonder-Copy` | Wonder | ⏳ awaiting upload | open | — |
-| `YACHATDAC-LivingWork-Copy` | Living Work | ⏳ awaiting upload | shared with care | Practitioner-audience "what we got wrong" section — see note 3 |
-| `YACHATDAC-Truth-Timeline` | Truth | ⏳ awaiting upload | **held by community** | **Suzanne Thompson's approval — stated on the document itself** |
-| `YACHATDAC-Sitemap` | Site-wide | ⏳ awaiting upload | open | — |
+| `YACHATDAC-Homepage-Copy-v1.pdf` | Homepage | 📥 draft uploaded | open | Acknowledgement names the wrong jurisdiction — note 1 |
+| `YACHATDAC-Wonder-Copy-v1.pdf` | Wonder | 📥 draft uploaded | open | Story wall dating — note 2 |
+| `YACHATDAC-LivingWork-Copy-v1.pdf` | Living Work | 📥 draft uploaded | shared with care | Practitioner-audience "what we got wrong" section — note 3 |
+| `YACHATDAC-Truth-Timeline-v1.pdf` | Truth | 📥 draft uploaded | **held by community** | **Suzanne Thompson's approval — stated on the document itself** |
+| `YACHATDAC-Sitemap-v1.png` | Site-wide | 📥 draft uploaded | open | Diverges from the build documentation IA — note 6 |
+
+All five uploaded 19 Aug 2026. Nothing here is approved; nothing here has been
+built from.
 
 ## Notes to resolve
 
@@ -74,3 +77,56 @@ with lore framed as the floor underneath rather than the oldest entry. That is a
 stronger structure than the section outline currently in
 `src/content/page-specs.ts`, which lists Truth as a conventional stack of
 sections. Reconcile the two once the draft is approved.
+
+### 6. Sitemap diverges from the build documentation IA
+
+The uploaded sitemap is not the same information architecture as build
+documentation §2, which is what `src/content/site.ts` is currently built from.
+The differences are structural, not cosmetic, so the code has deliberately
+**not** been changed — this needs a decision first.
+
+**New top-level areas**
+
+| In the sitemap | Build documentation says | Question |
+| --- | --- | --- |
+| **Blog** — Bookmarks, Categories, Archives, Search Blog, Blog Interior | One unified Blog/Editorial collection, surfaced through Resources/Explore. §4 is explicit that Resources *is* the content hub. | Are Blog and Resources two areas, or one collection surfaced twice? Two browse interfaces over the same posts will confuse both editors and visitors. If they are one thing, which name wins? |
+| **Contact** — its own page with a contact form | The Connect index carries the general contact form, distinct from Truth's partner enquiry and Wonder's register-interest. | Is Contact replacing the Connect index, or sitting beside it? |
+| **About** promoted into the navbar, separate from Connect | About YACHATDAC sits under Connect. | Does Connect survive as a nav item if About is lifted out of it? |
+| **FAQs** in the footer | Not mentioned anywhere in the build documentation. | New content type with no spec — who writes it, and is it CMS-managed? |
+
+**Things the sitemap drops**
+
+- **Partnership opportunities** on Truth. §4 has this as a section distinct from
+  research opportunities, aimed at the ESG/brand-buyer audience rather than
+  researchers. The sitemap's Truth has only Open Research Opportunities.
+- **Donations** and **Merch**. §7 has donations as live scope at launch and
+  merch built-but-feature-flagged. Neither appears anywhere in the sitemap.
+- **Site search** as a destination. §15 calls for in-site search across posts,
+  opportunities, jobs and experiences; the sitemap has "Search Blog" scoped to
+  Blog only.
+- **Living Work** from the footer, though the other pillars are there.
+- **The Cultural Knowledge Precinct** from the footer's Truth column.
+
+**Probable errors in the diagram rather than decisions**
+
+- Footer parent list reads About, Wonder, **Turth**, Resources, FAQs, Policies —
+  "Truth" is misspelt.
+- The footer's parent list and its child boxes do not line up: **FAQs** has no
+  child box, and there is a **Connect** child box with no parent entry.
+- That footer **Connect** column is character-for-character identical to the
+  Resources column — Stories, News / Updates, Downloads, Videos / Podcasts.
+  Reads as a copy-paste rather than an intent.
+
+**Legend**
+
+Green, orange and amber are used throughout with no key on the diagram. Adding
+one would make the next review much faster — and if the colours encode build
+status, that belongs in this status board too.
+
+**Naming**
+
+The sitemap says **Terms & Conditions** and adds a **Cookie Policy**; the repo
+currently has `/legal/privacy` and `/legal/terms` ("Terms of Use") and no cookie
+policy route. §11 does call for a cookie/consent notice, so the sitemap is
+likely right — worth confirming the label before the routes are renamed, since
+changing a legal page's URL after launch is avoidable churn.
