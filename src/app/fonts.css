@@ -1,35 +1,71 @@
 /* ---------------------------------------------------------------------------
-   YACHATDAC typography
+   YACHATDAC typography — self-hosted.
 
-   PLACEHOLDER STATE. The real font files are not in the repo yet — drop them
-   into /public/fonts (see public/fonts/README.md for exact filenames) and
-   everything below starts working with no code change.
+   All faces are woff2 in /public/fonts. Fallback stacks are still declared at
+   the bottom so a failed font fetch degrades to something readable rather than
+   to nothing.
 
-   Until they land, each family falls back to the stack declared in its
-   `--font-*` variable, so the site builds and runs. Nothing 404s fatally;
-   the browser just uses the fallback.
-
-   Licensing (build doc §17 #9): Block Berthold, Bantayog Sans and Good Dog
-   Cool are NOT confirmed as freely licensed. Get licence files from the brand
-   team before production. Do not silently substitute in production.
+   ⚠ Licensing is NOT settled for two of these three families. See
+   public/fonts/README.md before the production build — this is a compliance
+   question, not a preference.
    --------------------------------------------------------------------------- */
 
+/* Headline — Block Berthold.
+   Ships as a single weight. The 100–900 range maps any requested weight onto
+   that one face, which stops the browser reaching for a synthetic bold. */
 @font-face {
   font-family: "Block Berthold";
   src: url("/fonts/BlockBerthold.woff2") format("woff2");
-  font-weight: 400 900;
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Subheadline / eyebrow — Bantayog Sans.
+   Roman weights only. Italics and the Baybayin, SmallCaps and Alt cuts are in
+   the source set but are not shipped — nothing on the site calls for them yet,
+   and each one is another ~75KB. Add a face when a design actually needs it. */
+@font-face {
+  font-family: "Bantayog Sans";
+  src: url("/fonts/BantayogSans-Regular.woff2") format("woff2");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Bantayog Sans";
-  src: url("/fonts/BantayogSans.woff2") format("woff2");
-  font-weight: 400 900;
+  src: url("/fonts/BantayogSans-Medium.woff2") format("woff2");
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Bantayog Sans";
+  src: url("/fonts/BantayogSans-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bantayog Sans";
+  src: url("/fonts/BantayogSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bantayog Sans";
+  src: url("/fonts/BantayogSans-Black.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Body — Work Sans, variable. One file covers 100–900. */
 @font-face {
   font-family: "Work Sans";
   src: url("/fonts/WorkSans-Variable.woff2") format("woff2");
@@ -46,7 +82,9 @@
   font-display: swap;
 }
 
-/* Not yet supplied. Callout use only — keep the slot so it can be dropped in. */
+/* Callouts — Good Dog Cool. NOT SUPPLIED. The slot is kept so the file can be
+   dropped in without touching code; until then `.callout` falls back. Callout
+   use only — never body, never long headlines. */
 @font-face {
   font-family: "Good Dog Cool";
   src: url("/fonts/GoodDogCool.woff2") format("woff2");

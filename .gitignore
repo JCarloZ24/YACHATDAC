@@ -44,10 +44,14 @@ next-env.d.ts
 /AGENTS.md
 /CLAUDE.md
 
-# Font binaries are licensed assets. Track them only once licence terms are
-# confirmed with the brand team (see public/fonts/README.md).
-/public/fonts/*
-!/public/fonts/README.md
+# Font binaries. Work Sans is OFL and safe to track. Block Berthold is a
+# commercial Adobe/Berthold face and Bantayog Sans shipped no licence at all —
+# both stay out of git until terms are confirmed, because a commercial binary is
+# much easier to keep out of a repo than to remove from its history. Get them
+# from the Proyekto resources section. See public/fonts/README.md.
+/public/fonts/BlockBerthold.woff2
+/public/fonts/BantayogSans-*.woff2
+/public/fonts/GoodDogCool.woff2
 
 # Client media library. Lives in Google Drive today and moves into the CMS
 # media library at launch — it does not belong in git.

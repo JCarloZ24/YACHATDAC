@@ -8,9 +8,11 @@ Cross-referenced to section 17 of the build documentation.
 | # | Item | Why it blocks | Who |
 | --- | --- | --- | --- |
 | 1 | **DGR / charity status for donations** | Donation receipt copy must not claim tax-deductibility until verified directly against the org's ACNC/state registration. Earlier information said "registered DGR"; the Ten-Year Strategic Plan lists securing DGR as a *Year 1 goal*, which reads as not yet secured. This is a compliance risk, not a wording preference — do not rely on either prior answer. | Client |
-| 2 | **Font licences** | Block Berthold, Bantayog Sans and Good Dog Cool have no confirmed licence. Needed before the production build; no silent substitution. | Brand team |
+| 2 | **Font licences** | Fonts are installed and working, but Block Berthold carries an Adobe / H. Berthold AG copyright — a commercial retail face, and a desktop licence does not cover `@font-face` distribution. Bantayog Sans shipped no licence at all. Only Work Sans (OFL) is clear. Needed before the site reaches a public server. | Brand team |
 | 3 | **Story-wall imagery permission** | Unresolved. Treat as unavailable — the homepage Truth beat is built typographically because of it. | Elder Advisory Group / Marc |
-| 4 | **Welcome to Country wording** | Suzanne Thompson is an actual Traditional Owner, so a genuine Welcome to Country is possible in her own words. Footer, text only, no ceremony element, no popup. Not ours to write. | Suzanne Thompson |
+| 4 | **Welcome to Country wording** | Suzanne Thompson is an actual Traditional Owner, so a genuine Welcome to Country is possible in her own words. Footer, text only, no ceremony element, no popup. Not ours to write. **The homepage copy draft currently acknowledges the Northern Territory** — wrong jurisdiction; YACHATDAC is on Iningai Country in Central Western Queensland. See `docs/content/STATUS.md` note 1. | Suzanne Thompson |
+| 4a | **Suzanne's Truth-page testimony** | The Truth timeline draft carries her words from the Unfinished Business and Yacadak Framework recordings, edited for reading and re-ordered. The document states on its face that nothing publishes until she has seen and signed it off. Held by community. | Suzanne Thompson |
+| 4b | **Story wall dating** | Drafts disagree by a factor of ten — 55,000 years on Homepage and Wonder, 5,000 on the Truth timeline. One sourced number, used everywhere. See `docs/content/STATUS.md` note 2. | Client / researchers |
 
 ## Open
 

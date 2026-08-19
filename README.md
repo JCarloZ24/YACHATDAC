@@ -80,11 +80,12 @@ src/
     motion-controller.ts    Tier 1 GSAP registry — port of the skill's template
 docs/
   brand.md                  how the brand kit is wired into code
+  content/                  page copy and sitemaps — drafts → in-review → approved
   design/                   Figma links, milestone, wireframe requirements
   open-questions.md         blockers and open decisions
   meetings/                 briefing notes
 public/
-  fonts/                    ⏳ awaiting font files
+  fonts/                    self-hosted woff2 — see licence note below
   brand/                    ⏳ awaiting logo vectors and commissioned artwork
 ```
 
@@ -104,7 +105,7 @@ oversight.
 
 | | Blocks |
 | --- | --- |
-| Font files + licences (Block Berthold, Bantayog Sans, Work Sans) | Production build. See `public/fonts/README.md` |
+| Block Berthold + Bantayog Sans **licences** | Production build. Fonts are installed and working; terms are unconfirmed. See `public/fonts/README.md` |
 | Logo vector files | Header and footer currently render a text placeholder |
 | Welcome to Country wording from Suzanne Thompson | Footer — marked placeholder, cannot ship as-is |
 | Story-wall imagery permission | Homepage Truth beat is typographic until resolved |

@@ -1,42 +1,67 @@
-# Fonts — placeholder
+# Fonts
 
-**Nothing here yet.** Drop the licensed font files in this folder using the exact
-filenames below and the site picks them up with no code change. The `@font-face`
-declarations already exist in [`src/app/fonts.css`](../../src/app/fonts.css).
+Self-hosted woff2, wired up in [`src/app/fonts.css`](../../src/app/fonts.css).
+The three faces above the fold are preloaded in the root layout.
 
-| Role | Family | Expected filename | Status |
+| Role | Family | Files | Licence |
 | --- | --- | --- | --- |
-| Headline | Block Berthold | `BlockBerthold.woff2` | ⏳ awaiting upload |
-| Subheadline / eyebrow | Bantayog Sans | `BantayogSans.woff2` | ⏳ awaiting upload |
-| Body | Work Sans | `WorkSans-Variable.woff2` | ⏳ awaiting upload |
-| Body (italic) | Work Sans | `WorkSans-Italic-Variable.woff2` | optional |
-| Callouts | Good Dog Cool | `GoodDogCool.woff2` | not supplied — slot reserved |
+| Headline | Block Berthold | `BlockBerthold.woff2` | ⚠ **commercial — webfont licence not confirmed** |
+| Subheadline / eyebrow | Bantayog Sans | `BantayogSans-{Regular,Medium,SemiBold,Bold,Black}.woff2` | ⚠ **unverified — no licence shipped** |
+| Body | Work Sans | `WorkSans-Variable.woff2`, `WorkSans-Italic-Variable.woff2` | ✅ SIL OFL 1.1 — `WorkSans-OFL.txt` |
+| Callouts | Good Dog Cool | — | not supplied; slot reserved in `fonts.css` |
 
-## Until they arrive
+## ⚠ Licensing — resolve before production
 
-Each family falls back to a stack declared in `src/app/fonts.css`. The site
-builds and runs; it just doesn't look right yet. Do not judge spacing or
-hierarchy from the fallback rendering.
+This is a compliance question, not a preference. Build documentation §17
+decision 9 already flags it; here is what the supplied files actually say.
 
-## Format
+**Block Berthold** ships with `BlockBerthold-COPYRIGHT.txt`:
 
-`.woff2` only. If you have `.otf`/`.ttf`, convert first — e.g.
+> Copyright (c) 1992 Adobe Systems Incorporated. All Rights Reserved.
+> Block Berthold is a registered trademark of H. Berthold AG.
+
+That is a commercial retail typeface. A desktop licence does **not** cover
+serving the file over the web — `@font-face` distribution needs a separate
+webfont licence, usually priced by pageviews or domain. Someone has to confirm
+YACHATDAC (or the brand team) holds one before this goes to a public server.
+
+**Bantayog Sans** arrived with no licence file at all. Terms need confirming
+with whoever supplied it.
+
+Neither is a reason to stop building — both are installed and working now. Both
+are a reason not to ship without an answer.
+
+## Not in git
+
+Font binaries are gitignored except Work Sans, which is OFL and unambiguous.
+Block Berthold and Bantayog Sans stay out of version control until their
+licences are confirmed, because a commercial binary is far easier to keep out of
+a repo than to remove from its history.
+
+Get them from the **Proyekto resources section** — Marc uploads the brand/design
+assets there, Block Berthold included, since it is not publicly available
+online. Drop them into this folder using the filenames in the table above.
+
+To flip this once licences are confirmed, remove the two exclusion lines from
+`.gitignore`.
+
+## Regenerating from source
+
+Sources came from the brand team as OTF/TTF. Conversion:
 
 ```bash
-npx --yes woff2 <input.ttf>          # or use fonttools / a web converter
+npx --yes ttf2woff2 < "Work Sans/WorkSans-VariableFont_wght.ttf" > WorkSans-Variable.woff2
+npx --yes ttf2woff2 < "Block Berthold/blockberthold.otf"         > BlockBerthold.woff2
 ```
 
-Static (non-variable) files are fine too — if a family ships as separate
-weights, add one `@font-face` block per weight in `src/app/fonts.css` rather
-than a single `font-weight: 400 900` range.
+Bantayog Sans shipped woff2 already — the Roman weights were copied straight
+across. Its Italic, Baybayin, SmallCaps and Alt cuts exist in the source set but
+are **not** shipped: nothing on the site calls for them, and each is roughly
+75KB. Add a face when a design actually needs one, not in advance.
 
-## Licensing — read before production
+## Weight notes
 
-Per build documentation §17 decision 9, **none of Block Berthold, Bantayog Sans
-or Good Dog Cool are confirmed as freely licensed**. Get the licence files from
-the brand team before the production build, and do not substitute a lookalike
-silently. Work Sans is available under the SIL Open Font License via Google
-Fonts.
-
-Block Berthold in particular is not publicly available online — it comes from
-the brand team's own asset set.
+Block Berthold is a single-weight display face. `fonts.css` declares it across
+`100 900` so any requested weight maps onto that one file rather than the
+browser reaching for a synthetic bold — `font-synthesis-weight: none` is set on
+`body` as a second guard.
