@@ -31,6 +31,10 @@ really a piece of work rather than a decision or a risk, it is marked
 Field names below match the Decision modal exactly. The Risks & Issues form has
 not been seen, so those entries use a plain shape — remap as needed.
 
+**Ownership rule (19 Aug):** every risk or issue owned by Marc is co-owned by
+August. `→ someone` means the owner is the route to that person, not that the
+person is accountable in Proyekto.
+
 ---
 
 # Part 1 — Decisions still open
@@ -121,28 +125,32 @@ answer into *The decision*.
 
 ---
 
-## D5 — Which homepage copy is the source of truth?
+## D5 — The draft PDFs are the source of truth for copy · **RESOLVED**
 
 - **Category** — Content
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with August
-- **The decision** — Whether `src/content/homepage.ts` should be rewritten to
-  match `YACHATDAC-Homepage-Copy-v1.pdf`.
-- **Context** — The copy currently in the repo was reconstructed from the build
-  documentation before the draft existed. The two differ in real ways — the
-  hero subhead, and the Invitation cards are titled *Wonder / Truth / Living
-  Work* in the draft versus *Experience Country / Research Together / Learn
-  from Living Work* in the repo.
-- **Why it matters** — Two versions of the homepage copy are in circulation.
-  Whichever is chosen, the other should stop being edited.
-- **Note** — → task once decided. The draft is not approved yet, so this is
-  sequenced behind editorial sign-off.
+- **Status** — **Final** · **Visibility** — Shared · **Owner** — Marc, with August
+- **The decision** — The draft documents in `docs/content/drafts/` govern page
+  **copy and content**. They do **not** govern web design — the lo-fi and hi-fi
+  wireframes are the source of truth for that.
+- **Context** — The copy in `src/content/homepage.ts` had been reconstructed
+  from the build documentation before the drafts existed, and the two had
+  drifted apart — different hero subhead, and Invitation cards titled
+  *Experience Country / Research Together / Learn from Living Work* rather than
+  *Wonder / Truth / Living Work*.
+- **Why** — Two versions of the homepage copy were in circulation with no rule
+  for which won. Splitting it by artefact type — drafts own words, wireframes
+  own design — means neither has to arbitrate the other.
+- **Done** — `src/content/homepage.ts` now matches
+  `YACHATDAC-Homepage-Copy-v1.pdf`, with one deliberate exception: the draft's
+  Acknowledgement of Country names the Northern Territory and was **not**
+  copied across. See risk R1.
 
 ---
 
 ## D6 — Keep or cut "The parts that are not in the annual report"
 
 - **Category** — Content
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with the client
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc and August, with the client
 - **The decision** — Whether the Living Work draft's failure section — the
   broken grader, the failed bore pump — stays on the public page.
 - **Context** — The draft raises this itself and notes it can be cut in one
@@ -158,7 +166,7 @@ answer into *The decision*.
 ## D7 — Where fee-for-service land management lives
 
 - **Category** — Information architecture
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc and August
 - **The decision** — Where to place fee-for-service land management and
   cultural advisory in the site structure.
 - **Context** — The Ten-Year Strategic Plan names this as a real revenue stream
@@ -188,7 +196,7 @@ answer into *The decision*.
 ## D9 — Who signs off motion decisions
 
 - **Category** — Governance
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc and August
 - **The decision** — Whether motion sign-off sits with Marc, the board, or the
   Elder Advisory Group — and at which milestone.
 - **Context** — The motion skill's permissions board lists this as unresolved.
@@ -202,7 +210,7 @@ answer into *The decision*.
 ## D10 — Copy ownership per page
 
 - **Category** — Content
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc and August
 - **The decision** — Name one person responsible for the copy on each page.
 - **Context** — Raised at the 18 August briefing, acknowledged, not resolved.
   Four page drafts now exist without a recorded author.
@@ -229,39 +237,70 @@ in the room — record as **Final**.
 
 ---
 
-## F1 — Homepage copy lives in the repo, not the CMS
+## F1 — Homepage copy lives in the repo, not the CMS · **SUPERSEDED**
 
-- **Category** — Architecture · **Status** — Final · **Owner** — August
-- **The decision** — Homepage copy lives in `src/content/homepage.ts` and is
-  changed by pull request. Every other long-form page comes from the CMS.
-- **Why** — The homepage is one authored narrative, not a collection of
-  entries, and it changes rarely. In git it is versioned, reviewed, and cannot
-  be edited into incoherence from the admin UI.
-
----
-
-## F2 — The homepage thread is a plain vertical rule
-
-- **Category** — Motion / cultural governance · **Status** — Final · **Owner** — August
-- **The decision** — The connecting "thread" through the homepage is a straight
-  vertical progress rule. It does not meander and it has no waypoint nodes.
-- **Why** — The motion skill's sketch C1 (continuous line with lit waypoints)
-  is on **hold**: a meandering line with waypoints reads as Aboriginal
-  iconography and needs sign-off. The skill records the plain vertical rule as
-  the cleared alternative, so that is what was built. It does not get
-  "improved" into a path without a recorded permission.
+- **Category** — Architecture · **Status** — **Superseded** by D12 · **Owner** — August
+- **What it said** — Homepage copy lives in `src/content/homepage.ts` and
+  changes only by pull request, because the homepage is one authored narrative
+  rather than a collection of entries.
+- **Why it was replaced** — Confirmed with August that homepage copy will be
+  CMS-editable like every other page. The reasoning behind the original call
+  (protecting a carefully written narrative from casual edits) is real, but it
+  is an editorial-permissions problem, not an architectural one — the CMS
+  already has a draft → review → approved workflow for exactly that.
 
 ---
 
-## F3 — The homepage Truth beat is typographic
+## D12 — Homepage copy is CMS-editable · **RESOLVED**
 
-- **Category** — Content / cultural governance · **Status** — Final · **Owner** — August
-- **The decision** — The Truth beat carries no imagery. It is built on
-  typography and ground colour alone.
-- **Why** — Story-wall imagery permission is unresolved, so it is treated as
-  unavailable. The motion skill also forbids animating cultural-site imagery in
-  any form — motion turns a record into a spectacle. Revisit only when a
-  permission is recorded.
+- **Category** — Architecture
+- **Status** — **Final** · **Visibility** — Shared · **Owner** — August
+- **The decision** — Homepage **copy** is editable in the CMS. **Design,
+  animation, motion and section structure are not** — those stay in code.
+- **Context** — Supersedes F1. Confirmed with August.
+- **Why** — The client's team is small and non-technical. Making them raise a
+  pull request to fix a typo on the most-read page of the site is the wrong
+  trade. Editorial safety comes from the CMS approval workflow instead.
+- **Build implication** — The homepage becomes a CMS content type (a singleton
+  page with one entry per beat), not a hardcoded module.
+  `src/content/homepage.ts` is now the **seed/default** the CMS is populated
+  from, and is marked as such in the file. Nothing downstream should assume
+  those strings are compile-time constants.
+- **Note** — → task for David: add the homepage to the CMS content model
+  (Phase 6). Not blocking anything today.
+
+---
+
+## F2 — The homepage thread is a plain vertical rule · **ON HOLD**
+
+- **Category** — Motion / cultural governance · **Status** — Proposed (on hold)
+  · **Owner** — August, with Ivy and JC
+- **On hold because** — There is no final homepage design yet. The lo-fi and
+  hi-fi wireframes are the source of truth for web design, so this is not
+  recorded as Final until they land.
+- **The interim position** — What is built today: a straight vertical progress
+  rule, no meander, no waypoint nodes.
+- **What does not change with the design** — Sketch C1 (continuous line with
+  lit waypoints) is on **hold** in the motion skill because a meandering line
+  with waypoints reads as Aboriginal iconography and needs sign-off. That is a
+  cultural constraint, not a design preference, so a wireframe drawing a
+  meandering path does not clear it — decision D9 (who signs off motion) does.
+  Until then the plain rule is the only cleared option.
+
+---
+
+## F3 — The homepage Truth beat is typographic · **ON HOLD**
+
+- **Category** — Content / cultural governance · **Status** — Proposed (on
+  hold) · **Owner** — August, with Ivy
+- **On hold because** — Same as F2: the wireframes decide the visual treatment
+  of this beat, and they do not exist yet.
+- **The interim position** — What is built today: typography and ground colour
+  alone, no imagery.
+- **What does not change with the design** — Story-wall imagery permission is
+  unresolved and is treated as unavailable, and the motion skill forbids
+  animating cultural-site imagery in any form. A wireframe specifying a photo
+  of the engravings would not unblock it; the permission would. See risk R10.
 
 ---
 
@@ -311,7 +350,7 @@ in the room — record as **Final**.
 
 ## R1 · ISSUE · High — Acknowledgement of Country names the wrong jurisdiction
 
-- **Owner** — Marc → Suzanne Thompson
+- **Owner** — Marc and August → Suzanne Thompson
 - **What is happening** — The homepage copy draft acknowledges *"the Aboriginal
   people of the Northern Territory."* YACHATDAC is on **Iningai Country,
   Central Western Queensland** — Turraburra sits 120km north of Barcaldine. It
@@ -331,7 +370,7 @@ in the room — record as **Final**.
 
 ## R2 · ISSUE · High — Story wall dating differs by a factor of ten
 
-- **Owner** — Marc → client / researchers
+- **Owner** — Marc and August → client / researchers
 - **What is happening** — Homepage and Wonder both say the engravings are at
   least **55,000** years old. The Truth timeline says at least **5,000**, and
   carries its own "dating under review" note.
@@ -345,7 +384,7 @@ in the room — record as **Final**.
 
 ## R3 · RISK · High — Block Berthold has no confirmed webfont licence
 
-- **Owner** — Marc → brand team
+- **Owner** — Marc and August → brand team
 - **What could go wrong** — Block Berthold ships an Adobe / H. Berthold AG
   copyright. It is a commercial retail typeface, and a desktop licence does not
   cover serving the file over the web; `@font-face` distribution needs a
@@ -362,7 +401,7 @@ in the room — record as **Final**.
 
 ## R4 · RISK · Medium — Bantayog Sans licence unknown
 
-- **Owner** — Marc
+- **Owner** — Marc and August
 - **What could go wrong** — Bantayog Sans arrived with no licence file at all.
   Terms are simply unknown.
 - **Impact** — Same class of exposure as R3, on the subheadline and eyebrow
@@ -374,7 +413,7 @@ in the room — record as **Final**.
 
 ## R5 · RISK · High — Suzanne's approvals are on the critical path
 
-- **Owner** — Marc
+- **Owner** — Marc and August
 - **What could go wrong** — Two items need Suzanne Thompson personally: the
   Welcome to Country wording, and the Truth timeline, which carries her words
   from the Unfinished Business and Yacadak Framework recordings and states on
@@ -391,7 +430,7 @@ in the room — record as **Final**.
 
 ## R6 · RISK · High — Lo-fi wireframes are due 21 August with the IA still open
 
-- **Owner** — Ivy, with Marc
+- **Owner** — Ivy, with Marc and August
 - **What could go wrong** — Lo-fi wireframes are due in two days, but the
   sitemap raises four unanswered structural questions (D1–D4) and the roadmap
   task "Define the site map and information architecture" is still open.
@@ -448,7 +487,7 @@ in the room — record as **Final**.
 
 ## R10 · RISK · Medium — Cultural permissions are unresolved and unowned
 
-- **Owner** — Marc → Elder Advisory Group
+- **Owner** — Marc and August → Elder Advisory Group
 - **What could go wrong** — Three permissions are open on the motion skill's
   board: artwork motion (vectorised artwork received, no motion permission
   recorded), land and terrain detail level, and story-wall imagery. None has a
@@ -477,7 +516,7 @@ in the room — record as **Final**.
 
 ## R12 · RISK · Low — Brand assets outstanding
 
-- **Owner** — Marc
+- **Owner** — Marc and August
 - **What could go wrong** — Logo vector files (SVG/EPS) and the Good Dog Cool
   callout face have not been supplied.
 - **Impact** — Low. The header renders a marked text placeholder and the

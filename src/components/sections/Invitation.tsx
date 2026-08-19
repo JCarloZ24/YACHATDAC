@@ -24,11 +24,13 @@ export function Invitation() {
           </h2>
         </Reveal>
 
-        <Reveal index={2}>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-canvas/75">
-            {invitation.body}
-          </p>
-        </Reveal>
+        {invitation.body ? (
+          <Reveal index={2}>
+            <p className="mt-6 max-w-2xl text-base leading-relaxed text-canvas/75">
+              {invitation.body}
+            </p>
+          </Reveal>
+        ) : null}
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {invitation.cards.map((card, index) => (
