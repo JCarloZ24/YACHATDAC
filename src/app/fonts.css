@@ -1,0 +1,64 @@
+/* ---------------------------------------------------------------------------
+   YACHATDAC typography
+
+   PLACEHOLDER STATE. The real font files are not in the repo yet — drop them
+   into /public/fonts (see public/fonts/README.md for exact filenames) and
+   everything below starts working with no code change.
+
+   Until they land, each family falls back to the stack declared in its
+   `--font-*` variable, so the site builds and runs. Nothing 404s fatally;
+   the browser just uses the fallback.
+
+   Licensing (build doc §17 #9): Block Berthold, Bantayog Sans and Good Dog
+   Cool are NOT confirmed as freely licensed. Get licence files from the brand
+   team before production. Do not silently substitute in production.
+   --------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Block Berthold";
+  src: url("/fonts/BlockBerthold.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bantayog Sans";
+  src: url("/fonts/BantayogSans.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Work Sans";
+  src: url("/fonts/WorkSans-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Work Sans";
+  src: url("/fonts/WorkSans-Italic-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Not yet supplied. Callout use only — keep the slot so it can be dropped in. */
+@font-face {
+  font-family: "Good Dog Cool";
+  src: url("/fonts/GoodDogCool.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-block-berthold: "Block Berthold", "Arial Black", "Helvetica Neue",
+    system-ui, sans-serif;
+  --font-bantayog-sans: "Bantayog Sans", "Helvetica Neue", system-ui, sans-serif;
+  --font-work-sans: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-good-dog-cool: "Good Dog Cool", "Comic Sans MS", cursive;
+}

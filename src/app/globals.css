@@ -1,0 +1,113 @@
+@import "tailwindcss";
+@import "./fonts.css";
+@import "./motion-tokens.css";
+
+/* ---------------------------------------------------------------------------
+   YACHATDAC design tokens
+   Source of truth: client brand kit ("Artwork Creative Brief"), build doc §5.
+
+   Every colour is tied to a real element of Country. Keep the name/meaning
+   pairing — do NOT flatten these to primary/secondary/accent.
+   --------------------------------------------------------------------------- */
+
+@theme {
+  /* Palette — name (meaning) */
+  --color-ochre: #d69828; /* Yellow Ochre   — Morning Light */
+  --color-burnt: #cb7722; /* Burnt Ochre    — Country */
+  --color-turquoise: #32b0ae; /* Turquoise Blue — Water & Sky */
+  --color-eucalyptus: #5e7930; /* Eucalyptus Grn — Vegetation */
+  --color-oxide: #af231c; /* Oxide Red      — The Land */
+  --color-roasted: #4e3524; /* Roasted Brown  — Earth */
+  --color-evergreen: #22372b; /* Deep Evergreen — Living Country */
+  --color-canvas: #f6f6ec; /* Off-White      — Natural Canvas */
+  --color-midnight: #122449; /* Midnight Navy  — Night Sky */
+  --color-charcoal: #090e12; /* Charcoal Black — Fire & Story */
+
+  /* Type families. Real files land in /public/fonts — see fonts.css.
+     Until then these fall back to the stacks declared there. */
+  --font-headline: var(--font-block-berthold);
+  --font-eyebrow: var(--font-bantayog-sans);
+  --font-body: var(--font-work-sans);
+  --font-callout: var(--font-good-dog-cool);
+
+  /* Display scale — headlines are set in Block Berthold, tight and heavy. */
+  --text-display: 4rem;
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-beat: 2.75rem;
+  --text-beat--line-height: 1.08;
+  --text-beat--letter-spacing: -0.015em;
+
+  /* Easing. Values fixed by the motion skill — `country` for anything large,
+     `quiet` for interface furniture. Overshoot and elastic are banned: they
+     read playful, and the brand is grounded. */
+  --ease-country: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quiet: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-machine: linear;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+
+:root {
+  --surface: var(--color-canvas);
+  --ink: var(--color-charcoal);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Accessibility floor (build doc §5) — visible focus everywhere. */
+:focus-visible {
+  outline: 2px solid var(--color-ochre);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background-color: var(--color-ochre);
+  color: var(--color-charcoal);
+}
+
+/* Reduced motion is handled in motion-tokens.css, alongside the rest of the
+   motion token set, so there is one place to look. */
+
+/* ---------------------------------------------------------------------------
+   Component patterns (build doc §5)
+   Kept as utility classes so they stay in one place while the design system
+   is still moving. Promote to React components as they stabilise.
+   --------------------------------------------------------------------------- */
+
+@utility eyebrow {
+  font-family: var(--font-eyebrow);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@utility headline {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+@utility callout {
+  /* Good Dog Cool — hand-drawn. Callouts only, never body or long headlines. */
+  font-family: var(--font-callout);
+  font-weight: 400;
+}

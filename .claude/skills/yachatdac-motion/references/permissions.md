@@ -1,0 +1,45 @@
+# Permissions status board
+
+Read this whenever a task touches artwork, land or terrain, or cultural material.
+Update it when a decision comes back — the date and who decided both matter, because
+"someone said it was fine" is not a record.
+
+## Open
+
+| Item | Affects | Status | Until then |
+|---|---|---|---|
+| Artwork motion | Any use of Leonard Mickelo's artwork | Vectorised artwork received. **No motion permission recorded.** | Artwork is static imagery only. No animating, masking, revealing, scrubbing, looping or transforming any artwork element. Group L (L1–L4) is derived from composition, not motifs, and is cleared. |
+| Land / terrain detail | D4 contour map, E1 terrain dolly, E3 camera path | Approved in principle by Marc for the About and Research pages. **Detail level unconfirmed** — how much of the property may be shown, and how precisely. | Build with abstracted or generic terrain. No real elevation data for Turraburra, no property boundaries, no place names, no waypoint labels, no coordinates anywhere in data or source. |
+| Story-wall imagery | Truth beat, B4 | Not resolved | Treat as unavailable. Build the Truth beat typographically (B5, Y2). |
+| Motion sign-off owner | Everything | Not resolved — Marc to confirm whether it's him, the board, or the Elder Advisory Group, and at which milestone | Flag motion decisions to Marc and note them here. |
+
+## Recorded permissions
+
+None yet. Format for entries when they land:
+
+```
+| Item | Decision | Who | Date | Scope |
+|---|---|---|---|---|
+| e.g. Artwork pattern loop | Yes, background only, no rotation | Leonard Mickelo via Marc | 2026-09-01 | Homepage + About backgrounds |
+```
+
+## Asks outstanding with the artist
+
+Alongside the existing creative-brief deliverables:
+
+1. Layered vector — elements on separate named layers, not flattened.
+2. Motif inventory — which elements may be repeated, cropped, scaled, recoloured;
+   which must appear whole and unaltered.
+3. Motion permission — may any element move, and if so which. A yes on some and a
+   no on others is the most useful possible answer.
+4. Pairing rules — anything that must not sit adjacent to or overlap something else.
+5. Single-colour version of the motif set, not just the logo.
+
+## Standing rules that need no decision
+
+These are settled and don't get reopened per task:
+
+- No animation of cultural-site imagery, in any form.
+- No generated Aboriginal iconography in code — concentric circles, dot fields,
+  meandering waypoint paths, U-shapes, animal tracks. Artwork comes from the artist.
+- No heritage coordinates in map layers, markup, comments or source.

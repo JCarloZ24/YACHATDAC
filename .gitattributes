@@ -1,0 +1,11 @@
+# Normalise line endings — the team is on mixed platforms.
+* text=auto eol=lf
+
+# Binary assets
+*.woff2 binary
+*.png binary
+*.jpg binary
+*.webp binary
+*.ico binary
+*.mp4 binary
+*.pdf binary
