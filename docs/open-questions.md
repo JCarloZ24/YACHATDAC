@@ -3,6 +3,10 @@
 Live list. Resolve upward — anything marked **blocking** stops real work.
 Cross-referenced to section 17 of the build documentation.
 
+Writing these up for Proyekto? [`decisions-and-risks.md`](decisions-and-risks.md)
+has the same items formatted to paste straight into the Decisions and
+Risks & Issues sections, with owners.
+
 ## Blocking
 
 | # | Item | Why it blocks | Who |
