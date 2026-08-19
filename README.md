@@ -81,6 +81,7 @@ src/
 docs/
   brand.md                  how the brand kit is wired into code
   content/                  page copy and sitemaps — drafts → in-review → approved
+  decisions-and-risks.md    paste-ready entries for Proyekto Decisions / Risks
   design/                   Figma links, milestone, wireframe requirements
   open-questions.md         blockers and open decisions
   meetings/                 briefing notes
