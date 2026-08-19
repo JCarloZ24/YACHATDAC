@@ -46,12 +46,17 @@ especially Eucalyptus Green and Turquoise Blue on Deep Evergreen.
 
 Motiva is scrapped and does not get reintroduced.
 
-Font files are **not in the repo yet** — see `public/fonts/README.md` for the
-filenames to drop in. Everything falls back to a documented stack until then,
-so do not judge spacing or hierarchy from the current rendering.
+All three are **installed and self-hosted** as woff2 in `public/fonts`, with
+the above-the-fold faces preloaded in the root layout. Good Dog Cool has not
+been supplied; its `@font-face` slot is reserved so the file can be dropped in
+without a code change.
 
-⚠ Block Berthold, Bantayog Sans and Good Dog Cool are not confirmed as freely
-licensed. Get licence files from the brand team before the production build.
+⚠ **Licences are not settled.** Block Berthold ships an Adobe / H. Berthold AG
+copyright — a commercial retail face, and a desktop licence does not cover
+serving it over the web. Bantayog Sans arrived with no licence file at all. Only
+Work Sans (SIL OFL 1.1) is unambiguous. Both unresolved families are gitignored
+and come from the Proyekto resources section. Details in
+`public/fonts/README.md`; this is a compliance question, not a preference.
 
 Splitting text for animation is by **line or word, never by character** —
 character splits break screen readers and read as a gimmick against this brand.
