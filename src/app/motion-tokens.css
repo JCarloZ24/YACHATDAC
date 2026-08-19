@@ -1,0 +1,50 @@
+/* ---------------------------------------------------------------------------
+   Motion tokens.
+
+   Ported from the project motion skill:
+     .claude/skills/yachatdac-motion/assets/motion-tokens.css
+     .claude/skills/yachatdac-motion/references/tokens.md
+
+   That skill is the source of truth. Values here are verbatim — do not tune
+   them per section. The whole point of a shared token set is that sections
+   built by different people feel like one site.
+
+   The palette itself is NOT duplicated here: the `--y-*` names the skill's
+   templates expect are aliased onto the Tailwind theme colours declared in
+   globals.css, so there is exactly one place a hex value is written down.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* Palette aliases — skill naming → Tailwind theme tokens. */
+  --y-evergreen: var(--color-evergreen);
+  --y-ochre: var(--color-ochre);
+  --y-burnt: var(--color-burnt);
+  --y-oxide: var(--color-oxide);
+  --y-brown: var(--color-roasted);
+  --y-eucalypt: var(--color-eucalyptus);
+  --y-turquoise: var(--color-turquoise);
+  --y-navy: var(--color-midnight);
+  --y-charcoal: var(--color-charcoal);
+  --y-offwhite: var(--color-canvas);
+
+  /* Duration */
+  --dur-large: 820ms; /* sections, full-bleed media, headlines */
+  --dur-medium: 550ms; /* cards, list items, image frames */
+  --dur-small: 320ms; /* hovers, focus rings, toggles */
+
+  /* Stagger */
+  --stagger-grid: 60ms;
+  --stagger-line: 90ms;
+}
+
+/* Reduced motion: cut, don't slow. A "gentler" variant is not an accommodation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
