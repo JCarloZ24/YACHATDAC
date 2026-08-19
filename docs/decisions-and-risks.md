@@ -35,12 +35,38 @@ not been seen, so those entries use a plain shape — remap as needed.
 August. `→ someone` means the owner is the route to that person, not that the
 person is accountable in Proyekto.
 
+## Index
+
+| | Decision | Status | Owner |
+| --- | --- | --- | --- |
+| D1 | Blog and Resources: one thing or two? | Proposed | Marc, Ivy |
+| D2 | Does Connect survive as a nav item? | Proposed | Marc |
+| D3 | FAQs: scope, ownership, CMS or static | Proposed | Marc, David |
+| D4 | Legal page naming and Cookie Policy | Proposed | David |
+| D5 | Draft PDFs are the source of truth for copy | **Final** | Marc, August |
+| D6 | Keep or cut the Living Work failure section | Proposed | Marc, August |
+| D7 | Where fee-for-service land management lives | Proposed | Marc, August |
+| D8 | Backend build priority | Proposed | David |
+| D9 | Who signs off motion decisions | Proposed | Marc, August |
+| D10 | Copy ownership per page | Proposed | Marc, August |
+| D11 | Hosting and database accounts | Proposed | David |
+| D12 | Homepage copy is CMS-editable | **Final** | August |
+| F1 | Homepage copy lives in the repo | **Superseded** by D12 | August |
+| F2 | Homepage thread is a plain vertical rule | **On hold** | August, Ivy, JC |
+| F3 | Homepage Truth beat is typographic | **On hold** | August, Ivy |
+| F4 | Motion tiers, two signature moments | **Final** | JC |
+| F5 | Only Work Sans is tracked in git | **Final** | August |
+| F6 | Local dev runs on port 3001 | **Final** | August |
+
+Risks and issues are in Part 4: R1–R12.
+
 ---
 
 # Part 1 — Decisions still open
 
-Record these as **Proposed**. Change to **Final** when answered, and write the
-answer into *The decision*.
+Ten open. Record each as **Proposed**; when it is answered, change the status to
+**Final** and write the answer into *The decision* rather than starting a new
+entry — the point is that the reasoning stays attached to the outcome.
 
 ---
 
@@ -110,40 +136,25 @@ answer into *The decision*.
 - **Category** — Legal / compliance
 - **Status** — Proposed · **Visibility** — Shared · **Owner** — David
 - **The decision** — Confirm the final labels and routes for the legal pages.
-  The sitemap says **Terms & Conditions** plus a **Cookie Policy**; the repo
-  currently has `/legal/privacy` and `/legal/terms` ("Terms of Use") and no
-  cookie route.
-- **Context** — The build documentation calls for a Privacy Policy, Terms of
-  Use and a cookie/consent notice, since GA4 sets tracking cookies. The sitemap
-  is probably right that a separate Cookie Policy is wanted.
+- **Context** — Three different namings are now in circulation across three
+  documents:
+
+  | Source | Terms | Cookies |
+  | --- | --- | --- |
+  | Build documentation | Terms of Use | cookie/consent notice |
+  | Sitemap (uploaded) | Terms & Conditions | Cookie Policy |
+  | Homepage copy draft footer | Terms of Service | Cookie Settings |
+
+  The repo currently has `/legal/privacy` and `/legal/terms` ("Terms of Use")
+  and no cookie route. Note "Cookie **Settings**" in the draft implies a consent
+  preferences dialog, not a policy page — those are different things and may
+  both be wanted.
 - **Why it matters** — Renaming a legal page's URL after launch breaks inbound
   links and any reference from a Stripe receipt or email footer. It costs
   nothing to settle before the routes are built.
 - **Options considered**
   1. Adopt the sitemap: `/legal/terms-and-conditions` + `/legal/cookies`.
   2. Keep `/legal/terms` and fold cookies into the Privacy Policy.
-
----
-
-## D5 — The draft PDFs are the source of truth for copy · **RESOLVED**
-
-- **Category** — Content
-- **Status** — **Final** · **Visibility** — Shared · **Owner** — Marc, with August
-- **The decision** — The draft documents in `docs/content/drafts/` govern page
-  **copy and content**. They do **not** govern web design — the lo-fi and hi-fi
-  wireframes are the source of truth for that.
-- **Context** — The copy in `src/content/homepage.ts` had been reconstructed
-  from the build documentation before the drafts existed, and the two had
-  drifted apart — different hero subhead, and Invitation cards titled
-  *Experience Country / Research Together / Learn from Living Work* rather than
-  *Wonder / Truth / Living Work*.
-- **Why** — Two versions of the homepage copy were in circulation with no rule
-  for which won. Splitting it by artefact type — drafts own words, wireframes
-  own design — means neither has to arbitrate the other.
-- **Done** — `src/content/homepage.ts` now matches
-  `YACHATDAC-Homepage-Copy-v1.pdf`, with one deliberate exception: the draft's
-  Acknowledgement of Country names the Northern Territory and was **not**
-  copied across. See risk R1.
 
 ---
 
@@ -230,10 +241,32 @@ answer into *The decision*.
 
 ---
 
-# Part 2 — Decisions already made, worth recording
+# Part 2 — Decisions made
 
-These are settled. They are here so the reasoning survives the people who were
-in the room — record as **Final**.
+Settled. Recorded so the reasoning survives the people who were in the room.
+Record as **Final**, except F1 which is **Superseded**.
+
+---
+
+## D5 — The draft PDFs are the source of truth for copy · **RESOLVED**
+
+- **Category** — Content
+- **Status** — **Final** · **Visibility** — Shared · **Owner** — Marc, with August
+- **The decision** — The draft documents in `docs/content/drafts/` govern page
+  **copy and content**. They do **not** govern web design — the lo-fi and hi-fi
+  wireframes are the source of truth for that.
+- **Context** — The copy in `src/content/homepage.ts` had been reconstructed
+  from the build documentation before the drafts existed, and the two had
+  drifted apart — different hero subhead, and Invitation cards titled
+  *Experience Country / Research Together / Learn from Living Work* rather than
+  *Wonder / Truth / Living Work*.
+- **Why** — Two versions of the homepage copy were in circulation with no rule
+  for which won. Splitting it by artefact type — drafts own words, wireframes
+  own design — means neither has to arbitrate the other.
+- **Done** — `src/content/homepage.ts` now matches
+  `YACHATDAC-Homepage-Copy-v1.pdf`, with one deliberate exception: the draft's
+  Acknowledgement of Country names the Northern Territory and was **not**
+  copied across. See risk R1.
 
 ---
 
@@ -268,39 +301,6 @@ in the room — record as **Final**.
   those strings are compile-time constants.
 - **Note** — → task for David: add the homepage to the CMS content model
   (Phase 6). Not blocking anything today.
-
----
-
-## F2 — The homepage thread is a plain vertical rule · **ON HOLD**
-
-- **Category** — Motion / cultural governance · **Status** — Proposed (on hold)
-  · **Owner** — August, with Ivy and JC
-- **On hold because** — There is no final homepage design yet. The lo-fi and
-  hi-fi wireframes are the source of truth for web design, so this is not
-  recorded as Final until they land.
-- **The interim position** — What is built today: a straight vertical progress
-  rule, no meander, no waypoint nodes.
-- **What does not change with the design** — Sketch C1 (continuous line with
-  lit waypoints) is on **hold** in the motion skill because a meandering line
-  with waypoints reads as Aboriginal iconography and needs sign-off. That is a
-  cultural constraint, not a design preference, so a wireframe drawing a
-  meandering path does not clear it — decision D9 (who signs off motion) does.
-  Until then the plain rule is the only cleared option.
-
----
-
-## F3 — The homepage Truth beat is typographic · **ON HOLD**
-
-- **Category** — Content / cultural governance · **Status** — Proposed (on
-  hold) · **Owner** — August, with Ivy
-- **On hold because** — Same as F2: the wireframes decide the visual treatment
-  of this beat, and they do not exist yet.
-- **The interim position** — What is built today: typography and ground colour
-  alone, no imagery.
-- **What does not change with the design** — Story-wall imagery permission is
-  unresolved and is treated as unavailable, and the motion skill forbids
-  animating cultural-site imagery in any form. A wireframe specifying a photo
-  of the engravings would not unblock it; the permission would. See risk R10.
 
 ---
 
@@ -342,7 +342,52 @@ in the room — record as **Final**.
 
 ---
 
-# Part 3 — Risks & Issues
+# Part 3 — Decisions on hold
+
+Deliberately not settled yet. There is no final homepage design, and the lo-fi
+and hi-fi wireframes are the source of truth for web design — so these wait.
+
+Each entry separates the **interim position** (what is built today, and what
+would change) from **what does not change with the design** — the cultural
+constraints underneath, which a wireframe cannot clear. Those lift when a
+permission is recorded, not when a design is drawn.
+
+---
+
+## F2 — The homepage thread is a plain vertical rule · **ON HOLD**
+
+- **Category** — Motion / cultural governance · **Status** — Proposed (on hold)
+  · **Owner** — August, with Ivy and JC
+- **On hold because** — There is no final homepage design yet. The lo-fi and
+  hi-fi wireframes are the source of truth for web design, so this is not
+  recorded as Final until they land.
+- **The interim position** — What is built today: a straight vertical progress
+  rule, no meander, no waypoint nodes.
+- **What does not change with the design** — Sketch C1 (continuous line with
+  lit waypoints) is on **hold** in the motion skill because a meandering line
+  with waypoints reads as Aboriginal iconography and needs sign-off. That is a
+  cultural constraint, not a design preference, so a wireframe drawing a
+  meandering path does not clear it — decision D9 (who signs off motion) does.
+  Until then the plain rule is the only cleared option.
+
+---
+
+## F3 — The homepage Truth beat is typographic · **ON HOLD**
+
+- **Category** — Content / cultural governance · **Status** — Proposed (on
+  hold) · **Owner** — August, with Ivy
+- **On hold because** — Same as F2: the wireframes decide the visual treatment
+  of this beat, and they do not exist yet.
+- **The interim position** — What is built today: typography and ground colour
+  alone, no imagery.
+- **What does not change with the design** — Story-wall imagery permission is
+  unresolved and is treated as unavailable, and the motion skill forbids
+  animating cultural-site imagery in any form. A wireframe specifying a photo
+  of the engravings would not unblock it; the permission would. See risk R10.
+
+---
+
+# Part 4 — Risks & Issues
 
 **Issue** = already true. **Risk** = might become true.
 
@@ -526,7 +571,7 @@ in the room — record as **Final**.
 
 ---
 
-# Part 4 — Roadmap housekeeping
+# Part 5 — Roadmap housekeeping
 
 Small, and doable through MCP on request.
 
@@ -536,3 +581,5 @@ Small, and doable through MCP on request.
 | "Upload font assets (**Black Berto, Good Dog, Work Sense**)" | Meeting-transcript garble. Should read **Block Berthold, Good Dog Cool, Work Sans**. |
 | "Lo-fi wireframes for inner pages (About, **Forums**, informational)" | There is no forum on this project. Likely "forms" or a mishearing — confirm and retitle. |
 | "Define the site map and information architecture" *(urgent, open)* | Blocked on D1–D4. Consider marking **blocked** so the reason is visible. |
+| **New task needed** — David, Phase 6 | Add the homepage to the CMS content model as a singleton page, one entry per beat. Follows from D12. Not blocking today. |
+| **New task needed** — Marc/August | Confirm the legal page labels (D4) before the routes are built, so no URL has to change after launch. |
