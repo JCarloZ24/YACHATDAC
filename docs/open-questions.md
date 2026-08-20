@@ -22,9 +22,14 @@ it. The loose names are confirmed too: **Suzanne** (not Susan) Thompson;
 different people**; **Steve** is FNAN, not the owner of the words. **D10 is
 settled — August owns copy on every page.**
 
-Two things stay pending on documents that do not exist yet: **D4** (no legal
-documentation) and the authoritative page content/copy, which August is
-uploading.
+**D4** stays pending on legal documentation that does not exist yet.
+
+**v2 copy uploaded (20 Aug, later the same day)** — homepage, Wonder, Living
+Work and Truth. Per D5 those documents govern copy, so they moved three items
+on their own: **R2 is re-answered the other way** (the site has never been
+dated — the 55,000 figure is withdrawn), **D6 is superseded** (the Living Work
+failure section is cut), and **D7 is done**. They also added **R13–R15**. The
+full read is in [`content/STATUS.md`](content/STATUS.md).
 
 ---
 
@@ -35,8 +40,8 @@ Nothing downstream of these should be built on an assumption.
 | # | Item | Why it blocks | Who |
 | --- | --- | --- | --- |
 | **R3 R4** | **Font licences** | Fonts are installed and working, but Block Berthold carries an Adobe / H. Berthold AG copyright — a commercial retail face, and a desktop licence does not cover `@font-face` distribution. Bantayog Sans shipped no licence at all. Only Work Sans (OFL) is clear. **20 Aug: ask Marc whether the fonts have been purchased** — and specifically whether the licence covers *webfont* use, which a desktop licence usually does not. Needed before the site reaches a public server, and before hi-fi locks the typography. | Marc and August → brand team |
-| **R1** | **Welcome to Country wording** | Suzanne is an actual Traditional Owner, so a genuine Welcome to Country is possible in her own words. Footer, text only, no ceremony element, no popup. Not ours to write. **The homepage copy draft acknowledges the Northern Territory** — wrong jurisdiction; YACHATDAC is on Iningai Country, Central Western Queensland. Deliberately not copied into the code. **Both, in order (20 Aug):** Steve — FNAN, the organisation that brought YACHATDAC to us — reviews the wording and jurisdiction; **Suzanne remains the owner** and hers is the approval that lets it publish. | Marc and August → Steve (FNAN), then Suzanne Thompson |
-| **R5** | **Suzanne's Truth-page testimony** | The Truth timeline draft carries her words from the Unfinished Business and Yacadak Framework recordings, edited for reading and re-ordered. The document states on its face that nothing publishes until she has signed it off. Held by community. It also asks her a specific question — whether re-ordering so the count of thirty-five comes before the blankets is acceptable. **Reconfirmed 20 Aug as critical path**, spelling confirmed as **Suzanne**. August is re-uploading the draft with the dating corrected (R2) — it must be right before it reaches her. | Marc and August → Suzanne Thompson |
+| **R1** | **Welcome to Country wording** | Suzanne is an actual Traditional Owner, so a genuine Welcome to Country is possible in her own words. Footer, text only, no ceremony element, no popup. Not ours to write. **The homepage copy draft acknowledges the Northern Territory** — wrong jurisdiction; YACHATDAC is on Iningai Country, Central Western Queensland. Deliberately not copied into the code. **Both, in order (20 Aug):** Steve — FNAN, the organisation that brought YACHATDAC to us — reviews the wording and jurisdiction; **Suzanne remains the owner** and hers is the approval that lets it publish. **Still wrong in v2** — the footer paragraph is carried over word-for-word, Northern Territory included, through two rounds of drafting. | Marc and August → Steve (FNAN), then Suzanne Thompson |
+| **R5** | **Suzanne's Truth-page testimony** | The Truth timeline draft carries her words from the Unfinished Business and Yacadak Framework recordings, edited for reading and re-ordered. The document states on its face that nothing publishes until she has signed it off. Held by community. **v2 asks her two questions, not one:** whether the re-ordering so the count comes before the blankets is right, **and the number itself** — her recording says thirty-five, the published figure is thirty-seven adults and three children, and the draft currently runs with thirty-seven (Hoch 1986, cited in Taçon et al. 2022). **Reconfirmed 20 Aug as critical path**, spelling confirmed as **Suzanne**. | Marc and August → Suzanne Thompson |
 | **R10** | **Story-wall imagery permission** | Unresolved. Treat as unavailable — the homepage Truth beat is typographic because of it. Blocked behind D9, since there is no named approver. **20 Aug settled the route, not the authority:** approvals are relayed into the CMS by an intermediary, Leo (D14) — how an approval arrives, not who gives it. Leo is **not** Leonard Mickelo, so the artwork-motion permission is still an approval to be sought. | Marc and August → Elder Advisory Group |
 
 ---
@@ -62,7 +67,7 @@ Needs an answer, not a default. Full write-ups in
 | --- | --- | --- |
 | **R10** | **Artwork motion permission** | Vectorised artwork received from Leonard Mickelo; no motion permission recorded. Artwork stays static. Group L behaviours (derived from composition, not motifs) are cleared. |
 | **R10** | **Land / terrain detail level** | Approved in principle for About and Research pages, detail level unconfirmed. Until confirmed: abstracted or generic terrain only. No real elevation data for Turraburra, no boundaries, no place names, no coordinates anywhere in data or source. |
-| — | **Guesting itinerary validation** | The day-by-day 2 Night / 3 Day outline was reconstructed from crew interviews. Needs Suzanne/Steve sign-off before publishing. |
+| — | ~~**Guesting itinerary validation**~~ | **Closed by v2.** The reconstructed day-by-day 2 Night / 3 Day outline is gone. Wonder v2 runs stages instead — Arriving / The first night / Walking out to the wall — and says plainly "we do not run a set itinerary, because the work does not". There is nothing left to validate. |
 | — | **Email / SMTP full spec** | Reference the existing ImHereTravels build for template-builder scope, reply/inbox handling and SMTP credentials. Confirm against that codebase before estimating. |
 | — | **Which events need RSVP** | RSVP is confirmed in scope for community gatherings and research visits. The exact list of recurring event types defaulting to RSVP vs announcement-only is a follow-up, not a blocker. |
 | **R11** | **Media size and compression targets** | Client video runs to 2GB per file; no maximum sizes, compression targets or storage service decided. The homepage is video-led and the above-the-fold budget is under 2.5MB. |
@@ -71,19 +76,27 @@ Needs an answer, not a default. Full write-ups in
 | **R9** | **Legal pages before any form goes live** | Privacy Policy, Terms and cookie notice are route stubs with no content. The homepage newsletter field is deliberately inert until they land. **20 Aug supplies placeholder copy (D4), not reviewed copy** — ship it marked as unreviewed to unblock the routes, and keep every data-collecting form off until the reviewed version lands. |
 | **R8** | **DGR status** | Still unverified — verify against the org's actual ACNC and state registration, not against either prior answer. No longer blocking, because **donations are deferred out of launch scope (D13)**. The risk moves to whenever donations are built. |
 | **D14** | **Approval attribution in the CMS** | Approvals are relayed by an intermediary, so a proxy-entered approval with no trail is indistinguishable from one nobody gave. The CMS should capture who approved, when, and on what basis. |
+| **R13** | **Wonder inclusions and cost** | Both flagged in the draft itself. *What's included / Guiding / Camping / Transfers* carries "NEEDS CONFIRMATION — every line above. This section is the most common reason an enquiry does not happen." Cost is "still undecided — publish a from-price, or state plainly that it is quoted per group." The page is built around a sticky enquiry panel, so both sit on its only conversion. |
+| **R14** | **Living Work status labels and Rainbow Credits** | "Status labels to be confirmed before publishing" — *Registration underway / Building the record / In progress / Being developed* are public claims about carbon registration, biodiversity credits, IPA designation and Native Title. The **Rainbow Credits** card is marked "FOR YACHATDAC TO WRITE". |
+| **R15** | **Legal name vs ORIC** | Homepage v2 footer: "confirm spelling against ORIC registration". It appears in every page footer and in the legal pages. |
+| **R2** | **Confirm the dating reversal was deliberate** | v2 withdraws the 55,000 claim across all three drafts. It is a large public claim to carry through v1 and then drop, so worth one confirmation — and the v2 homepage sentence needs a rewrite, because it does not parse: "The wasp nests that could be still sitting over the engravings, waiting for someone to ask." |
+| **D5** | **Code vs the drafts** | `src/content/homepage.ts` is ✅ **synced to v2** (20 Aug) — withdrawn 55,000 claim replaced, card eyebrows re-cut, *Indigenous* → **Iningai**. Still open: `src/content/page-specs.ts` has Truth as a section stack and a "2 Night, 3 Day" experience that v2 replaced with stages; and v2's tagline sits in `homepage.ts` unrendered, pending a design call. |
+| — | **Draft imagery is placeholder** | Confirmed 20 Aug. Every image, gallery and carousel block in the v2 documents is direction, not an asset — none names a file. Swap-in-ready, no layout that depends on a crop. Does not soften R11: placeholders are the cheapest time to set compression targets. |
 | **R12** | **Brand assets outstanding** | Logo vector files and the Good Dog Cool callout face not supplied. Low impact — both have marked placeholders. |
 
 ---
 
-## Waiting on August
+## Confirm on v2
 
-Not open questions — answered decisions waiting on a document.
+The v2 upload arrived and answered its three waiting items. It changed two
+things that had been recorded the other way, so those want one confirmation
+each — not a re-argument, just a check that the change was intended.
 
-| # | Waiting for | What it unblocks |
+| # | Confirm | Why |
 | --- | --- | --- |
-| **D6 D5** | The **authoritative page content/copy documents**. Until they land, "keep the Living Work failure section" is the working position, not a closed one — if the uploaded document drops it, the document wins (D5). | Everything downstream of copy: the Living Work page, and D6 read as final rather than inferred. |
-| **R2 R5** | The **Truth timeline** re-uploaded with **55,000** and the "dating under review" note dropped. | Suzanne's review (R5). Send her the corrected draft, not the current one. |
-| **D7** | The **Living Work draft PDF** updated to include fee-for-service: informational, no published fees, ends in a consultation booking. | The Living Work page build. |
+| **R2** | The **dating reversal**. v2 withdraws "at least 55,000 years" across all three drafts and says the site has **never been scientifically dated** — >5,000 on regional style sequences, wasp nests a method never taken up. Now properly sourced to the 2022 *Australian Archaeology* paper. | It reverses an answer given the same morning, and it is a public claim about cultural heritage. The v2 position looks like the defensible one; the v1 sentence appears to have described a dating that never happened. |
+| **D6** | The **cut failure section**. "The parts that are not in the annual report" is not in Living Work v2; an expandable *Our challenges* list replaces it. | Recorded as **keep** hours earlier. Per D5 the document wins, so this is superseded rather than reversed — but worth knowing it was deliberate rather than lost in the rewrite. |
+| **D7** | The button label — the decision says **book a consultation**, the draft says **Enquire**. | Trivial, but it needs one word. |
 
 ---
 
@@ -103,29 +116,34 @@ Not open questions — answered decisions waiting on a document.
 - **D10 — August owns the copy on every page.** One owner, all pages, not one
   per page. It does **not** extend to cultural content: Suzanne's words, the
   Truth timeline and the Welcome to Country are hers to approve.
-- **D6 — Living Work keeps its practitioner content**, failure section
-  included. *Pending the authoritative copy document from August.* It was written to answer other Indigenous communities asking how
+- ~~**D6 — Living Work keeps its practitioner content.**~~ **Superseded by v2**
+  — the failure section is not in the v2 draft, replaced by an *Our challenges*
+  list. Per D5 the document governs copy, so the document wins. See *Confirm on
+  v2*. It was written to answer other Indigenous communities asking how
   the system was built, and that is the audience the pillar names. *Read with
   care:* the walkthrough confirmed the audience and the content without naming
   "The parts that are not in the annual report" outright — keep is the only
   reading consistent with it, and it reverses in one move if wrong.
 - **D7 — fee-for-service land management sits under Living Work.** Page is
   informational, **no fees published**, ends in a call to book a consultation.
-  The Living Work draft PDF is to be updated to include it.
+  **Done in v2** ✅ — a *Being developed* card plus a **Land management
+  services** pathway with an Enquire CTA.
 - **D13 — donations are deferred out of launch scope**, pending confirmed DGR.
   A *not yet*, not a *never* — expected eventually, so leave the door open and
-  build nothing that assumes either answer.
+  build nothing that assumes either answer. Living Work v2 agrees with this on
+  its own face: "consider a fourth card for donations if DGR status is in
+  place".
 - **D14 — CMS roles are admin / editor / viewer**, and because elders and older
   community members will not log in, approvals are relayed by an intermediary,
   **Leo** — who is *not* Leonard Mickelo. That is the route, not the authority
   — D9 and R10 are unchanged.
-- **R2 — the story wall is at least 55,000 years old.** Homepage and Wonder
-  were right; the Truth timeline's 5,000 is the outlier and is being corrected
-  in August's re-upload, before the draft goes to Suzanne.
-  `src/content/homepage.ts` is already correct but its ⚠ comment and
-  `docs/content/STATUS.md` note 2 are now stale.
-  The figure is confirmed but still unattributed — the 2022 Marra Wonga study
-  is the obvious citation.
+- **R2 — the story wall has never been scientifically dated.** *(Re-answered by
+  v2, replacing the morning's "at least 55,000 years".)* The pecked designs are
+  likely more than 5,000 years old on regional style sequences; mud wasp nests
+  over some engravings could give minimum ages if they are ever sampled. All
+  three v2 drafts agree, and Truth v2 carries the full citation — Marra Wonga,
+  *Australian Archaeology*, 2022, with DOI. **`src/content/homepage.ts` still
+  carries the withdrawn 55,000 sentence and must be changed.**
 
 **From this project's own decisions**
 
@@ -159,6 +177,10 @@ Not open questions — answered decisions waiting on a document.
 - **Donations**: both one-time and recurring — but that is the *eventual*
   shape, **not launch scope**. Deferred pending DGR (D13).
 - **Pillar page blog feeds** are hand-picked by editors, not query-driven.
+  ⚠ **Wonder v2 specifies a hybrid instead** — three most recent Resources posts
+  tagged #lore, #country or #guesting, editor can pin the first slot, falls back
+  to most recent overall. Small, but it contradicts this line, so David should
+  model it deliberately rather than inherit it.
 - **Analytics**: GA4.
 - **Reviewer/approver**: the CMS Admin role is the technical enforcement layer
   for the Elder Advisory Group's decisions — not an independent judgment call.

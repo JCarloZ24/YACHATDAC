@@ -64,6 +64,11 @@ is here so the transcript can still be read against it.
 
 **Mapping confirmed by August (20 Aug).** Use this file's numbers from here on.
 
+**v2 copy uploaded (20 Aug, later the same day):** homepage, Wonder, Living Work
+and Truth. Per D5 these documents govern copy, so they move three items on this
+board — **R2 is reversed**, **D6 is superseded**, **D7 is satisfied** — and add
+R13–R15. Full read in `docs/content/STATUS.md`.
+
 ## Index
 
 | | Decision | Status | Owner |
@@ -73,8 +78,8 @@ is here so the transcript can still be read against it.
 | D3 | FAQs: scope, ownership, CMS or static | **Final** (20 Aug) — CMS-managed. Author still unnamed | Marc, David |
 | D4 | Legal page naming and Cookie Policy | Proposed — **pending**, no source documents yet | David |
 | D5 | Draft PDFs are the source of truth for copy | **Final** | Marc, August |
-| D6 | Keep or cut the Living Work failure section | **Final** (20 Aug) — keep | Marc, August |
-| D7 | Where fee-for-service land management lives | **Final** (20 Aug) — under Living Work | Marc, August |
+| D6 | Keep or cut the Living Work failure section | **Superseded** by the v2 draft — cut | Marc, August |
+| D7 | Where fee-for-service land management lives | **Final** (20 Aug) — under Living Work, **done in v2** | Marc, August |
 | D8 | Backend build priority | Proposed — **not** covered on 20 Aug | David |
 | D9 | Who signs off motion decisions | Proposed — motion character set, approver still open | Marc, August |
 | D10 | Copy ownership per page | **Final** (20 Aug) — August, every page | August |
@@ -89,7 +94,7 @@ is here so the transcript can still be read against it.
 | F5 | Only Work Sans is tracked in git | **Final** | August |
 | F6 | Local dev runs on port 3001 | **Final** | August |
 
-Risks and issues are in Part 4: R1–R12.
+Risks and issues are in Part 4: R1–R15.
 
 ---
 
@@ -115,6 +120,14 @@ Part 2 with their reasoning intact.
   present and structurally liftable, rather than baking in either answer.
   August is briefing the team on this (20 Aug), so the holding position is
   stated rather than assumed.
+- **Evidence from v2, not an answer** — Homepage v2's footer nav reads *About /
+  Wonder / Truth / Living Work / Resources*: no Connect, no Contact. But Truth
+  v2 links a partnerships card to **`/connect`**, and another to
+  **`/partnerships/#research-opportunities`** — a route in neither the nav nor
+  the sitemap. So the drafts suggest Connect survives as a *destination* even
+  where it is absent from the nav. D5 gives drafts authority over copy, not IA,
+  so take this to the lo-fi review as input rather than treating the nav line as
+  a decision.
 - **The decision** — Whether **Connect** remains in the navigation now that
   **About** and **Contact** have been lifted out of it to top level.
 - **Context** — Connect was the utility hub holding About YACHATDAC, the team,
@@ -271,10 +284,31 @@ Record as **Final**, except F1 which is **Superseded**.
 
 ---
 
-## D6 — The Living Work section keeps its practitioner content · **RESOLVED**
+## D6 — The Living Work failure section · **SUPERSEDED BY v2**
 
 - **Category** — Content
-- **Status** — **Final** (20 Aug) · **Visibility** — Shared · **Owner** — Marc and August, with the client
+- **Status** — **Superseded** (20 Aug, same day) · **Visibility** — Shared · **Owner** — Marc and August, with the client
+- **What happened** — Recorded as **keep** in the morning; the v2 draft uploaded
+  later the same day **does not contain the section**. Under D5 the document
+  governs copy, so the document wins and this decision is closed as superseded
+  rather than reversed by an argument.
+- **What replaced it** — An expandable **Our challenges** list of thirteen
+  items: overgrazing, degraded springs, soil carbon loss, wrong-way fire, weeds
+  and ferals, heat and drought, distance from town, no phone reception, water
+  security, site damage, unidentified species, ranger funding ahead of income,
+  natural-capital market volatility.
+- **Why that is a different thing** — The challenges list describes the
+  condition of the Country and the organisation's exposure. The failure section
+  described work this organisation tried that did not work — the broken grader,
+  the failed bore pump. The candour survives in places (the spring that took a
+  thousand litres carted twice a day for eight days; rangers "learning the job
+  as it went") but as detail inside success stories, not as a section that names
+  failures.
+- **One confirmation wanted** — that the cut was deliberate rather than lost in
+  the rewrite, given "keep" was recorded hours earlier. If it was deliberate,
+  nothing more to do; the reasoning below is kept for the record.
+
+The reasoning as it stood when this was Final:
 - **The decision** — Living Work keeps the content written for other Indigenous
   communities, including the failure section — the broken grader, the failed
   bore pump. It stays on the public page.
@@ -313,9 +347,15 @@ Record as **Final**, except F1 which is **Superseded**.
   capability being offered. Keeping prices off the page avoids anchoring a
   quote before the scope of a job is known, and keeps a consultation as the
   first contact.
-- **Next** — → task for **August**, who wrote the Living Work text (recorded in
-  the walkthrough only as "Speaker A"): update the Living Work draft PDF to
-  include the fee-for-service content.
+- **Done in v2 (20 Aug)** ✅ — Living Work v2 carries it twice, as specified. A
+  *Being developed* card under **What the work produces**: "Ranger skills
+  offered to neighbouring properties — right-way fire, land management and
+  cultural heritage advice." And a **Land management services** pathway under
+  **Get involved**: "Right-way fire, cultural heritage advice and Country
+  management for properties in the district", with an **Enquire** call to
+  action. No prices published; informational; ends in an enquiry.
+- **One word to settle** — this decision says "book a consultation", the draft
+  says "Enquire". Not a conflict, but the button needs one label.
 - **Note** — Supersedes note 4 in `docs/content/STATUS.md`, which still records
   this as unplaced.
 
@@ -579,7 +619,45 @@ permission is recorded, not when a design is drawn.
 
 ---
 
-## R2 · ISSUE · **RESOLVED** — Story wall dating is at least 55,000 years
+## R2 · ISSUE · **RE-ANSWERED BY v2** — the site has never been dated
+
+> **Superseded within the day.** The 20 Aug answer below was **55,000 years**.
+> The v2 drafts uploaded later that day say the site has **never been
+> scientifically dated**, and say it consistently across all three. Under D5 the
+> documents govern copy, so the v2 position stands. The original entry is kept
+> underneath because the reasoning matters — this is the second time this claim
+> has moved.
+
+- **The answer that now stands (v2)** — The site has **never been scientifically
+  dated**. The pecked designs are **likely more than 5,000 years old on regional
+  style sequences**. Mud wasp nests over some engravings **could give minimum
+  ages if they are ever sampled** — a method available, not a dating done.
+- **Now sourced** — Truth v2 carries the full citation: *Marra Wonga:
+  Archaeological and contemporary First Nations interpretations of one of
+  central Queensland's largest rock art sites*, Australian Archaeology, 2022,
+  with DOI. That closes the "confirmed but unattributed" gap — against a
+  different figure from the one it was opened against.
+- **Consistent across v2** — Homepage: "Nobody has dated it." Wonder: "Never
+  scientifically dated." Truth: as quoted above. No contradiction left.
+- **Where 55,000 came from** — the v1 homepage sentence, "A wasp nest built over
+  the story wall's markings let researchers date them — at least 55,000 years
+  old, by the most conservative estimate." On the v2 reading that describes a
+  dating that never happened. It looks like the error was in v1 all along, and
+  the Truth timeline's caution was right.
+- **Highest-priority code change in the repo** — `src/content/homepage.ts` still
+  carries the 55,000 sentence, synced from v1 under D5. It is a public claim
+  about cultural heritage that the source of truth now contradicts. Replace it
+  with the v2 wording, and delete the ⚠ comment above it, which describes the
+  old 55,000-vs-5,000 conflict.
+- **Two things to confirm with August** — that the reversal is deliberate rather
+  than a drafting slip; and the v2 homepage sentence itself, which does not
+  parse: *"The wasp nests that could be still sitting over the engravings,
+  waiting for someone to ask."*
+
+<details>
+<summary>The 20 Aug entry, superseded</summary>
+
+## R2 · ISSUE · **RESOLVED (superseded)** — Story wall dating is at least 55,000 years
 
 - **Owner** — Marc and August → client / researchers
 - **What was happening** — Homepage and Wonder both said the engravings are at
@@ -601,6 +679,8 @@ permission is recorded, not when a design is drawn.
   4. The number is confirmed but **not yet attributed**. The 2022 Marra Wonga
      study is still the obvious citation, and a heritage claim this specific
      should carry its source.
+
+</details>
 
 ---
 
@@ -774,6 +854,76 @@ permission is recorded, not when a design is drawn.
 
 ---
 
+## R13 · RISK · High — Wonder's inclusions and cost are unwritten, and the draft says why that matters
+
+- **Owner** — August, with the client
+- **What could go wrong** — Wonder v2 flags two gaps on its own face. The
+  *What's included / Guiding / Camping / Transfers* block carries **"NEEDS
+  CONFIRMATION — every line above. This section is the most common reason an
+  enquiry does not happen."** And cost is marked **"still undecided — publish a
+  from-price, or state plainly that it is quoted per group."**
+- **Impact** — The page is built around a sticky enquiry panel; these two blocks
+  sit directly on its only conversion. A visitor deciding whether to drive 120km
+  of dirt road wants to know what a stay includes and roughly what it costs.
+  Shipping the page with either unresolved wastes the page.
+- **Next step** — Two answers from the client: the actual inclusions, line by
+  line; and cost as either a from-price or an explicit "quoted per group". The
+  second is a decision, not a lookup — record it when it lands.
+- **Note** — "No fixed dates, no pricing on this page" is already the draft's
+  stated approach, which is consistent with the settled no-booking-flow
+  position. Saying *why* there is no price is the part still missing.
+
+---
+
+## R14 · RISK · Medium — Living Work publishes regulatory status labels nobody has confirmed
+
+- **Owner** — August, with the client
+- **What could go wrong** — Living Work v2's *What the work produces* section
+  labels each stream **Registration underway**, **Building the record**, **In
+  progress** and **Being developed**, and carries the note **"Status labels to
+  be confirmed before publishing."** Separately the **Rainbow Credits** card is
+  marked **"FOR YACHATDAC TO WRITE"** — what it is, what is measured, who it is
+  for, and where it sits with the Rainbow Foundation.
+- **Impact** — These are public claims about carbon registration, biodiversity
+  credit work, IPA designation and Native Title. Getting a status label wrong on
+  a page aimed partly at funders and credit buyers is a credibility problem, and
+  potentially a representation one. The unwritten card is a hole in a section
+  that otherwise reads as complete.
+- **Next step** — Have the client confirm each label against the actual
+  registration state, and write the Rainbow Credits card. Neither is a design
+  question; both block publishing that section.
+- **Also noted** — the draft's own "Consider a fourth card for donations if DGR
+  status is in place" is consistent with D13, and is a useful marker for what
+  gets switched on when DGR lands.
+
+---
+
+## R15 · RISK · Low — The organisation's legal name is unconfirmed against ORIC
+
+- **Owner** — August
+- **What could go wrong** — Homepage v2's footer carries the note "[ Yambangku
+  Aboriginal Cultural Heritage and Tourism Development Aboriginal Corporation —
+  confirm spelling against ORIC registration ]". The repo already spells it out
+  in `src/content/site.ts`.
+- **Impact** — Low, but it appears in the footer of every page and in the legal
+  pages, and a misspelt corporate name in a footer is the kind of thing that
+  gets noticed once and then everywhere.
+- **Next step** — Check the ORIC register and record the exact registered name.
+
+---
+
+## Note — draft imagery is placeholder direction (20 Aug)
+
+Confirmed by August: the image, gallery and carousel blocks in the v2 documents
+are **placeholders**. They describe what a shot should carry; none names an
+asset that exists. Treat every slot as swap-in-ready and do not build layout
+that depends on a particular crop. This is consistent with the settled
+"commissioned artwork is not blocking — placeholder-first, swap-in-ready"
+position, and it does **not** soften R11: placeholders are the cheapest moment
+to set size and compression targets, not a reason to defer them.
+
+---
+
 ## R12 · RISK · Low — Brand assets outstanding
 
 - **Owner** — Marc and August
@@ -803,8 +953,15 @@ Added after the 20 Aug walkthrough:
 
 | Item | Action |
 | --- | --- |
-| **New task** — August | Update the Living Work draft PDF to include fee-for-service land management: informational, no published fees, ends in a consultation booking (D7). |
-| **New task** — August | Upload the authoritative page content/copy documents, including the Truth timeline with "at least 5,000 years ago" corrected to **55,000** and the "dating under review" note dropped (R2, R5, D6). |
+| ~~Update the Living Work PDF for fee-for-service~~ | **Done in v2** (D7). |
+| ~~Upload the authoritative page content/copy~~ | **Done** — v2 uploaded 20 Aug. It answered R2 the other way; see below. |
+| ~~Replace the 55,000 sentence in `src/content/homepage.ts`~~ | ✅ **Done 20 Aug.** Withdrawn claim replaced with the v2 wording, stale ⚠ comment gone. The v2 fragment is transcribed verbatim with the probable repair noted but not applied — the rewrite is August's, not the repo's. |
+| ~~Re-sync the Invitation card eyebrows~~ | ✅ **Done 20 Aug**, along with *Indigenous* → **Iningai** in card 2 and the capitalised **Ranger** in card 3. `tsc --noEmit` clean. |
+| **New task** — Ivy/JC | Decide whether v2's tagline — "Ancient traditions walking together with contemporary visions" — renders in The Way Forward. It is in `homepage.ts` as a field but `WayForward.tsx` does not draw it, deliberately: it is a design call for the wireframes. |
+| **New task** — Ivy/JC | Reconcile `src/content/page-specs.ts` with v2: Truth is a reverse chronology, not a section stack; the "2 Night, 3 Day" guesting experience no longer exists — Wonder v2 runs stages and says "we do not run a set itinerary". |
+| **New task** — August | Confirm with the client: the dating reversal (R2), the cut failure section (D6), Wonder's inclusions and cost (R13), the Living Work status labels and Rainbow Credits card (R14), and the ORIC spelling (R15). |
+| **New task** — August | Rewrite the v2 homepage Truth sentence, which does not parse: "The wasp nests that could be still sitting over the engravings, waiting for someone to ask." |
+| **New task** — David | Wonder v2 specifies its story feed as *three most recent Resources posts tagged #lore/#country/#guesting, editor can pin the first slot, falls back to most recent*. The build documentation's settled position is hand-picked, not query-driven. Model the hybrid deliberately. |
 | **New task** — August | Brief the team on the IA position before lo-fi: Resources is one page (D1), Connect stays drawn but liftable pending Marc's review (D2). |
 | **New task** — David, Phase 6 | Model FAQs as a CMS collection: question, answer, category, sort order (D3). |
 | **New task** — David, Phase 6 | CMS roles (admin / editor / viewer) plus an approval-attribution field on culturally-governed content types (D14). |

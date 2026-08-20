@@ -1,0 +1,108 @@
+/* A2 — sky clock.
+
+   The whole atmosphere is transform and opacity. Nothing here animates a
+   colour, a size, or a position property: colours cross-fade between opaque
+   layers, and the sun is moved and scaled by a single transform. */
+
+.stage {
+  position: relative;
+  /* Its own stacking and containing context, so the fixed atmosphere belongs to
+     this prototype rather than escaping to the whole document the way the
+     mockup's body-level layers did. */
+  isolation: isolate;
+}
+
+/* ---------- fixed atmosphere ---------- */
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* Charcoal rather than transparent: the first layer fades in over it, and a
+     transparent ground would show the page behind for one frame. */
+  background-color: var(--color-charcoal);
+}
+
+.skyLayer {
+  position: absolute;
+  inset: 0;
+  will-change: opacity;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  will-change: opacity;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 60% 10%, #fff, transparent),
+    radial-gradient(1px 1px at 80% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 35% 60%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 90% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 80%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 50% 85%, #fff, transparent),
+    radial-gradient(1px 1px at 72% 22%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 44% 46%, #fff, transparent);
+}
+
+/* The sun. One transformed element carrying a stack of colour discs, so a
+   colour change costs an opacity tween rather than a repaint of a shadow. */
+.sunTrack {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 34vmax;
+  height: 34vmax;
+  will-change: transform;
+  /* Starting position, and the parked position under reduced motion — nothing
+     writes a transform in that branch. */
+  transform: translate3d(calc(50vw - 50%), calc(80vh - 50%), 0);
+}
+
+.sunDisc {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  will-change: opacity;
+}
+
+/* ---------- beats ---------- */
+
+.beat {
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  /* Extra padding on top, not on both sides: with the content centred, the
+     asymmetry offsets it clear of the lab's sticky controls bar. Prototype
+     chrome should not sit on top of the thing being reviewed. On the real
+     homepage this is a plain symmetric 12vh. */
+  padding: calc(12vh + 9rem) 6vw 12vh;
+}
+
+.beatInner {
+  max-width: 46rem;
+}
+
+/* Copy colour is a per-phase step, never interpolated — half-way between two
+   text colours is a contrast failure by construction. */
+.stage[data-ink="canvas"] .beat {
+  color: var(--color-canvas);
+}
+
+.stage[data-ink="charcoal"] .beat {
+  color: var(--color-charcoal);
+}
+
+.beat,
+.stage[data-ink] .beat {
+  transition: color var(--dur-large) var(--ease-country);
+}
+
+/* Right-aligned beat, as the mockup does for Belonging. */
+.alignRight .beatInner {
+  margin-left: auto;
+}
