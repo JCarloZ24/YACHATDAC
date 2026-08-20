@@ -3,20 +3,18 @@
    Colours come from the brand tokens in globals.css; nothing is written twice.
    The only per-frame property is stroke-dashoffset, set from JS. */
 
-/* Sized by whichever runs out first, the width of the page or the height of the
-   viewport — so the whole drawing is always on screen while it draws, and the
-   box always matches the drawing exactly.
+/* The frame is the viewport. Nothing is reserved for chrome: the controls
+   float and the panels sit on top, so the drawing gets the whole screen.
 
    The box has to match the drawing, not merely contain it: waypoints are
    positioned in percentages of this box, so any letterboxing would slide them
-   off the terrain they are meant to be pinned to. That rules out the easier
-   route of letting the SVG fill a box of some other shape. The reserve covers
-   the sticky controls bar, the detail panel, and the padding around them. */
+   off the terrain they are meant to be pinned to. That is why the contours are
+   traced at the measured aspect ratio in ContourMapSection rather than drawn at
+   a fixed one and fitted: the viewBox and the box are the same shape by
+   construction, so the SVG's default fit has nothing left to do. */
 .map {
-  position: relative;
-  width: min(100%, calc((100svh - 22rem) * 1600 / 700));
-  aspect-ratio: 1600 / 700;
-  border: 1px solid color-mix(in srgb, var(--color-canvas) 15%, transparent);
+  position: absolute;
+  inset: 0;
   background-color: var(--color-charcoal);
 }
 

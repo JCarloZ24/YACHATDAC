@@ -37,7 +37,7 @@ to diff, so prefer it where the source allows.
 YACHATDAC-<Page>-<Kind>-v<n>.<ext>
 
 YACHATDAC-Homepage-Copy-v1.docx
-YACHATDAC-Truth-Timeline-v2.pdf
+YACHATDAC-Truth-Copy-v2.md
 YACHATDAC-Sitemap-v1.png
 ```
 

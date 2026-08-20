@@ -16,31 +16,48 @@ import { buildHeightGrid } from "./generic-field";
 /**
  * Arbitrary viewBox — units here are not degrees, metres, or anything else.
  *
- * A wide landscape format, because that is how a map of country gets shown on
- * a page and how it has to be judged: shown large, a 1.56 frame is taller than
- * the viewport and you never see the whole drawing at once.
+ * The map is drawn at the full viewport, so the frame's proportions are the
+ * screen's, not a number chosen here. Height is fixed and the width follows the
+ * frame: a wider screen gets a wider *crop of country*, at the same scale, not
+ * the same crop stretched sideways. That is the whole reason the field is
+ * sampled through a span rather than a fixed square.
  *
  * E1 frames a squarer patch of the same field. Same country, different crop —
  * not a different landform.
  */
-export const VIEWBOX_WIDTH = 1600;
 export const VIEWBOX_HEIGHT = 700;
 
-/** Size of the field region sampled. Matches the frame, so nothing squashes. */
+/** Frame proportion used when nothing has measured the frame yet. */
+export const DEFAULT_ASPECT = 16 / 9;
+
+/**
+ * Aspect is clamped before anything is generated.
+ *
+ * A frame this far from landscape is a phone held upright or a window dragged
+ * to a sliver; past these bounds the crop stops being a map of country and
+ * starts being a strip of one, and the grid sizes get silly.
+ */
+const MIN_ASPECT = 0.55;
+const MAX_ASPECT = 3.4;
+
+/** Height of the field region sampled. Width is `aspect` times this. */
 const SPAN_V = 1;
-const SPAN_U = (VIEWBOX_WIDTH / VIEWBOX_HEIGHT) * SPAN_V;
 
 /**
  * Grid resolution the field is sampled at before contouring.
  *
  * This is the fidelity of the *tracing*, not of the landform — the landform's
- * own detail is the octave count in the detail preset. Doubling this makes each
+ * own detail is the octave count in the detail preset. A finer grid makes each
  * contour a smoother, truer line through the same terrain, which is what a map
  * needs when it is displayed large: at 160 columns the marching-squares
  * staircase starts to show once the SVG is over about 900px wide.
+ *
+ * Rows are fixed and columns scale with the frame, so a cell covers the same
+ * amount of country whatever shape the screen is — a wide monitor gets more
+ * map, at the same fidelity, rather than the same map traced more coarsely.
  */
-const GRID_COLS = 320;
 const GRID_ROWS = 208;
+const COLS_PER_ASPECT = 140;
 
 /**
  * Polylines shorter than this (in viewBox units) are dropped as speckle.
@@ -60,14 +77,33 @@ export type Contour = {
 
 type Segment = [number, number, number, number];
 
+export type ContourMap = {
+  /** viewBox width, in the same arbitrary units as VIEWBOX_HEIGHT. */
+  width: number;
+  height: number;
+  contours: Contour[];
+};
+
 /**
- * Contour the generic field into SVG path data.
+ * Contour the generic field into SVG path data at the frame's own proportions.
  *
  * Low contours come first so the ridges finish last in the stroke stagger —
  * the drawing fills in from the flats upward, which is how you would read it.
  */
-export function buildContours(levels: number, octaves: number): Contour[] {
-  const grid = buildHeightGrid(GRID_COLS, GRID_ROWS, octaves, SPAN_U, SPAN_V);
+export function buildContours(
+  levels: number,
+  octaves: number,
+  aspect: number = DEFAULT_ASPECT,
+): ContourMap {
+  const framed = Math.min(MAX_ASPECT, Math.max(MIN_ASPECT, aspect));
+  const cols = Math.round(framed * COLS_PER_ASPECT);
+  const spanU = framed * SPAN_V;
+  const width = Math.round(VIEWBOX_HEIGHT * framed);
+
+  const grid = buildHeightGrid(cols, GRID_ROWS, octaves, spanU, SPAN_V);
+
+  const sx = width / (cols - 1);
+  const sy = VIEWBOX_HEIGHT / (GRID_ROWS - 1);
 
   const contours: Contour[] = [];
 
@@ -76,13 +112,13 @@ export function buildContours(levels: number, octaves: number): Contour[] {
     // threshold would produce either nothing or one edge-hugging blob.
     const threshold = 0.16 + ((level + 1) / (levels + 1)) * 0.68;
 
-    for (const polyline of traceLevel(grid, threshold)) {
-      const d = toPathData(polyline);
+    for (const polyline of traceLevel(grid, threshold, cols, GRID_ROWS)) {
+      const d = toPathData(polyline, sx, sy);
       if (d) contours.push({ level, d });
     }
   }
 
-  return contours;
+  return { width, height: VIEWBOX_HEIGHT, contours };
 }
 
 /* -------------------------------------------------------------------------
@@ -95,15 +131,20 @@ function crossing(a: number, b: number, threshold: number): number {
   return span === 0 ? 0.5 : (threshold - a) / span;
 }
 
-function traceLevel(grid: Float32Array, threshold: number): number[][] {
+function traceLevel(
+  grid: Float32Array,
+  threshold: number,
+  cols: number,
+  rows: number,
+): number[][] {
   const segments: Segment[] = [];
 
-  for (let y = 0; y < GRID_ROWS - 1; y++) {
-    for (let x = 0; x < GRID_COLS - 1; x++) {
-      const tl = grid[y * GRID_COLS + x];
-      const tr = grid[y * GRID_COLS + x + 1];
-      const br = grid[(y + 1) * GRID_COLS + x + 1];
-      const bl = grid[(y + 1) * GRID_COLS + x];
+  for (let y = 0; y < rows - 1; y++) {
+    for (let x = 0; x < cols - 1; x++) {
+      const tl = grid[y * cols + x];
+      const tr = grid[y * cols + x + 1];
+      const br = grid[(y + 1) * cols + x + 1];
+      const bl = grid[(y + 1) * cols + x];
 
       let code = 0;
       if (tl > threshold) code |= 8;
@@ -218,11 +259,8 @@ function chain(segments: Segment[]): number[][] {
    Path data
    ------------------------------------------------------------------------- */
 
-function toPathData(points: number[]): string | null {
+function toPathData(points: number[], sx: number, sy: number): string | null {
   if (points.length < 6) return null;
-
-  const sx = VIEWBOX_WIDTH / (GRID_COLS - 1);
-  const sy = VIEWBOX_HEIGHT / (GRID_ROWS - 1);
 
   let length = 0;
   let d = "";

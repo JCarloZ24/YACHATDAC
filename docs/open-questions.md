@@ -147,7 +147,7 @@ each — not a re-argument, just a check that the change was intended.
 
 **From this project's own decisions**
 
-- **D5 — the draft PDFs govern copy.** The documents in `docs/content/drafts/`
+- **D5 — the draft documents govern copy.** The documents in `docs/content/drafts/`
   are the source of truth for page copy and content. They do **not** govern web
   design — the lo-fi and hi-fi wireframes do.
 - **D12 — homepage copy is CMS-editable.** Design, animation, motion and

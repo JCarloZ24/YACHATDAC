@@ -2,11 +2,11 @@
 
 import { useCallback, useState } from "react";
 import {
-  LabControls,
   MotionPreviewNotice,
   SegmentedControl,
   type SegmentedOption,
 } from "./LabChrome";
+import { LabControlPanel } from "./LabControlPanel";
 import { motionOptions } from "./labOptions";
 import { SkyClockSection } from "./SkyClockSection";
 import { SKY_PHASES } from "./skyPhases";
@@ -46,7 +46,7 @@ export function SkyClockLab() {
         forced={preview !== "system"}
       />
 
-      <LabControls>
+      <LabControlPanel>
         <SegmentedControl
           legend="Clock"
           options={MODE_OPTIONS}
@@ -65,7 +65,7 @@ export function SkyClockLab() {
             {SKY_PHASES[phase]?.label}
           </p>
         </div>
-      </LabControls>
+      </LabControlPanel>
 
       <SkyClockSection mode={mode} reduced={reduced} onPhase={onPhase} />
     </>

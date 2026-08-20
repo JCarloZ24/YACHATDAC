@@ -12,6 +12,11 @@ import { DETAIL_PRESETS, type DetailLevel } from "@/lib/terrain/generic-field";
  * rather than judged from a still. The canvas is sticky inside it, so the view
  * holds while the scroll drives the dolly — no pin, so nothing steals the
  * scrollbar and nothing needs unwinding under reduced motion.
+ *
+ * The canvas is the full viewport, and the camera's aspect is measured from it
+ * rather than fixed — so this is the frame and the framing the section would
+ * really have. The lab's controls float over it and can be hidden, so nothing
+ * in the flow crops the scene the way a sticky bar did.
  */
 
 const FALLBACK_REASONS: Record<string, string> = {
