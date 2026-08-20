@@ -39,6 +39,15 @@ export default function LabIndexPage() {
         be judged by scrolling rather than by description. Not linked from the
         site, not indexed.
       </p>
+      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-canvas/50">
+        Each one runs at the full viewport, at your screen&rsquo;s own aspect
+        ratio, so what you judge is the frame the behaviour would really have.
+        The settings float bottom right over the top of it and hide with{" "}
+        <kbd className="rounded-xs border border-canvas/30 px-1.5 py-0.5 text-[0.625rem] tracking-[0.12em]">
+          C
+        </kbd>
+        , so the frame can be seen clean.
+      </p>
 
       <ul className="mt-14 space-y-4">
         {PROTOTYPES.map((prototype) => (

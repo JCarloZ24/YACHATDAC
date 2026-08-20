@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import {
-  LabControls,
   MotionPreviewNotice,
   SegmentedControl,
   type SegmentedOption,
 } from "./LabChrome";
+import { LabControlPanel } from "./LabControlPanel";
 import { DETAIL_OPTIONS, motionOptions } from "./labOptions";
 import { TerrainDollySection } from "./TerrainDollySection";
 import { useMotionPreview } from "./useMotionPreview";
@@ -51,7 +51,7 @@ export function TerrainDollyLab() {
         forced={preview !== "system"}
       />
 
-      <LabControls>
+      <LabControlPanel>
         <SegmentedControl
           legend="Detail"
           options={DETAIL_OPTIONS}
@@ -70,7 +70,7 @@ export function TerrainDollyLab() {
           value={preview}
           onChange={setPreview}
         />
-      </LabControls>
+      </LabControlPanel>
 
       <TerrainDollySection
         detail={detail}

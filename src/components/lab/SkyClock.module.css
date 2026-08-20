@@ -76,11 +76,10 @@
   min-height: 100svh;
   display: flex;
   align-items: center;
-  /* Extra padding on top, not on both sides: with the content centred, the
-     asymmetry offsets it clear of the lab's sticky controls bar. Prototype
-     chrome should not sit on top of the thing being reviewed. On the real
-     homepage this is a plain symmetric 12vh. */
-  padding: calc(12vh + 9rem) 6vw 12vh;
+  /* Exactly what the real homepage gets. The lab's controls float and can be
+     hidden, so nothing is reserved for prototype chrome and each beat is
+     composed in the full viewport it will actually have. */
+  padding: 12vh 6vw;
 }
 
 .beatInner {

@@ -58,6 +58,43 @@ export default function SkyClockPage() {
           </p>
         </LabNote>
 
+        <LabNote title="Framing">
+          <p>
+            Each beat is a full viewport with the real page&rsquo;s symmetric
+            padding — nothing is reserved for prototype chrome, so the
+            composition you are judging is the composition the homepage gets.
+            The atmosphere behind it is fixed to the viewport, which is the
+            whole trick: the sky belongs to the screen and the copy scrolls
+            through it.
+          </p>
+        </LabNote>
+
+        <LabNote title="Measured in the full frame: the sun crosses the copy" tone="flag">
+          <p>
+            Sampling the composited background behind each headline at
+            1440&times;900, off-white copy measures <strong>2.45:1</strong> over
+            the sun on Truth, <strong>3.23:1</strong> on Belonging and{" "}
+            <strong>4.03:1</strong> on Living work. The floor is 4.5:1. Only
+            Wonder clears it, at 5.17:1.
+          </p>
+          <p>
+            This is not something the full-viewport framing introduced — at the
+            old framing the same three measured 2.59, 7.96 and 2.28, so it moved
+            the failure around rather than causing it. The sky layers are fine
+            and always were: every one of them carries off-white at 10:1 or
+            better. It is the sun disc that copy crosses, and at{" "}
+            <code className="text-ochre">sunScale</code> 0.9–1.4 the disc is
+            wider than the column the headline sits in.
+          </p>
+          <p>
+            Three ways out, all design calls rather than lab ones: move the sun
+            off the copy column per beat, shrink the disc, or accept that the
+            copy has to sit clear of it and compose each beat that way. Worth
+            settling before A2 is judged on look, because the fix changes the
+            look.
+          </p>
+        </LabNote>
+
         <LabNote title="Truth holds still">
           <p>
             The atmosphere stops entirely across the Truth beat and starts again

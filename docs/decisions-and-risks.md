@@ -77,7 +77,7 @@ R13–R15. Full read in `docs/content/STATUS.md`.
 | D2 | Does Connect survive as a nav item? | Proposed — held until Marc reviews the lo-fi | Marc |
 | D3 | FAQs: scope, ownership, CMS or static | **Final** (20 Aug) — CMS-managed. Author still unnamed | Marc, David |
 | D4 | Legal page naming and Cookie Policy | Proposed — **pending**, no source documents yet | David |
-| D5 | Draft PDFs are the source of truth for copy | **Final** | Marc, August |
+| D5 | Draft documents are the source of truth for copy | **Final** | Marc, August |
 | D6 | Keep or cut the Living Work failure section | **Superseded** by the v2 draft — cut | Marc, August |
 | D7 | Where fee-for-service land management lives | **Final** (20 Aug) — under Living Work, **done in v2** | Marc, August |
 | D8 | Backend build priority | Proposed — **not** covered on 20 Aug | David |
@@ -383,7 +383,7 @@ The reasoning as it stood when this was Final:
 
 ---
 
-## D5 — The draft PDFs are the source of truth for copy · **RESOLVED**
+## D5 — The draft documents are the source of truth for copy · **RESOLVED**
 
 - **Category** — Content
 - **Status** — **Final** · **Visibility** — Shared · **Owner** — Marc, with August
@@ -399,7 +399,7 @@ The reasoning as it stood when this was Final:
   for which won. Splitting it by artefact type — drafts own words, wireframes
   own design — means neither has to arbitrate the other.
 - **Done** — `src/content/homepage.ts` now matches
-  `YACHATDAC-Homepage-Copy-v1.pdf`, with one deliberate exception: the draft's
+  `YACHATDAC-Homepage-Copy-v2.md`, with one deliberate exception: the draft's
   Acknowledgement of Country names the Northern Territory and was **not**
   copied across. See risk R1.
 
@@ -668,7 +668,7 @@ permission is recorded, not when a design is drawn.
 - **The answer (20 Aug)** — **At least 55,000 years.** Homepage and Wonder were
   right; the Truth timeline is the outlier.
 - **Still to do**
-  1. The Truth timeline draft PDF carries the wrong figure and its own "dating
+  1. The Truth timeline draft carries the wrong figure and its own "dating
      under review" note. August is re-uploading it with the page content/copy
      — the corrected figure needs to be in that upload, and it needs to be
      right *before* the draft goes to Suzanne (R5), not after.
@@ -953,7 +953,7 @@ Added after the 20 Aug walkthrough:
 
 | Item | Action |
 | --- | --- |
-| ~~Update the Living Work PDF for fee-for-service~~ | **Done in v2** (D7). |
+| ~~Update the Living Work draft for fee-for-service~~ | **Done in v2** (D7). |
 | ~~Upload the authoritative page content/copy~~ | **Done** — v2 uploaded 20 Aug. It answered R2 the other way; see below. |
 | ~~Replace the 55,000 sentence in `src/content/homepage.ts`~~ | ✅ **Done 20 Aug.** Withdrawn claim replaced with the v2 wording, stale ⚠ comment gone. The v2 fragment is transcribed verbatim with the probable repair noted but not applied — the rewrite is August's, not the repo's. |
 | ~~Re-sync the Invitation card eyebrows~~ | ✅ **Done 20 Aug**, along with *Indigenous* → **Iningai** in card 2 and the capitalised **Ranger** in card 3. `tsc --noEmit` clean. |

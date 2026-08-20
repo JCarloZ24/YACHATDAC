@@ -20,9 +20,17 @@ export default function ContourMapPage() {
         <LabNote title="What you are looking at" tone="flag">
           <p>
             Same synthetic landform as E1, contoured with marching squares
-            instead of GDAL. The path data is in an arbitrary 1000&times;640
-            viewBox: not degrees, not metres, and not convertible to either.
-            Waypoints are positioned as percentages of that viewBox.
+            instead of GDAL. The path data is in an arbitrary viewBox: not
+            degrees, not metres, and not convertible to either. Waypoints are
+            positioned as percentages of that viewBox.
+          </p>
+          <p>
+            The map runs at the full viewport, and the contours are traced at
+            whatever proportions your screen has rather than drawn at a fixed
+            ratio and fitted into it. So a wider window shows a wider crop of
+            country at the same scale — more map, not a stretched map — and the
+            frame ratio it was generated at is named in the corner. Resize the
+            window and watch the caption follow.
           </p>
           <p>
             Waypoint names are placeholders, and stay placeholders. permissions.md

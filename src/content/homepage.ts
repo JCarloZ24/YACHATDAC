@@ -1,8 +1,8 @@
 /**
  * Homepage copy.
  *
- * Source of truth: docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v2.pdf
- * (decision D5). The draft PDFs govern page copy. They do NOT govern web
+ * Source of truth: docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v2.md
+ * (decision D5). The draft documents govern page copy. They do NOT govern web
  * design — that is the wireframes' job.
  *
  * Synced to v2 on 20 Aug 2026. What changed from v1: the Truth beat (see the
@@ -32,7 +32,7 @@ export type Beat = {
   /**
    * Art direction note for whoever selects the media. Not rendered.
    *
-   * ⚠ The image and gallery blocks in the draft PDFs are **placeholders** —
+   * ⚠ The image and gallery blocks in the draft documents are **placeholders** —
    * direction for what a shot should carry, not a specification of the final
    * asset. Nothing here names a file that exists. Treat every one as
    * swap-in-ready and do not build layout that depends on a specific crop.

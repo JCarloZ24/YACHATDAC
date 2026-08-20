@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import {
-  LabControls,
   MotionPreviewNotice,
   SegmentedControl,
 } from "./LabChrome";
+import { LabControlPanel } from "./LabControlPanel";
 import { DETAIL_OPTIONS, motionOptions } from "./labOptions";
 import { ContourMapSection } from "./ContourMapSection";
 import { useMotionPreview } from "./useMotionPreview";
@@ -22,7 +22,7 @@ export function ContourMapLab() {
         forced={preview !== "system"}
       />
 
-      <LabControls>
+      <LabControlPanel>
         <SegmentedControl
           legend="Detail"
           options={DETAIL_OPTIONS}
@@ -35,7 +35,7 @@ export function ContourMapLab() {
           value={preview}
           onChange={setPreview}
         />
-      </LabControls>
+      </LabControlPanel>
 
       <ContourMapSection detail={detail} reduced={reduced} />
     </>

@@ -4,10 +4,15 @@ import type { ReactNode } from "react";
 /**
  * Shared chrome for the /lab prototypes.
  *
- * These pages exist so Marc can judge D4 and E1 in a browser at real scroll
+ * These pages exist so Marc can judge A2, D4 and E1 in a browser at real scroll
  * speed, and so the open land-detail question can be answered by looking at
  * something rather than by describing it. They are not site pages: they are
  * noindex, they are not in the nav, and they carry their own explanation.
+ *
+ * Everything here is page furniture that sits *around* the prototype. Anything
+ * that would sit on top of it belongs in LabControlPanel, which floats and can
+ * be put away — each sketch is simulated at the full viewport, so chrome in the
+ * flow would change the frame the behaviour is being judged in.
  */
 
 export function LabHeader({
@@ -33,6 +38,15 @@ export function LabHeader({
       </p>
       <p className="mt-6 inline-block rounded-sm border border-ochre/40 bg-ochre/5 px-4 py-2 text-sm text-ochre">
         {status}
+      </p>
+      <p className="mt-6 max-w-2xl text-sm leading-relaxed text-canvas/50">
+        Scroll on. The sketch runs at the full viewport — the frame it would get
+        on the page, at your screen&rsquo;s own aspect ratio, with nothing
+        cropping it. Controls float bottom right and hide with{" "}
+        <kbd className="rounded-xs border border-canvas/30 px-1.5 py-0.5 text-[0.625rem] tracking-[0.12em]">
+          C
+        </kbd>
+        .
       </p>
     </header>
   );
@@ -107,7 +121,7 @@ export function SegmentedControl<T extends string>({
         })}
       </div>
       {options.find((option) => option.value === value)?.hint ? (
-        <p className="mt-2 max-w-md text-xs leading-relaxed text-canvas/55">
+        <p className="mt-2 text-xs leading-relaxed text-canvas/55">
           {options.find((option) => option.value === value)!.hint}
         </p>
       ) : null}
@@ -132,7 +146,7 @@ export function MotionPreviewNotice({
 }) {
   if (forced) {
     return (
-      <p className="mx-auto max-w-4xl px-6 pt-6 text-sm text-canvas/45 lg:px-16">
+      <p className="mx-auto max-w-4xl px-6 pb-10 text-sm text-canvas/45 lg:px-16">
         Motion branch is forced for preview. The site itself always follows the
         system preference.
       </p>
@@ -142,7 +156,7 @@ export function MotionPreviewNotice({
   if (!systemReduced) return null;
 
   return (
-    <div className="mx-auto max-w-4xl px-6 pt-6 lg:px-16">
+    <div className="mx-auto max-w-4xl px-6 pb-10 lg:px-16">
       <div className="rounded-sm border border-oxide/50 p-5">
         <h2 className="eyebrow text-oxide">
           Reduced motion is on — this is the cut version
@@ -155,22 +169,9 @@ export function MotionPreviewNotice({
         </p>
         <p className="mt-3 text-sm leading-relaxed text-canvas/70">
           To see the behaviour itself, set <strong>Motion</strong> to{" "}
-          <strong>Animated</strong> in the controls below. That switch exists on
-          this page only.
+          <strong>Animated</strong> in the floating controls at the bottom
+          right. That switch exists on this page only.
         </p>
-      </div>
-    </div>
-  );
-}
-
-/** Sticky control bar. Sticky so you can change detail without losing your place. */
-export function LabControls({ children }: { children: ReactNode }) {
-  return (
-    <div className="sticky top-0 z-20 border-y border-canvas/15 bg-charcoal/95 backdrop-blur">
-      {/* Compact: this bar is sticky over sections that fill the viewport, so
-          every row it costs is a row taken off the thing being reviewed. */}
-      <div className="mx-auto flex max-w-6xl flex-wrap items-start gap-x-10 gap-y-4 px-6 py-4 lg:px-10">
-        {children}
       </div>
     </div>
   );

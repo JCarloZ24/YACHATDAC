@@ -44,6 +44,16 @@ export default function TerrainDollyPage() {
           </p>
         </LabNote>
 
+        <LabNote title="Framing">
+          <p>
+            The canvas is the full viewport and the camera&rsquo;s aspect is
+            measured from it, so a wide screen sees wider country rather than a
+            squashed version of a fixed frame. Nothing sits in the flow above
+            it any more, which matters here: the horizon line is the thing being
+            judged, and it was previously nine rems lower than it will be.
+          </p>
+        </LabNote>
+
         <LabNote title="Why wireframe">
           <p>
             Wireframe reads as survey data, which is what it is. A textured

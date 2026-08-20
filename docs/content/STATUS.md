@@ -13,16 +13,16 @@ it decides who has to sign off.
 
 | Document | Page | State | Circle | Blocked on |
 | --- | --- | --- | --- | --- |
-| `YACHATDAC-Homepage-Copy-v2.pdf` | Homepage | 📥 **v2** uploaded | open | Acknowledgement **still** names the wrong jurisdiction — note 1 |
-| `YACHATDAC-Wonder-Copy-v2.pdf` | Wonder | 📥 **v2** uploaded | open | Inclusions and cost unwritten — note 7 |
-| `YACHATDAC-LivingWork-Copy-v2.pdf` | Living Work | 📥 **v2** uploaded | shared with care | Rainbow Credits unwritten; status labels unconfirmed — note 8 |
-| `YACHATDAC-Truth-Copy-v2.pdf` | Truth | 📥 **v2** uploaded | **held by community** | **Suzanne Thompson's approval — stated on the document itself.** She now has *two* questions to answer, not one — note 5 |
+| `YACHATDAC-Homepage-Copy-v2.md` | Homepage | 📥 **v2** uploaded | open | Acknowledgement **still** names the wrong jurisdiction — note 1 |
+| `YACHATDAC-Wonder-Copy-v2.md` | Wonder | 📥 **v2** uploaded | open | Inclusions and cost unwritten — note 7 |
+| `YACHATDAC-LivingWork-Copy-v2.md` | Living Work | 📥 **v2** uploaded | shared with care | Rainbow Credits unwritten; status labels unconfirmed — note 8 |
+| `YACHATDAC-Truth-Copy-v2.md` | Truth | 📥 **v2** uploaded | **held by community** | **Suzanne Thompson's approval — stated on the document itself.** She now has *two* questions to answer, not one — note 5 |
 | `YACHATDAC-Sitemap-v1.png` | Site-wide | 📥 draft uploaded | open | Partly overtaken by D1 and D3 — note 6 |
 
 **v2 uploaded 20 Aug 2026**, replacing the v1 set from 19 Aug. The v1 files are
 deleted rather than kept alongside — git history holds them. Note the Truth
 document is also **renamed**: `YACHATDAC-Truth-Timeline-v1.pdf` →
-`YACHATDAC-Truth-Copy-v2.pdf`.
+`YACHATDAC-Truth-Copy-v2.md`.
 
 Nothing here is approved; nothing here has been built from. Per D5 these
 documents govern **copy**, so where the repo disagrees with them, the repo is
