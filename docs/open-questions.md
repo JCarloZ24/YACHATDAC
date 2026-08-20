@@ -1,5 +1,7 @@
 # Open questions & blockers
 
+*Last updated: 20 August 2026*
+
 Live list. Resolve upward — anything marked **blocking** stops real work.
 Cross-referenced to section 17 of the build documentation.
 

@@ -1,5 +1,7 @@
 # Content
 
+*Last updated: 19 August 2026*
+
 Page copy, sitemaps and IA documents — **upload here**.
 
 Nothing in this folder is live. It is where written content sits while it moves

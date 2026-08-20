@@ -1,5 +1,7 @@
 # Brand implementation notes
 
+*Last updated: 19 August 2026*
+
 How the approved brand identity is wired into this codebase. The client's
 "Artwork Creative Brief" is the source of truth; this file records where each
 piece lives in code. Colour, typography and logo have all been approved by the

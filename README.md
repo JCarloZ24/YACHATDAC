@@ -1,5 +1,7 @@
 # YACHATDAC website
 
+*Last updated: 19 August 2026*
+
 Website for **YACHATDAC** — Yambangku Aboriginal Cultural Heritage & Tourism
 Development Aboriginal Corporation, on Iningai Country, Barcaldine QLD.
 
