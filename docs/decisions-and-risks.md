@@ -1,5 +1,7 @@
 # Decisions, Risks & Issues — paste-ready
 
+*Last updated: 20 August 2026*
+
 Everything here is written to be **copied straight into Proyekto**:
 
 - **Decisions** → Management → Decisions → *Record a decision*

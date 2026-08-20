@@ -1,5 +1,7 @@
 # Content status board
 
+*Last updated: 19 August 2026*
+
 One row per document. Update it in the same commit that moves a file between
 folders.
 
