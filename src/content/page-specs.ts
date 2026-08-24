@@ -8,6 +8,23 @@
  *
  * Unlike the homepage, these pages combine authored editorial content with CMS
  * collections (§8).
+ *
+ * ⚠ STALE AGAINST THE v3 DRAFTS (24 Aug 2026). Under D5 the drafts in
+ * docs/content/drafts/ govern copy and content, and this file has not been
+ * reconciled with them. Known drift:
+ *
+ *   - Truth is a reverse chronology (ahead → today → 2022 → 2026 → 2003 →
+ *     1950s → the seam → 1840s → the engraving → 100 million years ago), not
+ *     the section stack below.
+ *   - Wonder's "2 Night, 3 Day Guesting on Country experience" no longer
+ *     exists. v3 runs stages, not an itinerary: "We do not run a set itinerary,
+ *     because the work does not." The itinerary-validation note below is moot.
+ *   - Resources is titled "The Record" in every v3 page.
+ *   - About and Our People now have drafts and no spec here at all. They are
+ *     filed under drafts/connect/, which is a filing choice, not an answer
+ *     to D2.
+ *
+ * See docs/content/STATUS.md notes 5, 7, 11 and 13.
  */
 
 import type { PillarId } from "./site";

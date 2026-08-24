@@ -1,13 +1,39 @@
 /**
  * Homepage copy.
  *
- * Source of truth: docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v2.md
+ * Source of truth: docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v3.md
  * (decision D5). The draft documents govern page copy. They do NOT govern web
  * design — that is the wireframes' job.
  *
  * Synced to v2 on 20 Aug 2026. What changed from v1: the Truth beat (see the
  * note on that beat — the 55,000-year claim is withdrawn), and the Invitation
  * card eyebrows. Every other beat came through v2 unchanged.
+ *
+ * ⚠ STALE AGAINST v3 (24 Aug 2026). The drafts moved to v3 and this file has
+ * NOT been re-synced. v3 arrived as an HTML prototype, converted to Markdown at
+ * the path above. What it changes here:
+ *
+ *   - SIX beats, not seven. The standalone `living-work` beat is gone; it
+ *     survives only as an Invitation card.
+ *   - The `truth` beat is replaced outright — no "What's etched in stone
+ *     doesn't forget", no wasp-nest sentence. In its place, a scroll-driven
+ *     sequence: Iningai Nation → 1861 → 1862 → 1886 → 1902, closing on the
+ *     thirty-seven at Lake Dolly. That retires the sentence fragment recorded
+ *     below, and the comment explaining it.
+ *   - `belonging` is rewritten into first person plural, naming Polly and
+ *     Billy: "Some of us never left. Others are still coming back."
+ *   - Invitation card eyebrows and all three descriptions are rewritten. Card 2
+ *     is now "The record of this Country", not "Legacy, Research & Discovery".
+ *   - `wayForward` gains four pathways (Come on Country / Research with us /
+ *     Ranger exchange / Read the record) and a rewritten body.
+ *   - The footer acknowledgement is rewritten and no longer names the Northern
+ *     Territory — but it is still a drafter's placeholder marked for Suzanne.
+ *     See `welcomeToCountry` below; do NOT fill it from v3.
+ *
+ * This is deliberately not a drive-by sync. It changes the section count and
+ * replaces the page's most sensitive beat, so it wants to be its own change
+ * with the beat-count question settled first. See docs/content/STATUS.md note
+ * 11 and the "What v3 changed" table.
  *
  * ⚠ This file is NOT the long-term home for this text. Homepage copy will be
  * editable in the CMS (decision D12, superseding the earlier position that it
@@ -208,6 +234,15 @@ export const wayForward = {
  * Northern Territory included, through two rounds of drafting. This placeholder
  * therefore stays exactly as it is — it is the only thing stopping that
  * sentence reaching a page.
+ *
+ * ✅ FIXED IN v3 (24 Aug), and this placeholder still stays. The Northern
+ * Territory paragraph is gone; v3 reads "Turraburra is Iningai Country. We are
+ * its Traditional Custodians, and we are still here." It also gets the
+ * distinction right — that is a statement of custodianship and welcome, not an
+ * Acknowledgement, which is what a visitor makes on Country not their own. But
+ * v3 marks its own paragraph "[ DRAFT for Suzanne to correct or replace ]", so
+ * it is a drafter's words, not hers. Copying it in would swap one placeholder
+ * for another and make it look approved. R1 is downgraded, not closed.
  *
  * Note v2 also names homepage section 1 "Welcome to Country". That is a section
  * heading, not this paragraph. Do not conflate them when the real wording lands.
