@@ -1,6 +1,6 @@
 # Decisions, Risks & Issues — paste-ready
 
-*Last updated: 20 August 2026*
+*Last updated: 24 August 2026*
 
 Everything here is written to be **copied straight into Proyekto**:
 
@@ -69,6 +69,26 @@ and Truth. Per D5 these documents govern copy, so they move three items on this
 board — **R2 is reversed**, **D6 is superseded**, **D7 is satisfied** — and add
 R13–R15. Full read in `docs/content/STATUS.md`.
 
+**v3 copy uploaded (24 Aug), as coded HTML prototypes:** the same four pages
+plus **Resources, About and Our People**. Converted to Markdown and filed under
+`docs/content/drafts/`; the prototypes themselves stay in the Drive export. What
+it moves on this board:
+
+- **R1 downgrades from High to Medium** — the Northern Territory acknowledgement
+  is gone. What is left is a placeholder awaiting Suzanne's words.
+- **R13's cost half closes** — Wonder now states plainly that there is no
+  published pricing and every stay is arranged with the guest. Inclusions are
+  written but still unconfirmed.
+- **D5 gains a clause** — a prototype's *design* is a suggestion to the
+  wireframes, not a decision. Its *words* still govern copy.
+- **D2 gains evidence, again** — a real header nav with no Connect in it, plus
+  three routes (`/about`, `/our-people`, `/partnerships`) that exist nowhere in
+  the IA.
+- **R14 and R15 unchanged** — the Rainbow Credits card, the regulatory status
+  labels and the ORIC spelling are all still open, now for a third round.
+
+Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
+
 ## Index
 
 | | Decision | Status | Owner |
@@ -128,6 +148,16 @@ Part 2 with their reasoning intact.
   where it is absent from the nav. D5 gives drafts authority over copy, not IA,
   so take this to the lo-fi review as input rather than treating the nav line as
   a decision.
+- **More of the same from v3 (24 Aug)** — the homepage prototype now has a
+  working header nav: **Wonder / Truth / Living Work / The Record / About**,
+  with *Get in touch* as a button rather than a nav item. Connect is linked from
+  five places and is in none of them. Two independent drafting rounds have now
+  landed on the same shape, which is worth weighing — but it is still copy
+  evidence, not IA. v3 also links `/about`, `/our-people` and `/partnerships`,
+  none of which exist in `src/content/site.ts` or the sitemap, so whatever D2
+  decides has to account for **Our People** as well as About and Contact.
+  Separately, every v3 page labels the hub **The Record** where the repo says
+  **Resources** — same route, different word, and D1 settled on *Resources*.
 - **The decision** — Whether **Connect** remains in the navigation now that
   **About** and **Contact** have been lifted out of it to top level.
 - **Context** — Connect was the utility hub holding About YACHATDAC, the team,
@@ -398,10 +428,22 @@ The reasoning as it stood when this was Final:
 - **Why** — Two versions of the homepage copy were in circulation with no rule
   for which won. Splitting it by artefact type — drafts own words, wireframes
   own design — means neither has to arbitrate the other.
-- **Done** — `src/content/homepage.ts` now matches
-  `YACHATDAC-Homepage-Copy-v2.md`, with one deliberate exception: the draft's
-  Acknowledgement of Country names the Northern Territory and was **not**
-  copied across. See risk R1.
+- **Done** — `src/content/homepage.ts` was matched to
+  `YACHATDAC-Homepage-Copy-v2.md` on 20 Aug, with one deliberate exception: the
+  draft's Acknowledgement of Country named the Northern Territory and was
+  **not** copied across. See risk R1.
+- **Now stale (24 Aug)** — the drafts moved to **v3**
+  (`docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v3.md`), which changes
+  the homepage from seven beats to six and replaces the Truth beat outright.
+  The file has **not** been re-synced; that is its own change, not a wording
+  refresh. See `docs/content/STATUS.md` note 11.
+- **Applies to converted prototypes too (24 Aug)** — the v3 drafts arrived as
+  coded HTML pages. D5 still splits them the same way: the **words** in the
+  prototype govern copy, the **layout, styling, scroll behaviour and
+  interaction** in it do not. A prototype that implies a design is a suggestion
+  to the wireframes, not an instruction. This matters more with a prototype
+  than with a document, because the design is executed rather than described
+  and reads as settled when it is not.
 
 ---
 
@@ -616,6 +658,17 @@ permission is recorded, not when a design is drawn.
 - **Practical order** — Steve first, on the jurisdiction, which is the error
   that must not ship. Suzanne second, on the words themselves, as part of the
   same conversation as R5.
+- **Downgrade to Medium (24 Aug)** — the v3 homepage draft **drops the Northern
+  Territory paragraph**. The footer now reads *"Turraburra is Iningai Country.
+  We are its Traditional Custodians, and we are still here,"* and marks itself
+  *"[ DRAFT for Suzanne to correct or replace ]"*, adding that it is written as
+  a statement of custodianship and welcome, **not** an Acknowledgement — an
+  acknowledgement being something visitors make on Country that is not their
+  own. That distinction is correct and is what open decision 3 was circling.
+  The jurisdiction error is gone; what remains is a placeholder awaiting
+  Suzanne's words, which is the ordinary risk, not the severe one. Steve's
+  review is no longer blocking. Re-title this issue accordingly when it is
+  copied into Proyekto.
 
 ---
 
@@ -872,6 +925,17 @@ permission is recorded, not when a design is drawn.
 - **Note** — "No fixed dates, no pricing on this page" is already the draft's
   stated approach, which is consistent with the settled no-booking-flow
   position. Saying *why* there is no price is the part still missing.
+- **Half resolved in v3 (24 Aug) — downgrade to Medium.** Cost is answered, in
+  the draft's own words: *"No fixed dates and no pricing on this page — every
+  stay is arranged with you."* That is the second option this risk offered,
+  stated plainly, and it says why. **Inclusions are not answered**: the section
+  is now written out — Meals, Guiding, Camping, Transfers, with Suzanne, Graham
+  Ambridge and the Iningai Rangers named as hosts — but still carries *"NEEDS
+  CONFIRMATION — every line above needs Suzanne or Steve to confirm before
+  publishing."* Two lines are placeholders in substance too: *"What we provide
+  and what you bring"* does not say what is provided, and transfers are
+  *"available … for an extra cost"* with no cost. Re-scope this risk to
+  inclusions only.
 
 ---
 
