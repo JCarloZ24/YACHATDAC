@@ -14,8 +14,10 @@ docs/content/
 │   ├── wonder/
 │   ├── truth/
 │   ├── living-work/
+│   ├── about/
 │   ├── connect/
 │   └── resources/
+│       └── assets/   images pulled out of a markdown draft
 ├── in-review/       with the client / Elder Advisory Group
 ├── approved/        signed off, safe to build from
 └── sitemap/         sitemaps, IA diagrams, navigation trees
@@ -28,6 +30,14 @@ has been signed off.
 
 Any format is fine: `.docx`, `.pdf`, `.md`, image exports. Markdown is easiest
 to diff, so prefer it where the source allows.
+
+A Google Docs export inlines every image as base64 on one enormous line, which
+defeats the point of choosing markdown. Split those out into an `assets/` folder
+beside the draft and rewrite the link definitions to relative paths, leaving the
+prose untouched — see the About and The Record drafts for the shape. Check the
+weight of what comes out: a photograph exported as PNG is roughly ten times the
+size it needs to be, and a repository is much easier to keep light than to make
+light again.
 
 ## Naming
 

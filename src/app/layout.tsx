@@ -33,7 +33,7 @@ export default function RootLayout({
         />
         <link
           rel="preload"
-          href="/fonts/BantayogSans-Bold.woff2"
+          href="/fonts/BantayogSans-ExtraBold.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"

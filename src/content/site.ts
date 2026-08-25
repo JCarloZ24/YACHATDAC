@@ -119,6 +119,36 @@ export const resourcesHub = {
 } as const;
 
 /**
+ * Resources column as it appears in the footer, per build documentation §2.
+ *
+ * Kept separate from `resourcesHub.contentTypes`: those are the filter facets
+ * on the hub page, these are navigation links. Marc's hi-fi footer listed
+ * "Downloads" twice here and omitted nothing else; the duplicate was a
+ * copy-paste, not a decision.
+ */
+export const resourcesFooterLinks: NavChild[] = [
+  { title: "Stories", href: "/resources?type=story", stub: true },
+  { title: "News / Updates", href: "/resources?type=update", stub: true },
+  { title: "Downloads", href: "/resources?type=download", stub: true },
+  { title: "Videos / Podcast", href: "/resources?type=video", stub: true },
+];
+
+/**
+ * Legal row, from Homepage copy line 53.
+ *
+ * ⚠ Decision D4 is open on naming and on the missing cookie route: the repo
+ * has /legal/terms labelled "Terms of Use", the copy draft says "Terms of
+ * Service", and the uploaded sitemap says "Terms & Conditions" plus a "Cookie
+ * Policy". The copy draft governs copy (D5), so its labels are used here —
+ * but the cookie route does not exist yet, hence the stub.
+ */
+export const legalLinks: NavChild[] = [
+  { title: "Privacy Policy", href: "/legal/privacy" },
+  { title: "Terms of Service", href: "/legal/terms" },
+  { title: "Cookie Settings", href: "/legal/cookies", stub: true },
+];
+
+/**
  * Deliberately out of scope this phase (§2). Listed so nobody re-adds them by
  * accident, and so reviewers can see the omissions are decisions, not gaps.
  */

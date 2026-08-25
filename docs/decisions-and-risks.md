@@ -51,6 +51,13 @@ person is accountable in Proyekto.
 | D10 | Copy ownership per page | Proposed | Marc, August |
 | D11 | Hosting and database accounts | Proposed | David |
 | D12 | Homepage copy is CMS-editable | **Final** | August |
+| D13 | Living Work's closing CTA: newsletter, or the draft's two endings | Proposed | Marc, Ivy |
+| D14 | What follows the Truth descent | Proposed | Marc, Ivy |
+| D15 | The Record's taxonomy: two facet axes | Proposed | Marc, David |
+| D16 | Does `/partnerships` exist as a destination? | Proposed | Marc, August |
+| D17 | Is `/our-people` a route? | Proposed | Marc |
+| D18 | Persistent homepage navbar, or no nav until block 6? | Proposed | Marc, Ivy |
+| D19 | Where the empty state's "ask us what exists" goes | Proposed | Marc |
 | F1 | Homepage copy lives in the repo | **Superseded** by D12 | August |
 | F2 | Homepage thread is a plain vertical rule | **On hold** | August, Ivy, JC |
 | F3 | Homepage Truth beat is typographic | **On hold** | August, Ivy |
@@ -58,15 +65,24 @@ person is accountable in Proyekto.
 | F5 | Only Work Sans is tracked in git | **Final** | August |
 | F6 | Local dev runs on port 3001 | **Final** | August |
 
-Risks and issues are in Part 4: R1–R12.
+Risks and issues are in Part 4: R1–R15.
 
 ---
 
 # Part 1 — Decisions still open
 
-Ten open. Record each as **Proposed**; when it is answered, change the status to
-**Final** and write the answer into *The decision* rather than starting a new
+Seventeen open. Record each as **Proposed**; when it is answered, change the status
+to **Final** and write the answer into *The decision* rather than starting a new
 entry — the point is that the reasoning stays attached to the outcome.
+
+**D13 now has its write-up.** It was claimed by a note on the Living Work lo-fi
+frame (Figma node `13:100`) and carried for a while as a number with no entry.
+That is exactly how decisions get lost, so it is written up below.
+
+**D18 came out of a readout file, not a decision log.** It had been sitting in
+`docs/design/hifi-figma-readout.md` §2 marked *"unresolved, and a genuine design
+decision rather than an error. Flagged for the team"* — flagged, but never given
+an ID or an owner, and it changes the header on every page.
 
 ---
 
@@ -238,6 +254,208 @@ entry — the point is that the reasoning stays attached to the outcome.
 - **Context** — Raised at the briefing and noted without detail.
 - **Why it matters** — Handover to the client at the end of the project is far
   simpler if the services were never tied to a personal account.
+
+---
+
+## D14 — What follows the Truth descent
+
+- **Category** — Information architecture / content
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with Ivy
+- **The decision** — Whether the five structured blocks below the Truth timeline
+  — *The browsable record · What's been researched · Open research opportunities
+  · Partnership opportunities · Partner with us* — stay on that page, move to
+  Resources / The Record, or are replaced by something shorter.
+- **Context** — Four things now point the same way.
+
+  1. **The copy was never commissioned.** `src/content/truth.ts` has said so on
+     its own face since it was written: *"NO SOURCE COPY EXISTS. The copy
+     document ends at the Wattanuri entry, so roughly a fifth of this page is
+     uncommissioned … Retaining it is a decision."*
+  2. **The sitemap already dropped half of it.** STATUS.md note 6: the uploaded
+     sitemap gives Truth only Open Research Opportunities. Partnership
+     opportunities is gone.
+  3. **The Record draft (21 Aug) writes real copy for the same content, on
+     Resources.** *Everything in the record* is the browsable record, with a
+     filter bar and twelve written entries. *What we do not know* is the research
+     opportunities section, with four written gaps — and its CTA points at
+     `/partnerships/#research-opportunities`, routing them off Truth entirely.
+  4. **It reads badly, which is what the 21 Aug lo-fi walkthrough caught.** The
+     Truth lo-fi frame is 14,205px. The descent's last entry is Wattanuri,
+     closing on *"Lore is not a date. It is the floor everything above has been
+     resting on the whole way down."* Roughly 313vh of card grids and a form then
+     follow it. The layout puts four filterable grids underneath the floor the
+     copy has just declared.
+
+- **Why it matters** — This is a fifth of the longest page on the site, and it is
+  the page's ending. It also moves the navigation: `src/content/site.ts` currently
+  lists `/truth#researched` and `/truth#opportunities` as Truth's nav children, so
+  answering this retargets two primary nav items. And it decides whether David
+  models this content once or twice.
+- **The constraint that does not move** — **`#partner` stays on Truth.** The About
+  draft's own contact router sends *"Research or partnership — universities,
+  funders, brands"* to `/truth#partner`, and Living Work links the same anchor.
+  The enquiry form is Truth's job; the browsable archive is not.
+- **Options considered**
+  1. **Recommended — one closing band, roughly 120vh instead of 313vh.** After
+     Wattanuri: a quiet outbound line to The Record (one line, not a grid), two
+     or three *named* open opportunities as a compact list, and the `#partner`
+     enquiry form. Then the footer. The descent ends where its copy says it ends,
+     and nothing is duplicated across two pages.
+  2. **Keep the tail, commission the copy.** Honest, but it means writing a fifth
+     of the page from scratch against a 14 September launch, and maintaining two
+     browse interfaces over one collection — which is D1's problem again.
+  3. **Cut everything including `#partner`.** Cleanest page, but it strands two
+     inbound links and removes the site's only research-enquiry route.
+- **Drawn, not built** — the proposed version is wireframed as
+  `Truth — v2 PROPOSED` on the lo-fi canvas, below the reviewed row. The signed-off
+  frame above it is untouched. No `src/` change until this is Final.
+
+---
+
+## D15 — The Record's taxonomy: two facet axes, and what happens to Event
+
+- **Category** — Content model
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with David
+- **The decision** — Whether the Resources collection is filtered on one axis or
+  two, and whether `Event`, `Activity` and `Update` survive as content types.
+- **Context** — `resourcesHub.contentTypes` in `src/content/site.ts` is one flat
+  list: History · Research · Publication · Event · Activity · Story · Update. The
+  Record draft uses a different type list — Stories · Historical accounts ·
+  Research · Documentation · Recordings — **plus a source axis that does not exist
+  in the code at all**: Iningai knowledge · Colonial record · Published research.
+- **Why it matters** — Two things, of different sizes.
+
+  The small one: `Event` is dropped, which collides with the settled position
+  *"no separate Events page; Event is a content type inside Resources."* If Event
+  goes, events have nowhere to live.
+
+  The large one: the source axis is an epistemology, not a format. *Who says so* —
+  the community, the coloniser, or the journal — is the exact distinction the
+  whole Truth page is built on, and offering it as a filter over the record is a
+  stronger idea than the flat type list currently modelled. It is also a second
+  required field on every entry and a second filter control in the UI, so it is
+  David's content model and Ivy's layout, not a copy tweak.
+- **Options considered**
+  1. Adopt both axes as drafted, and re-add Event/Activity/Update to the type list.
+  2. Adopt both axes exactly as drafted, and find another home for events.
+  3. Keep one axis and express source as ordinary tags — cheapest, and loses the
+     idea that makes the record worth browsing.
+
+---
+
+## D16 — Does `/partnerships` exist as a destination?
+
+- **Category** — Information architecture
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc and August
+- **The decision** — Whether to create a partnerships page, or keep research and
+  partnership opportunities where build documentation §4 puts them, on Truth.
+- **Context** — The Record draft's *What we do not know* section links
+  `/partnerships/#research-opportunities`. No such route exists in
+  `src/content/site.ts` or in the build documentation. It is the first appearance
+  of a partnerships destination anywhere in the project.
+- **Why it matters** — It is the same question as **D14** seen from the other
+  end, and the two should be answered together rather than separately. It also
+  bears on **D7** — fee-for-service land management has no home in the sitemap
+  and its audience is landholders, which is closer to a partnerships page than to
+  any of the three pillars.
+
+---
+
+## D17 — Is `/our-people` a route?
+
+- **Category** — Information architecture
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc
+- **The decision** — Whether the About draft's *"Meet the people →"* link
+  (`/our-people`) is a new combined page, or Connect's existing team and Suzanne
+  sections under a new name.
+- **Context** — Build documentation §4 has *The YACHATDAC Team* and *About
+  Suzanne Thompson* as two separate items under Connect. The About draft names
+  Suzanne, the Iningai Rangers and the families in one paragraph and sends the
+  reader to a single destination.
+- **Why it matters** — Small on its own, but it is the third item pulling
+  material out of Connect, after About and Contact. Answer it alongside **D2**
+  rather than on its own; if Connect ends up holding only the team, that is the
+  answer to both.
+
+---
+
+## D13 — Living Work's closing CTA
+
+- **Category** — Content / conversion
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with Ivy
+- **The decision** — Whether Living Work ends on the build specification's
+  **newsletter signup**, or on the two closing blocks the copy draft actually
+  ends with — **"Talk to us →"** and **"Come on Country →"**.
+- **Context** — The build specification names newsletter signup as this page's
+  confirmed CTA. The copy draft ends somewhere else entirely, on a section headed
+  *"Come and see it, or ask us."* — *"Communities working through the same
+  questions are welcome here. It is easier to show than to write down, and most
+  of what matters is not on this page."* The lo-fi is built to the draft, with the
+  divergence flagged rather than silently resolved.
+- **Why it matters** — This pillar's audience is other Indigenous communities, and
+  the draft's two endings offer them a conversation. A newsletter signup offers
+  them a mailing list. Those are different propositions, and the page's whole tone
+  is peer-to-peer rather than broadcast.
+- **Options considered**
+  1. **Recommended — keep the draft's two endings primary**, and let the
+     newsletter live in the footer band, which every page already carries.
+  2. Newsletter as the page CTA, per the build specification, with the two
+     endings demoted or cut.
+  3. Both, stacked — most likely outcome is that neither gets used.
+- **Note** — Do **not** refer to this as "D3" in motion or design panels. D3 is
+  the FAQs decision, and it is also a Tier 1 sketch ID (depth-map parallax), which
+  is dangerously ambiguous in any panel that lists sketch IDs alongside decisions.
+
+---
+
+## D18 — Persistent homepage navbar, or no navigation until block 6?
+
+- **Category** — Information architecture / design
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with Ivy
+- **The decision** — Whether the homepage carries a persistent navigation bar from
+  the first screen, or no navigation at all until block 6, *The Invitation*.
+- **Context** — Three sources disagree.
+
+  | Source | Says |
+  | --- | --- |
+  | Homepage copy draft | No navigation until block 6. Blocks 1–5 are pure immersion, and the three invitation cards are the first navigation choice offered. |
+  | Marc's hi-fi | A `Navbar / 1 /` frame at `y=0`, above the hero, carrying WONDER · TRUTH · LIVING WORK · CONNECT. |
+  | Uploaded sitemap | A persistent navbar. |
+
+  The lo-fi is built to the copy draft, with a note on the frame saying so. The
+  divergence was recorded in `docs/design/hifi-figma-readout.md` §2 on 20 Aug as
+  *"unresolved, and a genuine design decision rather than an error"* — but it was
+  never given an ID, an owner or a place in this file.
+- **Why it matters** — It changes the header on **every page**, not just the
+  homepage, so it touches all seven wireframes and the shared component that
+  carries it. It is also a real argument rather than an oversight: the draft's
+  position is that withholding navigation for five blocks *is* the homepage's
+  argument. Overriding that should be a decision someone made, not a default that
+  arrives with a component library.
+- **Options considered**
+  1. No nav until block 6, per the copy draft — strongest version of the page's
+     own argument; unconventional, and some visitors will scroll looking for a menu.
+  2. Persistent navbar from `y=0`, per the hi-fi and the sitemap — conventional and
+     safe; costs the immersion the first five blocks are built for.
+  3. Navbar that appears on scroll, after block 5 — keeps the argument and gives
+     the reader a way out. Not in any source document; would need drawing.
+
+---
+
+## D19 — Where the empty state's "ask us what exists" goes
+
+- **Category** — Information architecture / content
+- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc
+- **The decision** — What the offer in The Record's empty state actually links to.
+- **Context** — The Record draft writes its own empty state, which is unusual:
+  *"Nothing here yet under that. Try another subject, or ask us what exists."*
+  The second half is a genuine offer, and it currently has no destination.
+- **Why it matters** — Small, but it is the only empty state on the site that
+  invites a conversation instead of apologising, and it fits the page's own
+  argument that the record is incomplete. Left unanswered it will ship as
+  unlinked text, which turns a good line into a dead one. Candidates are the
+  general contact form on Connect and the *"Do you hold something?"* block further
+  down the same page.
 
 ---
 
@@ -568,6 +786,70 @@ permission is recorded, not when a design is drawn.
   callout face has a reserved slot; neither blocks the build.
 - **Next step** — Supply when convenient. Do **not** recreate the logo in code
   in the meantime.
+
+---
+
+## R13 · ISSUE · Medium — The organisation's own legal name is unconfirmed and hardcoded sitewide
+
+- **Owner** — Marc and August → Suzanne Thompson
+- **What is happening** — The About draft flags on its own face that the logo and
+  the published research disagree on the spelling: *"Confirm spelling: Yambangku
+  or Yumbangku."* `src/content/site.ts` asserts **Yambangku** in `org.legalName`,
+  and that string renders in the footer and in page metadata on **every route**.
+  ICN and ABN are both still blank in the draft.
+- **Impact** — Getting an organisation's registered name wrong across an entire
+  site is a small error with a bad shape here: this is a client whose own argument
+  is that they were recorded wrongly by other people. It would be quoted back.
+- **Next step** — Confirm against the ORIC register, which is authoritative and
+  public, rather than against the logo. Collect ICN and ABN in the same ask.
+- **Current mitigation** — None. The name is a plain constant today, and reads as
+  settled to anyone who opens the file. Worth marking as unconfirmed in the code
+  once someone is chasing it.
+
+---
+
+## R14 · RISK · Medium — Ngapartji-Ngapartji is Western Desert language, not Iningai
+
+- **Owner** — Marc and August → Suzanne Thompson
+- **What could go wrong** — The client's Ten-Year Strategic Plan frames
+  reciprocity as the *Ngapartji-Ngapartji* principle. The About draft flags that
+  this is Western Desert language and asks for it to be confirmed.
+  `src/content/truth.ts` currently *recommends* framing the Truth enquiry form
+  with it.
+- **Impact** — Truth's entire argument is that the record was got wrong about
+  these people by outsiders who used the wrong names. Framing that page's
+  reciprocity ask in another nation's language is the specific error the page
+  indicts, and researchers are the audience most likely to notice.
+- **Next step** — Ask Suzanne. The client's own plan uses the term, so this is a
+  question, not a correction to make unilaterally — there may be a deliberate
+  reason, or an Iningai word that belongs there instead.
+- **Current mitigation** — It is a spec note in `truth.ts`, not rendered copy. The
+  cost of settling it is zero until the enquiry form is written.
+
+---
+
+## R15 · ISSUE · Low — Four copy details are unanswered and unowned
+
+- **Owner** — Marc and August → the copy owner (which is **D10**, still open)
+- **What is happening** — Four small questions are marked on the wireframes and
+  belong to nobody:
+
+  | # | Detail | Where |
+  | --- | --- | --- |
+  | 1 | Turraburra has no reliable mobile coverage. If a phone number is published, which hours is it answered? | About, *Get in touch* |
+  | 2 | The "on request" gate has no stated response time and no contact point. | The Record, *Items marked on request* |
+  | 3 | Five-Year Review shows `2031` as both its meta line and its status pill — the export collapsed two fields into `20312031`. Every other row is `<meta>` + `<status>`, so the status probably wants to read *Committed*. | The Record, *Documents and reports* |
+  | 4 | The Cultural Knowledge Precinct is tagged **Written record** in the copy draft, but it is a building that does not exist yet — *"master planning is underway"*. An evidence tag on a future facility reads as a PDF-extraction artefact. | Truth, *Ahead* |
+
+- **Impact** — Individually trivial. Together they are the reason **D10** matters:
+  four questions that any copy owner could answer in ten minutes have been sitting
+  on wireframes because no page has a named owner. Items 1 and 2 are the ones that
+  reach the public as a broken promise — a phone number nobody answers, and a
+  request process with no stated response.
+- **Next step** — Answer them in the same pass as D10, rather than as four
+  separate asks.
+- **Current mitigation** — All four are marked on the frames and none is invented
+  copy; the drafts' own bracketed notes are preserved where they exist.
 
 ---
 

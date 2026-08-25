@@ -9,7 +9,7 @@ that the codebase needs to stay in step with it.
 
 | File | Owner | Milestone | Status |
 | --- | --- | --- | --- |
-| Figma link — lo-fi wireframes | Ivy (Jasmin Ivy C. Fedilo) | Lo-Fi Wireframes, 21 Aug | ⏳ not supplied |
+| Figma link — lo-fi wireframes | Ivy (Jasmin Ivy C. Fedilo) | Lo-Fi Wireframes, 21 Aug | ✅ [Lo-fi — YACHATDAC (Home + 3 pillars)](https://www.figma.com/design/Qk35pAX0sz2ntNRXceY7Gb/Yachatdac-Exploration?node-id=0-1) |
 | Figma link — hi-fi mockups | Marc | Hi-Fi Mockups Approved, 31 Aug | ⏳ not started |
 | Figma link — UI design system / component library | Marc | — | ⏳ not supplied |
 | Relume Figma kit link | Marc → JC | — | ⏳ not supplied |

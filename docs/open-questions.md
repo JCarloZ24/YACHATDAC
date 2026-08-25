@@ -44,6 +44,13 @@ Needs an answer, not a default. Full write-ups in
 | **D9** | **Motion sign-off owner** | Marc, the board, or the Elder Advisory Group — and at which milestone. Unblocks R10 and the artwork/terrain permissions rather than being a separate ask. | Marc and August |
 | **D10** | **Page copy ownership** | Raised at the briefing, not resolved. Four drafts now exist with no recorded author. | Marc and August |
 | **D11** | **Hosting / database accounts** | One shared project account or individual accounts. Handover to the client is far simpler if nothing is tied to a personal account. | David |
+| **D14** | **What follows the Truth descent** | The five blocks below the timeline were never commissioned — `truth.ts` says so on its own face — the sitemap already drops half of them, and The Record draft now writes the same content for Resources and routes opportunities to `/partnerships`. The lo-fi walkthrough on 21 Aug caught it independently: ≈313vh of card grids sit underneath the line that calls itself the floor of the page. `#partner` stays regardless. | Marc, with Ivy |
+| **D15** | **The Record's taxonomy** | The draft filters on two axes — type *and* source (Iningai knowledge / Colonial record / Published research). The code has one flat list, and no source concept at all. `Event`, `Activity` and `Update` are dropped, which collides with "Event is a content type inside Resources". David's content model. | Marc, with David |
+| **D16** | **Does `/partnerships` exist?** | The Record draft links `/partnerships/#research-opportunities`; no such route exists anywhere in the project. Same question as D14 from the other end — answer them together. Bears on D7. | Marc and August |
+| **D17** | **Is `/our-people` a route?** | The About draft's "Meet the people →". Build docs have Team and Suzanne as two items under Connect. Third thing pulled out of Connect after About and Contact — answer with D2. | Marc |
+| **D13** | **Living Work's closing CTA** | The build spec says newsletter signup; the copy draft ends on "Talk to us →" and "Come on Country →". The pillar's audience is other Indigenous communities — the draft offers them a conversation, the spec offers them a mailing list. Built to the draft. | Marc, with Ivy |
+| **D18** | **Homepage navbar, or no nav until block 6?** | Three sources disagree: the copy draft says no navigation until block 6 and that this *is* the page's argument; Marc's hi-fi and the sitemap both carry a persistent navbar. Changes the header on every page. Flagged in `hifi-figma-readout.md` §2 on 20 Aug and never given an ID until now. | Marc, with Ivy |
+| **D19** | **Empty state destination** | The Record's empty state offers "ask us what exists" — a real invitation with nowhere to go. Only empty state on the site that opens a conversation rather than apologising. | Marc |
 
 ---
 
@@ -61,6 +68,10 @@ Needs an answer, not a default. Full write-ups in
 | **R7** | **Wireframes and motion structure** | Wireframes must state scroll spans in `vh` and mark which sections are Tier 1, or pinning gets retrofitted into a layout with no room for it. |
 | **R9** | **Legal pages before any form goes live** | Privacy Policy, Terms and cookie notice are route stubs with no content. The homepage newsletter field is deliberately inert until they land. |
 | **R12** | **Brand assets outstanding** | Logo vector files and the Good Dog Cool callout face not supplied. Low impact — both have marked placeholders. |
+| **R13** | **"Yambangku or Yumbangku"** | The About draft flags that the logo and the published research disagree on the organisation's own name. `site.ts` hardcodes **Yambangku** into the footer and page metadata on every route. ICN and ABN still blank. Confirm against the ORIC register, not the logo. |
+| **R14** | **Ngapartji-Ngapartji is Western Desert language** | The client's Strategic Plan uses it for reciprocity; the About draft questions it. `truth.ts` currently recommends framing the Truth enquiry form with it — on the one page arguing that outsiders got the record wrong. Ask Suzanne; do not correct unilaterally. |
+| **R15** | **Four copy details unowned** | Phone-answering hours; the on-request response time and contact point; the doubled `2031` status on Five-Year Review; the Cultural Knowledge Precinct tagged *Written record* for a building that does not exist yet. Trivial individually — collectively the argument for settling **D10**. |
+| — | **18.6MB of draft reference images** | The About and The Record drafts arrived with images inlined as base64. Extracted to `assets/`, but they are photographs saved as PNG and still total 18.6MB. JPEG would be ~1.5MB. Same reasoning as F5 — settle before committing. STATUS.md note 11. |
 
 ---
 
