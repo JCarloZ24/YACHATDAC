@@ -1,6 +1,6 @@
 # Change Requests — paste-ready
 
-*Last updated: 24 August 2026*
+*Last updated: 25 August 2026*
 
 Companion to `docs/decisions-and-risks.md`. That file holds the standing
 Decision and Risk registers; this one holds **Change Requests** — a request from
@@ -13,17 +13,47 @@ Everything here is written to be **copied straight into Proyekto**:
 - **Decisions** → Management → Decisions → *Record a decision*
 - **Risks & Issues** → Management → Risks & Issues
 
-The Proyekto MCP connector still has **no tools for Change Requests, Decisions
-or Risks & Issues**, so these are entered through the web UI. Where an item is
-really a piece of work rather than a request for a ruling, it is marked
-**→ task** and can be created through MCP on request.
+**Uploaded 25 Aug 2026:** the delivery write tools went live on
+`api.proyekto.tech/mcp` and this round was entered through them — CR1–CR11 are
+`CR-001`–`CR-011` in Proyekto (CR1–CR10 submitted, CR11 draft), D15–D18 are
+`DEC-021`–`DEC-024`, R16–R21 are on the risk register as `internal`. Where an item is really a piece of work rather than a request for a ruling,
+it is marked **→ task** and can be created through MCP on request — and once a
+Change Request exists it can be **linked** to the epics, features, tasks and
+deliverables it touches, which beats repeating file/line references into the
+form.
 
 Numbering continues the existing registers: change requests start at **CR1**,
 decisions at **D15**, risks at **R16**. Owners are as listed in
 `docs/decisions-and-risks.md`.
 
-**The Change Request form has not been seen.** These entries use a plain shape —
-remap the field names as needed. Decision entries match the Decision modal.
+## The Change Request form — confirmed 25 Aug
+
+Read from Proyekto's own schema; the earlier "form has not been seen" caveat is
+retired. The fields: Reference `CR-nnn` (**auto-assigned per project in entry
+order** — enter CR1–CR11 in order so the references line up, and keep "CR1 —"
+in the title regardless); Title; Description; Requested by (a project member —
+Steve has no account, so the entering account shows and "Raised by Steve
+(FNAN)" stays in the description); Impact on scope (prose); Impact on timeline
+(signed days); Target date before/after; Status; Decision note; Links.
+
+The status vocabulary is fixed: `draft | submitted | approved | rejected |
+changes_requested | withdrawn | applied`. This file's working statuses map as:
+
+| In this file | In the form |
+| --- | --- |
+| Proposed | `submitted` — the client has asked; no ruling yet |
+| **Held** (CR4, CR10) | `submitted`, with the hold and its reason in **Decision note** — held is a ruling pending, not a status |
+| **Blocked** (CR11) | `draft` — the request itself is not fully captured |
+| Type (Terminology / New content / Copy rewrite) | No field — first line of Description |
+| The request / Raised by | Description |
+| Where it lands / Assessment | Impact on scope |
+| Approved, later | `approved` unlocks **Apply to roadmap**; `applied` is set only by an actual roadmap commit — never hand-pick it |
+| Answered with options and sent back (CR5, CR7–CR9, once that happens) | `changes_requested` — the decider has returned it to the requester |
+
+Each CR below now carries a **Form** line with its mapped status. Decision
+entries match the Decision modal (`proposed | final | superseded` — exact
+match for how this file already writes them); risk entries carry the same
+Form line as the main register, including the likelihood a risk requires.
 
 ---
 
@@ -75,6 +105,7 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR1 — "cultural sites" becomes "cultural heritage sites"
 
+- **Form** — status `submitted` · timeline impact 0 days
 - **Type** — Terminology · **Status** — Proposed · **Owner** — August → Marc
 - **Raised by** — Steve (FNAN), 10:04, against the Living Work *Damage and
   access to cultural sites* accordion.
@@ -94,6 +125,7 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR2 — The card title "Carbon" becomes "Biological Sequestration"
 
+- **Form** — status `submitted` · decision note: apply with R14, not ahead of it
 - **Type** — Terminology · **Status** — Proposed · **Owner** — August, with the client
 - **Raised by** — Steve (FNAN), 10:27, against the Living Work *What the work
   produces* card grid.
@@ -114,6 +146,8 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR3 — "Cool burns" and "right-way fire" both become "fire-stick farming"
 
+- **Form** — status `submitted` · decision note: accepted as an edit pass, slug
+  held on D17
 - **Type** — Terminology · **Status** — Proposed · **Owner** — August, JC
 - **Raised by** — Steve (FNAN), 15:15, against the Wonder chip list. Two
   instructions in one message: replace **"Cool Burns"** with **"Fire-stick
@@ -156,6 +190,9 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR4 — "settlers" becomes "colonists"
 
+- **Form** — status `submitted` · **decision note: HELD — lands inside
+  Suzanne's recorded quote; nothing moves until D15 is answered and Suzanne
+  rules. See R17.**
 - **Type** — Terminology · **Status** — **Held** · **Owner** — August → Suzanne
 - **Raised by** — Steve (FNAN), 15:11: *"Please don't use 'settlers' in this
   case maybe use 'colonists'. The land was already settled when they got
@@ -184,6 +221,8 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR5 — Add SWER, and the on-site petrol and diesel tanks
 
+- **Form** — status `submitted` · move to `changes_requested` once the ask for
+  the actual SWER and fuel facts has gone back to Steve (R19)
 - **Type** — New content · **Status** — Proposed · **Owner** — August, with the client
 - **Raised by** — Steve (FNAN), 10:19 (edited): *"Can we please find an
   appropriate way to include Single-Wire Earth Return (SWER)"*, with a pasted
@@ -211,6 +250,7 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR6 — *Getting here* should include the train via Rockhampton
 
+- **Form** — status `submitted` · timeline impact 0 days
 - **Type** — New content · **Status** — Proposed · **Owner** — August
 - **Raised by** — Steve (FNAN), 15:19: *"They can also travel by train via
   Rockhampton to Barcaldine."*
@@ -228,6 +268,9 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR7 — "No town glow" becomes something more positive, e.g. "Magic at night"
 
+- **Form** — status `submitted` · move to `changes_requested` when the drafted
+  options go back (the Wonder options batch, Part 6 deliverable in
+  `docs/decisions-and-risks.md`)
 - **Type** — Copy rewrite · **Status** — Proposed · **Owner** — August, Ivy
 - **Raised by** — Steve (FNAN), 15:23, against the Wonder *After dark* card.
   Phrased as a suggestion: *"Maybe an alternative title that is more positive
@@ -250,6 +293,8 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR8 — The homepage hero should be "more heroic"
 
+- **Form** — status `submitted` · decision note: sequenced after R1 — the hero
+  and the Welcome are one beat
 - **Type** — Copy rewrite · **Status** — Proposed · **Owner** — August, Marc
 - **Raised by** — Steve (FNAN), 15:31, against the homepage hero: *"Maybe
   something more heroic?"*
@@ -271,6 +316,8 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR9 — "Guesting On-Country" becomes "Be our guest"
 
+- **Form** — status `submitted` · move to `changes_requested` with the Wonder
+  options batch, alongside CR7
 - **Type** — Copy rewrite · **Status** — Proposed · **Owner** — August
 - **Raised by** — Steve (FNAN), 15:36, against the homepage invitation card:
   *"Maybe different title such as 'Be our guest'?"*
@@ -291,6 +338,10 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR10 — Do not use "our" in reference to Indigenous people
 
+- **Form** — status `submitted` · **decision note: HELD — conflicts with the
+  client's own first-person voice and lands partly inside Suzanne's quote;
+  nothing moves until D16 and R18 are answered. Do not adopt the "Innigai"
+  spelling.**
 - **Type** — Terminology · **Status** — **Held** · **Owner** — August → Suzanne
 - **Raised by** — Steve (FNAN), 15:25, against Wonder's Turraburra paragraph:
   *"Don't use 'our' in reference to Indigenous people. In this case maybe use
@@ -320,6 +371,8 @@ Approved in this round, and now locked: see Part 4.
 
 ## CR11 — *Who comes* — the instruction was not captured
 
+- **Form** — status `draft` — the request itself is not fully captured; it
+  submits when the rest of the thread arrives (R20)
 - **Type** — Unknown · **Status** — **Blocked** · **Owner** — August
 - **Raised by** — Steve (FNAN), around 15:19–15:23. The screenshot shows the
   **WHO COMES** block — "Families, school groups, group bookings, international
@@ -333,8 +386,10 @@ Approved in this round, and now locked: see Part 4.
 
 # Part 2 — Decisions this round raises
 
-Record each as **Proposed**. When answered, change the status to **Final** and
-write the answer into *The decision* rather than opening a new entry.
+Record each as **Proposed** — an exact match for Proyekto's `proposed` status
+(confirmed 25 Aug). When answered, change the status to **Final** and write the
+answer into *The decision* rather than opening a new entry, marking the winning
+option **selected** in the options list.
 
 ---
 
@@ -452,6 +507,9 @@ Continuing the numbering in `docs/decisions-and-risks.md`, which ends at R15.
 
 ## R16 · ISSUE · Medium — Copy feedback now lands on code as well as drafts
 
+- **Form** — kind `issue` · severity `medium` · no likelihood · status
+  `mitigating` (the same-commit rule below is the mitigation) · visibility
+  `internal` · owner August
 - **Owner** — August, JC
 - **What has gone wrong** — v3 arrived as HTML prototypes and parts of it are
   already coded: the hero headline at `src/content/homepage.ts:79`, the site
@@ -470,6 +528,9 @@ Continuing the numbering in `docs/decisions-and-risks.md`, which ends at R15.
 
 ## R17 · RISK · **High** — Terminology edits are being asked for inside a Traditional Owner's recorded words
 
+- **Form** — kind `risk` · severity `high` · likelihood `high` (two live
+  requests already land inside the quote) · status `mitigating` (CR4 and CR10
+  are held) · visibility `internal` · owner August
 - **Owner** — August → Suzanne, via Marc
 - **What could go wrong** — CR4 and CR10 both land in the same blockquote on
   Truth v3, a page held by community and awaiting Suzanne's approval. Applied
@@ -488,6 +549,8 @@ Continuing the numbering in `docs/decisions-and-risks.md`, which ends at R15.
 
 ## R18 · ISSUE · Medium — "Innigai" and "Iningai" are both in circulation
 
+- **Form** — kind `issue` · severity `medium` · no likelihood · status `open` ·
+  visibility `internal` · owner August
 - **Owner** — August
 - **What has gone wrong** — Steve writes **"Innigai peoples"**. Every draft and
   every coded file write **"Iningai"** — thirteen lines of the About draft alone,
@@ -507,6 +570,8 @@ Continuing the numbering in `docs/decisions-and-risks.md`, which ends at R15.
 
 ## R19 · RISK · Medium — SWER and the fuel tanks would be published from a search result
 
+- **Form** — kind `risk` · severity `medium` · likelihood `medium` · status
+  `open` · visibility `internal` · owner August
 - **Owner** — August, with the client
 - **What could go wrong** — CR5 asks for SWER on the Living Work infrastructure
   block, supported by a pasted Google definition of how SWER works in general.
@@ -525,6 +590,8 @@ Continuing the numbering in `docs/decisions-and-risks.md`, which ends at R15.
 
 ## R20 · ISSUE · Medium — This round's feedback is incomplete and unconsolidated
 
+- **Form** — kind `issue` · severity `medium` · no likelihood · status `open` ·
+  visibility `internal` · owner August
 - **Owner** — August
 - **What has gone wrong** — The feedback exists as WhatsApp messages captured in
   six screenshots. Within it: one instruction is cut off mid-message (**CR11**),
@@ -544,6 +611,8 @@ Continuing the numbering in `docs/decisions-and-risks.md`, which ends at R15.
 
 ## R21 · RISK · Low — Two pending client emails may reopen settled scope
 
+- **Form** — kind `risk` · severity `low` · likelihood `medium` · status
+  `monitoring` · visibility `internal` · owner August
 - **Owner** — August, David
 - **What could go wrong** — Steve has emailed YACHATDAC for **updated ranger
   objectives pegged to their funding, so the reporting requirements are
