@@ -4,7 +4,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SettleText } from "@/components/lofi/ui/SettleText";
 import type { Beat } from "@/content/lofi/homepage";
-import { heroNightSlot, heroPathArtwork, heroSlot } from "@/content/lofi/media";
+import {
+  heroNightSlot,
+  heroPathArtwork,
+  heroSlot,
+  type MediaSlot,
+} from "@/content/lofi/media";
 import { onEnter } from "@/lib/site-entry";
 
 /**
@@ -71,6 +76,65 @@ import { onEnter } from "@/lib/site-entry";
  */
 const HERO_NIGHT_ENTRY = true;
 
+/**
+ * One full-bleed layer of the hero, with the missing-file case handled.
+ *
+ * `public/media/` is the client media library: it lives in Drive today, moves
+ * into the CMS at launch, and `.gitignore` keeps it out of the repo. So the
+ * `src` string here is always set while the file behind it exists on exactly
+ * one machine. Checking the string proves nothing — only the load does.
+ *
+ * `fallback="slot"` swaps in the same [ IMAGE — … ] placeholder the rest of
+ * the build uses, so an unsourced hero reads as an empty slot rather than a
+ * broken page. `fallback="none"` is for the night frame: it sits *over* the
+ * day frame, so if it cannot load the right answer is to not render it and
+ * let the settled state show through.
+ */
+function HeroLayer({
+  slot,
+  className,
+  fallback,
+  ...rest
+}: {
+  slot: MediaSlot;
+  className: string;
+  fallback: "slot" | "none";
+} & Record<`data-${string}`, string | undefined>) {
+  const [failed, setFailed] = useState(false);
+
+  if (slot.src && !failed) {
+    return (
+      <Image
+        src={slot.src}
+        alt=""
+        aria-hidden
+        fill
+        priority
+        sizes="100vw"
+        data-bucket={slot.bucket}
+        className={className}
+        onError={() => setFailed(true)}
+        {...rest}
+      />
+    );
+  }
+
+  if (fallback === "none") return null;
+
+  return (
+    <div
+      aria-hidden
+      data-placeholder="media"
+      data-bucket={slot.bucket}
+      className="absolute inset-0 bg-canvas/10"
+    >
+      <p className="absolute inset-x-0 top-0 p-4 text-[11px] leading-snug text-canvas/45">
+        [ IMAGE — {slot.expects} ]
+      </p>
+    </div>
+  );
+}
+
 export function Hero({ beat }: { beat: Beat }) {
   const [entered, setEntered] = useState(false);
   const [cueLive, setCueLive] = useState(true);
@@ -106,29 +170,7 @@ export function Hero({ beat }: { beat: Beat }) {
           On any machine but the one these were dropped onto, `src` is absent,
           and a hero that 404s reads as a broken build rather than as an empty
           slot. Same fallback shape as MediaTile: say what the slot expects. */}
-      {heroSlot.src ? (
-        <Image
-          src={heroSlot.src}
-          alt=""
-          aria-hidden
-          fill
-          priority
-          sizes="100vw"
-          data-bucket={heroSlot.bucket}
-          className="object-cover"
-        />
-      ) : (
-        <div
-          aria-hidden
-          data-placeholder="media"
-          data-bucket={heroSlot.bucket}
-          className="absolute inset-0 bg-canvas/10"
-        >
-          <p className="absolute inset-x-0 top-0 p-4 text-[11px] leading-snug text-canvas/45">
-            [ IMAGE — {heroSlot.expects} ]
-          </p>
-        </div>
-      )}
+      <HeroLayer slot={heroSlot} fallback="slot" className="object-cover" />
 
       {/* Night — the opening state. Clears on entry.
 
@@ -140,16 +182,11 @@ export function Hero({ beat }: { beat: Beat }) {
           looking at. Rendering it always and hiding it with
           `motion-reduce:hidden` keeps it in the initial payload and still
           makes it genuinely absent for anyone who asked for less motion. */}
-      {HERO_NIGHT_ENTRY && heroNightSlot.src ? (
-        <Image
-          src={heroNightSlot.src}
-          alt=""
-          aria-hidden
-          data-hero-night
-          fill
-          priority
-          sizes="100vw"
-          data-bucket={heroNightSlot.bucket}
+      {HERO_NIGHT_ENTRY ? (
+        <HeroLayer
+          slot={heroNightSlot}
+          fallback="none"
+          data-hero-night=""
           className={`object-cover transition-opacity duration-[1600ms] ease-country motion-reduce:hidden ${
             entered ? "opacity-0" : "opacity-100"
           }`}

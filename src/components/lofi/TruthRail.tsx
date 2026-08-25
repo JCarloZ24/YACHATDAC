@@ -49,6 +49,7 @@ export function TruthRail({ hardStopId }: { hardStopId: string }) {
     <div
       aria-hidden
       data-motion="rail"
+      data-tier1-exception="D9"
       data-absent={atHardStop || undefined}
       className={`pointer-events-none fixed inset-y-0 left-8 z-20 hidden w-px bg-canvas/15 transition-opacity duration-(--dur-medium) ease-quiet lg:block ${
         atHardStop ? "opacity-0" : "opacity-100"

@@ -118,6 +118,7 @@ export function HardStop() {
       ref={sectionRef}
       id={hardStop.id}
       data-motion="scroll-lock"
+      data-tier1-exception="D9"
       data-locked={locked || undefined}
       className="relative flex min-h-svh flex-col items-center justify-center bg-charcoal px-6 py-32 text-center"
     >
