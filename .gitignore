@@ -52,6 +52,7 @@ next-env.d.ts
 /public/fonts/BlockBerthold.woff2
 /public/fonts/BantayogSans-*.woff2
 /public/fonts/GoodDogCool.woff2
+/public/fonts/GoodDogPlain.woff2
 
 # Client media library. Lives in Google Drive today and moves into the CMS
 # media library at launch — it does not belong in git.
