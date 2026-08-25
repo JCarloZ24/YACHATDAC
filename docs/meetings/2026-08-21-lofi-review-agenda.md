@@ -47,7 +47,7 @@ separate ask. Several behaviours are on hold waiting for a named approver.
 
 ### 04 · D10 — Copy ownership per page
 *Marc and August* — Raised at the 18 Aug briefing, still open. Six drafts now
-exist with no recorded author, and R15 is four small copy questions that have gone
+exist with no recorded author, and R23 is four small copy questions that have gone
 unanswered purely because no page has an owner.
 
 **Answer:**
@@ -55,7 +55,7 @@ unanswered purely because no page has an owner.
 ### 05 · D7 — Where fee-for-service land management lives
 *Marc and August* — A real revenue stream in the Ten-Year Plan (Goal 3.5) whose
 audience is neighbouring landholders, matching none of the three pillars. The
-sitemap marks it NOT YET PLACED. If D16 creates `/partnerships`, that may be its
+sitemap marks it NOT YET PLACED. If D22 creates `/partnerships`, that may be its
 home.
 
 **Answer:**
@@ -70,7 +70,7 @@ spec, no content model, no named author.
 
 ## Home
 
-### 07 · D18 — Persistent navbar, or no nav until block 6?  ⚑ BLOCKS HI-FI
+### 07 · D24 — Persistent navbar, or no nav until block 6?  ⚑ BLOCKS HI-FI
 *Marc, with Ivy* — The copy draft says blocks 1–5 carry no navigation and that
 this **is** the page's argument. Marc's hi-fi and the sitemap both show a
 persistent navbar. Built to the draft. Changes the header on every page, not just
@@ -102,7 +102,7 @@ built typographically. Confirm that stays until a permission is recorded.
 
 ## Truth
 
-### 10 · D14 — What follows the Truth descent?  ⚑ BLOCKS HI-FI
+### 10 · D20 — What follows the Truth descent?  ⚑ BLOCKS HI-FI
 *Marc, with Ivy* — The five blocks below the timeline were never commissioned;
 `truth.ts` says so on its own face. The sitemap already drops half of them, and The
 Record draft now writes the same content for `/resources`. The proposal replaces
@@ -130,7 +130,7 @@ one removable section so it can be cut in a single move.
 
 **Answer:**
 
-### 13 · D13 — Living Work's closing CTA
+### 13 · D19 — Living Work's closing CTA
 *Marc, with Ivy* — The build spec names newsletter signup. The copy draft ends on
 **"Talk to us →"** and **"Come on Country →"**. The pillar's audience is other
 Indigenous communities — the draft offers them a conversation, the spec offers
@@ -143,7 +143,7 @@ newsletter to the footer band every page already carries.
 
 ## About
 
-### 14 · D17 — Is `/our-people` a route?
+### 14 · D23 — Is `/our-people` a route?
 *Marc* — The draft's "Meet the people →" points there. Build documentation §4 has
 The YACHATDAC Team and About Suzanne Thompson as two separate items under Connect.
 Third thing pulled out of Connect after About and Contact — answer alongside 02.
@@ -154,7 +154,7 @@ Third thing pulled out of Connect after About and Contact — answer alongside 0
 
 ## The Record
 
-### 15 · D15 — One facet axis or two?  ⚑ BLOCKS HI-FI
+### 15 · D21 — One facet axis or two?  ⚑ BLOCKS HI-FI
 *Marc, with David* — The draft filters on **type AND source** (Iningai knowledge ·
 Colonial record · Published research). The code has one flat list and no source
 concept at all. Event, Activity and Update are dropped, contradicting "Event is a
@@ -163,7 +163,7 @@ content type inside Resources". The source axis is an epistemology, not a format
 
 **Answer:**
 
-### 16 · D16 — Does `/partnerships` exist as a destination?
+### 16 · D22 — Does `/partnerships` exist as a destination?
 *Marc and August* — The draft's "Research with us" points at
 `/partnerships/#research-opportunities`, a route that exists nowhere in the
 project. This is item 10 seen from the other end; answer them together or both
@@ -171,7 +171,7 @@ pages will assume the other is carrying it. Bears on 05.
 
 **Answer:**
 
-### 17 · D19 — Where does "ask us what exists" go?
+### 17 · D25 — Where does "ask us what exists" go?
 *Marc* — The draft writes its own empty state: *"Nothing here yet under that. Try
 another subject, or ask us what exists."* The second half is a real offer with no
 destination. Candidates: the Connect contact form, or the "Do you hold something?"
@@ -199,10 +199,10 @@ The output for these is **who asks, by when** — not an answer.
 
 | To | Items |
 | --- | --- |
-| **Suzanne / Elder Advisory Group** (via Marc) | R1 Welcome to Country wording · R2 story-wall dating · R5 testimony sign-off · R10 imagery permission · R13 Yambangku/Yumbangku + ICN/ABN · R14 Ngapartji-Ngapartji |
+| **Suzanne / Elder Advisory Group** (via Marc) | R1 Welcome to Country wording · R2 story-wall dating · R5 testimony sign-off · R10 imagery permission · R15 Yambangku/Yumbangku + ICN/ABN · R22 Ngapartji-Ngapartji |
 | **Brand team** | R3 Block Berthold webfont licence · R4 Bantayog Sans licence · R12 logo vectors and Good Dog Cool |
 | **David** | D4 legal page naming · D8 backend build priority · D11 hosting accounts · R8 DGR status · R9 legal pages before forms · R11 media size targets |
-| **Copy owner** (blocked on 04 / D10) | R15 — phone-answering hours · on-request response time · the doubled 2031 status · the Precinct's evidence tag |
+| **Copy owner** (blocked on 04 / D10) | R23 — phone-answering hours · on-request response time · the doubled 2031 status · the Precinct's evidence tag |
 
 **Actions:**
 
@@ -225,3 +225,24 @@ The output for these is **who asks, by when** — not an answer.
    written into *The decision*, reasoning kept attached to the outcome.
 3. Update `open-questions.md` to match.
 4. Only then revise the wireframes.
+
+---
+
+## ID renumbering, 25 August 2026
+
+The decision and risk IDs on this sheet moved on 25 Aug. They were written as
+D13–D19 and R13–R15 on a branch while `docs/change-requests.md` independently
+took D13–D18 and R16–R21 for the FNAN review round. That file is written to be
+pasted into Proyekto, so its numbering stands and these moved:
+
+| Was | Now | | Was | Now |
+| --- | --- | --- | --- | --- |
+| D13 | **D19** | | D18 | **D24** |
+| D14 | **D20** | | D19 | **D25** |
+| D15 | **D21** | | R13 | folded into **R15** |
+| D16 | **D22** | | R14 | **R22** |
+| D17 | **D23** | | R15 | **R23** |
+
+**The 01–18 item numbers are unchanged**, so this sheet and the Figma
+*⧉ Review board — internal · 21 Aug 2026* page still line up item for item. The
+board's decision-ID labels need updating to match the right-hand column.

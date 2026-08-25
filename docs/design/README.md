@@ -1,5 +1,7 @@
 # Design files — placeholder
 
+*Last updated: 19 August 2026*
+
 **Current milestone: Lo-Fi Wireframes.** Target 21 August 2026.
 
 Design happens in Figma; this folder holds the links, exports and decisions
