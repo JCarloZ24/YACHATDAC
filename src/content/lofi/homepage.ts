@@ -18,6 +18,8 @@
  * ⚠ Copy status: draft, not approved. See docs/content/STATUS.md.
  */
 
+import { STORY_WALL_DATING } from "./fields";
+
 export type Beat = {
   id: string;
   /** Small caps label above the headline. */
@@ -62,11 +64,19 @@ export const beats: Beat[] = [
     eyebrow: "Truth",
     headline: "What's etched in stone doesn't forget.",
     body: [
-      "A wasp nest built over the story wall's markings let researchers date them — at least 55,000 years old, by the most conservative estimate. Lore and science, reading the same stone.",
+      `A wasp nest built over the story wall's markings let researchers date them — at least ${STORY_WALL_DATING}, by the most conservative estimate. Lore and science, reading the same stone.`,
     ],
-    // ⚠ The Truth timeline draft says "at least 5,000 years ago" for the same
-    // engravings. A factor of ten apart, unresolved — risk R2. This beat
-    // follows the homepage draft, which is its source of truth for copy.
+    // ⚠ RISK R2 — the homepage draft says "at least 55,000 years old"; the
+    // Truth timeline draft says "at least 5,000 years ago" for the same
+    // engravings, and flags its own dating as under review. A factor of ten
+    // apart in a public claim about cultural heritage, on a site whose whole
+    // argument is that the record has been got wrong before.
+    //
+    // Neither literal is used. The dating renders as a visible content field
+    // until one sourced number exists — see src/content/lofi/fields.ts. D5 gives
+    // the draft authority over copy, but it cannot arbitrate between two
+    // drafts that disagree, and shipping both numbers on one site is the
+    // specific failure R2 names. Wonder and Truth render the same field.
     //
     // ⚠ Story-wall imagery permission is UNRESOLVED (motion skill,
     // permissions.md). Treat as unavailable. No photograph of the engravings,

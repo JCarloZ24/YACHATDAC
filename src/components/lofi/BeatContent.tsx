@@ -1,8 +1,8 @@
 import { Fragment, type ReactNode } from "react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
-import { WordEmphasis } from "@/components/ui/WordEmphasis";
-import type { Beat } from "@/content/homepage";
+import { WordEmphasis } from "@/components/lofi/ui/WordEmphasis";
+import type { Beat } from "@/content/lofi/homepage";
 
 /**
  * Palette anchor per beat. Explicit map — Tailwind cannot see dynamic names.

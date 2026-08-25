@@ -1,7 +1,8 @@
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
+import { SettleText } from "@/components/lofi/ui/SettleText";
 import { SignupField } from "@/components/ui/SignupField";
-import { wayForward } from "@/content/homepage";
+import { wayForward } from "@/content/lofi/homepage";
 
 /**
  * Beat 7 — The Way Forward.
@@ -18,11 +19,13 @@ export function WayForward() {
           <Eyebrow className="text-ochre">{wayForward.eyebrow}</Eyebrow>
         </Reveal>
 
-        <Reveal index={1}>
-          <h2 className="headline mt-6 max-w-3xl text-4xl text-canvas sm:text-5xl">
-            {wayForward.headline}
-          </h2>
-        </Reveal>
+        {/* B5 — the workhorse heading treatment. Tier 2 safe: it is CSS
+            transitions, not GSAP. */}
+        <SettleText
+          as="h2"
+          text={wayForward.headline}
+          className="headline mt-6 max-w-3xl text-4xl text-canvas sm:text-5xl"
+        />
 
         <Reveal index={2}>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-canvas/75">

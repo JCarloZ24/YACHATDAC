@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { hardStop } from "@/content/truth";
+import { hardStop } from "@/content/lofi/truth";
 import { usePrefersReducedMotion } from "@/lib/motion";
 
 /**

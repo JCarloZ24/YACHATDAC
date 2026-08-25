@@ -1,4 +1,4 @@
-import { MAY_ANIMATE, MAY_SHOW, type MediaSlot } from "@/content/media";
+import { MAY_ANIMATE, MAY_SHOW, type MediaSlot } from "@/content/lofi/media";
 
 /**
  * One media slot, rendered as a square.
@@ -6,7 +6,7 @@ import { MAY_ANIMATE, MAY_SHOW, type MediaSlot } from "@/content/media";
  * ⚠ There are no photographs in this repository yet. Every tile is currently a
  * tonal square standing in for one. That is deliberate for the prototype — the
  * mechanism is provable without the imagery, and dropping a photo in means
- * setting `src` in src/content/media.ts and nothing else.
+ * setting `src` in src/content/lofi/media.ts and nothing else.
  *
  * THIS COMPONENT ENFORCES A PERMISSION, IT DOES NOT JUST DESCRIBE ONE
  * -------------------------------------------------------------------
