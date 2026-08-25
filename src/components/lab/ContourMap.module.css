@@ -1,0 +1,91 @@
+/* D4 — contour map.
+
+   Colours come from the brand tokens in globals.css; nothing is written twice.
+   The only per-frame property is stroke-dashoffset, set from JS. */
+
+/* The frame is the viewport. Nothing is reserved for chrome: the controls
+   float and the panels sit on top, so the drawing gets the whole screen.
+
+   The box has to match the drawing, not merely contain it: waypoints are
+   positioned in percentages of this box, so any letterboxing would slide them
+   off the terrain they are meant to be pinned to. That is why the contours are
+   traced at the measured aspect ratio in ContourMapSection rather than drawn at
+   a fixed one and fitted: the viewBox and the box are the same shape by
+   construction, so the SVG's default fit has nothing left to do. */
+.map {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-charcoal);
+}
+
+.map svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.contour {
+  fill: none;
+  stroke: var(--color-eucalyptus);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The top bands read as ridge lines. Ochre is Morning Light — it lands on the
+   high ground, which is where the light actually gets to first. */
+.ridge {
+  stroke: var(--color-ochre);
+  stroke-width: 1.4;
+}
+
+.waypoint {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--color-canvas);
+  opacity: 0;
+  transition: opacity var(--dur-small) var(--ease-quiet);
+}
+
+.waypoint[data-on="true"] {
+  opacity: 1;
+}
+
+/* A keyboard user must be able to reach a waypoint whether or not the scroll
+   position has lit it. Focus order follows the DOM; nothing here traps it. */
+.waypoint:focus-visible {
+  opacity: 1;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  border-radius: 50%;
+  background: var(--color-ochre);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-ochre) 18%, transparent);
+}
+
+.waypoint[aria-pressed="true"] .dot {
+  background: var(--color-canvas);
+}
+
+.label {
+  font-family: var(--font-eyebrow);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* Canvas on charcoal — well past 4.5:1 against the darkest and lightest
+     parts of the map, which is only ever contour lines on a flat ground. */
+  text-shadow: 0 1px 6px var(--color-charcoal);
+}

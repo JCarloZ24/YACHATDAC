@@ -1,5 +1,7 @@
 # Website briefing — 18 August 2026, 7.30pm
 
+*Last updated: 19 August 2026*
+
 ## Decisions
 
 - **Brand identity approved by the client** — colour, typography and logo.

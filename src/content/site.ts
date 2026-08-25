@@ -31,6 +31,24 @@ export type NavChild = {
   stub?: boolean;
 };
 
+/**
+ * ⚠ NAV IS UNCHANGED, AND THAT IS DELIBERATE (24 Aug 2026).
+ *
+ * The pillar pages are now built, so the child links below point at real
+ * sections instead of at spec outlines, and the `stub` flags are cleared where
+ * the destination exists. Three new routes also exist — `/about`,
+ * `/our-people` and `/partnerships` — because every v3 draft links to them.
+ *
+ * None of that answers **D2**: whether Connect survives as a navigation item
+ * now that About and Contact have been lifted out of it. Two rounds of client
+ * drafting have produced a header nav with no Connect in it while linking to
+ * `/connect` from five places. That is copy evidence for the lo-fi review, not
+ * an IA decision, so the four top-level pillars below are untouched and
+ * Connect still holds About, the team and Suzanne as children.
+ *
+ * When D2 is answered, this is the file that changes.
+ */
+
 export type Pillar = {
   id: PillarId;
   /** One-word pillar name, as the client uses it. */
@@ -51,10 +69,13 @@ export const pillars: Pillar[] = [
     audience: "Travellers and schools — the curious",
     href: "/wonder",
     children: [
-      { title: "Guesting on Country", href: "/wonder#experience", stub: true },
-      { title: "Experiences", href: "/wonder#experience", stub: true },
-      { title: "Stories", href: "/resources?type=story", stub: true },
-      { title: "Downloads", href: "/resources?type=download", stub: true },
+      { title: "Guesting on Country", href: "/wonder#experience" },
+      { title: "About Turraburra", href: "/wonder#turraburra" },
+      { title: "Stories", href: "/resources?type=story" },
+      /* "Downloads" was `?type=download`, which is not one of the record's
+         content types and would have matched nothing. The documents and
+         reports section is what it meant. */
+      { title: "Documents & reports", href: "/resources#documents" },
     ],
   },
   {
@@ -65,10 +86,10 @@ export const pillars: Pillar[] = [
       "Universities, funders, brands, researchers and partners — the practitioners",
     href: "/truth",
     children: [
-      { title: "What's Been Researched", href: "/truth#researched", stub: true },
-      { title: "Open Research Opportunities", href: "/truth#opportunities", stub: true },
-      { title: "The Cultural Knowledge Precinct", href: "/truth#precinct", stub: true },
-      { title: "Partner with Us", href: "/truth#partner", stub: true },
+      { title: "What's Been Researched", href: "/truth#researched" },
+      { title: "Open Research Opportunities", href: "/truth#opportunities" },
+      { title: "The Cultural Knowledge Precinct", href: "/truth#precinct" },
+      { title: "Partner with Us", href: "/truth#partner" },
     ],
   },
   {
@@ -78,9 +99,9 @@ export const pillars: Pillar[] = [
     audience: "Other Indigenous communities worldwide",
     href: "/living-work",
     children: [
-      { title: "The Iningai Rangers", href: "/living-work#rangers", stub: true },
-      { title: "Caring for Country in Practice", href: "/living-work#practice", stub: true },
-      { title: "How We Built This", href: "/living-work#how-we-built-this", stub: true },
+      { title: "The Iningai Rangers", href: "/living-work#rangers" },
+      { title: "Caring for Country in Practice", href: "/living-work#practice" },
+      { title: "How We Built This", href: "/living-work#how-we-built-this" },
     ],
   },
   {
@@ -89,12 +110,18 @@ export const pillars: Pillar[] = [
     subtitle: "About & contact",
     audience: "All site visitors",
     href: "/connect",
+    /*
+      These pointed at `/connect#about`, `#team`, `#suzanne` and `#turraburra`
+      — four anchors on a page that was a stub, so none of them resolved. They
+      now point at the pages that carry that content. Connect itself is still
+      here and still a nav item; see the D2 note above.
+    */
     children: [
-      { title: `About ${org.name}`, href: "/connect#about", stub: true },
-      { title: "The YACHATDAC Team", href: "/connect#team", stub: true },
-      { title: "About Suzanne Thompson", href: "/connect#suzanne", stub: true },
-      { title: `About ${org.property}`, href: "/connect#turraburra", stub: true },
-      { title: "Resources", href: "/resources", stub: true },
+      { title: `About ${org.name}`, href: "/about" },
+      { title: "Our people", href: "/our-people" },
+      { title: "Partnerships", href: "/partnerships" },
+      { title: `About ${org.property}`, href: "/wonder#turraburra" },
+      { title: "Resources", href: "/resources" },
     ],
   },
 ];
