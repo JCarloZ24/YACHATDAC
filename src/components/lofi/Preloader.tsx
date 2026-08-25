@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { loaderSlot } from "@/content/media";
+import { loaderSlot } from "@/content/lofi/media";
 import { org } from "@/content/site";
 import { trackAssets } from "@/lib/asset-progress";
 import { markEntered } from "@/lib/site-entry";

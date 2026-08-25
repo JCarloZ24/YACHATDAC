@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { BeatContent, toneClasses } from "@/components/sections/BeatContent";
-import { BeatSection } from "@/components/sections/BeatSection";
-import { GhostType } from "@/components/ui/GhostType";
-import { MediaTile } from "@/components/ui/MediaTile";
-import type { Beat } from "@/content/homepage";
-import { skyBeatSlots } from "@/content/media";
+import { BeatContent, toneClasses } from "@/components/lofi/BeatContent";
+import { BeatSection } from "@/components/lofi/BeatSection";
+import { GhostType } from "@/components/lofi/ui/GhostType";
+import { MediaTile } from "@/components/lofi/ui/MediaTile";
+import type { Beat } from "@/content/lofi/homepage";
+import { skyBeatSlots } from "@/content/lofi/media";
 import { usePrefersReducedMotion } from "@/lib/motion";
 import { register } from "@/lib/motion-controller";
 import { createSkyClock, SKY_CLOCK_SPAN_VH } from "@/lib/sections/sky-clock";
