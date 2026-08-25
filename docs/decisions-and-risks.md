@@ -1,22 +1,93 @@
 # Decisions, Risks & Issues — paste-ready
 
-*Last updated: 24 August 2026*
+*Last updated: 25 August 2026*
 
 Everything here is written to be **copied straight into Proyekto**:
 
 - **Decisions** → Management → Decisions → *Record a decision*
 - **Risks & Issues** → Management → Risks & Issues
+- **Deliverables** → Management → Deliverables — Part 6 of this file
+
+> **Uploaded 25 Aug 2026** via the new MCP delivery write tools: all 24
+> decisions (D1–D18 + F1–F6, entered in order so `DEC-001`–`DEC-024` track the
+> numbering, F1 sitting at DEC-012 so the D12 supersede chain holds), all 21
+> risks/issues (visibility `internal`), 11 change requests (`CR-001`–`CR-011`)
+> and the three Part 6 deliverables. This file remains the source of truth for
+> the *reasoning*; Proyekto now carries the live state. Still to set by hand in
+> the web UI (the PAT used cannot read `internal` rows back, so `risk_update`
+> 404s): R2 → monitoring, R6 R8 R13 R16 R17 → mitigating, R21 → monitoring;
+> plus decision categories, which have no MCP create tool.
 
 ## Why this is a file and not already in Proyekto
 
 The Proyekto MCP connector exposes projects, the roadmap (epics, features,
-tasks, milestones), chat, members and comments. It has **no tools for
-Decisions, Risks & Issues or Change Requests**, so those three sections cannot
-be written to programmatically — they have to be entered through the web UI.
+tasks, milestones), chat, members and comments. Re-checked 25 Aug: it still has
+**no tools for Decisions, Risks & Issues, Change Requests or Deliverables**, so
+those sections cannot be written to programmatically — they are entered through
+the web UI.
 
 Roadmap tasks *can* be created and assigned through MCP. Where an item below is
 really a piece of work rather than a decision or a risk, it is marked
-**→ task** and can be created on request.
+**→ task** and can be created on request. Once a record exists in Proyekto it
+can be **linked** to the epics, features, tasks and deliverables it bears on —
+prefer a link over repeating file/line references into the form.
+
+## The Proyekto record shapes — confirmed 25 Aug
+
+Read from Proyekto's own schema, so the earlier "form has not been seen"
+caveats are retired. Vocabularies below are exact; anything outside them will
+not save.
+
+**Decision** — Reference `DEC-nnn` (auto-assigned per project, in entry
+order); Title; Category (per-project taxonomy — create ours, see the mapping
+table); Context (what prompted it); Decision (required, stated plainly);
+Rationale; Options considered (structured list — title, detail, at most one
+marked **selected**); Decided by (one project member); Decided on (date);
+Status `proposed | final | superseded`; Supersedes (points at the decision it
+replaces); Visibility `internal | shared`.
+
+**Risk / Issue** — one register, one form, discriminated by Kind
+`risk | issue`. Title; Description; Severity `low | medium | high | critical`;
+Likelihood `low | medium | high` — **required for a risk, must be empty for an
+issue** (an issue has already happened); Status `open | mitigating |
+monitoring | resolved | accepted | closed`; Impact; Mitigation; Owner (one
+project member); Due date; Visibility `internal | shared`, defaulting to
+internal.
+
+**Deliverable** — Title; Description; Acceptance criteria (countable
+checklist, each tick attributed); Status `not_started | in_progress |
+in_review | approved | changes_requested` — the UI labels `approved`
+**Accepted**; Owner; Due date; named Reviewers (any project members — **all**
+must approve); Evidence attachments, typed `github | figma | deployment |
+docs | demo | other`.
+
+Change Requests are shaped in `docs/change-requests.md`, which carries the
+same 25 Aug confirmation.
+
+## How this file's labels map onto the forms
+
+| In this file | In the form |
+| --- | --- |
+| D-number / R-number / F-number | **Put it in the Title** — "D15 — …", "R17 — …". Proyekto assigns its own `DEC-nnn` in entry order and the risk register has no reference column, so the file's numbering survives only in titles. Enter decisions in numeric order so DEC numbers land near D numbers. F-entries are decisions like the D-series. |
+| Category | Categories are per-project and free to define — create this file's own: Information architecture, Content, Content governance, Legal / compliance, Governance, Delivery, Infrastructure, Architecture, Motion, Tooling, Process. Of the built-in presets (Product, Technical, Design, Scope, Business, Process) only Process overlaps. |
+| The decision | Decision |
+| Context | Context |
+| Why / Why it matters | Rationale |
+| Options considered | Options — for a Final decision, mark the option that won as selected |
+| What could go wrong / What is happening | Description |
+| Impact | Impact |
+| Next step / Current mitigation | Mitigation |
+| Owner "Marc, with Ivy" / "August → Suzanne" | Owner takes **one** project member: the first-named. Co-owners and routes stay in the prose — Suzanne, Steve and Leo have no Proyekto account and cannot be owners or reviewers. |
+| "Held", "Blocked", "On hold" | Not statuses in Proyekto. A held decision is `proposed` with the hold reason in Context. |
+
+Each risk entry below now carries a **Form** line with the mapped values —
+kind, severity, likelihood (pre-filled by judgement on 25 Aug, review before
+entry), status and visibility.
+
+**Visibility rule for this project:** every Risk & Issue enters as `internal`
+(the default); every Decision as `shared`, as each entry already states.
+Several risk entries discuss client-side feedback candidly (R17, R18, R20) —
+flipping a row to `shared` is a deliberate later act, never a default.
 
 ## Owners
 
@@ -39,8 +110,8 @@ Client side and approvers:
 | **Leo** | Secretary / intermediary. Holds a CMS account and enters approvals on behalf of people who do not log in. **A different person from Leonard Mickelo.** |
 | **Leonard Mickelo** | Artist. Supplied the vectorised artwork. No motion permission recorded — see R10. |
 
-Field names below match the Decision modal exactly. The Risks & Issues form has
-not been seen, so those entries use a plain shape — remap as needed.
+Field names below match the confirmed shapes above; the Risks & Issues form is
+no longer guessed at.
 
 **Ownership rule (19 Aug):** every risk or issue owned by Marc is co-owned by
 August. `→ someone` means the owner is the route to that person, not that the
@@ -634,6 +705,8 @@ permission is recorded, not when a design is drawn.
 
 ## R1 · ISSUE · High — Acknowledgement of Country names the wrong jurisdiction
 
+- **Form** — kind `issue` · severity `medium` (downgraded 24 Aug, see below) ·
+  no likelihood · status `open` · visibility `internal` · owner Marc
 - **Owner** — Marc and August → Suzanne Thompson
 - **What is happening** — The homepage copy draft acknowledges *"the Aboriginal
   people of the Northern Territory."* YACHATDAC is on **Iningai Country,
@@ -681,6 +754,9 @@ permission is recorded, not when a design is drawn.
 > underneath because the reasoning matters — this is the second time this claim
 > has moved.
 
+- **Form** — kind `issue` · severity `high` · no likelihood · status
+  `monitoring` (re-answered; two confirmations with August still outstanding) ·
+  visibility `internal` · owner Marc
 - **The answer that now stands (v2)** — The site has **never been scientifically
   dated**. The pecked designs are **likely more than 5,000 years old on regional
   style sequences**. Mud wasp nests over some engravings **could give minimum
@@ -739,6 +815,8 @@ permission is recorded, not when a design is drawn.
 
 ## R3 · RISK · High — Block Berthold has no confirmed webfont licence
 
+- **Form** — kind `risk` · severity `high` · likelihood `high` · status `open`
+  · visibility `internal` · owner Marc
 - **Owner** — Marc and August → brand team
 - **What could go wrong** — Block Berthold ships an Adobe / H. Berthold AG
   copyright. It is a commercial retail typeface, and a desktop licence does not
@@ -762,6 +840,8 @@ permission is recorded, not when a design is drawn.
 
 ## R4 · RISK · Medium — Bantayog Sans licence unknown
 
+- **Form** — kind `risk` · severity `medium` · likelihood `medium` · status
+  `open` · visibility `internal` · owner Marc
 - **Owner** — Marc and August
 - **What could go wrong** — Bantayog Sans arrived with no licence file at all.
   Terms are simply unknown.
@@ -777,6 +857,9 @@ permission is recorded, not when a design is drawn.
 
 ## R5 · RISK · High — Suzanne's approvals are on the critical path
 
+- **Form** — kind `risk` · severity `high` · likelihood `high` (nothing is in
+  front of her yet and launch is 14 Sep) · status `open` · visibility
+  `internal` · owner Marc · due date 14 Sep 2026
 - **Owner** — Marc and August
 - **What could go wrong** — Two items need Suzanne Thompson personally: the
   Welcome to Country wording, and the Truth timeline, which carries her words
@@ -799,6 +882,8 @@ permission is recorded, not when a design is drawn.
 
 ## R6 · RISK · High — Lo-fi wireframes are due 21 August with the IA still open
 
+- **Form** — kind `risk` · severity `medium` (downgraded 20 Aug) · likelihood
+  `low` · status `mitigating` · visibility `internal` · owner Ivy
 - **Owner** — Ivy, with Marc and August
 - **What could go wrong** — Lo-fi wireframes are due in two days, but the
   sitemap raises four unanswered structural questions (D1–D4) and the roadmap
@@ -820,6 +905,8 @@ permission is recorded, not when a design is drawn.
 
 ## R7 · RISK · Medium — Wireframes may omit scroll spans and motion tiers
 
+- **Form** — kind `risk` · severity `medium` · likelihood `medium` · status
+  `open` · visibility `internal` · owner Ivy
 - **Owner** — Ivy and JC
 - **What could go wrong** — Motion is structural on this site. If wireframes do
   not state scroll spans in `vh` and mark which sections are Tier 1, pinning
@@ -834,6 +921,9 @@ permission is recorded, not when a design is drawn.
 
 ## R8 · RISK · Medium (was High) — DGR status is unverified
 
+- **Form** — kind `risk` · severity `medium` · likelihood `low` (launch
+  exposure removed by D13) · status `mitigating` · visibility `internal` ·
+  owner David
 - **Owner** — David, with the client
 - **What could go wrong** — Earlier information said YACHATDAC is a registered
   DGR. The Ten-Year Strategic Plan lists securing DGR status as a *Year 1
@@ -855,6 +945,8 @@ permission is recorded, not when a design is drawn.
 
 ## R9 · RISK · Medium — Legal pages must exist before any form goes live
 
+- **Form** — kind `risk` · severity `medium` · likelihood `medium` · status
+  `open` · visibility `internal` · owner David · due date 14 Sep 2026
 - **Owner** — David
 - **What could go wrong** — Newsletter signup, donations, merch orders and
   every enquiry form collect personal data. The Privacy Policy, Terms and
@@ -870,6 +962,9 @@ permission is recorded, not when a design is drawn.
 
 ## R10 · RISK · Medium — Cultural permissions are unresolved and unowned
 
+- **Form** — kind `risk` · severity `medium` · likelihood `high` (no approver
+  is named, so nothing moves on its own) · status `open` · visibility
+  `internal` · owner Marc
 - **Owner** — Marc and August → Elder Advisory Group
 - **What could go wrong** — Three permissions are open on the motion skill's
   board: artwork motion (vectorised artwork received, no motion permission
@@ -896,6 +991,9 @@ permission is recorded, not when a design is drawn.
 
 ## R11 · RISK · Medium — Media pipeline has no size or compression targets
 
+- **Form** — kind `risk` · severity `medium` · likelihood `high` (no targets
+  exist, so the default outcome is the bad one) · status `open` · visibility
+  `internal` · owner David
 - **Owner** — David, with ven and Joshua
 - **What could go wrong** — Client video runs to 2GB per file and images are
   TIFF/RAW. No maximum file sizes or compression targets have been set, and the
@@ -909,6 +1007,9 @@ permission is recorded, not when a design is drawn.
 
 ## R13 · RISK · High — Wonder's inclusions and cost are unwritten, and the draft says why that matters
 
+- **Form** — kind `risk` · severity `medium` (downgraded 24 Aug, see below) ·
+  likelihood `medium` · status `mitigating` (cost half is answered;
+  inclusions remain) · visibility `internal` · owner August
 - **Owner** — August, with the client
 - **What could go wrong** — Wonder v2 flags two gaps on its own face. The
   *What's included / Guiding / Camping / Transfers* block carries **"NEEDS
@@ -941,6 +1042,8 @@ permission is recorded, not when a design is drawn.
 
 ## R14 · RISK · Medium — Living Work publishes regulatory status labels nobody has confirmed
 
+- **Form** — kind `risk` · severity `medium` · likelihood `medium` · status
+  `open` · visibility `internal` · owner August
 - **Owner** — August, with the client
 - **What could go wrong** — Living Work v2's *What the work produces* section
   labels each stream **Registration underway**, **Building the record**, **In
@@ -964,6 +1067,8 @@ permission is recorded, not when a design is drawn.
 
 ## R15 · RISK · Low — The organisation's legal name is unconfirmed against ORIC
 
+- **Form** — kind `risk` · severity `low` · likelihood `low` · status `open` ·
+  visibility `internal` · owner August
 - **Owner** — August
 - **What could go wrong** — Homepage v2's footer carries the note "[ Yambangku
   Aboriginal Cultural Heritage and Tourism Development Aboriginal Corporation —
@@ -990,6 +1095,8 @@ to set size and compression targets, not a reason to defer them.
 
 ## R12 · RISK · Low — Brand assets outstanding
 
+- **Form** — kind `risk` · severity `low` · likelihood `medium` · status
+  `open` · visibility `internal` · owner Marc
 - **Owner** — Marc and August
 - **What could go wrong** — Logo vector files (SVG/EPS) and the Good Dog Cool
   callout face have not been supplied.
@@ -1032,3 +1139,67 @@ Added after the 20 Aug walkthrough:
 | **Scope change** — David | Donations are out of launch scope (D13). Move any donation tasks out of the launch phase rather than leaving them open against 14 September. |
 | **Note on the lo-fi task** — Ivy | Connect stays drawn but structurally liftable, pending Marc's review (D2). |
 | **Stale docs** | `docs/content/STATUS.md` notes 2, 3 and 4 are superseded by R2, D6 and D7. The ⚠ comment above the Truth beat in `src/content/homepage.ts` is superseded by R2. |
+
+---
+
+# Part 6 — Deliverables
+
+New surface, shape confirmed 25 Aug. A Proyekto deliverable is the
+client-facing artifact with named reviewers and an acceptance state — the
+thing that gets accepted, not the task that produces it. Only artifacts this
+register itself generates are listed here; site-build deliverables (lo-fi and
+hi-fi wireframes, the launch site) belong to the roadmap review, not this
+file.
+
+**Reviewer rule.** Reviewers must be project members. Client-side approvals —
+Suzanne above all — are relayed by August per D14 and recorded in the review
+note with the real approver's name, the date, and the basis of approval, per
+the attribution sub-risk on R10. A tick from a team member is never itself
+the cultural approval.
+
+---
+
+## DEL — Terminology sheet
+
+- **Form** — status `not_started` · owner August · reviewers Marc (Suzanne's
+  approval relayed, per the rule above) · due before the next review round
+- **Description** — One page settling the site's words, so this class of
+  review comment retires: the Iningai spelling (R18), "our" / "Indigenous" /
+  "First Nations" and the first-person voice ruling (D16, CR10), fire-stick
+  farming (CR3), and the Turraburra / Terraburra pair.
+- **Acceptance criteria** — Iningai spelling confirmed with Suzanne · voice
+  ruling recorded · Indigenous / First Nations usage ruled · fire-stick
+  farming entry present · Suzanne's approval relayed and attributed
+- **Links** — D16, R18, CR3, CR10. This is the → task already flagged in D16.
+
+---
+
+## DEL — Copy options batches (Wonder, then Homepage)
+
+- **Form** — status `not_started` · owner August · reviewers Marc
+- **Description** — Per D18's recommendation: suggestions are answered with
+  two or three drafted options, batched one document per page. The Wonder
+  batch answers CR7 (After dark title) and CR9 (Guesting On-Country). The
+  Homepage batch answers CR8 (hero) and is sequenced after R1's Welcome
+  placeholder is resolved — the hero and the Welcome are one beat.
+- **Acceptance criteria** — Wonder options drafted · Homepage options drafted
+  · each option's client answer recorded against it
+- **Links** — CR7, CR8, CR9, D18.
+
+---
+
+## DEL — Corrected Truth v3 package for Suzanne
+
+- **Form** — status `not_started` · owner August · reviewers Marc (Suzanne's
+  approval relayed — hers is the one that counts)
+- **Description** — The Truth draft exactly as it goes to Suzanne: the dating
+  wording per R2's v2 answer, quotations visibly marked as quotations (D15
+  option 3), the held requests CR4 and CR10 presented as questions *beside*
+  her words rather than edits inside them, and the reordering question R5
+  already records (whether the count of thirty-five may come before the
+  blankets).
+- **Acceptance criteria** — quotations marked · CR4 and CR10 framed as
+  questions, not applied · dating wording matches the v2 answer · Suzanne's
+  approval recorded with date and basis
+- **Links** — R5, R17, D15, CR4, CR10. The Truth page publishes only behind
+  this deliverable.
