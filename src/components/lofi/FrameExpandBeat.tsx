@@ -6,7 +6,6 @@ import { GhostType } from "@/components/lofi/ui/GhostType";
 import { MediaTile } from "@/components/lofi/ui/MediaTile";
 import type { Beat } from "@/content/lofi/homepage";
 import { livingWorkPlanes } from "@/content/lofi/media";
-import { usePrefersReducedMotion } from "@/lib/motion";
 import { register } from "@/lib/motion-controller";
 import {
   createFrameExpand,
@@ -49,7 +48,6 @@ const PLANE_POSITION = [
 
 export function FrameExpandBeat({ beat }: { beat: Beat }) {
   const rootRef = useRef<HTMLElement>(null);
-  const prefersReduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -73,19 +71,25 @@ export function FrameExpandBeat({ beat }: { beat: Beat }) {
       data-tier1-exception="D9"
       className="relative flex min-h-svh items-center overflow-hidden bg-charcoal"
     >
-      {/* The frame. clip-path opens across the approach. */}
+      {/* The frame. clip-path opens across the approach.
+
+          THE CLOSED STATE IS IN CSS, NOT GATED ON JS, for the same reason
+          Hero.tsx gives for its night frame: usePrefersReducedMotion reports
+          `true` on the server. Gating these two on it meant the server rendered
+          the frame open and unscaled, and hydration then snapped it shut before
+          ScrollTrigger reopened it — invisible behind the loader on the
+          homepage, plainly visible anywhere without one. Rendering the closed
+          state always and undoing it under `motion-reduce:` keeps the two
+          passes identical, and GSAP overrides both with inline transforms once
+          it takes over. */}
       <div
         aria-hidden
         data-frame
-        className="absolute inset-0"
-        style={
-          prefersReduced ? undefined : { clipPath: "inset(12% 14% 12% 14%)" }
-        }
+        className="absolute inset-0 [clip-path:inset(12%_14%_12%_14%)] motion-reduce:[clip-path:inset(0%_0%_0%_0%)]"
       >
         <div
           data-frame-media
-          className={`absolute inset-0 ${toneClasses[beat.tone]}`}
-          style={prefersReduced ? undefined : { transform: "scale(1.3)" }}
+          className={`absolute inset-0 scale-[1.3] motion-reduce:scale-100 ${toneClasses[beat.tone]}`}
         >
           {/* D1 — the 3D scene. `perspective` here, `preserve-3d` on the
               camera, fixed translateZ on each plane. Only the camera moves. */}

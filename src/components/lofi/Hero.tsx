@@ -99,17 +99,36 @@ export function Hero({ beat }: { beat: Beat }) {
         <style>{`[data-hero-night]{opacity:0}`}</style>
       </noscript>
 
-      {/* Sunset — the settled state, and what the beat's mediaNote asks for. */}
-      <Image
-        src={heroSlot.src as string}
-        alt=""
-        aria-hidden
-        fill
-        priority
-        sizes="100vw"
-        data-bucket={heroSlot.bucket}
-        className="object-cover"
-      />
+      {/* Sunset — the settled state, and what the beat's mediaNote asks for.
+
+          GUARDED, because public/media/ is the client media library and is
+          gitignored — it lives in Drive today and moves into the CMS at launch.
+          On any machine but the one these were dropped onto, `src` is absent,
+          and a hero that 404s reads as a broken build rather than as an empty
+          slot. Same fallback shape as MediaTile: say what the slot expects. */}
+      {heroSlot.src ? (
+        <Image
+          src={heroSlot.src}
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          data-bucket={heroSlot.bucket}
+          className="object-cover"
+        />
+      ) : (
+        <div
+          aria-hidden
+          data-placeholder="media"
+          data-bucket={heroSlot.bucket}
+          className="absolute inset-0 bg-canvas/10"
+        >
+          <p className="absolute inset-x-0 top-0 p-4 text-[11px] leading-snug text-canvas/45">
+            [ IMAGE — {heroSlot.expects} ]
+          </p>
+        </div>
+      )}
 
       {/* Night — the opening state. Clears on entry.
 
@@ -121,9 +140,9 @@ export function Hero({ beat }: { beat: Beat }) {
           looking at. Rendering it always and hiding it with
           `motion-reduce:hidden` keeps it in the initial payload and still
           makes it genuinely absent for anyone who asked for less motion. */}
-      {HERO_NIGHT_ENTRY ? (
+      {HERO_NIGHT_ENTRY && heroNightSlot.src ? (
         <Image
-          src={heroNightSlot.src as string}
+          src={heroNightSlot.src}
           alt=""
           aria-hidden
           data-hero-night
@@ -158,12 +177,14 @@ export function Hero({ beat }: { beat: Beat }) {
             #F6F6EC over 281 in black) and the optimiser has nothing to do to a
             vector. Do NOT add a filter to recolour it — the two tones are the
             artwork, and altering them is "transforming an artwork element". */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={heroPathArtwork.src as string}
-          alt=""
-          className="h-auto w-full opacity-80"
-        />
+        {heroPathArtwork.src ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={heroPathArtwork.src}
+            alt=""
+            className="h-auto w-full opacity-80"
+          />
+        ) : null}
       </div>
 
       {/* Lo-fi container: 1240 wide, 100px gutters at 1440. */}
