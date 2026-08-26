@@ -54,17 +54,42 @@ All in [Yachatdac Exploration](https://www.figma.com/design/Qk35pAX0sz2ntNRXceY7
 one page, 1440 wide. Ivy's frames sit at and below the origin; Marc's imported
 hi-fi and UI kit sit roughly 10,000px above it.
 
-| Page | State |
-| --- | --- |
-| Home | ✅ reconciled to v3 — Living Work beat cut, ★M2 moved to Wonder, Truth beat grown to 250vh for its four-step sequence |
-| Truth | ✅ the accepted v2 shape (D20). Descent still owes a v3 reconciliation |
-| Wonder | ⏳ rebuild — 8 sections against v3's 15 |
-| Living Work | ⏳ rebuild — the step set was replaced in v3 |
-| About | ⏳ reconcile |
-| The Record | ⏳ reconcile — 13 cards, two facet axes per D21's holding position |
-| Our People | ⏳ not drawn |
-| Partnerships | ⏳ not drawn — four live links point at it |
-| Connect, legal | ❌ no frame from either designer |
+**Every frame's section heights sum to its frame height exactly**, and every
+section name carries its span in `vh`. That is the handoff contract R7 rests on
+— if it stops being true, pinning gets retrofitted into a layout with no room
+for it.
+
+| Page | vh | Sections | State |
+| --- | --- | --- | --- |
+| Home | 903 | 7 | ✅ v3. Living Work beat cut, ★M2 moved to Wonder, Truth beat grown to 250vh for its four-step sequence, Way Forward gains four pathways |
+| Truth | 1925 | 22 | ✅ v3 descent — lane labels, the Bought back era (2026 / 2020 / 2019 / 2003), and three card entries. Two divergences flagged on the frame |
+| Wonder | 1538 | 16 | ✅ v3 — 8 sections became 13, plus 2 kept and flagged |
+| Living Work | 1549 | 18 | ✅ v3 — challenges, rangers, seven work streams, infrastructure, five output cards |
+| About | 1077 | 10 | ✅ already matched v3 |
+| The Record | 1140 | 9 | ✅ already matched v3 — both facet axes drawn per D21, 13 cards |
+| Our People | 805 | 8 | ✅ **drawn new** — eight of nine people cards visibly held |
+| Partnerships | 418 | 4 | ✅ **drawn new**, minimal — stops four live links being dead ends |
+| Connect, legal | — | — | ❌ still no frame from either designer |
+
+The footer was rebuilt to v3's four purpose columns — *Pages / Organisation /
+Get in touch / Follow* — and cloned into all eight frames. The Acknowledgement
+slot stays visibly empty pending Suzanne (R1); ICN and ABN are blank (R15).
+
+### Open on the frames, for the review
+
+- **Two `#partner` anchors on Truth.** v3 puts Partnerships near the top as a
+  card whose CTA leaves for `/connect`; D20 keeps the enquiry form at the tail.
+  Both are drawn so the collision is visible. About and Our People both route
+  "Research or partnership" at `/truth#partner`.
+- **Truth's ending.** v3's last entry is the Eromanga seabed; the frame keeps
+  Wattanuri as the floor, which is what the reviewed lo-fi and the closing band
+  were built to.
+- **Wonder** keeps two sections v3 does not carry — the stay-stage sub-cards are
+  still v2, and "Why we say guesting" has no v3 equivalent. Both flagged, not cut.
+- **Living Work's five status labels** are unconfirmed (R14) and drawn in oxide.
+  Rainbow Credits' body is empty. CR5 is a layout question routed to Ivy.
+- **Our People** should not go to `in-review` until the consent question is
+  answered.
 
 **Brand faces cannot be set through the Figma MCP** — the sandbox sees only
 Figma's hosted Google Fonts. Thirteen text styles carry Work Sans stand-ins with
