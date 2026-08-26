@@ -441,6 +441,15 @@ and these moved. D15–D18 live there, not here.
 - **Also answered by this** — the 21 Aug agenda's item 18, *"Rail B shortened —
   accept or revert?"*: **accept**. Rail B ends with the descent at Wattanuri
   rather than running to the foot of the page.
+- **⚑ How this was decided, recorded plainly.** D20 went Final on 26 Aug, in the
+  same pass that redrew the frame — so the wireframe and the decision authorising
+  it were made together, not one from the other. It reverses build documentation
+  §4 on *Partnership opportunities*, which `src/content/lofi/truth.ts` had flagged
+  as a live decision rather than a default. Ivy had called the Truth proposal
+  final before that pass began and asked for conflicts to be surfaced; this one
+  was not surfaced until afterwards. **Reviewed on 26 Aug and upheld** — the cut
+  stands, and the content is preserved at `src/content/lofi/truth.ts:240-273`.
+  Reopening it costs one line here.
 - **⚠ One part of this decision is already contradicted by v3.** The constraint
   below says `#partner` stays on Truth as an enquiry form. In the 24 Aug draft it
   is a card near the **top** of the page whose CTA leaves for `/connect`. About

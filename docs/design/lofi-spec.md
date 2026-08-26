@@ -269,6 +269,19 @@ D20 replaced four uncommissioned card grids with one closing band. v3 then went
 further: the draft ends on the descent and writes the tail's content elsewhere,
 so the closing band went too. **235vh cut on 26 Aug.**
 
+⚑ **This reversed a recorded decision, and it was raised late.** Build
+documentation §4 puts *Partnership opportunities* on Truth, and
+`src/content/lofi/truth.ts` says in as many words that **"Retaining it is a
+decision."** D20 overturned that, and D20 was itself only recorded Final on
+26 Aug — during this work, not before it. Ivy had said at the start of the
+Figma pass that *"the spec homepage and truth proposed are final"* and asked to
+be told what conflicts arose. The tail was cut without that being brought back.
+
+**Reviewed on 26 Aug after the fact, and the cut stands** — Ivy's call, with the
+tail's content intact in `src/content/lofi/truth.ts:240-273` if it is ever
+wanted back. The frame carries a one-line note saying so, so the absence reads
+as a decision rather than an oversight.
+
 *Where this goes* declared itself **SPEC — COPY NOT COMMISSIONED** on its own
 face, and all three of its research opportunities were already drawn twice — as
 *Still to be found* above, and again on the Partnerships frame. *Partner with us*
