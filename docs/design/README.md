@@ -7,8 +7,10 @@ August 2026, so it landed five days late: the client's v3 prototypes arrived on
 24 August, three days *after* the deadline, and invalidated parts of what had
 been drawn. The correction pass ran on 26 August and is done.
 
-**Ten frames, one row, every route covered.** Hi-fi can start. What is still
-open, and who holds it, is at the foot of this file and in the review sheet.
+**Ten frames, one row, every route covered.** Hi-fi can start. The full spec is
+in [`lofi-spec.md`](lofi-spec.md); the canvas itself is deliberately quiet, and
+what is still open and who holds it is at the foot of this file and in the
+review sheet.
 
 Design happens in Figma; this folder holds the links, exports and decisions
 that the codebase needs to stay in step with it.
@@ -52,120 +54,106 @@ the lo-fi canvas. The roadmap split above has not been formally changed — it i
 recorded here so the divergence is visible rather than discovered, and so the
 hours land against the right name.
 
-### Frames on the canvas, 26 August — **ten, complete**
+### Frames on the canvas — ten, complete
 
 All in [Yachatdac Exploration](https://www.figma.com/design/Qk35pAX0sz2ntNRXceY7Gb/Yachatdac-Exploration),
-one page, 1440 wide.
+one page, 1440 wide, in a single row in site order at a pitch of 2220, every
+frame top-aligned at `y=0`. Scrolling right walks the site. Marc's imported
+hi-fi and UI kit are untouched, at negative Y.
 
-**The canvas was reflowed on 26 August into a single row in site order**, at a
-pitch of 2220 (1440 frame + 560 annotation column + 160 gutter), every frame
-top-aligned at `y=0`. Scrolling right walks the site. It replaces a two-row grid
-that had started colliding — Truth grew past the row height and was sitting on
-top of Our People, its spec panel and its title. Rows cannot collide again
-however tall a page grows. Marc's imported hi-fi and UI kit are untouched, at
-negative Y.
+**The full spec now lives in [`lofi-spec.md`](lofi-spec.md)** — one section per
+page, with the motion sketch IDs, the span arithmetic, the decisions behind each
+page, and what is still held on it.
 
-**Every frame's section heights sum to its frame height exactly**, and every
-section name carries its span in `vh`. That is the handoff contract R7 rests on
-— if it stops being true, pinning gets retrofitted into a layout with no room
-for it. Verified programmatically after every edit; the overlap scan returns
-zero.
+| # | Page | x | vh | Sections |
+| --- | --- | --- | --- | --- |
+| 1 | Home | 0 | 903 | 7 |
+| 2 | Wonder | 2220 | 1419 | 15 |
+| 3 | Truth | 4440 | 1704 | 21 |
+| 4 | Living Work | 6660 | 986 | 9 |
+| 5 | The Record | 8880 | 1123 | 10 |
+| 6 | About | 11100 | 1106 | 11 |
+| 7 | Our People | 13320 | 814 | 9 |
+| 8 | Partnerships | 15540 | 423 | 5 |
+| 9 | Connect | 17760 | 446 | 6 |
+| 10 | Legal | 19980 | 295 | 6 |
 
-| # | Page | x | vh | Sections | State |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Home | 0 | 903 | 7 | ✅ v3. Belonging beat corrected to v3's copy. **No header band** — D24 |
-| 2 | Wonder | 2220 | 1410 | 15 | ✅ v3. Section 06 rebuilt as the **six named stay stages**; two unsourced sections cut |
-| 3 | Truth | 4440 | 1704 | 21 | ✅ v3 descent. **Tail cut** (235vh) — one `#partner`, not two |
-| 4 | Living Work | 6660 | 992 | 9 | ✅ v3. **Eight-step section cut** (562vh) — not in any draft |
-| 5 | The Record | 8880 | 1155 | 10 | ✅ v3 — both facet axes per D21, 13 cards |
-| 6 | About | 11100 | 1091 | 11 | ✅ already matched v3 |
-| 7 | Our People | 13320 | 820 | 9 | ✅ eight of nine people cards visibly held |
-| 8 | Partnerships | 15540 | 433 | 5 | ✅ minimal — stops four live links being dead ends |
-| 9 | **Connect** | 17760 | 442 | 6 | ✅ **drawn new** — the most-linked destination on the site |
-| 10 | **Legal** | 19980 | 265 | 6 | ✅ **drawn new** — three routes, one template |
+**Every route in `src/app` now has a frame.** Every frame's section heights sum
+to its frame height exactly, every section name carries its span in `vh`, and
+all 111 CTAs carry their destination as `→ /path`. Verified programmatically;
+the overlap scan returns zero.
 
-**The set is complete.** Every route in `src/app` now has a frame.
+### The canvas is deliberately quiet
 
-### The header, and the footer
+The wireframes carried **66,700 characters of annotation** — about 11,000 words,
+which read as "there is an enormous amount still to resolve" when the opposite
+was true. That is now **6,100 characters, a 91% cut**, and the rule is simple:
 
-**A header is now drawn on nine of the ten frames** — it had been missing from
-all of them, which meant no page could reach any other except through the
-footer. **D2** defines it: *Wonder · Truth · Living Work · The Record · About*,
-with *Get in touch* as a button. Home is the exception, per **D24**: it carries
-no header band and an annotation saying where the header appears.
+> **Pink means one thing: a person has to fill this in.** Suzanne's wording, a
+> name, a number, a permission, a status label. Nothing else is pink.
 
-The footer carries v3's four purpose columns — *Pages / Organisation / Get in
-touch / Follow* — on all ten frames. The Acknowledgement slot stays visibly
-empty pending Suzanne (R1); ICN and ABN are blank (R15). All 160 footer links
-were renamed on 26 Aug to the `→ /destination` convention the CTAs use, so the
-whole canvas encodes destinations one way.
+46 pink notes remain across ten frames, in 21 distinct messages. The ten SPEC
+panels and the whole margin-note column are gone — their content is in
+[`lofi-spec.md`](lofi-spec.md), in full rather than summarised.
 
-### The fact audit, 26 August
+### The header — Marc's geometry, D2's items
 
-Every frame was read **back** against its source — the v3 drafts and JC's
-content modules — rather than only being drawn from them. 178 body sentences and
-every date, quantity and proper noun were traced to a source file.
+Built to Marc's `Navbar / 1 /` component (`127:5287`): 1440x130, 64px side
+padding, container 1312x40, his own logo vector, nav links gap 32, actions gap
+16, pill CTA. Items are D2's — Wonder · Truth · Living Work · The Record ·
+About, with *Get in touch* as the button.
 
-**Five passages were found that appear in no client draft.** All five traced to
-`src/content/lofi/*` — the prototype namespace — which the wireframes had been
-quietly drawing from alongside the real sources. All five were **removed, not
-softened**:
+On nine frames. **Home carries none**, per D24, with a single line saying the
+first navigation is section 05.
 
-| Where | What | Why it went |
+### Type — one job left, and it is a manual one
+
+⚠ **This section said the opposite on 26 August, and it was wrong.**
+
+Applying the real brand text styles from the MCP environment **breaks the file**.
+Figma cannot measure text in a font it cannot load, and Block Berthold and
+Bantayog Sans are not loadable there — every converted node collapsed to a
+14px-tall box with 64px or 96px type inside it. 108 headlines were left
+overlapping the copy beneath them. Worse, a node carrying an unloadable font
+cannot be written to *at all* afterwards, so they could not be repaired in
+place; all of them had to be rebuilt.
+
+**Every headline in the file is now a Work Sans stand-in**, measuring and laying
+out correctly, and named by the style it stands in for:
+
+| Prefix | Style | Stand-in |
 | --- | --- | --- |
-| Truth · Eromanga | *"A seven-metre plant eater walks its shoreline, and will not be found until 1963"* | A palaeontological claim in no draft. Replaced with `truth.ts`, which is v3 verbatim |
-| Truth · lore floor | *"one figure at the southern end of the shelter is the pursuer himself"* | An **unsourced claim about a sacred site**. Replaced with the client's own Seven Sisters text |
-| Wonder · escarpment | *"A labyrinth of weathered caves and blowholes"* | Invented imagery. v3 says only that the escarpment runs along the edge of the Aramac Range |
-| Living Work · roads | *"about twenty hours of grader time"* | An unsourced quantity. v3 lists a grader under Machinery with no hours against it |
-| Living Work · fire | black ash *"is a biochar in its own right"* | An added technical assertion. v3 says only that rangers look for black ash rather than scorched ground |
+| `D96 →` | Display/96 | Work Sans SemiBold 96 |
+| `H64 →` | Heading/64 | Work Sans SemiBold 64 |
+| `CT32 →` | Card Title/32 | Work Sans SemiBold 32 |
+| `EB24 →` | Eyebrow/Section-24 | Work Sans ExtraBold 24 |
+| `CTA16 →` | Nav & CTA/16 | Work Sans ExtraBold 16 |
+| `EB12 →` | *(no style in the kit)* | Work Sans ExtraBold 12 |
+| `Scroll32 →` | Accent/Scroll-32 | Work Sans SemiBold 32 |
 
-Two further sections were cut entire because they exist in no draft and
-duplicated content already on the same page: Living Work's *"Why we are
-publishing this"* + the eight-step *"How we built this"* (562vh), and Wonder's
-*"Why we say guesting"* + the standalone first-night band (156vh).
+Each stand-in already carries the target style's line-height and tracking, so
+applying the real style does not reflow anything.
 
-⚠ **The "what travels / what stays here" framing died with the Living Work cut.**
-It is a knowledge-sovereignty device rather than decoration, and it is worth
-finding a home for. It has none in v3.
+**The one outstanding job:** select by layer-name prefix in the Figma UI, on a
+machine with the fonts installed, and apply each style. Figma re-measures
+correctly there. `Body/*` and `Link/*` are already right — Work Sans is the real
+body face. The kit has no 12px eyebrow, so `EB12` either needs
+**Eyebrow/Footer-12** adding (Bantayog Sans ExtraBold, 12px, 150% line height,
+8% tracking) or the family set directly.
 
-### Type — the font pass is done
+**Do not apply text styles from the MCP environment.** That is what broke it.
 
-**This was wrong in the previous version of this file.** Brand faces *can* be set
-through the MCP: the text styles already point at the right families, and a node
-can be created in Work Sans, given its words, then have the real style applied.
-
-**123 stand-in nodes across all ten frames were converted on 26 August** — every
-`D96 →`, `H96 →`, `H64 →`, `CT32 →`, `EB24 →` and `CTA16 →` now carries its real
-text style. **Not one frame changed height**, because the stand-ins already
-carried the target line-height and tracking.
-
-⚠ **One exception, and it is the only font work left in the file.** The 69
-12-pixel footer eyebrows (named `EB12 ·`) are still Work Sans ExtraBold. The kit
-has no 12px eyebrow style and one cannot be created from this environment,
-because Bantayog Sans will not load here. Either select those nodes and set the
-family, or add **Eyebrow/Footer-12** — Bantayog Sans ExtraBold, 12px, 150% line
-height, 8% tracking.
-
-### Open on the frames, for the review
-
-Shorter than it was. Nine decisions closed on 26 August — see
-[`../decisions-and-risks.md`](../decisions-and-risks.md).
+### Still open on the frames
 
 - **Living Work's five status labels** are unconfirmed (R14) and drawn in oxide.
-  Rainbow Credits' body is empty. CR5 is a layout question routed to Ivy.
-- **Wonder stage 03 keeps a held story-wall image slot** — R10, and the hold
-  survived the section rebuild. The permission does not travel with a redraw.
+  Rainbow Credits' body is empty.
+- **Wonder stage 03 keeps a held story-wall image slot** — R10.
 - **Our People** should not go to `in-review` until the consent question is
   answered. Eight of nine cards are unnamed.
 - **The Record's on-request response time** is the last unfilled field on that
-  page (R23), and now has an owner — August, per D10.
-
-**Resolved since the last version of this file**, and no longer open:
-
-- ~~Two `#partner` anchors on Truth~~ — the tail was cut; one anchor remains.
-- ~~Truth's ending~~ — Wattanuri stays the floor, recorded as a deliberate
-  departure from v3 rather than an unresolved question.
-- ~~Wonder's two sections not in v3~~ — cut, with the reason on the frame.
+  page (R23), owned by August per D10.
+- **The Acknowledgement slot** is empty pending Suzanne (R1); ICN and ABN blank
+  (R15).
 
 ## What wireframes must express
 
