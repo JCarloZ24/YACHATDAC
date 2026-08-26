@@ -24,13 +24,29 @@
  * compile-time constants.
  */
 
-/** The draft's filter vocabulary. Both selects are closed sets. */
+/**
+ * The draft's filter vocabulary. Both selects are closed sets.
+ *
+ * **D21 — Final (26 Aug).** Two facet axes, type and source, are adopted as the
+ * draft has them: `source` is already carried on every item below. The draft's
+ * five types are kept, and **Event** and **Update** are added back because the
+ * settled position is "no separate Events page — Event is a content type inside
+ * Resources", and dropping the type left events with nowhere to live. Neither
+ * has a published entry yet; they exist so the first one has a home rather than
+ * forcing a schema change later.
+ *
+ * **Activity** is deliberately not re-added. Nothing in any draft distinguishes
+ * it from Event, and a filter facet nobody can tell apart from its neighbour is
+ * worse than one fewer facet.
+ */
 export const recordTypes = [
   "Story",
   "Historical account",
   "Research",
   "Documentation",
   "Recording",
+  "Event",
+  "Update",
 ] as const;
 
 export const recordSources = [
@@ -240,6 +256,15 @@ export const browserCopy = {
   clearLabel: "Clear",
   empty:
     "Nothing here yet under that. Try another subject, or ask us what exists.",
+  /**
+   * D25 — Final (26 Aug). "Ask us what exists" shipped as unlinked text, which
+   * turns the only empty state on the site that offers a conversation into a
+   * dead one. It points at the "Do you hold something?" block further down this
+   * same page rather than at /connect: that block is already the inbound-
+   * contribution route, and keeping the reader on the page they are searching
+   * beats sending them to a contact page that has no form (R9).
+   */
+  emptyCta: { label: "Ask us what exists", href: "#do-you-hold-something" },
 } as const;
 
 /**

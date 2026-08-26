@@ -212,7 +212,9 @@ export default async function ResourcesPage({
           </Reveal>
 
           <Reveal index={1}>
-            <div>
+            {/* D25's destination. The id is load-bearing — the record's empty
+                state links here rather than to a contact page with no form. */}
+            <div id="do-you-hold-something" className="scroll-mt-28">
               <h3 className="headline text-2xl text-canvas">
                 {recordGrows.contribute.title}
               </h3>

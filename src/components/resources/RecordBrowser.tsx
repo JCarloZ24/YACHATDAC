@@ -200,6 +200,16 @@ export function RecordBrowser({
         <div className="mt-12 rounded-sm border border-dashed border-evergreen/30 p-10 text-center">
           <Eyebrow className="text-oxide">Nothing found</Eyebrow>
           <p className="mt-3 text-sm text-evergreen/70">{browserCopy.empty}</p>
+          {/* D25 — "ask us what exists" was unlinked text. It goes to the
+              contribute block on this same page, not off to /connect. */}
+          <p className="mt-5">
+            <a
+              href={browserCopy.emptyCta.href}
+              className="eyebrow text-xs text-oxide underline underline-offset-4 hover:text-evergreen"
+            >
+              {browserCopy.emptyCta.label} &rarr;
+            </a>
+          </p>
         </div>
       )}
     </div>

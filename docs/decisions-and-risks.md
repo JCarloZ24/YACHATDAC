@@ -165,26 +165,26 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 | | Decision | Status | Owner |
 | --- | --- | --- | --- |
 | D1 | Blog and Resources: one thing or two? | **Final** (20 Aug) — one page, labelled **Resources** | Marc, Ivy |
-| D2 | Does Connect survive as a nav item? | Proposed — held until Marc reviews the lo-fi | Marc |
-| D3 | FAQs: scope, ownership, CMS or static | **Final** (20 Aug) — CMS-managed. Author still unnamed | Marc, David |
-| D4 | Legal page naming and Cookie Policy | Proposed — **pending**, no source documents yet | David |
+| D2 | Does Connect survive as a nav item? | **Final** (26 Aug) — retired from the nav, kept as a destination | Marc |
+| D3 | FAQs: scope, ownership, CMS or static | **Final** (20 Aug) — CMS-managed. Author named 26 Aug: August | Marc, David |
+| D4 | Legal page naming and Cookie Policy | **Final** (26 Aug) **on naming only** — content still held under R9 | David |
 | D5 | Draft documents are the source of truth for copy | **Final** | Marc, August |
 | D6 | Keep or cut the Living Work failure section | **Superseded** by the v2 draft — cut | Marc, August |
 | D7 | Where fee-for-service land management lives | **Final** (20 Aug) — under Living Work, **done in v2** | Marc, August |
 | D8 | Backend build priority | Proposed — **not** covered on 20 Aug | David |
-| D9 | Who signs off motion decisions | Proposed — motion character set, approver still open | Marc, August |
+| D9 | Who signs off motion decisions | **Split** (26 Aug) — design half Final; **approver still open** | Marc, August |
 | D10 | Copy ownership per page | **Final** (20 Aug) — August, every page | August |
 | D11 | Hosting and database accounts | Proposed | David |
 | D12 | Homepage copy is CMS-editable | **Final** | August |
 | D13 | Donations are deferred out of launch scope | **Final** (20 Aug) | David, August |
 | D14 | CMS roles, and how approvals reach the CMS | **Final** (20 Aug) — route only, not the approver | David, Marc |
-| D19 | Living Work's closing CTA: newsletter, or the draft's two endings | Proposed | Marc, Ivy |
+| D19 | Living Work's closing CTA: newsletter, or the draft's two endings | **Final** (26 Aug) — v3 carries both | Marc, Ivy |
 | D20 | What follows the Truth descent | **Final** (26 Aug) — one closing band, `#partner` kept | Marc, Ivy |
-| D21 | The Record's taxonomy: two facet axes | Proposed | Marc, David |
-| D22 | Does `/partnerships` exist as a destination? | Proposed | Marc, August |
-| D23 | Is `/our-people` a route? | Proposed | Marc |
-| D24 | Persistent homepage navbar, or no nav until block 6? | Proposed | Marc, Ivy |
-| D25 | Where the empty state's "ask us what exists" goes | Proposed | Marc |
+| D21 | The Record's taxonomy: two facet axes | **Final** (26 Aug) — both axes; Event and Update back, Activity not | Marc, David |
+| D22 | Does `/partnerships` exist as a destination? | **Final** (26 Aug) — yes | Marc, August |
+| D23 | Is `/our-people` a route? | **Final** (26 Aug) — yes | Marc |
+| D24 | Persistent homepage navbar, or no nav until block 6? | **Final** (26 Aug) — no nav until The Invitation. **Code lags** | Marc, Ivy |
+| D25 | Where the empty state's "ask us what exists" goes | **Final** (26 Aug) — the same page's contribute block | Marc |
 | F1 | Homepage copy lives in the repo | **Superseded** by D12 | August |
 | F2 | Homepage thread is a plain vertical rule | **On hold** | August, Ivy, JC |
 | F3 | Homepage Truth beat is typographic | **On hold** | August, Ivy |
@@ -199,11 +199,32 @@ Risks and issues are in Part 4: R1–R15 and R22–R23 here; R16–R21 are in
 
 # Part 1 — Decisions still open
 
-Twelve open. Record each as **Proposed**; when it is answered, change the status
-to **Final** and write the answer into *The decision* rather than starting a new
-entry — the point is that the reasoning stays attached to the outcome. D1, D3,
-D6, D7 and D10 were answered on 20 Aug and have moved to Part 2 with their
-reasoning intact.
+**Two open.** D8 (backend build priority) and D11 (hosting accounts), both
+David's, and neither of them blocks anything on a wireframe.
+
+⚑ **Nine closed on 26 August, and one split.** The lo-fi review this board was
+built for had not happened, hi-fi starts on 28 August, and five rows were marked
+BLOCKS HI-FI. Ivy and JC worked the board rather than wait: **D2, D3, D4, D19,
+D21, D22, D23, D24 and D25 went Final**, and **D9 was split** — the design half
+closed, the approver left open because naming a person to a governance role is
+not a design decision.
+
+**The line that was held.** Design, layout, IA and taxonomy were decided. Nothing
+about history, dates, names, quantities, cultural permissions or legal text was
+invented or assumed — those stay with Suzanne, the Elder Advisory Group, August
+and David, and are listed in the review sheet's *Routed elsewhere* table. Where
+the wireframes were found carrying an unsourced fact, it was removed rather than
+softened.
+
+**Every one of these can be overturned in one line.** The reasoning is written
+into each entry precisely so that someone who disagrees can see what was weighed.
+
+Record each as **Proposed**; when it is answered, change the status to **Final**
+and write the answer into *The decision* rather than starting a new entry — the
+point is that the reasoning stays attached to the outcome. D1, D3, D6, D7 and D10
+were answered on 20 Aug and have moved to Part 2 with their reasoning intact.
+The nine closed on 26 Aug are left in place, following D20's precedent: a Final
+entry does not have to move to stay findable.
 
 **D19 now has its write-up.** It was claimed by a note on the Living Work lo-fi
 frame (Figma node `13:100`) and carried for a while as a number with no entry.
@@ -221,10 +242,11 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D2 — Does Connect survive as a navigation item?
+## D2 — Does Connect survive as a navigation item? · **FINAL (26 Aug)**
 
 - **Category** — Information architecture
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc
+- **Status** — **Final** (26 Aug) · **Visibility** — Shared · **Owner** — Marc
+- **Decided by Ivy and JC on 26 August**, in the owner's absence. The meeting this was booked for did not happen and hi-fi starts on 28 August. The reasoning is written out so that overturning it costs one line.
 - **Held until (20 Aug)** — Marc reviews the lo-fi wireframes. This is a
   deliberate deferral, not a stalled item: the case for keeping or retiring
   Connect is easier to make against drawn pages than against a sitemap slide.
@@ -251,8 +273,28 @@ and these moved. D15–D18 live there, not here.
   decides has to account for **Our People** as well as About and Contact.
   Separately, every v3 page labels the hub **The Record** where the repo says
   **Resources** — same route, different word, and D1 settled on *Resources*.
-- **The decision** — Whether **Connect** remains in the navigation now that
-  **About** and **Contact** have been lifted out of it to top level.
+- **The decision — Connect is RETIRED FROM THE NAVIGATION and kept as a
+  destination.** The header is **Wonder · Truth · Living Work · The Record ·
+  About**, with *Get in touch* as a button rather than a nav item.
+
+  The evidence that settled it is that two independent client drafting rounds —
+  v2's footer nav and v3's working header — produced *exactly* this shape, while
+  linking to `/connect` from twelve places across five pages. A destination
+  people are repeatedly *sent* to is not the same as a section people browse to,
+  and the drafts have been consistent about which one Connect is. D5 gives the
+  drafts copy rather than IA, so this is not the drafts deciding it; it is two
+  rounds of independent evidence pointing the same way with nothing pointing the
+  other.
+
+  **Knock-on, and the reason this was worth doing now:** it answers **D23**
+  (`/our-people` is a route) and **D22** (`/partnerships` exists) in the same
+  move, because Connect's children have to go somewhere and those are the pages
+  they go to. Three decisions, one answer.
+
+  **Implemented** as `primaryNav` and `primaryAction` in `src/content/site.ts`,
+  consumed by `SiteHeader`. `pillars` is deliberately untouched and still drives
+  the footer columns — the footer groups content, the header navigates. The
+  lo-fi draws the new header on nine of ten frames.
 - **Context** — Connect was the utility hub holding About YACHATDAC, the team,
   Suzanne, Turraburra and Resources. The sitemap promotes About and Contact to
   the navbar, which leaves Connect holding a thinner set.
@@ -266,11 +308,28 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D4 — Legal page naming and the missing Cookie Policy
+## D4 — Legal page naming and the missing Cookie Policy · **FINAL (26 Aug) on naming**
 
 - **Category** — Legal / compliance
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — David
-- **The decision** — Confirm the final labels and routes for the legal pages.
+- **Status** — **Final** (26 Aug) on labels and routes · content still held · **Visibility** — Shared · **Owner** — David
+- **Decided by Ivy and JC on 26 August**, in the owner's absence. The meeting this was booked for did not happen and hi-fi starts on 28 August. The reasoning is written out so that overturning it costs one line.
+- **The decision — adopt the copy draft's labels: Privacy Policy · Terms of
+  Service · Cookie Settings.** `/legal/privacy` and `/legal/terms` keep their
+  routes so no inbound link breaks, and **`/legal/cookies` now exists** — it had
+  been rendered in the footer of every page with nothing behind it.
+
+  D5 gives the drafts authority over copy, and a page label is copy. That is the
+  whole argument; three namings were in circulation and one source has authority.
+
+  ⚠ **Final on NAMING ONLY, and this matters.** The *content* of all three is
+  still held and is not ours: R9 requires legal review rather than internal
+  drafting, and the analytics setup that governs the cookie wording is still
+  pending. All three routes render a visibly-marked stub.
+
+  ⚠ **Still flagged, not resolved:** "Cookie **Settings**" implies a consent
+  preferences dialog, not a policy page. Those are different things and both may
+  be wanted. That needs the analytics decision first, so it stays open under R9
+  rather than being guessed at here.
 - **Context** — Three different namings are now in circulation across three
   documents:
 
@@ -323,10 +382,10 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D9 — Who signs off motion decisions
+## D9 — Who signs off motion decisions · **SPLIT (26 Aug)**
 
 - **Category** — Governance
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc and August
+- **Status** — Proposed on the approver · **the design half is Final (26 Aug)** · **Visibility** — Shared · **Owner** — Marc and August
 - **The decision** — Whether motion sign-off sits with Marc, the board, or the
   Elder Advisory Group — and at which milestone.
 - **Context** — The motion skill's permissions board lists this as unresolved.
@@ -339,8 +398,22 @@ and these moved. D15–D18 live there, not here.
   deliberate. Not playful, not bouncy, no overshoot or elastic easing. That is
   a constraint on the work and it is consistent with F4 — two signature
   moments, everything else Tier 2 — so nothing built so far has to change.
-- **Still open** — who signs off. A character brief does not name an approver,
-  so R10's three cultural permissions stay blocked behind this.
+- **Split on 26 Aug — the design half closes, the approver does not.**
+
+  *Closed:* **which behaviours ship.** That is a design question and it is
+  answered. The Tier 1 exceptions on **non-cultural** furniture — the Truth rail
+  and its scroll-driven behaviour — are confirmed under the *grounded* character
+  settled on 20 Aug. They ship.
+
+  *Not closed, and routed:* any exception on **cultural** material. The hard
+  stop's viewport hold is on Suzanne's testimony, so it goes to her with **R5**,
+  which is where it was always going. Splitting it this way means the motion work
+  is not blocked behind a governance appointment it never actually needed.
+
+- **Still open — who signs off.** Ivy and JC deliberately did **not** answer this
+  while working the rest of the board on 26 Aug. Naming a person to a governance
+  role is not a design decision and is not ours to make. Still with Marc and
+  August. R10's cultural permissions stay behind it.
 
 ---
 
@@ -425,12 +498,31 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D21 — The Record's taxonomy: two facet axes, and what happens to Event
+## D21 — The Record's taxonomy: two facet axes, and what happens to Event · **FINAL (26 Aug)**
 
 - **Category** — Content model
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with David
-- **The decision** — Whether the Resources collection is filtered on one axis or
-  two, and whether `Event`, `Activity` and `Update` survive as content types.
+- **Status** — **Final** (26 Aug) · **Visibility** — Shared · **Owner** — Marc, with David
+- **Decided by Ivy and JC on 26 August**, in the owner's absence. The meeting this was booked for did not happen and hi-fi starts on 28 August. The reasoning is written out so that overturning it costs one line.
+- **The decision — option 1. Both axes, and Event and Update come back.**
+
+  *The large half:* **adopt both facet axes.** The source axis is the stronger
+  idea, for the reason the entry already gives — *who says so* is the exact
+  distinction the Truth page is built on. It is also already implemented: every
+  item in `src/content/resources.ts` carries `source`, and `RecordBrowser`
+  filters on it. So this was confirmation of something built, not new work.
+
+  *The small half:* **Event and Update return to `recordTypes`.** Dropping Event
+  contradicted the settled position that there is no separate Events page
+  *because* Event is a content type inside Resources — which left events with
+  nowhere at all to live. Neither type has a published entry yet. They exist so
+  the first one has a home, rather than forcing a schema change at the moment
+  someone wants to publish an event.
+
+  **Activity is deliberately NOT re-added.** Nothing in any draft distinguishes
+  it from Event, and a filter facet a reader cannot tell apart from its
+  neighbour is worse than one fewer facet. If a real distinction turns up, adding
+  it back is one line — which is the same argument as the paragraph above, run in
+  the other direction.
 - **Context** — `resourcesHub.contentTypes` in `src/content/site.ts` is one flat
   list: History · Research · Publication · Event · Activity · Story · Update. The
   Record draft uses a different type list — Stories · Historical accounts ·
@@ -456,12 +548,27 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D22 — Does `/partnerships` exist as a destination?
+## D22 — Does `/partnerships` exist as a destination? · **FINAL (26 Aug)**
 
 - **Category** — Information architecture
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc and August
-- **The decision** — Whether to create a partnerships page, or keep research and
-  partnership opportunities where build documentation §4 puts them, on Truth.
+- **Status** — **Final** (26 Aug) · **Visibility** — Shared · **Owner** — Marc and August
+- **Decided by Ivy and JC on 26 August**, in the owner's absence. The meeting this was booked for did not happen and hi-fi starts on 28 August. The reasoning is written out so that overturning it costs one line.
+- **The decision — yes, `/partnerships` exists.** Built, drawn as its own frame,
+  and four live links already point at it: the homepage Way Forward, the footer's
+  Get in touch column, Truth's *Still to be found* card, and The Record's *What
+  we do not know*.
+
+  Answered together with **D20** and **D2**, as the entry always said it should
+  be. Seen from Truth's end, D20 cut the uncommissioned partnership tail off that
+  page; the opportunities have to land somewhere and this is where. Seen from
+  the nav's end, D2 moves Connect's children out to real pages and this is one of
+  them. All three answers point the same way.
+
+  **Bears on D7 as predicted** — fee-for-service land management currently sits
+  on Living Work, and its audience is neighbouring landholders. That is closer to
+  this page than to any pillar. Not moved: D7 is Final where it is, and moving it
+  is a separate decision someone should make deliberately rather than as a
+  side-effect of this one.
 - **Context** — The Record draft's *What we do not know* section links
   `/partnerships/#research-opportunities`. No such route exists in
   `src/content/site.ts` or in the build documentation. It is the first appearance
@@ -474,13 +581,24 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D23 — Is `/our-people` a route?
+## D23 — Is `/our-people` a route? · **FINAL (26 Aug)**
 
 - **Category** — Information architecture
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc
-- **The decision** — Whether the About draft's *"Meet the people →"* link
-  (`/our-people`) is a new combined page, or Connect's existing team and Suzanne
-  sections under a new name.
+- **Status** — **Final** (26 Aug) · **Visibility** — Shared · **Owner** — Marc
+- **Decided by Ivy and JC on 26 August**, in the owner's absence. The meeting this was booked for did not happen and hi-fi starts on 28 August. The reasoning is written out so that overturning it costs one line.
+- **The decision — yes, it is a route, and a new combined page.** Built, drawn,
+  and linked from About and from the homepage Belonging beat.
+
+  Answered alongside **D2**, exactly as the entry said to. Once Connect is
+  retired from the navigation, its children have to become destinations of their
+  own, and the team and Suzanne are one page rather than two — which is what the
+  About draft assumes when it names Suzanne, the Rangers and the families in a
+  single paragraph and sends the reader to a single link.
+
+  ⚠ **The page's content constraint is unchanged and is not part of this
+  decision.** Eight of nine people cards are unnamed and consent is unresolved.
+  The frame draws the card shape and the grid with the rows visibly held. Making
+  `/our-people` a route does not make it a directory.
 - **Context** — Build documentation §4 has *The YACHATDAC Team* and *About
   Suzanne Thompson* as two separate items under Connect. The About draft names
   Suzanne, the Iningai Rangers and the families in one paragraph and sends the
@@ -492,13 +610,24 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D19 — Living Work's closing CTA
+## D19 — Living Work's closing CTA · **FINAL (26 Aug)**
 
 - **Category** — Content / conversion
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with Ivy
-- **The decision** — Whether Living Work ends on the build specification's
-  **newsletter signup**, or on the two closing blocks the copy draft actually
-  ends with — **"Talk to us →"** and **"Come on Country →"**.
+- **Status** — **Final** (26 Aug) · **Visibility** — Shared · **Owner** — Marc, with Ivy
+- **The decision — v3 answered it, and it carries both.** The 24 August draft
+  ends on three get-involved paths — *Ranger exchange · Fund the work · Land
+  management services* — and then *Get the work in your inbox* underneath.
+
+  This decision was written against a draft that has since been replaced. The
+  either/or it was built on does not exist in the current copy: the newsletter is
+  not competing with the closing blocks, it sits below them. Recorded as Final
+  rather than withdrawn, because the reasoning about audience still holds and
+  explains *why* v3's ordering is right — the peer-to-peer offer comes first and
+  the mailing list is the afterthought, not the ask.
+
+  The two endings the entry names, *"Talk to us →"* and *"Come on Country →"*,
+  are v2 wording that v3 replaced with *Get in touch*, *Partner with us* and
+  *Enquire*. The lo-fi had still been drawing the v2 band; it now draws v3.
 - **Context** — The build specification names newsletter signup as this page's
   confirmed CTA. The copy draft ends somewhere else entirely, on a section headed
   *"Come and see it, or ask us."* — *"Communities working through the same
@@ -521,12 +650,26 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D24 — Persistent homepage navbar, or no navigation until block 6?
+## D24 — Persistent homepage navbar, or no navigation until block 6? · **FINAL (26 Aug)**
 
 - **Category** — Information architecture / design
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with Ivy
-- **The decision** — Whether the homepage carries a persistent navigation bar from
-  the first screen, or no navigation at all until block 6, *The Invitation*.
+- **Status** — **Final** (26 Aug) · **Visibility** — Shared · **Owner** — Marc, with Ivy
+- **The decision — option 1. No navigation until *The Invitation*.** Confirmed by
+  Ivy on 26 August.
+
+  The copy draft's position is that withholding navigation *is* the page's
+  argument, and the entry itself already made the case: overriding that should be
+  a decision someone made, not a default that arrives with a component library.
+  Nobody made that decision, so the draft's position stands.
+
+  **Drawn:** Home is the only one of the ten lo-fi frames with no header band,
+  and it carries an annotation saying where the header appears.
+
+  ⚠ **NOT IMPLEMENTED IN CODE, and deliberately handed over rather than done.**
+  `SiteHeader` still renders persistently over the hero. Making the header appear
+  on scroll is a behavioural change in a shared layout component that every route
+  uses, which is a different kind of change from the rest of this pass. Recorded
+  in `src/components/layout/SiteHeader.tsx` at the point where it needs doing.
 - **Context** — Three sources disagree.
 
   | Source | Says |
@@ -555,11 +698,28 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D25 — Where the empty state's "ask us what exists" goes
+## D25 — Where the empty state's "ask us what exists" goes · **FINAL (26 Aug)**
 
 - **Category** — Information architecture / content
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc
-- **The decision** — What the offer in The Record's empty state actually links to.
+- **Status** — **Final** (26 Aug) · **Visibility** — Shared · **Owner** — Marc
+- **Decided by Ivy and JC on 26 August**, in the owner's absence. The meeting this was booked for did not happen and hi-fi starts on 28 August. The reasoning is written out so that overturning it costs one line.
+- **The decision — it links to *"Do you hold something?"*, further down the same
+  page.** Not to Connect.
+
+  Two reasons, and the second is the stronger one. First, that block is already
+  the inbound-contribution route — it is the thing the offer is offering. Second,
+  Connect **has no form**: R9 blocks every form on the site until the legal pages
+  have content. Sending a reader who just failed to find something off to a
+  contact page with nothing to fill in would replace a dead line with a dead end,
+  which is worse.
+
+  Keeping them on the page they are searching is also simply better. They came
+  looking for material about this Country; the block asks whether they are
+  holding some.
+
+  **Implemented** — `browserCopy.emptyCta` in `src/content/resources.ts`, and the
+  contribute block in `src/app/resources/page.tsx` now carries the
+  `id="do-you-hold-something"` it points at.
 - **Context** — The Record draft writes its own empty state, which is unusual:
   *"Nothing here yet under that. Try another subject, or ask us what exists."*
   The second half is a genuine offer, and it currently has no destination.
@@ -604,7 +764,7 @@ Record as **Final**, except F1 which is **Superseded**.
 
 ---
 
-## D3 — FAQs are CMS-managed · **RESOLVED**
+## D3 — FAQs are CMS-managed · **RESOLVED** · author named 26 Aug
 
 - **Category** — Content
 - **Status** — **Final** (20 Aug) · **Visibility** — Shared · **Owner** — Marc, with David
@@ -622,6 +782,12 @@ Record as **Final**, except F1 which is **Superseded**.
   category, sort order) in Phase 6.
 
 ---
+
+- **Author named — August (26 Aug).** The only thing still open on this entry was
+  who writes them, and **D10** already says August owns the copy on every page.
+  There was no second question here, just an unfilled field. Closed on 26 Aug
+  while working the review board.
+
 
 ## D6 — The Living Work failure section · **SUPERSEDED BY v2**
 
