@@ -69,7 +69,13 @@ export const contactRoutes = {
     {
       title: "Research or partnership",
       description: "Universities, funders, brands",
-      href: "/truth#partner",
+      /*
+        Was /truth#partner — a card inside Truth's descent. /partnerships is
+        the dedicated page, Final under D22, and it is where Connect's own
+        "Ways in" already sent this. The two disagreed; this is the one that
+        matches the page that exists.
+      */
+      href: "/partnerships",
     },
     /*
       These two pointed at /connect — which is a link back to itself, because

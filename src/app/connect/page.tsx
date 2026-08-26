@@ -113,7 +113,12 @@ export default function ConnectPage() {
         </div>
       </Band>
 
-      <ContactBlock tone="charcoal" />
+      {/*
+        showRoutes={false}: the four routes ContactBlock renders are the same
+        four as "Ways in" above, which carries them in fuller words. Only the
+        contact details are wanted here.
+      */}
+      <ContactBlock tone="charcoal" showRoutes={false} />
     </>
   );
 }
