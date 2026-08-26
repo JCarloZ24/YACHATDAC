@@ -456,7 +456,7 @@ New in this upload, with no earlier version to compare against:
 
 | Draft | Page | Notes |
 | --- | --- | --- |
-| `YACHATDAC-Resources-Copy-v1.md` | Resources | Titled **"The Record"** throughout. Filterable index (type / source / sort / search), fourteen story cards, a *What we do not know* block, documents and reports, an access-request path for material marked "on request", and a subscribe block. The access path is marked *"[ Response time and contact point to confirm. ]"* |
+| `YACHATDAC-Resources-Copy-v1.md` | Resources | Titled **"The Record"** throughout. Filterable index (type / source / sort / search), thirteen story cards, a *What we do not know* block, documents and reports, an access-request path for material marked "on request", and a subscribe block. The access path is marked *"[ Response time and contact point to confirm. ]"* |
 | `YACHATDAC-About-Copy-v1.md` | About | Organisation, registration, strategic plan framing, partners. ICN and ABN blank; legal-name spelling queried — note 10. |
 | `YACHATDAC-OurPeople-Copy-v1.md` | Our People | Suzanne, Graham Ambridge, then **placeholder rows** for Rangers, operations, cultural heritage, guesting and three board seats. Also *"The ones who got us here"* — a named list of people outside the organisation. |
 
@@ -513,7 +513,7 @@ The Record draft now writes real copy for the same content, on Resources:
 
 | Truth tail block (no copy) | The Record draft (written copy) |
 | --- | --- |
-| The browsable record | **Everything in the record** — filter bar plus 12 written entries |
+| The browsable record | **Everything in the record** — filter bar plus 13 written entries |
 | What's been researched | the `Research` type and `Published research` source facets on that same grid |
 | Open research opportunities | **What we do not know** — four written gaps, CTA to `/partnerships/#research-opportunities` |
 

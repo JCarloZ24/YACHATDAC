@@ -9,9 +9,11 @@ answers written here go back into
 entry from **Proposed** to **Final** and writing the answer into *The decision*
 rather than starting a new one.
 
-The Figma equivalent is the **⧉ Review board — internal · 21 Aug 2026** page in
+⚠ **There is no Figma equivalent.** This sheet previously said the same eighteen
+items were mirrored on a **⧉ Review board — internal · 21 Aug 2026** page in
 [Yachatdac Exploration](https://www.figma.com/design/Qk35pAX0sz2ntNRXceY7Gb/Yachatdac-Exploration).
-Same eighteen items, same numbers.
+Checked 26 Aug: that file has one page and no such board. The eighteen items live
+only here.
 
 **⚑ BLOCKS HI-FI** marks the five that have to be settled before hi-fi starts on
 28 August: 01, 02, 07, 10, 15.
@@ -189,7 +191,9 @@ Wattanuri rather than running to the foot of the page. This is the one change in
 v2 that is a design opinion rather than a documented gap: if the rail *is* the
 descent, it should not continue past the floor. One line to revert.
 
-**Answer:**
+**Answer: accept (26 Aug).** Rail B ends with the descent at Wattanuri. Recorded
+against **D20**, which went Final the same day — the v2 frame is now simply
+`Truth`, and the earlier frame has been deleted.
 
 ---
 
@@ -243,6 +247,6 @@ pasted into Proyekto, so its numbering stands and these moved:
 | D16 | **D22** | | R14 | **R22** |
 | D17 | **D23** | | R15 | **R23** |
 
-**The 01–18 item numbers are unchanged**, so this sheet and the Figma
-*⧉ Review board — internal · 21 Aug 2026* page still line up item for item. The
-board's decision-ID labels need updating to match the right-hand column.
+**The 01–18 item numbers are unchanged.** There is no Figma review board to keep
+in step — see the note at the top of this file — so the right-hand column is the
+only place these IDs need to be correct.
