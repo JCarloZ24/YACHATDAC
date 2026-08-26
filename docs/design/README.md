@@ -1,8 +1,11 @@
 # Design files — placeholder
 
-*Last updated: 19 August 2026*
+*Last updated: 26 August 2026*
 
-**Current milestone: Lo-Fi Wireframes.** Target 21 August 2026.
+**Current milestone: Lo-Fi Wireframes.** Target was 21 August 2026 — **overdue**.
+The client's v3 prototypes landed on 24 August, three days after the deadline,
+and invalidated parts of what had been drawn. A correction pass is running now
+against a 28–31 August hi-fi start.
 
 Design happens in Figma; this folder holds the links, exports and decisions
 that the codebase needs to stay in step with it.
@@ -39,6 +42,36 @@ Four pieces, per the roadmap:
 2. Lo-fi wireframes for inner pages (About, informational) — Marc
 3. Whiteboard sketches for scroll and animation behaviour — JC
 4. Team review and sign-off
+
+**⚠ In practice item 2 has been done by Ivy, not Marc.** About and The Record
+were drawn on the lo-fi canvas, and Our People and Partnerships are being added.
+The roadmap split above has not been formally changed — it is recorded here so
+the divergence is visible rather than discovered.
+
+### Frames on the canvas, 26 August
+
+All in [Yachatdac Exploration](https://www.figma.com/design/Qk35pAX0sz2ntNRXceY7Gb/Yachatdac-Exploration),
+one page, 1440 wide. Ivy's frames sit at and below the origin; Marc's imported
+hi-fi and UI kit sit roughly 10,000px above it.
+
+| Page | State |
+| --- | --- |
+| Home | ✅ reconciled to v3 — Living Work beat cut, ★M2 moved to Wonder, Truth beat grown to 250vh for its four-step sequence |
+| Truth | ✅ the accepted v2 shape (D20). Descent still owes a v3 reconciliation |
+| Wonder | ⏳ rebuild — 8 sections against v3's 15 |
+| Living Work | ⏳ rebuild — the step set was replaced in v3 |
+| About | ⏳ reconcile |
+| The Record | ⏳ reconcile — 13 cards, two facet axes per D21's holding position |
+| Our People | ⏳ not drawn |
+| Partnerships | ⏳ not drawn — four live links point at it |
+| Connect, legal | ❌ no frame from either designer |
+
+**Brand faces cannot be set through the Figma MCP** — the sandbox sees only
+Figma's hosted Google Fonts. Thirteen text styles carry Work Sans stand-ins with
+the target face in each style's description; new headline-tier text is named by
+its intended style (`H64 →`, `CT32 →`, `EB24 →`, `EB12 →`, `CTA16 →`) so the font
+pass can find it. `Body/*` and `Link/*` are already correct — Work Sans is the
+real body face.
 
 ## What wireframes must express
 

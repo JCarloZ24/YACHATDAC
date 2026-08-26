@@ -179,7 +179,7 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 | D13 | Donations are deferred out of launch scope | **Final** (20 Aug) | David, August |
 | D14 | CMS roles, and how approvals reach the CMS | **Final** (20 Aug) — route only, not the approver | David, Marc |
 | D19 | Living Work's closing CTA: newsletter, or the draft's two endings | Proposed | Marc, Ivy |
-| D20 | What follows the Truth descent | Proposed | Marc, Ivy |
+| D20 | What follows the Truth descent | **Final** (26 Aug) — one closing band, `#partner` kept | Marc, Ivy |
 | D21 | The Record's taxonomy: two facet axes | Proposed | Marc, David |
 | D22 | Does `/partnerships` exist as a destination? | Proposed | Marc, August |
 | D23 | Is `/our-people` a route? | Proposed | Marc |
@@ -356,10 +356,24 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
-## D20 — What follows the Truth descent
+## D20 — What follows the Truth descent · **FINAL (26 Aug)**
 
 - **Category** — Information architecture / content
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, with Ivy
+- **Status** — **Final** (26 Aug) · **Visibility** — Shared · **Owner** — Marc, with Ivy
+- **The answer** — **Option 1.** One closing band replaces the five structured
+  blocks. The tail goes 311vh → 226vh. `#partner` is retained. The wireframe that
+  was drawn as `Truth — v2 PROPOSED` is now simply `Truth`; the earlier frame has
+  been deleted rather than kept alongside, because the two shared a byte-identical
+  descent and every edit would otherwise have to be made twice.
+- **Also answered by this** — the 21 Aug agenda's item 18, *"Rail B shortened —
+  accept or revert?"*: **accept**. Rail B ends with the descent at Wattanuri
+  rather than running to the foot of the page.
+- **⚠ One part of this decision is already contradicted by v3.** The constraint
+  below says `#partner` stays on Truth as an enquiry form. In the 24 Aug draft it
+  is a card near the **top** of the page whose CTA leaves for `/connect`. About
+  and Our People both route "Research or partnership" to `/truth#partner`, so as
+  v3 has it both land on a bounce. That needs reopening as its own question — it
+  does not change the tail decision recorded here.
 - **The decision** — Whether the five structured blocks below the Truth timeline
   — *The browsable record · What's been researched · Open research opportunities
   · Partnership opportunities · Partner with us* — stay on that page, move to
@@ -405,9 +419,9 @@ and these moved. D15–D18 live there, not here.
      browse interfaces over one collection — which is D1's problem again.
   3. **Cut everything including `#partner`.** Cleanest page, but it strands two
      inbound links and removes the site's only research-enquiry route.
-- **Drawn, not built** — the proposed version is wireframed as
-  `Truth — v2 PROPOSED` on the lo-fi canvas, below the reviewed row. The signed-off
-  frame above it is untouched. No `src/` change until this is Final.
+- **Drawn** — the lo-fi canvas now carries one Truth frame, at the reviewed row's
+  position. `src/` is unchanged: `src/app/truth/page.tsx` was already rebuilt from
+  the v3 draft, which has no tail of its own.
 
 ---
 
