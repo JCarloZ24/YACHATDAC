@@ -107,54 +107,67 @@ About, with *Get in touch* as the button.
 On nine frames. **Home carries none**, per D24, with a single line saying the
 first navigation is section 05.
 
-### Type — one job left, and it is a manual one
+### Type — change six styles, not six hundred nodes
 
-⚠ **This section said the opposite on 26 August, and it was wrong.**
+**The font pass is now a styles job.** Every headline, eyebrow, CTA and body
+node in the ten frames is **bound to a text style**. Change the family on the
+style and every node using it updates at once. Nothing has to be selected by
+hand.
 
-Applying the real brand text styles from the MCP environment **breaks the file**.
-Figma cannot measure text in a font it cannot load, and Block Berthold and
-Bantayog Sans are not loadable there — every converted node collapsed to a
-14px-tall box with 64px or 96px type inside it. 108 headlines were left
-overlapping the copy beneath them. Worse, a node carrying an unloadable font
-cannot be written to *at all* afterwards, so they could not be repaired in
-place; all of them had to be rebuilt.
-
-**Every headline in the file is now a Work Sans stand-in**, measuring and laying
-out correctly, and named by the style it stands in for:
-
-| Prefix | Style | Stand-in | Nodes |
+| Style | Set its font to | Currently | Nodes |
 | --- | --- | --- | --- |
-| `D96 →` | Display/96 | Work Sans SemiBold 96 | 9 |
-| `H64 →` | Heading/64 | Work Sans SemiBold 64 | 59 |
-| `CT32 →` | Card Title/32 | Work Sans SemiBold 32 | 120 |
-| `EB24 →` | Eyebrow/Section-24 | Work Sans ExtraBold 24 | 130 |
-| `CTA16 →` | Nav & CTA/16 | Work Sans ExtraBold 16 | 230 |
-| `EB12 →` | *(no style in the kit)* | Work Sans ExtraBold 12 | 69 |
-| `Scroll32 →` | Accent/Scroll-32 | Work Sans SemiBold 32 | 1 |
+| `Display/96` | **Block Berthold** Regular | Work Sans SemiBold | 9 |
+| `Heading/64` | **Block Berthold** Regular | Work Sans SemiBold | 58 |
+| `Card Title/32` | **Block Berthold** Regular | Work Sans SemiBold | 116 |
+| `Eyebrow/Section-24` | **Bantayog Sans** ExtraBold | Work Sans ExtraBold | 125 |
+| `Eyebrow/Footer-12` | **Bantayog Sans** ExtraBold | Work Sans ExtraBold | 69 |
+| `Nav & CTA/16` | **Bantayog Sans** ExtraBold | Work Sans ExtraBold | 237 |
+| `Accent/Scroll-32` | **GoodDog Plain** Regular | Work Sans SemiBold | 1 |
+| `Eyebrow/Hero-32` · `Nav & CTA/16 Bold` | as named | Work Sans | 0 — kit only |
 
-⚠ **618 nodes, and the prefix coverage is now complete.** The final check on 26
-August found **179 of them carrying no prefix at all** — a select-by-name pass
-would have left 29% of the file in Work Sans while everything around it changed
-face, which is worse than not doing the pass. They are named now, and the
-vocabulary is closed to the seven above; two stray `H96 →` were folded into
-`D96 →`.
+**Each style carries the instruction in its own description**, visible in the
+Figma styles panel, so it travels with the file rather than living in this
+document.
 
-The prefix names **the style to apply**, not the semantic role — a bold 16px
-value in a contact block is `CTA16 →` because Nav & CTA/16 is the style it takes.
-Anything unprefixed, or prefixed `Lead24 →`, is **body copy already in the right
-face**. Leave it alone.
+`Body/*` and `Link/*` are **already correct** — Work Sans is the real body face.
+Their descriptions say so. Do not change them.
 
-Each stand-in already carries the target style's line-height and tracking, so
-applying the real style does not reflow anything.
+⚠ **Do it in the Figma UI, on a machine with the fonts installed. Never through
+the plugin API.** Figma cannot measure a font it cannot load, and Block
+Berthold, Bantayog Sans and GoodDog Plain are all unavailable there. Setting
+them from the API collapses every node to a 14px-tall box and the nodes then
+cannot be repaired in place — that happened on 26 August and cost a full rebuild
+of 108 headlines. It is the reason the styles ship pointing at Work Sans.
 
-**The one outstanding job:** select by layer-name prefix in the Figma UI, on a
-machine with the fonts installed, and apply each style. Figma re-measures
-correctly there. `Body/*` and `Link/*` are already right — Work Sans is the real
-body face. The kit has no 12px eyebrow, so `EB12` either needs
-**Eyebrow/Footer-12** adding (Bantayog Sans ExtraBold, 12px, 150% line height,
-8% tracking) or the family set directly.
+**What changed on 26 August to make this possible**
 
-**Do not apply text styles from the MCP environment.** That is what broke it.
+- The eight brand styles were **repointed to loadable Work Sans stand-ins** at
+  matching weight, line height and tracking, so applying them is safe.
+- **1,099 nodes were bound** — 615 headline-tier, 484 body and link. Binding
+  moved nothing: not one frame changed height, because the stand-ins already
+  carried each style's metrics exactly.
+- **`Eyebrow/Footer-12` was created.** The kit had no 12px eyebrow, which is why
+  the 69 footer labels had nowhere to point.
+- **Eight nodes were mislabelled** — four `EB24 →` and four `CT32 →` that were
+  actually 16px ExtraBold. Relabelled to `CTA16 →` rather than restyled, so the
+  design is unchanged.
+- **`__probe`** — a diagnostic style left behind by the earlier font
+  investigation — was deleted.
+
+**120 text nodes are deliberately unbound.** They are the annotation layer: the
+Inter notes, the `[ held ]` slots and the 11–13px captions. They are not design,
+and they should not take a brand face.
+
+**Layer names still carry the prefix** — `D96 →` `H64 →` `CT32 →` `EB24 →`
+`CTA16 →` `EB12 →` `Scroll32 →` — so the binding stays auditable at a glance.
+They are now a record of what a node *is*, not a to-do list.
+
+⚠ **Expect reflow when the real fonts land.** The stand-ins match on size, line
+height and tracking, but Block Berthold and Bantayog Sans have different glyph
+widths, so line breaks will move and some sections will change height. That is
+normal and is hi-fi's business — but it does mean **the `vh` figures in the
+frame names are measured against the stand-ins**, and want re-checking once the
+faces are real.
 
 ### Still open on the frames
 

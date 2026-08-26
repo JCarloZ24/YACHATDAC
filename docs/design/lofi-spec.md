@@ -84,40 +84,41 @@ Follow* — replacing Marc's five columns by pillar. All 160 links carry
   margin and the social list rendered clipped. The four columns are `FILL` now
   and the legal row's gap is 24; every footer terminates at exactly 1340.
 
-### Type
+### Type — a styles job, not a selection job
 
-Headline-tier text is named by its intended style so the font pass is findable:
+Every headline, eyebrow, CTA and body node across the ten frames is **bound to a
+text style**. Changing the family on a style updates every node using it.
 
-| Prefix | Style to apply | Nodes |
+| Style | Set its font to | Nodes |
 | --- | --- | --- |
-| `D96 →` | Display/96 | 9 |
-| `H64 →` | Heading/64 | 59 |
-| `CT32 →` | Card Title/32 | 120 |
-| `EB24 →` | Eyebrow/Section-24 | 130 |
-| `CTA16 →` | Nav & CTA/16 | 230 |
-| `EB12 →` | *(no style in the kit — see below)* | 69 |
-| `Scroll32 →` | Accent/Scroll-32 | 1 |
+| `Display/96` | **Block Berthold** Regular | 9 |
+| `Heading/64` | **Block Berthold** Regular | 58 |
+| `Card Title/32` | **Block Berthold** Regular | 116 |
+| `Eyebrow/Section-24` | **Bantayog Sans** ExtraBold | 125 |
+| `Eyebrow/Footer-12` | **Bantayog Sans** ExtraBold | 69 |
+| `Nav & CTA/16` | **Bantayog Sans** ExtraBold | 237 |
+| `Accent/Scroll-32` | **GoodDog Plain** Regular | 1 |
 
-**618 nodes, and every one of them carries a prefix.** That was checked on 26
-Aug and it was not true: **179 of them — 29% — had no prefix at all**, so a
-select-by-name font pass would have left them in Work Sans while everything
-around them changed face. They are named now. The prefix names *the style to
-apply*, not the semantic role: a bold 16px value in the contact block reads as
-`CTA16 →` because Nav & CTA/16 is the style it takes.
+Each style says the same thing in its own description, in the Figma styles
+panel. `Body/*` and `Link/*` are already the real face and are marked correct.
 
-The vocabulary is closed — `D96` `H64` `CT32` `EB24` `CTA16` `EB12` `Scroll32`.
-Two stray `H96 →` names were normalised to `D96 →` in the same pass. Anything
-prefixed `Lead24 →` or unprefixed is **body copy in Work Sans and correct as it
-stands** — do not restyle it.
+⚠ **In the Figma UI only, with the fonts installed — never through the plugin
+API.** Figma cannot measure a font it cannot load; the three brand faces are all
+unavailable to the API, and setting them there collapses every node to a 14px
+box that cannot then be written to at all. That is why the styles ship pointing
+at Work Sans stand-ins matched on weight, line height and tracking.
 
-⚠ **The nodes are drawn in Work Sans as a stand-in and the styles are not
-applied.** Block Berthold and Bantayog Sans cannot be loaded in the environment
-that builds these frames, and Figma cannot measure text in a font it cannot load
-— applying the styles from there collapses every headline to a 14px-tall box.
-Applying them by hand in the Figma UI, on a machine with the fonts installed,
-works correctly. **That is the one outstanding job on this file.**
+1,099 nodes bound, and **not one frame changed height** when they were — the
+stand-ins already carried the metrics. 120 nodes stay unbound on purpose: the
+annotation layer, which is not design.
 
-`Body/*` and `Link/*` are already correct — Work Sans is the real body face.
+Layer-name prefixes — `D96 →` `H64 →` `CT32 →` `EB24 →` `CTA16 →` `EB12 →`
+`Scroll32 →` — are kept so the binding is auditable, but they are a record now
+rather than a task list.
+
+⚠ **The `vh` figures are measured against the stand-ins.** Block Berthold and
+Bantayog Sans have different glyph widths, so line breaks and section heights
+will move when the real faces land. Re-check the spans then.
 
 ### Constraints that do not lift
 
