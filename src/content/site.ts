@@ -61,6 +61,34 @@ export type Pillar = {
   children: NavChild[];
 };
 
+/**
+ * The primary navigation — **D2, Final (26 Aug)**.
+ *
+ * Connect is retired from the navigation and kept as a destination. Two
+ * independent client drafting rounds (v2's footer nav, v3's working header)
+ * both produced exactly this shape: the three pillars, the record, and About,
+ * with "Get in touch" as a button rather than a nav item — while linking to
+ * `/connect` from a dozen places. D23 (`/our-people` is a route) and D22
+ * (`/partnerships` exists) fall out of the same decision, because Connect's
+ * children move out to pages of their own.
+ *
+ * `pillars` below is unchanged and still describes the four content groupings
+ * the footer columns are built from. This is the nav; that is the IA.
+ *
+ * Decided by Ivy and JC in Marc's absence, with hi-fi starting 28 Aug. One line
+ * to override.
+ */
+export const primaryNav: NavChild[] = [
+  { title: "Wonder", href: "/wonder" },
+  { title: "Truth", href: "/truth" },
+  { title: "Living Work", href: "/living-work" },
+  { title: "The Record", href: "/resources" },
+  { title: "About", href: "/about" },
+];
+
+/** The header's single button. Connect survives here, and only here. */
+export const primaryAction = { title: "Get in touch", href: "/connect" } as const;
+
 export const pillars: Pillar[] = [
   {
     id: "wonder",
@@ -154,25 +182,44 @@ export const resourcesHub = {
  * copy-paste, not a decision.
  */
 export const resourcesFooterLinks: NavChild[] = [
-  { title: "Stories", href: "/resources?type=story", stub: true },
-  { title: "News / Updates", href: "/resources?type=update", stub: true },
-  { title: "Downloads", href: "/resources?type=download", stub: true },
-  { title: "Videos / Podcast", href: "/resources?type=video", stub: true },
+  { title: "Stories", href: "/resources?type=story" },
+  { title: "News / Updates", href: "/resources?type=update" },
+  /*
+    "Downloads" and "Videos / Podcast" filtered on `download` and `video`,
+    neither of which is a RecordType. They did not error — resources/page.tsx
+    matches the query against the closed set and falls through to no filter —
+    so both links quietly delivered the WHOLE record under a promise of a
+    subset. Misleading rather than broken, and worse for being neither.
+
+    Downloads is the documents and reports section, which is what it always
+    meant. Videos / Podcast maps onto Recording, a type that exists.
+    `update` now resolves too, because D21 put Update back in the vocabulary.
+  */
+  { title: "Downloads", href: "/resources#documents" },
+  { title: "Videos / Podcast", href: "/resources?type=Recording", stub: true },
 ];
 
 /**
  * Legal row, from Homepage copy line 53.
  *
- * ⚠ Decision D4 is open on naming and on the missing cookie route: the repo
- * has /legal/terms labelled "Terms of Use", the copy draft says "Terms of
- * Service", and the uploaded sitemap says "Terms & Conditions" plus a "Cookie
- * Policy". The copy draft governs copy (D5), so its labels are used here —
- * but the cookie route does not exist yet, hence the stub.
+ * **D4 — Final (26 Aug) on labels and routes.** Three namings were in
+ * circulation: build documentation said "Terms of Use" and a cookie/consent
+ * notice, the sitemap said "Terms & Conditions" and "Cookie Policy", the copy
+ * draft footer said "Terms of Service" and "Cookie Settings". D5 gives the
+ * drafts authority over copy, so the draft's labels stand. `/legal/terms` keeps
+ * its route so no inbound link breaks, and `/legal/cookies` now exists — it had
+ * been rendered in the footer of every page with nothing behind it.
+ *
+ * ⚠ D4 is Final on NAMING ONLY. The content of all three is still held: R9
+ * requires legal review rather than internal drafting, and the analytics setup
+ * that governs the cookie wording is pending. Note "Cookie **Settings**"
+ * implies a consent preferences dialog rather than a policy page — those are
+ * different things and both may be wanted. Flagged, not resolved.
  */
 export const legalLinks: NavChild[] = [
   { title: "Privacy Policy", href: "/legal/privacy" },
   { title: "Terms of Service", href: "/legal/terms" },
-  { title: "Cookie Settings", href: "/legal/cookies", stub: true },
+  { title: "Cookie Settings", href: "/legal/cookies" },
 ];
 
 /**

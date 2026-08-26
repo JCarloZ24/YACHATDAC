@@ -71,15 +71,22 @@ export const contactRoutes = {
       description: "Universities, funders, brands",
       href: "/truth#partner",
     },
+    /*
+      These two pointed at /connect — which is a link back to itself, because
+      ContactBlock renders on /connect as well as on About, Our People and
+      Partnerships. Retargeted to the destinations src/app/connect/page.tsx
+      already routes the same two things to, so the router now works from
+      every page that carries it.
+    */
     {
       title: "Ranger exchange",
       description: "Other First Nations groups",
-      href: "/connect",
+      href: "/living-work#rangers",
     },
     {
       title: "Something for the record",
       description: "Photographs, papers, family records",
-      href: "/connect",
+      href: "/resources",
     },
   ],
 } as const;

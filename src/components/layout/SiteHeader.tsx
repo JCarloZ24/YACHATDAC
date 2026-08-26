@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { org, pillars } from "@/content/site";
+import { org, primaryAction, primaryNav } from "@/content/site";
 
 /**
  * Site header.
@@ -15,19 +15,23 @@ import { org, pillars } from "@/content/site";
  * gone. Do not restyle, recolour or redraw this asset. It ships as authored
  * (its paths are already fill="white", so it needs no filter over the hero).
  *
- * ⚠ THIS NAVBAR ITSELF IS AN UNRESOLVED DIVERGENCE — readout §2.
- * Marc's hi-fi carries a persistent navbar. The homepage copy draft specifies
- * NO navigation until block 6, and says so as an argument rather than an
- * oversight: "Blocks 1–5 carry NO nav bar and NO links. First navigation is
- * block 6. This is the page's argument, not an oversight." (lo-fi note 4:61).
+ * ⚑ D2 — FINAL (26 Aug). The nav is `primaryNav`: Wonder · Truth · Living Work
+ * · The Record · About, with "Get in touch" as a button. Connect is retired as
+ * a nav item and kept as a destination. This is the shape both the v2 and v3
+ * client drafts independently produced.
  *
- * The code has always rendered a header, so it already sides with the hi-fi.
- * Left that way rather than silently switching sides mid-prototype, but it is
- * a genuine design decision for the team and not settled by this file.
+ * ⚠ D24 — FINAL (26 Aug), AND THIS FILE DOES NOT YET IMPLEMENT IT. The homepage
+ * copy draft specifies NO navigation until The Invitation, and says so as an
+ * argument rather than an oversight: "Blocks 1–5 carry NO nav bar and NO links.
+ * First navigation is block 6. This is the page's argument, not an oversight."
+ * D24 went Final in favour of the draft, so this header should not render over
+ * the homepage hero — it should appear when The Invitation does.
+ *
+ * That is a scroll-driven behaviour change in a shared layout component and it
+ * belongs with whoever owns the header, so it is recorded here rather than
+ * done: the lo-fi draws it correctly (no header band on the Home frame, an
+ * annotation saying where it appears) and the code still renders persistently.
  */
-
-/** Marc's navbar: the three pillars, then CONNECT as a filled pill. */
-const CONNECT_HREF = "/connect";
 
 export function SiteHeader() {
   return (
@@ -49,23 +53,23 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-6 lg:gap-10">
           <ul className="hidden items-center gap-6 md:flex lg:gap-10">
-            {pillars.map((pillar) => (
-              <li key={pillar.id}>
+            {primaryNav.map((item) => (
+              <li key={item.href}>
                 <Link
-                  href={pillar.href}
+                  href={item.href}
                   className="eyebrow text-xs text-white transition-colors hover:text-gold"
                 >
-                  {pillar.title}
+                  {item.title}
                 </Link>
               </li>
             ))}
           </ul>
 
           <Link
-            href={CONNECT_HREF}
+            href={primaryAction.href}
             className="eyebrow rounded-full bg-charcoal px-6 py-3 text-xs text-white transition-colors hover:bg-oxide"
           >
-            Connect
+            {primaryAction.title}
           </Link>
         </div>
       </nav>
