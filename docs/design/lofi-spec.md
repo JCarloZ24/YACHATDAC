@@ -18,14 +18,14 @@ wording from Suzanne — drawn in pink so it cannot be mistaken for finished cop
 | Page | x | vh | Sections | Tier |
 | --- | --- | --- | --- | --- |
 | [Home](#home) | 0 | 903 | 7 | **1** |
-| [Wonder](#wonder) | 2220 | 1410 | 15 | 2 |
+| [Wonder](#wonder) | 2220 | 1363 | 14 | 2 |
 | [Truth](#truth) | 4440 | 1704 | 21 | 2 |
 | [Living Work](#living-work) | 6660 | 992 | 9 | 2 |
 | [The Record](#the-record) | 8880 | 1155 | 10 | 2 |
 | [About](#about) | 11100 | 1091 | 11 | 2 |
 | [Our People](#our-people) | 13320 | 820 | 9 | 2 |
 | [Partnerships](#partnerships) | 15540 | 433 | 5 | 2 |
-| [Connect](#connect) | 17760 | 442 | 6 | 2 |
+| [Connect](#connect) | 17760 | 393 | 6 | 2 |
 | [Legal](#legal) | 19980 | 265 | 6 | 2 |
 
 ---
@@ -78,12 +78,37 @@ Follow* — replacing Marc's five columns by pillar. All 160 links carry
 - The newsletter field is **inert until R9 clears**. Marc's hi-fi carries
   unmodified Relume boilerplate in Roboto here; that is placeholder, not copy.
 - ICN and ABN are blank (**R15**).
+- **Right margin fixed, 26 Aug.** The nav row's five fixed-width children summed
+  to 1252 inside a 1240 content box, and the credits row to 1257 — so on **all
+  ten frames** the *Follow* column and the social line sat 12–17px past the right
+  margin and the social list rendered clipped. The four columns are `FILL` now
+  and the legal row's gap is 24; every footer terminates at exactly 1340.
 
 ### Type
 
 Headline-tier text is named by its intended style so the font pass is findable:
-`D96 →` Display/96 · `H64 →` Heading/64 · `CT32 →` Card Title/32 ·
-`EB24 →` Eyebrow/Section-24 · `CTA16 →` Nav & CTA/16 · `EB12 →` (no style yet).
+
+| Prefix | Style to apply | Nodes |
+| --- | --- | --- |
+| `D96 →` | Display/96 | 9 |
+| `H64 →` | Heading/64 | 59 |
+| `CT32 →` | Card Title/32 | 120 |
+| `EB24 →` | Eyebrow/Section-24 | 130 |
+| `CTA16 →` | Nav & CTA/16 | 230 |
+| `EB12 →` | *(no style in the kit — see below)* | 69 |
+| `Scroll32 →` | Accent/Scroll-32 | 1 |
+
+**618 nodes, and every one of them carries a prefix.** That was checked on 26
+Aug and it was not true: **179 of them — 29% — had no prefix at all**, so a
+select-by-name font pass would have left them in Work Sans while everything
+around them changed face. They are named now. The prefix names *the style to
+apply*, not the semantic role: a bold 16px value in the contact block reads as
+`CTA16 →` because Nav & CTA/16 is the style it takes.
+
+The vocabulary is closed — `D96` `H64` `CT32` `EB24` `CTA16` `EB12` `Scroll32`.
+Two stray `H96 →` names were normalised to `D96 →` in the same pass. Anything
+prefixed `Lead24 →` or unprefixed is **body copy in Work Sans and correct as it
+stands** — do not restyle it.
 
 ⚠ **The nodes are drawn in Work Sans as a stand-in and the styles are not
 applied.** Block Berthold and Bantayog Sans cannot be loaded in the environment
@@ -177,7 +202,7 @@ copy.
 
 ## Wonder
 
-**Route** `/wonder` · **Tier 2** · **1410vh** · 15 sections · frame `2:5`
+**Route** `/wonder` · **Tier 2** · **1363vh** · 14 sections · frame `2:5`
 
 Rebuilt to v3 on 26 Aug: 8 sections became 13, plus the header. The draft adds a
 fact strip, three highlight cards, Getting here, Turraburra, Where you sleep,
@@ -198,6 +223,19 @@ Section 06 is now the draft's six named stages, verbatim: Arriving · The first
 night · Walking out to the wall · Older than the wall · Out for food · Hands in
 the work. The first night is stage 02 rather than a band of its own, which is
 where the draft puts it.
+
+### The two closing sections merged, 26 Aug — 1419vh → 1363vh
+
+*Take it with you* had been drawn as its own 62vh band — eyebrow, 64px headline,
+one line of copy and a **Download PDF** button — immediately above *Come and see
+it*, which carries **Download the brochure** as its secondary CTA. The same
+brochure, twice, in consecutive sections.
+
+The draft nests them: `### Take it with you` contains `#### Come and see it`, and
+`src/content/wonder.ts` already merges them into a single `wonderClose` object.
+The wireframe was the only place they were siblings. The band is now one section
+carrying the eyebrow, the headline, the four facts, the brochure line and both
+CTAs — which is what the code renders.
 
 ### Held
 
@@ -507,7 +545,7 @@ Not moved — that is a separate decision someone should take deliberately.
 
 ## Connect
 
-**Route** `/connect` · **Tier 2** · **442vh** · 6 sections · frame `239:1996`
+**Route** `/connect` · **Tier 2** · **393vh** · 6 sections · frame `239:1996`
 
 Drawn new on 26 Aug. **The most-linked destination in the project** — twelve
 inbound links from Truth, Living Work, The Record, About and Our People — and it
@@ -533,6 +571,24 @@ say which hours it is answered (**R23**).
 for the record* to `/connect` — links back to the page itself. Retargeted to
 `/living-work#rangers` and `/resources`, matching what `connect/page.tsx` already
 routes to, and the same fix went into `src/content/contact.ts`.
+
+### The page carried its four routes twice — 446vh → 393vh
+
+*Ways in* (section 02) and the router inside the *Get in touch* block (section
+04) were **the same four destinations**, and they disagreed: *Ways in* sent
+research to `/partnerships`, the router sent it to `/truth#partner`. Section 04's
+headline *"Different things go to different people."* also repeated the hero
+standfirst word for word.
+
+Section 04 is now the contact details alone — eyebrow, the five detail columns,
+the R23 note. *Ways in* keeps the four routes, in the fuller words it already
+had.
+
+**In code**, `ContactBlock` gained a `showRoutes` prop and `/connect` passes
+`false`. About, Our People and Partnerships are the only pages that render the
+router, and they are unchanged — on those three it is the only place the routes
+appear, which is correct. `contactRoutes`' research destination moved to
+`/partnerships`, the page that exists under **D22**.
 
 ---
 

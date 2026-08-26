@@ -20,13 +20,21 @@ import { toneInk, type Tone } from "@/lib/tone";
  * the top of src/content/contact.ts — the email address in the draft looks
  * real and is not, so nothing here becomes a mailto: until someone clears the
  * `pending` flag.
+ *
+ * `showRoutes` exists for /connect alone. That page already carries the same
+ * four destinations, in fuller words, as its own "Ways in" band — so rendering
+ * the router here put the identical four routes on the page twice, and they
+ * disagreed on where "Research" went. Connect passes false and keeps the
+ * contact details; every other page keeps the default and is unchanged.
  */
 export function ContactBlock({
   id = "contact",
   tone = "charcoal",
+  showRoutes = true,
 }: {
   id?: string;
   tone?: Tone;
+  showRoutes?: boolean;
 }) {
   const ink = toneInk[tone];
 
@@ -34,7 +42,9 @@ export function ContactBlock({
     <Band id={id} tone={tone}>
       <BandHeading eyebrow="Get in touch" title={org.name} tone={tone} />
 
-      <div className="mt-14 grid gap-14 lg:grid-cols-2">
+      <div
+        className={`mt-14 grid gap-14 ${showRoutes ? "lg:grid-cols-2" : ""}`}
+      >
         <Reveal>
           <dl className="space-y-6">
             {contactDetails.map((detail) => (
@@ -60,6 +70,7 @@ export function ContactBlock({
           </dl>
         </Reveal>
 
+        {showRoutes ? (
         <div className="space-y-8">
           <Reveal index={1}>
             <div>
@@ -90,6 +101,7 @@ export function ContactBlock({
             ))}
           </ul>
         </div>
+        ) : null}
       </div>
 
       <div className="mt-14 max-w-2xl">

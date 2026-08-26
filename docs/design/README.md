@@ -68,20 +68,21 @@ page, and what is still held on it.
 | # | Page | x | vh | Sections |
 | --- | --- | --- | --- | --- |
 | 1 | Home | 0 | 903 | 7 |
-| 2 | Wonder | 2220 | 1419 | 15 |
+| 2 | Wonder | 2220 | 1363 | 14 |
 | 3 | Truth | 4440 | 1704 | 21 |
 | 4 | Living Work | 6660 | 986 | 9 |
 | 5 | The Record | 8880 | 1123 | 10 |
 | 6 | About | 11100 | 1106 | 11 |
 | 7 | Our People | 13320 | 814 | 9 |
 | 8 | Partnerships | 15540 | 423 | 5 |
-| 9 | Connect | 17760 | 446 | 6 |
+| 9 | Connect | 17760 | 393 | 6 |
 | 10 | Legal | 19980 | 295 | 6 |
 
 **Every route in `src/app` now has a frame.** Every frame's section heights sum
 to its frame height exactly, every section name carries its span in `vh`, and
-all 111 CTAs carry their destination as `→ /path`. Verified programmatically;
-the overlap scan returns zero.
+all 243 CTA and link nodes carry their destination as `→ /path`. Twenty distinct
+destinations, every one of them a route that exists. Verified programmatically;
+the overlap scan returns zero, as does the clipped-text scan.
 
 ### The canvas is deliberately quiet
 
@@ -121,15 +122,27 @@ place; all of them had to be rebuilt.
 **Every headline in the file is now a Work Sans stand-in**, measuring and laying
 out correctly, and named by the style it stands in for:
 
-| Prefix | Style | Stand-in |
-| --- | --- | --- |
-| `D96 →` | Display/96 | Work Sans SemiBold 96 |
-| `H64 →` | Heading/64 | Work Sans SemiBold 64 |
-| `CT32 →` | Card Title/32 | Work Sans SemiBold 32 |
-| `EB24 →` | Eyebrow/Section-24 | Work Sans ExtraBold 24 |
-| `CTA16 →` | Nav & CTA/16 | Work Sans ExtraBold 16 |
-| `EB12 →` | *(no style in the kit)* | Work Sans ExtraBold 12 |
-| `Scroll32 →` | Accent/Scroll-32 | Work Sans SemiBold 32 |
+| Prefix | Style | Stand-in | Nodes |
+| --- | --- | --- | --- |
+| `D96 →` | Display/96 | Work Sans SemiBold 96 | 9 |
+| `H64 →` | Heading/64 | Work Sans SemiBold 64 | 59 |
+| `CT32 →` | Card Title/32 | Work Sans SemiBold 32 | 120 |
+| `EB24 →` | Eyebrow/Section-24 | Work Sans ExtraBold 24 | 130 |
+| `CTA16 →` | Nav & CTA/16 | Work Sans ExtraBold 16 | 230 |
+| `EB12 →` | *(no style in the kit)* | Work Sans ExtraBold 12 | 69 |
+| `Scroll32 →` | Accent/Scroll-32 | Work Sans SemiBold 32 | 1 |
+
+⚠ **618 nodes, and the prefix coverage is now complete.** The final check on 26
+August found **179 of them carrying no prefix at all** — a select-by-name pass
+would have left 29% of the file in Work Sans while everything around it changed
+face, which is worse than not doing the pass. They are named now, and the
+vocabulary is closed to the seven above; two stray `H96 →` were folded into
+`D96 →`.
+
+The prefix names **the style to apply**, not the semantic role — a bold 16px
+value in a contact block is `CTA16 →` because Nav & CTA/16 is the style it takes.
+Anything unprefixed, or prefixed `Lead24 →`, is **body copy already in the right
+face**. Leave it alone.
 
 Each stand-in already carries the target style's line-height and tracking, so
 applying the real style does not reflow anything.
