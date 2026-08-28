@@ -57,6 +57,18 @@
   font-display: swap;
 }
 
+/* ExtraBold. This is the weight the Figma text styles are repointed to —
+   Eyebrow/Hero-32, Eyebrow/Section-24 and Nav & CTA/16 are all Bantayog Sans
+   ExtraBold, so the `eyebrow` utility resolves here rather than to Bold.
+   Nav & CTA/16 Bold is the one style that stays at 700. */
+@font-face {
+  font-family: "Bantayog Sans";
+  src: url("/fonts/BantayogSans-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Bantayog Sans";
   src: url("/fonts/BantayogSans-Black.woff2") format("woff2");
@@ -82,9 +94,29 @@
   font-display: swap;
 }
 
-/* Callouts — Good Dog Cool. NOT SUPPLIED. The slot is kept so the file can be
-   dropped in without touching code; until then `.callout` falls back. Callout
-   use only — never body, never long headlines. */
+/* Callouts — the GoodDog set, Fonthead Design. Both cuts are installed and
+   both are FREEWARE ("Use it to your hearts content without any guilt" —
+   GoodDog-LICENCE.txt), so unlike Block Berthold and Bantayog Sans there is no
+   open licence question here.
+
+   ⚠ WHICH CUT IS AN UNRESOLVED DIVERGENCE.
+     · tokens.md says          "Callouts `Good Dog Cool`"
+     · the Figma text style    Accent/Scroll-32 → GoodDog Plain Regular
+     · Marc's hi-fi hero       node 17:927 → GoodDog Plain Regular
+   Two design sources say Plain, one written token says Cool. `--font-callout`
+   points at Plain so the build matches what is actually designed, and both
+   faces are installed so flipping it is one line rather than a font hunt.
+   Raise it with Marc; do not treat this comment as the decision.
+
+   Callout use only — never body, never long headlines. */
+@font-face {
+  font-family: "GoodDog Plain";
+  src: url("/fonts/GoodDogPlain.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Good Dog Cool";
   src: url("/fonts/GoodDogCool.woff2") format("woff2");
@@ -99,4 +131,5 @@
   --font-bantayog-sans: "Bantayog Sans", "Helvetica Neue", system-ui, sans-serif;
   --font-work-sans: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-good-dog-cool: "Good Dog Cool", "Comic Sans MS", cursive;
+  --font-good-dog-plain: "GoodDog Plain", "Comic Sans MS", cursive;
 }

@@ -28,12 +28,30 @@
   --font-headline: var(--font-block-berthold);
   --font-eyebrow: var(--font-bantayog-sans);
   --font-body: var(--font-work-sans);
-  --font-callout: var(--font-good-dog-cool);
+  /* Plain, not Cool — see the divergence note in fonts.css. */
+  --font-callout: var(--font-good-dog-plain);
 
-  /* Display scale — headlines are set in Block Berthold, tight and heavy. */
-  --text-display: 4rem;
-  --text-display--line-height: 1.02;
-  --text-display--letter-spacing: -0.02em;
+  /* Warm/Yellow Gold. Taken from the Figma paint style of that name, which is
+     what Marc's hi-fi hero uses for the Scroll callout (node 17:927).
+     ⚠ NOT the same colour as --color-ochre (#d69828, "Yellow Ochre — Morning
+     Light") from tokens.md. Both are real brand names; the code palette was
+     simply missing this one. Whether the two should coexist or one is a drift
+     of the other is a question for Marc — flagged, not silently merged. */
+  --color-gold: #fbae3d;
+
+  /* Display scale — headlines are set in Block Berthold, tight and heavy.
+     Sizes below match the Figma text styles rather than being chosen here:
+     Display/96, Eyebrow/Hero-32, Body/Lead-24, Accent/Scroll-32. The code
+     scale used to be materially smaller than the design system across the
+     board — 64px display, 13px eyebrow — so a built page could never look
+     like the hi-fi no matter how the layout was arranged. */
+  --text-display: 6rem; /* 96 — Figma Display/96 */
+  --text-display--line-height: 1.2; /* lo-fi Display/96 is 120% */
+  --text-display--letter-spacing: 0em; /* Marc: 0% */
+
+  --text-eyebrow-hero: 2rem; /* 32 — Figma Eyebrow/Hero-32 */
+  --text-lead: 1.5rem; /* 24 — Figma Body/Lead-24 */
+  --text-scroll: 2rem; /* 32 — Figma Accent/Scroll-32 */
 
   --text-beat: 2.75rem;
   --text-beat--line-height: 1.08;
@@ -57,7 +75,21 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* ⚠ NO GLOBAL smooth-scroll, deliberately. It was here and it was wrong.
+     Three reasons, in order of how much they hurt:
+
+     1. It animates anchor jumps through the whole document. Truth's own
+        "Start from the beginning ↓" targets the LAST timeline entry, so with
+        smooth scrolling one click flies past all eighteen sections instead of
+        landing. That is not a nice transition, it is losing the reader.
+     2. It makes keyboard paging (space, PageDown, arrows) animate, and
+        repeated presses queue and overshoot.
+     3. It fights scroll-driven animation: ScrollTrigger reads a scroll
+        position that is mid-tween, and the brand note is explicit that "the
+        visitor sets the pace".
+
+     If a specific link ever wants an eased jump, do it on that link with
+     scrollIntoView({behavior:"smooth"}) — not on every scroll on the site. */
   -webkit-text-size-adjust: 100%;
 }
 
@@ -94,7 +126,10 @@ body {
 @utility eyebrow {
   font-family: var(--font-eyebrow);
   font-size: 0.8125rem;
-  font-weight: 700;
+  /* 800 = ExtraBold, matching the Figma repoint of Eyebrow/Hero-32,
+     Eyebrow/Section-24 and Nav & CTA/16. Was 700, which rendered a weight
+     lighter than the lo-fi. */
+  font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -110,4 +145,26 @@ body {
   /* Good Dog Cool — hand-drawn. Callouts only, never body or long headlines. */
   font-family: var(--font-callout);
   font-weight: 400;
+}
+
+/* X2 — scroll cue. 2.4s is the spec's own figure, not a tuned value. The only
+   ambient loop allowed above the fold, and it is killed permanently on the
+   first scroll (see Hero) rather than left running. */
+@keyframes y-scroll-cue {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(0.5rem);
+  }
+}
+
+@utility scroll-cue {
+  animation: y-scroll-cue 2.4s var(--ease-quiet) infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue {
+    animation: none;
+  }
 }

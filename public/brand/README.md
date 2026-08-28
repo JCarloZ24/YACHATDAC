@@ -1,4 +1,4 @@
-# Brand assets — placeholder
+# Brand assets
 
 ## Logo
 
@@ -6,17 +6,44 @@
 hand-lettered `YACHATDAC.` wordmark in Oxide Red, paired with boomerang and
 dot-painting motifs in Yellow Ochre and Burnt Ochre.
 
-Final vector files (SVG/EPS) come from the brand team. Drop them here as:
+| File | Use | Status |
+| --- | --- | --- |
+| `logo-wordmark.svg` | Wordmark only — header, loader, small sizes | ✅ **in** |
+| `logo-full.svg` | Wordmark + motifs + legal-name lockup | not supplied |
+| `logo-mono.svg` | Single-colour version | not supplied |
 
-| File | Use |
-| --- | --- |
-| `logo-full.svg` | Wordmark + motifs + legal-name lockup |
-| `logo-wordmark.svg` | Wordmark only — header, small sizes |
-| `logo-mono.svg` | Single-colour version |
+`logo-wordmark.svg` was extracted on 2026-08-20 from Marc's hi-fi navbar —
+node `17:260`, a 15-vector group — on the "Reference — Marc's hi-fi" page of
+Figma file `Qk35pAX0sz2ntNRXceY7Gb`, and exported whole. Its paths are already
+`fill="white"`, so it needs no filter over dark imagery.
 
-Until then, `SiteHeader` renders a plain text wordmark marked
-`data-placeholder="logo"`. Swap it for the real asset, do not restyle the
-placeholder to look closer to the real thing.
+`SiteHeader` and `Preloader` now render this asset. The old text placeholder is
+gone. Rendering the artist's real vector satisfies §5; redrawing, recolouring
+or restyling it does not — do neither.
+
+⚠ It is the wordmark **only**. The full lockup with boomerang and dot-painting
+motifs, and the single-colour cut, still have to come from the brand team.
+
+## Commissioned artwork — what is here
+
+| File | Source | Rule |
+| --- | --- | --- |
+| `artwork-path.svg` | Figma node `17:312`, 562 vector nodes | ⛔ **static only** |
+
+The dotted path across the bottom of the hero. It is the artist's supplied,
+vectorised artwork — exported, not generated — so using it is fine.
+
+**It must never move.** `permissions.md` records no motion permission for
+artwork: *"static imagery only. No animating, masking, revealing, scrubbing,
+looping or transforming any artwork element."* It is stamped `data-static` in
+the DOM, which every motion module on the site checks before touching a media
+element.
+
+It is also **not** sketch C1. C1 — a continuous line with lit waypoints — is on
+hold precisely because a machine-drawn meandering path with waypoints reads as
+iconography. This one is not machine-drawn. Do not reimplement it as code
+because it "looks simple"; that would turn a permitted asset into a prohibited
+generation.
 
 ## Commissioned artwork
 

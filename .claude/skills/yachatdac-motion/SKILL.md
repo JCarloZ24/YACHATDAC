@@ -106,6 +106,11 @@ Read `references/patterns.md` for the GSAP idioms this project uses — scrub vs
 trigger-once, grid and radial stagger, FLIP handoffs, snap on pinned steps, and the
 `gsap.matchMedia()` shape for the reduced-motion branch.
 
+For GSAP API detail beyond these patterns (plugin options, timeline mechanics,
+`gsap.utils` helpers), the `gsap-*` skills are the reference. The rules and process
+in this document still take precedence — they govern what gets built and how, not
+just GSAP syntax.
+
 Read `references/tokens.md` for durations, staggers, parallax ratios, scroll spans
 and the palette. Don't invent values; the whole point of the token set is that
 sections built by different people feel like one site.

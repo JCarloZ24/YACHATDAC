@@ -52,7 +52,15 @@ next-env.d.ts
 /public/fonts/BlockBerthold.woff2
 /public/fonts/BantayogSans-*.woff2
 /public/fonts/GoodDogCool.woff2
+/public/fonts/GoodDogPlain.woff2
 
 # Client media library. Lives in Google Drive today and moves into the CMS
 # media library at launch — it does not belong in git.
 /public/media/
+
+# Raw Drive-export copies of the client prototypes, with their base64
+# photography extracted to disk. JC's converted versions — provenance header,
+# governance circle, `[ Image — … ]` markers in place of the photos — are the
+# ones in docs/content/drafts/. Per STATUS note 12 the photography is
+# placeholder direction, not an asset manifest, so it stays out of git.
+/docs/content/drafts/.drive-export-raw/
