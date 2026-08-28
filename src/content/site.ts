@@ -31,6 +31,24 @@ export type NavChild = {
   stub?: boolean;
 };
 
+/**
+ * ⚠ NAV IS UNCHANGED, AND THAT IS DELIBERATE (24 Aug 2026).
+ *
+ * The pillar pages are now built, so the child links below point at real
+ * sections instead of at spec outlines, and the `stub` flags are cleared where
+ * the destination exists. Three new routes also exist — `/about`,
+ * `/our-people` and `/partnerships` — because every v3 draft links to them.
+ *
+ * None of that answers **D2**: whether Connect survives as a navigation item
+ * now that About and Contact have been lifted out of it. Two rounds of client
+ * drafting have produced a header nav with no Connect in it while linking to
+ * `/connect` from five places. That is copy evidence for the lo-fi review, not
+ * an IA decision, so the four top-level pillars below are untouched and
+ * Connect still holds About, the team and Suzanne as children.
+ *
+ * When D2 is answered, this is the file that changes.
+ */
+
 export type Pillar = {
   id: PillarId;
   /** One-word pillar name, as the client uses it. */
@@ -43,6 +61,34 @@ export type Pillar = {
   children: NavChild[];
 };
 
+/**
+ * The primary navigation — **D2, Final (26 Aug)**.
+ *
+ * Connect is retired from the navigation and kept as a destination. Two
+ * independent client drafting rounds (v2's footer nav, v3's working header)
+ * both produced exactly this shape: the three pillars, the record, and About,
+ * with "Get in touch" as a button rather than a nav item — while linking to
+ * `/connect` from a dozen places. D23 (`/our-people` is a route) and D22
+ * (`/partnerships` exists) fall out of the same decision, because Connect's
+ * children move out to pages of their own.
+ *
+ * `pillars` below is unchanged and still describes the four content groupings
+ * the footer columns are built from. This is the nav; that is the IA.
+ *
+ * Decided by Ivy and JC in Marc's absence, with hi-fi starting 28 Aug. One line
+ * to override.
+ */
+export const primaryNav: NavChild[] = [
+  { title: "Wonder", href: "/wonder" },
+  { title: "Truth", href: "/truth" },
+  { title: "Living Work", href: "/living-work" },
+  { title: "The Record", href: "/resources" },
+  { title: "About", href: "/about" },
+];
+
+/** The header's single button. Connect survives here, and only here. */
+export const primaryAction = { title: "Get in touch", href: "/connect" } as const;
+
 export const pillars: Pillar[] = [
   {
     id: "wonder",
@@ -51,10 +97,13 @@ export const pillars: Pillar[] = [
     audience: "Travellers and schools — the curious",
     href: "/wonder",
     children: [
-      { title: "Guesting on Country", href: "/wonder#experience", stub: true },
-      { title: "Experiences", href: "/wonder#experience", stub: true },
-      { title: "Stories", href: "/resources?type=story", stub: true },
-      { title: "Downloads", href: "/resources?type=download", stub: true },
+      { title: "Guesting on Country", href: "/wonder#experience" },
+      { title: "About Turraburra", href: "/wonder#turraburra" },
+      { title: "Stories", href: "/resources?type=story" },
+      /* "Downloads" was `?type=download`, which is not one of the record's
+         content types and would have matched nothing. The documents and
+         reports section is what it meant. */
+      { title: "Documents & reports", href: "/resources#documents" },
     ],
   },
   {
@@ -65,10 +114,10 @@ export const pillars: Pillar[] = [
       "Universities, funders, brands, researchers and partners — the practitioners",
     href: "/truth",
     children: [
-      { title: "What's Been Researched", href: "/truth#researched", stub: true },
-      { title: "Open Research Opportunities", href: "/truth#opportunities", stub: true },
-      { title: "The Cultural Knowledge Precinct", href: "/truth#precinct", stub: true },
-      { title: "Partner with Us", href: "/truth#partner", stub: true },
+      { title: "What's Been Researched", href: "/truth#researched" },
+      { title: "Open Research Opportunities", href: "/truth#opportunities" },
+      { title: "The Cultural Knowledge Precinct", href: "/truth#precinct" },
+      { title: "Partner with Us", href: "/truth#partner" },
     ],
   },
   {
@@ -78,9 +127,9 @@ export const pillars: Pillar[] = [
     audience: "Other Indigenous communities worldwide",
     href: "/living-work",
     children: [
-      { title: "The Iningai Rangers", href: "/living-work#rangers", stub: true },
-      { title: "Caring for Country in Practice", href: "/living-work#practice", stub: true },
-      { title: "How We Built This", href: "/living-work#how-we-built-this", stub: true },
+      { title: "The Iningai Rangers", href: "/living-work#rangers" },
+      { title: "Caring for Country in Practice", href: "/living-work#practice" },
+      { title: "How We Built This", href: "/living-work#how-we-built-this" },
     ],
   },
   {
@@ -89,12 +138,18 @@ export const pillars: Pillar[] = [
     subtitle: "About & contact",
     audience: "All site visitors",
     href: "/connect",
+    /*
+      These pointed at `/connect#about`, `#team`, `#suzanne` and `#turraburra`
+      — four anchors on a page that was a stub, so none of them resolved. They
+      now point at the pages that carry that content. Connect itself is still
+      here and still a nav item; see the D2 note above.
+    */
     children: [
-      { title: `About ${org.name}`, href: "/connect#about", stub: true },
-      { title: "The YACHATDAC Team", href: "/connect#team", stub: true },
-      { title: "About Suzanne Thompson", href: "/connect#suzanne", stub: true },
-      { title: `About ${org.property}`, href: "/connect#turraburra", stub: true },
-      { title: "Resources", href: "/resources", stub: true },
+      { title: `About ${org.name}`, href: "/about" },
+      { title: "Our people", href: "/our-people" },
+      { title: "Partnerships", href: "/partnerships" },
+      { title: `About ${org.property}`, href: "/wonder#turraburra" },
+      { title: "Resources", href: "/resources" },
     ],
   },
 ];
@@ -117,6 +172,55 @@ export const resourcesHub = {
     "Update",
   ],
 } as const;
+
+/**
+ * Resources column as it appears in the footer, per build documentation §2.
+ *
+ * Kept separate from `resourcesHub.contentTypes`: those are the filter facets
+ * on the hub page, these are navigation links. Marc's hi-fi footer listed
+ * "Downloads" twice here and omitted nothing else; the duplicate was a
+ * copy-paste, not a decision.
+ */
+export const resourcesFooterLinks: NavChild[] = [
+  { title: "Stories", href: "/resources?type=story" },
+  { title: "News / Updates", href: "/resources?type=update" },
+  /*
+    "Downloads" and "Videos / Podcast" filtered on `download` and `video`,
+    neither of which is a RecordType. They did not error — resources/page.tsx
+    matches the query against the closed set and falls through to no filter —
+    so both links quietly delivered the WHOLE record under a promise of a
+    subset. Misleading rather than broken, and worse for being neither.
+
+    Downloads is the documents and reports section, which is what it always
+    meant. Videos / Podcast maps onto Recording, a type that exists.
+    `update` now resolves too, because D21 put Update back in the vocabulary.
+  */
+  { title: "Downloads", href: "/resources#documents" },
+  { title: "Videos / Podcast", href: "/resources?type=Recording", stub: true },
+];
+
+/**
+ * Legal row, from Homepage copy line 53.
+ *
+ * **D4 — Final (26 Aug) on labels and routes.** Three namings were in
+ * circulation: build documentation said "Terms of Use" and a cookie/consent
+ * notice, the sitemap said "Terms & Conditions" and "Cookie Policy", the copy
+ * draft footer said "Terms of Service" and "Cookie Settings". D5 gives the
+ * drafts authority over copy, so the draft's labels stand. `/legal/terms` keeps
+ * its route so no inbound link breaks, and `/legal/cookies` now exists — it had
+ * been rendered in the footer of every page with nothing behind it.
+ *
+ * ⚠ D4 is Final on NAMING ONLY. The content of all three is still held: R9
+ * requires legal review rather than internal drafting, and the analytics setup
+ * that governs the cookie wording is pending. Note "Cookie **Settings**"
+ * implies a consent preferences dialog rather than a policy page — those are
+ * different things and both may be wanted. Flagged, not resolved.
+ */
+export const legalLinks: NavChild[] = [
+  { title: "Privacy Policy", href: "/legal/privacy" },
+  { title: "Terms of Service", href: "/legal/terms" },
+  { title: "Cookie Settings", href: "/legal/cookies" },
+];
 
 /**
  * Deliberately out of scope this phase (§2). Listed so nobody re-adds them by

@@ -49,6 +49,22 @@ export default function LabIndexPage() {
         , so the frame can be seen clean.
       </p>
 
+      <Link
+        href="/lab/lofi"
+        className="mt-14 block rounded-sm border border-ochre/40 bg-ochre/5 p-6 transition-colors duration-(--dur-small) ease-quiet hover:border-ochre"
+      >
+        <p className="eyebrow text-ochre">Walkthrough · four pages</p>
+        <h2 className="headline mt-2 text-2xl text-canvas">
+          Lo-fi, with the motion wired up
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-canvas/70">
+          Home, Truth, Wonder and Living Work as drawn for the lo-fi review,
+          with the loader, the sky clock and the scroll transitions built rather
+          than described. Whole pages, so the behaviours are judged in the
+          company they would really keep.
+        </p>
+      </Link>
+
       <ul className="mt-14 space-y-4">
         {PROTOTYPES.map((prototype) => (
           <li key={prototype.sketch}>
@@ -69,7 +85,7 @@ export default function LabIndexPage() {
       </ul>
 
       <div className="mt-14 rounded-sm border border-oxide/50 p-6">
-        <h2 className="eyebrow text-oxide">Both are on hold</h2>
+        <h2 className="eyebrow text-oxide">D4 and E1 are on hold</h2>
         <p className="mt-3 text-sm leading-relaxed text-canvas/70">
           D4 and E1 are approved in principle for the About and Research pages.
           What is not confirmed is how much of the property may be shown and at

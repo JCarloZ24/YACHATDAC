@@ -1,13 +1,28 @@
 /**
  * Homepage copy.
  *
- * Source of truth: docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v2.md
+ * Source of truth: docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v3.md
  * (decision D5). The draft documents govern page copy. They do NOT govern web
  * design — that is the wireframes' job.
  *
- * Synced to v2 on 20 Aug 2026. What changed from v1: the Truth beat (see the
- * note on that beat — the 55,000-year claim is withdrawn), and the Invitation
- * card eyebrows. Every other beat came through v2 unchanged.
+ * Synced to **v3** on 24 Aug 2026. What changed from v2:
+ *
+ *   - SIX sections, not seven. The standalone `living-work` beat is gone; it
+ *     survives as an Invitation card. `beats` is now four.
+ *   - The `truth` beat is replaced outright. No "What's etched in stone
+ *     doesn't forget", no wasp-nest sentence — that whole beat and the R2 note
+ *     attached to it are retired. In its place, a sequence running from the
+ *     Iningai Nation before 1861 down to the thirty-seven at Lake Dolly.
+ *   - `belonging` is rewritten into first person plural and names Polly and
+ *     Billy.
+ *   - `wonder` and `belonging` now carry a call to action. Beats 2–5 had none
+ *     in v2, deliberately; v3 changes that and the drafts govern.
+ *   - Invitation card eyebrows and all three descriptions are rewritten. Card 2
+ *     is "The record of this Country", not "Legacy, Research & Discovery".
+ *   - `wayForward` gains four pathways and a rewritten body.
+ *   - The footer acknowledgement is rewritten and no longer names the Northern
+ *     Territory — but it is still a drafter's placeholder marked for Suzanne.
+ *     See `welcomeToCountry`; it is deliberately NOT filled from v3.
  *
  * ⚠ This file is NOT the long-term home for this text. Homepage copy will be
  * editable in the CMS (decision D12, superseding the earlier position that it
@@ -16,19 +31,50 @@
  * seed/default content the CMS is populated from, and do not build anything
  * that assumes these strings are compile-time constants.
  *
- * Structure: seven beats, one continuous scroll (build documentation §3). The
- * order mirrors Suzanne Thompson's own framework.
- *
  * ⚠ Copy status: draft, not approved. See docs/content/STATUS.md.
+ *
+ * ⚠ Pending change requests touch this file. CR8 asks for a "more heroic"
+ * hero headline; CR9 asks whether the first Invitation card becomes "Be our
+ * guest"; CR3 renames "right-way fire" in the Living Work card's media note.
+ * None are applied — see docs/change-requests.md.
  */
+
+export type BeatStep = {
+  /**
+   * Year or label for this step.
+   *
+   * ⚠ The prototype's Truth sequence is labelled by year — the conversion
+   * notes read it as 1861 → 1862 → 1886 → 1902 — but only the first label
+   * survived into the Markdown. The remaining steps are left unlabelled rather
+   * than dated from inference: putting a year against a line about the Native
+   * Police is not a formatting decision. Recover the labels from the prototype
+   * in the Drive export before this beat is signed off.
+   */
+  label?: string;
+  text: string;
+};
 
 export type Beat = {
   id: string;
   /** Small caps label above the headline. */
   eyebrow: string;
-  headline: string;
+  /** Optional — the v3 Truth beat opens on a sequence rather than a headline. */
+  headline?: string;
   /** One or two short paragraphs. Kept short — the imagery carries the weight. */
   body: string[];
+  /**
+   * A dated sequence, where the beat is built from one. Only Truth is.
+   */
+  sequence?: {
+    /** The state being described before the sequence starts moving. */
+    subject: string;
+    subjectLabel: string;
+    /** Descriptors of that state. */
+    subjectDetail: readonly string[];
+    steps: readonly BeatStep[];
+  };
+  /** v3 gives some beats an onward link. v2 gave none any. */
+  cta?: { label: string; href: string };
   /**
    * Art direction note for whoever selects the media. Not rendered.
    *
@@ -50,12 +96,16 @@ export const beats: Beat[] = [
     // homepage slides label it — but it is a design-level call, so the
     // wireframes decide whether it renders.
     eyebrow: "Welcome to Country",
+    // ⚠ CR8 — FNAN asked for "maybe something more heroic?" against this line.
+    // Not applied. It is a direction rather than a brief, and it sits under a
+    // Welcome to Country eyebrow whose wording is still blocked on Suzanne
+    // (R1), so rewriting it first risks doing it twice.
     headline: "Reconnection — across time, across people.",
     body: [
       "You are entering Turraburra: story held in stone and starlight, still being lived today.",
     ],
     mediaNote:
-      "Full-bleed hero video or still. Country at first light — landscape and sky, no cultural-site material. No button; a scroll cue only.",
+      "A red dirt road running out through low scrub under a wide sky. Full-bleed hero video or still. No cultural-site material. No button; a scroll cue only.",
     tone: "charcoal",
   },
   {
@@ -65,32 +115,50 @@ export const beats: Beat[] = [
     body: [
       "Deep time isn't a figure of speech here. The stars above the story wall are the same ones this Country has watched for longer than most of what humans call history.",
     ],
+    cta: { label: "Guesting On-Country", href: "/wonder" },
     mediaNote: "Deep time, sensory — night sky, sunrise, the escarpment.",
     tone: "midnight",
   },
   {
     id: "truth",
     eyebrow: "Truth",
-    headline: "What's etched in stone doesn't forget.",
+    /**
+     * ⚠ REPLACED IN v3. The old beat and its 55,000-year history are gone —
+     * see R2 in docs/decisions-and-risks.md for why that claim was withdrawn.
+     * Do not reinstate a date for the wall without the 2022 paper open.
+     *
+     * This beat is forty-one years told in seven lines. It has no headline of
+     * its own in the draft; the sequence is the headline.
+     */
     body: [
-      "The largest rock art site in central Queensland is here — over 15,000 markings across 160 metres of wall. Nobody has dated it. The wasp nests that could be still sitting over the engravings, waiting for someone to ask.",
+      "By 1902 there were thirty-seven of us left, camped at Lake Dolly, sharing eighteen pairs of blankets. That July the Protector of Aborigines removed fifty-two people to a mission at Durundur.",
+      "Forty-one years. That is one part of a much longer story — fifteen thousand markings cut into a wall nobody has dated, an inland sea before that, a station called Gracevale bought back in 2019, a deed of grant signed in 2026.",
+      "We tell it in the order that explains it.",
     ],
-    // ⚠ CHANGED IN v2 — risk R2. v1 said the markings were "at least 55,000
-    // years old, by the most conservative estimate", dated from a wasp nest
-    // built over them. All three v2 drafts withdraw that: the site has never
-    // been scientifically dated. The pecked designs are likely more than 5,000
-    // years old on regional style sequences, and the wasp nests are a method
-    // that COULD give minimum ages if anyone ever sampled them — not a dating
-    // that happened. Sourced in the Truth draft to Marra Wonga, Australian
-    // Archaeology, 2022. Do not reinstate a figure without that paper open.
-    //
-    // ⚠ The third sentence above is transcribed verbatim from v2 and is a
-    // sentence fragment as drafted. Not repaired here, because D5 makes the
-    // draft the source of truth for copy and inventing a fix would put words in
-    // the client's mouth. August is confirming the reversal; the rewrite goes
-    // with it. Probable intent: "The wasp nests that could date them are still
-    // sitting over the engravings, waiting for someone to ask."
-    //
+    sequence: {
+      subject: "Iningai Nation",
+      subjectLabel: "1861",
+      subjectDetail: [
+        "Nineteen and a half thousand square miles, from the Great Dividing Range west to Longreach, north to Muttaburra and Aramac",
+        "Sandy plains, wooded country, and the Alice and the Thomson running through it",
+        "Our people living into their nineties",
+      ],
+      steps: [
+        {
+          text: "Landsborough comes through. The squatters follow him onto our Country.",
+        },
+        {
+          text: "One cattle station, Bowen Downs, takes fifteen hundred square miles of it — and the Thomson River with it.",
+        },
+        {
+          text: "The Native Police are sent to disperse us. Stock foul our waterholes. Disease follows, and we have no immunity to it.",
+        },
+        {
+          text: "Drought. We cannot hunt and we cannot reach our water. The government calculates how many blankets we need.",
+        },
+      ],
+    },
+    cta: { label: "The full account", href: "/truth" },
     // ⚠ Story-wall imagery permission is UNRESOLVED (motion skill,
     // permissions.md). Treat as unavailable. No photograph of the engravings,
     // and no motion applied to cultural-site imagery in any form.
@@ -101,36 +169,35 @@ export const beats: Beat[] = [
   {
     id: "belonging",
     eyebrow: "Belonging",
-    headline: "Some people never left. Everyone else can find their way back.",
+    headline: "Some of us never left. Others are still coming back.",
     body: [
-      "For the Iningai Nation, this has always been Country. For everyone else, belonging is something every person carries — even the ones who've forgotten where.",
+      "Families stayed on this Country, or were removed and came back, or were brought back by the ones who stayed. Our great-great-great grandmother was Polly. Our great-great-great grandfather was Billy. That is how we know where to hunt out here, and which springs to go to.",
+      "For anyone still finding their way home, this Country is patient.",
     ],
+    cta: {
+      label: "Meet the people keeping this Country",
+      href: "/our-people",
+    },
     mediaNote:
-      "Real, unlabelled imagery of people. No names, no bios — that is Connect's job. The feeling, not the directory.",
+      "Real, unlabelled imagery of people. No names, no bios — that is Our People's job. The feeling, not the directory.",
     tone: "roasted",
-  },
-  {
-    id: "living-work",
-    eyebrow: "Living Work",
-    headline: "Caring for Country, in practice.",
-    body: [
-      "Fire-stick farming, carbon farming, spring restoration — work the Iningai Rangers do every week, by hand, not heritage kept behind glass.",
-    ],
-    mediaNote:
-      "Hands-on ranger work. Right-way fire, restoration sites, the flux towers. Working imagery, not portraiture.",
-    tone: "evergreen",
   },
 ];
 
 /**
- * Beat 6 — The Invitation. The first point in the page where the visitor is
- * given a choice. Three cards, one per pillar.
+ * The Invitation. The first point in the page where the visitor is given a
+ * choice. Three cards, one per pillar.
  *
  * The draft titles each card with the pillar name and carries the descriptive
  * phrase as an eyebrow above it — not the other way round.
+ *
+ * ⚠ CR9 — FNAN asked whether the first card becomes "Be our guest". Not
+ * applied. The card currently shares its name with the Wonder page's own H1,
+ * so renaming one without the other breaks that pairing; the question needs
+ * answering before either moves.
  */
 export const invitation = {
-  eyebrow: "The Invitation",
+  eyebrow: "The invitation",
   headline:
     "Every journey begins differently — we welcome you to walk alongside us.",
   body: "",
@@ -139,51 +206,86 @@ export const invitation = {
       eyebrow: "Guesting On-Country",
       title: "Wonder",
       description:
-        "Walk alongside us on Country through immersive experiences, native foods, stories and seasonal knowledge.",
-      cta: "Explore Experiences",
+        "Walk alongside us on Country — the wall, the food in the scrub, the fire at night.",
+      cta: "Explore experiences",
       href: "/wonder",
     },
     {
-      // v2 widened this from "Research & Discovery" and notes the change was
-      // deliberate, to match the Truth page title: "Truth — Legacy, Research &
-      // Discovery". Keep the two in step if either moves.
-      eyebrow: "Legacy, Research & Discovery",
+      // v3 widens this again, from "Legacy, Research & Discovery". The card is
+      // now about the record rather than about research alone, which matches
+      // what the Truth page actually became.
+      eyebrow: "The record of this Country",
       title: "Truth",
       description:
-        // v2 says Iningai, not Indigenous. The narrower word is the point:
-        // this is one nation's knowledge, not a category.
-        "Partner with us on research and discovery that honours both Iningai knowledge and contemporary practice.",
-      cta: "Research & Partnerships",
+        "The story of this Country from today back to the seabed, and the research being done on it now.",
+      cta: "Follow it back",
       href: "/truth",
     },
     {
       eyebrow: "Caring for Country",
       title: "Living Work",
       description:
-        // Ranger is capitalised in v2 throughout — it is a role here, not a
-        // job description.
-        "See Caring for Country in action — Ranger programs, restoration, fire management and community-led practice.",
-      cta: "See the Work",
+        "Ranger programs, restoration, fire management and community-led practice.",
+      cta: "See the work",
       href: "/living-work",
     },
   ],
 } as const;
 
 /**
- * Beat 7 — The Way Forward. Legacy/template framing for other communities.
- * This is NOT a note about the build being unfinished (open decision 1).
+ * The Way Forward. Legacy/template framing for other communities. This is NOT
+ * a note about the build being unfinished (open decision 1).
+ *
+ * ⚠ D16. This body carries both "Indigenous traditions" and "First Nations" in
+ * three sentences, and FNAN has flagged both words for checking — "We need to
+ * triple check use of the words 'Indigenous' and 'First Nations'", 24 Aug.
+ * Left as drafted. The terminology sheet D16 proposes is what settles it, not
+ * an edit here.
  */
 export const wayForward = {
-  eyebrow: "The Way Forward",
+  eyebrow: "The way forward",
   headline: "A way forward, for whoever needs one.",
-  body: "What's been rebuilt here — Country, culture, a way of working — is offered as one example, not the only one. Wherever you're standing, there's a way back to your own Country too.",
+  body: "What we have rebuilt here — Country, Indigenous traditions, an organisation that can carry them — is offered as one example, not the only one. Other First Nations groups are welcome to come and see how it was done, and to tell us where we have it wrong.",
   /**
-   * New in v2, between the body and the signup. This is the organisation's own
-   * line — it is on the logo, and Wonder and Living Work both carry it too.
+   * New in v3: four pathways between the body and the signup.
    *
-   * ⚠ NOT RENDERED YET. WayForward.tsx draws eyebrow, headline, body and the
-   * signup field only. Wiring it in is a design-level call, so it waits on the
-   * wireframes (D5) rather than being added on the way past.
+   * These are the page's second and last navigation, and they are a different
+   * set from the Invitation's — that one routes by pillar, this one routes by
+   * what the visitor wants to do.
+   */
+  paths: [
+    {
+      title: "Come on Country",
+      description:
+        "Guesting On-Country for families, school groups and visitors. Small groups, dates arranged with you.",
+      cta: "Guesting On-Country",
+      href: "/wonder",
+    },
+    {
+      title: "Research with us",
+      description:
+        "What we do not know and would like studied — how old the wall is, what lives here, what is in the ground.",
+      cta: "Open research",
+      href: "/partnerships",
+    },
+    {
+      title: "Ranger exchange",
+      description:
+        "On-Country training camps and exchanges with other First Nations ranger groups.",
+      cta: "Get in touch",
+      href: "/connect",
+    },
+    {
+      title: "Read the record",
+      description:
+        "Stories, historical accounts, research and recordings. Some of it is science, some of it is memory.",
+      cta: "The Record",
+      href: "/resources",
+    },
+  ],
+  /**
+   * The organisation's own line — it is on the logo, and Wonder, Living Work
+   * and About all carry it too. Rendered as of the v3 sync.
    */
   tagline: "Ancient traditions walking together with contemporary visions.",
   signup: {
@@ -191,7 +293,7 @@ export const wayForward = {
     placeholder: "Your email address",
     cta: "Stay connected",
     /** Not transactional. Explicitly not a booking or donation prompt (§4). */
-    note: "Occasional updates from Country. No more than that.",
+    note: "New material a few times a year, when something is added.",
   },
 } as const;
 
@@ -199,18 +301,24 @@ export const wayForward = {
  * Acknowledgement / Welcome to Country — footer, text only, no ceremony
  * element and no popup (open decision 3).
  *
- * ⚠ BLOCKED, and deliberately NOT taken from the draft. The homepage draft
- * acknowledges "the Aboriginal people of the Northern Territory" — the wrong
- * jurisdiction. YACHATDAC is on Iningai Country, Central Western Queensland.
- * See risk R1.
+ * ⚠ BLOCKED, and deliberately NOT taken from the draft.
  *
- * ⚠ STILL WRONG IN v2. The footer paragraph is carried over word for word,
- * Northern Territory included, through two rounds of drafting. This placeholder
- * therefore stays exactly as it is — it is the only thing stopping that
- * sentence reaching a page.
+ * v1 and v2 acknowledged "the Aboriginal people of the Northern Territory" —
+ * the wrong jurisdiction, carried word for word through two rounds. That is
+ * risk R1 and it is the reason this placeholder exists.
  *
- * Note v2 also names homepage section 1 "Welcome to Country". That is a section
- * heading, not this paragraph. Do not conflate them when the real wording lands.
+ * ✅ FIXED IN v3 (24 Aug), and this placeholder still stays. The Northern
+ * Territory paragraph is gone; v3 reads "Turraburra is Iningai Country. We are
+ * its Traditional Custodians, and we are still here." It also gets the
+ * distinction right — that is a statement of custodianship and welcome, not an
+ * Acknowledgement, which is what a visitor makes on Country not their own. But
+ * v3 marks its own paragraph "[ DRAFT for Suzanne to correct or replace ]", so
+ * it is a drafter's words, not hers. Copying it in would swap one placeholder
+ * for another and make it look approved. R1 is downgraded, not closed.
+ *
+ * Note the drafts also name homepage section 1 "Welcome to Country". That is a
+ * section heading, not this paragraph. Do not conflate them when the real
+ * wording lands.
  *
  * Final wording must come from Suzanne Thompson. She is an actual Traditional
  * Owner, so a genuine Welcome to Country is possible here, in her own words —
@@ -223,3 +331,10 @@ export const welcomeToCountry = {
   placeholder:
     "Welcome to Country wording to be provided by Suzanne Thompson before launch.",
 };
+
+/**
+ * Cultural advice. v3 carries it in the footer, and Our People carries its own
+ * copy at the top of that page because the risk is concentrated there.
+ */
+export const culturalAdvice =
+  "Aboriginal and Torres Strait Islander readers are advised that this website contains images and names of people who have passed away.";

@@ -1,6 +1,6 @@
 # Open questions & blockers
 
-*Last updated: 20 August 2026*
+*Last updated: 26 August 2026*
 
 Live list. Resolve upward — anything marked **blocking** stops real work.
 Cross-referenced to section 17 of the build documentation.
@@ -11,6 +11,12 @@ written up to paste straight into Proyekto's Decisions and Risks & Issues
 sections. That file is the detail; this one is the glance.
 
 **Ownership:** every item owned by Marc is co-owned by August (19 Aug).
+
+**Renumbered (25 Aug):** D13–D19 and R13–R15 raised on the lo-fi branch are now
+**D19–D25** and **R22–R23**; the old R13 folded into **R15**, which is the same
+finding. `docs/change-requests.md` had independently taken D13–D18 and R16–R21
+for the FNAN review round, and that file is written to be pasted into Proyekto,
+so its numbering stands.
 
 **Last worked (20 Aug):** JC ran the list with the client side and closed
 seven items — D1, D3, D6, D7 and R2, plus two new decisions, D13 and D14 — with
@@ -48,16 +54,39 @@ Nothing downstream of these should be built on an assumption.
 
 ## Open decisions
 
-Needs an answer, not a default. Full write-ups in
-[`decisions-and-risks.md`](decisions-and-risks.md).
+**Two.** Down from twelve on 26 August.
+
+Nine were closed and one split on 26 August, by Ivy and JC, in the owners'
+absence — the lo-fi review had not happened, hi-fi starts on 28 August, and five
+of them were marked BLOCKS HI-FI. Everything that was a **design, layout, IA or
+taxonomy** question was answered with its reasoning written out. Nothing about
+history, cultural permission, legal text or unwritten content was touched. Full
+write-ups in [`decisions-and-risks.md`](decisions-and-risks.md); the answers as
+a single sheet are in
+[`meetings/2026-08-21-lofi-review-agenda.md`](meetings/2026-08-21-lofi-review-agenda.md).
+
+**Any of them can be overturned in one line.**
 
 | # | Item | Current state | Who |
 | --- | --- | --- | --- |
-| **D2** | **Does Connect survive as a nav item?** | About and Contact are lifted to top level in the sitemap, leaving Connect thinner. **Deliberately held (20 Aug) until Marc reviews the lo-fi.** That inverts R6's advice to settle it before wireframing — so draw Connect as present and structurally liftable, rather than baking in either answer. | Marc |
-| **D4** | **Legal page naming** | Three different namings now in circulation — Terms of Use (docs) / Terms & Conditions (sitemap) / Terms of Service (homepage draft), and cookie notice / Cookie Policy / Cookie Settings. Settle before the routes are built; changing a legal URL after launch is avoidable churn. **Pending (20 Aug)** — there is no legal documentation for this site yet. The working intent is interim text from the existing YACHATDAC site or a generic Australian policy, and analytics setup is also pending so the cookie wording cannot be finalised. Labels and routes only, so it does not block wireframes. | David |
-| **D8** | **Backend build priority** | User-facing front end first, or CMS/backend in parallel? Deferred at the 18 Aug briefing to a follow-up that has not happened. Urgent on the roadmap. **Not covered on 20 Aug** — the walkthrough's "D8/D9" was motion only. | David |
-| **D9** | **Motion sign-off owner** | Marc, the board, or the Elder Advisory Group — and at which milestone. Unblocks R10 and the artwork/terrain permissions rather than being a separate ask. **20 Aug set the character, not the approver:** motion follows the documentation sent to Marc and should feel **grounded** — weighted and deliberate, not playful or bouncy. Consistent with F4, so nothing built changes. | Marc and August |
+| **D8** | **Backend build priority** | User-facing front end first, or CMS/backend in parallel? Deferred at the 18 Aug briefing to a follow-up that has not happened. Urgent on the roadmap. **Not covered on 20 Aug** — the walkthrough's "D8/D9" was motion only. Nothing on a wireframe turns on it, which is why it survived 26 Aug untouched. | David |
 | **D11** | **Hosting / database accounts** | One shared project account or individual accounts. Handover to the client is far simpler if nothing is tied to a personal account. | David |
+| **D9** ⚠ | **Motion sign-off owner — the half that is still open** | **Split on 26 Aug.** *Which behaviours ship* is closed: the Tier 1 exceptions on non-cultural furniture are confirmed under the grounded character set on 20 Aug, and any exception on cultural material routes to Suzanne with R5. **Who signs off is still open**, and was deliberately not answered — naming a person to a governance role is not a design decision. | Marc and August |
+
+### Closed on 26 August
+
+| # | Item | Answer |
+| --- | --- | --- |
+| **D2** | Does Connect survive as a nav item? | **No.** Retired from the nav, kept as a destination. Header is Wonder · Truth · Living Work · The Record · About, with *Get in touch* as a button. Both client drafting rounds produced this shape. |
+| **D3** | FAQs — author | **August**, which D10 already said. An unfilled field, not a question. |
+| **D4** | Legal page naming | **The copy draft's labels**, per D5: Privacy Policy · Terms of Service · Cookie Settings. `/legal/cookies` created — the footer had linked it on every page with nothing behind it. ⚠ **Naming only; the content stays held under R9.** |
+| **D19** | Living Work's closing CTA | **v3 answered it** — the 24 Aug draft carries both the three get-involved paths and the newsletter. The either/or the entry was built on no longer exists. |
+| **D20** | What follows the Truth descent | Already Final. **Carried further:** v3 ends on the descent, so the closing band went too. Resolves the two-`#partner` collision. |
+| **D21** | The Record's taxonomy | **Both axes** — already implemented, so this was confirmation. **Event and Update return**; Activity does not, because nothing distinguishes it from Event. |
+| **D22** | Does `/partnerships` exist? | **Yes.** Built, drawn, four live links already point at it. |
+| **D23** | Is `/our-people` a route? | **Yes.** Falls out of D2. The consent constraint on its content is unchanged. |
+| **D24** | Homepage navbar | **No navigation until The Invitation.** ⚠ **The code lags** — `SiteHeader` still renders persistently; recorded in that file. |
+| **D25** | Empty state destination | **The *"Do you hold something?"* block on the same page**, not /connect — which has no form (R9). |
 
 ---
 
@@ -71,18 +100,20 @@ Needs an answer, not a default. Full write-ups in
 | — | **Email / SMTP full spec** | Reference the existing ImHereTravels build for template-builder scope, reply/inbox handling and SMTP credentials. Confirm against that codebase before estimating. |
 | — | **Which events need RSVP** | RSVP is confirmed in scope for community gatherings and research visits. The exact list of recurring event types defaulting to RSVP vs announcement-only is a follow-up, not a blocker. |
 | **R11** | **Media size and compression targets** | Client video runs to 2GB per file; no maximum sizes, compression targets or storage service decided. The homepage is video-led and the above-the-fold budget is under 2.5MB. |
-| **R6** | **Lo-fi wireframes vs the open IA** | Largely mitigated on 20 Aug: **D1 and D3 are answered**, D4 is naming only and never blocked wireframes. **D2 was deliberately deferred to the lo-fi review** — the inversion of the original advice — so draw Connect as present and structurally liftable rather than baking in either answer. Downgraded to Medium. |
+| **R6** | **Lo-fi wireframes vs the open IA** | **Closeable.** The IA questions this risk was about — D1, D2, D22, D23 — are all Final as of 26 Aug, and the ten frames are drawn against them. Previously: largely mitigated on 20 Aug: **D1 and D3 are answered**, D4 is naming only and never blocked wireframes. **D2 was deliberately deferred to the lo-fi review** — the inversion of the original advice — so draw Connect as present and structurally liftable rather than baking in either answer. Downgraded to Medium. |
 | **R7** | **Wireframes and motion structure** | Wireframes must state scroll spans in `vh` and mark which sections are Tier 1, or pinning gets retrofitted into a layout with no room for it. |
-| **R9** | **Legal pages before any form goes live** | Privacy Policy, Terms and cookie notice are route stubs with no content. The homepage newsletter field is deliberately inert until they land. **20 Aug supplies placeholder copy (D4), not reviewed copy** — ship it marked as unreviewed to unblock the routes, and keep every data-collecting form off until the reviewed version lands. |
+| **R9** | **Legal pages before any form goes live** | **Unchanged, and now the widest-reaching open risk.** It is why Truth's enquiry form was cut on 26 Aug, why Connect has no form, and why the newsletter field is inert. **D4 (26 Aug) settled the labels and created `/legal/cookies`, so all three routes now exist** — but Privacy Policy, Terms and Cookie Settings are still stubs with no content. The homepage newsletter field is deliberately inert until they land. **20 Aug supplies placeholder copy (D4), not reviewed copy** — ship it marked as unreviewed to unblock the routes, and keep every data-collecting form off until the reviewed version lands. |
 | **R8** | **DGR status** | Still unverified — verify against the org's actual ACNC and state registration, not against either prior answer. No longer blocking, because **donations are deferred out of launch scope (D13)**. The risk moves to whenever donations are built. |
 | **D14** | **Approval attribution in the CMS** | Approvals are relayed by an intermediary, so a proxy-entered approval with no trail is indistinguishable from one nobody gave. The CMS should capture who approved, when, and on what basis. |
 | **R13** | **Wonder inclusions and cost** | Both flagged in the draft itself. *What's included / Guiding / Camping / Transfers* carries "NEEDS CONFIRMATION — every line above. This section is the most common reason an enquiry does not happen." Cost is "still undecided — publish a from-price, or state plainly that it is quoted per group." The page is built around a sticky enquiry panel, so both sit on its only conversion. |
 | **R14** | **Living Work status labels and Rainbow Credits** | "Status labels to be confirmed before publishing" — *Registration underway / Building the record / In progress / Being developed* are public claims about carbon registration, biodiversity credits, IPA designation and Native Title. The **Rainbow Credits** card is marked "FOR YACHATDAC TO WRITE". |
-| **R15** | **Legal name vs ORIC** | Homepage v2 footer: "confirm spelling against ORIC registration". It appears in every page footer and in the legal pages. |
+| **R15** | **Legal name vs ORIC** | Homepage v2 footer: "confirm spelling against ORIC registration", and the About draft says why there is a doubt — the logo and the published research disagree on the spelling. `site.ts` hardcodes **Yambangku** into the footer and page metadata on every route. ICN and ABN still blank. Confirm against the ORIC register, not the logo. |
 | **R2** | **Confirm the dating reversal was deliberate** | v2 withdraws the 55,000 claim across all three drafts. It is a large public claim to carry through v1 and then drop, so worth one confirmation — and the v2 homepage sentence needs a rewrite, because it does not parse: "The wasp nests that could be still sitting over the engravings, waiting for someone to ask." |
 | **D5** | **Code vs the drafts** | `src/content/homepage.ts` is ✅ **synced to v2** (20 Aug) — withdrawn 55,000 claim replaced, card eyebrows re-cut, *Indigenous* → **Iningai**. Still open: `src/content/page-specs.ts` has Truth as a section stack and a "2 Night, 3 Day" experience that v2 replaced with stages; and v2's tagline sits in `homepage.ts` unrendered, pending a design call. |
 | — | **Draft imagery is placeholder** | Confirmed 20 Aug. Every image, gallery and carousel block in the v2 documents is direction, not an asset — none names a file. Swap-in-ready, no layout that depends on a crop. Does not soften R11: placeholders are the cheapest time to set compression targets. |
 | **R12** | **Brand assets outstanding** | Logo vector files and the Good Dog Cool callout face not supplied. Low impact — both have marked placeholders. |
+| **R22** | **Ngapartji-Ngapartji is Western Desert language** | The client's Strategic Plan uses it for reciprocity; the About draft questions it. `truth.ts` currently recommends framing the Truth enquiry form with it — on the one page arguing that outsiders got the record wrong. Ask Suzanne; do not correct unilaterally. |
+| **R23** | **Four copy details — now owned.** | **D10 is Final, so these are August's.** Phone-answering hours; the on-request response time and contact point; the doubled `2031` status on Five-Year Review; the Cultural Knowledge Precinct tagged *Written record* for a building that does not exist yet. Trivial individually — collectively the argument for settling **D10**. |
 
 ---
 
