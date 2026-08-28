@@ -19,6 +19,14 @@
 > meant to carry. Per STATUS note 12 the photography is placeholder direction,
 > not an asset manifest.
 >
+> **Change requests applied (28 Aug).** CR1 ("cultural sites" → "cultural
+> heritage sites"), CR2 ("Carbon" → "Biological Sequestration", applied ahead
+> of R14 on explicit instruction — the status label and body claims are
+> unconfirmed and unchanged) and CR3 ("cool burn"/"right-way fire" →
+> "fire-stick farming") are applied below. The one CR3 exception is the
+> article title linked from the Resources block below — that's held on
+> **D17**, since renaming it renames the route too.
+>
 > **Form controls.** `[ Field: … ]` and `[ Button: … ]` mark inputs in the
 > prototype, kept because their labels are copy.
 
@@ -52,13 +60,13 @@ Restoration is slow: clear the hole, plant around it, and keep water up to it th
 
 Carbon in healthy soil starts at the surface. Testing here found it beginning only 30 centimetres down, which means the top of the profile has been stripped over time.
 
-Groundcover, right-way fire and rested paddocks build it back. It is also the basis of any carbon project, so it is worth measuring before you start work rather than after.
+Groundcover, fire-stick farming and rested paddocks build it back. It is also the basis of any carbon project, so it is worth measuring before you start work rather than after.
 
 **Wrong-way fire and wildfire risk**
 
-Without regular cool burning, fuel builds up and the fire that eventually comes through is hot enough to kill trees, sterilise soil and damage sites.
+Without regular fire-stick farming, fuel builds up and the fire that eventually comes through is hot enough to kill trees, sterilise soil and damage sites.
 
-Cool burns at the right time of year, read off the season, break the country into a patchwork so a wildfire has nowhere to run.
+Fire-stick farming at the right time of year, read off the season, breaks the country into a patchwork so a wildfire has nowhere to run.
 
 **Weeds and feral animals**
 
@@ -90,7 +98,7 @@ Stock water, camp water, nursery water and firefighting water all come off one s
 
 When something fails out here it gets fixed here. Water security is a standing priority rather than a project with an end date.
 
-**Damage and access to cultural sites**
+**Damage and access to cultural heritage sites**
 
 Marra Wonga carries historic graffiti from visitors going back over a century, and artefacts near the shelter have been removed by station owners and tourists since the late 1800s. Stock and feral animals damage sites simply by sheltering at them.
 
@@ -116,7 +124,7 @@ The approach is to work across several natural capital products rather than depe
 
 ### Iningai Rangers
 
-Rangers run the cool burns, the fencing, the seed collection, the spring and wetland restoration, the weed and feral control, the machinery and the site protection. Ranger workplans set the year’s work across the property. Training partnerships are being built so the jobs here can be filled from community.
+Rangers run fire-stick farming, the fencing, the seed collection, the spring and wetland restoration, the weed and feral control, the machinery and the site protection. Ranger workplans set the year’s work across the property. Training partnerships are being built so the jobs here can be filled from community.
 
 [ Image — Rangers out on Country. ]
 
@@ -172,9 +180,9 @@ What Rangers do on the ground.
 
 #### Fire-stick farming
 
-Low-intensity cool burning at the right time of year — reducing fuel loads, encouraging germination and breaking Country into a patchwork that carries more life than unburnt or hot-burnt ground.
+Low-intensity fire-stick farming at the right time of year — reducing fuel loads, encouraging germination and breaking Country into a patchwork that carries more life than unburnt or hot-burnt ground.
 
-Rangers burn right way and look for black ash rather than scorched ground. Burns run as workshops as well as work, so more people come off them able to do it. Soil is tested before and after: carbon here began only 30 centimetres down, and one paddock was recorded working as a carbon sink within eight to nine months of a cool burn.
+Rangers practise fire-stick farming and look for black ash rather than scorched ground. It runs as workshops as well as work, so more people come off them able to do it. Soil is tested before and after: carbon here began only 30 centimetres down, and one paddock was recorded working as a carbon sink within eight to nine months of a burn.
 
 [ Image ]
 
@@ -293,11 +301,11 @@ The register is the reason a town run can be planned in one trip.
 
 The same activities, measured.
 
-##### Carbon
+##### Biological Sequestration
 
 Registration underway
 
-Two flux towers and soil testing underpin a carbon farming project. Cool burning done right way is the practice being measured.
+Two flux towers and soil testing underpin a carbon farming project. Fire-stick farming is the practice being measured.
 
 ##### Biodiversity credits
 
@@ -315,7 +323,7 @@ Indigenous Protected Area status for Turraburra, alongside National and World He
 
 Being developed
 
-Ranger skills offered to neighbouring properties — right-way fire, land management and cultural heritage advice.
+Ranger skills offered to neighbouring properties — fire-stick farming, land management and cultural heritage advice.
 
 ##### Rainbow Credits
 
@@ -345,7 +353,7 @@ Ranger wages, water infrastructure, monitoring equipment and restoration. What i
 
 ##### Land management services
 
-Right-way fire, cultural heritage advice and Country management for properties in the district.
+Fire-stick farming, cultural heritage advice and Country management for properties in the district.
 
 [Enquire →](/connect)
 

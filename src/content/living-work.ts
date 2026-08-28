@@ -20,16 +20,20 @@
  *   Nothing states what Turraburra actually has, so nothing has been added.
  *   See docs/change-requests.md.
  *
- * ⚠ CR3 (pending) replaces "cool burn"/"cool burning" and "right-way fire"
- * with "fire-stick farming" throughout. NOT applied. Note when it is that
- * several lines here use "cool burning" and "burn right way" to describe
- * manner rather than to name a practice — "Rangers burn right way and look for
- * black ash" does not survive a substitution and needs rewriting.
+ * ⚠ CR3 — applied. "Cool burn"/"cool burning" and "right-way fire" now read
+ * "fire-stick farming" throughout. The two manner-phrasings ("Rangers burn
+ * right way and look for black ash") were rewritten rather than substituted,
+ * per the CR's own note.
  *
- * ⚠ CR1 (pending) renames "cultural sites" to "cultural heritage sites". The
- * one occurrence is the challenge titled "Damage and access to cultural
- * sites", below. NOT applied — the draft governs until the request is
- * answered.
+ * ⚠ CR1 — applied. "Cultural sites" now reads "cultural heritage sites" in
+ * the challenge title below.
+ *
+ * ⚠ CR2 — applied on explicit instruction, ahead of R14 rather than with it
+ * as the CR itself recommended. Retitled "Carbon" → "Biological
+ * Sequestration" below; the card body ("a carbon farming project", "the
+ * practice being measured") and its status label are untouched — R14's
+ * unconfirmed-status-label risk still stands and still needs the client's
+ * confirmation before publishing.
  */
 
 export const livingWorkHero = {
@@ -76,14 +80,14 @@ export const challenges: readonly Challenge[] = [
     problem:
       "Carbon in healthy soil starts at the surface. Testing here found it beginning only 30 centimetres down, which means the top of the profile has been stripped over time.",
     response:
-      "Groundcover, right-way fire and rested paddocks build it back. It is also the basis of any carbon project, so it is worth measuring before you start work rather than after.",
+      "Groundcover, fire-stick farming and rested paddocks build it back. It is also the basis of any carbon project, so it is worth measuring before you start work rather than after.",
   },
   {
     title: "Wrong-way fire and wildfire risk",
     problem:
-      "Without regular cool burning, fuel builds up and the fire that eventually comes through is hot enough to kill trees, sterilise soil and damage sites.",
+      "Without regular fire-stick farming, fuel builds up and the fire that eventually comes through is hot enough to kill trees, sterilise soil and damage sites.",
     response:
-      "Cool burns at the right time of year, read off the season, break the country into a patchwork so a wildfire has nowhere to run.",
+      "Fire-stick farming at the right time of year, read off the season, breaks the country into a patchwork so a wildfire has nowhere to run.",
   },
   {
     title: "Weeds and feral animals",
@@ -120,8 +124,7 @@ export const challenges: readonly Challenge[] = [
       "When something fails out here it gets fixed here. Water security is a standing priority rather than a project with an end date.",
   },
   {
-    /** ⚠ CR1 renames this to "cultural heritage sites". Pending, not applied. */
-    title: "Damage and access to cultural sites",
+    title: "Damage and access to cultural heritage sites",
     problem:
       "Marra Wonga carries historic graffiti from visitors going back over a century, and artefacts near the shelter have been removed by station owners and tourists since the late 1800s. Stock and feral animals damage sites simply by sheltering at them.",
     response:
@@ -152,7 +155,7 @@ export const challenges: readonly Challenge[] = [
 
 export const rangers = {
   title: "Iningai Rangers",
-  body: "Rangers run the cool burns, the fencing, the seed collection, the spring and wetland restoration, the weed and feral control, the machinery and the site protection. Ranger workplans set the year's work across the property. Training partnerships are being built so the jobs here can be filled from community.",
+  body: "Rangers run fire-stick farming, the fencing, the seed collection, the spring and wetland restoration, the weed and feral control, the machinery and the site protection. Ranger workplans set the year's work across the property. Training partnerships are being built so the jobs here can be filled from community.",
   /**
    * The prototype ran these as a carousel with numbered controls. Rendered as
    * a grid instead: a carousel hides six of seven photographs behind an
@@ -183,9 +186,9 @@ export const workStreams: readonly WorkStream[] = [
   {
     number: "01",
     title: "Fire-stick farming",
-    lede: "Low-intensity cool burning at the right time of year — reducing fuel loads, encouraging germination and breaking Country into a patchwork that carries more life than unburnt or hot-burnt ground.",
+    lede: "Low-intensity fire-stick farming at the right time of year — reducing fuel loads, encouraging germination and breaking Country into a patchwork that carries more life than unburnt or hot-burnt ground.",
     detail:
-      "Rangers burn right way and look for black ash rather than scorched ground. Burns run as workshops as well as work, so more people come off them able to do it. Soil is tested before and after: carbon here began only 30 centimetres down, and one paddock was recorded working as a carbon sink within eight to nine months of a cool burn.",
+      "Rangers practise fire-stick farming and look for black ash rather than scorched ground. It runs as workshops as well as work, so more people come off them able to do it. Soil is tested before and after: carbon here began only 30 centimetres down, and one paddock was recorded working as a carbon sink within eight to nine months of a burn.",
   },
   {
     number: "02",
@@ -318,16 +321,15 @@ export type Output = {
  * status. None is confirmed. The draft's own note is carried as
  * `outputsNote` and renders under the grid.
  *
- * ⚠ CR2 (pending) retitles "Carbon" to "Biological Sequestration". NOT
- * applied — it should be confirmed in the same pass as the status labels
- * rather than separately, and "biological sequestration" is a broader claim
- * than "carbon".
+ * ⚠ CR2 — applied 28 Aug, ahead of R14 on explicit instruction. "Carbon" now
+ * reads "Biological Sequestration" below; the status labels above are still
+ * unconfirmed and this retitle does not resolve that.
  */
 export const outputs: readonly Output[] = [
   {
-    title: "Carbon",
+    title: "Biological Sequestration",
     status: "Registration underway",
-    body: "Two flux towers and soil testing underpin a carbon farming project. Cool burning done right way is the practice being measured.",
+    body: "Two flux towers and soil testing underpin a carbon farming project. Fire-stick farming is the practice being measured.",
   },
   {
     title: "Biodiversity credits",
@@ -342,7 +344,7 @@ export const outputs: readonly Output[] = [
   {
     title: "Fee-for-service",
     status: "Being developed",
-    body: "Ranger skills offered to neighbouring properties — right-way fire, land management and cultural heritage advice.",
+    body: "Ranger skills offered to neighbouring properties — fire-stick farming, land management and cultural heritage advice.",
   },
   {
     title: "Rainbow Credits",
@@ -371,7 +373,7 @@ export const getInvolved = {
     },
     {
       title: "Land management services",
-      body: "Right-way fire, cultural heritage advice and Country management for properties in the district.",
+      body: "Fire-stick farming, cultural heritage advice and Country management for properties in the district.",
       cta: { label: "Enquire", href: "/connect" },
     },
   ],

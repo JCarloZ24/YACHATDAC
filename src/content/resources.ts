@@ -180,11 +180,11 @@ export const recordItems: readonly RecordItem[] = [
     type: "Research",
     source: "Iningai knowledge",
     /**
-     * ⚠ CR3 renames the term "right-way fire" to "fire-stick farming" site
-     * wide, which would rename this article and, with it, the slug. That is an
-     * IA change rather than a copy change and it is raised as **D17**. Two
-     * pages link to this exact route. Change the title and the slug together
-     * or not at all.
+     * ⚠ CR3 — applied everywhere else. This title (and the slug below) are
+     * deliberately still "right-way fire" — renaming it would rename the
+     * article and, with it, the route. That is an IA change rather than a
+     * copy change and it is raised as **D17**, still open. Two pages link to
+     * this exact route. Change the title and the slug together or not at all.
      */
     title: "Right-way fire and the carbon in the soil",
     summary:
@@ -291,7 +291,7 @@ export const knowledgeGaps = {
         "Fossil footprints, petrified trees, and what one visiting specialist thought might be dinosaur eggs. Almost none of it examined.",
     },
     {
-      question: "What does right-way fire actually do?",
+      question: "What does fire-stick farming actually do?",
       detail:
         "Two flux towers are measuring it. More work is welcome, particularly on soil carbon at depth.",
     },

@@ -232,7 +232,7 @@ Most of this Country has never been studied. These are the gaps we would like fi
 
 **What is in the ground?** — Fossil footprints, petrified trees, and what one visiting specialist thought might be dinosaur eggs. Almost none of it examined.
 
-**What does right-way fire actually do?** — Two flux towers are measuring it. More work is welcome, particularly on soil carbon at depth.
+**What does fire-stick farming actually do?** — Two flux towers are measuring it. More work is welcome, particularly on soil carbon at depth.
 
 [Research with us](/partnerships/#research-opportunities)
 

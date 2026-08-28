@@ -76,7 +76,7 @@ The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers
 
 They can do this work because, seven years ago, this stopped being someone else's station.
 
-[ Image — people at work cool burn, seed collecting or the flux tower ]
+[ Image — people at work fire-stick farming, seed collecting or the flux tower ]
 
 Living memory
 
