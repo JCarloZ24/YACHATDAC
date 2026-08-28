@@ -103,10 +103,13 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR1 — "cultural sites" becomes "cultural heritage sites"
+## CR1 — "cultural sites" becomes "cultural heritage sites" · **APPLIED (28 Aug)**
 
 - **Form** — status `submitted` · timeline impact 0 days
-- **Type** — Terminology · **Status** — Proposed · **Owner** — August → Marc
+- **Type** — Terminology · **Status** — **Applied** · **Owner** — August → Marc
+- **Applied 28 Aug** — the accordion heading now reads "Damage and access to
+  cultural heritage sites" in both `src/content/living-work.ts` and the v3
+  draft. Mark `applied` in Proyekto.
 - **Raised by** — Steve (FNAN), 10:04, against the Living Work *Damage and
   access to cultural sites* accordion.
 - **The request** — Use **cultural heritage sites** wherever the site currently
@@ -123,10 +126,17 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR2 — The card title "Carbon" becomes "Biological Sequestration"
+## CR2 — The card title "Carbon" becomes "Biological Sequestration" · **APPLIED (28 Aug), ahead of R14**
 
 - **Form** — status `submitted` · decision note: apply with R14, not ahead of it
-- **Type** — Terminology · **Status** — Proposed · **Owner** — August, with the client
+- **Type** — Terminology · **Status** — **Applied** · **Owner** — August, with the client
+- **Applied 28 Aug, on explicit instruction, ahead of R14** — this entry
+  originally recommended waiting for R14 (the status labels are unconfirmed);
+  August asked to proceed anyway. The retitle is live in
+  `src/content/living-work.ts` and the v3 draft. The card body and its
+  "Registration underway" status label are untouched — R14 still stands and
+  still needs the client's confirmation before publishing. Mark `applied` in
+  Proyekto, noting R14 is unaffected.
 - **Raised by** — Steve (FNAN), 10:27, against the Living Work *What the work
   produces* card grid.
 - **The request** — Retitle the **Carbon** card **Biological Sequestration**.
@@ -144,11 +154,20 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR3 — "Cool burns" and "right-way fire" both become "fire-stick farming"
+## CR3 — "Cool burns" and "right-way fire" both become "fire-stick farming" · **APPLIED (28 Aug), except the slug**
 
 - **Form** — status `submitted` · decision note: accepted as an edit pass, slug
   held on D17
-- **Type** — Terminology · **Status** — Proposed · **Owner** — August, JC
+- **Type** — Terminology · **Status** — **Applied, partial** · **Owner** — August, JC
+- **Applied 28 Aug** — every occurrence across `living-work.ts`, `wonder.ts`,
+  `truth.ts`, `resources.ts` and the matching v3/v1 drafts now reads
+  "fire-stick farming", including the two manner-phrasings, rewritten rather
+  than substituted, per the note below. `docs/content/STATUS.md` was left
+  alone — those two lines are historical quotes of what the v2 draft said on
+  20 Aug, not live copy. **Not applied** — the Resources article title/slug
+  (`right-way-fire-and-the-carbon-in-the-soil`) and the matching Truth link
+  title, exactly as this entry says: held on **D17**, still open. Mark
+  `applied` in Proyekto with that carve-out noted in the decision note.
 - **Raised by** — Steve (FNAN), 15:15, against the Wonder chip list. Two
   instructions in one message: replace **"Cool Burns"** with **"Fire-stick
   Farming"**, *and* replace every occasion **"right-way fire"** has been used
@@ -266,12 +285,17 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR7 — "No town glow" becomes something more positive, e.g. "Magic at night"
+## CR7 — "No town glow" becomes something more positive, e.g. "Magic at night" · **APPLIED (28 Aug)**
 
 - **Form** — status `submitted` · move to `changes_requested` when the drafted
   options go back (the Wonder options batch, Part 6 deliverable in
   `docs/decisions-and-risks.md`)
-- **Type** — Copy rewrite · **Status** — Proposed · **Owner** — August, Ivy
+- **Type** — Copy rewrite · **Status** — **Applied** · **Owner** — August, Ivy
+- **Applied 28 Aug** — took the client's own suggested title, "Magic at
+  night", satisfying the note without losing the fact: the body now opens
+  "There's no town glow out this way" as the stated reason, rather than
+  dropping it. Applied in `src/content/wonder.ts` and the v3 draft. Mark
+  `applied` in Proyekto.
 - **Raised by** — Steve (FNAN), 15:23, against the Wonder *After dark* card.
   Phrased as a suggestion: *"Maybe an alternative title that is more positive
   like 'Magic at night'"*.
@@ -314,25 +338,32 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR9 — "Guesting On-Country" becomes "Be our guest"
+## CR9 — "Guesting On-Country" becomes "Be our guest" · **APPLIED (28 Aug), card only**
 
 - **Form** — status `submitted` · move to `changes_requested` with the Wonder
   options batch, alongside CR7
-- **Type** — Copy rewrite · **Status** — Proposed · **Owner** — August
+- **Type** — Copy rewrite · **Status** — **Applied, partial** · **Owner** — August
 - **Raised by** — Steve (FNAN), 15:36, against the homepage invitation card:
   *"Maybe different title such as 'Be our guest'?"*
 - **Where it lands** —
-  - `docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v3.md:132` and
-    `src/content/homepage.ts:165` — the card eyebrow **Guesting On-Country**
+  - `docs/content/drafts/homepage/YACHATDAC-Homepage-Copy-v3.md:100` and
+    `src/content/homepage.ts` — the card eyebrow **Guesting On-Country**
   - `docs/content/drafts/wonder/YACHATDAC-Wonder-Copy-v3.md:47` — the Wonder
     page's own H1 is **Guesting On-Country**
 - **The knock-on** — the card is the entry point to the Wonder page and
   currently shares its name. Renaming one and not the other breaks that link;
-  renaming both is a larger change than the note asks for. Decide which.
-- **Note against CR10** — "Be our guest" is first-person plural in the
-  organisation's voice. Worth checking it does not run into the same objection
-  Steve raises at 15:25 about the word "our".
-- **Assessment** — A suggestion. Answer with options, and say which pages move.
+  renaming both is a larger change than the note asks for. **Decided 28 Aug:
+  card only.** The homepage Invitation card eyebrow now reads "Be our guest";
+  Wonder's own H1, route and breadcrumb keep "Guesting On-Country" — that's a
+  bigger IA/branding move than a suggested card title and wasn't part of
+  Steve's literal note.
+- **Note against CR10, still live** — "Be our guest" is first-person plural in
+  the organisation's voice, the same word CR10 asks not to use about
+  Indigenous people. Applied anyway on explicit instruction (28 Aug); the
+  terminology sheet (**D16**) isn't being built right now, but flag this line
+  when it eventually is.
+- **Assessment** — Applied as the card-only option. Mark `applied` in
+  Proyekto, noting the scope decision and the open D16 tension.
 
 ---
 

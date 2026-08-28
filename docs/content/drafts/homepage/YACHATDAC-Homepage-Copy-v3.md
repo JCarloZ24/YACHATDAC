@@ -97,7 +97,7 @@ For anyone still finding their way home, this Country is patient.
 
 ### Every journey begins differently — we welcome you to walk alongside us.
 
-**Guesting On-Country**
+**Be our guest**
 
 #### Wonder
 

@@ -48,7 +48,7 @@ Home › Wonder › Guesting On-Country
 
 A few days on Turraburra with the Traditional Custodians of this Country. You are welcome here, and you will be looked after.
 
-Marra Wonga · Native foods · Cool burns · Camping · Central Western Queensland · Families & school groups
+Marra Wonga · Native foods · Fire-stick farming · Camping · Central Western Queensland · Families & school groups
 
 Where
 
@@ -96,9 +96,9 @@ Herbs, fruits, seeds and nuts, in scrub that looked empty on the drive in.
 
 **After dark**
 
-##### No town glow
+##### Magic at night
 
-The fire burns down and the sky comes all the way to the ground.
+There's no town glow out this way — when the fire burns down, the sky comes all the way to the ground.
 
 ### Getting here is part of it
 
@@ -176,7 +176,7 @@ You learn what to look at, and then you keep seeing it.
 
 **Hands in the work**
 
-We do not run a set itinerary, because the work does not. Rain the night before and the morning goes to a cool burn while the ground is right. Seed on the grasses and we will be out collecting it. You join whatever is already happening, which is why no two groups get the same days and why nothing you see was put on for you.
+We do not run a set itinerary, because the work does not. Rain the night before and the morning goes to fire-stick farming while the ground is right. Seed on the grasses and we will be out collecting it. You join whatever is already happening, which is why no two groups get the same days and why nothing you see was put on for you.
 
 One of our springs had been trampled flat by a hundred years of stock. We cleaned it out, planted grasses, and carted a thousand litres to it twice a day through drought. Eight days in it held a puddle. Next morning there was a koala standing at it.
 

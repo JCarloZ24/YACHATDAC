@@ -29,16 +29,12 @@ export const wonderHero = {
    * The draft's summary line. Kept as separate items rather than one string so
    * it can be set as chips or as a run of text without re-splitting it.
    *
-   * ⚠ CR3 (pending) replaces "Cool burns" with "Fire-stick farming" here and
-   * everywhere else on the site. Not applied — the change request is logged,
-   * not answered, and it needs an edit pass rather than a substitution because
-   * several sentences use "cool burning" to describe manner rather than to
-   * name a practice.
+   * ⚠ CR3 — applied. "Cool burns" now reads "Fire-stick farming".
    */
   summary: [
     "Marra Wonga",
     "Native foods",
-    "Cool burns",
+    "Fire-stick farming",
     "Camping",
     "Central Western Queensland",
     "Families & school groups",
@@ -81,10 +77,10 @@ export const wonderGallery = [
 ] as const;
 
 /**
- * ⚠ CR7 (pending) asks for a more positive title than "No town glow" —
- * "Magic at night" is the client's suggestion. Not applied. Worth noting when
- * it is answered that the current title states a fact the body then depends
- * on, and the same fact carries the "first night" stage below.
+ * ⚠ CR7 — applied. Title turned positive per the client's suggestion; the
+ * body keeps "no town glow" as the stated reason rather than losing the fact,
+ * per the CR's own recommended approach. The same fact carries the "first
+ * night" stage below.
  */
 export const wonderHighlights = [
   {
@@ -101,8 +97,8 @@ export const wonderHighlights = [
   },
   {
     eyebrow: "After dark",
-    title: "No town glow",
-    body: "The fire burns down and the sky comes all the way to the ground.",
+    title: "Magic at night",
+    body: "There's no town glow out this way — when the fire burns down, the sky comes all the way to the ground.",
     image: "Fire at dusk.",
   },
 ] as const;
@@ -212,7 +208,7 @@ export const stayStages: readonly StayStage[] = [
   {
     title: "Hands in the work",
     body: [
-      "We do not run a set itinerary, because the work does not. Rain the night before and the morning goes to a cool burn while the ground is right. Seed on the grasses and we will be out collecting it. You join whatever is already happening, which is why no two groups get the same days and why nothing you see was put on for you.",
+      "We do not run a set itinerary, because the work does not. Rain the night before and the morning goes to fire-stick farming while the ground is right. Seed on the grasses and we will be out collecting it. You join whatever is already happening, which is why no two groups get the same days and why nothing you see was put on for you.",
       "One of our springs had been trampled flat by a hundred years of stock. We cleaned it out, planted grasses, and carted a thousand litres to it twice a day through drought. Eight days in it held a puddle. Next morning there was a koala standing at it.",
     ],
     images: ["Standing at a spring in open country."],

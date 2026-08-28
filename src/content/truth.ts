@@ -130,10 +130,11 @@ export const erasBefore: readonly TruthEra[] = [
       {
         when: "Now",
         /**
-         * ⚠ CR3 (pending) renames "right-way fire" to "fire-stick farming"
-         * across the site. That would rename this article and, with it, the
-         * route below — which is an IA change, not a copy change, and is
-         * raised separately as D17. Left as drafted until D17 is answered.
+         * ⚠ CR3 — applied everywhere else. This title and href are
+         * deliberately still "right-way fire" — renaming them would rename
+         * the linked article and, with it, the route below. That is an IA
+         * change, not a copy change, and is raised separately as D17, still
+         * open. Left as drafted until D17 is answered.
          */
         title: "Right-way fire, springs, and two flux towers",
         href: "/resources/right-way-fire-and-the-carbon-in-the-soil",
@@ -141,7 +142,7 @@ export const erasBefore: readonly TruthEra[] = [
           "The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on Country managed this way, one on grazed land, checked against each other.",
         ],
         coda: "They can do this work because, seven years ago, this stopped being someone else's station.",
-        image: "People at work — cool burn, seed collecting, or the flux tower.",
+        image: "People at work — fire-stick farming, seed collecting, or the flux tower.",
         source: "Living memory",
         cta: {
           label: "What the towers are showing",

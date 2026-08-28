@@ -33,10 +33,9 @@
  *
  * ⚠ Copy status: draft, not approved. See docs/content/STATUS.md.
  *
- * ⚠ Pending change requests touch this file. CR8 asks for a "more heroic"
- * hero headline; CR9 asks whether the first Invitation card becomes "Be our
- * guest"; CR3 renames "right-way fire" in the Living Work card's media note.
- * None are applied — see docs/change-requests.md.
+ * ⚠ Change requests touch this file. CR8 (a "more heroic" hero headline) is
+ * withdrawn — no change needed. CR9 is applied to the Invitation card only,
+ * see the note at `invitation` below. See docs/change-requests.md.
  */
 
 export type BeatStep = {
@@ -191,10 +190,14 @@ export const beats: Beat[] = [
  * The draft titles each card with the pillar name and carries the descriptive
  * phrase as an eyebrow above it — not the other way round.
  *
- * ⚠ CR9 — FNAN asked whether the first card becomes "Be our guest". Not
- * applied. The card currently shares its name with the Wonder page's own H1,
- * so renaming one without the other breaks that pairing; the question needs
- * answering before either moves.
+ * ⚠ CR9 — applied to the card only, scoped to Steve's literal note against
+ * this homepage card. The Wonder page's own H1/route/breadcrumb keep
+ * "Guesting On-Country" — renaming those too is a larger IA/branding change
+ * than a suggested card title, and is left for a deliberate call rather than
+ * inherited here. Worth noting for whoever settles D16 later: "Be our guest"
+ * is first-person-plural ("our"), the same word CR10 asks not to use about
+ * Indigenous people — applied now on explicit instruction, but flag it when
+ * the terminology sheet is written.
  */
 export const invitation = {
   eyebrow: "The invitation",
@@ -203,7 +206,7 @@ export const invitation = {
   body: "",
   cards: [
     {
-      eyebrow: "Guesting On-Country",
+      eyebrow: "Be our guest",
       title: "Wonder",
       description:
         "Walk alongside us on Country — the wall, the food in the scrub, the fire at night.",
