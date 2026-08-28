@@ -8,6 +8,13 @@
  *
  * Unlike the homepage, these pages combine authored editorial content with CMS
  * collections (§8).
+ *
+ * `wonder` and `truth` are synced to the v2 drafts (docs/content/drafts/),
+ * per decision D5 — the documents govern copy, this file governs nothing more
+ * than a walkable stub of it. Truth runs present → past, not a section stack;
+ * "the seam" carries Suzanne Thompson's words and stays held-by-community
+ * until she approves it (R5). Wonder's stay is stages, not a fixed itinerary —
+ * the old "2 Night, 3 Day" outline is gone. See docs/content/STATUS.md note 11.
  */
 
 import type { PillarId } from "./site";
@@ -27,9 +34,9 @@ export const pageSpecs: Record<PillarId | "resources", SectionSpec[]> = {
         "Short banner reinforcing 'Guesting on Country'. Inspirational, not transactional.",
     },
     {
-      title: "The Experience",
+      title: "What a stay looks like",
       intent:
-        "One offer, not a listing grid — the 2 Night, 3 Day Guesting on Country experience. Guests camp; that is Stage 1 of the org's own accommodation roadmap, not a permanent limitation. Draft itinerary needs Suzanne/Steve validation before publishing.",
+        "One offer, not a listing grid — a stay run as stages, not numbered days: Arriving, The first night, Walking out to the wall, Older than the wall, Out for food, Hands in the work. Guests camp; that is Stage 1 of the org's own accommodation roadmap, not a permanent limitation. No fixed dates, no pricing — 'no set itinerary, because the work does not' (v2). Inclusions (meals/guiding/camping/transfers) and cost are both still unconfirmed by the client — see R13.",
       cta: "Register interest / enquire",
     },
     {
@@ -48,36 +55,72 @@ export const pageSpecs: Record<PillarId | "resources", SectionSpec[]> = {
     {
       title: "Intro / hero",
       intent:
-        "Institutional but on-brand. Needs a clear subtitle — 'Truth' alone does not self-explain to this audience.",
+        "'Most people have never heard of the Iningai. This is what happened here, told by the people it happened to.' Two entry points: scroll to the oldest section at the foot, or jump to research & partnerships mid-page.",
     },
     {
-      title: "What's been researched",
+      title: "Ahead — what is being built, within five years",
       intent:
-        "Featured editorial posts tagged Truth, type Research/Publication. Eco-sounds, Marra Wonga, Rainbow Credits, the Bush University partnership with QUT and Griffith.",
-      cta: "Read more",
+        "The Cultural Knowledge Precinct. Framed as direction, not an in-progress feature with a countdown — master planning is underway because there is something here worth building it for.",
+      cta: "Talk to us about being part of it → /connect",
     },
     {
-      title: "Open research opportunities",
+      title: "Inline card — Work with us / Partnerships",
       intent:
-        "Structured listing — discipline, description, status (open/closed).",
-      cta: "Enquire per listing",
+        "'A researcher on Country is a guest on Country.' Partnerships are expected to give something back to the land and the people. D2 note: v2 links this to /connect even though Connect is absent from the v2 homepage footer nav — evidence for the lo-fi review, not a decision.",
+      cta: "→ /connect",
     },
     {
-      title: "Partnership opportunities",
+      title: "Today — the work going on now",
       intent:
-        "Structured listing for the ESG/brand-buyer audience. Distinct from research opportunities.",
-      cta: "Enquire per listing",
+        "Right-way fire, springs, and two flux towers. The Iningai Rangers' land management work, measured against grazed land — possible because Turraburra stopped being someone else's station seven years ago.",
+      cta: "What the towers are showing → Resources",
     },
     {
-      title: "The Cultural Knowledge Precinct",
+      title: "2022 — the site is studied with its owners",
       intent:
-        "Vision and roadmap — master plan Year 1, open to visitors Year 5, full precinct Year 8. Framed as direction, not an in-progress feature with a countdown. Moved here from Living Work.",
+        "The Marra Wonga study, with Iningai community members as research partners rather than subjects.",
+      cta: "Read the findings → Resources",
     },
     {
-      title: "Partner with us",
+      title: "Inline card — Still to be found / Open research",
       intent:
-        "Primary enquiry form for this page, routed to the enquiry/CRM path rather than the newsletter list. Consider framing through the org's own Ngapartji-Ngapartji reciprocity principle.",
-      cta: "Submit enquiry",
+        "Most of this Country has never been studied. Researchers wanted in palaeontology and archaeology, ecology and biodiversity, and medicinal botany.",
+      cta: "→ /partnerships/#research-opportunities",
+    },
+    {
+      title: "2026 back to 2003 — bought back",
+      intent:
+        "Reverse-chronology beats: the deed of grant (26 June 2026) · Gracevale renamed Turraburra (1 Oct 2020) · the ILSC purchase and first night on the property (30 Apr 2019) · Suzanne's father, who protected the sites before her.",
+      cta: "Suzanne's account of how it happened → Resources",
+    },
+    {
+      title: "1950s — admired under the wrong name",
+      intent:
+        "The escarpment was written up and photographed for decades as 'The Art Gallery' — a visitor's name, not an Iningai one.",
+      cta: "Who named it, and what it was called before → Resources",
+    },
+    {
+      title: "The seam",
+      intent:
+        "Full-bleed dark break. The timeline stops — no rail, no markers, no way past it. Suzanne Thompson's words on 1902 and the massacre history, held by community: not published until she has seen and approved it. Two open questions for her — the reordering, and whether the figure is thirty-five or thirty-seven. See R5.",
+    },
+    {
+      title: "1840s — before the runs were taken up",
+      intent:
+        "What Thomas Mitchell recorded passing through — the first written account, by someone who had just arrived.",
+      cta: "Read the passage, and what it proves → Resources",
+    },
+    {
+      title: "Older than the record — cut into the wall",
+      intent:
+        "The engraving: 15,000+ petroglyphs and 111 stencils along 160 metres, Marra Wonga. Never scientifically dated — likely 5,000+ years on regional style sequences. Full citation, Australian Archaeology 2022.",
+      cta: "What the study found, and how → Resources",
+    },
+    {
+      title: "Before people — about 100 million years ago",
+      intent:
+        "Closing section, full width, escarpment photograph behind. The Eromanga Sea, the sandstone, the tracks set in the mud.",
+      cta: "How the seabed became the escarpment → Resources",
     },
   ],
   "living-work": [
