@@ -64,3 +64,6 @@ next-env.d.ts
 # ones in docs/content/drafts/. Per STATUS note 12 the photography is
 # placeholder direction, not an asset manifest, so it stays out of git.
 /docs/content/drafts/.drive-export-raw/
+
+# local dev server log
+/dev.log
