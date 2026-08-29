@@ -15,36 +15,39 @@ wording from Suzanne — drawn in pink so it cannot be mistaken for finished cop
 **File:** [Yachatdac Exploration](https://www.figma.com/design/Qk35pAX0sz2ntNRXceY7Gb/Yachatdac-Exploration)
 · one page · ten frames in site order at a pitch of 2220, all top-aligned.
 
-| Page | x | vh | Sections | Tier |
+| Page | x | vh | Sections | Verb (F7) |
 | --- | --- | --- | --- | --- |
-| [Home](#home) | 0 | 903 | 7 | **1** |
-| [Wonder](#wonder) | 2220 | 1363 | 14 | 2 |
-| [Truth](#truth) | 4440 | 1704 | 21 | 2 |
-| [Living Work](#living-work) | 6660 | 992 | 9 | 2 |
-| [The Record](#the-record) | 8880 | 1155 | 10 | 2 |
-| [About](#about) | 11100 | 1091 | 11 | 2 |
-| [Our People](#our-people) | 13320 | 820 | 9 | 2 |
-| [Partnerships](#partnerships) | 15540 | 433 | 5 | 2 |
-| [Connect](#connect) | 17760 | 393 | 6 | 2 |
-| [Legal](#legal) | 19980 | 265 | 6 | 2 |
+| [Home](#home) | 0 | 903 | 7 | *opens* |
+| [Wonder](#wonder) | 2220 | 1363 | 14 | TBD |
+| [Truth](#truth) | 4440 | 1704 | 21 | *descends* |
+| [Living Work](#living-work) | 6660 | 992 | 9 | *accumulates* |
+| [The Record](#the-record) | 8880 | 1155 | 10 | TBD |
+| [About](#about) | 11100 | 1091 | 11 | TBD |
+| [Our People](#our-people) | 13320 | 820 | 9 | TBD |
+| [Partnerships](#partnerships) | 15540 | 433 | 5 | TBD |
+| [Connect](#connect) | 17760 | 393 | 6 | TBD |
+| [Legal](#legal) | 19980 | 265 | 6 | TBD |
 
 ---
 
 ## Site-wide
 
-### Motion tiers — F4, Final
+### Motion doctrine — F7, the immersive mandate (supersedes F4)
 
-**Tier 1 is the homepage only**, with a budget of **two signature moments in
-total**. Both are spent: `A2` and `M2`. A third means replacing one.
+**Motion is the default on every page** (client directive 2026-08-29 — decision
+F7 in `decisions-and-risks.md`). Each page carries a motion script — entrance,
+scroll choreography, transition out — governed by the **Loud Channel rule**:
+every screen declares one loud channel (media, type, or transition) and keeps
+the other two quiet. Spans are still documented in vh; the 60fps target and the
+media budgets are the limits. The old tier split and two-signature-moment budget
+are superseded. The per-page notes below describe the v1 lo-fi as built — it
+stays live at the current routes while the v2 immersive pages are built
+alongside them under `/v2`.
 
-Every other page is **Tier 2** — entry staggers and hover states. No pinning, no
-scrubbed media, no parallax. A CMS template must not be able to produce Tier 1
-motion.
-
-`X4` entry stagger is the Tier 2 workhorse: start `top 82%`, `once: true`,
-y16 + fade, 60ms stagger. `X6` reduced-motion twin ships with it — the same
-timeline at duration 0, final state y0 / opacity 1, no pins created. **Never a
-slowed variant.**
+`X4` entry stagger remains the baseline for quiet screens: start `top 82%`,
+`once: true`, y16 + fade, 60ms stagger. `X6` reduced-motion twin ships with
+every behaviour — the same timeline at duration 0, final state y0 / opacity 1,
+no pins created. **Never a slowed variant.**
 
 `X5` legibility scrim is required on every full-bleed band carrying copy. It is a
 readability requirement, not decoration: test at least 4.5:1 against the
@@ -131,7 +134,6 @@ will move when the real faces land. Re-check the spans then.
 - No heritage coordinates anywhere, including comments and source.
 - Story-wall dating is **disputed** (**R2**). Render from a content field, never
   a literal; the era marker reads `{ story-wall-dating }` for that reason.
-- Truth-telling sections move *less*, not more.
 
 ### Open, and whose
 
@@ -148,7 +150,7 @@ will move when the real faces land. Re-check the spans then.
 
 ## Home
 
-**Route** `/` · **Tier 1** · **903vh** · 7 sections · frame `2:3`
+**Route** `/` · verb *opens* · **903vh** · 7 sections · frame `2:3`
 
 Spans: 100 + 83 + 250 + 84 + 146 + 137 = 800vh, plus a 103vh footer.
 Sections sum to 8129px exactly.
@@ -203,7 +205,7 @@ copy.
 
 ## Wonder
 
-**Route** `/wonder` · **Tier 2** · **1363vh** · 14 sections · frame `2:5`
+**Route** `/wonder` · verb TBD · **1363vh** · 14 sections · frame `2:5`
 
 Rebuilt to v3 on 26 Aug: 8 sections became 13, plus the header. The draft adds a
 fact strip, three highlight cards, Getting here, Turraburra, Where you sleep,
@@ -259,7 +261,7 @@ CTAs — which is what the code renders.
 
 ## Truth
 
-**Route** `/truth` · **Tier 2** · **1704vh** · 21 sections · frame `143:2`
+**Route** `/truth` · verb *descends* · **1704vh** · 21 sections · frame `143:2`
 
 The descent — 00 Intro through *Underneath all of it* — carries both full-bleed
 breaks and the hard stop.
@@ -345,7 +347,7 @@ anywhere.
 
 ## Living Work
 
-**Route** `/living-work` · **Tier 2** · **992vh** · 9 sections · frame `2:9`
+**Route** `/living-work` · verb *accumulates* · **992vh** · 9 sections · frame `2:9`
 
 Structure follows v3 exactly: hero, thirteen expandable challenges, Iningai
 Rangers, the work as seven named streams, infrastructure and technology as six
@@ -408,7 +410,7 @@ or less, deterministic, never random per load.
 
 ## The Record
 
-**Route** `/resources` · **Tier 2** · **1155vh** · 10 sections · frame `133:2`
+**Route** `/resources` · verb TBD · **1155vh** · 10 sections · frame `133:2`
 
 Route and nav label stay **Resources** per D1; the page titles itself *The
 Record*, which is what every v3 page calls it when it links here.
@@ -465,7 +467,7 @@ has no form (R9).
 
 ## About
 
-**Route** `/about` · **Tier 2** · **1091vh** · 11 sections · frame `115:2`
+**Route** `/about` · verb TBD · **1091vh** · 11 sections · frame `115:2`
 
 Source: `docs/content/drafts/about/YACHATDAC-About-Copy-v1.md`, 21 Aug 2026.
 Governance circle: open. Copy is the draft's, verbatim.
@@ -508,7 +510,7 @@ draft calls The Record.
 
 ## Our People
 
-**Route** `/our-people` · **Tier 2** · **820vh** · 9 sections · frame `222:1996`
+**Route** `/our-people` · verb TBD · **820vh** · 9 sections · frame `222:1996`
 
 Drawn new on 26 Aug — neither designer had a frame for it and four inbound links
 point at it: the homepage Belonging CTA, About's *Meet the people*, and the
@@ -540,7 +542,7 @@ answered.** Governance circle: shared with care.
 
 ## Partnerships
 
-**Route** `/partnerships` · **Tier 2** · **433vh** · 5 sections · frame `225:1996`
+**Route** `/partnerships` · verb TBD · **433vh** · 5 sections · frame `225:1996`
 
 Drawn new on 26 Aug, deliberately minimal. **D22, Final** — the page exists. Four
 live links point at it: the homepage Way Forward, the footer's Get in touch
@@ -559,7 +561,7 @@ Not moved — that is a separate decision someone should take deliberately.
 
 ## Connect
 
-**Route** `/connect` · **Tier 2** · **393vh** · 6 sections · frame `239:1996`
+**Route** `/connect` · verb TBD · **393vh** · 6 sections · frame `239:1996`
 
 Drawn new on 26 Aug. **The most-linked destination in the project** — twelve
 inbound links from Truth, Living Work, The Record, About and Our People — and it
@@ -608,7 +610,7 @@ appear, which is correct. `contactRoutes`' research destination moved to
 
 ## Legal
 
-**Route** `/legal/privacy` · `/legal/terms` · `/legal/cookies` · **Tier 2** ·
+**Route** `/legal/privacy` · `/legal/terms` · `/legal/cookies` · verb TBD ·
 **265vh** · 6 sections · frame `242:1996`
 
 Three routes drawn as one frame because they are one template — the shape is

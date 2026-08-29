@@ -44,27 +44,43 @@ nearest acceptable alternative rather than complying.
 
 - Per-frame work touches `transform` and `opacity` only. Flag anything animating
   `width`, `height`, `top`, `left` or `filter` on every frame and rewrite it.
-- One WebGL section on the entire site. Lazy-loaded after first paint, paused
-  off-screen via IntersectionObserver, disposed on teardown, poster-frame fallback.
+- WebGL scenes are lazy-loaded after first paint, paused off-screen via
+  IntersectionObserver, disposed on teardown, poster-frame fallback — and at most
+  **one renderer live at a time**, enforced by the scene manager. Several scenes
+  per site is fine; simultaneous contexts are not.
 - Device pixel ratio capped at 1.5 in any canvas or WebGL context.
 
 ## 2. Resolve what to build
 
-If the request names a sketch ID (A1–A4, B1–B5, C1–C3, D1–D4, E1–E4, F1–F2,
-L1–L4, M1–M7, T1–T6, X1–X6, Y1–Y3), read `references/sketch-library.md` for its
-spec, tier and status before writing anything.
+If the request names a sketch ID (A1–A5, B1–B6, C1–C4, D1–D4, E1–E5, F1–F2,
+L1–L4, M1–M8, T1–T7, X1–X8, Y1–Y7), read `references/sketch-library.md` for its
+spec and status before writing anything.
 
 If it doesn't, pick from the library rather than inventing a behaviour, and say
-which one you picked. The library exists so the site has a limited motion
-vocabulary instead of a different idea per section.
+which one you picked. The library exists so the site has a shared motion
+vocabulary instead of a different idea per section — the vocabulary is now large,
+but it is still a vocabulary.
 
-**Tiers.** Tier 1 is homepage only: pinning, scrubbed media, parallax, WebGL,
-signature moments. Tier 2 is every other page including all CMS-generated pages:
-entry staggers and hover states only. A CMS template must not be able to produce
-Tier 1 motion.
+**The doctrine (F7 — the immersive mandate, 2026-08-29).** The client directed the
+site to be cinematic everywhere; the old tier system and homepage budget are
+superseded — see decision F7 in `docs/decisions-and-risks.md`. The rules now:
 
-**Budget.** Two signature moments on the homepage, total. If a third is requested,
-ask which existing one it replaces.
+1. **Motion is the default.** Every page has a motion script — an entrance, scroll
+   choreography, and a transition out. A static section is the exception and
+   states its reason (e.g. testimony being read).
+2. **The Loud Channel rule.** Every screen declares ONE loud channel — **media**,
+   **type**, or **transition** — and keeps the other two quiet. Plain text means a
+   big media or transition moment; plain media means big type. This is the pacing
+   law; it is what keeps "cinematic everywhere" from becoming noise.
+3. **One verb per page.** Every page gets a verb (Truth *descends*, Living Work
+   *accumulates*, Home *opens*…) and its cinema is built from that grammar.
+   Contrast between pages comes from different grammars, not motion vs stillness.
+4. **Per-page engineering budgets, not per-site caps.** Document spans in vh; the
+   60fps target and the media budgets are the real limits. Several WebGL scenes
+   may exist; at most one is live at a time.
+5. **CMS surfaces get the full standard kit** — route transitions, split-text
+   reveals, hover system, media reveals — as a bounded set an editor cannot break.
+   Signature modules remain importable only from hand-built page hosts.
 
 ## 3. Check permissions before building
 
@@ -95,7 +111,7 @@ reduced-motion branch, the teardown, and the correct easing tokens.
 | `assets/motion-controller.js` | Always. Central registry — every timeline registers here so reduced motion, route changes and teardown are handled in one place. |
 | `assets/section-scrub.js` | Any scroll-linked section without pinning. Most work. |
 | `assets/section-pin.js` | Pinned step-throughs and horizontal panoramas. |
-| `assets/webgl-section.js` | The one WebGL section. Lazy import, DPR cap, IO pause, dispose, poster. |
+| `assets/webgl-section.js` | WebGL scenes. Lazy import, DPR cap, IO pause, dispose, poster — one renderer live at a time via the scene manager. |
 | `assets/image-sequence.js` | Frame-scrubbed sequences and scrubbed video. |
 | `assets/motion-tokens.css` | Palette, durations, easing curves as CSS custom properties. |
 
@@ -120,8 +136,8 @@ sections built by different people feel like one site.
 ```
 [ ] reduced-motion branch present, and it cuts rather than slows
 [ ] no pin without a documented scroll span in vh
-[ ] text split by line or word, never by character
-[ ] once:true on all Tier 2 entry animations (no re-trigger on scroll-up)
+[ ] narrative/testimony copy split by line or word only (chars only on short display headings, aria intact)
+[ ] once:true on all entry animations (no re-trigger on scroll-up)
 [ ] contrast >= 4.5:1 for copy over media
 [ ] transform/opacity only in the per-frame path
 [ ] destroy() removes triggers, disposes GL resources, cancels rAF
@@ -136,9 +152,12 @@ quietly dropping it.
 
 The brand attributes are grounded, honest, organic, human, respectful, awakened.
 In motion terms that means: things settle and never rebound; loaders report real
-progress; layers move at uneven rates; the visitor sets the pace; motion finishes
-before reading starts; and surprise is rationed. Easing is `country` for anything
-large and `quiet` for interface furniture — never overshoot or elastic, which read
-as playful against this brand.
+progress; layers move at uneven rates; the visitor sets the pace; and motion
+finishes before reading starts. Easing is `country` for anything large and `quiet`
+for interface furniture — never overshoot or elastic, which read as playful
+against this brand. Adventurous means scale and choreography, not bounce.
 
-Truth-telling sections should move less than the rest of the site, not more.
+Truth's cinema is the descent — its dissolves, darkening grounds and rail carry
+the chronology, and they are built at full cinematic weight. Testimony is read in
+stillness the page chooses; under the doctrine that stillness is a stated
+exception, not a smaller ration.

@@ -71,7 +71,7 @@ a single sheet are in
 | --- | --- | --- | --- |
 | **D8** | **Backend build priority** | User-facing front end first, or CMS/backend in parallel? Deferred at the 18 Aug briefing to a follow-up that has not happened. Urgent on the roadmap. **Not covered on 20 Aug** — the walkthrough's "D8/D9" was motion only. Nothing on a wireframe turns on it, which is why it survived 26 Aug untouched. | David |
 | **D11** | **Hosting / database accounts** | One shared project account or individual accounts. Handover to the client is far simpler if nothing is tied to a personal account. | David |
-| **D9** ⚠ | **Motion sign-off owner — the half that is still open** | **Split on 26 Aug.** *Which behaviours ship* is closed: the Tier 1 exceptions on non-cultural furniture are confirmed under the grounded character set on 20 Aug, and any exception on cultural material routes to Suzanne with R5. **Who signs off is still open**, and was deliberately not answered — naming a person to a governance role is not a design decision. | Marc and August |
+| **D9** ⚠ | **Motion sign-off owner — the half that is still open** | **Split on 26 Aug; narrowed on 29 Aug.** *Which behaviours ship* is closed, and **F7 (the immersive mandate, 29 Aug) resolves motion-quantity authority — August directed cinematic motion site-wide.** What remains open is only the **cultural** approver: artwork motion and R10 permissions (any exception on cultural material still routes to Suzanne with R5). Naming that person is not a design decision. | Marc and August |
 
 ### Closed on 26 August
 
@@ -101,7 +101,7 @@ a single sheet are in
 | — | **Which events need RSVP** | RSVP is confirmed in scope for community gatherings and research visits. The exact list of recurring event types defaulting to RSVP vs announcement-only is a follow-up, not a blocker. |
 | **R11** | **Media size and compression targets** | Client video runs to 2GB per file; no maximum sizes, compression targets or storage service decided. The homepage is video-led and the above-the-fold budget is under 2.5MB. |
 | **R6** | **Lo-fi wireframes vs the open IA** | **Closeable.** The IA questions this risk was about — D1, D2, D22, D23 — are all Final as of 26 Aug, and the ten frames are drawn against them. Previously: largely mitigated on 20 Aug: **D1 and D3 are answered**, D4 is naming only and never blocked wireframes. **D2 was deliberately deferred to the lo-fi review** — the inversion of the original advice — so draw Connect as present and structurally liftable rather than baking in either answer. Downgraded to Medium. |
-| **R7** | **Wireframes and motion structure** | Wireframes must state scroll spans in `vh` and mark which sections are Tier 1, or pinning gets retrofitted into a layout with no room for it. |
+| **R7** | **Wireframes and motion structure** | Wireframes must state scroll spans in `vh` and mark each screen's loud channel (F7), or pinning gets retrofitted into a layout with no room for it — or every channel ends up loud at once. |
 | **R9** | **Legal pages before any form goes live** | **Unchanged, and now the widest-reaching open risk.** It is why Truth's enquiry form was cut on 26 Aug, why Connect has no form, and why the newsletter field is inert. **D4 (26 Aug) settled the labels and created `/legal/cookies`, so all three routes now exist** — but Privacy Policy, Terms and Cookie Settings are still stubs with no content. The homepage newsletter field is deliberately inert until they land. **20 Aug supplies placeholder copy (D4), not reviewed copy** — ship it marked as unreviewed to unblock the routes, and keep every data-collecting form off until the reviewed version lands. |
 | **R8** | **DGR status** | Still unverified — verify against the org's actual ACNC and state registration, not against either prior answer. No longer blocking, because **donations are deferred out of launch scope (D13)**. The risk moves to whenever donations are built. |
 | **D14** | **Approval attribution in the CMS** | Approvals are relayed by an intermediary, so a proxy-entered approval with no trail is indistinguishable from one nobody gave. The CMS should capture who approved, when, and on what basis. |
@@ -185,9 +185,11 @@ each — not a re-argument, just a check that the change was intended.
   section structure stay in code. `src/content/homepage.ts` is the seed the CMS
   is populated from, not the long-term home. Supersedes the earlier position
   that homepage copy stayed in git.
-- **F4 — motion tiers.** Tier 1 (pinning, scrubbing, parallax, WebGL,
-  signature moments) is homepage-only; everything else, including every
-  CMS-generated page, is Tier 2. Two signature moments on the homepage, total.
+- **F7 — the immersive mandate (supersedes F4, 29 Aug).** Motion is the default
+  on every page, paced by the Loud Channel rule (one loud channel per screen:
+  media, type, or transition); per-page vh/perf budgets replace the old tier
+  split and homepage budget. CMS surfaces get a bounded standard kit. Cultural
+  rules, reduced-motion cut, and performance floors unchanged.
 - **F5 — only Work Sans is tracked in git.** Block Berthold and Bantayog Sans
   are distributed through the Proyekto resources section until their licences
   are confirmed.

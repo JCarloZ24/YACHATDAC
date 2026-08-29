@@ -3,6 +3,14 @@
 Running list of the animations and effects we want on the site. Add to it freely —
 this is the input list, not the approved list.
 
+**2026-08-29 — the immersive mandate (F7).** The client directed cinematic motion
+site-wide; the budget/tier gate that used to close this list is superseded. Ideas
+now graduate straight into page motion scripts, checked only against the Loud
+Channel rule, the vh/perf budgets, and the subject-matter table below. The
+reference set behind the v2 build: lumen-artspace.webflow.io (GSAP + Flip +
+Barba), danu.ventures (the 3D arc), pear.no (scrubbed film, print texture),
+GSAP Showreel 2025.
+
 **Template**
 
 ```
@@ -83,23 +91,18 @@ Status lines are added by whoever builds the thing, not by whoever asks for it.
 
 ## Two things to check an idea against before adding it
 
-### The budget is two
+### The gate is the Loud Channel rule (F7 — was: a budget of two)
 
-**F4 allows two signature moments on the homepage, total.** Items 3, 4 and 5 are
-already four. They run as flagged exceptions and can be found with:
+The old rule — F4's two signature moments, Tier 1 homepage-only — is superseded
+by **F7, the immersive mandate** (client directive, 2026-08-29). Motion is the
+default on every page. What replaces the budget as the gate:
 
-```bash
-grep -rn 'data-tier1-exception' src/
-```
+- one loud channel per screen — media, type, or transition, never all three;
+- every span documented in vh in the page's motion script;
+- the 60fps and media budgets in the motion skill's `tokens.md`.
 
-Nothing more can be approved until **D9** names who signs motion off — that
-decision is still open, so right now there is no one with the authority to say
-yes.
-
-Tier 1 (pinning, scrubbing, parallax, WebGL) is **homepage only**. Every other
-page, including anything the CMS generates, is Tier 2: entry staggers and hover
-states. An idea that needs Tier 1 on Wonder, Truth or Living Work is an idea
-that needs a rule changed first.
+The `data-tier1-exception` flags in v1 code are historical — they reference the
+superseded F4 and remain only where the v1 pages do.
 
 ### Some effects are closed by subject matter, not by taste
 
@@ -114,13 +117,12 @@ can move is a property of **what it shows**, not of how good the motion is.
 | Cultural sites — Marra Wonga, engravings, the escarpment | ❌ never, standing rule |
 | Story-wall imagery | ❌ unavailable entirely — build typographically |
 
-Two more that apply regardless of subject:
+One more that applies regardless of subject:
 
 - **No generated Aboriginal iconography in code.** No concentric circles, dot
   fields, meandering waypoint paths, U-shapes or animal tracks. Artwork comes
   from the artist as a supplied asset. Using Leonard's exported vector is fine;
   drawing something that resembles it is not.
-- **Truth-telling sections move less than the rest of the site, not more.**
 
 If an idea lands in a ❌ row, it isn't dead — it needs a recorded permission in
 `permissions.md` first, with a date and a name. "Someone said it was fine" is not

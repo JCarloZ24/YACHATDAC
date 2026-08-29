@@ -23,6 +23,20 @@ None yet. Format for entries when they land:
 | e.g. Artwork pattern loop | Yes, background only, no rotation | Leonard Mickelo via Marc | 2026-09-01 | Homepage + About backgrounds |
 ```
 
+## ▲ Sign-off queue — artwork motion in the v2 immersive build (2026-08-29)
+
+The immersive mandate (decision F7) directs cinematic motion site-wide. Where a
+v2 design uses Leonard Mickelo's artwork in motion, it is built as designed and
+flagged here — one clear list for Marc to take to Leonard, per Ivy's standing
+instruction. Until the Artwork-motion entry above records a yes, each ships in
+its cleared fallback.
+
+| Ask | Sketch | Wanted for | Cleared fallback while open |
+|---|---|---|---|
+| Artwork pieces as orbit cards (the group rotates/translates; pieces themselves unwarped, whole) | T7 | /v2/home hero proposal 2 | Photography cards from batch 1 |
+| An artwork tile morphing between routes (position/scale only) | C4 | /v2/home → /v2/truth handoff | Photo-tile morph; artwork tiles swap without morph |
+| An artwork plate inside the Recall focus rack (opacity crossfade only) | A5 | /v2/home hero proposal 1 | Photographic plates only |
+
 ## Asks outstanding with the artist
 
 Alongside the existing creative-brief deliverables:
