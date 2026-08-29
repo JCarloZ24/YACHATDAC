@@ -34,9 +34,10 @@
   /* Warm/Yellow Gold. Taken from the Figma paint style of that name, which is
      what Marc's hi-fi hero uses for the Scroll callout (node 17:927).
      ⚠ NOT the same colour as --color-ochre (#d69828, "Yellow Ochre — Morning
-     Light") from tokens.md. Both are real brand names; the code palette was
-     simply missing this one. Whether the two should coexist or one is a drift
-     of the other is a question for Marc — flagged, not silently merged. */
+     Light").
+     RESOLVED 29 Aug 2026: the two coexist deliberately. Neither is a drift.
+     Yellow Ochre is the brand colour; Yellow Gold is the hero scroll cue and
+     nothing else. Both exist as paint styles in YACHATDAC-V2. */
   --color-gold: #fbae3d;
 
   /* Display scale — headlines are set in Block Berthold, tight and heavy.
