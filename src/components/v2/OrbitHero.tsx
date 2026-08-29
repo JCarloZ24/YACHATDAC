@@ -36,7 +36,17 @@ const SLATS: Slat[] = [
   { kind: "field", label: "Iningai Country", detail: "Still here", className: "bg-roasted text-canvas" },
 ];
 
+/**
+ * Slat placement is baked into server-side inline styles: the ring is static
+ * (rotate about the wheel's axis, then push out along the slat's own z), and
+ * only the WHEEL's rotationX moves per frame. GSAP must not own the slat
+ * transforms — its translate-before-rotate ordering would collapse the ring
+ * onto a single point.
+ */
+const RADIUS = 380;
+
 export function OrbitHero({ beat }: { beat: Beat }) {
+  const step = 360 / SLATS.length;
   return (
     <section
       data-orbit-root
@@ -55,7 +65,10 @@ export function OrbitHero({ beat }: { beat: Beat }) {
               key={index}
               data-orbit-card
               aria-hidden
-              className="absolute -ml-24 -mt-16 h-32 w-48 overflow-hidden rounded-lg [backface-visibility:hidden]"
+              className="absolute h-32 w-48 overflow-hidden rounded-lg [backface-visibility:hidden]"
+              style={{
+                transform: `translate(-50%, -50%) rotateX(${index * step}deg) translateZ(${RADIUS}px)`,
+              }}
             >
               {slat.kind === "photo" ? (
                 <MediaOrField src={slat.src} alt={slat.alt} sizes="192px" />

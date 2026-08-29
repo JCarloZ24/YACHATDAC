@@ -38,7 +38,6 @@ const TILT_DEG = 2; // T3's cap.
 export function createOrbit(): MotionModule {
   let ctx: gsap.Context | null = null;
   let tick: ((time: number, delta: number) => void) | null = null;
-  let onResize: (() => void) | null = null;
 
   const init = () => {
     const root = document.querySelector<HTMLElement>("[data-orbit-root]");
@@ -46,35 +45,18 @@ export function createOrbit(): MotionModule {
     const wheel = root?.querySelector<HTMLElement>("[data-orbit-wheel]");
     if (!root || !stage || !wheel) return;
 
-    const cards = Array.from(
-      wheel.querySelectorAll<HTMLElement>("[data-orbit-card]"),
-    );
-    if (cards.length === 0) return;
-
-    const layout = () => {
-      const radius = Math.min(stage.clientHeight * 0.62, 480);
-      const step = 360 / cards.length;
-      cards.forEach((card, i) => {
-        gsap.set(card, {
-          rotationX: i * step,
-          z: radius,
-          transformOrigin: "center center",
-        });
-      });
-    };
-
+    // Slat placement is server-rendered inline style (rotate-then-translate);
+    // this module only ever turns the wheel. GSAP must not touch the slats —
+    // its translate-before-rotate ordering would collapse the ring.
     ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: reduce)", () => {
         // The wheel as a still composition — angled, present, unmoving.
-        layout();
         gsap.set(wheel, { rotationX: 14 });
       });
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        layout();
-
         const state = { drift: 0, scroll: 0, boost: 0 };
         const setRotation = gsap.quickSetter(wheel, "rotationX", "deg") as (
           v: number,
@@ -135,18 +117,11 @@ export function createOrbit(): MotionModule {
       });
 
     }, root);
-
-    // Outside the context: gsap.context does not treat a callback's return
-    // value as a teardown — plain listeners are removed in destroy().
-    onResize = layout;
-    window.addEventListener("resize", onResize);
   };
 
   const destroy = () => {
     if (tick) gsap.ticker.remove(tick);
     tick = null;
-    if (onResize) window.removeEventListener("resize", onResize);
-    onResize = null;
     ctx?.revert();
     ctx = null;
   };
