@@ -1,0 +1,72 @@
+/*
+ * X7 — route transitions for the /v2 segment.
+ *
+ * Every rule here targets ::view-transition pseudo-elements, which only exist
+ * while a React <ViewTransition> runs — the current pages never trigger one,
+ * so loading this file site-wide changes nothing outside /v2.
+ *
+ * The wipe is the new page's own ground clipping in over the held old page:
+ * the ground literally arrives, which is truer to the brand than a curtain in
+ * a third colour. Snapshot animation is compositor work — no per-frame JS.
+ *
+ * Durations mirror the motion skill's tokens.md (route wipe 600ms country,
+ * untyped/back 300ms quiet crossfade) and VT_DURATION_MS in
+ * src/lib/motion/route-entry.ts. Change them together.
+ */
+
+::view-transition {
+  pointer-events: none;
+}
+
+/* Forward (typed nav-forward): old page holds, new page wipes up over it. */
+::view-transition-old(.v2-hold) {
+  animation: v2-hold 600ms step-end both;
+}
+::view-transition-new(.v2-wipe) {
+  animation: v2-wipe-in 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Untyped navigations — browser back/forward among them: quiet crossfade. */
+::view-transition-old(.v2-fade) {
+  animation: v2-fade 300ms cubic-bezier(0.33, 1, 0.68, 1) both reverse;
+}
+::view-transition-new(.v2-fade) {
+  animation: v2-fade 300ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+@keyframes v2-wipe-in {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes v2-hold {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes v2-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* X6 — reduced motion cuts. The swap is instant, morphs included. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-image-pair(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+  }
+}
