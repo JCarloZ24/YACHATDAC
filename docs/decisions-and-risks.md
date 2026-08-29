@@ -188,9 +188,10 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 | F1 | Homepage copy lives in the repo | **Superseded** by D12 | August |
 | F2 | Homepage thread is a plain vertical rule | **On hold** | August, Ivy, JC |
 | F3 | Homepage Truth beat is typographic | **On hold** | August, Ivy |
-| F4 | Motion tiers, two signature moments | **Final** | JC |
+| F4 | Motion tiers, two signature moments | **Superseded** by F7 (29 Aug) | JC |
 | F5 | Only Work Sans is tracked in git | **Final** | August |
 | F6 | Local dev runs on port 3001 | **Final** | August |
+| F7 | The immersive mandate — motion is the default site-wide | **Final** (29 Aug) | August, via Ivy |
 
 Risks and issues are in Part 4: R1–R15 and R22–R23 here; R16–R21 are in
 `docs/change-requests.md`.
@@ -414,6 +415,10 @@ and these moved. D15–D18 live there, not here.
   while working the rest of the board on 26 Aug. Naming a person to a governance
   role is not a design decision and is not ours to make. Still with Marc and
   August. R10's cultural permissions stay behind it.
+- **29 Aug — the quantity half is resolved by F7.** August's directive settles
+  who can say yes to *more motion*: he did, site-wide. What remains open here is
+  only the **cultural** approver — artwork motion and R10 permissions —
+  unchanged, still with Marc and August.
 
 ---
 
@@ -1029,15 +1034,51 @@ The reasoning as it stood when this was Final:
 
 ## F4 — Motion tiers, and a budget of two signature moments
 
-- **Category** — Motion · **Status** — Final · **Owner** — JC
-- **The decision** — Tier 1 (pinning, scrubbing, parallax, WebGL, signature
-  moments) is homepage-only. Everything else, including every CMS-generated
-  page, is Tier 2: entry staggers and hover states. Two signature moments on
-  the homepage, total.
+- **Category** — Motion · **Status** — **Superseded by F7** (29 Aug) · **Owner** — JC
+- **The decision (as was)** — Tier 1 (pinning, scrubbing, parallax, WebGL,
+  signature moments) is homepage-only. Everything else, including every
+  CMS-generated page, is Tier 2: entry staggers and hover states. Two signature
+  moments on the homepage, total.
 - **Why** — A CMS template must not be able to produce Tier 1 motion, or the
   site's motion vocabulary drifts every time an editor publishes. In code the
-  split is enforced by keeping Tier 2 on IntersectionObserver and CSS with no
+  split was enforced by keeping Tier 2 on IntersectionObserver and CSS with no
   GSAP dependency.
+- **Superseded, not reversed (29 Aug)** — August directed cinematic motion
+  site-wide; see F7. The CMS-drift concern this entry existed for survives as
+  F7's bounded standard kit. The v1 pages built under F4 stay as built at their
+  current routes; their `data-tier1-exception` flags are historical.
+
+---
+
+## F7 — The immersive mandate: motion is the default, site-wide
+
+- **Category** — Motion · **Status** — Final (29 Aug 2026) · **Owner** — August
+  (direction), relayed and specified by Ivy
+- **The decision** — Cinematic motion on every page: each page ships a motion
+  script — entrance, scroll choreography, transition out. Pacing is governed by
+  the **Loud Channel rule**: every screen declares ONE loud channel (media,
+  type, or transition) and keeps the other two quiet; plus one verb per page.
+  Per-site caps become per-page budgets — spans documented in vh; the 60fps
+  target and the media budgets in the motion skill's `tokens.md` are the
+  limits; several WebGL scenes may exist with one renderer live at a time. CMS
+  surfaces get the full standard kit (route transitions, split-text reveals,
+  hovers, media reveals) as a bounded set; signature modules remain importable
+  only from hand-built page hosts.
+- **Why** — August, 29 Aug 2026, group chat, relayed by Ivy: *"i think you can
+  be more adventurous pa. I am starting to worry Marc is keeping everything too
+  flat."* The direction: adventurous, on-brand, immersive — "STATIC is not our
+  brand." Reference set: lumen-artspace.webflow.io (GSAP + Flip + Barba),
+  danu.ventures (the 3D arc), pear.no (scrubbed film, print texture), GSAP
+  Showreel 2025.
+- **What it does not change** — every cultural hard rule (R10, F2/F3's holds,
+  no generated iconography, no heritage coordinates); artwork motion still
+  requires Leonard's recorded permission (built as designed and ▲-flagged in
+  the permissions board's sign-off queue); the reduced-motion cut; the
+  performance floors; the grounded easing character (no overshoot/elastic).
+  D9's **cultural** approver half stays open — F7 resolves motion *quantity*
+  authority only.
+- **Where it lands first** — the `feat/immersive-motion` branch: new pages
+  `/v2/home` and `/v2/truth`, built alongside the untouched current routes.
 
 ---
 
@@ -1316,19 +1357,21 @@ permission is recorded, not when a design is drawn.
 
 ---
 
-## R7 · RISK · Medium — Wireframes may omit scroll spans and motion tiers
+## R7 · RISK · Medium — Wireframes may omit scroll spans and loud channels
 
 - **Form** — kind `risk` · severity `medium` · likelihood `medium` · status
   `open` · visibility `internal` · owner Ivy
 - **Owner** — Ivy and JC
-- **What could go wrong** — Motion is structural on this site. If wireframes do
-  not state scroll spans in `vh` and mark which sections are Tier 1, pinning
-  gets retrofitted into a layout that has no room for it.
-- **Impact** — Rework at the front-end stage, and pins that land in the wrong
-  place.
+- **What could go wrong** — Motion is structural on this site, and under F7 it
+  is the default. If wireframes do not state scroll spans in `vh` and mark each
+  screen's loud channel (media / type / transition), pinning gets retrofitted
+  into a layout that has no room for it — or every channel ends up loud at once.
+- **Impact** — Rework at the front-end stage, pins that land in the wrong
+  place, and noise where the doctrine wants contrast.
 - **Next step** — Express spans in `vh` (standard section 100vh; pinned
-  step-through ~320vh for four steps; pinned panorama ~250vh) and name
-  behaviours by their sketch ID from the motion skill's library.
+  step-through ~320vh for four steps; pinned panorama ~250vh), mark the loud
+  channel per screen, and name behaviours by their sketch ID from the motion
+  skill's library.
 
 ---
 

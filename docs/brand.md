@@ -88,8 +88,12 @@ before doing anything with it — motion permission for artwork is not recorded.
 Brand attributes: grounded, honest, organic, human, respectful, awakened.
 
 In motion terms that means things settle and never rebound, loaders report real
-progress, layers move at uneven rates, the visitor sets the pace, motion
-finishes before reading starts, and surprise is rationed. Overshoot and elastic
-easing are banned — they read playful.
+progress, layers move at uneven rates, the visitor sets the pace, and motion
+finishes before reading starts. Overshoot and elastic easing are banned — they
+read playful. Adventurous means scale and choreography, not bounce.
 
-Truth-telling sections should move **less** than the rest of the site, not more.
+**Motion is the default (F7, the immersive mandate — 2026-08-29).** Every page
+carries an entrance, scroll choreography and a transition out, paced by the
+**Loud Channel rule**: each screen turns up exactly one channel — media, type,
+or transition — and keeps the other two quiet. Truth's cinema is the descent
+itself; testimony is read in stillness the page chooses, as a stated exception.

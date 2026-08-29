@@ -469,17 +469,20 @@ decided at wireframe stage or they get retrofitted badly:
 - **Scroll spans in `vh`, not `px`.** A pinned step-through needs ~320vh for
   four steps; a pinned panorama ~250vh; a standard section 100vh. If the span
   is not in the layout, the pin has nowhere to live.
-- **Which sections are Tier 1.** Tier 1 (pinning, scrubbing, parallax, WebGL,
-  signature moments) is homepage-only. Everything else — including every
-  CMS-generated page — is Tier 2: entry staggers and hover states. The budget
-  is **two signature moments on the homepage, total**.
+- **Each screen's loud channel.** Under **F7 — the immersive mandate**
+  (2026-08-29, supersedes F4's tiers and budget), motion is the default on every
+  page; what a wireframe must mark is which ONE channel each screen turns up —
+  **media**, **type**, or **transition** — with the other two quiet. CMS
+  surfaces inherit the bounded standard kit (transitions, split-text reveals,
+  hovers, media reveals), never hand-built signature modules.
 
-**One verb per page — decided 29 Aug.** Truth *descends*: its dissolves, breaks, darkening
-grounds and rail all encode chronology, so the motion is the argument. Living Work
-*accumulates*: it is an inventory, so it is a light-ground field notebook with exactly one
-pinned moment (the spring's eight-day counter) and no rail. **Contrast is the mechanism —
-if every page is cinematic, Truth stops reading as heavy.** Do not carry Truth's grammar
-onto another page without asking what that page's verb is.
+**One verb per page — decided 29 Aug, extended under F7.** Truth *descends*: its
+dissolves, breaks, darkening grounds and rail all encode chronology, so the motion is
+the argument. Living Work *accumulates*: a working field notebook, quantities doing the
+talking. Home *opens*. Every remaining page is assigned its verb when its v2 script is
+written. **Contrast between pages now comes from different grammars, not from motion vs
+stillness** — do not carry Truth's grammar onto another page without asking what that
+page's verb is.
 
 ⚠ **R10 extends to batch 2, and is untagged there.** `March22-2302` and the untitled
 `March22` frame are story-wall material. They and the eight tagged batch-1 frames are
@@ -497,6 +500,12 @@ direction:
 - **Heritage** — the structural base for homepage sections
 - **No Art Music**
 
+> **Superseded 2026-08-29 by F7.** The two paragraphs below record the 18 Aug
+> briefing's direction and are kept as history. August's directive of 29 Aug
+> ("be more adventurous… STATIC is not our brand") replaces them: cinematic
+> motion site-wide, governed by the Loud Channel rule. The v2 reference set is
+> lumen-artspace.webflow.io, danu.ventures, pear.no, and GSAP Showreel 2025.
+
 The client's Game-of-Thrones-style 3D map concept was assessed as too extreme
 to implement and is not in scope. The agreed direction is more restrained:
 static foreground, moving/changing background on scroll, fades rather than
@@ -505,7 +514,7 @@ need heavy animation or gradients to land.
 
 ## Homepage vs inner pages
 
-The homepage is the animation-heavy, visually rich page, with an intro
-video/loading sequence in front of it. Inner pages stay simple and
-straightforward. That split is deliberate and should be visible in the
-wireframes.
+*(Superseded by F7 — see above.)* The homepage is the animation-heavy, visually
+rich page, with an intro video/loading sequence in front of it. Inner pages stay
+simple and straightforward. That split is deliberate and should be visible in
+the wireframes.

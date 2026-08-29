@@ -52,6 +52,16 @@ corridor (T4)           ~250vh
 coupled sky beats (A2)  ~250vh for three beats
 ```
 
+## Route transitions
+
+```
+ground wipe (X7)    600ms   country — the new page's own ground clips in
+shared morph (C4)   500ms   country — card into detail hero
+back navigation     crossfade + morph only (browser back carries no types)
+```
+
+All zeroed under reduced motion — the swap is instant.
+
 ## Palette
 
 ```
@@ -69,8 +79,10 @@ without gradient overlays.
 Headline `Block Berthold`. Subhead `Bantayog Sans`. Callouts `Good Dog Cool`.
 Body `Work Sans`. Motiva is scrapped — don't reintroduce it.
 
-Split text by line or word. Never by character: it breaks screen readers and reads
-as a gimmick against this brand.
+Split narrative and testimony copy by line or word only. Character splits are
+allowed on short display headings (≤ ~6 words — sketch B6) with SplitText's
+`aria:"auto"` so the accessible name survives. Never chars on body copy or quoted
+speech: there it still breaks the reading and reads as a gimmick.
 
 ## Performance budget
 

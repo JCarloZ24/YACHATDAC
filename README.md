@@ -30,7 +30,7 @@ page.
 | Framework | Next.js 16 (App Router, Turbopack) |
 | Language | TypeScript |
 | Styling | Tailwind CSS v4 — tokens in `src/app/globals.css` |
-| Motion | GSAP + ScrollTrigger (Tier 1); IntersectionObserver + CSS (Tier 2) |
+| Motion | GSAP + ScrollTrigger site-wide (F7); bounded IntersectionObserver + CSS kit for CMS surfaces |
 
 ## Getting started
 
