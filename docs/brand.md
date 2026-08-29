@@ -48,6 +48,15 @@ especially Eucalyptus Green and Turquoise Blue on Deep Evergreen.
 
 Motiva is scrapped and does not get reintroduced.
 
+**Where the headline face stops.** Audited in the V2 Figma file on 29 Aug 2026: Block
+Berthold covers **H1–H3 only**. `Typography/Desktop/H4`, `H5` and `H6` are set in Bantayog
+Sans ExtraBold Alt. That boundary is deliberate in the design and this table did not record
+it.
+
+**Good Dog Cool is confirmed**, not Plain. `Typography/Desktop/Tagline` in the V2 file is
+GoodDog Cool Regular, which settles the divergence noted in
+`docs/design/hifi-figma-readout.md` §10.
+
 All three are **installed and self-hosted** as woff2 in `public/fonts`, with
 the above-the-fold faces preloaded in the root layout. Good Dog Cool has not
 been supplied; its `@font-face` slot is reserved so the file can be dropped in

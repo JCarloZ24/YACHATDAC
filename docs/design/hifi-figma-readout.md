@@ -144,7 +144,15 @@ forming a curved top edge. These are placeholders for the commissioned artwork, 
 | `#f9b24c` `#d57907` `#98470d` `#31afe3` `#fefefe` | **In neither palette** |
 
 The two palettes were assumed to be an either/or choice. The built design uses **both**, plus five
-undocumented values. Whoever owns the palette decision needs to see this before it is settled.
+undocumented values.
+
+> ✅ **CLOSED, 29 August 2026.** Ivy settled this: the **client-approved Artwork Creative Brief set
+> wins**. The paint styles in YACHATDAC-V2 were corrected in place — `Rust Red → Oxide Red #af231c`,
+> `Sky Blue → Turquoise Blue #32b0ae`, `Olive Grove → Eucalyptus Green #5e7930`, Burnt Ochre
+> `#d97804 → #cb7722`, Off-White `#fcf7f0 → #f6f6ec` — and `Colour/Yellow Ochre #d69828` was added.
+> `Warm/Yellow Gold #fbae3d` stays as the hero scroll-cue accent; it is not a drift of Yellow Ochre.
+> Editing the styles in place carried every bound node with them. **Do not reopen this as a
+> question.**
 
 Caveat: raw fill counts are inflated by the logo artwork's many vector paths. Treat this as
 presence/absence evidence, not weighting.
