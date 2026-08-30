@@ -18,6 +18,7 @@ still documented in vh in the page's motion script. Cultural holds are unchanged
 - Group B — Etched (marks that arrive and stay)
 - Group C — Walking Together (continuity devices)
 - Group L — Artwork-derived (composition only)
+- Group G — The Guide (the artwork travels the site)
 - Group X — Core plumbing
 - Group M — Media in motion
 - Group D — Depth without WebGL
@@ -69,6 +70,24 @@ palette. Reproduces no motifs, so these are clear to build now.
 | L2 | Scale triad | Three arrival tiers — anchor 0, mid .25, detail .45 — each with internal micro-stagger. Layout rule as much as motion. | build |
 | L3 | Hand irregularity | Seeded per-element delay jitter ≤40ms and ≤2px offset. Deterministic, never random per load. | build |
 | L4 | Dark ground, warm figure | Dark surface as default. Content arrives by gaining brightness/saturation rather than fading from light. | build — site-wide decision, confirm before committing component library |
+
+## Group G — The Guide (the artwork travels the site)
+
+One artwork traveller — "the bird" — crosses each page, leading the eye to what
+matters next, the way a film camera follows a subject. Ivy's directive
+(2026-08-30): make the artworks alive; the guide is the spine of it. Every
+element is an **instance, clone, mask or transform of Leonard Mickelo's supplied
+vectors — nothing redrawn**, and every G use is flagged in `permissions.md`.
+Traveller candidates (audition board in the V2 file): trail lead rosette
+(placed default) · boomerang · cluster flock. Decorative: `aria-hidden`, never
+in focus order. Reduced motion: the guide rests at its waypoints — no travel.
+
+| ID | Behaviour | Spec | Status |
+|---|---|---|---|
+| G1 | Travel + trail draw-on | The traveller flies a leg (~2.0s, country); its dotted trail draws behind via mask reveal of the supplied trail vector. Transform + clip only, no per-frame filters. | ▲ build + flag — each placement in the permissions queue |
+| G2 | Band undulation | The flowing dot band drifts inside a mask window (x-drift, ±6px ambient, transform-only). River banks, grounds. The same supplied vector, shifted — never redrawn. | ▲ build + flag |
+| G3 | Waypoint settle | The traveller lands and becomes the pointer: rosette + dashed lead aimed at the thing to read or do. 0.5s quiet settle, then still. | ▲ build + flag |
+| G4 | Hand-off | The guide exits one context into the next: into the §02 door tile ahead of X7+C4; departs upward at the page close. Inside Truth, Marc's wave divider (his furniture, cleared) carries the guide's job. | ▲ build + flag — the wave itself needs no flag |
 
 ## Group X — Core plumbing
 

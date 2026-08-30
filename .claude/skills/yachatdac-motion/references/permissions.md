@@ -36,6 +36,9 @@ its cleared fallback.
 | Artwork pieces as orbit cards (the group rotates/translates; pieces themselves unwarped, whole) | T7 | /v2/home hero proposal 2 | Photography cards from batch 1 |
 | An artwork tile morphing between routes (position/scale only) | C4 | /v2/home → /v2/truth handoff | Photo-tile morph; artwork tiles swap without morph |
 | An artwork plate inside the Recall focus rack (opacity crossfade only) | A5 | /v2/home hero proposal 1 | Photographic plates only |
+| The Guide — one artwork traveller crossing every page, its dotted trail drawing behind it. Instances/masks/transforms of supplied vectors only; traveller = trail lead rosette, boomerang, or cluster flock (pick open, audition board in the V2 file) | G1 G3 G4 | Home site thread — hi-fi + guide boards (2026-08-30) | Guide hidden; the trail and rule stay as static placements |
+| The flowing dot band undulating in place (x-drift inside a mask — the same supplied vector, never redrawn) | G2 | §04 river banks and grounds | Bands hold still |
+| The trail drawing an underline beneath the §02 claim, rosette at the reveal edge | G1 | /v2/home §02 | Static trail underline |
 
 ## Asks outstanding with the artist
 
