@@ -62,6 +62,20 @@ back navigation     crossfade + morph only (browser back carries no types)
 
 All zeroed under reduced motion — the swap is instant.
 
+## The guide (group G)
+
+```
+guide leg (G1 travel)     2000ms  country — one flight between waypoints
+trail draw-on             follows the leg; mask reveal, no per-frame filters
+band undulation (G2)      ambient ±6px x-drift, ~8s period, transform-only
+waypoint settle (G3)      500ms   quiet — lands, then holds still
+hand-off (G4)             rides the route transition it leads (X7/C4 timing)
+```
+
+The guide is decorative (`aria-hidden`), never in the focus order, and under
+reduced motion it rests at its waypoints — the trail and pointer render in
+their settled states, no travel. Every G use is ▲-flagged in `permissions.md`.
+
 ## Palette
 
 ```
