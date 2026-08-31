@@ -1,0 +1,24 @@
+{
+  "$comment": "The YACHATDAC palette. Read from the Figma local variable collection 'YACHATDAC Colour' in file 7XBvi0Mdbtmym10nkF9IGp on 2026-08-31, and cross-checked hex-for-hex against 'YACHATDAC Branding Guide (Initial).pdf'. Both agree. Keep the name/meaning pairing — every colour is tied to a real element of Country, and flattening these to primary/secondary/accent loses the point of them.",
+  "source": {
+    "figmaFile": "7XBvi0Mdbtmym10nkF9IGp",
+    "figmaCollection": "YACHATDAC Colour",
+    "brandDocument": "YACHATDAC Branding Guide (Initial).pdf",
+    "readOn": "2026-08-31"
+  },
+  "warning": "Three colours in src/app/globals.css and src/content/kit.ts do NOT match this set — burnt #d97804, eucalyptus #3f6b1f ('Olive Grove'), oxide #c23d31 ('Rust Red'). Those three values live in the Figma collection literally named '_relume (legacy — do not bind)'. See OPEN QUESTIONS in docs/ART-DIRECTION.md.",
+  "colours": [
+    { "token": "ochre",      "figma": "Colour/Yellow Ochre",    "hex": "#d69828", "meaning": "Morning Light" },
+    { "token": "burnt",      "figma": "Colour/Burnt Ochre",     "hex": "#cb7722", "meaning": "Country" },
+    { "token": "turquoise",  "figma": "Colour/Turquoise Blue",  "hex": "#32b0ae", "meaning": "Water & Sky" },
+    { "token": "eucalyptus", "figma": "Colour/Eucalyptus Green","hex": "#5e7930", "meaning": "Vegetation" },
+    { "token": "oxide",      "figma": "Colour/Oxide Red",       "hex": "#af231c", "meaning": "The Land" },
+    { "token": "roasted",    "figma": "Colour/Roasted Brown",   "hex": "#4e3524", "meaning": "Earth" },
+    { "token": "evergreen",  "figma": "Colour/Deep Evergreen",  "hex": "#22372b", "meaning": "Living Country" },
+    { "token": "canvas",     "figma": "Colour/Off-White",       "hex": "#f6f6ec", "meaning": "Natural Canvas" },
+    { "token": "midnight",   "figma": "Colour/Midnight Navy",   "hex": "#122449", "meaning": "Night Sky" },
+    { "token": "charcoal",   "figma": "Colour/Charcoal Black",  "hex": "#090e12", "meaning": "Fire & Story" },
+    { "token": "gold",       "figma": "Colour/Yellow Gold",     "hex": "#fbae3d", "meaning": "Hero scroll cue only — NOT a drift of Yellow Ochre; both are real and both stay" },
+    { "token": "white",      "figma": "Colour/White",           "hex": "#ffffff", "meaning": "Pure white, interface only" }
+  ]
+}

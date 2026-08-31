@@ -1,0 +1,230 @@
+/* ---------------------------------------------------------------
+   Motion tokens
+   Values in this file are measured from reference footage, not
+   chosen by convention. See MOTION-SYSTEM.md §1.
+   --------------------------------------------------------------- */
+
+:root {
+  /* --- Easing -------------------------------------------------
+     --ease-out is the workhorse. It was derived by tracking a hero
+     expansion across 24 frames and fitting against 11 candidate
+     curves; the best fit was power2.5.out (RMSE 0.022), which this
+     bezier approximates. Measured progress: 25%->0.527, 50%->0.801,
+     75%->0.935. CSS's built-in `ease-out` is visibly flatter and is
+     the most overused curve on the web. Avoid it.
+  */
+  --ease-out:        cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-out-soft:   cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-strong: cubic-bezier(0.16, 1, 0.30, 1);
+  --ease-in-out:     cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-in:         cubic-bezier(0.55, 0, 1, 0.45); /* exits only */
+
+  /* --- Duration -----------------------------------------------
+     Scale duration with distance travelled and area changed.
+     --dur-slow is the measured value for a full hero morph.
+  */
+  --dur-instant: 100ms;
+  --dur-fast:    200ms;
+  --dur-base:    350ms;
+  --dur-mid:     600ms;
+  --dur-slow:    800ms;
+  --dur-xslow:  1200ms;
+
+  /* --- Stagger -------------------------------------------------
+     Measured gaps widened through the sequence (67ms -> 200ms).
+     Apply an ease to the stagger distribution, not a flat interval.
+  */
+  --stagger-tight: 50ms;
+  --stagger-base:  80ms;
+  --stagger-loose: 130ms;
+  --stagger-hero:  200ms;
+
+  /* --- Distance ------------------------------------------------ */
+  --shift-sm: 16px;
+  --shift-md: 40px;
+  --shift-lg: 80px;
+
+  /* --- Composed ------------------------------------------------ */
+  --t-hover:  var(--dur-base) var(--ease-out);
+  --t-reveal: var(--dur-mid)  var(--ease-out);
+  --t-morph:  var(--dur-slow) var(--ease-out);
+}
+
+/* ---------------------------------------------------------------
+   Reduced motion.
+   Removal alone is not enough for scrubbed or 3D work — substitute
+   a static end state so the content stays reachable.
+   --------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------
+   ENT-01 — fade and rise
+   Baseline entrance. Use sparingly; applied to every section it is
+   the clearest tell of generated work.
+   --------------------------------------------------------------- */
+
+.ent-fade-rise {
+  opacity: 0;
+  transform: translateY(var(--shift-md));
+  transition:
+    opacity   var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+.ent-fade-rise.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------------------------------------------------------------
+   ENT-02 — mask wipe
+   Content is uncovered rather than moved. Reads as more considered
+   than ENT-01 for roughly the same cost.
+   --------------------------------------------------------------- */
+
+.ent-wipe {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--dur-mid) var(--ease-out);
+}
+
+.ent-wipe.is-in {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ---------------------------------------------------------------
+   ENT-06 — line mask
+   Wrap each line in .ent-line-mask; the inner element rises from
+   behind the mask edge. Pair with GSAP SplitText.
+   --------------------------------------------------------------- */
+
+.ent-line-mask {
+  overflow: hidden;
+  display: block;
+}
+
+.ent-line-mask > * {
+  display: block;
+  transform: translateY(100%);
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.is-in .ent-line-mask > * {
+  transform: none;
+}
+
+/* ---------------------------------------------------------------
+   ENT-05 — cascade
+   Eased stagger, not a flat interval. Gaps widen through the
+   sequence, matching the measured distribution.
+   --------------------------------------------------------------- */
+
+.ent-cascade > *  { transition-delay: 0ms; }
+.ent-cascade > *:nth-child(2) { transition-delay: 60ms; }
+.ent-cascade > *:nth-child(3) { transition-delay: 130ms; }
+.ent-cascade > *:nth-child(4) { transition-delay: 220ms; }
+.ent-cascade > *:nth-child(5) { transition-delay: 330ms; }
+.ent-cascade > *:nth-child(6) { transition-delay: 460ms; }
+
+/* ---------------------------------------------------------------
+   IMG-06 — Ken Burns
+   Present in the reference hero even when it appears static.
+   Source image needs 1.5-2x resolution headroom.
+   --------------------------------------------------------------- */
+
+@keyframes img-drift {
+  from { transform: scale(1)    translate3d(0, 0, 0); }
+  to   { transform: scale(1.08) translate3d(-1.5%, -1%, 0); }
+}
+
+.img-drift {
+  animation: img-drift 20s var(--ease-in-out) infinite alternate;
+}
+
+/* ---------------------------------------------------------------
+   AMB-05 — breathing
+   --------------------------------------------------------------- */
+
+@keyframes amb-breathe {
+  from { transform: scale(1); }
+  to   { transform: scale(1.02); }
+}
+
+.amb-breathe {
+  animation: amb-breathe 5s var(--ease-in-out) infinite alternate;
+}
+
+/* ---------------------------------------------------------------
+   INT-05 — underline draw
+   Origin flips between enter and leave so the line retracts the
+   way it arrived.
+   --------------------------------------------------------------- */
+
+.int-underline {
+  position: relative;
+}
+
+.int-underline::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.int-underline:hover::after,
+.int-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------------
+   INT-03 — tilt
+   Container needs perspective. Cap rotation at 8-12deg; beyond that
+   it stops reading as a surface and starts reading as a glitch.
+   --------------------------------------------------------------- */
+
+.int-tilt-scene { perspective: 1000px; }
+
+.int-tilt {
+  transition: transform var(--dur-base) var(--ease-out);
+  transform-style: preserve-3d;
+}
+
+/* ---------------------------------------------------------------
+   IMG-09 — grain
+   3-6% opacity. The cheapest way to unify mismatched image sources.
+   Supply your own noise texture.
+   --------------------------------------------------------------- */
+
+.img-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("/noise.png");
+  background-repeat: repeat;
+}
+
+/* ---------------------------------------------------------------
+   will-change
+   Apply on interaction start, remove on end. Leaving it on
+   permanently allocates a GPU layer per element and costs more
+   than it saves.
+   --------------------------------------------------------------- */
+
+.will-animate { will-change: transform, opacity; }

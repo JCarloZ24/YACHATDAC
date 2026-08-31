@@ -1,0 +1,51 @@
+/* ---------------------------------------------------------------------------
+   YACHATDAC palette — the brand set, as CSS custom properties.
+
+   Source: Figma local variable collection `YACHATDAC Colour`
+   (file 7XBvi0Mdbtmym10nkF9IGp), read 2026-08-31. Cross-checked hex-for-hex
+   against `YACHATDAC Branding Guide (Initial).pdf`. Both agree.
+
+   This file is REFERENCE, not a build input. The site's live tokens are the
+   `@theme` block in src/app/globals.css. Three of those values currently
+   disagree with this file — see the note at the foot.
+
+   Keep the name/meaning pairing. Every colour is tied to a real element of
+   Country; do not flatten these to primary/secondary/accent.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --c-ochre: #d69828; /* Yellow Ochre    — Morning Light */
+  --c-burnt: #cb7722; /* Burnt Ochre     — Country */
+  --c-turquoise: #32b0ae; /* Turquoise Blue  — Water & Sky */
+  --c-eucalyptus: #5e7930; /* Eucalyptus Green— Vegetation */
+  --c-oxide: #af231c; /* Oxide Red       — The Land */
+  --c-roasted: #4e3524; /* Roasted Brown   — Earth */
+  --c-evergreen: #22372b; /* Deep Evergreen  — Living Country */
+  --c-canvas: #f6f6ec; /* Off-White       — Natural Canvas */
+  --c-midnight: #122449; /* Midnight Navy   — Night Sky */
+  --c-charcoal: #090e12; /* Charcoal Black  — Fire & Story */
+
+  /* Yellow Gold is the hero scroll cue and nothing else. It is NOT a drift of
+     Yellow Ochre — both exist as paint styles in the V2 file and both stay. */
+  --c-gold: #fbae3d;
+
+  --c-white: #ffffff; /* interface only */
+}
+
+/* ---------------------------------------------------------------------------
+   ⚠ Known drift, recorded 2026-08-31.
+
+   src/app/globals.css and src/content/kit.ts ship three values that are not in
+   the `YACHATDAC Colour` collection:
+
+     --color-burnt      #d97804   vs  #cb7722
+     --color-eucalyptus #3f6b1f   vs  #5e7930   (and is labelled "Olive Grove")
+     --color-oxide      #c23d31   vs  #af231c   (and is labelled "Rust Red")
+
+   All three of those hexes, and the names "Olive Grove" and "Rust Red", appear
+   in the Figma collection named `_relume (legacy — do not bind)`. The code is
+   bound to the legacy set for these three colours.
+
+   This is NOT resolved here, because correcting globals.css would restyle the
+   live site. Logged in OPEN QUESTIONS in docs/ART-DIRECTION.md.
+   --------------------------------------------------------------------------- */
