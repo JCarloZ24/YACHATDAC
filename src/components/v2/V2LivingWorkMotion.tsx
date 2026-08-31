@@ -14,7 +14,7 @@ import {
 } from "@/lib/motion/recipes";
 
 /**
- * /v2/living-work — the page's motion script. Verb: ACCUMULATES.
+ * /living-work — the page’s motion script. Verb: ACCUMULATES.
  *
  * One recipe per screen, each declaring its own loud channel and its span in
  * vh. Renders nothing.
@@ -23,7 +23,7 @@ import {
  * docs/motion/scenes.md:
  *
  *   §01 hero        media       100vh   ⚡5   → rest
- *   §02 aperture    type        300vh   ⚡5   pinned · the signature
+ *   §02 aperture    type        430vh   ⚡5   pinned · countdown → theater → the O hand-off
  *   §03 challenges  transition  330vh   ⚡3
  *   §04 rangers     media       100vh   ⚡4   → rest
  *   §05 spring      media       150vh   ⚡5   pinned · snapped
@@ -57,7 +57,7 @@ export function V2LivingWorkMotion() {
       };
 
       wire(find("hero"), (el) => fullBleedOpen(el, 100));
-      wire(find("aperture"), (el) => apertureSequence(el, 300));
+      wire(find("aperture"), (el) => apertureSequence(el, 430));
       wire(find("challenges"), (el) =>
         // bone → dust → dry earth. The ground dries out while the section is
         // read, because the section is about drought and erosion.

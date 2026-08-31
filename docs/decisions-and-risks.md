@@ -183,7 +183,7 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 | D21 | The Record's taxonomy: two facet axes | **Final** (26 Aug) — both axes; Event and Update back, Activity not | Marc, David |
 | D22 | Does `/partnerships` exist as a destination? | **Final** (26 Aug) — yes | Marc, August |
 | D23 | Is `/our-people` a route? | **Final** (26 Aug) — yes | Marc |
-| D24 | Persistent homepage navbar, or no nav until block 6? | **Final** (26 Aug) — no nav until The Invitation. **Code lags** | Marc, Ivy |
+| D24 | Persistent homepage navbar, or no nav until block 6? | **Superseded** (31 Aug) — persistent navbar on every page, per wireframe | Marc, Ivy |
 | D25 | Where the empty state's "ask us what exists" goes | **Final** (26 Aug) — the same page's contribute block | Marc |
 | F1 | Homepage copy lives in the repo | **Superseded** by D12 | August |
 | F2 | Homepage thread is a plain vertical rule | **On hold** | August, Ivy, JC |
@@ -192,6 +192,7 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 | F5 | Only Work Sans is tracked in git | **Final** | August |
 | F6 | Local dev runs on port 3001 | **Final** | August |
 | F7 | The immersive mandate — motion is the default site-wide | **Final** (29 Aug) | August, via Ivy |
+| F8 | Build-first: governance moves from gate to review | **Final** (31 Aug) | Marc, Ivy, August, JC |
 
 Risks and issues are in Part 4: R1–R15 and R22–R23 here; R16–R21 are in
 `docs/change-requests.md`.
@@ -712,6 +713,17 @@ and these moved. D15–D18 live there, not here.
 
 ---
 
+## D24 — supersede note (31 Aug)
+
+The 31 Aug navbar wireframe (logo · Wonder / Truth / Living Work / The Record /
+About · CONNECT pill) was directed to be reused on **all pages**, homepage
+included. That reverses the 26 Aug answer: option 2 (persistent navbar from
+`y=0`) now stands, and the code — which had never implemented the hold-back —
+now matches the direction. The pill wording also settles on **Connect**,
+replacing D2's "Get in touch".
+
+---
+
 ## D25 — Where the empty state's "ask us what exists" goes · **FINAL (26 Aug)**
 
 - **Category** — Information architecture / content
@@ -1119,6 +1131,68 @@ The reasoning as it stood when this was Final:
   authority only.
 - **Where it lands first** — the `feat/immersive-motion` branch: new pages
   `/v2/home` and `/v2/truth`, built alongside the untouched current routes.
+- **⚑ Superseded in part by F8 (31 Aug)** — the grounded-easing character and
+  the artwork-motion sign-off queue in "What it does not change" no longer
+  hold. See F8 for what replaced them and what survives.
+
+---
+
+## F8 — Build-first: governance moves from gate to review · **FINAL (31 Aug)**
+
+- **Category** — Governance / process
+- **Status** — **Final** (31 Aug 2026) · **Visibility** — Shared
+- **Decided by** Marc, Ivy, August and JC, 31 August 2026.
+- **The decision** — Front-end implementation is no longer gated by
+  pre-approval. The team builds freely; the work is **presented to Steve
+  (FNAN) and the Elder Advisory Group, who review and request changes** —
+  corrections flow back through the change-request process (D18). Review
+  happens at presentation, not before build.
+
+  Specifically, this supersedes:
+
+  1. **The grounded easing character (D9, 20 Aug) is removed.** Motion
+     character is unrestricted; the team adds whatever it has decided on.
+  2. **The `yachatdac-motion` skill is removed from the repo** along with its
+     permissions board. Its recorded grants are preserved below so the record
+     survives the file.
+  3. **The artwork-motion sign-off queue is dissolved.** Artwork motion is
+     built and shipped as designed, without waiting on a per-piece fallback.
+     Leonard Mickelo sees the work at presentation like every other reviewer.
+  4. **Copy and cultural pre-approval gates are lifted.** All copy and content
+     is authored by August as working copy — understood to be provisional —
+     and is presented to Steve (FNAN), who corrects it. The two-gate model in
+     `docs/content/README.md` (editorial sign-off, then Elder endorsement
+     *before* build) becomes one review pass at presentation.
+
+- **Record preserved from the permissions board** (deleted with the skill):
+  Ivy authorised artwork motion site-wide, cultural-site imagery at `frame`
+  grade, and story-wall imagery, all on 2026-08-30. The asks outstanding with
+  the artist (layered vectors, motif inventory, motion permission, pairing
+  rules, single-colour set) remain worth collecting but no longer block build.
+
+- **What still holds, deliberately, and why** — two data-level lines survive
+  because a later review cannot walk them back:
+
+  1. **No heritage coordinates** in data, markup, comments or source — a
+     coordinate committed to git is in history even after a correction.
+  2. **No generated Aboriginal iconography drawn in code** — concentric
+     circles, dot fields, waypoint paths, U-shapes, animal tracks. Motion and
+     treatment of the artist's *supplied* vectors are now unrestricted; the
+     line is only against fabricating new iconography.
+
+  Both are overturnable here in one line if the team decides otherwise.
+
+- **Why** — Launch is 14 September and the gate-before-build model was
+  consuming the schedule on approvals for work nobody had seen. Presenting
+  finished work gives Steve and the Elders something concrete to correct, and
+  D18 already gives their corrections a path back in. The review still stands
+  between the build and the public site — this moves the review, it does not
+  remove it.
+- **What it does not change** — D5 (drafts govern copy, wireframes govern
+  design), D10 (August owns copy), D12 (copy is CMS-editable), F5, F6. R17's
+  caution about editing recorded quotations transfers to the presentation
+  review: changes Steve requests inside Suzanne's recorded words are routed to
+  her there, since they are hers regardless of process.
 
 ---
 

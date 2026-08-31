@@ -153,6 +153,23 @@ export const challenges: readonly Challenge[] = [
   },
 ];
 
+/**
+ * The 31 Aug hi-fi groups the thirteen challenges into four named bands,
+ * rendered as an accordion with the first row of each band open. `items` are
+ * indexes into `challenges` above — the copy itself is untouched; only the
+ * presentation order inside "Conditions here" follows the design (reception
+ * first, because it is the band's open row).
+ */
+export const challengeGroups: readonly {
+  label: string;
+  items: readonly number[];
+}[] = [
+  { label: "Country damaged", items: [0, 1, 2, 3, 4] },
+  { label: "Conditions here", items: [7, 5, 6, 8] },
+  { label: "What we could lose", items: [9, 10] },
+  { label: "What could stop the work", items: [11, 12] },
+];
+
 export const rangers = {
   title: "Iningai Rangers",
   body: "Rangers run fire-stick farming, the fencing, the seed collection, the spring and wetland restoration, the weed and feral control, the machinery and the site protection. Ranger workplans set the year's work across the property. Training partnerships are being built so the jobs here can be filled from community.",
@@ -355,6 +372,32 @@ export const outputs: readonly Output[] = [
 ];
 
 export const outputsNote = "Status labels to be confirmed before publishing.";
+
+/**
+ * ⚠ DESIGN-PROPOSAL COPY, for sign-off — hi-fi §08's "WHAT IT RESTS ON" lines.
+ * The client's own thesis, recovered from stream 07: management decisions and
+ * credit claims both rest on evidence. Each line names the physical thing the
+ * claim rests on. Flagged on the canvas; not from the copy draft.
+ * Keyed by output title so a retitle breaks loudly rather than silently.
+ */
+export const outputsRestsOn: Record<string, string> = {
+  "Biological Sequestration":
+    "Two flux towers — managed Country and a grazed control · soil samples every six metres",
+  "Biodiversity credits":
+    "Four acoustic recorders, two at the springs · cameras on the towers, 500m radius",
+  "IPA designation":
+    "The cultural heritage survey · the Four Rivers People Native Title claim",
+  "Fee-for-service":
+    "The rangers’ own skills · fire-stick farming, heritage and land management",
+  "Rainbow Credits": "Nothing yet — the body is still to be written",
+};
+
+/**
+ * ⚠ DESIGN-PROPOSAL COPY, for sign-off — hi-fi §08's standfirst. Authored on
+ * the canvas, not in the draft.
+ */
+export const outputsStandfirst =
+  "The work has to pay for itself, and it has to be recognised. Every one of these rests on evidence the rangers are already collecting — and not one of them is finished.";
 
 export const getInvolved = {
   eyebrow: "Get involved",

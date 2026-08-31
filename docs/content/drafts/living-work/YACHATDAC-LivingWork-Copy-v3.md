@@ -8,6 +8,14 @@
 > `drive-download-20260824T052412Z-1-001`, received 24 August 2026). Prototype
 > title: *Living Work — Caring for Country — YACHATDAC*.
 >
+> **Update (31 Aug).** Synced against the client's markdown export
+> `YACHATDAC-Living-work.md`. The export matches this draft except that it
+> still carries the pre-CR wording (left as applied below) and adds one new
+> piece of content: the infrastructure schematic (four systems, as drawn),
+> now included under Infrastructure and technology. The schematic is the only
+> place recording the pollen found at 60m in the bore and the radio-range
+> caveat.
+>
 > **What survived the conversion.** The words, the headings, the link
 > destinations, the bracketed editorial notes and the image *direction*.
 > Layout, styling, scroll behaviour and interaction did **not** — under
@@ -249,6 +257,17 @@ Four acoustic recorders log birds and frogs into a database held with QUT, two o
 ### Infrastructure and technology
 
 What it takes to run a property 120 kilometres from the nearest town.
+
+**Schematic (four systems, as drawn).** The source presents this as a drawn
+schematic; the table records its content — treat the layout as a suggestion
+per D5.
+
+| System | Source | Distribution | Notes |
+| --- | --- | --- | --- |
+| Connectivity | Starlink satellite uplink | Router → Mesh 1, Mesh 2, Mesh 3 | house · shed · campground |
+| Radio | UHF radio | house, shed, vehicles, ~10 handhelds | ~5km range; further from high ground |
+| Water | Bore — 480m (pollen found at 60m) | Tanks · Camp · Stock | filters changed six-monthly |
+| Power & monitoring | Solar & regulators (data readable over wifi) | Flux towers · Recorders | monitoring runs off site power; data held with QUT |
 
 ##### Communications
 

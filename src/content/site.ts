@@ -86,8 +86,12 @@ export const primaryNav: NavChild[] = [
   { title: "About", href: "/about" },
 ];
 
-/** The header's single button. Connect survives here, and only here. */
-export const primaryAction = { title: "Get in touch", href: "/connect" } as const;
+/**
+ * The header's single button. Connect survives here, and only here.
+ * "Connect" per the 31 Aug wireframe (it renders CONNECT — the eyebrow style
+ * uppercases), replacing D2's "Get in touch" and matching the hi-fi pill.
+ */
+export const primaryAction = { title: "Connect", href: "/connect" } as const;
 
 export const pillars: Pillar[] = [
   {
@@ -128,8 +132,8 @@ export const pillars: Pillar[] = [
     href: "/living-work",
     children: [
       { title: "The Iningai Rangers", href: "/living-work#rangers" },
-      { title: "Caring for Country in Practice", href: "/living-work#practice" },
-      { title: "How We Built This", href: "/living-work#how-we-built-this" },
+      { title: "Caring for Country in Practice", href: "/living-work#streams" },
+      { title: "How We Built This", href: "/living-work#infrastructure" },
     ],
   },
   {

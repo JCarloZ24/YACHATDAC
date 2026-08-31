@@ -124,18 +124,15 @@ One more that applies regardless of subject:
   from the artist as a supplied asset. Using Leonard's exported vector is fine;
   drawing something that resembles it is not.
 
-If an idea lands in a ❌ row, it isn't dead — it needs a recorded permission in
-`permissions.md` first, with a date and a name. "Someone said it was fine" is not
-a record.
-
 ---
 
 ## Where the rules live
 
-- `.claude/skills/yachatdac-motion/references/sketch-library.md` — every
-  behaviour available, with its tier and status
-- `.claude/skills/yachatdac-motion/references/permissions.md` — the live board
-  for anything needing a human decision
-- `.claude/skills/yachatdac-motion/references/tokens.md` — durations, staggers,
-  parallax ratios, scroll spans. Don't invent values; that's the whole point of
-  having them.
+⚠ **Superseded by F8 (31 Aug 2026).** The `yachatdac-motion` skill, its sketch
+library, permissions board and token reference were removed; the ❌/permission
+gating above no longer applies. The team builds freely and the work is reviewed
+by Steve (FNAN) and the Elder Advisory Group at presentation. See
+`docs/decisions-and-risks.md` F8 for the two lines that survive (no heritage
+coordinates in source; no generated Aboriginal iconography). Tokens now live in
+`src/lib/motion/tokens.ts` and `src/app/motion-tokens.css`; the motion system is
+documented in `docs/motion/`.

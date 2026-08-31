@@ -29,10 +29,10 @@
  * the same curve. Registration happens inside registerYachatdacEffects(), which
  * every motion host calls before it animates anything.
  *
- * There is no overshoot entry, deliberately. `back`, `elastic` and `bounce` are
- * banned site-wide by both the brief and the skill — they read as a brand
- * enjoying itself, which is the wrong register for this subject. registerEffect
- * asserts against them in development; see effects.ts.
+ * Overshoot eases (`back`, `elastic`, `bounce`) were banned until decision F8
+ * (31 Aug 2026) lifted the grounded-character rule. They have no named entry
+ * here yet, but using them directly is allowed — add entries as designs call
+ * for them.
  */
 export const EASE = {
   country: "country",
@@ -46,9 +46,6 @@ export const EASE_CSS = {
   quiet: "cubic-bezier(.33,1,.68,1)",
   machine: "linear",
 } as const;
-
-/** Easing names that must never appear in this codebase. */
-export const BANNED_EASES = ["back", "elastic", "bounce"] as const;
 
 /* -------------------------------------------------------------------------
    Duration and stagger — seconds, because GSAP takes seconds

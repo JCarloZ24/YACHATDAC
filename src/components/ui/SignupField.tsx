@@ -16,30 +16,47 @@ export function SignupField({
   placeholder,
   cta,
   note,
+  tone = "dark",
 }: {
   label: string;
   placeholder: string;
   cta: string;
   note: string;
+  /** "dark" for light-on-dark grounds (default); "light" for bone/canvas. */
+  tone?: "dark" | "light";
 }) {
   const id = useId();
+  const ink =
+    tone === "light"
+      ? {
+          label: "text-evergreen",
+          rule: "border-charcoal/25",
+          input: "text-charcoal placeholder:text-charcoal/40",
+          note: "text-charcoal/50",
+        }
+      : {
+          label: "text-canvas/70",
+          rule: "border-canvas/30",
+          input: "text-canvas placeholder:text-canvas/40",
+          note: "text-canvas/50",
+        };
 
   return (
     <form
       className="max-w-md space-y-3"
       onSubmit={(event) => event.preventDefault()}
     >
-      <label htmlFor={id} className="eyebrow block text-canvas/70">
+      <label htmlFor={id} className={`eyebrow block ${ink.label}`}>
         {label}
       </label>
 
-      <div className="flex items-center gap-4 border-b border-canvas/30 pb-2 focus-within:border-ochre">
+      <div className={`flex items-center gap-4 border-b ${ink.rule} pb-2 focus-within:border-ochre`}>
         <input
           id={id}
           type="email"
           name="email"
           placeholder={placeholder}
-          className="w-full bg-transparent text-canvas placeholder:text-canvas/40 focus:outline-none"
+          className={`w-full bg-transparent focus:outline-none ${ink.input}`}
         />
         <button
           type="submit"
@@ -49,7 +66,7 @@ export function SignupField({
         </button>
       </div>
 
-      <p className="text-xs text-canvas/50">{note}</p>
+      <p className={`text-xs ${ink.note}`}>{note}</p>
     </form>
   );
 }

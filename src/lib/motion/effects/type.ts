@@ -48,6 +48,38 @@ const ZERO = {
   glyphRy: 0.6,
 } as const;
 
+/**
+ * The three clip states of the aperture, measured from the rendered glyph.
+ *
+ * Exported so a recipe can stage the opening against its own choreography —
+ * the hi-fi's §02 ties each stage to a specific figure (keyhole while 120
+ * stands, glyph while 480 stands, screen while 2019 runs past the margin),
+ * and the effect's fixed 0.45/0.55 split cannot express a hold between them.
+ */
+export function apertureClips(
+  container: HTMLElement,
+  glyph: HTMLElement | null,
+): { counter: string; whole: string; screen: string } {
+  const box = container.getBoundingClientRect();
+  const g = glyph?.getBoundingClientRect();
+
+  // Centre of the counter, in the container's own percentage space.
+  const cx = g ? ((g.left - box.left + g.width / 2) / box.width) * 100 : 50;
+  const cy = g ? ((g.top - box.top + g.height / 2) / box.height) * 100 : 50;
+
+  const pct = (v: number, of: number) => (v / of) * 100;
+  const counter = g
+    ? `ellipse(${pct(g.width * ZERO.counterRx, box.width)}% ${pct(g.height * ZERO.counterRy, box.height)}% at ${cx}% ${cy}%)`
+    : `ellipse(6% 10% at ${cx}% ${cy}%)`;
+  const whole = g
+    ? `ellipse(${pct(g.width * ZERO.glyphRx, box.width)}% ${pct(g.height * ZERO.glyphRy, box.height)}% at ${cx}% ${cy}%)`
+    : `ellipse(16% 26% at ${cx}% ${cy}%)`;
+  // Big enough to clear the corners from an off-centre origin.
+  const screen = `ellipse(150% 150% at ${cx}% ${cy}%)`;
+
+  return { counter, whole, screen };
+}
+
 export function registerType(): void {
   /* --- the aperture ------------------------------------------------------
      Grammar: "the world opening", type cut · sketch Y1 · hi-fi §02.
@@ -78,22 +110,7 @@ export function registerType(): void {
       const tl = gsap.timeline();
       if (!container) return tl;
 
-      const box = container.getBoundingClientRect();
-      const g = glyph?.getBoundingClientRect();
-
-      // Centre of the counter, in the container's own percentage space.
-      const cx = g ? ((g.left - box.left + g.width / 2) / box.width) * 100 : 50;
-      const cy = g ? ((g.top - box.top + g.height / 2) / box.height) * 100 : 50;
-
-      const pct = (v: number, of: number) => (v / of) * 100;
-      const counter = g
-        ? `ellipse(${pct(g.width * ZERO.counterRx, box.width)}% ${pct(g.height * ZERO.counterRy, box.height)}% at ${cx}% ${cy}%)`
-        : `ellipse(6% 10% at ${cx}% ${cy}%)`;
-      const whole = g
-        ? `ellipse(${pct(g.width * ZERO.glyphRx, box.width)}% ${pct(g.height * ZERO.glyphRy, box.height)}% at ${cx}% ${cy}%)`
-        : `ellipse(16% 26% at ${cx}% ${cy}%)`;
-      // Big enough to clear the corners from an off-centre origin.
-      const screen = `ellipse(150% 150% at ${cx}% ${cy}%)`;
+      const { counter, whole, screen } = apertureClips(container, glyph);
 
       const duration = config.duration as number;
       const ease = config.ease as string;

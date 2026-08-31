@@ -19,7 +19,7 @@ export const metadata: Metadata = { title: "Screen recipes" };
  * /lab/compose — one composed screen at a time.
  *
  * The effects gallery shows the vocabulary; this shows the sentences. Each
- * screen below is a real composition from /v2/living-work, rendered alone and
+ * screen below is a real composition from /living-work, rendered alone and
  * top-aligned so it can be judged on its own — which the full page makes hard,
  * because on the page every screen arrives after 300vh of something else.
  *
@@ -115,8 +115,8 @@ export default async function ComposeLabPage({
         <h1 className="headline mt-4 text-2xl text-canvas">Screen recipes</h1>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-canvas/65">
           One composed screen at a time, from{" "}
-          <Link href="/v2/living-work" className="text-ochre hover:underline">
-            /v2/living-work
+          <Link href="/living-work" className="text-ochre hover:underline">
+            /living-work
           </Link>
           . Effects are the vocabulary; these are the sentences — each one layers
           three or four on a single timeline and declares which channel it is
