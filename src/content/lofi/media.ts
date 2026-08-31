@@ -9,9 +9,10 @@
  * then the first person to reuse a component in a new place breaks the rule
  * without ever seeing it.
  *
- * So the bucket is stored with the asset and `mayAnimate` is derived from it.
- * MediaTile reads the bucket and refuses to animate a restricted slot even if
- * a caller asks it to. The rule is enforced, not documented.
+ * So the bucket is stored with the asset and its MOTION GRADE is derived from
+ * it. MediaTile reads the bucket and refuses to move the image plane of a
+ * graded slot even if a caller asks it to. The rule is enforced, not
+ * documented.
  *
  * THE BUCKETS, straight from permissions.md
  * -----------------------------------------
@@ -19,19 +20,21 @@
  *   work           Rangers working, restoration, the flux towers. No
  *                  restriction — this is documentary photography of people
  *                  doing a job, not cultural material.
- *   artwork        Leonard Mickelo's commissioned artwork. Vectorised artwork
- *                  received; NO MOTION PERMISSION RECORDED. Static only.
+ *   artwork        Leonard Mickelo's commissioned artwork. Motion PERMITTED —
+ *                  Ivy, 2026-08-30, superseding the old static-only hold. The
+ *                  artist's own sign-off is noted outstanding in permissions.md.
  *   cultural-site  Marra Wonga, the engravings, the teaching wall, the
- *                  escarpment. Never animated, in any form. Listed under
- *                  "standing rules that need no decision" — this one does not
- *                  get reopened per task.
- *   story-wall     Unresolved. Treat as UNAVAILABLE — not "static", absent.
- *                  The Truth beat is built typographically instead (B5, Y2).
+ *                  escarpment. Available and used, at `frame` grade: the world
+ *                  moves and the record holds. Ivy, 2026-08-30.
+ *   story-wall     Available — Ivy, 2026-08-30, "everything we have can be
+ *                  USED". Graded `frame` for the same reason as cultural-site.
  *
- * ⚠ Every `src` below is null. There are no photographs in this repository
- * yet. Slots render as tonal squares until the real files land; dropping a
- * photograph in means setting `src` and nothing else.
+ * Photography now exists — see src/content/kit.ts, which carries batch 1 with a
+ * grade on every frame. Slots below still holding `src: null` render as tonal
+ * squares; dropping a photograph in means setting `src` and nothing else.
  */
+
+import type { MotionGrade } from "@/content/kit";
 
 export type MediaBucket =
   | "country"
@@ -41,24 +44,38 @@ export type MediaBucket =
   | "story-wall";
 
 /**
- * Whether a bucket may carry motion. Derived from permissions.md, not from
- * anyone's judgement at the call site.
+ * How much of a slot may move. Derived from permissions.md, not from anyone's
+ * judgement at the call site.
+ *
+ *   full   the image plane itself may be scrubbed, masked, pushed, warped.
+ *   frame  the world moves and the record holds — plate, ground, scrim, type
+ *          and neighbouring layers animate at full weight; the image does not.
+ *
+ * `frame` is not a lesser ration. The heaviest plates in the kit — P1 full-bleed
+ * hold, P8 cinematic hold, P9 dissolve pair — are all frame plates.
+ *
+ * This replaced a boolean. A boolean could only say yes or no, so everything
+ * sensitive was forced into stillness; the grade says which channel moves
+ * instead, which is what Ivy actually chose on 2026-08-30.
  */
-export const MAY_ANIMATE: Record<MediaBucket, boolean> = {
-  country: true,
-  work: true,
-  artwork: false, // no motion permission recorded
-  "cultural-site": false, // standing rule, never reopened
-  "story-wall": false, // unavailable entirely
+export const MOTION_GRADE: Record<MediaBucket, MotionGrade> = {
+  country: "full",
+  work: "full",
+  artwork: "full", // Ivy, 2026-08-30 — artwork motion permitted
+  "cultural-site": "frame", // Ivy, 2026-08-30 — the world moves, the record holds
+  "story-wall": "frame", // available (Ivy, 2026-08-30), graded as cultural material
 };
 
-/** Whether a bucket may be shown at all. */
+/**
+ * Whether a bucket may be shown at all. Everything the project holds is
+ * available — Ivy, 2026-08-30: "everything we have can be USED".
+ */
 export const MAY_SHOW: Record<MediaBucket, boolean> = {
   country: true,
   work: true,
   artwork: true,
   "cultural-site": true,
-  "story-wall": false, // permissions.md: "Treat as unavailable"
+  "story-wall": true,
 };
 
 export type MediaSlot = {
@@ -168,7 +185,7 @@ export const heroPathArtwork: MediaSlot = {
   id: "hero-path",
   bucket: "artwork",
   expects: "Supplied artwork — exported from Figma node 17:312",
-  src: "/brand/artwork-path.svg",
+  src: "/artwork/dots-trail.svg",
   tone: "charcoal",
 };
 

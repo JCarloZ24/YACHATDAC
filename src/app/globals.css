@@ -13,10 +13,10 @@
 @theme {
   /* Palette — name (meaning) */
   --color-ochre: #d69828; /* Yellow Ochre   — Morning Light */
-  --color-burnt: #cb7722; /* Burnt Ochre    — Country */
+  --color-burnt: #d97804; /* Burnt Ochre    — Country (KIT · Truth ladder) */
   --color-turquoise: #32b0ae; /* Turquoise Blue — Water & Sky */
-  --color-eucalyptus: #5e7930; /* Eucalyptus Grn — Vegetation */
-  --color-oxide: #af231c; /* Oxide Red      — The Land */
+  --color-eucalyptus: #3f6b1f; /* Olive Grove    — Vegetation (KIT · Truth ladder) */
+  --color-oxide: #c23d31; /* Rust Red       — The Land (KIT · Truth ladder) */
   --color-roasted: #4e3524; /* Roasted Brown  — Earth */
   --color-evergreen: #22372b; /* Deep Evergreen — Living Country */
   --color-canvas: #f6f6ec; /* Off-White      — Natural Canvas */

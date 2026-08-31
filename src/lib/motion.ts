@@ -3,20 +3,25 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 /**
- * Tier 2 motion primitives.
+ * The GSAP-free motion primitives.
  *
  * Source of truth for all motion on this project is the `yachatdac-motion`
  * skill (.claude/skills/yachatdac-motion/). Read it before writing animation
- * code, not after. This file implements only the Tier 2 vocabulary:
+ * code, not after. This file implements the two behaviours that a page must be
+ * able to have without loading an animation library at all:
  *
  *   X4  entry stagger  — start "top 82%", once, y16 + fade, 60ms stagger
  *   X6  reduced-motion twin — same code path, zero duration, nothing pinned
  *
- * Tier 1 behaviour (pinning, scrubbing, parallax, WebGL, signature moments) is
- * homepage-only, is built with GSAP + ScrollTrigger from the skill's templates
- * in `assets/`, and must register with the motion controller in
- * `src/lib/motion-controller.ts`. Do not grow this file into that — a CMS
- * template must not be able to reach Tier 1 motion.
+ * ⚠ The tier system this file used to describe is SUPERSEDED — decision F7,
+ * 2026-08-29. Motion is now the default on every page and there is no
+ * "homepage-only" class of behaviour; pacing is governed by the Loud Channel
+ * rule and per-page vh budgets.
+ *
+ * The reason to keep this file separate is therefore no longer a ration, it is
+ * a dependency: a CMS-generated page can use these without pulling GSAP. Named
+ * effects live in `src/lib/motion/effects.ts`, and anything scroll-linked
+ * registers with the controller in `src/lib/motion-controller.ts`.
  */
 
 /* -------------------------------------------------------------------------

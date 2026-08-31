@@ -78,7 +78,7 @@ function collect(root: HTMLElement): Els | null {
     y2Words: [...root.querySelectorAll<HTMLElement>("[data-y2-word]")],
     tiles: [
       ...root.querySelectorAll<HTMLElement>(
-        "[data-media-tile]:not([data-static])",
+        "[data-media-tile]:not([data-motion='frame'])",
       ),
     ],
   };

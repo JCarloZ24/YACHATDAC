@@ -154,3 +154,49 @@ sections), cancel rAF loops, dispose GL resources, disconnect observers.
 Call `ScrollTrigger.refresh()` after fonts load and after any late-loading media
 changes layout height. Web fonts arriving late is the most common cause of pins
 landing in the wrong place.
+
+## Registered effects — the vocabulary, stored
+
+`gsap.registerEffect()` is how this project stores a reusable animation under a
+name. It is the mechanism behind `src/lib/motion/effects.ts`, and it is what makes
+the brief's audit rule mechanical: every registered effect cites a row of
+`docs/motion/motion-grammar.md`, and a behaviour that cites nothing has nowhere to
+live.
+
+Note that the `gsap-core` skill does not cover `registerEffect` at all. This is the
+reference for it on this project.
+
+```js
+gsap.registerEffect({
+  name: 'settle',
+  extendTimeline: true,             // also becomes a timeline method
+  defaults: { duration: 0.82, ease: 'expo.out', stagger: 0.09 },
+  effect: (targets, config) => gsap.from(targets, { yPercent: 110, ...config })
+});
+
+gsap.effects.settle(heading);       // as a call
+tl.settle(heading).pushIn(plate, {}, '<');   // as a timeline method
+```
+
+**Effects are pure animation builders.** They return a tween or a timeline and know
+nothing about ScrollTrigger. That is not a stylistic choice — it is what lets one
+effect serve an entry, a scrub and a hero timeline without three copies. Scroll
+wiring belongs in the section module, next to the `vh` span it costs:
+
+```js
+gsap.timeline({ scrollTrigger: { trigger: frame, scrub: 0.8 } })
+    .frameOpen(frame, { duration: 1 });
+```
+
+**Do not put stateful behaviour in an effect.** Ticker loops (the type river),
+pointer listeners (cursor gravity) and WebGL are modules with `init()`/`destroy()`,
+because they have something to tear down and an effect does not.
+
+**Typing.** GSAP declares `[key: string]: any` on `Timeline` specifically for
+`extendTimeline`, so effect methods typecheck but are not checked. A typo in an
+effect name fails at runtime, not at build — which is a reason to add the name to
+`EffectName` in `effects.ts` when adding a row.
+
+**The banned-ease guard.** `effects.ts` throws in development if an effect is handed
+`back`, `elastic` or `bounce`. The ban was a rule in two documents that nothing
+enforced; now it fails loudly in dev and costs nothing in production.

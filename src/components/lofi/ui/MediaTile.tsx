@@ -1,4 +1,4 @@
-import { MAY_ANIMATE, MAY_SHOW, type MediaSlot } from "@/content/lofi/media";
+import { MAY_SHOW, MOTION_GRADE, type MediaSlot } from "@/content/lofi/media";
 
 /**
  * One media slot, rendered as a square.
@@ -10,15 +10,15 @@ import { MAY_ANIMATE, MAY_SHOW, type MediaSlot } from "@/content/lofi/media";
  *
  * THIS COMPONENT ENFORCES A PERMISSION, IT DOES NOT JUST DESCRIBE ONE
  * -------------------------------------------------------------------
- * A tile whose bucket has no motion permission is stamped `data-static`, and
- * every motion module on this site selects tiles with
- * `[data-media-tile]:not([data-static])`. So a cultural-site or artwork photo
- * dropped into an animated grid stops animating — it does not quietly inherit
- * the behaviour of whatever component it was placed in.
+ * Every tile is stamped with its MOTION GRADE as `data-motion`, and modules
+ * that move an image plane select `[data-media-tile]:not([data-motion="frame"])`.
+ * So a cultural-site photo dropped into a scrubbing grid keeps its image still —
+ * it does not quietly inherit the behaviour of whatever component it was placed
+ * in. Modules that move the plate, ground, scrim or type around a tile need no
+ * such filter: that is the whole point of the grade.
  *
- * A tile whose bucket may not be shown at all (story-wall, unresolved) renders
- * as a marked hold rather than as a square, so it reads as absent-on-purpose
- * rather than as a slot somebody forgot to fill.
+ * `frame` is not a smaller ration. It is the P1/P8 language — full-bleed, held,
+ * with the world moving around it — which is the heaviest cinema in the kit.
  */
 
 const toneClass: Record<MediaSlot["tone"], string> = {
@@ -70,15 +70,16 @@ export function MediaTile({
     );
   }
 
-  const mayAnimate = MAY_ANIMATE[slot.bucket];
+  const grade = MOTION_GRADE[slot.bucket];
 
   return (
     <div
       data-media-tile={slot.id}
       data-bucket={slot.bucket}
       data-tier={tier}
-      /* Read by every motion module. Absent means "this may move". */
-      data-static={mayAnimate ? undefined : ""}
+      /* Read by every motion module. "frame" means the world moves around this
+         tile and its image plane holds; absent/"full" means anything goes. */
+      data-motion={grade}
       className={`relative overflow-hidden ${square ? "aspect-square" : ""} ${
         toneClass[slot.tone]
       } ${className}`}

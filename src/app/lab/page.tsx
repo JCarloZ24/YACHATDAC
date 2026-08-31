@@ -5,6 +5,20 @@ export const metadata: Metadata = { title: "Motion prototypes" };
 
 const PROTOTYPES = [
   {
+    sketch: "—",
+    title: "The motion vocabulary",
+    href: "/lab/effects",
+    summary:
+      "Every registered effect, running on the real artwork and photography, each citing its row of the motion grammar. Also the kit inventory — plates, glyphs, artwork and the descent ladder, with their Figma node ids.",
+  },
+  {
+    sketch: "—",
+    title: "Screen recipes",
+    href: "/lab/compose",
+    summary:
+      "The compositions — one composed screen at a time, each layering three or four effects on a single timeline with its loud channel and vh span declared. Where the gallery shows the vocabulary, this shows the sentences.",
+  },
+  {
     sketch: "A2",
     title: "Sky clock",
     href: "/lab/sky-clock",
@@ -67,7 +81,7 @@ export default function LabIndexPage() {
 
       <ul className="mt-14 space-y-4">
         {PROTOTYPES.map((prototype) => (
-          <li key={prototype.sketch}>
+          <li key={prototype.href}>
             <Link
               href={prototype.href}
               className="block rounded-sm border border-canvas/15 p-6 transition-colors duration-(--dur-small) ease-quiet hover:border-ochre/60"

@@ -1050,6 +1050,46 @@ The reasoning as it stood when this was Final:
 
 ---
 
+## F8 — Everything we hold is usable; motion grade replaces the motion ban
+
+- **Category** — Motion / cultural · **Status** — Final (30 Aug 2026) · **Owner** — Ivy
+- **The decision** — Three parts.
+  1. **Artwork motion is permitted.** Leonard Mickelo's supplied vectors may be
+     animated, masked, revealed, scrubbed and transformed. This clears the whole
+     ▲ sign-off queue (Group G the Guide, T7 artwork orbit, C4 artwork morph, A5
+     artwork plate, G2 band undulation) to build.
+  2. **Every bucket is available.** Cultural-site and story-wall imagery are used,
+     not withheld. Ivy: *"everything we have can be USED."*
+  3. **A boolean becomes a grade.** `MAY_ANIMATE: boolean` is replaced by
+     `MOTION_GRADE: "full" | "frame"`. `full` means the image plane itself may
+     move. `frame` means **the world moves and the record holds** — plate,
+     ground, scrim, type and neighbouring layers animate at full cinematic
+     weight, and the image inside them does not scrub, mask, erode or warp.
+     Cultural-site material, story-wall material and portraits of real people are
+     `frame`; everything else is `full`.
+- **Why** — The old board withheld material rather than deciding how to use it, so
+  a real photo library sat in Figma while the site rendered tonal squares. The
+  boolean was the mechanism of that: it could only say yes or no, so anything
+  sensitive was forced into stillness and the page went flat exactly where it
+  should have been heaviest. The grade says *which channel* moves instead.
+- **Why `frame` is not a lesser ration** — P1 full-bleed hold, P8 cinematic hold
+  and P9 dissolve pair are the heaviest plates in `KIT · Truth`, and all three are
+  frame plates. It is also the brief's own corollary — *the world moves around
+  them* — applied to records as well as to faces.
+- **What it does not change** — No generated Aboriginal iconography, ever: this
+  permits moving the artist's *supplied* vectors and never permits drawing new
+  ones. That distinction is why `Dots / Trail` moves and sketch C1 stays on hold.
+  No heritage coordinates. The reduced-motion cut, the performance floors and the
+  grounded easing character are untouched.
+- **Still outstanding, recorded not blocking** — Leonard Mickelo's own artist
+  sign-off, and Elder Advisory Group endorsement for Truth (whose governance
+  circle is *held by community*). Both are noted in the motion skill's
+  `permissions.md` so the record shows who authorised what.
+- **Where it is enforced** — `MOTION_GRADE` in `src/content/lofi/media.ts`, stamped
+  as `data-motion` on every tile, read by every module that moves an image plane.
+
+---
+
 ## F7 — The immersive mandate: motion is the default, site-wide
 
 - **Category** — Motion · **Status** — Final (29 Aug 2026) · **Owner** — August

@@ -8,6 +8,7 @@ import {
   heroNightSlot,
   heroPathArtwork,
   heroSlot,
+  MOTION_GRADE,
   type MediaSlot,
 } from "@/content/lofi/media";
 import { onEnter } from "@/lib/site-entry";
@@ -40,7 +41,7 @@ import { onEnter } from "@/lib/site-entry";
  *
  * FROM MARC'S HI-FI (frames 17:256 sunset / 17:2802 night)
  *   photograph     node 17:257 / 17:2803 → public/media/
- *   dotted path    node 17:312, 562 vectors → public/brand/artwork-path.svg
+ *   dotted path    node 2051:2801, 562 vectors → public/artwork/dots-trail.svg
  *   cue colour     #fbae3d, Figma paint style "Warm/Yellow Gold"
  *
  * ⚠ The lo-fi's image annotation asks for "escarpment / first light". The
@@ -49,10 +50,12 @@ import { onEnter } from "@/lib/site-entry";
  * night-to-day cross-fade below stops being permitted and the frame becomes
  * static. Do not swap the asset without re-reading permissions.md.
  *
- * ⛔ THE DOTTED PATH DOES NOT MOVE. It is the artist's supplied artwork and
- * permissions.md records no motion permission: "static imagery only". Stamped
- * data-static, which every motion module checks. It is also NOT sketch C1 —
- * see heroPathArtwork in media.ts for why that distinction matters.
+ * THE DOTTED PATH MAY NOW MOVE. Ivy authorised artwork motion on 2026-08-30,
+ * so the trail carries data-motion="full" and is the Guide's road (G1). It is
+ * still the artist's SUPPLIED vector, never a redrawn one, and it is still NOT
+ * sketch C1 — see heroPathArtwork in media.ts for why that distinction matters.
+ * Animating this asset is permitted; regenerating its geometry in code is not,
+ * and never becomes so.
  *
  * ⚠ Copy is the draft's, per D5. Marc's hi-fi body is a different sentence
  * ("YACHATDAC is a living thread between Country, culture, ..."). Raise it.
@@ -201,13 +204,13 @@ export function Hero({ beat }: { beat: Beat }) {
         className="absolute inset-0 bg-linear-to-t from-charcoal/90 via-charcoal/35 to-charcoal/45"
       />
 
-      {/* ⛔ Supplied artwork. Static — see file header. Lo-fi and hi-fi agree on
-          placement: low, right, running off the edge. */}
+      {/* Supplied artwork, and cleared to move — see file header. Lo-fi and
+          hi-fi agree on placement: low, right, running off the edge. */}
       <div
         aria-hidden
         data-media-tile={heroPathArtwork.id}
         data-bucket={heroPathArtwork.bucket}
-        data-static=""
+        data-motion={MOTION_GRADE[heroPathArtwork.bucket]}
         className="pointer-events-none absolute right-0 bottom-[7%] w-[68%] max-w-[60rem]"
       >
         {/* Plain <img>, not next/image: this is a two-tone SVG (281 paths at

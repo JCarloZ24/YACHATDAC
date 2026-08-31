@@ -26,11 +26,10 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MotionModule } from "@/lib/motion-controller";
+import { registerYachatdacEffects } from "@/lib/motion/effects";
+import { DUR, EASE, SCRUB } from "@/lib/motion/tokens";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const EASE_COUNTRY = "expo.out";
-const DUR_MEDIUM = 0.55;
 
 export function createV2Home(): MotionModule {
   let ctx: gsap.Context | null = null;
@@ -38,61 +37,62 @@ export function createV2Home(): MotionModule {
   const magnetCleanups: Array<() => void> = [];
 
   const init = () => {
+    registerYachatdacEffects();
+
     ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        // Quiet entries. once:true — re-triggering on scroll-up is banned.
+        // Quiet entries — grammar row "arriving quietly" (X4).
+        // once:true — re-triggering on scroll-up is banned.
         gsap.utils.toArray<HTMLElement>("[data-v2-arrive]").forEach((el) => {
           gsap.from(el, {
             y: 24,
             opacity: 0,
-            duration: DUR_MEDIUM,
-            ease: EASE_COUNTRY,
+            duration: DUR.medium,
+            ease: EASE.country,
             scrollTrigger: { trigger: el, start: "top 85%", once: true },
           });
         });
 
-        // M2 — frame expand + counter-scale, scrubbed.
+        // Grammar row "the world opening" — M2, plate P3. The registered
+        // effect owns the shape; this file owns only where it fires and how
+        // it is scrubbed, which is what the scroll span documents.
         gsap.utils.toArray<HTMLElement>("[data-v2-frame]").forEach((frame) => {
           const media = frame.querySelector<HTMLElement>(
             "[data-v2-frame-media]",
           );
           if (!media) return;
-          const scrub = {
-            trigger: frame,
-            start: "top 85%",
-            end: "top 15%",
-            scrub: 0.7,
-          };
-          gsap.fromTo(
-            frame,
-            { clipPath: "inset(16% 12% 16% 12%)" },
-            { clipPath: "inset(0% 0% 0% 0%)", ease: "none", scrollTrigger: scrub },
-          );
-          gsap.fromTo(
-            media,
-            { scale: 1.28 },
-            { scale: 1, ease: "none", scrollTrigger: scrub },
-          );
+          // The effect reads [data-frame-media]; v2's markup predates that
+          // name, so bridge it here rather than churning the server markup.
+          media.dataset.frameMedia = "";
+          // extendTimeline:true makes every effect a timeline method, so the
+          // scroll wiring lives on the timeline and the effect stays a pure
+          // animation builder that knows nothing about ScrollTrigger.
+          gsap
+            .timeline({
+              scrollTrigger: {
+                trigger: frame,
+                start: "top 85%",
+                end: "top 15%",
+                scrub: SCRUB.normal,
+              },
+            })
+            .frameOpen(frame, { duration: 1 });
         });
 
-        // Transition-loud band: the ground sweeps in over the page.
+        // Grammar row "a change of ground" — the ground sweeps over the page.
         gsap.utils.toArray<HTMLElement>("[data-v2-sweep]").forEach((sweep) => {
-          gsap.fromTo(
-            sweep,
-            { scaleY: 0, transformOrigin: "top center" },
-            {
-              scaleY: 1,
-              ease: "none",
+          gsap
+            .timeline({
               scrollTrigger: {
                 trigger: sweep.parentElement ?? sweep,
                 start: "top 85%",
                 end: "top 25%",
-                scrub: 0.6,
+                scrub: SCRUB.light,
               },
-            },
-          );
+            })
+            .ground(sweep, { duration: 1 });
         });
 
         // Y7 — the type river.

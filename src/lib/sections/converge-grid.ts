@@ -37,7 +37,7 @@ import type { MotionModule } from "@/lib/motion-controller";
  * --------------
  * The reference this comes from animates photographs of artworks. Here that
  * bucket has no motion permission, so the module selects
- * `[data-media-tile]:not([data-static])` — a restricted photo dropped into
+ * `[data-media-tile]:not([data-motion="frame"])` — a restricted photo dropped into
  * this grid is skipped by the animation rather than silently animated.
  *
  * NO PIN, ON PURPOSE
@@ -87,7 +87,7 @@ export function createConvergeGrid(root: HTMLElement): MotionModule {
     // Restricted tiles are excluded here, not filtered downstream.
     const tiles = [
       ...root.querySelectorAll<HTMLElement>(
-        "[data-media-tile]:not([data-static])",
+        "[data-media-tile]:not([data-motion='frame'])",
       ),
     ];
     if (tiles.length === 0) return;
