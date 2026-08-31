@@ -20,18 +20,26 @@ nearest acceptable alternative rather than complying.
 
 **Cultural**
 
-- Never animate, mask, reveal, scrub, reconstruct, 3D-scan, particle-ise or draw-on
-  imagery of cultural sites — Marra Wonga, rock engravings, the teaching wall, any
-  heritage site. These are shown as still photographs with their story in words.
-  Motion turns a record into a spectacle, which is the specific harm to avoid.
+- Cultural-site imagery — Marra Wonga, rock engravings, the teaching wall, the
+  escarpment — is **used, at `frame` grade** (Ivy, 2026-08-30). The world moves and
+  the record holds: the plate, ground, scrim, type and neighbouring layers animate at
+  full cinematic weight, and the image plane inside them is never scrubbed, masked,
+  eroded, warped, reconstructed, 3D-scanned, particle-ised or drawn on. Carried by
+  plates P1, P8 and P9. `frame` is not a smaller ration — those are the heaviest
+  plates in the kit.
+- **Portraits of real people hold still**, on the same grade. The world moves around
+  them. Motion applied to a person turns them into an asset, and this one is the
+  brief's own corollary rather than a permission anybody granted.
 - Never reproduce, imitate or generate Aboriginal iconography in code. That includes
   procedurally drawn concentric circles, dot fields, meandering paths with waypoints,
   U-shapes and animal tracks. If a design calls for artwork, it comes from the
-  commissioned artist as a supplied asset — never from generated geometry.
+  commissioned artist as a supplied asset — never from generated geometry. Animating
+  a supplied vector is permitted; generating one never becomes permitted.
 - Never place heritage site coordinates, names or precise locations in map data,
   markup, comments or source files.
-- Artwork elements move only where `references/permissions.md` records a yes.
-  Absent an entry, treat every artwork element as static.
+- **Artwork motion is permitted** (Ivy, 2026-08-30) — the whole ▲ queue is cleared to
+  build, with Leonard Mickelo's own sign-off noted outstanding in
+  `references/permissions.md`. Read that board before assuming any other hold.
 
 **Accessibility**
 

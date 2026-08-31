@@ -8,20 +8,29 @@ Update it when a decision comes back — the date and who decided both matter, b
 
 | Item | Affects | Status | Until then |
 |---|---|---|---|
-| Artwork motion | Any use of Leonard Mickelo's artwork | Vectorised artwork received. **No motion permission recorded.** | Artwork is static imagery only. No animating, masking, revealing, scrubbing, looping or transforming any artwork element. Group L (L1–L4) is derived from composition, not motifs, and is cleared. |
 | Land / terrain detail | D4 contour map, E1 terrain dolly, E3 camera path | Approved in principle by Marc for the About and Research pages. **Detail level unconfirmed** — how much of the property may be shown, and how precisely. | Build with abstracted or generic terrain. No real elevation data for Turraburra, no property boundaries, no place names, no waypoint labels, no coordinates anywhere in data or source. |
-| Story-wall imagery | Truth beat, B4 | Not resolved | Treat as unavailable. Build the Truth beat typographically (B5, Y2). |
+| Artist sign-off on artwork motion | Group G, T7, C4, A5 artwork plate | Ivy authorised the build 2026-08-30 (below). **Leonard Mickelo's own sign-off still to be confirmed** at the milestone. | Build as designed. Keep the list below current so there is one thing to take to Leonard rather than a hunt through the diff. |
+| Elder Advisory Group endorsement | Truth, whose governance circle is *held by community* | Not confirmed. Ivy authorised cultural-site material to be used and moved at `frame` grade 2026-08-30. | Build as decided. Note it here so the record shows who authorised what. |
 | Motion sign-off owner | Everything | Not resolved — Marc to confirm whether it's him, the board, or the Elder Advisory Group, and at which milestone | Flag motion decisions to Marc and note them here. |
 
 ## Recorded permissions
 
-None yet. Format for entries when they land:
-
-```
 | Item | Decision | Who | Date | Scope |
 |---|---|---|---|---|
-| e.g. Artwork pattern loop | Yes, background only, no rotation | Leonard Mickelo via Marc | 2026-09-01 | Homepage + About backgrounds |
-```
+| Artwork motion | **Yes.** Supersedes "static imagery only". Leonard Mickelo's supplied vectors may be animated, masked, revealed, scrubbed and transformed. | Ivy | 2026-08-30 | Site-wide. Group G (the Guide), T7 artwork orbit, C4 artwork morph, A5 artwork plate, G2 band undulation — the whole ▲ queue below. |
+| Cultural-site imagery | **Available and used**, at **`frame`** grade — the world moves, the record holds. Plate, ground, scrim, type and neighbouring layers animate at full cinematic weight; the image plane does not scrub, mask, erode or warp. | Ivy | 2026-08-30 | Marra Wonga, the engravings, the teaching wall, the escarpment. Carried by plates P1, P8 and P9. |
+| Story-wall imagery | **Available.** "Everything we have can be USED." Graded `frame` for the same reason as cultural-site. | Ivy | 2026-08-30 | The Truth beat may now use it rather than being built typographically by necessity. |
+
+**What none of these change.** No generated Aboriginal iconography — the unblock lets
+the artist's *supplied* vectors move, and never licenses drawing concentric circles,
+dot fields or meandering waypoint paths in code. That distinction is why `Dots / Trail`
+is permitted and sketch C1 is not. No heritage coordinates. Portraits of real people
+still hold still (`frame`), which is the brief's own corollary and not a permission
+anyone waived. The reduced-motion cut, the performance floors and the grounded easing
+character are all unchanged.
+
+**Where the grade is enforced:** `MOTION_GRADE` in `src/content/lofi/media.ts`, stamped
+on every tile as `data-motion`, and read by every module that moves an image plane.
 
 ## ▲ Sign-off queue — artwork motion in the v2 immersive build (2026-08-29)
 

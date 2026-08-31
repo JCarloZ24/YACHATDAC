@@ -22,6 +22,8 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MotionModule } from "@/lib/motion-controller";
+import { registerYachatdacEffects } from "@/lib/motion/effects";
+import { SCRUB } from "@/lib/motion/tokens";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,28 +31,32 @@ export function createTruthDescentV2(): MotionModule {
   let ctx: gsap.Context | null = null;
 
   const init = () => {
+    registerYachatdacEffects();
+
     ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Grammar row "being drawn in" — M1, plate P2.
+        //
+        // GRADE: this selector deliberately excludes frame-graded media. The
+        // Truth hero may carry escarpment or engraving material, and on that
+        // the plate moves while the record holds — pushing into the image
+        // itself is the one thing the grade forbids.
         const hero = document.querySelector<HTMLElement>(
-          "[data-v2-hero-media]",
+          "[data-v2-hero-media]:not([data-motion='frame'])",
         );
         if (hero) {
-          gsap.fromTo(
-            hero,
-            { scale: 1 },
-            {
-              scale: 1.1,
-              ease: "none",
+          gsap
+            .timeline({
               scrollTrigger: {
                 trigger: hero,
                 start: "top top",
                 end: "bottom top",
-                scrub: 0.6,
+                scrub: SCRUB.light,
               },
-            },
-          );
+            })
+            .pushIn(hero, { scale: 1.1, y: "0%", duration: 1 });
         }
 
         gsap.utils.toArray<HTMLElement>("[data-v2-depth]").forEach((el) => {

@@ -79,14 +79,31 @@ their settled states, no travel. Every G use is ▲-flagged in `permissions.md`.
 ## Palette
 
 ```
---evergreen #22372b   --ochre     #d69828   --burnt   #cb7722
---oxide     #af231c   --brown     #4e3524   --eucalypt #5e7930
+--evergreen #22372b   --ochre     #d69828   --burnt   #d97804
+--oxide     #c23d31   --brown     #4e3524   --eucalypt #3f6b1f
 --turquoise #32b0ae   --navy      #122449   --charcoal #090e12
---offwhite  #f6f6ec
+--offwhite  #f6f6ec   --gold      #fbae3d
 ```
 
 Solid colours, not gradients — agreed in the briefing. The imagery is strong enough
 without gradient overlays.
+
+**Three stops corrected 2026-08-30** against `KIT · Truth` zone 01, which Ivy
+confirmed is the live source: burnt `#cb7722`→`#d97804`, oxide `#af231c`→`#c23d31`,
+eucalypt `#5e7930`→`#3f6b1f` (and the kit calls that one Olive Grove). The other six
+already matched. Hex values live once, in `src/app/globals.css`.
+
+### The descent ladder
+
+Truth's chronology, in order — **red is spent once**:
+
+```
+Deep Evergreen → Olive Grove → Roasted Brown → Burnt Ochre → Yellow Gold
+→ Rust Red → Midnight Navy → Charcoal Black → Off-White
+```
+
+The order is load-bearing, not decorative: it is how the page encodes time, so it is
+never sorted or re-grouped. Held in code as `DESCENT_LADDER` in `src/content/kit.ts`.
 
 ## Type
 

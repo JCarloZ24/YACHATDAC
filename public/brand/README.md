@@ -26,24 +26,24 @@ motifs, and the single-colour cut, still have to come from the brand team.
 
 ## Commissioned artwork — what is here
 
-| File | Source | Rule |
-| --- | --- | --- |
-| `artwork-path.svg` | Figma node `17:312`, 562 vector nodes | ⛔ **static only** |
+**The artwork now lives in `public/artwork/`, not here.** Fifteen vectors were
+brought in from `KIT · Truth` and `FOUNDATIONS · Artwork` on 2026-08-30; the
+manifest is `src/content/kit.ts`, which carries each piece's Figma node id and
+path count. `artwork-path.svg` moved to `public/artwork/dots-trail.svg` — the
+same 562-path vector, re-exported from YACHATDAC-V2 node `2051:2801` rather than
+the retired Exploration file.
 
-The dotted path across the bottom of the hero. It is the artist's supplied,
-vectorised artwork — exported, not generated — so using it is fine.
+**Artwork motion is PERMITTED** — Ivy, 2026-08-30, superseding the old
+"static imagery only" hold. Leonard Mickelo's supplied vectors may be animated,
+masked, revealed, scrubbed and transformed. Leonard's own artist sign-off is
+noted outstanding in `permissions.md`.
 
-**It must never move.** `permissions.md` records no motion permission for
-artwork: *"static imagery only. No animating, masking, revealing, scrubbing,
-looping or transforming any artwork element."* It is stamped `data-static` in
-the DOM, which every motion module on the site checks before touching a media
-element.
-
-It is also **not** sketch C1. C1 — a continuous line with lit waypoints — is on
-hold precisely because a machine-drawn meandering path with waypoints reads as
-iconography. This one is not machine-drawn. Do not reimplement it as code
-because it "looks simple"; that would turn a permitted asset into a prohibited
-generation.
+What has not changed, and does not: **animating a supplied vector is permitted;
+generating one is not.** `dots-trail.svg` is exported artwork, so moving it is
+fine. Sketch C1 — a machine-drawn meandering line with lit waypoints — stays on
+hold precisely because generated geometry of that kind reads as iconography. Do
+not reimplement any of these as code because one "looks simple"; that turns a
+permitted asset into a prohibited generation.
 
 ## Commissioned artwork
 
@@ -57,9 +57,9 @@ placeholder-first with swap-in-ready slots, so launch does not wait on the
 artist's timeline. Sections carry `data-placeholder="beat-media"` where art is
 expected.
 
-**Motion permission for artwork is not recorded.** Until it is, artwork is
-static imagery only — no animating, masking, revealing, scrubbing, looping or
-transforming any artwork element. See
+**Motion permission for artwork is recorded** — Ivy, 2026-08-30. Artwork may
+move. The superseded wording was: static imagery only, no animating, masking,
+revealing, scrubbing, looping or transforming any element. See
 `.claude/skills/yachatdac-motion/references/permissions.md`, which is the live
 status board and should be updated when a decision comes back.
 

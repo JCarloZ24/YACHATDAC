@@ -31,16 +31,16 @@ import type { MotionModule } from "@/lib/motion-controller";
  * SUBJECT MATTER — WHY THIS ONE FAILS CLOSED INSTEAD OF FILTERING
  * ---------------------------------------------------------------
  * Every other module on this site excludes restricted photographs by
- * selecting `[data-media-tile]:not([data-static])`. That does not work here,
+ * selecting `[data-media-tile]:not([data-motion="frame"])`. That does not work here,
  * and the difference matters.
  *
  * A dolly moves the CAMERA. Every plane under it is moved by the parent
  * transform whether or not the module selected it, so skipping a restricted
  * tile would skip nothing at all — it would still be dollied, just without
- * anyone having decided to. `data-static` is unenforceable inside a 3D scene.
+ * anyone having decided to. The grade is unenforceable inside a 3D scene.
  *
  * So this module fails closed: if it finds any restricted tile under the
- * camera it does not run at all. A cultural-site or artwork photograph
+ * camera it does not run at all. A frame-graded photograph
  * dropped into livingWorkPlanes turns the dolly OFF rather than quietly
  * inheriting it. The section degrades to a still scene, which is exactly what
  * permissions.md asks for ("artwork is static imagery only"), and the reason
@@ -75,7 +75,7 @@ export function createLayeredDolly(root: HTMLElement): MotionModule {
     // Fail closed. See the subject-matter note above for why a filter would
     // be theatre here rather than enforcement.
     const restricted = camera.querySelector<HTMLElement>(
-      "[data-media-tile][data-static]",
+      "[data-media-tile][data-motion='frame']",
     );
     if (restricted) {
       root.setAttribute(

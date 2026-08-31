@@ -10,14 +10,20 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * The skill is the source of truth — if the two ever disagree, the skill wins
  * and this file gets updated, not the other way round.
  *
- * Every Tier 1 section registers here so reduced motion, route changes and
+ * Every section module registers here so reduced motion, route changes and
  * teardown are handled in one place instead of being reimplemented per
  * section. No timelines are created outside the controller, and nothing calls
  * ScrollTrigger.killAll().
  *
- * Tier 2 (entry staggers, hovers) does NOT go through here — it is plain CSS
- * plus IntersectionObserver in src/lib/motion.ts, so CMS-generated pages never
- * pull GSAP or reach Tier 1 behaviour.
+ * ⚠ The tier system this file used to describe is SUPERSEDED — decision F7,
+ * 2026-08-29, the immersive mandate. There is no longer a "Tier 1 is
+ * homepage-only" rule and no per-site cap: motion is the default on every page,
+ * governed by the Loud Channel rule and per-page vh budgets instead.
+ *
+ * What survives the change is the split of concerns, not the ration:
+ * src/lib/motion.ts still holds the GSAP-free primitives so a CMS-generated
+ * page need not pull the library, and the named vocabulary lives in
+ * src/lib/motion/effects.ts.
  */
 
 gsap.registerPlugin(ScrollTrigger);
