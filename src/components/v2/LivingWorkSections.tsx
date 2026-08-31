@@ -1,17 +1,23 @@
+import Link from "next/link";
 import { photoById } from "@/content/kit";
+import { SignupField } from "@/components/ui/SignupField";
+import { RangerStrip } from "@/components/v2/RangerStrip";
 import {
+  challengeGroups,
   challenges,
   getInvolved,
   infrastructure,
   livingWorkHero,
   outputs,
   outputsNote,
+  outputsRestsOn,
+  outputsStandfirst,
   rangers,
   workStreams,
 } from "@/content/living-work";
 
 /**
- * /v2/living-work — the markup. Verb: ACCUMULATES.
+ * /living-work — the markup. Verb: ACCUMULATES.
  *
  * Built to `03 · Living Work · HI-FI · Desktop · the field notebook`
  * (Figma 2137:2613, 1440 × 18407 ≈ 2045vh, twelve sections).
@@ -22,27 +28,43 @@ import {
  * accessibility floor and the reason the reduced-motion cut works — the markup
  * IS the final state, and motion only ever animates toward it.
  *
- * PHOTOGRAPHY. The hi-fi names specific frames (1.40.2 the hero, 1.28.1 the
- * plain seen through the aperture, 1.65.1 for BREATH). Batch 1 gave us eight
- * general frames, so the closest match is used and the swap is a one-line
- * change in each slot. Two of the hi-fi's own picks are marked STAND-IN on the
- * design as well, so some of these slots are provisional by design rather than
- * by our shortfall.
+ * PHOTOGRAPHY. The Living Work batch landed 2026-08-31 (gathered per slot —
+ * see the manifest note in src/content/kit.ts). The hero is the hi-fi's own
+ * 1.40.2 and BREATH is its 1.65.1. The spring frame is still a stand-in by
+ * design: the restored waterhole holding water has never been photographed.
+ *
+ * Every media wrapper is stamped `data-motion` with the photo's grade so
+ * grade-aware modules can hold a `frame` image plane still — the hero is a
+ * portrait and the rule is the brief's own corollary, not a design choice.
  */
 
-const HERO = photoById("work-botanical");
-const PLAIN = photoById("country-wide");
-const BREAK = photoById("country-sunset-grass");
-const RANGERS = photoById("work-seed");
-const SPRING = photoById("country-sunset-grass");
-const BREATH_FRAME = photoById("escarpment-approach");
+const HERO = photoById("lw-hero"); // frame — portrait; the plane holds
+const PLAIN = photoById("lw-plain");
+const BREAK = photoById("lw-escarpment-sunset"); // frame — escarpment country
+const SPRING = photoById("lw-spring-dry");
+const BREATH_FRAME = photoById("lw-seedhead"); // 1.65.1 — a hand and a seed head
+const SUNSET = photoById("lw-sunset-grass"); // 1.76.2 — §09's opening band
 
-/** The four figures of §02, in the hi-fi's order. All figures of return. */
+/**
+ * §06 anchor frames — streams that carry a photograph, bleeding to the edge
+ * via stickyStreams' `[data-frame]` hook. The correction pass made 01, 04 and
+ * 07 the anchor tier; the gathered photography matches 01, 03 and 06, so those
+ * are the ones that bleed until frames for fencing and monitoring exist.
+ */
+const STREAM_PHOTOS: Record<string, ReturnType<typeof photoById>> = {
+  "01": photoById("lw-fire"),
+  "03": photoById("lw-seed-collect"),
+  "06": photoById("lw-yumba-sign"),
+};
+
+/** The four figures of §02, counted DOWN — biggest first, so the sequence
+    reads as a countdown that lands on 120, the figure whose 0 becomes the
+    aperture onto the plain. All figures of return. */
 const FIGURES = [
   { value: "8,870", caption: "hectares of Iningai Country" },
-  { value: "120", caption: "kilometres south to Barcaldine" },
-  { value: "480", caption: "metre bore · one water system" },
   { value: "2019", caption: "bought back for the Iningai people" },
+  { value: "480", caption: "metre bore · one water system" },
+  { value: "120", caption: "kilometres south to Barcaldine" },
 ] as const;
 
 /** §08's fills, in the content file's order. The fifth has not started. */
@@ -59,15 +81,19 @@ export function LivingWorkHero() {
       data-lw="hero"
       className="relative flex min-h-svh items-end overflow-hidden bg-charcoal"
     >
+      {/* 1.40.2 — the subject sits right of centre and the headline never
+          crosses her. Hold that relationship if the crop is ever adjusted:
+          object-position keeps her right of centre when narrow viewports crop
+          the sides, and the copy column below is capped so it stays left. */}
       {HERO ? (
-        <div data-media data-plane="far" className="absolute inset-0">
+        <div data-media data-plane="far" data-motion={HERO.grade} className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={HERO.src}
             alt=""
             width={HERO.width}
             height={HERO.height}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover object-[68%_40%]"
           />
         </div>
       ) : null}
@@ -81,14 +107,16 @@ export function LivingWorkHero() {
       />
 
       <div className="relative mx-auto w-full max-w-7xl px-6 pt-32 pb-32 lg:px-16">
-        <p className="eyebrow text-ochre">{livingWorkHero.eyebrow}</p>
+        <p className="eyebrow text-gold">{livingWorkHero.eyebrow}</p>
+        {/* max-w keeps the headline in the left half — it must never cross
+            the subject, whatever the copy does. */}
         <h1
           data-heading
-          className="headline mt-6 max-w-4xl text-5xl text-canvas sm:text-6xl lg:text-7xl"
+          className="headline mt-6 max-w-xl text-5xl text-canvas sm:text-6xl lg:max-w-2xl lg:text-7xl"
         >
           {livingWorkHero.title}
         </h1>
-        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-canvas/80">
+        <p className="mt-8 max-w-xl text-lg leading-relaxed text-canvas/85">
           {livingWorkHero.standfirst}
         </p>
       </div>
@@ -99,8 +127,12 @@ export function LivingWorkHero() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 text-canvas"
       >
+        {/* viewBox bottom sits just above where the path bottoms out (y≈105.3),
+            so the fill overdraws the box's lower edge. At 151 the lower third
+            was transparent and the photograph showed below the crest; at exactly
+            the path's own depth, rounding left a hairline of photograph. */}
         <svg
-          viewBox="0 0 1442 151"
+          viewBox="0 0 1442 104"
           preserveAspectRatio="none"
           className="block h-[9vw] w-full"
         >
@@ -131,79 +163,217 @@ export function LivingWorkHero() {
  * machine without it the glyph is a different width, so measuring is what keeps
  * the portal inside the counter whichever face renders.
  */
+/** The figure the section rests on with no JS — the countdown's own last
+    frame: 120 with the plain showing through its 0. */
+const APERTURE_REST = 3; // 120
+
+/** Split a figure at its LAST zero — the 0 is the portal. 2019 is the only
+    figure with digits after its aperture (2 · 0 · 19), which is why slicing
+    the final character was wrong for it. */
+function splitAtAperture(value: string): [string, string, string] {
+  const i = value.lastIndexOf("0");
+  if (i === -1) return [value, "", ""];
+  return [value.slice(0, i), "0", value.slice(i + 1)];
+}
+
 export function LivingWorkAperture() {
   return (
-    <section id="aperture" data-lw="aperture" className="relative min-h-svh bg-canvas">
-      {/* Stage 3 lives here: the photograph, clipped. */}
+    <section id="aperture" data-lw="aperture" className="relative bg-canvas">
+      {/* The theater — the wide shot's final frame. NOT full-screen: a wide
+          band with the section's own canvas (#F6F6EC) above and below, the way
+          a cinema screen sits in a wall. Hidden at rest: the rest state is the
+          crop inside 120's glyph below, and the motion pass grows the opening
+          from that glyph until it fills this band. */}
       {PLAIN ? (
-        <div data-aperture className="absolute inset-0">
+        <div
+          data-aperture
+          data-motion={PLAIN.grade}
+          aria-hidden
+          className="absolute inset-x-0 top-[16svh] h-[68svh] opacity-0"
+        >
+          {/* The reveal mask — a smooth, irregular blob in the brand's own
+              furniture language (the wave, the Button/Blob). The 0 hands over
+              to it and it grows until the photograph has the frame. Drawn
+              freehand: an organic rounded shape, no motif, no geometry the
+              cultural rules reserve. */}
+          <svg aria-hidden width="0" height="0" className="absolute">
+            <defs>
+              <clipPath id="lw-zero-clip">
+                <path
+                  data-reveal-blob
+                  d="M100 8 C150 2 185 30 192 75 C199 118 210 150 196 192 C182 232 148 260 104 258 C60 256 28 228 16 186 C4 145 8 104 22 66 C36 29 55 13 100 8 Z"
+                />
+              </clipPath>
+            </defs>
+          </svg>
+          {/* The full frame, fading in behind the zooming glyph. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            data-reveal-full
             src={PLAIN.src}
             alt=""
             width={PLAIN.width}
             height={PLAIN.height}
-            className="h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           />
+          <div
+            data-reveal-clipped
+            className="absolute inset-0 [clip-path:url(#lw-zero-clip)]"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={PLAIN.src}
+              alt=""
+              width={PLAIN.width}
+              height={PLAIN.height}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          {/* X5 + the caption — one centred line low in the frame. */}
+          <div data-band-dress aria-hidden className="absolute inset-0 opacity-0">
+            <div className="absolute inset-0 bg-linear-to-t from-charcoal/50 via-transparent to-transparent" />
+            <div className="absolute inset-x-0 bottom-[12%] px-6 text-center">
+              <p className="eyebrow text-xs leading-relaxed text-gold">
+                8,870 hectares of Iningai Country&ensp;&middot;&ensp;120
+                kilometres south to Barcaldine&ensp;&middot;&ensp;480 metre
+                bore, one water system&ensp;&middot;&ensp;2019 bought back for
+                the Iningai people
+              </p>
+            </div>
+          </div>
+          {/* The O of "Our challenges", as a letterform mask on THIS frame —
+              it absorbs the wide shot at the end of the pin and lands in the
+              ghost header below, which assembles around it before the scene
+              closes; §03 then opens with the real heading in the same voice.
+              One wide shot, one transition. */}
+          <div data-o-ghost aria-hidden className="absolute inset-x-0 top-[6%] opacity-0">
+            <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
+              <p data-ghost-item className="eyebrow text-burnt opacity-0">
+                Our challenges
+              </p>
+              <h2 className="headline mt-5 text-4xl text-evergreen sm:text-5xl">
+                <span data-o-ghost-land className="inline-block">O</span>
+                <span data-ghost-item className="opacity-0">ur challenges</span>
+              </h2>
+            </div>
+          </div>
+          <svg aria-hidden width="0" height="0" className="absolute">
+            <defs>
+              <clipPath id="lw-o-clip">
+                <text data-o-glyph>O</text>
+              </clipPath>
+            </defs>
+          </svg>
+          <div
+            data-o-shrink
+            className="absolute inset-0 opacity-0 [clip-path:url(#lw-o-clip)]"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={PLAIN.src}
+              alt=""
+              width={PLAIN.width}
+              height={PLAIN.height}
+              className="h-full w-full object-cover"
+            />
+          </div>
         </div>
       ) : null}
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 pt-32 lg:px-16">
-        <p className="eyebrow text-oxide">The numbers</p>
+      {/* data-copy — everything the full-bleed hold clears off the screen. */}
+      <div data-copy className="relative mx-auto w-full max-w-7xl px-6 pt-32 lg:px-16">
+        <p data-fade className="eyebrow text-burnt">The numbers</p>
 
-        {/* The rail — four ticks, one per figure. */}
-        <div className="mt-6 flex items-center gap-3">
-          {FIGURES.map((f) => (
+        {/* The rail — the scroll progress bar, divided into four segments,
+            one per figure; each fills across its own stretch of the pin.
+            Rest state matches the design's own 04/04 frame. */}
+        <div data-fade className="mt-6 flex items-center gap-2">
+          {FIGURES.map((f, i) => (
             <span
               key={f.value}
-              data-rail-tick
-              className="block h-px w-12 bg-oxide"
               aria-hidden
-            />
+              className="relative block h-0.5 w-14 overflow-hidden bg-burnt/20"
+            >
+              <span
+                data-seg-fill
+                className={`absolute inset-0 origin-left bg-burnt ${
+                  i === APERTURE_REST ? "" : "scale-x-0"
+                }`}
+              />
+            </span>
           ))}
+          <span data-rail-count className="eyebrow ml-4 text-xs text-burnt">
+            {String(APERTURE_REST + 1).padStart(2, "0")} / {String(FIGURES.length).padStart(2, "0")}
+          </span>
         </div>
 
         <div className="relative mt-16 h-[30vw] min-h-64">
-          {FIGURES.map((figure, i) => (
-            <p
-              key={figure.value}
-              data-figure
-              className="headline absolute inset-0 text-right text-[22vw] leading-none text-evergreen"
-            >
-              {/* Right-aligned so every figure's last glyph lands at the same x.
-                  The design pins this — "every figure is placed so its 0 lands
-                  on x=833 · fixed for the whole sequence" — because the aperture
-                  must not jump between figures. Measuring the first figure's
-                  final glyph therefore gives the centre for all four. */}
-              {figure.value.slice(0, -1)}
-              <span data-glyph={i === 0 ? "" : undefined}>
-                {figure.value.slice(-1)}
-              </span>
-            </p>
-          ))}
+          {/* The live counter — the rolling number the countdown ticks
+              through between the four figures. Motion-only. */}
+          <p
+            data-count-live
+            aria-hidden
+            className="headline absolute inset-0 text-center text-[20vw] leading-none text-evergreen opacity-0 sm:text-[16vw]"
+          />
+          {FIGURES.map((figure, i) => {
+            const [before, zero, after] = splitAtAperture(figure.value);
+            return (
+              <p
+                key={figure.value}
+                data-figure
+                data-value={figure.value.replace(/\D/g, "")}
+                className={`headline absolute inset-0 text-center text-[20vw] leading-none text-evergreen sm:text-[16vw] ${
+                  i === APERTURE_REST ? "" : "opacity-0"
+                }`}
+              >
+                {/* The digits around the 0 get their own wrapper so the exit
+                    can fade them while the 0 stays and becomes the reveal. */}
+                {before ? <span data-figure-rest>{before}</span> : null}
+                {/* Y1 — image-in-type, one per site, spent here. Two layers:
+                    the solid ink glyph beneath, and the image-filled glyph
+                    above it. At rest the fill shows (the design's own frame);
+                    in motion the fill starts clipped away so the 0 stands in
+                    font colour, then LIQUID-FILLS bottom-up mid-way through
+                    120's stretch. */}
+                <span data-zero className="relative inline-block">
+                  {zero}
+                  <span
+                    data-zero-fill
+                    aria-hidden
+                    className="absolute inset-0 bg-cover bg-center bg-clip-text text-transparent"
+                    style={PLAIN ? { backgroundImage: `url(${PLAIN.src})` } : undefined}
+                  >
+                    {zero}
+                  </span>
+                </span>
+                {after ? <span data-figure-rest>{after}</span> : null}
+              </p>
+            );
+          })}
         </div>
 
-        <p className="mt-10 max-w-xl text-sm leading-relaxed text-evergreen/70">
-          The aperture opens as the figures change — the counter of the 0, then
-          the whole glyph, then the whole screen.
+        <div data-fade className="mt-6 border-t border-burnt/50 pt-4">
+          <div className="relative h-6">
+            {FIGURES.map((figure, i) => (
+              <p
+                key={figure.value}
+                data-figure-caption
+                className={`eyebrow absolute inset-0 text-xs text-burnt ${
+                  i === APERTURE_REST ? "" : "opacity-0"
+                }`}
+              >
+                {figure.caption}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <p data-fade className="mt-14 max-w-xl pb-24 text-sm leading-relaxed text-evergreen/70">
+          The figures count down to 120 — and the 0 of 120 opens onto the
+          plain until the photograph takes the frame.
         </p>
       </div>
 
-      {/* The four figures, once the aperture has closed.
-          X5: the strip sits on the photograph at stage 3, so it carries its own
-          scrim rather than relying on the frame being dark. mix-blend was the
-          first instinct and is the wrong one — its contrast against arbitrary
-          photography cannot be tested, and this text has to clear 4.5:1 against
-          the brightest frame. */}
-      <div className="relative mx-auto mt-24 w-full max-w-7xl px-6 pb-24 lg:px-16">
-        <ul className="inline-flex flex-wrap gap-x-8 gap-y-2 rounded-sm bg-charcoal/85 px-5 py-3">
-          {FIGURES.map((f) => (
-            <li key={f.value} className="eyebrow text-xs text-canvas">
-              {f.value} {f.caption}
-            </li>
-          ))}
-        </ul>
-      </div>
     </section>
   );
 }
@@ -212,59 +382,116 @@ export function LivingWorkAperture() {
    03 — the challenges, on a ground that thins
    ------------------------------------------------------------------------- */
 
+/**
+ * One accordion band — a labelled, counted group of challenge rows. Native
+ * `<details>` per the Disclosure rationale: works before hydration, browser
+ * keyboard/AT behaviour, stays a server component. The first row of each band
+ * ships open, per the 31 Aug hi-fi.
+ */
+function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) {
+  return (
+    <div data-cluster>
+      <div className="flex items-baseline justify-between gap-6 border-b border-burnt/70 pb-2">
+        <p className="eyebrow text-xs text-burnt">{group.label}</p>
+        <p className="eyebrow text-xs text-burnt">
+          {String(group.items.length).padStart(2, "0")}
+        </p>
+      </div>
+
+      {group.items.map((index, i) => {
+        const challenge = challenges[index];
+        return (
+          <details
+            key={challenge.title}
+            data-line
+            open={i === 0 || undefined}
+            className="group border-b border-evergreen/20"
+          >
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 [&::-webkit-details-marker]:hidden">
+              <h3 className="headline text-xl text-evergreen sm:text-2xl">
+                {challenge.title}
+              </h3>
+              <span
+                aria-hidden
+                className="shrink-0 text-2xl leading-none text-burnt"
+              >
+                <span className="group-open:hidden">+</span>
+                <span className="hidden group-open:inline">&minus;</span>
+              </span>
+            </summary>
+            {/* Damage left, response right — the lede explains the columns. */}
+            <div className="grid gap-4 pb-8 sm:grid-cols-2 sm:gap-10">
+              <p className="text-sm leading-relaxed text-evergreen/80">
+                {challenge.problem}
+              </p>
+              <p className="text-sm leading-relaxed text-evergreen/80 sm:border-l sm:border-burnt/60 sm:pl-6">
+                {challenge.response}
+              </p>
+            </div>
+          </details>
+        );
+      })}
+    </div>
+  );
+}
+
 export function LivingWorkChallenges() {
   return (
     <section
       id="challenges"
       data-lw="challenges"
       data-ground
-      className="relative py-32"
+      className="relative overflow-hidden py-32"
       style={{ background: "var(--ground, #f6f6ec)" }}
     >
-      <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <p className="eyebrow text-oxide">Our challenges</p>
-        <h2 className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
-          What the work is up against
+      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+        <p data-fade-seq className="eyebrow text-burnt">Our challenges</p>
+        <h2 data-fade-seq className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
+          {/* [data-o-land] — the glyph the capture lands in. Measured, never
+              hardcoded: the display face is gitignored (F5). */}
+          <span data-o-land className="inline-block">O</span>ur challenges
         </h2>
+        {/* ⚠ Design-proposal lede, authored on the hi-fi canvas. */}
+        <p data-fade-seq className="mt-6 max-w-2xl text-lg leading-relaxed text-evergreen/80">
+          What the work is up against. Every one of these is a piece of damage
+          and a response to it &mdash; the left column is what happened to
+          Country, the right is what the Rangers do about it.
+        </p>
 
-        <div className="mt-16 grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {challenges.map((challenge, i) => (
-            <article
-              key={challenge.title}
-              data-cluster
-              data-tier={i < 3 ? "anchor" : i < 8 ? "mid" : "detail"}
-              className="border-t border-evergreen/25 pt-5"
-            >
-              <h3 className="headline text-xl text-evergreen">
-                {challenge.title}
-              </h3>
-              <p data-line className="mt-3 text-sm leading-relaxed text-evergreen/75">
-                {challenge.problem}
-              </p>
-              <p data-line className="mt-3 text-sm leading-relaxed text-evergreen/60">
-                {challenge.response}
-              </p>
-            </article>
+        <div data-fade-seq className="mt-16 space-y-16">
+          {challengeGroups.slice(0, 2).map((group) => (
+            <ChallengeGroup key={group.label} group={group} />
           ))}
         </div>
       </div>
 
-      {/* The silent landscape that splits the clusters. No copy, by design. */}
+      {/* The landscape that splits the bands — the plain the rows describe. */}
       {BREAK ? (
-        <div className="relative mt-24 h-[70svh] overflow-hidden">
-          <div data-frame className="absolute inset-0">
+        <div className="relative my-24 h-[70svh] overflow-hidden">
+          <div data-frame data-motion={BREAK.grade} className="absolute inset-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               data-frame-media
               src={BREAK.src}
-              alt=""
+              alt={BREAK.subject}
               width={BREAK.width}
               height={BREAK.height}
               className="h-full w-full object-cover"
             />
           </div>
+          <p className="absolute bottom-6 left-6 text-sm text-canvas/90 lg:left-16">
+            The plain from the escarpment.
+          </p>
         </div>
       ) : null}
+
+      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+        <div className="space-y-16">
+          {challengeGroups.slice(2).map((group) => (
+            <ChallengeGroup key={group.label} group={group} />
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
@@ -273,37 +500,109 @@ export function LivingWorkChallenges() {
    04 — the Rangers, the page's second dark beat
    ------------------------------------------------------------------------- */
 
+/**
+ * Hi-fi §04. Charcoal, the page's second dark beat: the artist's wave rule
+ * over the header, a motif ground bleeding in from the left, and the seven
+ * ranger slots as a drag strip with an edge fade saying the strip continues.
+ *
+ * ⚠ Ranger names, identification and consent to be named and photographed are
+ * all still to come — the slots are built at full size to receive them. The
+ * on-page warning was removed by request (31 Aug); this note is now the only
+ * record. Two frames (visiting-group, walking-the-country) include visiting
+ * children; the consent question is still open.
+ *
+ * The artwork is supplied vectors placed whole — `data-artwork` marks them for
+ * the motion pass (▲ wave rule draw-in and motif drift are on Leonard's
+ * sign-off queue; until then they hold still, which is the cleared fallback).
+ */
+const RANGER_STRIP: { photo: ReturnType<typeof photoById>; caption: string }[] = [
+  { photo: photoById("lw-rangers1"), caption: "Out on Country" },
+  { photo: photoById("lw-rangers5"), caption: "Showing plants to a visiting group" },
+  { photo: photoById("lw-rangers3"), caption: "Nursery work under shade cloth" },
+  { photo: photoById("lw-rangers4"), caption: "Seedlings into trays" },
+  { photo: photoById("lw-seed-collect"), caption: "Seed collecting in the scrub" },
+  { photo: photoById("lw-rangers2"), caption: "Walking the country" },
+  { photo: undefined, caption: "At the escarpment" }, // 1.82.1 — not yet gathered
+];
+
 export function LivingWorkRangers() {
   return (
     <section id="rangers" data-lw="rangers" className="relative overflow-hidden bg-charcoal py-32">
-      {RANGERS ? (
-        <div
-          data-media
-          data-plane="far"
-          aria-hidden
-          className="absolute inset-0 opacity-25"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={RANGERS.src}
-            alt=""
-            width={RANGERS.width}
-            height={RANGERS.height}
-            className="h-full w-full object-cover"
-          />
-        </div>
-      ) : null}
+      {/* ▲ ARTWORK — supplied motif, whole. Drift is on the sign-off queue. */}
+      <div
+        data-artwork="motif"
+        aria-hidden
+        className="pointer-events-none absolute top-44 -left-[420px] h-[1000px] w-[1000px] opacity-[0.06]"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/artwork/ring-b.svg" alt="" className="h-full w-full" />
+      </div>
+
       <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <p className="eyebrow text-ochre">Iningai Rangers</p>
+        {/* ▲ ARTWORK — the wave rule. Draw-in is on the sign-off queue. */}
+        <div data-artwork="wave-rule" aria-hidden className="mb-16">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/dots-wave.svg" alt="" className="w-full max-w-5xl" />
+        </div>
+
+        <p className="eyebrow text-burnt">The Rangers</p>
         <h2
           data-heading
           className="headline mt-5 max-w-3xl text-4xl text-canvas sm:text-5xl"
         >
           {rangers.title}
         </h2>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-canvas/75">
+        <p className="mt-6 max-w-4xl text-lg leading-relaxed text-canvas/80">
           {rangers.body}
         </p>
+
+        <div className="mt-12 flex items-baseline justify-between">
+          <p className="eyebrow text-xs text-gold">01 / {String(RANGER_STRIP.length).padStart(2, "0")}</p>
+          <p className="eyebrow text-xs text-canvas/55">Drag &rarr;</p>
+        </div>
+      </div>
+
+      {/* The strip. Drag to travel — the scrollbar is hidden and the client
+          wrapper owns the pointer work; native swipe stays as the touch floor. */}
+      <div className="relative mt-4">
+        <RangerStrip>
+          {RANGER_STRIP.map((slot) => (
+            <li key={slot.caption} className="w-[280px] shrink-0">
+              {slot.photo ? (
+                <div
+                  data-media
+                  data-motion={slot.photo.grade}
+                  className="h-[400px] overflow-hidden rounded-sm"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={slot.photo.src}
+                    alt={slot.caption}
+                    width={slot.photo.width}
+                    height={slot.photo.height}
+                    draggable={false}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div
+                  data-placeholder="image"
+                  className="flex h-[400px] items-end rounded-sm border border-dashed border-canvas/25 bg-canvas/5 p-4"
+                >
+                  <p className="text-xs leading-relaxed text-canvas/50">
+                    1.82.1 — at the escarpment. Not yet gathered.
+                  </p>
+                </div>
+              )}
+              <p className="eyebrow mt-4 text-xs text-gold">[ name held ]</p>
+              <p className="mt-1 text-sm text-canvas/70">{slot.caption}</p>
+            </li>
+          ))}
+        </RangerStrip>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-linear-to-r from-transparent to-charcoal"
+        />
       </div>
     </section>
   );
@@ -329,7 +628,7 @@ export function LivingWorkSpring() {
       className="relative flex min-h-svh items-center overflow-hidden bg-evergreen"
     >
       {SPRING ? (
-        <div data-media aria-hidden className="absolute inset-0 opacity-40">
+        <div data-media data-motion={SPRING.grade} aria-hidden className="absolute inset-0 opacity-40">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={SPRING.src}
@@ -409,28 +708,124 @@ export function LivingWorkStreams() {
                 <p className="mt-3 max-w-2xl text-sm leading-relaxed text-evergreen/60">
                   {stream.detail}
                 </p>
+
+                {/* Anchor frame — bleeds past the column edge via stickyStreams'
+                    bleed. Only streams with a real photograph carry one. */}
+                {STREAM_PHOTOS[stream.number] ? (
+                  <div
+                    data-frame
+                    data-motion={STREAM_PHOTOS[stream.number]!.grade}
+                    className="relative mt-8 h-[52svh] overflow-hidden"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      data-frame-media
+                      src={STREAM_PHOTOS[stream.number]!.src}
+                      alt=""
+                      width={STREAM_PHOTOS[stream.number]!.width}
+                      height={STREAM_PHOTOS[stream.number]!.height}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ) : null}
               </article>
             ))}
           </div>
         </div>
 
-        {/* Infrastructure — what it takes, two at a time. */}
-        <div className="mt-28 grid gap-x-10 gap-y-12 sm:grid-cols-2">
-          {infrastructure.map((block) => (
-            <div key={block.title} className="border-t border-evergreen/25 pt-5">
-              <h3 className="headline text-xl text-evergreen">{block.title}</h3>
-              <ul className="mt-4 space-y-2">
-                {block.points.map((point) => (
-                  <li key={point} className="text-sm leading-relaxed text-evergreen/75">
-                    {point}
-                  </li>
-                ))}
-              </ul>
-              {block.note ? (
-                <p className="mt-4 text-sm text-evergreen/55 italic">{block.note}</p>
-              ) : null}
-            </div>
-          ))}
+      </div>
+    </section>
+  );
+}
+
+/* -------------------------------------------------------------------------
+   07 — infrastructure, what it takes
+   ------------------------------------------------------------------------- */
+
+/**
+ * Hi-fi §07. Evergreen — with §08's charcoal it reads as one dark passage, the
+ * technical end of the argument. Twenty-three facts met four to eight at a
+ * time: two blocks per row, a rule under every line, and a sticky WHAT IT
+ * TAKES index at the left edge. The artist's Dots / Rule sits whole under the
+ * header — the one place on the page it appears.
+ *
+ * The index lighting as pairs pass is the motion pass's job (sticky, not
+ * pinning — the page's one pin stays at §05). Statically the index renders
+ * with the first pair lit, which is the design's own rest state.
+ */
+export function LivingWorkInfrastructure() {
+  return (
+    <section
+      id="infrastructure"
+      data-lw="infrastructure"
+      className="relative bg-evergreen py-32"
+    >
+      <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
+        <p className="eyebrow text-gold">Infrastructure</p>
+        <h2 className="headline mt-5 max-w-4xl text-4xl text-canvas sm:text-5xl">
+          Infrastructure and technology
+        </h2>
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
+          What it takes to run a property 120 kilometres from the nearest town.
+        </p>
+
+        {/* Dots / Rule — the artist's dotted divider, used whole. */}
+        <div data-artwork="dots-rule" aria-hidden className="mt-10">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/dots-rule.svg" alt="" className="w-full" />
+        </div>
+
+        <div className="mt-16 lg:flex lg:gap-14">
+          <aside className="hidden lg:sticky lg:top-32 lg:block lg:h-fit lg:w-56 lg:shrink-0">
+            <p className="eyebrow text-xs text-canvas/45">What it takes</p>
+            <ol className="mt-6 space-y-4">
+              {infrastructure.map((block, i) => (
+                <li
+                  key={block.title}
+                  data-index-item
+                  className={`relative pl-5 text-xs tracking-[0.08em] uppercase ${
+                    i < 2 ? "text-canvas" : "text-canvas/30"
+                  }`}
+                >
+                  {i < 2 ? (
+                    <span
+                      aria-hidden
+                      className="absolute top-0 left-0 h-[18px] w-0.5 bg-gold"
+                    />
+                  ) : null}
+                  {String(i + 1).padStart(2, "0")} &nbsp;{block.title}
+                </li>
+              ))}
+            </ol>
+          </aside>
+
+          <div className="grid flex-1 gap-x-14 gap-y-20 sm:grid-cols-2">
+            {infrastructure.map((block, i) => (
+              <div key={block.title} data-infra-block>
+                <p className="eyebrow text-xs text-gold">
+                  {String(i + 1).padStart(2, "0")}
+                </p>
+                <h3 className="headline mt-3 text-2xl text-canvas">
+                  {block.title}
+                </h3>
+                <ul className="mt-5">
+                  {block.points.map((point) => (
+                    <li
+                      key={point}
+                      className="border-b border-canvas/15 py-3 text-base leading-relaxed text-canvas/85"
+                    >
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+                {block.note ? (
+                  <p className="mt-4 text-sm leading-relaxed text-canvas/60">
+                    {block.note}
+                  </p>
+                ) : null}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -453,7 +848,7 @@ export function LivingWorkBreath() {
   return (
     <section id="breath" data-lw="breath" className="relative h-[47svh] overflow-hidden bg-charcoal">
       {BREATH_FRAME ? (
-        <div data-media className="absolute inset-0">
+        <div data-media data-motion={BREATH_FRAME.grade} className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={BREATH_FRAME.src}
@@ -480,48 +875,148 @@ export function LivingWorkBreath() {
  * the labels come from the content file so they change in one place when the
  * client confirms them.
  */
+/**
+ * Hi-fi §08, third redesign — the vessels. Charcoal, so §07 + §08 read as one
+ * dark passage. Each of the five names is set solid to where the work has got
+ * and outline for what is still to come; a track and a gold stop mark the same
+ * point; the status is Marc's Button / Blob, stroke only — drawn, not filled,
+ * which is the right weight for an unconfirmed claim (R14). Above each word,
+ * WHAT IT RESTS ON names the physical evidence — the §06 apparatus.
+ *
+ * Every name is measured against itself. No shared scale is claimed, because
+ * none exists; no percentage appears anywhere. The last thing you see is a
+ * hollow word on an empty track — the honest state of Rainbow Credits.
+ *
+ * The artist's rings and dot wave are the ground, never furniture: whole
+ * instances at single-digit opacity, static (`data-artwork`).
+ */
 export function LivingWorkOutputs() {
   return (
-    <section id="outputs" data-lw="outputs" className="relative bg-evergreen py-32">
-      <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <p className="eyebrow text-ochre">What the work produces</p>
-        <h2 className="headline mt-5 max-w-3xl text-4xl text-canvas sm:text-5xl">
-          Five streams. Four of them have started.
+    <section
+      id="outputs"
+      data-lw="outputs"
+      className="relative overflow-hidden bg-charcoal py-32"
+    >
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div data-artwork="ring-b" className="absolute -top-28 right-0 h-[1000px] w-[1000px] translate-x-1/3 opacity-[0.09]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/ring-b.svg" alt="" className="h-full w-full" />
+        </div>
+        <div data-artwork="ring-a" className="absolute top-[45%] -left-48 h-[640px] w-[707px] opacity-[0.07]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/ring-a.svg" alt="" className="h-full w-full" />
+        </div>
+        <div data-artwork="dots-wave" className="absolute bottom-10 -left-20 w-[120%] opacity-[0.11]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/dots-wave.svg" alt="" className="w-full" />
+        </div>
+      </div>
+
+      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+        <p className="eyebrow text-gold">What it adds up to</p>
+        <h2 className="headline mt-5 max-w-4xl text-4xl text-canvas sm:text-5xl">
+          What the work produces
         </h2>
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
+          The same activities, measured.
+        </p>
+        {/* ⚠ Design-proposal copy, for sign-off — see content/living-work.ts. */}
+        <p className="mt-5 max-w-3xl text-base leading-relaxed text-canvas/65">
+          {outputsStandfirst}
+        </p>
 
-        <div className="mt-16 space-y-10">
-          {outputs.map((output, i) => (
-            <div key={output.title} className="relative">
-              <div className="flex flex-wrap items-baseline justify-between gap-4">
-                <h3 data-vessel-label className="headline text-2xl text-canvas">
-                  {output.title}
-                </h3>
-                <p className="eyebrow text-xs text-ochre">{output.status}</p>
+        <div className="mt-14 border-t border-canvas/15" aria-hidden />
+
+        <div className="mt-4 space-y-20">
+          {outputs.map((output, i) => {
+            const fill = FILLS[i];
+            const empty = fill === 0;
+            return (
+              <div key={output.title} className="relative">
+                <p
+                  className={`eyebrow text-xs ${empty ? "text-gold/40" : "text-gold/85"}`}
+                >
+                  {outputsRestsOn[output.title] ?? ""}
+                </p>
+
+                {/* The vessel — solid to where the work has got, outline for
+                    what is still to come. Rest state IS the final fill; the
+                    motion pass scrubs toward it, never past it. */}
+                <div className="mt-3 inline-block max-w-full align-top">
+                  <div
+                    data-vessel
+                    data-fill={fill}
+                    className="relative overflow-hidden whitespace-nowrap"
+                  >
+                    <span
+                      aria-hidden
+                      className="headline block text-4xl text-transparent sm:text-6xl [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]"
+                    >
+                      {output.title}
+                    </span>
+                    <span
+                      data-vessel-fill
+                      className="absolute inset-0 overflow-hidden"
+                      style={{ width: `${fill}%` }}
+                    >
+                      <span className="headline block text-4xl whitespace-nowrap text-canvas sm:text-6xl">
+                        {output.title}
+                      </span>
+                    </span>
+                    {/* Accessible name, once — the two layers above are drawing. */}
+                    <span className="sr-only">{output.title}</span>
+                  </div>
+
+                  {/* The track: the whole word is the whole job. */}
+                  <div className="relative mt-3 h-px w-full bg-canvas/20">
+                    {empty ? null : (
+                      <>
+                        <div
+                          data-vessel-track
+                          className="absolute top-0 left-0 h-px bg-gold/85"
+                          style={{ width: `${fill}%` }}
+                        />
+                        <div
+                          aria-hidden
+                          className="absolute -top-4 h-4 w-px bg-gold/85"
+                          style={{ left: `${fill}%` }}
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Status — Button / Blob, stroke only. R14 on every label. */}
+                <div className="mt-6 flex flex-wrap items-start justify-between gap-8">
+                  <p
+                    className={`max-w-2xl text-base leading-relaxed ${
+                      output.unwritten ? "text-canvas/40" : "text-canvas/80"
+                    }`}
+                  >
+                    {output.body}
+                  </p>
+                  <div className="relative h-11 w-[246px] shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={empty ? "/brand/button-blob-muted.svg" : "/brand/button-blob.svg"}
+                      alt=""
+                      className="absolute inset-0 h-full w-full"
+                    />
+                    <p
+                      className={`eyebrow absolute inset-0 flex items-center justify-center text-xs ${
+                        empty ? "text-canvas/40" : "text-gold/90"
+                      }`}
+                    >
+                      {output.status}
+                    </p>
+                  </div>
+                </div>
               </div>
-
-              {/* The mark. scaleX to its own proportion — no counting text. */}
-              <div className="mt-4 h-px w-full bg-canvas/20">
-                <div
-                  data-vessel
-                  data-fill={FILLS[i]}
-                  className="h-px w-full origin-left bg-ochre"
-                />
-              </div>
-
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-canvas/70">
-                {output.unwritten ? (
-                  <span className="text-oxide italic">
-                    [ For YACHATDAC to write ]
-                  </span>
-                ) : (
-                  output.body
-                )}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        <p className="mt-12 max-w-2xl text-sm text-canvas/50 italic">
+        <p className="mt-16 max-w-2xl text-sm text-canvas/50 italic">
           {outputsNote}
         </p>
       </div>
@@ -533,30 +1028,92 @@ export function LivingWorkOutputs() {
    09 — get involved
    ------------------------------------------------------------------------- */
 
+/**
+ * Hi-fi §09, second review — the real card. `Card / Story — no image`:
+ * radius 24, padding 36, glyph, gold audience eyebrow, an 84px bottom-aligned
+ * title box so one- and two-line titles share a baseline, and the CTA pinned
+ * to the card bottom so all three land on the same y whatever the copy does.
+ *
+ * The grounds are decorative here and carry no meaning — on Truth the same
+ * card's ground is era-coded, and a reader of both pages must not assume this
+ * one is too. Charcoal sits last so the row hands off into the footer. The
+ * glyphs are the artist's three existing motifs, placed whole — nothing drawn.
+ */
+const PATH_PRESENTATION = [
+  { audience: "For other ranger groups", ground: "bg-evergreen", glyph: "/artwork/glyph-a.svg" },
+  { audience: "For funders and partners", ground: "bg-roasted", glyph: "/artwork/glyph-c.svg" },
+  { audience: "For properties in the district", ground: "bg-charcoal", glyph: "/artwork/glyph-b.svg" },
+] as const;
+
 export function LivingWorkInvitation() {
   return (
-    <section id="invitation" data-lw="invitation" className="relative bg-charcoal py-32">
-      <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
+    <section id="invitation" data-lw="invitation" className="relative bg-canvas pb-32">
+      {/* 1.76.2 — country at sunset. M1 push-in belongs to the motion pass. */}
+      {SUNSET ? (
+        <div
+          data-media
+          data-motion={SUNSET.grade}
+          className="relative h-[420px] overflow-hidden"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={SUNSET.src}
+            alt=""
+            width={SUNSET.width}
+            height={SUNSET.height}
+            className="h-full w-full object-cover"
+          />
+        </div>
+      ) : null}
+
+      <div className="mx-auto w-full max-w-7xl px-6 pt-20 lg:px-16">
+        <p className="eyebrow text-burnt">{getInvolved.eyebrow}</p>
         <h2
           data-heading
-          className="headline max-w-3xl text-4xl text-canvas sm:text-5xl"
+          className="headline mt-5 max-w-5xl text-4xl text-evergreen sm:text-5xl"
         >
           {getInvolved.title}
         </h2>
-        <div className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-3">
-          {getInvolved.paths.map((path) => (
-            <article
-              key={path.title}
-              data-cluster
-              data-tier="mid"
-              className="border-t border-canvas/25 pt-5"
-            >
-              <h3 className="headline text-xl text-canvas">{path.title}</h3>
-              <p data-line className="mt-3 text-sm leading-relaxed text-canvas/70">
-                {path.body}
-              </p>
-            </article>
-          ))}
+        {/* ⚠ Design-proposal lede, for sign-off — authored on the canvas. */}
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-charcoal">
+          Ranger exchange, funding the work, and land management services for
+          properties in the district.
+        </p>
+
+        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {getInvolved.paths.map((path, i) => {
+            const p = PATH_PRESENTATION[i];
+            return (
+              <article
+                key={path.title}
+                data-cluster
+                data-tier="mid"
+                className={`flex min-h-[420px] flex-col rounded-3xl p-9 ${p.ground}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.glyph} alt="" className="size-11" aria-hidden />
+                <p className="eyebrow mt-6 text-xs text-gold">{p.audience}</p>
+                <div className="mt-2 flex h-21 items-end">
+                  <h3 className="headline text-2xl leading-[1.3] text-canvas">
+                    {path.title}
+                  </h3>
+                </div>
+                <p data-line className="mt-4 text-base leading-relaxed text-canvas">
+                  {path.body}
+                </p>
+                <Link
+                  href={path.cta.href}
+                  className="eyebrow mt-auto pt-8 text-gold transition-colors duration-(--dur-small) ease-quiet hover:underline"
+                >
+                  {path.cta.label} &rarr;
+                </Link>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="mt-16 border-t border-charcoal/15 pt-8">
+          <SignupField tone="light" {...getInvolved.signup} />
         </div>
       </div>
     </section>

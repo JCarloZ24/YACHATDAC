@@ -68,12 +68,13 @@ export default function V2IndexPage() {
             </span>
           </TransitionLink>
 
+          {/* Promoted to the real route on 31 Aug — the first page to move. */}
           <TransitionLink
-            href="/v2/living-work"
+            href="/living-work"
             className="group block border-y border-canvas/15 py-6"
           >
             <span className="eyebrow text-canvas/50">
-              03 · verb: accumulates
+              03 · verb: accumulates · now live at /living-work
             </span>
             <span className="headline mt-2 block text-3xl text-canvas transition-colors group-hover:text-ochre">
               Living Work — the field notebook &rarr;

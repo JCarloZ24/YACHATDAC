@@ -95,25 +95,20 @@ visible on the face of the file.
 Version numbers count **that page's drafts**, not upload rounds. A page whose
 first draft arrives in the third upload is still `v1`.
 
-## Approval is not a formality here
+## Approval is review-at-presentation (F8, 31 Aug)
 
-Two gates apply, and they are different from each other:
+**Decision F8** replaced the two-gate pre-approval model. All copy and content
+is authored by August as working copy — provisional by design — and the built
+site is **presented to Steve (FNAN) and the Elder Advisory Group, who review
+and request changes**. Corrections come back through the change-request
+process (D18). Approval no longer blocks drafting, building, or front-end
+implementation.
 
-1. **Editorial sign-off** — is the copy right, on-brand, and accurate?
-2. **Cultural governance** — the client's Ten-Year Strategic Plan names a formal
-   **Elder Advisory Group** with binding authority: *no program involving the
-   sharing of Iningai cultural knowledge, stories, or sacred information
-   proceeds without Elder Advisory Group endorsement.*
-
-Content carrying cultural knowledge needs the second gate, not just the first.
-Tag each document in `STATUS.md` with its governance circle — **open**, **shared
-with care**, or **held by community** — the same three circles the CMS uses
-internally (build documentation §12).
-
-Where a document says on its face that it is awaiting someone's approval — the
-Truth timeline carries *"DRAFT — Suzanne's words, awaiting her approval"* — that
-is binding. It does not go into `approved/`, into the CMS, or onto a staging
-URL until she has seen it and said yes.
+The governance-circle tags in `STATUS.md` (**open**, **shared with care**,
+**held by community**) are kept as labels — they tell a reviewer what to look
+hardest at — but they no longer gate the build. Changes requested inside
+Suzanne's recorded words are routed to her at review, since the words are hers
+regardless of process (see F8 and R17).
 
 ## These drafts are the source of truth for copy
 

@@ -5,10 +5,10 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 /**
  * The GSAP-free motion primitives.
  *
- * Source of truth for all motion on this project is the `yachatdac-motion`
- * skill (.claude/skills/yachatdac-motion/). Read it before writing animation
- * code, not after. This file implements the two behaviours that a page must be
- * able to have without loading an animation library at all:
+ * The motion system is documented in docs/motion/ (the yachatdac-motion skill
+ * was removed under decision F8, 31 Aug 2026). This file implements the two
+ * behaviours that a page must be able to have without loading an animation
+ * library at all:
  *
  *   X4  entry stagger  — start "top 82%", once, y16 + fade, 60ms stagger
  *   X6  reduced-motion twin — same code path, zero duration, nothing pinned

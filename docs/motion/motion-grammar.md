@@ -111,8 +111,8 @@ than quietly inheriting whatever the component does.
 
 ## Bans, restated because they are grammar too
 
-- **No overshoot.** `back`, `elastic` and `bounce` are banned site-wide. They are the sound of a
-  brand enjoying itself. `registerEffect` throws on them in development.
+- ~~**No overshoot.**~~ **Lifted by F8 (31 Aug 2026).** `back`, `elastic` and `bounce` are
+  allowed; the dev-mode guard in `effects/shared.ts` is a no-op. Character is a design choice.
 - **No count-up on figures of loss.** A number describing people who died or land taken is
   stated and held, never ticked upward like a sales metric.
 - **No character splits on testimony.** Anything a person actually said is split by line or

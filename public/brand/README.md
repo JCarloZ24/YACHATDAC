@@ -57,11 +57,11 @@ placeholder-first with swap-in-ready slots, so launch does not wait on the
 artist's timeline. Sections carry `data-placeholder="beat-media"` where art is
 expected.
 
-**Motion permission for artwork is recorded** — Ivy, 2026-08-30. Artwork may
-move. The superseded wording was: static imagery only, no animating, masking,
-revealing, scrubbing, looping or transforming any element. See
-`.claude/skills/yachatdac-motion/references/permissions.md`, which is the live
-status board and should be updated when a decision comes back.
+**Motion permission for artwork is recorded** — Ivy, 2026-08-30, and under
+decision **F8** (31 Aug 2026) artwork motion is built freely without a
+per-piece sign-off queue; Leonard Mickelo reviews the work at presentation
+alongside Steve (FNAN) and the Elders. See `docs/decisions-and-risks.md` F8,
+which also preserves the permissions board's record.
 
 Never generate Aboriginal iconography in code as a stand-in — no procedural
 concentric circles, dot fields, meandering waypoint paths, U-shapes or animal

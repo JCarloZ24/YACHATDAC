@@ -6,9 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 /**
  * Central motion controller.
  *
- * TypeScript port of .claude/skills/yachatdac-motion/assets/motion-controller.js.
- * The skill is the source of truth — if the two ever disagree, the skill wins
- * and this file gets updated, not the other way round.
+ * Originally a TypeScript port of the yachatdac-motion skill's controller
+ * template (skill removed under decision F8, 31 Aug 2026). This file is now
+ * the source of truth.
  *
  * Every section module registers here so reduced motion, route changes and
  * teardown are handled in one place instead of being reimplemented per
