@@ -20,6 +20,20 @@ Update it when a decision comes back — the date and who decided both matter, b
 | Artwork motion | **Yes.** Supersedes "static imagery only". Leonard Mickelo's supplied vectors may be animated, masked, revealed, scrubbed and transformed. | Ivy | 2026-08-30 | Site-wide. Group G (the Guide), T7 artwork orbit, C4 artwork morph, A5 artwork plate, G2 band undulation — the whole ▲ queue below. |
 | Cultural-site imagery | **Available and used**, at **`frame`** grade — the world moves, the record holds. Plate, ground, scrim, type and neighbouring layers animate at full cinematic weight; the image plane does not scrub, mask, erode or warp. | Ivy | 2026-08-30 | Marra Wonga, the engravings, the teaching wall, the escarpment. Carried by plates P1, P8 and P9. |
 | Story-wall imagery | **Available.** "Everything we have can be USED." Graded `frame` for the same reason as cultural-site. | Ivy | 2026-08-30 | The Truth beat may now use it rather than being built typographically by necessity. |
+| **Photo batches 1 and 2 — use** | **Cleared, both batches, in full.** "All images on batch 1 and batch 2 are usable… there are notes there that we can't use it but I'm telling now that everything there we can use." This explicitly overrides the `⛔ R10 QUARANTINE` group in `PHOTOS · Living Work`, which covered eight tagged batch-1 frames plus `March22-2302` (petroglyph close-up) and the untitled `March22` frame (red ochre figures). **The Figma quarantine label is now stale and should be re-worded in the file.** | Ivy | **2026-08-31** | Both batches, all 89 frames. |
+| **Cultural-site and story-wall — motion grade** | ⬆ **Raised from `frame` to `full`.** The image plane itself may now be scrubbed, masked, pushed and morphed, not only the world around it. **This supersedes the `frame` grade recorded above on 2026-08-30**, which is kept as history rather than deleted. | Ivy | **2026-08-31** | Cultural-site and story-wall buckets in `src/content/lofi/media.ts`. |
+
+⚠ **What the 2026-08-31 grade change does NOT change.** `full` governs *which channel moves*.
+ART-DIRECTION §6 governs *which techniques are never applied to a depicted subject*, and it is
+unaffected: dissolve (`IMG-03`), chromatic split (`IMG-04`), velocity warp (`IMG-01`),
+character decode (`ENT-07`), image trail (`INT-07`) and duotone recolour (`IMG-05`) remain
+banned on portraits, artefacts and archival photographs. Both rules hold at once. Ivy
+confirmed §6 stays absolute on the same day.
+
+⚠ **Sign-off still outstanding on the grade change.** Elder Advisory Group endorsement was
+already unconfirmed under the `frame` grade (risk R10); raising to `full` widens what is being
+done under an unconfirmed endorsement. Take this to whoever D9 names, alongside the artwork
+asks below.
 
 **What none of these change.** No generated Aboriginal iconography — the unblock lets
 the artist's *supplied* vectors move, and never licenses drawing concentric circles,
@@ -49,6 +63,11 @@ its cleared fallback.
 | The flowing dot band undulating in place (x-drift inside a mask — the same supplied vector, never redrawn) | G2 | §04 river banks and grounds | Bands hold still |
 | The trail drawing an underline beneath the §02 claim, rosette at the reveal edge | G1 | /v2/home §02 | Static trail underline |
 
+⚠ **No artist is recorded for the three photographed dot paintings** (ASSETS.md §4). Ivy's
+2026-08-30 authorisation of artwork motion was given in the context of Leonard Mickelo's
+supplied vectors; whether it reaches those three pieces depends on who painted them, which is
+unanswered. Anything built on them is flagged here before it ships.
+
 ## Asks outstanding with the artist
 
 Alongside the existing creative-brief deliverables:
@@ -66,6 +85,12 @@ Alongside the existing creative-brief deliverables:
 These are settled and don't get reopened per task:
 
 - No animation of cultural-site imagery, in any form.
+- **Recompose, never author.** Confirmed by Ivy 2026-08-31 when the question of making new
+  artwork "in the same theme" was put directly. New pieces are built by instancing, masking,
+  cropping, recolouring, mirroring and recombining Leonard Mickelo's **actual supplied
+  paths** — the theme is guaranteed because it is his geometry. Authoring new geometry in
+  that style is not permitted and is not ours or the client's to authorise on the artist's
+  behalf. If genuinely new motifs are wanted, they go to Leonard as a request.
 - No generated Aboriginal iconography in code — concentric circles, dot fields,
   meandering waypoint paths, U-shapes, animal tracks. Artwork comes from the artist.
 - No heritage coordinates in map layers, markup, comments or source.

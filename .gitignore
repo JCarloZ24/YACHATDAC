@@ -67,3 +67,17 @@ next-env.d.ts
 
 # local dev server log
 /dev.log
+
+# Brand source-of-truth folder (see brand/README.md).
+# Photography and video are client media — same reasoning as /public/media/ above:
+# they live in Drive today and move into the CMS at launch.
+/brand/photography/
+# Video masters are excluded, but the README explaining how to transcode them is not —
+# hence the glob + negation rather than ignoring the directory itself.
+/brand/video/*
+!/brand/video/README.md
+# Unlicensed font families, mirroring the /public/fonts/ rules above.
+/brand/typefaces/BlockBerthold.woff2
+/brand/typefaces/BantayogSans-*.woff2
+/brand/typefaces/GoodDog*.woff2
+/brand/typefaces/GOODD*.TTF
