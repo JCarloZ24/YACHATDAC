@@ -1,3 +1,4 @@
+import { FooterGround } from "@/components/layout/FooterGround";
 import type { Metadata } from "next";
 import { Band, BandHeading } from "@/components/layout/Band";
 import { PageHero } from "@/components/layout/PageHero";
@@ -243,6 +244,7 @@ export default async function ResourcesPage({
           </Reveal>
         </div>
       </Band>
+      <FooterGround color="var(--color-charcoal)" />
     </>
   );
 }

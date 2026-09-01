@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { photoById } from "@/content/kit";
 import { SignupField } from "@/components/ui/SignupField";
-import { RangerStrip } from "@/components/v2/RangerStrip";
+import { RangerCarousel } from "@/components/v2/RangerCarousel";
 import {
   challengeGroups,
   challenges,
@@ -243,10 +243,10 @@ export function LivingWorkAperture() {
             <div className="absolute inset-0 bg-linear-to-t from-charcoal/50 via-transparent to-transparent" />
             <div className="absolute inset-x-0 bottom-[12%] px-6 text-center">
               <p className="eyebrow text-xs leading-relaxed text-gold">
-                8,870 hectares of Iningai Country&ensp;&middot;&ensp;120
-                kilometres south to Barcaldine&ensp;&middot;&ensp;480 metre
-                bore, one water system&ensp;&middot;&ensp;2019 bought back for
-                the Iningai people
+                8,870 hectares of Iningai Country&ensp;&middot;&ensp;2019
+                bought back for the Iningai people&ensp;&middot;&ensp;480
+                metre bore, one water system&ensp;&middot;&ensp;120 kilometres
+                south to Barcaldine
               </p>
             </div>
           </div>
@@ -451,7 +451,13 @@ export function LivingWorkChallenges() {
       data-lw="challenges"
       data-ground
       className="relative overflow-hidden py-32"
-      style={{ background: "var(--ground, #f6f6ec)" }}
+      /* The hi-fi frame's ground: bone thinning to dry earth down the section.
+         The ramp animates only the deep end (--ground), so the rest state IS
+         the wireframe gradient and motion darkens it from the bottom up. */
+      style={{
+        background:
+          "linear-gradient(180deg, #f6f6ec 0%, #f5f3e8 22%, #efe9da 55%, #e7decb 80%, var(--ground, #e0d4bd) 100%)",
+      }}
     >
       <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
         {/* data-handoff-title — this header exists for the document: with
@@ -547,9 +553,14 @@ const RANGER_STRIP: { photo: ReturnType<typeof photoById>; caption: string }[] =
 export function LivingWorkRangers() {
   return (
     <section id="rangers" data-lw="rangers" className="relative overflow-hidden bg-charcoal py-32">
-      {/* ▲ ARTWORK — supplied motif, whole. Drift is on the sign-off queue. */}
+      {/* ▲ ARTWORK — supplied motif, whole. data-media/data-plane hand it to
+          fullBleedOpen's plateParallax: the ring drifts against the scroll on
+          the near plane, which is the drift the sign-off queue was holding —
+          now requested directly (1 Sep). */}
       <div
         data-artwork="motif"
+        data-media
+        data-plane="near"
         aria-hidden
         className="pointer-events-none absolute top-44 -left-[420px] h-[1000px] w-[1000px] opacity-[0.06]"
       >
@@ -574,54 +585,14 @@ export function LivingWorkRangers() {
         <p className="mt-6 max-w-4xl text-lg leading-relaxed text-canvas/80">
           {rangers.body}
         </p>
-
-        <div className="mt-12 flex items-baseline justify-between">
-          <p className="eyebrow text-xs text-gold">01 / {String(RANGER_STRIP.length).padStart(2, "0")}</p>
-          <p className="eyebrow text-xs text-canvas/55">Drag &rarr;</p>
-        </div>
       </div>
 
-      {/* The strip. Drag to travel — the scrollbar is hidden and the client
-          wrapper owns the pointer work; native swipe stays as the touch floor. */}
-      <div className="relative mt-4">
-        <RangerStrip>
-          {RANGER_STRIP.map((slot) => (
-            <li key={slot.caption} className="w-[280px] shrink-0">
-              {slot.photo ? (
-                <div
-                  data-media
-                  data-motion={slot.photo.grade}
-                  className="h-[400px] overflow-hidden rounded-sm"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={slot.photo.src}
-                    alt={slot.caption}
-                    width={slot.photo.width}
-                    height={slot.photo.height}
-                    draggable={false}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div
-                  data-placeholder="image"
-                  className="flex h-[400px] items-end rounded-sm border border-dashed border-canvas/25 bg-canvas/5 p-4"
-                >
-                  <p className="text-xs leading-relaxed text-canvas/50">
-                    1.82.1 — at the escarpment. Not yet gathered.
-                  </p>
-                </div>
-              )}
-              <p className="eyebrow mt-4 text-xs text-gold">[ name held ]</p>
-              <p className="mt-1 text-sm text-canvas/70">{slot.caption}</p>
-            </li>
-          ))}
-        </RangerStrip>
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-linear-to-r from-transparent to-charcoal"
-        />
+      {/* The carousel — an infinite belt of cards riding a circular arc, with
+          the in-place profile overlay behind each. The cards deliberately do
+          NOT carry data-media: the recipe's plateParallax would fight the arc
+          transforms the client owns. */}
+      <div className="mt-12">
+        <RangerCarousel slots={[...RANGER_STRIP]} profileBody={rangers.body} />
       </div>
     </section>
   );
@@ -920,20 +891,25 @@ export function LivingWorkInfrastructure() {
           <aside className="hidden lg:sticky lg:top-32 lg:block lg:h-fit lg:w-56 lg:shrink-0">
             <p className="eyebrow text-xs text-canvas/45">What it takes</p>
             <ol className="mt-6 space-y-4">
+              {/* Rest state IS the wireframe's own frame: the first pair lit,
+                  the rest dimmed with their bars retracted. The motion pass
+                  (whatItTakes) re-lights pairs as their grid row passes —
+                  every item carries its bar so any row can take the light. */}
               {infrastructure.map((block, i) => (
                 <li
                   key={block.title}
                   data-index-item
-                  className={`relative pl-5 text-xs tracking-[0.08em] uppercase ${
-                    i < 2 ? "text-canvas" : "text-canvas/30"
+                  className={`relative pl-5 text-xs tracking-[0.08em] text-canvas uppercase ${
+                    i < 2 ? "" : "opacity-30"
                   }`}
                 >
-                  {i < 2 ? (
-                    <span
-                      aria-hidden
-                      className="absolute top-0 left-0 h-[18px] w-0.5 bg-gold"
-                    />
-                  ) : null}
+                  <span
+                    data-index-bar
+                    aria-hidden
+                    className={`absolute top-0 left-0 h-[18px] w-0.5 origin-top bg-gold ${
+                      i < 2 ? "" : "scale-y-0"
+                    }`}
+                  />
                   {String(i + 1).padStart(2, "0")} &nbsp;{block.title}
                 </li>
               ))}
@@ -1197,12 +1173,16 @@ export function LivingWorkInvitation() {
           className="relative h-[420px] overflow-hidden"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
+          {/* The hi-fi band's own crop (pattern transform, 2146:2788): the
+              visible slice is rows ~27–83% of the frame, centre ≈ 61% — a
+              touch below object-cover's default, so the grass line carries
+              the bottom of the band rather than the treetops the top. */}
           <img
             src={SUNSET.src}
             alt=""
             width={SUNSET.width}
             height={SUNSET.height}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover object-[50%_61%]"
           />
         </div>
       ) : null}
@@ -1229,8 +1209,15 @@ export function LivingWorkInvitation() {
                 key={path.title}
                 data-cluster
                 data-tier="mid"
-                className={`flex min-h-[420px] flex-col rounded-3xl p-9 ${p.ground}`}
+                className={`group relative flex min-h-[420px] flex-col overflow-hidden rounded-3xl p-9 ${p.ground}`}
               >
+                {/* The hover lift — the ground lightens 4%, per the card note.
+                    A canvas veil rather than a filter, so the motifs and type
+                    keep their exact colour. */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-canvas opacity-0 transition-opacity duration-(--dur-small) ease-quiet group-hover:opacity-[0.04]"
+                />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.glyph} alt="" className="size-11" aria-hidden />
                 <p className="eyebrow mt-6 text-xs text-gold">{p.audience}</p>
@@ -1244,9 +1231,17 @@ export function LivingWorkInvitation() {
                 </p>
                 <Link
                   href={path.cta.href}
-                  className="eyebrow mt-auto pt-8 text-gold transition-colors duration-(--dur-small) ease-quiet hover:underline"
+                  className="eyebrow mt-auto pt-8 text-gold"
                 >
-                  {path.cta.label} &rarr;
+                  {path.cta.label}{" "}
+                  {/* 6px of travel on the card's hover — inside the p-9, so it
+                      never reaches the clipped edge. */}
+                  <span
+                    aria-hidden
+                    className="inline-block transition-transform duration-(--dur-small) ease-quiet group-hover:translate-x-1.5"
+                  >
+                    &rarr;
+                  </span>
                 </Link>
               </article>
             );

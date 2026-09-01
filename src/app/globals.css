@@ -92,6 +92,22 @@ html {
      If a specific link ever wants an eased jump, do it on that link with
      scrollIntoView({behavior:"smooth"}) — not on every scroll on the site. */
   -webkit-text-size-adjust: 100%;
+
+  /* No scrollbar UI, site-wide (1 Sep direction). Scrolling itself is
+     untouched — wheel, keys, touch and drag all still work; only the bar is
+     hidden, on the document and on every inner scroller (the ranger profile,
+     any overflow strip). */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
 }
 
 body {

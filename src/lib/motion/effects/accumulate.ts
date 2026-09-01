@@ -143,12 +143,41 @@ export function registerAccumulate(): void {
 
       marks.forEach((mark, i) => {
         const fill = Number(mark.dataset.fill ?? 0) / 100;
-        tl.fromTo(
-          mark,
-          { scaleX: 0, transformOrigin: "left center" },
-          { scaleX: fill, duration, ease },
-          i * stagger,
-        );
+        // Two markups share this effect. The vessel redesign (hi-fi §08, third
+        // pass) nests the moving part: [data-vessel] is the whole word — the
+        // outline layer plus a clipped [data-vessel-fill] whose WIDTH is the
+        // rest state. There the crop is what moves (the word underneath never
+        // distorts, and a 0% vessel keeps its outline standing — the honest
+        // empty word is the point). Scaling the wrapper squashed every title
+        // by its fill ratio and erased the empty one entirely.
+        const inner = mark.querySelector<HTMLElement>("[data-vessel-fill]");
+        if (inner) {
+          tl.fromTo(
+            inner,
+            { width: "0%" },
+            { width: `${fill * 100}%`, duration, ease },
+            i * stagger,
+          );
+          const track = mark.parentElement?.querySelector<HTMLElement>(
+            "[data-vessel-track]",
+          );
+          if (track) {
+            tl.fromTo(
+              track,
+              { scaleX: 0, transformOrigin: "left center" },
+              { scaleX: 1, duration, ease },
+              i * stagger,
+            );
+          }
+        } else {
+          // A bare mark IS the bar — the original contract.
+          tl.fromTo(
+            mark,
+            { scaleX: 0, transformOrigin: "left center" },
+            { scaleX: fill, duration, ease },
+            i * stagger,
+          );
+        }
       });
       return tl;
     },

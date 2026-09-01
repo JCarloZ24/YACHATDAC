@@ -1,3 +1,4 @@
+import { FooterGround } from "@/components/layout/FooterGround";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Band } from "@/components/layout/Band";
@@ -216,6 +217,7 @@ export default function TruthPage() {
           </p>
         </Reveal>
       </Band>
+      <FooterGround color="var(--color-charcoal)" />
     </>
   );
 }

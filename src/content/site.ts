@@ -227,6 +227,58 @@ export const legalLinks: NavChild[] = [
 ];
 
 /**
+ * Footer navigation — the hi-fi footer's four columns (frame 2137:2623),
+ * replacing the earlier pillar-derived columns. PAGES is the primary nav minus
+ * About (which moves under ORGANISATION as "About YACHATDAC"); GET IN TOUCH
+ * names the three enquiry types and routes each to /connect, the one contact
+ * destination D2 kept.
+ */
+export const footerNav: { title: string; links: NavChild[] }[] = [
+  {
+    title: "Pages",
+    links: primaryNav.filter((link) => link.title !== "About"),
+  },
+  {
+    title: "Organisation",
+    links: [
+      { title: `About ${org.name}`, href: "/about" },
+      { title: "Our people", href: "/our-people" },
+      { title: "Partners", href: "/partnerships" },
+    ],
+  },
+  {
+    title: "Get in touch",
+    links: [
+      { title: "Guesting enquiries", href: "/connect" },
+      { title: "Research & partnerships", href: "/connect" },
+      { title: "Ranger exchange", href: "/connect" },
+    ],
+  },
+];
+
+/**
+ * ⚠ Social profiles — the hi-fi footer lists these (FOLLOW column and the icon
+ * row), but no profile URLs have been supplied. `href: null` renders each as a
+ * held placeholder rather than a dead link; fill in the URL and it becomes one.
+ */
+export const socialLinks: { title: string; href: string | null }[] = [
+  { title: "Facebook", href: null },
+  { title: "Instagram", href: null },
+  { title: "X", href: null },
+  { title: "LinkedIn", href: null },
+  { title: "YouTube", href: null },
+];
+
+/**
+ * ⚠ R15 — corporation registration numbers, not yet supplied. The footer
+ * renders bracketed holds and a visible warning until both are filled.
+ */
+export const registration: { icn: string | null; abn: string | null } = {
+  icn: null,
+  abn: null,
+};
+
+/**
  * Deliberately out of scope this phase (§2). Listed so nobody re-adds them by
  * accident, and so reviewers can see the omissions are decisions, not gaps.
  */

@@ -1,0 +1,548 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - navigation "Primary" [ref=f1e3]:
+      - link "YACHATDAC — home" [ref=f1e4] [cursor=pointer]:
+        - /url: /
+        - img "YACHATDAC" [ref=f1e5]
+      - generic [ref=f1e6]:
+        - list [ref=f1e7]:
+          - listitem [ref=f1e8]:
+            - link "Wonder" [ref=f1e9] [cursor=pointer]:
+              - /url: /wonder
+          - listitem [ref=f1e10]:
+            - link "Truth" [ref=f1e11] [cursor=pointer]:
+              - /url: /truth
+          - listitem [ref=f1e12]:
+            - link "Living Work" [ref=f1e13] [cursor=pointer]:
+              - /url: /living-work
+          - listitem [ref=f1e14]:
+            - link "The Record" [ref=f1e15] [cursor=pointer]:
+              - /url: /resources
+          - listitem [ref=f1e16]:
+            - link "About" [ref=f1e17] [cursor=pointer]:
+              - /url: /about
+        - link "Connect" [ref=f1e18] [cursor=pointer]:
+          - /url: /connect
+  - main [ref=f1e22]:
+    - generic [ref=f1e24]:
+      - status [ref=f1e25]:
+        - generic [ref=f1e26]:
+          - generic [ref=f1e27]:
+            - img "YACHATDAC" [ref=f1e28]
+            - paragraph [ref=f1e31]: 0%
+          - generic [aria-hidden] [ref=f1e32]:
+            - paragraph [ref=f1e33]: You’re viewing
+            - paragraph [ref=f1e34]: Living Work
+      - generic [ref=f1e35]:
+        - generic [ref=f1e39]:
+          - paragraph [ref=f1e40]: Living Work · Caring for Country
+          - heading "Field notes from Turraburra" [level=1] [ref=f1e41]
+          - paragraph [ref=f1e42]: YACHATDAC manages Turraburra, 8,870 hectares of Iningai Country 120km north of Barcaldine in Central Western Queensland. The property was bought back for the Iningai people in 2019.
+        - generic [ref=f1e43]:
+          - generic [aria-hidden] [ref=f1e44]:
+            - paragraph [ref=f1e49]: 8,870 hectares of Iningai Country · 2019 bought back for the Iningai people · 480 metre bore, one water system · 120 kilometres south to Barcaldine
+            - generic [ref=f1e51]:
+              - paragraph [ref=f1e52]: Our challenges
+              - heading [level=2] [ref=f1e53]:
+                - generic [ref=f1e54]: O
+                - text: ur challenges
+          - generic [ref=f1e56]:
+            - paragraph [ref=f1e57]: The numbers
+            - generic [ref=f1e58]: 04 / 04
+            - generic [ref=f1e65]:
+              - paragraph [aria-hidden] [ref=f1e66]
+              - paragraph [ref=f1e67]:
+                - text: 8,87
+                - generic [ref=f1e68]:
+                  - text: "0"
+                  - generic [aria-hidden] [ref=f1e69]: "0"
+              - paragraph [ref=f1e70]:
+                - text: "2"
+                - generic [ref=f1e71]:
+                  - text: "0"
+                  - generic [aria-hidden] [ref=f1e72]: "0"
+                - text: "19"
+              - paragraph [ref=f1e73]:
+                - text: "48"
+                - generic [ref=f1e74]:
+                  - text: "0"
+                  - generic [aria-hidden] [ref=f1e75]: "0"
+              - paragraph [ref=f1e76]:
+                - text: "12"
+                - generic [ref=f1e77]:
+                  - text: "0"
+                  - generic [aria-hidden] [ref=f1e78]: "0"
+            - generic [ref=f1e80]:
+              - paragraph [ref=f1e81]: hectares of Iningai Country
+              - paragraph [ref=f1e82]: bought back for the Iningai people
+              - paragraph [ref=f1e83]: metre bore · one water system
+              - paragraph [ref=f1e84]: kilometres south to Barcaldine
+            - paragraph [ref=f1e85]: The figures count down to 120 — and the 0 of 120 opens onto the plain until the photograph takes the frame.
+        - generic [ref=f1e86]:
+          - generic [ref=f1e87]:
+            - paragraph [ref=f1e88]: Our challenges
+            - heading "O ur challenges" [level=2] [ref=f1e89]:
+              - generic [ref=f1e90]: O
+              - text: ur challenges
+            - paragraph [ref=f1e91]: What the work is up against. Every one of these is a piece of damage and a response to it — the left column is what happened to Country, the right is what the Rangers do about it.
+            - generic [ref=f1e92]:
+              - generic [ref=f1e93]:
+                - generic [ref=f1e94]:
+                  - paragraph [ref=f1e95]: Country damaged
+                  - paragraph [ref=f1e96]: "05"
+                - group [ref=f1e97]:
+                  - generic [ref=f1e98] [cursor=pointer]:
+                    - heading "A century of overgrazing" [level=3] [ref=f1e99]
+                    - generic [aria-hidden] [ref=f1e100]: −
+                  - generic [ref=f1e101]:
+                    - paragraph [ref=f1e102]: Turraburra was run as a sheep and cattle station from the 1880s. Continuous grazing strips groundcover, compacts soil and stops native grasses setting seed, so Country loses its ability to hold water and recover on its own.
+                    - paragraph [ref=f1e103]: Fencing lets us rest paddocks and manage them separately. Seed collection and replanting rebuild what grazing removed.
+                - group [ref=f1e104]:
+                  - generic [ref=f1e105] [cursor=pointer]:
+                    - heading "Degraded springs and waterholes" [level=3] [ref=f1e106]
+                    - generic [aria-hidden] [ref=f1e107]: +
+                - group [ref=f1e108]:
+                  - generic [ref=f1e109] [cursor=pointer]:
+                    - heading "Soil carbon loss and erosion" [level=3] [ref=f1e110]
+                    - generic [aria-hidden] [ref=f1e111]: +
+                - group [ref=f1e112]:
+                  - generic [ref=f1e113] [cursor=pointer]:
+                    - heading "Wrong-way fire and wildfire risk" [level=3] [ref=f1e114]
+                    - generic [aria-hidden] [ref=f1e115]: +
+                - group [ref=f1e116]:
+                  - generic [ref=f1e117] [cursor=pointer]:
+                    - heading "Weeds and feral animals" [level=3] [ref=f1e118]
+                    - generic [aria-hidden] [ref=f1e119]: +
+              - generic [ref=f1e120]:
+                - generic [ref=f1e121]:
+                  - paragraph [ref=f1e122]: Conditions here
+                  - paragraph [ref=f1e123]: "04"
+                - group [ref=f1e124]:
+                  - generic [ref=f1e125] [cursor=pointer]:
+                    - heading "No reliable phone reception" [level=3] [ref=f1e126]
+                    - generic [aria-hidden] [ref=f1e127]: −
+                  - generic [ref=f1e128]:
+                    - paragraph [ref=f1e129]: There is no dependable mobile coverage on the property, apart from patches on top of the escarpment. That is a safety issue before it is an inconvenience.
+                    - paragraph [ref=f1e130]: See Infrastructure below for how the property stays connected.
+                - group [ref=f1e131]:
+                  - generic [ref=f1e132] [cursor=pointer]:
+                    - heading "Extreme heat, drought and flood" [level=3] [ref=f1e133]
+                    - generic [aria-hidden] [ref=f1e134]: +
+                - group [ref=f1e135]:
+                  - generic [ref=f1e136] [cursor=pointer]:
+                    - heading "Distance from town" [level=3] [ref=f1e137]
+                    - generic [aria-hidden] [ref=f1e138]: +
+                - group [ref=f1e139]:
+                  - generic [ref=f1e140] [cursor=pointer]:
+                    - heading "Water security across 8,870 hectares" [level=3] [ref=f1e141]
+                    - generic [aria-hidden] [ref=f1e142]: +
+          - generic [ref=f1e143]:
+            - img "Red rock outcrop at last light, the plain behind — escarpment country" [ref=f1e145]
+            - paragraph [ref=f1e146]: The plain from the escarpment.
+          - generic [ref=f1e148]:
+            - generic [ref=f1e149]:
+              - generic [ref=f1e150]:
+                - paragraph [ref=f1e151]: What we could lose
+                - paragraph [ref=f1e152]: "02"
+              - group [ref=f1e153]:
+                - generic [ref=f1e154] [cursor=pointer]:
+                  - heading "Damage and access to cultural heritage sites" [level=3] [ref=f1e155]
+                  - generic [aria-hidden] [ref=f1e156]: −
+                - generic [ref=f1e157]:
+                  - paragraph [ref=f1e158]: Marra Wonga carries historic graffiti from visitors going back over a century, and artefacts near the shelter have been removed by station owners and tourists since the late 1800s. Stock and feral animals damage sites simply by sheltering at them.
+                  - paragraph [ref=f1e159]: Roads are aligned to go around sites rather than through them, and access is controlled and guided.
+              - group [ref=f1e160]:
+                - generic [ref=f1e161] [cursor=pointer]:
+                  - heading "Species we have not yet identified" [level=3] [ref=f1e162]
+                  - generic [aria-hidden] [ref=f1e163]: +
+            - generic [ref=f1e164]:
+              - generic [ref=f1e165]:
+                - paragraph [ref=f1e166]: What could stop the work
+                - paragraph [ref=f1e167]: "02"
+              - group [ref=f1e168]:
+                - generic [ref=f1e169] [cursor=pointer]:
+                  - heading "Ranger funding ahead of income" [level=3] [ref=f1e170]
+                  - generic [aria-hidden] [ref=f1e171]: −
+                - generic [ref=f1e172]:
+                  - paragraph [ref=f1e173]: Ranger work is currently grant funded, and grant cycles are shorter than the work. Losing ranger funding before commercial income is established is the single biggest risk to everything on this page.
+                  - paragraph [ref=f1e174]: Guesting, native foods, natural capital and fee-for-service land management are being built to carry the Rangers independently of grant rounds.
+              - group [ref=f1e175]:
+                - generic [ref=f1e176] [cursor=pointer]:
+                  - heading "Natural capital market volatility" [level=3] [ref=f1e177]
+                  - generic [aria-hidden] [ref=f1e178]: +
+        - generic [ref=f1e179]:
+          - generic [ref=f1e180]:
+            - paragraph [ref=f1e182]: The Rangers
+            - heading "Iningai Rangers" [level=2] [ref=f1e183]
+            - paragraph [ref=f1e184]: Rangers run fire-stick farming, the fencing, the seed collection, the spring and wetland restoration, the weed and feral control, the machinery and the site protection. Ranger workplans set the year's work across the property. Training partnerships are being built so the jobs here can be filled from community.
+          - generic [ref=f1e186]:
+            - generic [ref=f1e187]:
+              - paragraph [ref=f1e188]:
+                - generic [ref=f1e189]: 01 / 07
+              - paragraph [ref=f1e190]: Drag →
+            - list [ref=f1e192]:
+              - listitem [ref=f1e193]:
+                - button "View ranger profile — Out on Country" [ref=f1e194] [cursor=pointer]:
+                  - generic [ref=f1e195]:
+                    - img "Out on Country" [ref=f1e196]
+                    - paragraph [aria-hidden] [ref=f1e198]: View profile →
+                  - paragraph [ref=f1e199]: "[ name held ]"
+                  - paragraph [ref=f1e200]: Out on Country
+              - listitem [ref=f1e201]:
+                - button "View ranger profile — Showing plants to a visiting group" [ref=f1e202] [cursor=pointer]:
+                  - generic [ref=f1e203]:
+                    - img "Showing plants to a visiting group" [ref=f1e204]
+                    - paragraph [aria-hidden] [ref=f1e206]: View profile →
+                  - paragraph [ref=f1e207]: "[ name held ]"
+                  - paragraph [ref=f1e208]: Showing plants to a visiting group
+              - listitem [ref=f1e209]:
+                - button "View ranger profile — Nursery work under shade cloth" [ref=f1e210] [cursor=pointer]:
+                  - generic [ref=f1e211]:
+                    - img "Nursery work under shade cloth" [ref=f1e212]
+                    - paragraph [aria-hidden] [ref=f1e214]: View profile →
+                  - paragraph [ref=f1e215]: "[ name held ]"
+                  - paragraph [ref=f1e216]: Nursery work under shade cloth
+              - listitem [ref=f1e217]:
+                - button "View ranger profile — Seedlings into trays" [ref=f1e218] [cursor=pointer]:
+                  - generic [ref=f1e219]:
+                    - img "Seedlings into trays" [ref=f1e220]
+                    - paragraph [aria-hidden] [ref=f1e222]: View profile →
+                  - paragraph [ref=f1e223]: "[ name held ]"
+                  - paragraph [ref=f1e224]: Seedlings into trays
+              - listitem [ref=f1e225]:
+                - button "View ranger profile — Seed collecting in the scrub" [ref=f1e226] [cursor=pointer]:
+                  - generic [ref=f1e227]:
+                    - img "Seed collecting in the scrub" [ref=f1e228]
+                    - paragraph [aria-hidden] [ref=f1e230]: View profile →
+                  - paragraph [ref=f1e231]: "[ name held ]"
+                  - paragraph [ref=f1e232]: Seed collecting in the scrub
+              - listitem [ref=f1e233]:
+                - button "View ranger profile — Walking the country" [ref=f1e234] [cursor=pointer]:
+                  - generic [ref=f1e235]:
+                    - img "Walking the country" [ref=f1e236]
+                    - paragraph [aria-hidden] [ref=f1e238]: View profile →
+                  - paragraph [ref=f1e239]: "[ name held ]"
+                  - paragraph [ref=f1e240]: Walking the country
+              - listitem [ref=f1e241]:
+                - generic [ref=f1e242]:
+                  - paragraph [ref=f1e244]: 1.82.1 — at the escarpment. Not yet gathered.
+                  - paragraph [ref=f1e245]: "[ name held ]"
+                  - paragraph [ref=f1e246]: At the escarpment
+        - generic [ref=f1e250]:
+          - paragraph [ref=f1e251]: The spring · Stream 02
+          - paragraph [ref=f1e252]: One spring had been trampled flat by a century of stock. Rangers cleaned the waterhole out, planted grasses around it and carted a thousand litres to it twice a day through drought.
+          - generic [ref=f1e253]:
+            - paragraph [ref=f1e254]: Day
+            - generic [ref=f1e255]:
+              - paragraph [aria-hidden] [ref=f1e256]: "0"
+              - generic [ref=f1e257]:
+                - paragraph [ref=f1e258]: "1"
+                - paragraph [ref=f1e259]: "2"
+                - paragraph [ref=f1e260]: "3"
+                - paragraph [ref=f1e261]: "4"
+                - paragraph [ref=f1e262]: "5"
+                - paragraph [ref=f1e263]: "6"
+                - paragraph [ref=f1e264]: "7"
+                - paragraph [ref=f1e265]: "8"
+            - paragraph [ref=f1e267]: Of eight
+          - generic [ref=f1e268]:
+            - paragraph [ref=f1e269]: On release
+            - paragraph [ref=f1e270]: Eight days in it held a puddle. The next morning there was a koala standing at it.
+          - paragraph [ref=f1e271]: ◇ Stand-in · 1.87.1 the dry creek — the restored waterhole holding water has never been photographed
+        - generic [ref=f1e273]:
+          - paragraph [ref=f1e274]: The work
+          - heading "The work" [level=2] [ref=f1e275]
+          - paragraph [ref=f1e276]: What Rangers do on the ground. Seven streams, running at once, all year.
+          - generic [ref=f1e277]:
+            - article [ref=f1e278]:
+              - generic [ref=f1e279]:
+                - paragraph [ref=f1e280]: "01"
+                - generic [ref=f1e281]:
+                  - heading "Fire-stick farming" [level=3] [ref=f1e282]
+                  - paragraph [ref=f1e283]: Low-intensity fire-stick farming at the right time of year — reducing fuel loads, encouraging germination and breaking Country into a patchwork that carries more life than unburnt or hot-burnt ground.
+                  - paragraph [ref=f1e284]: "Rangers practise fire-stick farming and look for black ash rather than scorched ground. It runs as workshops as well as work, so more people come off them able to do it. Soil is tested before and after: carbon here began only 30 centimetres down, and one paddock was recorded working as a carbon sink within eight to nine months of a burn."
+            - article [ref=f1e286]:
+              - generic [ref=f1e287]:
+                - paragraph [ref=f1e288]: "02"
+                - generic [ref=f1e289]:
+                  - heading "Springs and waterholes" [level=3] [ref=f1e290]
+                  - paragraph [ref=f1e291]: Bringing cultural wetlands and spring networks back to holding water on their own.
+                  - paragraph [ref=f1e292]: The spring above is one of them.
+            - article [ref=f1e294]:
+              - generic [ref=f1e295]:
+                - paragraph [ref=f1e296]: "03"
+                - generic [ref=f1e297]:
+                  - heading "Seed and groundcover" [level=3] [ref=f1e298]
+                  - paragraph [ref=f1e299]: Collecting seed when Country produces it, holding it, and putting it back into revegetation.
+                  - paragraph [ref=f1e300]: Seed is available when the season decides, not when a work plan says so, which is why the year is organised around the country rather than the other way round.
+            - article [ref=f1e302]:
+              - generic [ref=f1e303]:
+                - paragraph [ref=f1e304]: "04"
+                - generic [ref=f1e305]:
+                  - heading "Fencing and paddocks" [level=3] [ref=f1e306]
+                  - paragraph [ref=f1e307]: New fencing built corner assembly by corner assembly, giving paddocks that can be managed separately.
+                  - paragraph [ref=f1e308]: Rangers built it themselves, learning the job as it went. It turned out to matter more than expected — without separate paddocks the flux tower comparison would not have been possible.
+            - article [ref=f1e310]:
+              - generic [ref=f1e311]:
+                - paragraph [ref=f1e312]: "05"
+                - generic [ref=f1e313]:
+                  - heading "Weeds and feral animals" [level=3] [ref=f1e314]
+                  - paragraph [ref=f1e315]: Continuous control targeted at the places doing the most damage — waterholes, regrowth and rock shelters.
+                  - paragraph [ref=f1e316]: Control is ongoing rather than a one-off campaign, and it runs alongside the restoration work rather than separately from it.
+            - article [ref=f1e318]:
+              - generic [ref=f1e319]:
+                - paragraph [ref=f1e320]: "06"
+                - generic [ref=f1e321]:
+                  - heading "Sites and access" [level=3] [ref=f1e322]
+                  - paragraph [ref=f1e323]: Protecting Marra Wonga and the other recorded sites, and controlling how people reach them.
+                  - paragraph [ref=f1e324]: Road alignments were set from cultural mapping so routes work around sites rather than through them. Access is guided. Ecological and cultural mapping of the property tells us what is where and what must not be disturbed.
+                  - paragraph [ref=f1e327]: What stays here
+            - article [ref=f1e329]:
+              - generic [ref=f1e330]:
+                - paragraph [ref=f1e331]: "07"
+                - generic [ref=f1e332]:
+                  - heading "Monitoring" [level=3] [ref=f1e333]
+                  - paragraph [ref=f1e334]: Recording what is here and what changes, so management decisions and credit claims both rest on evidence.
+                  - paragraph [ref=f1e335]: Four acoustic recorders log birds and frogs into a database held with QUT, two of them down at the springs. Cameras on the towers photograph five hundred metres around, tracking vegetation and flowering through the year. Soil samples from the bore are held by QUT.
+        - generic [ref=f1e338]:
+          - paragraph [ref=f1e339]: Infrastructure
+          - heading "Infrastructure and technology" [level=2] [ref=f1e340]
+          - paragraph [ref=f1e341]: What it takes to run a property 120 kilometres from the nearest town.
+          - generic [ref=f1e343]:
+            - complementary [ref=f1e344]:
+              - paragraph [ref=f1e345]: What it takes
+              - list [ref=f1e346]:
+                - listitem [ref=f1e347]: 01 Communications
+                - listitem [ref=f1e349]: 02 Water
+                - listitem [ref=f1e351]: 03 Power
+                - listitem [ref=f1e352]: 04 Monitoring gear
+                - listitem [ref=f1e353]: 05 Machinery
+                - listitem [ref=f1e354]: 06 Coming
+            - generic [ref=f1e355]:
+              - generic [ref=f1e356]:
+                - paragraph [ref=f1e357]: "01"
+                - heading "Communications" [level=3] [ref=f1e358]
+                - list [ref=f1e359]:
+                  - listitem [ref=f1e360]: Starlink uplink bridged to an external router
+                  - listitem [ref=f1e361]: Wifi mesh — three extenders plus one in the campground
+                  - listitem [ref=f1e362]: UHF radio in the house, the shed and nearly every vehicle
+                  - listitem [ref=f1e363]: About ten UHF handhelds, roughly 5km range from the house
+                - paragraph [ref=f1e364]: Direct-to-handset satellite messaging is expected to change this within a couple of years.
+              - generic [ref=f1e365]:
+                - paragraph [ref=f1e366]: "02"
+                - heading "Water" [level=3] [ref=f1e367]
+                - list [ref=f1e368]:
+                  - listitem [ref=f1e369]: 480-metre bore at Lancewood Ridge
+                  - listitem [ref=f1e370]: Tanks, pumps and lines across the property
+                  - listitem [ref=f1e371]: Filters on a six-month replacement cycle
+                  - listitem [ref=f1e372]: Stock, camp, nursery and firefighting water off one system
+              - generic [ref=f1e373]:
+                - paragraph [ref=f1e374]: "03"
+                - heading "Power" [level=3] [ref=f1e375]
+                - list [ref=f1e376]:
+                  - listitem [ref=f1e377]: Solar with wifi-enabled regulators
+                  - listitem [ref=f1e378]: Data can be pulled off the regulators remotely
+                  - listitem [ref=f1e379]: 240 volt supply to the mesh network
+                - paragraph [ref=f1e380]: Renewable self-sufficiency is a Stage 4 goal.
+              - generic [ref=f1e381]:
+                - paragraph [ref=f1e382]: "04"
+                - heading "Monitoring gear" [level=3] [ref=f1e383]
+                - list [ref=f1e384]:
+                  - listitem [ref=f1e385]: Two flux towers — managed Country and grazed control
+                  - listitem [ref=f1e386]: Four acoustic recorders, two at the springs
+                  - listitem [ref=f1e387]: Cameras on the towers, 500m radius
+                  - listitem [ref=f1e388]: Soil samples every six metres from the bore, held with QUT
+              - generic [ref=f1e389]:
+                - paragraph [ref=f1e390]: "05"
+                - heading "Machinery" [level=3] [ref=f1e391]
+                - list [ref=f1e392]:
+                  - listitem [ref=f1e393]: Grader, buggies, vehicles and heavy plant
+                  - listitem [ref=f1e394]: Serviced, repaired and rebuilt on site
+                  - listitem [ref=f1e395]: Register down to serial and filter numbers
+                  - listitem [ref=f1e396]: Service history with hours and kilometres, updated every visit
+                - paragraph [ref=f1e397]: The register is the reason a town run can be planned in one trip.
+              - generic [ref=f1e398]:
+                - paragraph [ref=f1e399]: "06"
+                - heading "Coming" [level=3] [ref=f1e400]
+                - list [ref=f1e401]:
+                  - listitem [ref=f1e402]: Secure Ranger Base
+                  - listitem [ref=f1e403]: Research facilities and nurseries
+                  - listitem [ref=f1e404]: Walking tracks and camping facilities
+                  - listitem [ref=f1e405]: Staff housing
+        - generic [ref=f1e409]:
+          - paragraph [ref=f1e410]: What it adds up to
+          - heading "What the work produces" [level=2] [ref=f1e411]
+          - paragraph [ref=f1e412]: The same activities, measured.
+          - paragraph [ref=f1e413]: The work has to pay for itself, and it has to be recognised. Every one of these rests on evidence the rangers are already collecting — and not one of them is finished.
+          - generic [ref=f1e415]:
+            - generic [ref=f1e416]:
+              - paragraph [ref=f1e417]: Two flux towers — managed Country and a grazed control · soil samples every six metres
+              - generic [ref=f1e419]:
+                - generic [aria-hidden] [ref=f1e420]: Biological Sequestration
+                - generic [ref=f1e421]: Biological Sequestration
+                - generic [ref=f1e423]: Biological Sequestration
+              - generic [ref=f1e427]:
+                - paragraph [ref=f1e428]: Two flux towers and soil testing underpin a carbon farming project. Fire-stick farming is the practice being measured.
+                - paragraph [ref=f1e430]: Registration underway
+            - generic [ref=f1e431]:
+              - paragraph [ref=f1e432]: Four acoustic recorders, two at the springs · cameras on the towers, 500m radius
+              - generic [ref=f1e434]:
+                - generic [aria-hidden] [ref=f1e435]: Biodiversity credits
+                - generic [ref=f1e436]: Biodiversity credits
+                - generic [ref=f1e438]: Biodiversity credits
+              - generic [ref=f1e442]:
+                - paragraph [ref=f1e443]: Species of significance are being identified and monitored. The same data that guides management underpins any credit work.
+                - paragraph [ref=f1e445]: Building the record
+            - generic [ref=f1e446]:
+              - paragraph [ref=f1e447]: The cultural heritage survey · the Four Rivers People Native Title claim
+              - generic [ref=f1e449]:
+                - generic [aria-hidden] [ref=f1e450]: IPA designation
+                - generic [ref=f1e451]: IPA designation
+                - generic [ref=f1e453]: IPA designation
+              - generic [ref=f1e457]:
+                - paragraph [ref=f1e458]: Indigenous Protected Area status for Turraburra, alongside National and World Heritage applications and the Four Rivers People Native Title claim.
+                - paragraph [ref=f1e460]: In progress
+            - generic [ref=f1e461]:
+              - paragraph [ref=f1e462]: The rangers’ own skills · fire-stick farming, heritage and land management
+              - generic [ref=f1e464]:
+                - generic [aria-hidden] [ref=f1e465]: Fee-for-service
+                - generic [ref=f1e466]: Fee-for-service
+                - generic [ref=f1e468]: Fee-for-service
+              - generic [ref=f1e472]:
+                - paragraph [ref=f1e473]: Ranger skills offered to neighbouring properties — fire-stick farming, land management and cultural heritage advice.
+                - paragraph [ref=f1e475]: Being developed
+            - generic [ref=f1e476]:
+              - paragraph [ref=f1e477]: Nothing yet — the body is still to be written
+              - generic [ref=f1e479]:
+                - generic [aria-hidden] [ref=f1e480]: Rainbow Credits
+                - generic: Rainbow Credits
+                - generic [ref=f1e481]: Rainbow Credits
+              - generic [ref=f1e483]:
+                - paragraph [ref=f1e484]: "Integrating environmental and traditional land management into a single natural-capital product. Needs describing in your words: what it is, what is measured, who it is for, and where it sits with the Rainbow Foundation."
+                - paragraph [ref=f1e486]: For YACHATDAC to write
+          - paragraph [ref=f1e487]: Status labels to be confirmed before publishing.
+        - generic [ref=f1e490]:
+          - paragraph [ref=f1e491]: Get involved
+          - heading "Ancient traditions walking together with contemporary visions" [level=2] [ref=f1e492]
+          - paragraph [ref=f1e493]: Ranger exchange, funding the work, and land management services for properties in the district.
+          - generic [ref=f1e494]:
+            - article [ref=f1e495]:
+              - paragraph [ref=f1e497]: For other ranger groups
+              - heading "Ranger exchange" [level=3] [ref=f1e499]
+              - paragraph [ref=f1e500]: On-Country training camps and exchanges with other First Nations ranger groups.
+              - link "Get in touch →" [ref=f1e501] [cursor=pointer]:
+                - /url: /connect
+            - article [ref=f1e502]:
+              - paragraph [ref=f1e504]: For funders and partners
+              - heading "Fund the work" [level=3] [ref=f1e506]
+              - paragraph [ref=f1e507]: Ranger wages, water infrastructure, monitoring equipment and restoration. What is needed is specific and can be costed.
+              - link "Partner with us →" [ref=f1e508] [cursor=pointer]:
+                - /url: /connect
+            - article [ref=f1e509]:
+              - paragraph [ref=f1e511]: For properties in the district
+              - heading "Land management services" [level=3] [ref=f1e513]
+              - paragraph [ref=f1e514]: Fire-stick farming, cultural heritage advice and Country management for properties in the district.
+              - link "Enquire →" [ref=f1e515] [cursor=pointer]:
+                - /url: /connect
+          - generic [ref=f1e517]:
+            - generic [ref=f1e518]: Get the work in your inbox
+            - generic [ref=f1e519]:
+              - textbox "Get the work in your inbox" [ref=f1e520]:
+                - /placeholder: Your email address
+              - button "Subscribe →" [ref=f1e521]
+            - paragraph [ref=f1e522]: Occasional updates from Country. No more than that.
+  - contentinfo [ref=f1e523]:
+    - generic [ref=f1e524]:
+      - generic [ref=f1e525]:
+        - heading "Acknowledgement of Country" [level=2] [ref=f1e526]
+        - paragraph [ref=f1e527]: Welcome to Country wording to be provided by Suzanne Thompson before launch.
+      - generic [ref=f1e528]:
+        - generic [ref=f1e529]:
+          - heading "Wonder" [level=2] [ref=f1e530]
+          - list [ref=f1e531]:
+            - listitem [ref=f1e532]:
+              - link "Guesting on Country" [ref=f1e533] [cursor=pointer]:
+                - /url: /wonder#experience
+            - listitem [ref=f1e534]:
+              - link "About Turraburra" [ref=f1e535] [cursor=pointer]:
+                - /url: /wonder#turraburra
+            - listitem [ref=f1e536]:
+              - link "Stories" [ref=f1e537] [cursor=pointer]:
+                - /url: /resources?type=story
+            - listitem [ref=f1e538]:
+              - link "Documents & reports" [ref=f1e539] [cursor=pointer]:
+                - /url: /resources#documents
+        - generic [ref=f1e540]:
+          - heading "Truth" [level=2] [ref=f1e541]
+          - list [ref=f1e542]:
+            - listitem [ref=f1e543]:
+              - link "What's Been Researched" [ref=f1e544] [cursor=pointer]:
+                - /url: /truth#researched
+            - listitem [ref=f1e545]:
+              - link "Open Research Opportunities" [ref=f1e546] [cursor=pointer]:
+                - /url: /truth#opportunities
+            - listitem [ref=f1e547]:
+              - link "The Cultural Knowledge Precinct" [ref=f1e548] [cursor=pointer]:
+                - /url: /truth#precinct
+            - listitem [ref=f1e549]:
+              - link "Partner with Us" [ref=f1e550] [cursor=pointer]:
+                - /url: /truth#partner
+        - generic [ref=f1e551]:
+          - heading "Living Work" [level=2] [ref=f1e552]
+          - list [ref=f1e553]:
+            - listitem [ref=f1e554]:
+              - link "The Iningai Rangers" [ref=f1e555] [cursor=pointer]:
+                - /url: /living-work#rangers
+            - listitem [ref=f1e556]:
+              - link "Caring for Country in Practice" [ref=f1e557] [cursor=pointer]:
+                - /url: /living-work#streams
+            - listitem [ref=f1e558]:
+              - link "How We Built This" [ref=f1e559] [cursor=pointer]:
+                - /url: /living-work#infrastructure
+        - generic [ref=f1e560]:
+          - heading "About" [level=2] [ref=f1e561]
+          - list [ref=f1e562]:
+            - listitem [ref=f1e563]:
+              - link "About YACHATDAC" [ref=f1e564] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f1e565]:
+              - link "Our people" [ref=f1e566] [cursor=pointer]:
+                - /url: /our-people
+            - listitem [ref=f1e567]:
+              - link "Partnerships" [ref=f1e568] [cursor=pointer]:
+                - /url: /partnerships
+            - listitem [ref=f1e569]:
+              - link "About Turraburra" [ref=f1e570] [cursor=pointer]:
+                - /url: /wonder#turraburra
+            - listitem [ref=f1e571]:
+              - link "Resources" [ref=f1e572] [cursor=pointer]:
+                - /url: /resources
+        - generic [ref=f1e573]:
+          - heading "Resources" [level=2] [ref=f1e574]
+          - list [ref=f1e575]:
+            - listitem [ref=f1e576]:
+              - link "Stories" [ref=f1e577] [cursor=pointer]:
+                - /url: /resources?type=story
+            - listitem [ref=f1e578]:
+              - link "News / Updates" [ref=f1e579] [cursor=pointer]:
+                - /url: /resources?type=update
+            - listitem [ref=f1e580]:
+              - link "Downloads" [ref=f1e581] [cursor=pointer]:
+                - /url: /resources#documents
+            - listitem [ref=f1e582]:
+              - link "Videos / Podcast" [ref=f1e583] [cursor=pointer]:
+                - /url: /resources?type=Recording
+      - generic [ref=f1e584]:
+        - paragraph [ref=f1e585]: Yambangku Aboriginal Cultural Heritage & Tourism Development Aboriginal Corporation
+        - list [ref=f1e586]:
+          - listitem [ref=f1e587]: © YACHATDAC
+          - listitem [ref=f1e588]:
+            - link "Privacy Policy" [ref=f1e589] [cursor=pointer]:
+              - /url: /legal/privacy
+          - listitem [ref=f1e590]:
+            - link "Terms of Service" [ref=f1e591] [cursor=pointer]:
+              - /url: /legal/terms
+          - listitem [ref=f1e592]:
+            - link "Cookie Settings" [ref=f1e593] [cursor=pointer]:
+              - /url: /legal/cookies
+  - button "Open Next.js Dev Tools" [ref=f1e599] [cursor=pointer]
