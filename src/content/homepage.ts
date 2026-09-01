@@ -331,8 +331,10 @@ export const wayForward = {
  */
 export const welcomeToCountry = {
   status: "awaiting-suzanne" as const,
+  /* The hi-fi footer's own hold wording (2137:2623) — rendered verbatim,
+     brackets included, so the hold cannot be mistaken for copy. */
   placeholder:
-    "Welcome to Country wording to be provided by Suzanne Thompson before launch.",
+    "[ WELCOME TO COUNTRY — held. The wording comes from Suzanne Thompson and has not been supplied. ⚠ R1 — do not draft, paraphrase or place substitute text here. ]",
 };
 
 /**

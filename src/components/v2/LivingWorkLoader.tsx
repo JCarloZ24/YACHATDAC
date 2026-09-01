@@ -132,10 +132,19 @@ export function LivingWorkLoader() {
         svg.style.height = "auto";
         svg.style.display = "block";
 
+        const els = Array.from(svg.querySelectorAll<SVGGraphicsElement>("path"));
+        // Hide BEFORE measuring. getBBox() below forces a style flush, and if
+        // the dots are still visible at that flush, hiding them afterwards
+        // with a transition attached fades the whole artwork out on screen —
+        // the "everything flashed fully lit" artefact. Opacity doesn't affect
+        // geometry, so measuring hidden dots is safe. The transition is only
+        // attached later, once everything is already hidden.
+        els.forEach((el) => {
+          el.style.opacity = "0";
+        });
+
         type Dot = { el: SVGGraphicsElement; x: number; y: number };
-        const dots: Dot[] = Array.from(
-          svg.querySelectorAll<SVGGraphicsElement>("path"),
-        ).map((el) => {
+        const dots: Dot[] = els.map((el) => {
           const b = el.getBBox();
           return { el, x: b.x + b.width / 2, y: b.y + b.height / 2 };
         });
@@ -194,7 +203,6 @@ export function LivingWorkLoader() {
         }
 
         ordered.forEach((d) => {
-          d.el.style.opacity = "0";
           d.el.style.transition = "opacity 0.25s ease-out";
         });
         dotsRef.current = ordered.map((d) => d.el);
@@ -217,16 +225,29 @@ export function LivingWorkLoader() {
     if (!shouldShow.current) return;
     let frame = 0;
     let lit = 0;
+    // Cursor for the per-dot cascade: each dot's fade-in begins strictly
+    // after the previous dot's, however many light in one frame.
+    let lightAt = 0;
     const started = performance.now();
     const step = () => {
       const dots = dotsRef.current;
       if (dots.length) {
         // Full sweep takes at least ~1.5s (90 frames) whatever the cache.
         const maxStep = Math.max(1, Math.ceil(dots.length / 90));
+        // Spacing between consecutive dots so the whole run of dots still
+        // paces to the same ~1.5s sweep — the flow moves dot per dot, never
+        // a frame's batch switching on together.
+        const perDotMs = 1500 / dots.length;
         const target = Math.floor(displayRef.current * dots.length);
         if (lit < target) {
+          const now = performance.now();
+          if (lightAt < now) lightAt = now;
           const next = Math.min(target, lit + maxStep);
-          for (let i = lit; i < next; i++) dots[i].style.opacity = "1";
+          for (let i = lit; i < next; i++) {
+            dots[i].style.transitionDelay = `${Math.max(0, lightAt - now)}ms`;
+            dots[i].style.opacity = "1";
+            lightAt += perDotMs;
+          }
           lit = next;
         }
         if (lit >= dots.length && displayRef.current >= 1) {

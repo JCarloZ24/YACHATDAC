@@ -12,6 +12,7 @@ import {
   quietArrival,
   stickyStreams,
   vessels,
+  whatItTakes,
 } from "@/lib/motion/recipes";
 
 /**
@@ -29,6 +30,7 @@ import {
  *   §04 rangers     media       100vh   ⚡4   → rest
  *   §05 spring      media       150vh   ⚡5   pinned · snapped
  *   §06 streams     media       360vh   ⚡3
+ *   §07 infra       none        160vh   ⚡2   the index lights, two at a time
  *   §07b breath     none         47vh   ⚡1   the hold
  *   §08 outputs     none        120vh   ⚡2
  *   §09 invitation  type        100vh   ⚡2
@@ -62,11 +64,12 @@ export function V2LivingWorkMotion() {
       wire(find("challenges"), (el) =>
         // bone → dust → dry earth. The ground dries out while the section is
         // read, because the section is about drought and erosion.
-        clusterDescent(el, ["#f6f6ec", "#e3dcc9", "#c9b79a", "#8a7455"], 330),
+        clusterDescent(el, ["#e0d4bd", "#c9b79a", "#8a7455"], 330),
       );
       wire(find("rangers"), (el) => fullBleedOpen(el, 100));
       wire(find("spring"), (el) => pinnedCount(el, 150));
       wire(find("streams"), (el) => stickyStreams(el, 360));
+      wire(find("infrastructure"), (el) => whatItTakes(el, 160));
       wire(find("breath"), (el) => breath(el, 47));
       wire(find("outputs"), (el) => vessels(el, 120));
       wire(find("invitation"), (el) => quietArrival(el, 100));

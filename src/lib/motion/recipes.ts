@@ -447,6 +447,10 @@ export function clusterDescent(
       // header never appears at all.
       const titles = qa(root, "[data-handoff-title]");
       if (titles.length) gsap.set(titles, { display: "none" });
+      // With the duplicate header gone, the section's own top padding is dead
+      // air between §02's landed heading and the lede — drop it while motion
+      // runs so the lede begins right under the standing title.
+      gsap.set(root, { paddingTop: 0 });
       // The pinned scene above ends with the landed heading standing alone in
       // an emptied theater. Pull this section up so its content begins just
       // below that heading the moment the pin releases — the overlap only
@@ -466,7 +470,9 @@ export function clusterDescent(
           const g = ghost.getBoundingClientRect();
           const p = pinned.getBoundingClientRect();
           const headingBottom = g.top - p.top + g.height;
-          // Land the section's top a breath under the standing heading.
+          // Land the section's top a breath under the standing heading. The
+          // cap is the invariant: the section's opaque ground must never ride
+          // up over the heading while §02 is still pinned.
           pullUp = Math.max(
             pullUp,
             overhang + window.innerHeight - headingBottom - 24,
@@ -486,68 +492,75 @@ export function clusterDescent(
       // reopen by hand. The programmatic open fires the same `toggle` event
       // the motion script debounces into a ScrollTrigger.refresh.
       //
-      // "top 42%": the reading gaze rests in the upper-middle of the screen,
-      // not at its bottom edge. Triggering there means the row unfolds right
-      // under the line the reader is actually looking at — an earlier trigger
-      // opens rows off in peripheral vision at the fold, and the reader only
-      // ever meets them already expanded.
+      // "top 30%": the row has to be carried well up the screen before it
+      // gives its answer — opening takes scroll effort, so the reveal reads
+      // as earned rather than ambient, and the row unfolds right under the
+      // line the reader is actually looking at.
       //
-      // Opens are SERIALIZED through one queue: a fast scroll can carry
-      // several rows across the line in a single frame, and opening them all
-      // at once both hides the expand animation and dumps every answer on the
-      // reader together. One row unfolds, holds a beat, then the next —
-      // accumulating, which is this page's verb. The 650ms spacing is the
-      // 450ms ::details-content transition plus a breath.
-      const queue: HTMLDetailsElement[] = [];
-      let draining = false;
-      const drain = () => {
-        const next = queue.shift();
-        if (!next) {
-          draining = false;
-          return;
-        }
-        draining = true;
-        next.open = true;
-        window.setTimeout(drain, 650);
-      };
       // The markup ships each band's first row open (the rest state, and what
       // no-JS and reduced motion read). In motion that pre-open would show
       // rows further down the page already expanded before the reader gets
-      // there — so every row starts closed here, and ALL opens run through
-      // the queue, strictly in reading order.
+      // there — so every row starts closed here and opens the moment it
+      // crosses the line; the CSS transition alone paces the unfold.
       qa<HTMLDetailsElement>(root, "details[data-line]").forEach((row) => {
         row.open = false;
         ScrollTrigger.create({
           trigger: row,
-          start: "top 42%",
+          start: "top 30%",
           once: true,
           onEnter: () => {
-            queue.push(row);
-            if (!draining) drain();
+            row.open = true;
           },
         });
       });
 
       // The landscape that splits the bands — "the world opening": the frame's
-      // letterbox clip opens across its own approach, so the escarpment is
-      // revealed rather than simply sitting there, and the caption settles in
-      // as the frame completes. Grade-aware: at `frame` grade the image plane
+      // letterbox clip opens as the frame approaches, and the caption settles
+      // in as it completes. Grade-aware: at `frame` grade the image plane
       // itself holds still (the world moves, the record holds) — the clip is
       // the only thing that animates, so scale is pinned to 1.
+      //
+      // Time-based, NOT scrubbed: the accordion rows above reflow the page as
+      // they open, which moves this frame's trigger under a scrub and made
+      // the half-open clip snap back and forth with every reflow. Instead the
+      // open plays on enter and reverses on leaving back up — but ONLY on a
+      // real upward scroll: a row opening above pushes the frame back down
+      // across the line without the reader moving, and that phantom exit
+      // must not close the world again. "top 60%" so the frame is properly
+      // on screen before it opens.
       qa(root, "[data-frame]").forEach((frame) => {
         const caption = frame.parentElement?.querySelector<HTMLElement>(
           "[data-frame-caption]",
         );
         const sub = gsap.timeline({
-          scrollTrigger: {
-            trigger: frame,
-            start: "top 85%",
-            end: "top 20%",
-            scrub: SCRUB.normal,
+          paused: true,
+          defaults: { ease: EASE.country },
+        });
+        // Not a boundary trigger: a row opening above reflows the page and
+        // moves the frame across the line with the reader standing still, and
+        // ScrollTrigger's enter/leaveBack crossings both misfire on that (the
+        // refresh consumes the crossing, so a later real scroll-up finds
+        // nothing left to reverse). Instead every scroll update re-derives
+        // the state from live geometry plus the REAL scroll delta: past the
+        // line, the frame opens (or stays open through a reflow, delta 0);
+        // above it on a genuine upward scroll, it closes.
+        let lastY = window.scrollY;
+        ScrollTrigger.create({
+          start: 0,
+          end: "max",
+          onUpdate: () => {
+            const y = window.scrollY;
+            const dir = y > lastY ? 1 : y < lastY ? -1 : 0;
+            lastY = y;
+            const past =
+              frame.getBoundingClientRect().top < window.innerHeight * 0.6;
+            if (past) {
+              if (dir >= 0) sub.play();
+            } else if (dir === -1) sub.reverse();
           },
         });
         sub.frameOpen(frame, {
-          duration: 1,
+          duration: 1.2,
           ...(frame.dataset.motion === "frame" ? { scale: 1 } : {}),
         });
         if (caption) {
@@ -704,6 +717,98 @@ export function stickyStreams(root: HTMLElement, span = 360): MotionModule {
 }
 
 /* -------------------------------------------------------------------------
+   05b — whatItTakes
+   ------------------------------------------------------------------------- */
+
+/**
+ * Infrastructure, what it takes. Hi-fi §07.
+ *
+ * Twenty-three facts met four to eight at a time: the two-column grid passes in
+ * rows, and the sticky WHAT IT TAKES index lights the pair whose row is on
+ * screen — the hi-fi marks its items LIT, two at a time, which is why this
+ * cannot be the one-at-a-time `stickyIndex` effect. Sticky, not pinned: the
+ * page's one pin stays at §05, and the index's own `position: sticky` does the
+ * staying — motion only moves the light.
+ *
+ * Lighting follows the rows' real positions (per-row triggers), not an even
+ * split of the span — the blocks are different heights and an even split drifts
+ * off them by the third row. Two-way, unlike an entrance: the light is an
+ * index, and an index that stops tracking on scroll-up is lying.
+ *
+ * Loud channel: NONE. A ledger of serial numbers and filter cycles holds
+ * still; the blocks arrive once and the only thing that moves after that is
+ * the light in the margin.
+ *
+ * Markup:
+ *   [data-index-item]   the index rows; each carries [data-index-bar]
+ *   [data-infra-block]  the fact blocks, in index order, gridded in pairs
+ */
+export function whatItTakes(root: HTMLElement, span = 160): MotionModule {
+  return composition("whatItTakes", root, {
+    channel: "none",
+    span,
+    uses: ["arrive"],
+    build: () => {
+      const items = qa(root, "[data-index-item]");
+      const blocks = qa(root, "[data-infra-block]");
+      if (!items.length || !blocks.length) return;
+
+      // Rest classes light the first pair (the wireframe's frame). Motion owns
+      // the light from here: normalise every item to the dimmed state and let
+      // setRow re-light — clearAll on revert restores the rest classes.
+      const bars = items.map((item) =>
+        item.querySelector<HTMLElement>("[data-index-bar]"),
+      );
+      const light = (i: number, on: boolean) => {
+        gsap.to(items[i], {
+          opacity: on ? 1 : 0.3,
+          duration: DUR.small,
+          ease: EASE.quiet,
+        });
+        if (bars[i]) {
+          gsap.to(bars[i], {
+            scaleY: on ? 1 : 0,
+            duration: DUR.small,
+            ease: EASE.quiet,
+          });
+        }
+      };
+      const rows = Math.ceil(blocks.length / 2);
+      let current = 0;
+      const setRow = (r: number) => {
+        const next = Math.max(0, Math.min(rows - 1, r));
+        if (next === current) return;
+        current = next;
+        items.forEach((_, i) => light(i, Math.floor(i / 2) === next));
+      };
+
+      gsap.set(items.slice(2), { opacity: 0.3 });
+      bars.slice(2).forEach((bar) => bar && gsap.set(bar, { scaleY: 0 }));
+
+      // One trigger per grid row, on the row's first block. "top 45%" is the
+      // reading line — the light moves when the pair reaches where the reader
+      // is actually looking, same reasoning as §03's accordion trigger.
+      blocks.forEach((block, i) => {
+        if (i % 2 !== 0) return;
+        const row = i / 2;
+        if (row === 0) return; // row 0 is the rest state; rows hand back to it
+        ScrollTrigger.create({
+          trigger: block,
+          start: "top 45%",
+          onEnter: () => setRow(row),
+          onLeaveBack: () => setRow(row - 1),
+        });
+      });
+    },
+    enter: (tl) => {
+      const blocks = qa(root, "[data-infra-block]");
+      if (blocks.length) tl.arrive(blocks, { duration: DUR.medium, stagger: 0.12 });
+    },
+    cut: clearAll,
+  });
+}
+
+/* -------------------------------------------------------------------------
    06 — breath
    ------------------------------------------------------------------------- */
 
@@ -739,46 +844,120 @@ export function breath(root: HTMLElement, span = 47): MotionModule {
    ------------------------------------------------------------------------- */
 
 /**
- * What the work produces. Hi-fi §08.
+ * What the work produces. Hi-fi §08, motion spec "FOUR WORDS FILL, ONE NEVER
+ * DOES".
  *
  * Five vessels, four filling — 78%, 58%, 42%, 26%, and one at 0% that has not
  * started. The fifth staying empty is the honest part of the section.
  *
- * Loud channel: NONE declared, because nothing here takes the screen: the marks
- * are small and the movement is proportional. The section's weight comes from
- * what it says, which is the correct answer for a page's final claim.
+ * The spec's frames, amended by client direction (1–2 Sep): every word starts
+ * hollow; each fill sweeps left to right over 700ms, eased out, when its row
+ * passes 65% of the viewport, staggered 150ms apart. Each fill stops ON the
+ * line marker — the gold tick at data-fill% is the boundary, never crossed —
+ * and scrolling back REWINDS the sweep at its own tempo. Rainbow Credits, at
+ * 0%, has nothing to sweep and stays the hollow outline. The status blobs
+ * never animate: an unconfirmed claim should not perform (R14).
  *
- * ⚠ R14 — the regulatory status labels are an open risk. Copy comes from the
- * content file; this only moves the marks.
+ * Per-row triggers rather than one section entrance, so a reader who arrives
+ * mid-section still sees each word fill as they meet it; rows that share a
+ * screen cascade through one 150ms queue, which is the spec's own +0.0 / +0.15
+ * / +0.30 sequence. Two-way by direction: the play/reverse pair replaces X4's
+ * one-way rule for this screen, and a rewind (not a scrub) keeps the fill's
+ * tempo in both directions.
+ *
+ * Loud channel: NONE declared, because nothing here takes the screen: the
+ * movement is proportional and quiet. The section's weight comes from what it
+ * says, which is the correct answer for a page's final claim.
  *
  * Markup:
- *   [data-vessel]  each fill mark, carrying data-fill="78"
+ *   [data-vessel]       each vessel word, carrying data-fill="78"
+ *   [data-vessel-fill]  the clipped solid layer inside it (rest width = fill)
+ *   [data-vessel-track] the gold underline beside it, grown with the fill
  */
 export function vessels(root: HTMLElement, span = 120): MotionModule {
   return composition("vessels", root, {
     channel: "none",
     span,
-    uses: ["vesselFill", "arrive"],
-    // Nothing scrubs here. A fill that runs backwards as the reader scrolls up
-    // would read as the work being undone, which is the opposite of the claim.
-    build: () => {},
-    enter: (tl) => {
+    // Plain width/scale tweens, hand-rolled: `vesselFill` sweeps a mark to its
+    // proportional stop and cannot rewind — this screen fills whole and plays
+    // both ways.
+    uses: [],
+    build: () => {
       const marks = qa(root, "[data-vessel]");
-      const labels = qa(root, "[data-vessel-label]");
-      if (labels.length) tl.arrive(labels, { duration: DUR.medium }, 0);
-      if (marks.length) tl.vesselFill(marks, { duration: DUR.large }, 0.1);
-    },
-    cut: (el) => {
-      clearAll(el);
-      // Fills shown at their true proportions, statically. The figures are the
-      // content; only the animation of them is optional.
-      qa(el, "[data-vessel]").forEach((mark) => {
-        gsap.set(mark, {
-          scaleX: Number(mark.dataset.fill ?? 0) / 100,
-          transformOrigin: "left center",
+      if (!marks.length) return;
+
+      // Every word starts hollow. Each row owns one paused sweep: 700ms left
+      // to right, eased out, played when the row passes 65% of the viewport —
+      // and REWOUND, at its own speed, when the row scrolls back out (client
+      // direction, 2 Sep). A rewind rather than a scrub: the fill keeps its
+      // tempo in both directions instead of dragging with the wheel.
+      const sweeps: { mark: HTMLElement; sweep: gsap.core.Timeline }[] = [];
+      marks.forEach((mark) => {
+        const inner = q(mark, "[data-vessel-fill]");
+        if (!inner) return;
+        gsap.set(inner, { width: "0%" });
+        const track = mark.parentElement?.querySelector<HTMLElement>(
+          "[data-vessel-track]",
+        );
+        if (track) gsap.set(track, { scaleX: 0, transformOrigin: "left center" });
+
+        // The sweep stops ON the line marker — the gold tick at data-fill% is
+        // the boundary, and the fill runs exactly to it, never past (client
+        // direction, 2 Sep — restoring the spec's own stop).
+        const fill = Number(mark.dataset.fill ?? 0);
+        const sweep = gsap.timeline({ paused: true });
+        sweep.fromTo(
+          inner,
+          { width: "0%" },
+          { width: `${fill}%`, duration: 0.7, ease: EASE.country },
+          0,
+        );
+        if (track) {
+          sweep.fromTo(
+            track,
+            { scaleX: 0, transformOrigin: "left center" },
+            { scaleX: 1, duration: 0.7, ease: EASE.country },
+            0,
+          );
+        }
+        sweeps.push({ mark, sweep });
+      });
+
+      // The 150ms cascade holds for fills: rows crossing the line together
+      // play in reading order, one queue — the same serialization §03's
+      // accordion uses. Rewinds skip the queue: an undo answers the scroll
+      // immediately.
+      const queue: gsap.core.Timeline[] = [];
+      let draining = false;
+      const drain = () => {
+        const next = queue.shift();
+        if (!next) {
+          draining = false;
+          return;
+        }
+        draining = true;
+        next.play();
+        window.setTimeout(drain, 150);
+      };
+      sweeps.forEach(({ mark, sweep }) => {
+        ScrollTrigger.create({
+          trigger: mark,
+          start: "top 65%",
+          onEnter: () => {
+            queue.push(sweep);
+            if (!draining) drain();
+          },
+          onLeaveBack: () => {
+            const waiting = queue.indexOf(sweep);
+            if (waiting !== -1) queue.splice(waiting, 1);
+            sweep.reverse();
+          },
         });
       });
     },
+    // The cut is clearAll alone: the markup's rest state already shows every
+    // fill at its true proportion (the [data-vessel-fill] widths are inline).
+    cut: clearAll,
   });
 }
 
@@ -811,7 +990,10 @@ export function quietArrival(root: HTMLElement, span = 100): MotionModule {
       const clusters = qa(root, "[data-cluster]");
       const lines = qa(root, "[data-cluster] [data-line]");
       if (heading) tl.settle(heading, { duration: DUR.large }, 0);
-      if (clusters.length) tl.triad(clusters, { duration: DUR.medium }, 0.1);
+      // The hi-fi's card note asks for 80ms left-to-right, a beat wider than
+      // the grid token — the three grounds read as three, not one.
+      if (clusters.length)
+        tl.triad(clusters, { duration: DUR.medium, each: 0.08 }, 0.1);
       if (lines.length) tl.arrive(lines, { duration: DUR.medium }, 0.2);
     },
     cut: clearAll,
@@ -825,6 +1007,7 @@ export const RECIPES = {
   clusterDescent,
   pinnedCount,
   stickyStreams,
+  whatItTakes,
   breath,
   vessels,
   quietArrival,

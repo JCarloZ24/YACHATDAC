@@ -140,7 +140,7 @@ export function registerCore(): void {
   gsap.registerEffect({
     name: "triad",
     extendTimeline: true,
-    defaults: { duration: DUR.medium, ease: EASE.country },
+    defaults: { duration: DUR.medium, ease: EASE.country, each: STAGGER.grid },
     effect: (targets: object, config: Record<string, unknown>) => {
       assertEase("triad", config.ease);
       const els = gsap.utils.toArray<HTMLElement>(targets);
@@ -155,7 +155,7 @@ export function registerCore(): void {
             opacity: 0,
             duration: config.duration as number,
             ease: config.ease as string,
-            stagger: STAGGER.grid,
+            stagger: config.each as number,
           },
           TRIAD[tier],
         );
