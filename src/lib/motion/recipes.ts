@@ -19,8 +19,9 @@
  */
 
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { clearAll, composition } from "@/lib/motion/compose";
-import { DUR, EASE } from "@/lib/motion/tokens";
+import { DUR, EASE, SCRUB } from "@/lib/motion/tokens";
 import type { MotionModule } from "@/lib/motion-controller";
 
 const q = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
@@ -315,16 +316,21 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
           fontWeight: ocs.fontWeight,
           fontSize: ocs.fontSize,
         });
-        let obb = oGlyph.getBBox();
+        const obb = oGlyph.getBBox();
         if (obb.height > 0) {
-          gsap.set(oGlyph, { fontSize: parseFloat(ocs.fontSize) * (o.height / obb.height) });
-          obb = oGlyph.getBBox();
+          // Same face at the same font-size IS the same glyph — no rescaling.
+          // The old ratio compared the span's line box (leading included) to
+          // the glyph's ink box, so the landed O never matched the heading's.
+          // Alignment centres the ink inside the span's box instead.
           const landX = o.left - box.left;
           const landY = o.top - box.top;
           gsap.set(oGlyph, {
-            attr: { x: landX - obb.x + (o.width - obb.width) / 2, y: landY - obb.y },
+            attr: {
+              x: landX - obb.x + (o.width - obb.width) / 2,
+              y: landY - obb.y + (o.height - obb.height) / 2,
+            },
           });
-          const startScale = (box.height * 0.85) / o.height;
+          const startScale = (box.height * 0.85) / obb.height;
           const fdx = box.width / 2 - (landX + o.width / 2);
           const fdy = box.height / 2 - (landY + o.height / 2);
           oGlyph.style.transformBox = "fill-box";
@@ -364,10 +370,13 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
         if (ghostLand)
           tl.to(ghostLand, { autoAlpha: 1, duration: 0.2, ease: EASE.machine }, 9.7);
         tl.to(oShrink, { autoAlpha: 0, duration: 0.2, ease: EASE.machine }, 9.7);
-        // The scene closes; §03 opens with the real heading in the same voice.
-        if (ghost) tl.to(ghost, { autoAlpha: 0, duration: 0.3, ease: EASE.machine }, 10.35);
+        // The word STANDS and is never faded — it IS the section title from
+        // here on. The landing is the pin's final beat: the moment the image
+        // drains into the letter the pin releases, and §03's content fades in
+        // directly beneath (its own duplicate header is suppressed by
+        // clusterDescent while motion runs). One heading, then its section.
       }
-      tl.to({}, { duration: 0.2 }); // settle before the unpin
+      tl.to({}, { duration: 0.1 }); // a breath, then the unpin
 
       // The rail is the scroll progress bar, divided into four: each segment
       // fills across its own figure's stretch of the pin — the fourth keeps
@@ -408,8 +417,14 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
  * the screen is the ground moving underneath them.
  *
  * Markup:
- *   [data-ground]   the element whose --ground custom property is ramped
- *   [data-cluster]  each cluster
+ *   [data-ground]         the element whose --ground custom property is ramped
+ *   [data-cluster]        each cluster
+ *   [data-fade-seq]       lede and first bands — held back, then faded in as
+ *                         the section rises under §02's landed heading
+ *   [data-handoff-title]  the section's own eyebrow + heading — the document's
+ *                         copy of the title. Suppressed while motion runs:
+ *                         §02's aperture lands the O in ITS header and that
+ *                         one stays as the only "Our challenges" on the page.
  */
 export function clusterDescent(
   root: HTMLElement,
@@ -419,16 +434,143 @@ export function clusterDescent(
   return composition("clusterDescent", root, {
     channel: "transition",
     span,
-    uses: ["groundRamp", "triad", "arrive"],
+    // §02 above is pinned, so this section waits parked at the viewport's
+    // bottom edge — fire the entrance the moment the pin releases and it
+    // peeks in, or the hand-off shows a beat of blank ground.
+    enterStart: "top 100%",
+    uses: ["groundRamp", "triad", "arrive", "frameOpen"],
     build: (tl) => {
+      // While motion runs, §02's aperture has already landed the O in its own
+      // "Our challenges" header and that one stays standing as THE title —
+      // this section's duplicate pair collapses so the page never shows the
+      // heading twice. Reduced motion and no-JS keep it: there the aperture's
+      // header never appears at all.
+      const titles = qa(root, "[data-handoff-title]");
+      if (titles.length) gsap.set(titles, { display: "none" });
+      // The pinned scene above ends with the landed heading standing alone in
+      // an emptied theater. Pull this section up so its content begins just
+      // below that heading the moment the pin releases — the overlap only
+      // ever covers ground the aperture has already faded, and the pull is
+      // capped so it can never reach the heading itself. The previous sibling
+      // is the pin spacer once §02's trigger exists; measure the section
+      // inside it.
+      const prev = root.previousElementSibling as HTMLElement | null;
+      const pinned = prev?.classList.contains("pin-spacer")
+        ? (prev.firstElementChild as HTMLElement | null)
+        : prev;
+      if (pinned) {
+        const overhang = pinned.offsetHeight - window.innerHeight;
+        const ghost = pinned.querySelector<HTMLElement>("[data-o-ghost]");
+        let pullUp = Math.max(0, overhang);
+        if (ghost) {
+          const g = ghost.getBoundingClientRect();
+          const p = pinned.getBoundingClientRect();
+          const headingBottom = g.top - p.top + g.height;
+          // Land the section's top a breath under the standing heading.
+          pullUp = Math.max(
+            pullUp,
+            overhang + window.innerHeight - headingBottom - 24,
+          );
+        }
+        if (pullUp > 0) gsap.set(root, { marginTop: -pullUp });
+      }
       const ground = q(root, "[data-ground]");
       if (ground) tl.groundRamp(ground, { stops, duration: 1 }, 0);
+
+      // The rows open themselves as the reader reaches them: each <details>
+      // flips open once as it crosses the trigger line, and the CSS
+      // ::details-content transition (globals.css) does the expanding — the
+      // row unfolds and the page reflows with it. One-way, like every
+      // entrance (X4): rows never re-close on scroll-up, but the summary
+      // stays a real disclosure control, so a reader can still close and
+      // reopen by hand. The programmatic open fires the same `toggle` event
+      // the motion script debounces into a ScrollTrigger.refresh.
+      //
+      // "top 42%": the reading gaze rests in the upper-middle of the screen,
+      // not at its bottom edge. Triggering there means the row unfolds right
+      // under the line the reader is actually looking at — an earlier trigger
+      // opens rows off in peripheral vision at the fold, and the reader only
+      // ever meets them already expanded.
+      //
+      // Opens are SERIALIZED through one queue: a fast scroll can carry
+      // several rows across the line in a single frame, and opening them all
+      // at once both hides the expand animation and dumps every answer on the
+      // reader together. One row unfolds, holds a beat, then the next —
+      // accumulating, which is this page's verb. The 650ms spacing is the
+      // 450ms ::details-content transition plus a breath.
+      const queue: HTMLDetailsElement[] = [];
+      let draining = false;
+      const drain = () => {
+        const next = queue.shift();
+        if (!next) {
+          draining = false;
+          return;
+        }
+        draining = true;
+        next.open = true;
+        window.setTimeout(drain, 650);
+      };
+      // The markup ships each band's first row open (the rest state, and what
+      // no-JS and reduced motion read). In motion that pre-open would show
+      // rows further down the page already expanded before the reader gets
+      // there — so every row starts closed here, and ALL opens run through
+      // the queue, strictly in reading order.
+      qa<HTMLDetailsElement>(root, "details[data-line]").forEach((row) => {
+        row.open = false;
+        ScrollTrigger.create({
+          trigger: row,
+          start: "top 42%",
+          once: true,
+          onEnter: () => {
+            queue.push(row);
+            if (!draining) drain();
+          },
+        });
+      });
+
+      // The landscape that splits the bands — "the world opening": the frame's
+      // letterbox clip opens across its own approach, so the escarpment is
+      // revealed rather than simply sitting there, and the caption settles in
+      // as the frame completes. Grade-aware: at `frame` grade the image plane
+      // itself holds still (the world moves, the record holds) — the clip is
+      // the only thing that animates, so scale is pinned to 1.
+      qa(root, "[data-frame]").forEach((frame) => {
+        const caption = frame.parentElement?.querySelector<HTMLElement>(
+          "[data-frame-caption]",
+        );
+        const sub = gsap.timeline({
+          scrollTrigger: {
+            trigger: frame,
+            start: "top 85%",
+            end: "top 20%",
+            scrub: SCRUB.normal,
+          },
+        });
+        sub.frameOpen(frame, {
+          duration: 1,
+          ...(frame.dataset.motion === "frame" ? { scale: 1 } : {}),
+        });
+        if (caption) {
+          sub.fromTo(
+            caption,
+            { autoAlpha: 0, y: 14 },
+            { autoAlpha: 1, y: 0, duration: 0.35, ease: EASE.country },
+            0.6,
+          );
+        }
+      });
     },
     enter: (tl) => {
+      // The header sequence first — the aperture's hand-off has just spelled
+      // "Our challenges" and faded; the section's own copy fades in beneath it
+      // in reading order rather than standing there already, which read as the
+      // heading appearing twice.
+      const seq = qa(root, "[data-fade-seq]");
       const clusters = qa(root, "[data-cluster]");
       const lines = qa(root, "[data-cluster] [data-line]");
-      if (clusters.length) tl.triad(clusters, { duration: DUR.medium }, 0);
-      if (lines.length) tl.arrive(lines, { duration: DUR.medium }, 0.1);
+      if (seq.length) tl.arrive(seq, { duration: DUR.medium, stagger: 0.18 }, 0);
+      if (clusters.length) tl.triad(clusters, { duration: DUR.medium }, 0.3);
+      if (lines.length) tl.arrive(lines, { duration: DUR.medium }, 0.45);
     },
     cut: clearAll,
   });
@@ -450,9 +592,15 @@ export function clusterDescent(
  * Loud channel: MEDIA. The photograph behind the count is the thing; the
  * numerals are large but they are an index, not a display.
  *
+ * The days turn split-flap style — a departure board, per the hi-fi frames —
+ * and the last day pays off: the story's release line lifts in. The section's
+ * scrim is static — part of the image, keeping the right-side text legible —
+ * and is deliberately not animated here.
+ *
  * Markup:
- *   [data-step]   each step, crossfaded in turn
- *   [data-media]  the plate behind them
+ *   [data-step]     each step, flapped in turn
+ *   [data-media]    the plate behind them
+ *   [data-release]  the withheld payoff, revealed with the final step
  */
 export function pinnedCount(root: HTMLElement, span = 150): MotionModule {
   const steps = qa(root, "[data-step]");
@@ -461,16 +609,30 @@ export function pinnedCount(root: HTMLElement, span = 150): MotionModule {
     span,
     pin: true,
     snap: steps.length > 1 ? 1 / (steps.length - 1) : undefined,
-    uses: ["stepCounter", "dissolve"],
+    uses: ["splitFlap", "dissolve"],
     build: (tl) => {
       const media = qa(root, "[data-media]");
-      if (steps.length > 1) tl.stepCounter(steps, { duration: DUR.medium }, 0);
+      const release = q(root, "[data-release]");
+      if (steps.length > 1) tl.splitFlap(steps, { duration: DUR.medium }, 0);
       if (media.length > 1) tl.dissolve(media, { duration: DUR.large }, 0);
+      // The payoff rides the last flip — day 08 and the koala arrive together.
+      // The scrim is not touched: it is part of the image, holding the
+      // right-side text legible for the section's whole life.
+      const last = steps.length - 1;
+      if (release) {
+        tl.fromTo(
+          release,
+          { autoAlpha: 0, y: 24 },
+          { autoAlpha: 1, y: 0, duration: DUR.medium, ease: EASE.country },
+          last,
+        );
+      }
     },
     cut: (el) => {
       clearAll(el);
-      // All eight days visible as a list, in order. The story still lands.
-      gsap.set(qa(el, "[data-step]"), { opacity: 1 });
+      // All eight days visible as a list, in order. The story still lands —
+      // the release line is in the markup and simply reads where it sits.
+      gsap.set(qa(el, "[data-step]"), { visibility: "visible", opacity: 1, rotationX: 0 });
     },
   });
 }
@@ -482,29 +644,56 @@ export function pinnedCount(root: HTMLElement, span = 150): MotionModule {
 /**
  * The work, and what it takes. Hi-fi §06 and §07.
  *
- * Seven streams, three of them anchor tier (L2), anchor images bleeding to the
- * edge; alongside them a sticky index that lights each one as it passes, so a
- * long stretch stays navigable rather than becoming endless.
+ * Seven streams as alternating rows, each carrying its own photograph; three
+ * of them anchor tier (L2), whose frames sit bled to the viewport edge as the
+ * markup's rest state.
  *
- * Loud channel: MEDIA. The anchor images bleeding past the column edge are what
- * takes the screen; the index is deliberately small and quiet.
+ * Every frame arrives with the Lumen reveal — "the world opening", scrubbed
+ * across the frame's own approach: the clip-path opens while the photograph
+ * counter-scales, so the picture is revealed rather than resized. The old
+ * `bleed` tween is gone: the edge-bleed is now CSS rest state, and its scaleX
+ * would fight frameOpen's media scale.
+ *
+ * Loud channel: MEDIA. Seven photographs opening in turn are what take the
+ * screen; the copy just arrives.
  *
  * Markup:
- *   [data-index-item]  index rows, lit in turn; may contain [data-index-rule]
- *   [data-stream]      each stream, carrying data-tier for L2
- *   [data-frame]       anchor frames that bleed; media inside is [data-frame-media]
+ *   [data-index-item]        optional index rows, lit in turn
+ *   [data-stream]            each stream row, carrying data-tier for L2
+ *   [data-frame]/[data-media] the frame per stream; media is [data-frame-media]
  */
 export function stickyStreams(root: HTMLElement, span = 360): MotionModule {
   return composition("stickyStreams", root, {
     channel: "media",
     span,
-    uses: ["stickyIndex", "bleed", "triad"],
+    uses: ["stickyIndex", "frameOpen", "triad"],
     build: (tl) => {
       const index = qa(root, "[data-index-item]");
-      const frames = qa(root, "[data-frame]");
-
       if (index.length) tl.stickyIndex(index, { duration: DUR.medium }, 0);
-      if (frames.length) tl.bleed(frames, { duration: DUR.large }, 0);
+
+      // One reveal per frame, on its own scrubbed trigger — same pattern as
+      // §03's landscape. The wipe unrolls from the frame's own side of the
+      // page ([data-reveal-edge], stamped by the markup's alternation), so a
+      // right-hand image opens right-to-left and vice versa. Grade-aware: at
+      // `frame` grade the image plane holds still (the world moves, the
+      // record holds), so scale pins to 1 and the clip is the only mover.
+      qa(root, "[data-stream] [data-frame], [data-stream] [data-media]").forEach(
+        (frame) => {
+          const sub = gsap.timeline({
+            scrollTrigger: {
+              trigger: frame,
+              start: "top 85%",
+              end: "top 30%",
+              scrub: SCRUB.normal,
+            },
+          });
+          sub.frameOpen(frame, {
+            duration: 1,
+            edge: frame.dataset.revealEdge ?? "center",
+            ...(frame.dataset.motion === "frame" ? { scale: 1 } : {}),
+          });
+        },
+      );
     },
     enter: (tl) => {
       const streams = qa(root, "[data-stream]");

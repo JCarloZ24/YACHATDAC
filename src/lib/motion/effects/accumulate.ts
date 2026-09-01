@@ -63,6 +63,54 @@ export function registerAccumulate(): void {
     },
   });
 
+  /* --- the split-flap counter --------------------------------------------
+     Grammar: "accumulating" · hi-fi §05, THE SPRING — the departure-board cut.
+
+     Same contract as stepCounter — steps declare themselves with data-step,
+     the numeral is swapped, never tweened — but the swap is mechanical: the
+     outgoing day folds away about its horizontal middle and the incoming one
+     drops down into place, like a flap turning on an airport board. The hinge
+     is the card's centre, so the step's box must be sized to the glyph — a
+     taller box moves the hinge off the digit and the turn floats. The
+     container must carry a perspective for the fold to read in 3D.
+
+     EASE.machine on purpose: a board is a mechanism, and country easing would
+     make it look like it was deciding. Each half-flip gets half the duration,
+     back to back, so scrubbing backwards runs the board in reverse.
+
+     No opacity tweens — a flap does not fade, it folds. At ±90° a step is
+     edge-on and invisible on its own; the instant visibility toggles at the
+     half-way point only guard against the 1px edge sliver, and being set()s
+     they reverse cleanly under scrub. */
+  gsap.registerEffect({
+    name: "splitFlap",
+    extendTimeline: true,
+    defaults: { duration: DUR.medium, ease: EASE.machine },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      assertEase("splitFlap", config.ease);
+      const steps = gsap.utils.toArray<HTMLElement>(targets);
+      const duration = config.duration as number;
+      const ease = config.ease as string;
+      const half = duration / 2;
+      const tl = gsap.timeline();
+
+      gsap.set(steps, { visibility: "hidden", rotationX: 90, transformOrigin: "50% 50%" });
+      gsap.set(steps[0], { visibility: "visible", rotationX: 0 });
+      steps.slice(1).forEach((step, i) => {
+        tl.to(steps[i], { rotationX: -90, duration: half, ease }, i);
+        tl.set(steps[i], { visibility: "hidden" }, i + half);
+        tl.set(step, { visibility: "visible" }, i + half);
+        tl.fromTo(
+          step,
+          { rotationX: 90 },
+          { rotationX: 0, duration: half, ease, immediateRender: false },
+          i + half,
+        );
+      });
+      return tl;
+    },
+  });
+
   /* --- the vessels -------------------------------------------------------
      Grammar: "accumulating" · hi-fi §08.
 

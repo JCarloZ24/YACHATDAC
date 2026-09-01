@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { register, start, stop, watchVisibility } from "@/lib/motion-controller";
 import {
   breath,
@@ -76,9 +77,23 @@ export function V2LivingWorkMotion() {
     if (document.fonts?.status === "loaded") build();
     else void document.fonts?.ready.then(build);
 
+    // The challenge bands are native <details> that expand smoothly via CSS
+    // (globals.css) — the document's height changes with them, so every
+    // trigger below is stale until re-measured. `toggle` does not bubble;
+    // capture catches it. Debounced past the 450ms transition so the refresh
+    // measures the settled layout, not a frame mid-expand.
+    let refreshTimer = 0;
+    const onToggle = () => {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 500);
+    };
+    document.addEventListener("toggle", onToggle, true);
+
     const unwatch = watchVisibility();
     return () => {
       disposed = true;
+      window.clearTimeout(refreshTimer);
+      document.removeEventListener("toggle", onToggle, true);
       unwatch();
       unregister.forEach((fn) => fn());
       stop();
