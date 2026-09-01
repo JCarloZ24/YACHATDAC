@@ -46,16 +46,25 @@ const BREATH_FRAME = photoById("lw-seedhead"); // 1.65.1 — a hand and a seed h
 const SUNSET = photoById("lw-sunset-grass"); // 1.76.2 — §09's opening band
 
 /**
- * §06 anchor frames — streams that carry a photograph, bleeding to the edge
- * via stickyStreams' `[data-frame]` hook. The correction pass made 01, 04 and
- * 07 the anchor tier; the gathered photography matches 01, 03 and 06, so those
- * are the ones that bleed until frames for fencing and monitoring exist.
+ * §06 stream photographs — one per stream, per the wireframe. The Living Work
+ * batch was exported per slot (kit.ts manifest note): work1…work7 ARE streams
+ * 01…07, so every row carries its own frame. Anchor tier (01, 04, 07 — the
+ * correction pass's choice) bleeds to the viewport edge via stickyStreams'
+ * `[data-frame]` hook; the rest sit inside the column.
  */
 const STREAM_PHOTOS: Record<string, ReturnType<typeof photoById>> = {
   "01": photoById("lw-fire"),
-  "03": photoById("lw-seed-collect"),
+  "02": photoById("lw-seed-collect"),
+  "03": photoById("lw-seed-sort"),
+  "04": photoById("lw-seed-grind"),
+  "05": photoById("lw-regrowth-dusk"),
   "06": photoById("lw-yumba-sign"),
+  "07": photoById("lw-seed-grind-2"),
 };
+
+/** The anchor streams — their frames bleed past the container to the
+    viewport edge, on the side the image already sits. */
+const STREAM_ANCHORS = new Set(["01", "04", "07"]);
 
 /** The four figures of §02, counted DOWN — biggest first, so the sequence
     reads as a countdown that lands on 120, the figure whose 0 becomes the
@@ -445,8 +454,14 @@ export function LivingWorkChallenges() {
       style={{ background: "var(--ground, #f6f6ec)" }}
     >
       <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <p data-fade-seq className="eyebrow text-burnt">Our challenges</p>
-        <h2 data-fade-seq className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
+        {/* data-handoff-title — this header exists for the document: with
+            JavaScript off (or reduced motion) it is the section's heading.
+            While motion runs, §02's aperture lands the O in ITS header and
+            that one stays as the only title, so the motion pass suppresses
+            this pair — rendering both would put "Our challenges" on the page
+            twice. */}
+        <p data-handoff-title className="eyebrow text-burnt">Our challenges</p>
+        <h2 data-handoff-title className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
           {/* [data-o-land] — the glyph the capture lands in. Measured, never
               hardcoded: the display face is gitignored (F5). */}
           <span data-o-land className="inline-block">O</span>ur challenges
@@ -479,7 +494,11 @@ export function LivingWorkChallenges() {
               className="h-full w-full object-cover"
             />
           </div>
-          <p className="absolute bottom-6 left-6 text-sm text-canvas/90 lg:left-16">
+          {/* data-frame-caption — settles in as the frame finishes opening. */}
+          <p
+            data-frame-caption
+            className="absolute bottom-6 left-6 text-sm text-canvas/90 lg:left-16"
+          >
             The plain from the escarpment.
           </p>
         </div>
@@ -621,14 +640,22 @@ export function LivingWorkRangers() {
  */
 export function LivingWorkSpring() {
   const days = Array.from({ length: 8 }, (_, i) => i + 1);
+  const springStream = workStreams.find((stream) => stream.number === "02");
+  // The hi-fi splits the draft's stream-02 story across the pinned moment: the
+  // set-up reads at the top, and "Eight days in…" is withheld until day 08.
+  // Split on the draft's own sentence so the copy itself stays D5-governed.
+  const detail = springStream?.detail ?? "";
+  const releaseAt = detail.indexOf("Eight days in");
+  const setup = releaseAt > 0 ? detail.slice(0, releaseAt).trim() : detail;
+  const release = releaseAt > 0 ? detail.slice(releaseAt).trim() : "";
   return (
     <section
       id="spring"
       data-lw="spring"
-      className="relative flex min-h-svh items-center overflow-hidden bg-evergreen"
+      className="relative flex min-h-svh items-center overflow-hidden bg-charcoal"
     >
       {SPRING ? (
-        <div data-media data-motion={SPRING.grade} aria-hidden className="absolute inset-0 opacity-40">
+        <div data-media data-motion={SPRING.grade} aria-hidden className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={SPRING.src}
@@ -640,26 +667,103 @@ export function LivingWorkSpring() {
         </div>
       ) : null}
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <p className="eyebrow text-ochre">The spring</p>
-        <div className="relative mt-8 h-[26vw] min-h-52">
-          {days.map((day) => (
+      {/* X5 — copy sits on media, so the photo carries a scrim. The hi-fi
+          (2137:2617) overlays a neutral dark gradient, not an evergreen tint —
+          the photograph keeps its own colour under it. Darkest on the RIGHT —
+          it keeps the right-side text legible — and permanent: part of the
+          image, never lifted by the motion pass. */}
+      <div
+        data-scrim
+        aria-hidden
+        className="absolute inset-0 bg-linear-to-l from-charcoal/25 via-charcoal/60 to-charcoal"
+      />
+
+      {/* Bottom padding clears the wave (7.3vw tall) plus breathing room, so
+          the stand-in note never sits under the crest on short viewports. */}
+      <div className="relative mx-auto w-full max-w-7xl px-6 pt-20 pb-[calc(7.3vw+3rem)] lg:px-16">
+        {/* Hi-fi 2137:2617 sets this eyebrow in gold and names the stream the
+            moment belongs to. */}
+        <p className="eyebrow text-gold">The spring · Stream 02</p>
+        <p className="mt-6 max-w-xl text-base leading-relaxed text-canvas/85">
+          {setup}
+        </p>
+
+        {/* The counter — DAY / numeral / rule / OF EIGHT, per the hi-fi frames.
+            The board reads two digits, but only the units flap turns: the
+            leading 0 is a fixed plate, the way an airport board leaves settled
+            digits alone. The step stack sizes the row; the 0 sits beside it. */}
+        <div className="mt-12 max-w-sm lg:mt-16">
+          <p className="eyebrow text-xs text-gold">Day</p>
+          <div className="mt-3 flex items-start">
             <p
-              key={day}
-              data-step
-              className="headline absolute inset-0 text-[18vw] leading-none text-canvas"
+              aria-hidden
+              className="headline text-[10vw] leading-none text-canvas min-[1440px]:text-9xl"
             >
-              Day {day}
+              0
             </p>
-          ))}
+            {/* The stack is sized by an invisible in-flow digit so its box is
+                exactly one glyph tall — the flap then hinges at the digit's
+                own middle instead of a taller container's top edge, which
+                left the turning number floating above the zero. */}
+            <div className="relative flex-1 [perspective:800px]">
+              <p
+                aria-hidden
+                className="headline invisible text-[10vw] leading-none min-[1440px]:text-9xl"
+              >
+                8
+              </p>
+              {days.map((day) => (
+                <p
+                  key={day}
+                  data-step
+                  className="headline absolute inset-0 text-[10vw] leading-none text-canvas backface-hidden min-[1440px]:text-9xl"
+                >
+                  {day}
+                </p>
+              ))}
+            </div>
+          </div>
+          <div aria-hidden className="mt-8 h-px w-full bg-gold/80" />
+          <p className="eyebrow mt-4 text-xs text-gold">Of eight</p>
         </div>
-        <p className="mt-8 max-w-xl text-base leading-relaxed text-canvas/80">
-          It ran for eight days. Nobody alive had seen it run.
+
+        {/* The payoff — held back until day 08 by the motion pass; with
+            JavaScript off it simply reads in order, which is the final state. */}
+        <div data-release className="mt-12 max-w-2xl lg:mt-16">
+          <p className="eyebrow text-xs text-gold">On release</p>
+          <p className="mt-4 text-2xl leading-snug text-canvas sm:text-3xl">
+            {release}
+          </p>
+        </div>
+
+        {/* Hi-fi 2137:2617 sets the stand-in note as a gold eyebrow annotation,
+            ◇-marked with the frame reference — not faded body text. */}
+        <p className="eyebrow mt-10 max-w-xl text-xs leading-relaxed text-gold">
+          &#9671; Stand-in &middot; 1.87.1 the dry creek &mdash; the restored
+          waterhole holding water has never been photographed
         </p>
-        <p className="mt-4 max-w-xl text-xs leading-relaxed text-canvas/45">
-          Photograph stands in — the restored waterhole holding water has never
-          been photographed.
-        </p>
+      </div>
+
+      {/* The wave hands the photograph off into the canvas section below —
+          frame 2195:2829's own path. Static: pinnedCount does not animate it. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 text-canvas"
+      >
+        {/* viewBox bottom sits just above where the path bottoms out (y≈105.3)
+            so the fill overdraws the box's lower edge — same trick as the hero
+            wave; at the path's own depth, rounding left a hairline of
+            photograph under the crest on windowed widths. */}
+        <svg
+          viewBox="0 0 1440 104"
+          preserveAspectRatio="none"
+          className="block h-[7.3vw] w-full"
+        >
+          <path
+            d="M1469.04 7.9544C1426.51 -2.1372 1376.18 -2.66008 1332.96 6.57748C1269.32 20.155 1223.29 42.5343 1156.49 50.8132C1112.11 56.3209 1071.13 52.2598 1027.08 50.5343C968.069 48.2162 916.126 51.1444 859.791 61.48C806.923 71.1707 755.575 83.7895 699.999 88.7046C632.371 94.6829 563.487 84.9573 498.434 73.4888C433.382 62.0203 368.263 48.5648 299.776 46.7696C194.602 44.0157 94.7447 68.87 0.0055774 93.1491L0.00122744 105.324H1467.85L1469.04 7.97183V7.9544Z"
+            fill="currentColor"
+          />
+        </svg>
       </div>
     </section>
   );
@@ -671,68 +775,105 @@ export function LivingWorkSpring() {
 
 export function LivingWorkStreams() {
   return (
-    <section id="streams" data-lw="streams" className="relative bg-canvas py-32">
+    <section
+      id="streams"
+      data-lw="streams"
+      className="relative overflow-x-clip bg-canvas py-32"
+    >
       <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <div className="lg:flex lg:gap-16">
-          {/* The sticky index — two at a time, lighting as they pass. */}
-          <aside className="lg:sticky lg:top-32 lg:h-fit lg:w-56 lg:shrink-0">
-            <p className="eyebrow text-oxide">The work</p>
-            <ol className="mt-6 space-y-3">
-              {workStreams.map((stream) => (
-                <li
-                  key={stream.number}
-                  data-index-item
-                  className="text-xs tracking-[0.08em] text-evergreen uppercase"
-                >
-                  {stream.number} {stream.title}
-                </li>
-              ))}
-            </ol>
-          </aside>
+        <p className="eyebrow text-burnt">The work</p>
+        <h2 className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
+          The work
+        </h2>
+        {/* ⚠ Design-proposal standfirst, authored on the wireframe. */}
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-evergreen/80">
+          What Rangers do on the ground. Seven streams, running at once, all
+          year.
+        </p>
 
-          <div className="mt-16 flex-1 lg:mt-0">
-            {workStreams.map((stream, i) => (
+        <div className="mt-16">
+          {workStreams.map((stream, i) => {
+            const photo = STREAM_PHOTOS[stream.number];
+            const anchor = STREAM_ANCHORS.has(stream.number);
+            /* Alternation — odd streams carry the image right, even left;
+               anchors bleed on the side they already sit. */
+            const imageRight = i % 2 === 0;
+            return (
               <article
                 key={stream.number}
                 data-stream
-                data-tier={i < 3 ? "anchor" : i < 5 ? "mid" : "detail"}
-                className="border-t border-evergreen/20 py-12 first:border-t-0 first:pt-0"
+                data-tier={anchor ? "anchor" : i < 5 ? "mid" : "detail"}
+                className="grid items-start gap-10 border-t border-evergreen/20 py-14 first:border-t-0 lg:grid-cols-2 lg:gap-16"
               >
-                <p className="headline text-3xl text-ochre">{stream.number}</p>
-                <h3 className="headline mt-3 max-w-2xl text-2xl text-evergreen sm:text-3xl">
-                  {stream.title}
-                </h3>
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-evergreen/80">
-                  {stream.lede}
-                </p>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-evergreen/60">
-                  {stream.detail}
-                </p>
+                <div className={`flex gap-6 ${imageRight ? "" : "lg:order-2"}`}>
+                  <p className="headline w-10 shrink-0 text-2xl text-ochre">
+                    {stream.number}
+                  </p>
+                  <div>
+                    <h3 className="headline text-2xl text-evergreen sm:text-3xl">
+                      {stream.title}
+                    </h3>
+                    <p className="mt-5 max-w-md text-sm leading-relaxed text-evergreen/80">
+                      {stream.lede}
+                    </p>
+                    <p className="mt-4 max-w-md text-sm leading-relaxed text-evergreen/80">
+                      {/* ⚠ Stream 02's detail is the spring story, told in
+                          full at §05's pinned moment above — the wireframe
+                          points back at it rather than repeating it. */}
+                      {stream.number === "02"
+                        ? "The spring above is one of them."
+                        : stream.detail}
+                    </p>
+                    {stream.number === "06" ? (
+                      /* WHAT STAYS HERE — the lo-fi's governance framing:
+                         knowledge that belongs to this Country and does not
+                         travel. A label, not a link — it has no destination
+                         until that page exists. */
+                      <div className="mt-8">
+                        <div aria-hidden className="h-px w-32 bg-burnt" />
+                        <p className="eyebrow mt-3 text-xs text-burnt">
+                          What stays here
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
 
-                {/* Anchor frame — bleeds past the column edge via stickyStreams'
-                    bleed. Only streams with a real photograph carry one. */}
-                {STREAM_PHOTOS[stream.number] ? (
+                {photo ? (
+                  /* Every frame gets stickyStreams' scrubbed frameOpen reveal
+                     (clip opens, media counter-scales — the Lumen move).
+                     Anchors are [data-frame]; their edge-bleed is this rest
+                     state's own negative margin, not a tween. Non-anchors are
+                     [data-media]: in-column, same reveal. */
                   <div
-                    data-frame
-                    data-motion={STREAM_PHOTOS[stream.number]!.grade}
-                    className="relative mt-8 h-[52svh] overflow-hidden"
+                    {...(anchor ? { "data-frame": true } : { "data-media": true })}
+                    data-motion={photo.grade}
+                    data-reveal-edge={imageRight ? "right" : "left"}
+                    className={`relative overflow-hidden ${
+                      imageRight ? "" : "lg:order-1"
+                    } ${
+                      anchor
+                        ? imageRight
+                          ? "h-[40svh] min-h-64 lg:mr-[calc(-1*(max((100vw-80rem)/2,0px)+4rem))]"
+                          : "h-[40svh] min-h-64 lg:ml-[calc(-1*(max((100vw-80rem)/2,0px)+4rem))]"
+                        : "aspect-[3/2] max-h-[52svh]"
+                    }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       data-frame-media
-                      src={STREAM_PHOTOS[stream.number]!.src}
+                      src={photo.src}
                       alt=""
-                      width={STREAM_PHOTOS[stream.number]!.width}
-                      height={STREAM_PHOTOS[stream.number]!.height}
+                      width={photo.width}
+                      height={photo.height}
                       className="h-full w-full object-cover"
                     />
                   </div>
                 ) : null}
               </article>
-            ))}
-          </div>
+            );
+          })}
         </div>
-
       </div>
     </section>
   );

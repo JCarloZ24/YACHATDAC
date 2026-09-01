@@ -169,3 +169,25 @@ body {
     animation: none;
   }
 }
+
+/* Disclosure rows (`<details data-line>`, the challenge bands). The content
+   expands and collapses smoothly — and the page reflows with it — via the
+   CSS-only `interpolate-size` + `::details-content` path, so the behaviour
+   ships in the server markup with no JS in the loop. Browsers without either
+   feature simply snap open, which is the same disclosure, unanimated.
+   `--ease-country` because a band opening is a section-scale move. */
+@media (prefers-reduced-motion: no-preference) {
+  details[data-line] {
+    interpolate-size: allow-keywords;
+  }
+  details[data-line]::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 0.45s var(--ease-country),
+      content-visibility 0.45s allow-discrete;
+  }
+  details[data-line][open]::details-content {
+    block-size: auto;
+  }
+}

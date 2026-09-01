@@ -131,5 +131,6 @@ export type EffectName =
   | "overlap"
   // accumulating
   | "stepCounter"
+  | "splitFlap"
   | "vesselFill"
   | "flattenReveal";
