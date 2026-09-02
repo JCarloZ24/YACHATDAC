@@ -33,7 +33,7 @@ export function InvitationV2() {
         <div className="mt-16 grid gap-6 md:grid-cols-3">
           {invitation.cards.map((card, index) => {
             const toV2 = card.href === "/truth";
-            const href = toV2 ? "/v2/truth" : card.href;
+            const href = toV2 ? "/truth" : card.href;
             const CardLink = toV2 ? TransitionLink : Link;
             return (
               <div

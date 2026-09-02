@@ -88,7 +88,7 @@ export function TruthBeat({ beat }: { beat: Beat }) {
 
         {/* C4 — the door down. This tile IS the /v2/truth hero, morphed. */}
         <TransitionLink
-          href="/v2/truth"
+          href="/truth"
           className="group mt-14 inline-block"
           aria-label="Descend into Truth"
         >

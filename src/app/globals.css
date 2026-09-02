@@ -180,8 +180,25 @@ body {
   animation: y-scroll-cue 2.4s var(--ease-quiet) infinite alternate;
 }
 
+/* The Truth hero's cue: the same 2.4s breath, but as brightness — it rises
+   and falls faintly, never a bounce (the hi-fi motion note, 2026-09-02).
+   Killed permanently on first scroll, like the homepage cue. */
+@keyframes y-scroll-cue-glow {
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility scroll-cue-glow {
+  animation: y-scroll-cue-glow 2.4s var(--ease-quiet) infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .scroll-cue {
+  .scroll-cue,
+  .scroll-cue-glow {
     animation: none;
   }
 }

@@ -29,6 +29,21 @@ const q = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
 const qa = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
   Array.from(root.querySelectorAll<T>(sel));
 
+/**
+ * The artist's ring grounds, riding the scroll. Quiet by construction — a
+ * slow clockwise turn scrubbed across the section's whole span, far below any
+ * loud channel; because it is scrub-linked, scrolling back up winds it
+ * counter-clockwise at the same tempo. `data-artwork-drift` opts an artwork
+ * wrapper in. Whole vectors only, never redrawn (F2); the reduced cut clears
+ * the transform with everything else.
+ */
+function driftArtwork(tl: gsap.core.Timeline, root: HTMLElement) {
+  const rings = qa(root, "[data-artwork-drift]");
+  if (rings.length) {
+    tl.to(rings, { rotation: 30, ease: "none", duration: 1 }, 0);
+  }
+}
+
 /* -------------------------------------------------------------------------
    01 — fullBleedOpen
    ------------------------------------------------------------------------- */
@@ -126,6 +141,9 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
     pin: true,
     uses: ["aperture"],
     build: (tl) => {
+      // The ring ground turns with the countdown — before the guard below,
+      // so the drift survives even a markup change that bails the sequence.
+      driftArtwork(tl, root);
       const container = q(root, "[data-aperture]");
       const figures = qa(root, "[data-figure]");
       const zeros = qa(root, "[data-figure] [data-zero]");
@@ -447,6 +465,8 @@ export function clusterDescent(
       // header never appears at all.
       const titles = qa(root, "[data-handoff-title]");
       if (titles.length) gsap.set(titles, { display: "none" });
+      // The ring grounds ride the section's whole descent.
+      driftArtwork(tl, root);
       // With the duplicate header gone, the section's own top padding is dead
       // air between §02's landed heading and the lede — drop it while motion
       // runs so the lede begins right under the standing title.
@@ -520,14 +540,15 @@ export function clusterDescent(
       // itself holds still (the world moves, the record holds) — the clip is
       // the only thing that animates, so scale is pinned to 1.
       //
-      // Time-based, NOT scrubbed: the accordion rows above reflow the page as
-      // they open, which moves this frame's trigger under a scrub and made
-      // the half-open clip snap back and forth with every reflow. Instead the
-      // open plays on enter and reverses on leaving back up — but ONLY on a
-      // real upward scroll: a row opening above pushes the frame back down
-      // across the line without the reader moving, and that phantom exit
-      // must not close the world again. "top 60%" so the frame is properly
-      // on screen before it opens.
+      // Scroll-DRIVEN (client direction, 2 Sep — the timed open read as the
+      // image moving on its own): the clip opens in step with the scroll.
+      // Not a positional scrub, though — the accordion rows above reflow the
+      // page as they open, which leaves a trigger's stored positions stale
+      // and made a plain scrub snap. Instead every scroll update re-derives
+      // progress from the frame's LIVE viewport position (the open runs as
+      // the frame's top travels from 92% to 40% of the viewport), and a
+      // short lerp carries the timeline there — so a reflow's jump eases
+      // through the same tempo as the scroll itself.
       qa(root, "[data-frame]").forEach((frame) => {
         const caption = frame.parentElement?.querySelector<HTMLElement>(
           "[data-frame-caption]",
@@ -536,28 +557,24 @@ export function clusterDescent(
           paused: true,
           defaults: { ease: EASE.country },
         });
-        // Not a boundary trigger: a row opening above reflows the page and
-        // moves the frame across the line with the reader standing still, and
-        // ScrollTrigger's enter/leaveBack crossings both misfire on that (the
-        // refresh consumes the crossing, so a later real scroll-up finds
-        // nothing left to reverse). Instead every scroll update re-derives
-        // the state from live geometry plus the REAL scroll delta: past the
-        // line, the frame opens (or stays open through a reflow, delta 0);
-        // above it on a genuine upward scroll, it closes.
-        let lastY = window.scrollY;
+        const toProgress = gsap.quickTo(sub, "progress", {
+          duration: 0.3,
+          ease: "none",
+        });
+        const update = () => {
+          const vh = window.innerHeight;
+          const top = frame.getBoundingClientRect().top;
+          toProgress(gsap.utils.clamp(0, 1, (vh * 0.92 - top) / (vh * 0.52)));
+        };
+        // onRefresh as well as onUpdate: a row opening above reflows the page
+        // with the reader standing still — no scroll event fires, but the
+        // toggle's debounced ScrollTrigger.refresh does, and the frame's
+        // progress must be re-derived from the moved geometry.
         ScrollTrigger.create({
           start: 0,
           end: "max",
-          onUpdate: () => {
-            const y = window.scrollY;
-            const dir = y > lastY ? 1 : y < lastY ? -1 : 0;
-            lastY = y;
-            const past =
-              frame.getBoundingClientRect().top < window.innerHeight * 0.6;
-            if (past) {
-              if (dir >= 0) sub.play();
-            } else if (dir === -1) sub.reverse();
-          },
+          onUpdate: update,
+          onRefresh: update,
         });
         sub.frameOpen(frame, {
           duration: 1.2,

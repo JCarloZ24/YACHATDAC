@@ -5,14 +5,21 @@
    the bottom so a failed font fetch degrades to something readable rather than
    to nothing.
 
-   ⚠ Licensing is NOT settled for two of these three families. See
-   public/fonts/README.md before the production build — this is a compliance
-   question, not a preference.
+   Licensing (2026-09-02, from admin):
+   · Block Berthold — licensed via Adobe Fonts, web project qqn2php; the kit
+     stylesheet is linked in the root layout and serves the family as
+     "berthold-block-w1g" (400/700, normal + italic).
+   · Bantayog Sans — commercial licence key held; recorded in
+     public/fonts/README.md.
+   · Work Sans — SIL OFL. · GoodDog — freeware (licence file shipped).
    --------------------------------------------------------------------------- */
 
 /* Headline — Block Berthold.
-   Ships as a single weight. The 100–900 range maps any requested weight onto
-   that one face, which stops the browser reaching for a synthetic bold. */
+   The LIVE face comes from the Adobe Fonts kit ("berthold-block-w1g", first
+   in the stack below). This self-hosted declaration is only the offline /
+   kit-outage fallback. Ships as a single weight; the 100–900 range maps any
+   requested weight onto that one face, which stops the browser reaching for
+   a synthetic bold. */
 @font-face {
   font-family: "Block Berthold";
   src: url("/fonts/BlockBerthold.woff2") format("woff2");
@@ -126,8 +133,10 @@
 }
 
 :root {
-  --font-block-berthold: "Block Berthold", "Arial Black", "Helvetica Neue",
-    system-ui, sans-serif;
+  /* Adobe Fonts kit family first (the licensed web face), self-hosted copy
+     as the fallback behind it. */
+  --font-block-berthold: "berthold-block-w1g", "Block Berthold", "Arial Black",
+    "Helvetica Neue", system-ui, sans-serif;
   --font-bantayog-sans: "Bantayog Sans", "Helvetica Neue", system-ui, sans-serif;
   --font-work-sans: "Work Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-good-dog-cool: "Good Dog Cool", "Comic Sans MS", cursive;

@@ -1,21 +1,18 @@
-import { FooterGround } from "@/components/layout/FooterGround";
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Band } from "@/components/layout/Band";
-import { PageHero } from "@/components/layout/PageHero";
-import { TruthEraSection } from "@/components/sections/TruthEra";
-import { EditorialNote } from "@/components/ui/EditorialNote";
-import { Eyebrow } from "@/components/ui/Eyebrow";
-import { ImageSlot } from "@/components/ui/ImageSlot";
-import { PullQuote } from "@/components/ui/PullQuote";
-import { Reveal } from "@/components/ui/Reveal";
+import { FooterGround } from "@/components/layout/FooterGround";
+import { PageTransition } from "@/components/transitions/PageTransition";
+import { V2TruthMotion } from "@/components/v2/V2TruthMotion";
 import {
-  erasAfter,
-  erasBefore,
-  publication,
-  suzanne,
-  truthHero,
-} from "@/content/truth";
+  EraSection,
+  FullBleedBreak,
+  GoldTrail,
+  PublicationBand,
+  SuzanneBand,
+  TruthHeroV2,
+  WattanuriBand,
+} from "@/components/v2/TruthSections";
+import { TruthTrailRail } from "@/components/v2/TruthTrailRail";
+import { erasAfter, erasBefore, truthHero } from "@/content/truth";
 
 export const metadata: Metadata = {
   title: "Truth",
@@ -23,201 +20,84 @@ export const metadata: Metadata = {
 };
 
 /**
- * Truth — the descent, newest first.
+ * /truth — verb: DESCENDS. The hi-fi build, promoted from /v2/truth
+ * (2026-09-02) to be the real page.
  *
- * ⚠ HELD BY COMMUNITY. This page carries Suzanne Thompson's recorded words and
- * is not publishable until she has approved them. The draft warning renders on
- * the page, in place, above her section. Do not remove it to make the page
- * look finished; removing it is the failure mode it exists to prevent.
+ * The committed descent module owns the grounds: each band below names one of
+ * the six era grounds and the fixed layer stack beneath cross-fades as the
+ * reader travels back. Content is src/content/truth.ts verbatim — held by
+ * community, draft warnings rendered, quotations untouched (R17/D15).
  *
- * Structure follows the draft exactly: eras above her account, then her
- * account on its own ground with nothing else on it, then the eras below —
- * older. The draft's build note explains why the section is isolated, and it
- * renders too.
+ * From the hi-fi wireframes:
+ *   · the winding record trail on the left — the scroll indicator, gold up to
+ *     where the reader stands, with a mark at each era;
+ *   · photo strips per entry (src/content/truth-media.ts — real photographs
+ *     where the library has them, tonal fields where it does not);
+ *   · two full-bleed country breaks between eras (R10 — never cultural-site);
+ *   · the gold dot-trail artwork threading the descent (static — artwork);
+ *   · the Wattanuri floor closing the chronology below the seabed.
+ *
+ * Band mapping (content eras are finer-grained than the six grounds):
+ * hero + Ahead + Today → present · Bought back → return · 1950s →
+ * named-wrong · 1902 + 1840s → count · Older than the record →
+ * before-record · the seabed + Wattanuri → deep-time.
  */
 export default function TruthPage() {
+  const [ahead, today, boughtBack, namedWrong] = erasBefore;
+  /* The descent is chronological: Now → 2026 → 2022 → 2020. Today's dated
+     records (the 2022 study, and Research & discovery with them) therefore
+     render after the 2026 deed plate, inside the Bought back section. */
+  const [, ...todayRecords] = today.entries;
+  const [mitchell, olderThanRecord, beginning] = erasAfter;
+
   return (
-    <>
-      <PageHero
-        eyebrow={truthHero.eyebrow}
-        title={truthHero.title}
-        standfirst={truthHero.standfirst}
-        actions={truthHero.actions}
-        tone="charcoal"
-      />
+    <PageTransition ground="#22372B">
+      <V2TruthMotion />
+      <div data-descent-root className="relative text-canvas">
+        {/* The ground — the module builds one opaque layer per era into it. */}
+        <div data-descent-ground aria-hidden className="fixed inset-0 -z-10" />
+        {/* The winding record trail — the wireframe's scroll indicator: the
+            path of the descent with a mark at each era, gold up to where the
+            reader stands. */}
+        <TruthTrailRail />
 
-      {erasBefore.map((era) => (
-        <TruthEraSection key={era.marker} era={era} />
-      ))}
+        <section data-descent-band="present">
+          <TruthHeroV2 />
+          <EraSection era={ahead} />
+          <EraSection era={today} />
+          {/* The 08 break closes the present band and hands the reader to
+              Bought back's roasted ground via Marc's wave. */}
+          <FullBleedBreak which="countryNow" waveTo="roasted" />
+        </section>
 
-      {/*
-        The 1902 section. Oxide — the Land — and it is the only band on the
-        page that uses it, which is the whole treatment: the descent stops
-        here and the ground changes under it.
-      */}
-      <Band tone="oxide">
-        <Reveal>
-          <Eyebrow className="text-canvas">{suzanne.marker}</Eyebrow>
-        </Reveal>
+        <section data-descent-band="return">
+          <EraSection era={boughtBack} prependEntries={todayRecords} />
+        </section>
 
-        {/* Not decoration. See the warning at the top of content/truth.ts. */}
-        <div className="mt-8 max-w-2xl">
-          <EditorialNote label="Draft — awaiting Suzanne Thompson's approval">
-            <p>{suzanne.draftWarning}</p>
-          </EditorialNote>
-        </div>
+        <section data-descent-band="named-wrong">
+          <GoldTrail variant="trail" />
+          <EraSection era={namedWrong} />
+          <FullBleedBreak which="duskCountry" />
+        </section>
 
-        <div className="mt-16 grid gap-12 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-16">
-          <div>
-            <Reveal>
-              <ImageSlot
-                note={suzanne.image}
-                tone="oxide"
-                aspect="portrait"
-              />
-            </Reveal>
-            <Reveal index={1}>
-              <div className="mt-6">
-                <p className="eyebrow text-canvas/60">Told by</p>
-                <p className="headline mt-2 text-xl text-canvas">
-                  {suzanne.attribution}
-                </p>
-                <p className="mt-1 text-sm text-canvas/70 italic">
-                  {suzanne.role}
-                </p>
-              </div>
-            </Reveal>
-          </div>
+        <section data-descent-band="count">
+          <SuzanneBand />
+          <EraSection era={mitchell} />
+        </section>
 
-          <div>
-            <Reveal>
-              <h2 className="headline max-w-2xl text-4xl text-canvas sm:text-5xl">
-                {suzanne.title}
-              </h2>
-            </Reveal>
+        <section data-descent-band="before-record">
+          <EraSection era={olderThanRecord} />
+        </section>
 
-            <Reveal index={1}>
-              <PullQuote
-                tone="oxide"
-                className="mt-10"
-                attribution={suzanne.attribution}
-                role={suzanne.role}
-              >
-                {suzanne.openingQuote}
-              </PullQuote>
-            </Reveal>
-
-            <Reveal index={2}>
-              <p className="mt-10 max-w-2xl text-base leading-relaxed text-canvas/80">
-                {suzanne.lede}
-              </p>
-            </Reveal>
-
-            <dl className="mt-10 max-w-2xl space-y-6">
-              {suzanne.figures.map((figure, index) => (
-                <Reveal key={figure.year} index={index}>
-                  <div className="border-t border-canvas/25 pt-4 sm:grid sm:grid-cols-[6rem_minmax(0,1fr)] sm:gap-6">
-                    <dt className="eyebrow text-canvas">{figure.year}</dt>
-                    <dd className="mt-2 text-sm leading-relaxed text-canvas/80 sm:mt-0">
-                      {figure.detail}
-                    </dd>
-                  </div>
-                </Reveal>
-              ))}
-            </dl>
-
-            <Reveal index={2}>
-              <p className="mt-6 max-w-2xl text-xs leading-relaxed text-canvas/60">
-                <Link
-                  href={suzanne.citation.href}
-                  className="underline underline-offset-4"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {suzanne.citation.text}
-                </Link>
-              </p>
-            </Reveal>
-
-            {/*
-              ⚠ CR4 and CR10 both want words changed inside these two quotes.
-              Both are HELD pending D15 — see R17 and the note in PullQuote.
-            */}
-            <div className="mt-12 space-y-8">
-              {suzanne.quotes.map((quote, index) => (
-                <Reveal key={quote} index={index}>
-                  <PullQuote tone="oxide" attribution={suzanne.attribution}>
-                    {quote}
-                  </PullQuote>
-                </Reveal>
-              ))}
-            </div>
-
-            <Reveal index={1}>
-              <p className="mt-12 max-w-2xl text-base leading-relaxed text-canvas/80">
-                {suzanne.afterQuotes}
-              </p>
-            </Reveal>
-
-            <Reveal index={2}>
-              <PullQuote
-                tone="oxide"
-                className="mt-10"
-                attribution={suzanne.attribution}
-              >
-                {suzanne.standingQuote}
-              </PullQuote>
-            </Reveal>
-
-            <div className="mt-12 max-w-2xl space-y-6">
-              {suzanne.closing.map((paragraph, index) => (
-                <Reveal key={paragraph} index={index}>
-                  <p className="text-base leading-relaxed text-canvas/80">
-                    {paragraph}
-                  </p>
-                </Reveal>
-              ))}
-            </div>
-
-            {/* Her two open questions. Neither has been answered. */}
-            <div className="mt-14 max-w-2xl space-y-5">
-              <EditorialNote label="For Suzanne to check — unanswered">
-                <p>{suzanne.checkNote}</p>
-              </EditorialNote>
-
-              <EditorialNote label="Build note — for the wireframes">
-                <p>{suzanne.buildNote}</p>
-              </EditorialNote>
-            </div>
-          </div>
-        </div>
-      </Band>
-
-      {erasAfter.map((era) => (
-        <TruthEraSection key={era.marker} era={era} />
-      ))}
-
-      <Band tone="charcoal">
-        <Reveal>
-          <p className="eyebrow text-canvas/50">Published as</p>
-        </Reveal>
-        <Reveal index={1}>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-canvas/75">
-            <Link
-              href={publication.href}
-              className="underline underline-offset-4 hover:text-ochre"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {publication.title}
-            </Link>
-            <span className="block text-sm text-canvas/50 italic">
-              {publication.journal}
-            </span>
-          </p>
-        </Reveal>
-      </Band>
-      <FooterGround color="var(--color-charcoal)" />
-    </>
+        <section data-descent-band="deep-time">
+          <EraSection era={beginning} />
+          <GoldTrail variant="wave" />
+          <WattanuriBand />
+          <PublicationBand />
+        </section>
+      </div>
+      {/* The page ends on the deep-time ground, not canvas. */}
+      <FooterGround color="var(--color-midnight)" />
+    </PageTransition>
   );
 }
