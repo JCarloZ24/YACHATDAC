@@ -227,6 +227,10 @@ export function RangerCarousel({
             Flip.from(state, {
               targets: media,
               absolute: true,
+              // Transforms only — the default left/top/width/height mode
+              // re-lays-out the full-size image every frame, which is the
+              // stutter the flight home showed on both desktop and mobile.
+              scale: true,
               duration: 0.7,
               ease: "country",
               zIndex: 90,
@@ -262,6 +266,7 @@ export function RangerCarousel({
           Flip.from(flipIn.current, {
             targets: portrait,
             absolute: true,
+            scale: true,
             duration: 0.82,
             ease: "country",
           });
@@ -372,6 +377,8 @@ export function RangerCarousel({
                       width={slot.photo.width}
                       height={slot.photo.height}
                       draggable={false}
+                      loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover transition-transform duration-700 ease-quiet group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
                     />
                     {/* The hover preview — a scrim rises and the invitation

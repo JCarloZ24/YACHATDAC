@@ -60,7 +60,9 @@ export function SiteFooter() {
           <FooterGround/> and defaulting to the hi-fi's canvas. A fixed fill
           put a stray band on dark-ending pages; overlapping the section
           instead had the wave invading its content. */}
-      <div aria-hidden className="pointer-events-none">
+      {/* -mb-px: the 13.9vw height rounds to a fraction on narrow viewports
+          and leaves a hairline seam over the charcoal block — overlap it. */}
+      <div aria-hidden className="pointer-events-none -mt-px -mb-px">
         <svg
           viewBox="0 0 1440 200"
           preserveAspectRatio="none"

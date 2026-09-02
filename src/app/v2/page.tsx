@@ -55,7 +55,7 @@ export default function V2IndexPage() {
           </TransitionLink>
 
           <TransitionLink
-            href="/v2/truth"
+            href="/truth"
             className="group block border-t border-canvas/15 py-6"
           >
             <span className="eyebrow text-canvas/50">02 · verb: descends</span>

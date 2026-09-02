@@ -102,6 +102,8 @@ export function LivingWorkHero() {
             alt=""
             width={HERO.width}
             height={HERO.height}
+            fetchPriority="high"
+            decoding="async"
             className="h-full w-full object-cover object-[68%_40%]"
           />
         </div>
@@ -187,7 +189,25 @@ function splitAtAperture(value: string): [string, string, string] {
 
 export function LivingWorkAperture() {
   return (
-    <section id="aperture" data-lw="aperture" className="relative bg-canvas">
+    <section id="aperture" data-lw="aperture" className="relative min-h-svh bg-canvas">
+      {/* The artist's ring as ground — a whisper on the canvas behind the
+          countdown, per the 2 Sep hi-fi. White over cream so it reads as a
+          lift, not a mark; data-artwork-drift hands it to the recipe's quiet
+          scroll drift. The wrapper clips to the section's FIRST viewport —
+          the pinned countdown's own frame — so the ring never bleeds into
+          the tail where §03's hand-off rides up, and the offset never widens
+          the page. */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-svh overflow-hidden">
+        <div
+          data-artwork="ring-c"
+          data-artwork-drift
+          className="absolute top-[4%] -right-80 h-[1100px] w-[1100px] opacity-[0.11]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
+        </div>
+      </div>
+
       {/* The theater — the wide shot's final frame. NOT full-screen: a wide
           band with the section's own canvas (#F6F6EC) above and below, the way
           a cinema screen sits in a wall. Hidden at rest: the rest state is the
@@ -290,7 +310,7 @@ export function LivingWorkAperture() {
       ) : null}
 
       {/* data-copy — everything the full-bleed hold clears off the screen. */}
-      <div data-copy className="relative mx-auto w-full max-w-7xl px-6 pt-32 lg:px-16">
+      <div data-copy className="relative mx-auto w-full max-w-7xl px-6 pt-32 pb-24 lg:px-16">
         <p data-fade className="eyebrow text-burnt">The numbers</p>
 
         {/* The rail — the scroll progress bar, divided into four segments,
@@ -301,7 +321,7 @@ export function LivingWorkAperture() {
             <span
               key={f.value}
               aria-hidden
-              className="relative block h-0.5 w-14 overflow-hidden bg-burnt/20"
+              className="relative block h-0.5 w-10 overflow-hidden bg-burnt/20 sm:w-14"
             >
               <span
                 data-seg-fill
@@ -316,7 +336,7 @@ export function LivingWorkAperture() {
           </span>
         </div>
 
-        <div className="relative mt-16 h-[30vw] min-h-64">
+        <div className="relative mt-16 h-[30vw] min-h-32 sm:min-h-64">
           {/* The live counter — the rolling number the countdown ticks
               through between the four figures. Motion-only. */}
           <p
@@ -377,10 +397,6 @@ export function LivingWorkAperture() {
           </div>
         </div>
 
-        <p data-fade className="mt-14 max-w-xl pb-24 text-sm leading-relaxed text-evergreen/70">
-          The figures count down to 120 — and the 0 of 120 opens onto the
-          plain until the photograph takes the frame.
-        </p>
       </div>
 
     </section>
@@ -459,6 +475,27 @@ export function LivingWorkChallenges() {
           "linear-gradient(180deg, #f6f6ec 0%, #f5f3e8 22%, #efe9da 55%, #e7decb 80%, var(--ground, #e0d4bd) 100%)",
       }}
     >
+      {/* The ring again — same whisper, same slow turn, so §02 and §03 read
+          as one passage of ground. The section already clips. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div
+          data-artwork="ring-c"
+          data-artwork-drift
+          className="absolute -top-48 -right-72 h-[1000px] w-[1000px] opacity-[0.11]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
+        </div>
+        <div
+          data-artwork="ring-c"
+          data-artwork-drift
+          className="absolute bottom-[6%] -left-96 h-[900px] w-[900px] opacity-[0.09]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
+        </div>
+      </div>
+
       <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
         {/* data-handoff-title — this header exists for the document: with
             JavaScript off (or reduced motion) it is the section's heading.
@@ -497,6 +534,8 @@ export function LivingWorkChallenges() {
               alt={BREAK.subject}
               width={BREAK.width}
               height={BREAK.height}
+              loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover"
             />
           </div>
@@ -633,6 +672,8 @@ export function LivingWorkSpring() {
             alt=""
             width={SPRING.width}
             height={SPRING.height}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
           />
         </div>
@@ -837,6 +878,8 @@ export function LivingWorkStreams() {
                       alt=""
                       width={photo.width}
                       height={photo.height}
+                      loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover"
                     />
                   </div>
@@ -972,6 +1015,8 @@ export function LivingWorkBreath() {
             alt=""
             width={BREATH_FRAME.width}
             height={BREATH_FRAME.height}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
           />
         </div>
@@ -1067,7 +1112,7 @@ export function LivingWorkOutputs() {
                   >
                     <span
                       aria-hidden
-                      className="headline block text-4xl text-transparent sm:text-6xl [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]"
+                      className="headline block text-[clamp(1.375rem,6.4vw,2.25rem)] text-transparent sm:text-6xl [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]"
                     >
                       {output.title}
                     </span>
@@ -1076,7 +1121,7 @@ export function LivingWorkOutputs() {
                       className="absolute inset-0 overflow-hidden"
                       style={{ width: `${fill}%` }}
                     >
-                      <span className="headline block text-4xl whitespace-nowrap text-canvas sm:text-6xl">
+                      <span className="headline block text-[clamp(1.375rem,6.4vw,2.25rem)] whitespace-nowrap text-canvas sm:text-6xl">
                         {output.title}
                       </span>
                     </span>
@@ -1182,6 +1227,8 @@ export function LivingWorkInvitation() {
             alt=""
             width={SUNSET.width}
             height={SUNSET.height}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover object-[50%_61%]"
           />
         </div>

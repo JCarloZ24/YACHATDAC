@@ -26,7 +26,8 @@
 import type { Tone } from "@/lib/tone";
 
 export const truthHero = {
-  eyebrow: "The Truth",
+  /** The hi-fi hero sets the bare section label — TRUTH — not "The Truth". */
+  eyebrow: "Truth",
   title: "Most people have never heard of the Iningai.",
   standfirst: "This is what happened here, told by the people it happened to.",
   actions: [
@@ -105,8 +106,8 @@ export const erasBefore: readonly TruthEra[] = [
         ],
         image:
           "Architectural render of the Cultural Knowledge Precinct, a curved timber lattice canopy over an open gathering space, with visitors walking on red earth.",
-        caption: "Concept render of the Cultural Knowledge Precinct.",
-        coda: "It is being built because there is something here worth building it for.",
+        claim:
+          "It is being built because there is something here worth building it for.",
         source: "Written record",
         cta: { label: "Talk to us about being part of it", href: "#partner" },
       },
@@ -128,6 +129,7 @@ export const erasBefore: readonly TruthEra[] = [
     tone: "canvas",
     entries: [
       {
+        id: "today-fire",
         when: "Now",
         /**
          * ⚠ CR3 — applied everywhere else. This title and href are
@@ -150,6 +152,7 @@ export const erasBefore: readonly TruthEra[] = [
         },
       },
       {
+        id: "study-2022",
         when: "2022",
         title: "The site is studied with its owners",
         href: "/resources/fifteen-thousand-markings-read-in-order",
@@ -165,6 +168,9 @@ export const erasBefore: readonly TruthEra[] = [
         },
       },
       {
+        /* id added 2026-09-02 so the hi-fi's six-up photo strip can key its
+           media slots — no copy or structure change. */
+        id: "research-discovery",
         when: "More of this",
         title: "Research & discovery",
         body: [
@@ -184,6 +190,7 @@ export const erasBefore: readonly TruthEra[] = [
     lore: true,
     entries: [
       {
+        id: "deed",
         when: "12:15pm, Friday 26 June 2026",
         title: "The deed of grant",
         href: "/resources/it-nearly-didnt-happen",
@@ -202,6 +209,7 @@ export const erasBefore: readonly TruthEra[] = [
         },
       },
       {
+        id: "renamed",
         when: "1 October 2020",
         title: "Gracevale becomes Turraburra",
         body: [
@@ -211,6 +219,7 @@ export const erasBefore: readonly TruthEra[] = [
         source: "Written record",
       },
       {
+        id: "just-us",
         when: "2:30pm, 30 April 2019",
         title: "And then it was just us",
         href: "/resources/it-nearly-didnt-happen",
@@ -225,6 +234,7 @@ export const erasBefore: readonly TruthEra[] = [
         },
       },
       {
+        id: "father",
         when: "2003",
         title: "Suzanne's father",
         href: "/resources/it-nearly-didnt-happen",
@@ -246,6 +256,7 @@ export const erasBefore: readonly TruthEra[] = [
     tone: "charcoal",
     entries: [
       {
+        id: "art-gallery",
         when: "1950s",
         title: "They called it The Art Gallery",
         href: "/resources/when-they-called-it-the-art-gallery",
@@ -335,6 +346,7 @@ export const erasAfter: readonly TruthEra[] = [
     lore: true,
     entries: [
       {
+        id: "mitchell",
         when: "1840s",
         title: "What Mitchell recorded",
         href: "/resources/what-mitchell-wrote-down",
@@ -357,6 +369,7 @@ export const erasAfter: readonly TruthEra[] = [
     tone: "canvas",
     entries: [
       {
+        id: "engraving",
         when: "Older than 5,000 years, and nobody knows how much older",
         title: "The engraving starts",
         href: "/resources/fifteen-thousand-markings-read-in-order",
@@ -406,6 +419,7 @@ export const erasAfter: readonly TruthEra[] = [
     tone: "midnight",
     entries: [
       {
+        id: "seabed",
         when: "The Eromanga Sea",
         title: "The seabed that became the escarpment",
         body: [
@@ -421,6 +435,46 @@ export const erasAfter: readonly TruthEra[] = [
     ],
   },
 ];
+
+/**
+ * The floor. The hi-fi wireframe ends the descent here, below the seabed —
+ * and the draft (Timeline-v1, verbatim in src/content/lofi/truth.ts) is
+ * explicit that this is NOT the oldest entry: Lore is not a date, it is what
+ * the rail's "Lore — continuous" label has been pointing at the whole way
+ * down. Rendered as its own band, not a TruthEra, because it closes the
+ * chronology rather than extending it.
+ */
+export const wattanuri = {
+  id: "underneath-all-of-it",
+  marker: "Underneath all of it",
+  title: "Wattanuri, and the sisters he followed",
+  body: "The Seven Sisters travel across the sky and across the country, pursued. What they did on that journey shaped landforms that are still standing, and one figure at the southern end of the shelter is the pursuer himself.",
+  floor:
+    "This is not at the bottom of the page because it is the oldest thing on it. Lore is not a date. It is the floor everything above has been resting on the whole way down — which is why the band has run beside the reader since the first screen.",
+  cta: {
+    label: "As much as is told away from Country",
+    href: "/resources/wattanuri-and-the-ones-he-followed",
+  },
+} as const;
+
+/**
+ * Full-bleed photographic breaks — no caption by design, alt text required.
+ *
+ * ⚠ R10: the lo-fi drew the second break as the escarpment, and that hold
+ * stands — full-bleed break subject matter must not be cultural-site
+ * material. The subject is re-chosen here as open Country at dusk, which is
+ * the `country` bucket and carries no restriction.
+ */
+export const truthBreaks = {
+  countryNow: {
+    id: "break-country-now",
+    alt: "First light over the range at Turraburra.",
+  },
+  duskCountry: {
+    id: "break-dusk",
+    alt: "Open Country at dusk, trees against the last light.",
+  },
+} as const;
 
 /** The published paper the 2022 study became. Cited at the foot of the page. */
 export const publication = {

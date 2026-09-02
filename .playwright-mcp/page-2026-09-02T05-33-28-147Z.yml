@@ -1,0 +1,351 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - navigation "Primary" [ref=f1e3]:
+      - link "YACHATDAC — home" [ref=f1e4] [cursor=pointer]:
+        - /url: /
+        - img "YACHATDAC" [ref=f1e5]
+      - generic [ref=f1e6]:
+        - list [ref=f1e7]:
+          - listitem [ref=f1e8]:
+            - link "Wonder" [ref=f1e9] [cursor=pointer]:
+              - /url: /wonder
+          - listitem [ref=f1e10]:
+            - link "Truth" [ref=f1e11] [cursor=pointer]:
+              - /url: /truth
+          - listitem [ref=f1e12]:
+            - link "Living Work" [ref=f1e13] [cursor=pointer]:
+              - /url: /living-work
+          - listitem [ref=f1e14]:
+            - link "The Record" [ref=f1e15] [cursor=pointer]:
+              - /url: /resources
+          - listitem [ref=f1e16]:
+            - link "About" [ref=f1e17] [cursor=pointer]:
+              - /url: /about
+        - link "Connect" [ref=f1e18] [cursor=pointer]:
+          - /url: /connect
+  - main [ref=f1e22]:
+    - generic [ref=f1e25]:
+      - generic [ref=f1e27]:
+        - generic [ref=f1e33]:
+          - paragraph [ref=f1e34]: The Truth
+          - heading "Most people have never heard of the Iningai." [level=1] [ref=f1e35]
+          - paragraph [ref=f1e36]: This is what happened here, told by the people it happened to.
+          - generic [ref=f1e37]:
+            - link "↓ Start from the beginning" [ref=f1e38] [cursor=pointer]:
+              - /url: "#beginning"
+            - link "Research & partnerships" [ref=f1e39] [cursor=pointer]:
+              - /url: "#research"
+        - generic [ref=f1e40]:
+          - paragraph [ref=f1e41]: Lore — continuous
+          - paragraph [ref=f1e42]: Ahead
+          - heading "What is being built" [level=2] [ref=f1e43]
+          - generic [ref=f1e44]:
+            - article [ref=f1e45]:
+              - paragraph [ref=f1e46]: Within five years
+              - generic [ref=f1e47]:
+                - heading [level=3] [ref=f1e48]:
+                  - link "The Cultural Knowledge Precinct" [ref=f1e49] [cursor=pointer]:
+                    - /url: /resources/cultural-knowledge-precinct
+                - paragraph [ref=f1e50]: Exhibitions, teaching, research accommodation and a place for community to gather, in one place at Turraburra. Master planning is underway.
+                - figure "Concept render of the Cultural Knowledge Precinct." [ref=f1e51]
+                - paragraph [ref=f1e58]: It is being built because there is something here worth building it for.
+                - paragraph [ref=f1e59]: Written record
+                - link "Talk to us about being part of it →" [ref=f1e60] [cursor=pointer]:
+                  - /url: "#partner"
+            - article [ref=f1e61]:
+              - paragraph [ref=f1e62]: Work with us
+              - generic [ref=f1e63]:
+                - heading "Partnerships" [level=3] [ref=f1e64]
+                - paragraph [ref=f1e65]: A researcher on Country is a guest on Country. Partnerships here are expected to give something back to the land and the people.
+                - link "Partner with us →" [ref=f1e66] [cursor=pointer]:
+                  - /url: /connect
+        - generic [ref=f1e67]:
+          - paragraph [ref=f1e68]: Today
+          - heading "The work going on" [level=2] [ref=f1e69]
+          - generic [ref=f1e70]:
+            - article [ref=f1e71]:
+              - paragraph [ref=f1e72]: Now
+              - generic [ref=f1e73]:
+                - heading [level=3] [ref=f1e74]:
+                  - link "Right-way fire, springs, and two flux towers" [ref=f1e75] [cursor=pointer]:
+                    - /url: /resources/right-way-fire-and-the-carbon-in-the-soil
+                - paragraph [ref=f1e76]: The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on Country managed this way, one on grazed land, checked against each other.
+                - figure [ref=f1e77]:
+                  - generic [ref=f1e78]:
+                    - img "Rangers at the burn" [ref=f1e80]
+                    - img "A spring coming back" [ref=f1e82]
+                    - img "The flux tower on Country" [ref=f1e84]
+                - paragraph [ref=f1e85]: They can do this work because, seven years ago, this stopped being someone else's station.
+                - paragraph [ref=f1e86]: Living memory
+                - link "What the towers are showing →" [ref=f1e87] [cursor=pointer]:
+                  - /url: /resources/right-way-fire-and-the-carbon-in-the-soil
+            - article [ref=f1e88]:
+              - paragraph [ref=f1e89]: "2022"
+              - generic [ref=f1e90]:
+                - heading [level=3] [ref=f1e91]:
+                  - link "The site is studied with its owners" [ref=f1e92] [cursor=pointer]:
+                    - /url: /resources/fifteen-thousand-markings-read-in-order
+                - paragraph [ref=f1e93]: A two-year study documents Marra Wonga from both archaeological and Iningai perspectives, with Iningai community members as research partners rather than subjects. Ten clusters of engravings, read south to north, tell the Seven Sisters in sequence.
+                - figure [ref=f1e94]:
+                  - img "Researchers and community members working together on site" [ref=f1e99]
+                - paragraph [ref=f1e100]: Iningai people could be partners in that research because, by then, there were Iningai people the researchers had to ask.
+                - paragraph [ref=f1e101]: Science
+                - link "Read the findings →" [ref=f1e102] [cursor=pointer]:
+                  - /url: /resources/fifteen-thousand-markings-read-in-order
+            - article [ref=f1e103]:
+              - paragraph [ref=f1e104]: More of this
+              - generic [ref=f1e105]:
+                - heading "Research & discovery" [level=3] [ref=f1e106]
+                - paragraph [ref=f1e107]: The bore, the recorders, the flux towers, the plants under study. What has been found on Turraburra so far, and how it was found.
+                - link "Explore our discoveries →" [ref=f1e108] [cursor=pointer]:
+                  - /url: /resources#research-and-discovery
+      - generic [ref=f1e113]:
+        - paragraph [ref=f1e114]: Lore — continuous
+        - paragraph [ref=f1e115]: 2026 back to 2003
+        - heading "Bought back" [level=2] [ref=f1e116]
+        - generic [ref=f1e117]:
+          - article [ref=f1e118]:
+            - paragraph [ref=f1e119]: 12:15pm, Friday 26 June 2026
+            - generic [ref=f1e120]:
+              - heading [level=3] [ref=f1e121]:
+                - link "The deed of grant" [ref=f1e122] [cursor=pointer]:
+                  - /url: /resources/it-nearly-didnt-happen
+              - paragraph [ref=f1e123]: Turraburra is signed over outright. No longer held on our behalf, no longer shackled to anyone else's conditions.
+              - figure "Signing at 12:15pm. Suzanne had finished telling the story of the buyback minutes earlier, then opened the laptop." [ref=f1e124]
+              - paragraph [ref=f1e129]: Owning it outright is not the same as getting it back. Getting it back took seven years longer, and nearly did not happen at all.
+              - paragraph [ref=f1e130]: Written record
+              - link "Suzanne's account of how it happened →" [ref=f1e131] [cursor=pointer]:
+                - /url: /resources/it-nearly-didnt-happen
+          - article [ref=f1e132]:
+            - paragraph [ref=f1e133]: 1 October 2020
+            - generic [ref=f1e134]:
+              - heading "Gracevale becomes Turraburra" [level=3] [ref=f1e135]
+              - paragraph [ref=f1e136]: The station is renamed and officially launched as Turraburra, after the Terraburra clan recorded on this Country in an 1884 map.
+              - paragraph [ref=f1e137]: The name went back before the deed did.
+              - paragraph [ref=f1e138]: Written record
+          - article [ref=f1e139]:
+            - paragraph [ref=f1e140]: 2:30pm, 30 April 2019
+            - generic [ref=f1e141]:
+              - heading [level=3] [ref=f1e142]:
+                - link "And then it was just us" [ref=f1e143] [cursor=pointer]:
+                  - /url: /resources/it-nearly-didnt-happen
+              - paragraph [ref=f1e144]: The Indigenous Land and Sea Corporation had purchased the property and leased it to YACHATDAC eleven days earlier. Now the owner drove off it. There was no furniture in the house, so everyone slept on the floor. That first night Mark told them to be quiet and listen.
+              - figure [ref=f1e145]
+              - paragraph [ref=f1e149]: It had to be bought incognito. Once anyone knew who the money was really for, the price would have gone up.
+              - paragraph [ref=f1e150]: Living memory
+              - link "Read what it took →" [ref=f1e151] [cursor=pointer]:
+                - /url: /resources/it-nearly-didnt-happen
+          - article [ref=f1e152]:
+            - paragraph [ref=f1e153]: "2003"
+            - generic [ref=f1e154]:
+              - heading [level=3] [ref=f1e155]:
+                - link "Suzanne's father" [ref=f1e156] [cursor=pointer]:
+                  - /url: /resources/it-nearly-didnt-happen
+              - paragraph [ref=f1e157]: He spent his life fencing and protecting the sites out here, and holding two families together with photographs and envelopes and names. When she came back after he died, nothing had been done since.
+              - figure [ref=f1e158]
+              - paragraph [ref=f1e162]: He was carrying on his own father's work, and his grandfather's. The relationships that kept this Country reachable were held by people who never owned an acre of it.
+              - paragraph [ref=f1e163]: Living memory
+              - link "My father's dream →" [ref=f1e164] [cursor=pointer]:
+                - /url: /resources/it-nearly-didnt-happen
+      - generic [ref=f1e166]:
+        - paragraph [ref=f1e167]: 1950s
+        - heading "Admired under the wrong name" [level=2] [ref=f1e168]
+        - article [ref=f1e170]:
+          - paragraph [ref=f1e171]: 1950s
+          - generic [ref=f1e172]:
+            - heading [level=3] [ref=f1e173]:
+              - link "They called it The Art Gallery" [ref=f1e174] [cursor=pointer]:
+                - /url: /resources/when-they-called-it-the-art-gallery
+            - paragraph [ref=f1e175]: By the 1950s the escarpment has a name given to it by visitors, and it is not an Iningai one. The site is written up, photographed and admired under that name for decades.
+            - figure [ref=f1e176]
+            - paragraph [ref=f1e180]: Nobody corrected them, because by then there was almost nobody left to do it.
+            - paragraph [ref=f1e181]: Written record
+            - link "Who named it, and what it was called before →" [ref=f1e182] [cursor=pointer]:
+              - /url: /resources/when-they-called-it-the-art-gallery
+      - generic [ref=f1e186]:
+        - generic [ref=f1e187]:
+          - generic [ref=f1e188]:
+            - paragraph [ref=f1e189]: 1902, and then further back
+            - heading "By 1902 there were thirty-seven." [level=2] [ref=f1e190]
+            - generic [ref=f1e191]:
+              - generic [ref=f1e192]:
+                - term [ref=f1e193]: "1902"
+                - definition [ref=f1e194]: 37 Iningai adults recorded in the area, and three children.
+              - generic [ref=f1e195]:
+                - term [ref=f1e196]: "1886"
+                - definition [ref=f1e197]: 7,500 blankets calculated as necessary for the Iningai nation, sixteen years earlier. When they arrived, some still had to be cut in half, because there were not enough to go round.
+            - paragraph [ref=f1e198]:
+              - link "Population figures recorded in Hoch (1986), cited in Taçon et al., Australian Archaeology, 2022." [ref=f1e199] [cursor=pointer]:
+                - /url: https://www.tandfonline.com/doi/full/10.1080/03122417.2022.2084666
+          - generic [ref=f1e200]:
+            - complementary [ref=f1e201]:
+              - paragraph [ref=f1e202]: Editorial note — not for publication
+              - generic [ref=f1e203]: Draft — Suzanne's words, awaiting her approval. Taken from the Unfinished Business and Yacadak Framework recordings and lightly edited for reading. Nothing here is published until she has seen it and signed it off.
+            - figure "Suzanne Thompson Iningai custodian · Founder and Managing Director, YACHATDAC" [ref=f1e204]:
+              - blockquote [ref=f1e205]:
+                - paragraph [ref=f1e206]: “And I'm a descendant of one of those 37.”
+              - generic [ref=f1e207]:
+                - text: Suzanne Thompson
+                - generic [ref=f1e208]: Iningai custodian · Founder and Managing Director, YACHATDAC
+            - paragraph [ref=f1e209]: To understand that number you have to go back sixteen years, to a drought, and to a decision made out of concern.
+            - figure [ref=f1e210]:
+              - blockquote [ref=f1e211]:
+                - paragraph [ref=f1e212]: “In 1886 the settlers had all come, and they'd established about 150 property landholdings. It was a great drought, and they were really concerned about the poor condition of the natives. Winter was coming. They were worried, because our people were off their lands and couldn't hunt, and had no access to their country or their foods.”
+            - figure [ref=f1e213]:
+              - blockquote [ref=f1e214]:
+                - paragraph [ref=f1e215]: “So they decided we needed blankets.”
+            - paragraph [ref=f1e216]: What was written in the history books afterwards is that we did not exist, that we had no rights, that we had been wiped out. Up until seven years ago, by the government's account, Iningai people did not exist at all.
+            - paragraph [ref=f1e217]: Well — we're still here.
+            - paragraph [ref=f1e218]: Our ancestors were dispossessed and massacred in a way that meant we never got to complete the proper cultural ceremony for that grieving. Another belief arrived and said it is done this way now. That is unfinished business. There are massacre sites out here. We know where they are.
+            - paragraph [ref=f1e219]: My great-great-great grandmother Polly. My great-great-great grandfather Billy. That is how I know where to hunt, and which springs to visit, and why my family is still on this Country.
+            - complementary [ref=f1e221]:
+              - paragraph [ref=f1e222]: For Suzanne to check — not for publication
+              - generic [ref=f1e223]: "For Suzanne to check — Every line above is yours, edited only for reading, and re-ordered so the count comes before the blankets. Two things to confirm: whether that reversal is right, and the number. Your recording says thirty-five; the published figure is thirty-seven adults and three children (Hoch 1986, cited in Taçon et al. 2022). We have used thirty-seven. Change it back if yours is the one that stands."
+        - generic [ref=f1e224]:
+          - paragraph [ref=f1e225]: Lore — continuous
+          - paragraph [ref=f1e226]: 1840s
+          - heading "Before the runs were taken up" [level=2] [ref=f1e227]
+          - article [ref=f1e229]:
+            - paragraph [ref=f1e230]: 1840s
+            - generic [ref=f1e231]:
+              - heading [level=3] [ref=f1e232]:
+                - link "What Mitchell recorded" [ref=f1e233] [cursor=pointer]:
+                  - /url: /resources/what-mitchell-wrote-down
+              - paragraph [ref=f1e234]: The explorer Thomas Mitchell passes through and describes the Iningai — including huts built solidly enough to carry bark tiles on the roof.
+              - figure [ref=f1e235]
+              - paragraph [ref=f1e239]: The first written account of the people here was written by someone who had just arrived. Everyone who could have written it earlier had no reason to.
+              - paragraph [ref=f1e240]: Written record
+              - link "Read the passage, and what it proves →" [ref=f1e241] [cursor=pointer]:
+                - /url: /resources/what-mitchell-wrote-down
+      - generic [ref=f1e243]:
+        - paragraph [ref=f1e244]: Older than the record
+        - heading "Cut into the wall" [level=2] [ref=f1e245]
+        - generic [ref=f1e246]:
+          - article [ref=f1e247]:
+            - paragraph [ref=f1e248]: Older than 5,000 years, and nobody knows how much older
+            - generic [ref=f1e249]:
+              - heading [level=3] [ref=f1e250]:
+                - link "The engraving starts" [ref=f1e251] [cursor=pointer]:
+                  - /url: /resources/fifteen-thousand-markings-read-in-order
+              - paragraph [ref=f1e252]: Over 15,000 petroglyphs and 111 stencils accumulate along 160 metres of shelter wall — animal tracks, lines, grooves, drilled holes, and human feet with six toes. The Iningai name for the place is Marra Wonga. It means place of many stories.
+              - paragraph [ref=f1e253]: Ten clusters of designs run south to north. They were made at different times. Read in that order, they tell the Seven Sisters — the sisters pursued, the boomerangs thrown, the Rainbow Serpent, the dingo watching over the one who stayed on Earth.
+              - paragraph [ref=f1e254]: The sisters are the Pleiades. Their story is told in more than eighty places across this continent, and in cultures on the other side of the world.
+              - paragraph [ref=f1e255]: Some of it is common knowledge. Some is women's and some is men's. What is written here is the part that is told away from Country.
+              - paragraph [ref=f1e256]: No other rock art site is known anywhere in the world where a story runs across the whole site. Researchers have looked.
+              - figure [ref=f1e257]
+              - paragraph [ref=f1e261]: People were marking this wall for thousands of years before anyone arrived to write a word about them.
+              - paragraph [ref=f1e262]: The site has never been scientifically dated. The pecked designs are likely more than 5,000 years old on regional style sequences; mud wasp nests over some engravings could give minimum ages if they are ever sampled.
+              - paragraph [ref=f1e263]: Science
+              - link "What the study found, and how →" [ref=f1e264] [cursor=pointer]:
+                - /url: /resources/fifteen-thousand-markings-read-in-order
+          - article [ref=f1e265]:
+            - paragraph [ref=f1e266]: Still to be found
+            - generic [ref=f1e267]:
+              - heading "Open research" [level=3] [ref=f1e268]
+              - paragraph [ref=f1e269]: Most of this Country has never been studied. We are looking for researchers in palaeontology and archaeology, ecology and biodiversity, and medicinal botany.
+              - link "Explore research opportunities →" [ref=f1e270] [cursor=pointer]:
+                - /url: /partnerships#research-opportunities
+      - generic [ref=f1e271]:
+        - generic [ref=f1e272]:
+          - paragraph [ref=f1e273]: Before people · about 100 million years ago
+          - heading "All of this was under water" [level=2] [ref=f1e274]
+          - article [ref=f1e276]:
+            - paragraph [ref=f1e277]: The Eromanga Sea
+            - generic [ref=f1e278]:
+              - heading "The seabed that became the escarpment" [level=3] [ref=f1e279]
+              - paragraph [ref=f1e280]: The Eromanga Sea covers most of inland Queensland. Sediment settles on its floor, hardens, and becomes the sandstone of the escarpment. The wall they marked was already the oldest thing here.
+              - paragraph [ref=f1e281]: Creatures stand in the mud at the edge of it, where the mangroves would have been, and the prints set. They are still here. So are petrified trees, and what one visiting specialist thinks may be dinosaur eggs. The soil profiles match Winton, where the dinosaurs were found.
+              - figure [ref=f1e282]
+              - paragraph [ref=f1e290]: Almost none of it has been studied.
+              - link "How the seabed became the escarpment →" [ref=f1e291] [cursor=pointer]:
+                - /url: /resources/you-are-standing-on-a-seabed
+        - generic [ref=f1e292]:
+          - paragraph [ref=f1e293]: Underneath all of it
+          - heading "Wattanuri, and the sisters he followed" [level=2] [ref=f1e294]
+          - paragraph [ref=f1e295]: The Seven Sisters travel across the sky and across the country, pursued. What they did on that journey shaped landforms that are still standing, and one figure at the southern end of the shelter is the pursuer himself.
+          - paragraph [ref=f1e296]: This is not at the bottom of the page because it is the oldest thing on it. Lore is not a date. It is the floor everything above has been resting on the whole way down — which is why the band has run beside the reader since the first screen.
+          - link "As much as is told away from Country →" [ref=f1e297] [cursor=pointer]:
+            - /url: /resources/wattanuri-and-the-ones-he-followed
+        - generic [ref=f1e298]:
+          - paragraph [ref=f1e299]: Published record
+          - paragraph [ref=f1e300]:
+            - 'link "Marra Wonga: Archaeological and contemporary First Nations interpretations of one of central Queensland''s largest rock art sites" [ref=f1e301] [cursor=pointer]':
+              - /url: https://www.tandfonline.com/doi/full/10.1080/03122417.2022.2084666
+            - text: — Australian Archaeology, 2022.
+  - contentinfo [ref=f1e302]:
+    - generic [ref=f1e304]:
+      - generic [ref=f1e305]:
+        - heading "Acknowledgement of Country" [level=2] [ref=f1e306]
+        - paragraph [ref=f1e307]: "[ WELCOME TO COUNTRY — held. The wording comes from Suzanne Thompson and has not been supplied. ⚠ R1 — do not draft, paraphrase or place substitute text here. ]"
+      - generic [ref=f1e309]:
+        - generic [ref=f1e310]:
+          - img "YACHATDAC — Yambangku Aboriginal Cultural Heritage & Tourism Development Aboriginal Corporation" [ref=f1e311]
+          - paragraph [ref=f1e312]: Registration
+          - paragraph [ref=f1e313]: ICN [ number ]
+          - paragraph [ref=f1e314]: ABN [ number ]
+          - paragraph [ref=f1e315]: ⚠ R15 — registration numbers not yet supplied
+        - generic [ref=f1e316]:
+          - heading "Pages" [level=2] [ref=f1e317]
+          - list [ref=f1e318]:
+            - listitem [ref=f1e319]:
+              - link "Wonder" [ref=f1e320] [cursor=pointer]:
+                - /url: /wonder
+            - listitem [ref=f1e321]:
+              - link "Truth" [ref=f1e322] [cursor=pointer]:
+                - /url: /truth
+            - listitem [ref=f1e323]:
+              - link "Living Work" [ref=f1e324] [cursor=pointer]:
+                - /url: /living-work
+            - listitem [ref=f1e325]:
+              - link "The Record" [ref=f1e326] [cursor=pointer]:
+                - /url: /resources
+        - generic [ref=f1e327]:
+          - heading "Organisation" [level=2] [ref=f1e328]
+          - list [ref=f1e329]:
+            - listitem [ref=f1e330]:
+              - link "About YACHATDAC" [ref=f1e331] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f1e332]:
+              - link "Our people" [ref=f1e333] [cursor=pointer]:
+                - /url: /our-people
+            - listitem [ref=f1e334]:
+              - link "Partners" [ref=f1e335] [cursor=pointer]:
+                - /url: /partnerships
+        - generic [ref=f1e336]:
+          - heading "Get in touch" [level=2] [ref=f1e337]
+          - list [ref=f1e338]:
+            - listitem [ref=f1e339]:
+              - link "Guesting enquiries" [ref=f1e340] [cursor=pointer]:
+                - /url: /connect
+            - listitem [ref=f1e341]:
+              - link "Research & partnerships" [ref=f1e342] [cursor=pointer]:
+                - /url: /connect
+            - listitem [ref=f1e343]:
+              - link "Ranger exchange" [ref=f1e344] [cursor=pointer]:
+                - /url: /connect
+        - generic [ref=f1e345]:
+          - heading "Follow" [level=2] [ref=f1e346]
+          - list [ref=f1e347]:
+            - listitem [ref=f1e348]: Facebook
+            - listitem [ref=f1e349]: Instagram
+      - generic [ref=f1e351]:
+        - generic [ref=f1e352]:
+          - paragraph [ref=f1e353]: © 2026 YACHATDAC. All rights reserved.
+          - link "Privacy Policy" [ref=f1e354] [cursor=pointer]:
+            - /url: /legal/privacy
+          - link "Terms of Service" [ref=f1e355] [cursor=pointer]:
+            - /url: /legal/terms
+          - link "Cookie Settings" [ref=f1e356] [cursor=pointer]:
+            - /url: /legal/cookies
+        - list [ref=f1e357]:
+          - listitem [ref=f1e358]:
+            - generic "Facebook — profile URL to come" [ref=f1e359]
+          - listitem [ref=f1e362]:
+            - generic "Instagram — profile URL to come" [ref=f1e363]
+          - listitem [ref=f1e366]:
+            - generic "X — profile URL to come" [ref=f1e367]
+          - listitem [ref=f1e370]:
+            - generic "LinkedIn — profile URL to come" [ref=f1e371]
+          - listitem [ref=f1e374]:
+            - generic "YouTube — profile URL to come" [ref=f1e375]
+  - button "Open Next.js Dev Tools" [ref=f1e383] [cursor=pointer]
