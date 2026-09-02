@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ConnectButton } from "@/components/layout/ConnectButton";
 import { org, primaryAction, primaryNav } from "@/content/site";
 
 /**
@@ -13,21 +14,56 @@ import { org, primaryAction, primaryNav } from "@/content/site";
  * links plus the Connect action when open. The desktop header stays the
  * transparent 130px band; this bar exists below `md` only.
  *
+ * The bar is fixed: it slides away as the reader scrolls down and returns on
+ * the first upward scroll, so the menu is always one gesture away without
+ * sitting on the photography the whole time.
+ *
  * The black wordmark is public/brand/logo-wordmark-black.svg — the same
  * authored vectors as the white cut, per build documentation §5 (never
  * recreate or approximate the mark in code).
  */
 export function MobileNav() {
   const [open, setOpen] = useState(false);
+  // Hidden while scrolling down, back the moment the reader scrolls up.
+  const [hidden, setHidden] = useState(false);
   const pathname = usePathname();
 
-  // A route change is a navigation — the panel closes behind it.
   useEffect(() => {
+    let last = window.scrollY;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const delta = y - last;
+        // A small dead-zone so rubber-banding and tiny jitters don't flicker
+        // the bar; near the top it always shows.
+        if (y < 16) setHidden(false);
+        else if (delta > 6) setHidden(true);
+        else if (delta < -6) setHidden(false);
+        last = y;
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  const [seenPath, setSeenPath] = useState(pathname);
+
+  // A route change is a navigation — the panel closes behind it. Done during
+  // render (not in an effect) so it never paints an open panel on the new page.
+  if (pathname !== seenPath) {
+    setSeenPath(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   return (
-    <div className="bg-white text-black md:hidden">
+    <div
+      className={`fixed inset-x-0 top-0 z-30 bg-white text-black transition-transform duration-(--dur-small) ease-quiet md:hidden ${
+        hidden && !open ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <div className="flex h-16 items-center justify-between pl-5 pr-3">
         <Link href="/" aria-label={`${org.name} — home`} className="shrink-0">
           <Image
@@ -77,12 +113,11 @@ export function MobileNav() {
               </li>
             ))}
           </ul>
-          <Link
-            href={primaryAction.href}
-            className="mt-4 flex h-10 items-center justify-center border border-black bg-black px-5 text-base leading-6 text-white"
-          >
-            {primaryAction.title}
-          </Link>
+          {/* The same CONNECT blob as the desktop header — one CTA, one asset,
+              one water fill (see ConnectButton). */}
+          <div className="mt-4">
+            <ConnectButton href={primaryAction.href} label={primaryAction.title} />
+          </div>
         </nav>
       ) : null}
     </div>

@@ -88,7 +88,7 @@ export function LivingWorkHero() {
     <section
       id="hero"
       data-lw="hero"
-      className="relative flex min-h-svh items-end overflow-hidden bg-charcoal"
+      className="relative -mb-0.5 flex min-h-svh items-end overflow-hidden bg-charcoal"
     >
       {/* 1.40.2 — the subject sits right of centre and the headline never
           crosses her. Hold that relationship if the crop is ever adjusted:
@@ -132,27 +132,38 @@ export function LivingWorkHero() {
         </p>
       </div>
 
-      {/* Marc's divider hands the photograph off into the page. */}
+      {/* Marc's divider hands the photograph off into the page. The path's
+          closing corner is pushed past the box on the left (x=-4) and below it
+          (y=120): the supplied asset closed at x=1, which left a one-pixel
+          column of photograph beside the fill at the left edge. */}
       <div
         data-wave
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 text-canvas"
       >
-        {/* viewBox bottom sits just above where the path bottoms out (y≈105.3),
-            so the fill overdraws the box's lower edge. At 151 the lower third
-            was transparent and the photograph showed below the crest; at exactly
-            the path's own depth, rounding left a hairline of photograph. */}
+        {/* viewBox bottom sits just above where the path bottoms out (y≈105.3)
+            so the fill overdraws the box's lower edge. The path's shallowest
+            point (x=0, y≈93) leaves only ~11 units of flat fill above the
+            box's bottom, so the seam cover below must stay thinner than that
+            or it shows as a flat step at the left edge — hence the section's
+            2px overlap into the next, and nothing taller. */}
         <svg
           viewBox="0 0 1442 104"
           preserveAspectRatio="none"
           className="block h-[9vw] w-full"
         >
           <path
-            d="M1470 8C1427.5 -2.1 1377.2 -2.7 1334 6.6c-63.6 13.6-109.7 36-176.5 44.2-44.4 5.5-85.4 1.5-129.4-.3-59-2.3-111-.6-167.3 9.8-52.9 9.7-104.2 22.3-159.8 27.2-67.6 6-136.5-3.7-201.6-15.2C434.4 62 369.3 48.6 300.8 46.8 195.6 44 95.7 68.9 1 93.1l0 12.2h1467.8L1470 8Z"
+            d="M1470 8C1427.5 -2.1 1377.2 -2.7 1334 6.6c-63.6 13.6-109.7 36-176.5 44.2-44.4 5.5-85.4 1.5-129.4-.3-59-2.3-111-.6-167.3 9.8-52.9 9.7-104.2 22.3-159.8 27.2-67.6 6-136.5-3.7-201.6-15.2C434.4 62 369.3 48.6 300.8 46.8 195.6 44 95.7 68.9 1 93.1L-4 94.4V120h1480V8Z"
             fill="currentColor"
           />
         </svg>
       </div>
+      {/* Seam: the motion pass leaves a transform on [data-wave], promoting it
+          to its own compositing layer, and the GPU can rasterise that layer's
+          bottom edge a device pixel short of the section edge. The section's
+          -mb-0.5 pulls the next section 2px up over this edge so the canvas
+          fills overlap. 2px, not more: the wave's left edge has ~4px of flat
+          fill on phones and anything taller reads as a step. */}
     </section>
   );
 }
@@ -662,7 +673,7 @@ export function LivingWorkSpring() {
     <section
       id="spring"
       data-lw="spring"
-      className="relative flex min-h-svh items-center overflow-hidden bg-charcoal"
+      className="relative -mb-0.5 flex min-h-svh items-center overflow-hidden bg-charcoal"
     >
       {SPRING ? (
         <div data-media data-motion={SPRING.grade} aria-hidden className="absolute inset-0">
@@ -777,6 +788,7 @@ export function LivingWorkSpring() {
           />
         </svg>
       </div>
+      {/* 2px overlap into the next section — see the hero wave's note. */}
     </section>
   );
 }
