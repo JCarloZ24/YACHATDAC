@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { org, primaryAction, primaryNav } from "@/content/site";
 import { ConnectButton } from "@/components/layout/ConnectButton";
+import { MobileNav } from "@/components/layout/MobileNav";
 
 /**
  * Site header.
@@ -37,9 +38,12 @@ import { ConnectButton } from "@/components/layout/ConnectButton";
 export function SiteHeader() {
   return (
     <header className="absolute inset-x-0 top-0 z-30">
+      {/* Navbar / Mobile — the solid white bar with the black wordmark and
+          the hamburger panel. Below md only; the band below is desktop's. */}
+      <MobileNav />
       <nav
         aria-label="Primary"
-        className="mx-auto flex h-[130px] max-w-[1440px] items-center justify-between gap-8 px-6 lg:px-16"
+        className="mx-auto hidden h-[130px] max-w-[1440px] items-center justify-between gap-8 px-6 md:flex lg:px-16"
       >
         <Link href="/" aria-label={`${org.name} — home`} className="shrink-0">
           <Image
