@@ -14,9 +14,10 @@
  *   [data-v2-count]        the 1902/1886 numerals — they arrive at scale and
  *                          take the screen; the count is the page's loudest
  *                          typographic moment and everything near it is still
- *   [data-v2-trail-fill]   the winding trail's gold layer — clipped open
- *                          linearly with document scroll (machine easing; a
- *                          progress indicator that eases is lying)
+ *   [data-v2-steps-fill]   the record strand's ochre fill — clipped open
+ *                          linearly with document scroll, trailing it on a
+ *                          heavy scrub (scroll-derived; the lag is the only
+ *                          easing, and it settles to the true position)
  *
  * Suzanne's testimony itself carries NO motion attributes. That stillness is
  * the doctrine's stated exception (F7 rule 1): the reader is being read to.
@@ -95,8 +96,12 @@ export function createTruthDescentV2(): MotionModule {
               },
             );
           };
-          wireFill("[data-v2-trail-fill]", 0.6, 0);
-          wireFill("[data-v2-steps-fill]", 0.3, 0.6);
+          // The record strand's colour drops behind the scroll on purpose
+          // (2026-09-03): a heavy scrub, so the ochre trails the reader
+          // down the dots and catches up when they pause. Still scroll-
+          // derived, still both directions. The tip aims at the 0.6vh
+          // reading line, arriving there once the lag settles.
+          wireFill("[data-v2-steps-fill]", SCRUB.heavy * 1.5, 0.6);
         }
 
         // The hero settle — the hi-fi motion note (2026-09-02) supersedes the
@@ -271,7 +276,7 @@ export function createTruthDescentV2(): MotionModule {
       // Everything else's resting markup IS the final state, and the base
       // descent module handles ground/rail snapping.
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        ["[data-v2-trail-fill]", "[data-v2-steps-fill]"].forEach((selector) => {
+        ["[data-v2-steps-fill]"].forEach((selector) => {
           const layer = document.querySelector<HTMLElement>(selector);
           if (layer) gsap.set(layer, { clipPath: "inset(0% 0% 0% 0%)" });
         });
