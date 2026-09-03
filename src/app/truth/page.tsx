@@ -6,8 +6,6 @@ import {
   DissolveBreak,
   EraSection,
   FullBleedBreak,
-  GoldTrail,
-  PublicationBand,
   SuzanneBand,
   TruthHeroV2,
   WattanuriBand,
@@ -55,7 +53,10 @@ export default function TruthPage() {
   return (
     <PageTransition ground="#22372B">
       <V2TruthMotion />
-      <div data-descent-root className="relative text-canvas">
+      <div
+        data-descent-root
+        className="relative -mb-[13.9vw] text-canvas"
+      >
         {/* The ground — the module builds one opaque layer per era into it. */}
         <div data-descent-ground aria-hidden className="fixed inset-0 -z-10" />
         {/* The winding record trail — the wireframe's scroll indicator: the
@@ -95,14 +96,17 @@ export default function TruthPage() {
         </section>
 
         <section data-descent-band="deep-time">
+          {/* 19 runs straight into 20 (16341 + 1447 = 17788): no trail between. */}
           <EraSection era={beginning} />
-          <GoldTrail variant="wave" />
           <WattanuriBand />
-          <PublicationBand />
         </section>
       </div>
-      {/* The page ends on the deep-time ground, not canvas. */}
-      <FooterGround color="var(--color-midnight)" />
+      {/* The page ends on the Wattanuri photograph itself (the 20 frame):
+          the footer's burnt crest rides the foot of the image, so the wave
+          block is pulled up over it (the negative margin above) and its
+          ground is transparent — no published-record strip and no colour
+          band between the floor and the footer. */}
+      <FooterGround color="transparent" />
     </PageTransition>
   );
 }

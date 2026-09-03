@@ -3,7 +3,6 @@ import { join } from "node:path";
 import Link from "next/link";
 import {
   loreMarker,
-  publication,
   suzanne,
   truthHero,
   type TruthEntry,
@@ -18,6 +17,7 @@ import {
   truthDeedPlateSlot,
   truthHeroSlot,
   truthTodayPlateSlot,
+  truthWattanuriMedia,
 } from "@/content/truth-media";
 import { MediaOrField } from "@/components/v2/MediaOrField";
 import { EditorialNote } from "@/components/ui/EditorialNote";
@@ -628,6 +628,67 @@ function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
   );
 }
 
+/**
+ * P7 · strata stack (19 · ABOUT 100 MILLION YEARS AGO — GROUND · charcoal,
+ * 2026-09-03): surface, tree line, stone. Three images stepped vertically
+ * with the ground showing between them as sediment bands, each offset
+ * horizontally (0 / 129 / 64 of the 920 column) — the layout itself is a
+ * cross-section. No people in any layer. Rounded 16px.
+ *
+ * ⚠ PENDING-MOTIF — both artworks static: the dot cluster sits ON the
+ * deepest layer, the seam glyph marks the second image's right edge.
+ * Country bucket, so the layers take the ground's depth drift.
+ */
+function StrataStack({ slots }: { slots: MediaSlot[] }) {
+  const [surface, treeLine, stone] = slots;
+  const strata: Array<{ slot: MediaSlot; offset: string }> = [
+    { slot: surface, offset: "ml-0" },
+    { slot: treeLine, offset: "sm:ml-[14%]" },
+    { slot: stone, offset: "sm:ml-[7%]" },
+  ];
+  return (
+    <figure className="mt-10 max-w-4xl">
+      {strata.map(({ slot, offset }, i) => (
+        <div
+          key={slot.id}
+          data-motion={MOTION_GRADE[slot.bucket]}
+          {...(MOTION_GRADE[slot.bucket] === "frame" ? {} : { "data-v2-depth": true })}
+          className={`relative aspect-[699/221] w-full overflow-hidden rounded-2xl sm:w-[76%] ${offset} ${
+            i > 0 ? "mt-6 sm:mt-9" : ""
+          }`}
+        >
+          <MediaOrField
+            src={presentSrc(slot.src)}
+            alt={slot.expects}
+            sizes="(min-width: 1024px) 48vw, 100vw"
+            fieldClass={FIELD_CLASS[slot.tone]}
+          />
+          {i === 1 ? (
+            /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
+            <img
+              src="/artwork/glyph-a.svg"
+              alt=""
+              aria-hidden
+              className="pointer-events-none absolute right-[3%] top-[71%] w-11"
+              loading="lazy"
+            />
+          ) : null}
+          {i === 2 ? (
+            /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
+            <img
+              src="/artwork/cluster.svg"
+              alt=""
+              aria-hidden
+              className="pointer-events-none absolute left-[66%] top-[44%] w-[16%] opacity-95"
+              loading="lazy"
+            />
+          ) : null}
+        </div>
+      ))}
+    </figure>
+  );
+}
+
 function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }) {
   const anyFrameGraded = slots.some((slot) => MOTION_GRADE[slot.bucket] === "frame");
   /* Six or more slots render as the hi-fi's square filmstrip (the 2022
@@ -722,8 +783,25 @@ function EntryBlock({
   const isArtGallery = entry.id === "art-gallery";
   /* 16 · ENTRY 1840s: the Country he described, then the held journal slot. */
   const isMitchell = entry.id === "mitchell";
-  /* Frames 10, 11, 12, 13 and 16 share the ground-record treatment. */
-  const isGroundFrame = isDiptych || isFather || isArtGallery || isMitchell;
+  /* 17 · OLDER THAN THE RECORD — ⛔ SILENT: typographic only. The era
+     marker sits in the gutter with the draft's dating line under it, the
+     era title as the burnt kicker, and nothing moves. The story-wall slot
+     is withheld (R10), so no media renders here — not even a tonal field. */
+  const isEngraving = entry.id === "engraving";
+  /* 18 · CARD Still to be found: kicker at Link/14, then evidence strip B. */
+  const isOpportunities = entry.id === "opportunities";
+  /* 19 · ABOUT 100 MILLION YEARS AGO: the era marker in the gutter, the era
+     title as the kicker, then the P7 strata stack — a cross-section. */
+  const isSeabed = entry.id === "seabed";
+  /* Frames 10–13 and 16–19 share the ground-record treatment. */
+  const isGroundFrame =
+    isDiptych ||
+    isFather ||
+    isArtGallery ||
+    isMitchell ||
+    isEngraving ||
+    isOpportunities ||
+    isSeabed;
   /* The 2022 record frame (2026-09-02) sets the pattern for ground records:
      the year alone in the left gutter at gold, the title at display scale,
      the coda as a large statement, and the record label + CTA on one row.
@@ -756,7 +834,10 @@ function EntryBlock({
               its pointer on this element exactly. */}
           {/* normal-case: the eyebrow uppercases, and a decade reads
               "1950s", not "1950S". */}
-          <p data-era-label className="eyebrow text-xl normal-case text-gold">
+          <p
+            data-era-label
+            className={`eyebrow text-xl text-gold ${/^\d/.test(label) ? "normal-case" : ""}`}
+          >
             {label}
           </p>
           {sub ? (
@@ -783,7 +864,9 @@ function EntryBlock({
         ) : null}
         {label ? (
           <div className="mb-6 md:hidden">
-            <p className="eyebrow normal-case text-gold">{label}</p>
+            <p className={`eyebrow text-gold ${/^\d/.test(label) ? "normal-case" : ""}`}>
+              {label}
+            </p>
             {sub ? (
               <p className="mt-1 text-xs font-normal uppercase text-canvas">
                 {sub}
@@ -854,7 +937,7 @@ function EntryBlock({
             {entry.coda}
           </p>
         ) : null}
-        {entry.id && truthEntryMedia[entry.id] ? (
+        {entry.id && truthEntryMedia[entry.id] && !isEngraving ? (
           entry.id === "precinct" ? (
             <FeatureMedia
               slots={truthEntryMedia[entry.id]}
@@ -876,6 +959,8 @@ function EntryBlock({
             <WrittenRecordFrame slots={truthEntryMedia[entry.id]} />
           ) : isMitchell ? (
             <CountryAndDocument slots={truthEntryMedia[entry.id]} />
+          ) : isSeabed ? (
+            <StrataStack slots={truthEntryMedia[entry.id]} />
           ) : (
             <EntryMedia slots={truthEntryMedia[entry.id]} caption={entry.caption} />
           )
@@ -893,7 +978,10 @@ function EntryBlock({
             </p>
             <Link
               href={entry.cta.href}
-              className="eyebrow text-xs text-ochre transition-transform duration-300 hover:translate-x-1"
+              /* The ground frames (17, 18) set the CTA at Yellow Gold. */
+              className={`eyebrow text-xs transition-transform duration-300 hover:translate-x-1 ${
+                isGroundFrame ? "text-gold" : "text-ochre"
+              }`}
             >
               {entry.cta.label} &rarr;
             </Link>
@@ -914,7 +1002,9 @@ function EntryBlock({
             {entry.cta ? (
               <Link
                 href={entry.cta.href}
-                className="eyebrow mt-6 inline-block text-xs text-ochre transition-transform duration-300 hover:translate-x-1"
+                className={`eyebrow mt-6 inline-block text-xs transition-transform duration-300 hover:translate-x-1 ${
+                  isGroundFrame ? "text-gold" : "text-ochre"
+                }`}
               >
                 {entry.cta.label} &rarr;
               </Link>
@@ -1025,6 +1115,15 @@ export function EraSection({
   /* 16 · ENTRY 1840s does the same — BEFORE THE RUNS WERE TAKEN UP under the
      gold year — but on the navy ground the page band paints, not roasted. */
   const eraTitleInGutter = titleInGutter || era.entries[0]?.id === "mitchell";
+  /* 17 · OLDER THAN THE RECORD + 18 · CARD Still to be found: the era title
+     becomes the engraving entry's kicker, Ring A sits static behind the copy
+     and Marc's charcoal wave hands the foot to deep time. */
+  const isOlderThanRecord = era.entries[0]?.id === "engraving";
+  /* 19 · ABOUT 100 MILLION YEARS AGO folds the same way: the marker in the
+     gutter (no dating line — the entry's when is its own title's subject),
+     ALL OF THIS WAS UNDER WATER as the seabed entry's burnt kicker. */
+  const isBeginning = era.id === "beginning";
+  const foldsEra = foldsTitleIntoEntry || isOlderThanRecord || isBeginning;
   /**
    * The Today era opens on its ENTRY plate (04, 1440×900 spec): the era
    * marker, title and lead-entry headline all live on the plate, so the
@@ -1136,7 +1235,7 @@ export function EraSection({
       {/* The era marker, the lore line, and the entry whens all live on the
           trail rail now (2026-09-02) — repeating them here doubled the
           timeline and crowded the gutter the rail moved into. */}
-      {foldsTitleIntoEntry || eraTitleInGutter ? null : (
+      {foldsEra || eraTitleInGutter ? null : (
         <SplitReveal
           as="h2"
           mode="lines"
@@ -1150,16 +1249,19 @@ export function EraSection({
           <EntryBlock
             key={entry.title}
             entry={entry}
-            kicker={foldsTitleIntoEntry && index === 0 ? era.title : undefined}
-            gutterLabel={
-              foldsTitleIntoEntry && index === 0 ? era.marker : undefined
-            }
+            /* 17 · OLDER THAN THE RECORD folds the era the same way as
+               Ahead: the marker (with the dating line under it) in the
+               gutter, CUT INTO THE WALL as the burnt kicker. */
+            kicker={foldsEra && index === 0 ? era.title : undefined}
+            gutterLabel={foldsEra && index === 0 ? era.marker : undefined}
             /* The 13 frame sets the era title under the year in the gutter
                (1950s / ADMIRED UNDER THE WRONG NAME), the same as 10–12. */
             gutterSub={
               entry.id === "art-gallery" || entry.id === "mitchell"
                 ? era.title
-                : undefined
+                : entry.id === "seabed"
+                  ? "" /* the 19 frame carries no dating line under the era */
+                  : undefined
             }
           />
         ))}
@@ -1173,6 +1275,37 @@ export function EraSection({
     return (
       <section id={era.id} className="relative bg-roasted">
         <div aria-hidden className="absolute inset-0 bg-[rgba(9,14,18,0.34)]" />
+        {inner}
+      </section>
+    );
+  }
+  if (isOlderThanRecord) {
+    return (
+      <section id={era.id} className="relative overflow-hidden pb-16 sm:pb-28">
+        {/* ⚠ PENDING-MOTIF · Artwork Ring A — static, deliberately behind the
+            copy. Spec: x900 y70 of the 1440 frame, 416px wide, 0.12 over the
+            0.08 fill. The delivered cut bakes 0.14 × 0.08, so it is dimmed to
+            0.86 here. Artwork-motion permission is not recorded. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/artwork/ring-spiral-a.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute right-[8.6%] top-[70px] w-104 opacity-[0.86]"
+          loading="lazy"
+        />
+        {inner}
+        {/* Wave / Divider · CHARCOAL — into deep time. Fill = the ground of
+            the band it introduces, over the foot of this one. */}
+        <HandoffWave to="charcoal" />
+      </section>
+    );
+  }
+  if (isBeginning) {
+    /* The 19 frame paints this ground outright: Charcoal Black (#090E12),
+       so it holds regardless of where the descent's cross-fade stands. */
+    return (
+      <section id={era.id} className="relative bg-charcoal">
         {inner}
       </section>
     );
@@ -1312,9 +1445,11 @@ export function SuzanneBand() {
         )}
       </div>
       {/* Wave / Divider · NAVY — Marc's hand-off, filled with the ground it
-          INTRODUCES: what came before the record. */}
+          INTRODUCES: what came before the record. The record strand on the
+          rail surfaces again here (data-count-wave), under the count. */}
       <svg
         aria-hidden
+        data-count-wave
         viewBox="0 0 1442 151"
         preserveAspectRatio="none"
         className="block h-16 w-full sm:h-28"
@@ -1343,6 +1478,28 @@ const WAVE_FILL: Record<string, string> = {
   midnight: "fill-midnight",
 };
 
+/**
+ * Marc's colour-handoff wave (349:3676), 1442×151. Fill = the colour of the
+ * section it INTRODUCES; it sits over the foot of the outgoing section, so
+ * the parent must be `relative`. The breaks (08, 14) and the deep-time
+ * hand-off after Open research (the CHARCOAL divider at 16236) all use it.
+ */
+export function HandoffWave({ to }: { to: keyof typeof WAVE_FILL }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 1442 151"
+      preserveAspectRatio="none"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-16 w-full sm:h-28"
+    >
+      <path
+        d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
+        className={WAVE_FILL[to]}
+      />
+    </svg>
+  );
+}
+
 export function FullBleedBreak({
   which,
   waveTo,
@@ -1369,19 +1526,7 @@ export function FullBleedBreak({
         aria-hidden
         className="absolute inset-0 bg-linear-to-b from-charcoal/40 via-transparent to-charcoal/40"
       />
-      {waveTo ? (
-        <svg
-          aria-hidden
-          viewBox="0 0 1442 151"
-          preserveAspectRatio="none"
-          className="absolute inset-x-0 bottom-0 h-16 w-full sm:h-28"
-        >
-          <path
-            d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
-            className={WAVE_FILL[waveTo]}
-          />
-        </svg>
-      ) : null}
+      {waveTo ? <HandoffWave to={waveTo} /> : null}
     </section>
   );
 }
@@ -1402,7 +1547,9 @@ export function DissolveBreak() {
   return (
     <section
       id={truthBreaks.escarpment.id}
-      className="relative min-h-[80svh] overflow-hidden"
+      /* The frame's 900 on 1440 — the break keeps that proportion rather
+         than a viewport-height minimum, so it never towers on a wide screen. */
+      className="relative h-[62.5vw] min-h-[24rem] overflow-hidden"
     >
       <div
         data-v2-plate
@@ -1432,17 +1579,7 @@ export function DissolveBreak() {
         aria-hidden
         className="absolute inset-0 bg-linear-to-b from-black/0 via-black/18 to-black/40"
       />
-      <svg
-        aria-hidden
-        viewBox="0 0 1442 151"
-        preserveAspectRatio="none"
-        className="absolute inset-x-0 bottom-0 h-16 w-full sm:h-28"
-      >
-        <path
-          d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
-          className="fill-charcoal"
-        />
-      </svg>
+      <HandoffWave to="charcoal" />
     </section>
   );
 }
@@ -1474,45 +1611,77 @@ export function GoldTrail({ variant = "wave" }: { variant?: "wave" | "trail" }) 
  * in src/content/truth.ts. Still, like the testimony: the band that has run
  * beside the reader the whole way down does not need an entrance.
  */
+/**
+ * 20 · UNDERNEATH ALL OF IT — DISSOLVE PAIR (2026-09-03): the descent ends,
+ * looking up. Shot B beneath is the opening shot returning (the hero frame);
+ * shot A, the dusk plains, dissolves 1 → 0 across the band's travel
+ * ([data-v2-dissolve]). Bottom-weighted scrim 0 → .387 → .86. The copy sits
+ * at the gutter's left edge, not the entry column. Text still — no arrive.
+ *
+ * The "consequence line" is spec, not draft: the frame flags it
+ * [ SPEC — COPY NOT COMMISSIONED ] and so does the page — an editorial note,
+ * never prose (the EditorialNote rule).
+ */
 export function WattanuriBand() {
+  const { outgoing, incoming } = truthWattanuriMedia;
+  const incomingSrc = presentSrc(incoming.src);
   return (
     <section
       id={wattanuri.id}
-      className="mx-auto flex min-h-svh max-w-6xl flex-col justify-center px-6 py-24 lg:px-24"
+      className="relative flex min-h-svh items-end overflow-hidden"
     >
-      <p className="eyebrow text-ochre/70">{wattanuri.marker}</p>
-      <h2 className="headline mt-6 max-w-3xl text-3xl text-canvas sm:text-5xl">
-        {wattanuri.title}
-      </h2>
-      <p className="mt-8 max-w-2xl text-lg leading-relaxed text-canvas/80">
-        {wattanuri.body}
-      </p>
-      <p className="mt-10 max-w-2xl border-l border-ochre/40 pl-5 leading-relaxed text-canvas/60">
-        {wattanuri.floor}
-      </p>
-      <Link
-        href={wattanuri.cta.href}
-        className="eyebrow mt-10 inline-block text-xs text-ochre transition-transform duration-300 hover:translate-x-1"
+      <div
+        data-v2-plate
+        data-motion={MOTION_GRADE[incoming.bucket]}
+        className="absolute inset-0"
       >
-        {wattanuri.cta.label} &rarr;
-      </Link>
+        <MediaOrField
+          src={incomingSrc}
+          alt=""
+          sizes="100vw"
+          fieldClass={FIELD_CLASS[incoming.tone]}
+        />
+      </div>
+      <div
+        {...(incomingSrc ? { "data-v2-dissolve": true } : {})}
+        className="absolute inset-0"
+      >
+        <MediaOrField
+          src={presentSrc(outgoing.src)}
+          alt={outgoing.expects}
+          sizes="100vw"
+          fieldClass={FIELD_CLASS[outgoing.tone]}
+        />
+      </div>
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.387] to-black/[0.86]"
+      />
+      {/* pb clears the footer's burnt crest (13.9vw), which rides the foot of
+          this photograph — the page root is pulled up under it. */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-[calc(12svh+14vw)] pt-[36svh] lg:px-24">
+        <p className="eyebrow text-lg text-gold sm:text-2xl">{wattanuri.marker}</p>
+        <h2 className="headline mt-4 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl">
+          {wattanuri.title}
+        </h2>
+        <p className="mt-8 max-w-3xl leading-relaxed text-canvas">{wattanuri.body}</p>
+        <EditorialNote
+          tone="canvas"
+          label="SPEC — COPY NOT COMMISSIONED"
+          className="mt-8 max-w-3xl"
+        >
+          <p className="text-xl font-medium leading-relaxed text-canvas sm:text-2xl">
+            {wattanuri.floor}
+          </p>
+        </EditorialNote>
+        <Link
+          href={wattanuri.cta.href}
+          className="eyebrow mt-10 inline-block text-xs text-gold transition-transform duration-300 hover:translate-x-1"
+        >
+          {wattanuri.cta.label} &rarr;
+        </Link>
+      </div>
     </section>
   );
 }
 
-export function PublicationBand() {
-  return (
-    <footer className="mx-auto max-w-6xl px-6 pb-32 pt-12 lg:px-24">
-      <p className="eyebrow text-canvas/50">Published record</p>
-      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-canvas/70">
-        <a
-          href={publication.href}
-          className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas"
-        >
-          {publication.title}
-        </a>{" "}
-        — {publication.journal}.
-      </p>
-    </footer>
-  );
-}

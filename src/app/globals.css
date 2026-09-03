@@ -224,3 +224,13 @@ body {
     block-size: auto;
   }
 }
+
+/* Mobile nav — the exit hand-back after the panel folds: one small beat in
+   which the bar's background and colour, and the two wordmark cuts, fade
+   instead of cutting. Applied by MobileNav for --dur-small, then removed;
+   the inline transition-property the scroll loop writes must not win. */
+.mobile-nav-exit {
+  transition-property: background-color, color, opacity !important;
+  transition-duration: var(--dur-small) !important;
+  transition-timing-function: var(--ease-quiet) !important;
+}

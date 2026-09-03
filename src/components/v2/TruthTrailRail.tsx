@@ -9,14 +9,13 @@ import { loreMarker } from "@/content/truth";
  *
  *   · the legend — "LORE — CONTINUOUS" — STATIC at the top of the trail; it
  *     scrolls away with the page and never follows the reader;
- *   · the LEFT dotted strand — the scroll indicator: faint dots the whole
- *     way down, with gold ink flowing through them to exactly where the
- *     reader stands ([data-v2-trail-fill], clipped open by the motion
- *     module with a short liquid lag);
- *   · the RIGHT gray dotted strand — footsteps: it does not exist ahead of
- *     the reader; the dots (and the dust scattered around them) are laid
- *     down as the reader travels ([data-v2-steps-fill], same clip, tighter
- *     lag so the dust trails the ink).
+ *   · the LEFT dotted strand — LORE · continuous: the record itself, static
+ *     ochre (#CB7722) the whole page, never breaks, not even at the count;
+ *   · the RIGHT dotted strand — RECORD: the scroll indicator. Faint dots
+ *     ahead (off-white, 0.45), the lore ochre (#CB7722) filling through them to the
+ *     reading line as the reader travels ([data-v2-steps-fill], clipped
+ *     open by the motion module, scroll-derived, both directions). It goes
+ *     under at the escarpment break and resumes at the 1840s.
  *
  * Every timeline mark anchors beside its actual section — AHEAD sits next
  * to "What is being built", the years next to their entries — measured from
@@ -64,11 +63,54 @@ const AMPLITUDE = 8;
 const WAVELENGTH = 214;
 const SAMPLE = 12;
 
-/** The strands surface below the wordmark rather than running over it: the
- *  dots fade in from nothing across this band (viewport-anchored — the header
- *  logo sits in the first ~100px of the page). */
-const STRAND_FADE = "linear-gradient(to bottom, transparent 100px, black 230px)";
-const strandFade = { maskImage: STRAND_FADE, WebkitMaskImage: STRAND_FADE };
+/**
+ * LORE · continuous — never breaks, not even at the count. The frame's own
+ * CSS (2026-09-03): a full-page strand at #CB7722, surfacing at y147.75
+ * (under the wordmark) and fading in over 0.94% of the height, holding to
+ * 99.06%, fading out before the footer's crest rises over the page's
+ * foot. Static: this is the record, not the reader.
+ */
+const LORE_COLOR = "#CB7722";
+const LORE_TOP = 148;
+function loreFade(height: number, end: number) {
+  const ramp = Math.max(height * 0.0094, 120);
+  /* `end` is the footer's crest: the line is gone before the wave rises. */
+  const image = `linear-gradient(to bottom, transparent ${LORE_TOP}px, black ${
+    LORE_TOP + ramp
+  }px, black ${end - ramp * 2}px, transparent ${end}px)`;
+  return { maskImage: image, WebkitMaskImage: image };
+}
+
+/**
+ * RECORD · S1 · dots ahead (faint) — the frame's CSS (2026-09-03): the
+ * footsteps strand DOES exist ahead of the reader, faintly — off-white at
+ * 0.45, fading in over the first 2.98% of the run and out over the last
+ * 2.98%. S1 runs from under the wordmark (y147.75) to the escarpment break;
+ * the strand goes under through the count and S2 resumes at the 1840s.
+ * The laid-down steps (data-v2-steps-fill) draw over this at full.
+ */
+const AHEAD_RAMP = 0.0298;
+function aheadFade(from: number, to: number) {
+  const ramp = Math.max((to - from) * AHEAD_RAMP, 60);
+  const image = `linear-gradient(to bottom, transparent ${from}px, black ${
+    from + ramp
+  }px, black ${to - ramp}px, transparent ${to}px)`;
+  return { maskImage: image, WebkitMaskImage: image };
+}
+
+/** An element's layout top relative to the descent root, ignoring transforms:
+ *  entries arrive translated 24px down ([data-descent-arrive], L4) and the
+ *  rail measures them before they arrive — a bounding rect would put every
+ *  pointer 24px below its year line. offsetTop is layout, not transform. */
+function layoutTop(el: HTMLElement, root: HTMLElement): number {
+  let top = 0;
+  let node: HTMLElement | null = el;
+  while (node && node !== root) {
+    top += node.offsetTop;
+    node = node.offsetParent as HTMLElement | null;
+  }
+  return top;
+}
 
 function strandX(y: number, center: number, phase: number): number {
   return center + AMPLITUDE * Math.sin((y / WAVELENGTH) * Math.PI * 2 + phase);
@@ -98,6 +140,13 @@ export function TruthTrailRail() {
    *  break, through the count, back at the 1840s mark. [start, end] in rail
    *  coordinates; null until measured (or if either anchor is absent). */
   const [gap, setGap] = useState<[number, number] | null>(null);
+  /** Where the two strands end (the 20 frame). The footsteps strand stops
+   *  under the "Underneath all of it" heading — the reader has arrived; the
+   *  ink strand runs on and fades out above the footer's crest, which rides
+   *  the foot of the page. Rail coordinates; null until measured. */
+  const [ends, setEnds] = useState<{ steps: number; ink: number } | null>(
+    null,
+  );
 
   useEffect(() => {
     const root = document.querySelector<HTMLElement>("[data-descent-root]");
@@ -106,7 +155,6 @@ export function TruthTrailRail() {
     let tops: Array<{ anchor: string; top: number }> = [];
 
     const measure = () => {
-      const rootTop = root.getBoundingClientRect().top + window.scrollY;
       setHeight(root.offsetHeight);
       // The strand pair centres on the "C" of the YACHATDAC wordmark (its
       // third letter): the descent drops out of the logo's own letterform.
@@ -137,25 +185,48 @@ export function TruthTrailRail() {
           el.querySelector<HTMLElement>("[data-era-label]") ??
           el.querySelector<HTMLElement>("h1, h2, h3") ??
           el;
-        const rect = heading.getBoundingClientRect();
         return [
           {
             anchor,
-            top: rect.top + rect.height / 2 + window.scrollY - rootTop,
+            top: layoutTop(heading, root) + heading.offsetHeight / 2,
           },
         ];
       });
       setMarks(tops);
+      // The strand goes under from the top of the escarpment break and
+      // surfaces again UNDER THE COUNT — at the navy wave that closes the
+      // count band — running through the wave and down to the 1840s
+      // pointer, so the line connects the count to the 1840s.
       const breakEl = document.getElementById("break-escarpment");
-      const resume = tops.find((mark) => mark.anchor === "mitchell");
+      // The wave is an <svg>: no offset geometry, so measure it by rect. Its
+      // box is charcoal above the crest, and at the rail's x the crest sits
+      // near the box's foot — so the run starts at the foot, where the navy
+      // is solid, and nothing strays onto the charcoal above.
+      const wave = document.querySelector<SVGElement>("[data-count-wave]");
+      const rootRectTop = root.getBoundingClientRect().top;
+      const resumeTop = wave
+        ? wave.getBoundingClientRect().bottom - rootRectTop
+        : (() => {
+            const band = document.querySelector<HTMLElement>(
+              '[data-descent-band="before-record"]',
+            );
+            return band ? layoutTop(band, root) : null;
+          })();
       setGap(
-        breakEl && resume
-          ? [
-              breakEl.getBoundingClientRect().top + window.scrollY - rootTop,
-              resume.top,
-            ]
+        breakEl && resumeTop !== null
+          ? [layoutTop(breakEl, root), resumeTop]
           : null,
       );
+      // The footer's wave block (13.9vw) is pulled up over the page's foot:
+      // the ink must be gone before it.
+      const crest = root.offsetHeight - window.innerWidth * 0.139;
+      // The record strand fades out and is gone before UNDERNEATH ALL OF
+      // IT begins: the reader has arrived. The lore line runs on alone.
+      const floor = document.getElementById("underneath-all-of-it");
+      setEnds({
+        steps: floor ? layoutTop(floor, root) : crest,
+        ink: crest,
+      });
     };
 
     // The reading line: a mark lights when its section crosses mid-viewport.
@@ -184,10 +255,20 @@ export function TruthTrailRail() {
     };
   }, []);
 
-  // The container (and both fill hooks) renders from the first paint even
+  // The container (and the fill hook) renders from the first paint even
   // though the strands wait on measurement — the motion module's init runs
   // before this component's measuring effect can re-render, and it must
-  // find [data-v2-trail-fill] and [data-v2-steps-fill] then.
+  // find [data-v2-steps-fill] then.
+  /* The record strand's runs — from under the wordmark to the escarpment
+     break, and from the 1840s to the strand's end. The faint base and the
+     colour fill both draw exactly these, so their dots coincide. */
+  const recordRuns: Array<[number, number]> = gap
+    ? [
+        [LORE_TOP, gap[0]],
+        [gap[1], ends?.steps ?? height],
+      ]
+    : [[LORE_TOP, ends?.steps ?? height]];
+
   return (
     <div
       aria-hidden
@@ -205,19 +286,20 @@ export function TruthTrailRail() {
         loading="lazy"
       />
 
-      {/* Left strand base — the path not yet travelled. */}
+      {/* Left strand — LORE · continuous. The full record at #CB7722, edge
+          to edge of the page; it never breaks, not even at the count. */}
       {height > 0 ? (
         <svg
           width={RAIL_W}
           height={height}
           viewBox={`0 0 ${RAIL_W} ${height}`}
           fill="none"
-          className="absolute left-0 top-0 text-canvas/15"
-          style={strandFade}
+          className="absolute left-0 top-0"
+          style={loreFade(height, ends?.ink ?? height)}
         >
           <path
             d={strandPath(height, INK_X, 0)}
-            stroke="currentColor"
+            stroke={LORE_COLOR}
             strokeWidth={4.5}
             strokeLinecap="round"
             strokeDasharray="0.1 9.9"
@@ -225,69 +307,71 @@ export function TruthTrailRail() {
         </svg>
       ) : null}
 
-      {/* Both fill wrappers render from the first paint, empty until
-          measured — the motion module wires their clips at init and must
-          find them then. */}
-      {/* Left strand ink — gold, flowing to where the reader stands. */}
-      <div
-        data-v2-trail-fill
-        className="absolute left-0 top-0"
-        style={{ clipPath: "inset(0% 0% 100% 0%)", ...strandFade }}
-      >
-        {height > 0 ? (
-          <svg
-            width={RAIL_W}
-            height={height}
-            viewBox={`0 0 ${RAIL_W} ${height}`}
-            fill="none"
-            className="text-gold/85"
-          >
-            <path
-              d={strandPath(height, INK_X, 0)}
-              stroke="currentColor"
-              strokeWidth={4.5}
-              strokeLinecap="round"
-              strokeDasharray="0.1 9.9"
-            />
-          </svg>
-        ) : null}
-      </div>
+      {/* The lore strand carries no fill: it is the record, static. The
+          scroll indicator is the RECORD strand beside it. */}
 
-      {/* Right strand — footsteps and dust, laid down behind the reader.
-          No base layer: the steps don't exist ahead. */}
-      <div
-        data-v2-steps-fill
-        className="absolute left-0 top-0"
-        style={{ clipPath: "inset(0% 0% 100% 0%)", ...strandFade }}
-      >
-        {height > 0 ? (
-          <svg
-            width={RAIL_W}
-            height={height}
-            viewBox={`0 0 ${RAIL_W} ${height}`}
-            fill="none"
-            className="text-canvas/35"
-          >
-            {/* The strand goes under at the escarpment break and surfaces
-                again at the 1840s — two runs, nothing drawn between. */}
-            {(gap
-              ? [
-                  [0, gap[0]],
-                  [gap[1], height],
-                ]
-              : [[0, height]]
-            ).map(([from, to]) => (
+      {/* Right strand base — RECORD · S1/S2 · dots ahead (faint): the run
+          from the wordmark to the escarpment break, and the run from the
+          1840s to the strand's end. Nothing between — the count. */}
+      {height > 0
+        ? recordRuns.map(([from, to]) => (
+            <svg
+              key={`ahead-${from}`}
+              width={RAIL_W}
+              height={height}
+              viewBox={`0 0 ${RAIL_W} ${height}`}
+              fill="none"
+              className="absolute left-0 top-0 text-canvas opacity-45"
+              style={aheadFade(from, to)}
+            >
               <path
-                key={from}
                 d={strandPath(to, STEP_X, 0.9, from)}
                 stroke="currentColor"
                 strokeWidth={3.5}
                 strokeLinecap="round"
                 strokeDasharray="0.1 12"
               />
-            ))}
-          </svg>
-        ) : null}
+            </svg>
+          ))
+        : null}
+
+      {/* RECORD strand fill — the scroll indicator: the lore ochre flowing
+          through the faint dots to the reading line, in both directions
+          ([data-v2-steps-fill], clipped open by the motion module and
+          derived from scroll each frame). Renders from the first paint,
+          empty until measured — the module wires the clip at init. */}
+      <div
+        data-v2-steps-fill
+        className="absolute left-0 top-0"
+        /* Sized explicitly: the runs inside are absolutely positioned, and a
+           clip-path in percentages needs a box to clip. */
+        style={{ width: RAIL_W, height, clipPath: "inset(0% 0% 100% 0%)" }}
+      >
+        {/* The SAME runs and the SAME fades as the faint base — so the
+            colour lands on the dots, not between them, and fades out before
+            the count, back in at the 1840s, and away under "Underneath all
+            of it" exactly where the base does. */}
+        {height > 0
+          ? recordRuns.map(([from, to]) => (
+              <svg
+                key={`fill-${from}`}
+                width={RAIL_W}
+                height={height}
+                viewBox={`0 0 ${RAIL_W} ${height}`}
+                fill="none"
+                className="absolute left-0 top-0"
+                style={{ color: LORE_COLOR, ...aheadFade(from, to) }}
+              >
+                <path
+                  d={strandPath(to, STEP_X, 0.9, from)}
+                  stroke="currentColor"
+                  strokeWidth={3.5}
+                  strokeLinecap="round"
+                  strokeDasharray="0.1 12"
+                />
+              </svg>
+            ))
+          : null}
       </div>
 
       {/* Timeline marks — each aligned with its record's gutter era block.

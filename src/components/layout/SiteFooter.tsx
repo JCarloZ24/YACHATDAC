@@ -27,23 +27,50 @@ import {
  * footer cannot drift from the navigation.
  */
 
-/** Simple social glyphs, 24×24, currentColor. Generic marks, not artwork. */
-const SOCIAL_ICONS: Record<string, string> = {
-  Facebook:
-    "M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12Z",
-  Instagram:
-    "M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.2 2.3.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1.1.4 2.3.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.9-.4 2.3-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1.1.4-2.3.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.2-2.3-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1.1-.4-2.3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.9.4-2.3.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1.1-.4 2.3-.4C8.4 2.2 8.8 2.2 12 2.2Zm0 3.1a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 1.8a3.2 3.2 0 1 1 0 6.4 3.2 3.2 0 0 1 0-6.4Zm5.2-2.9a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z",
-  X: "M17.5 3h3.1l-6.8 7.8L21.9 21h-6.3l-4.9-6.4L5.1 21H2l7.3-8.3L2.3 3h6.4l4.4 5.9L17.5 3Zm-1.1 16.1h1.7L7.8 4.8H6l10.4 14.3Z",
-  LinkedIn:
-    "M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V21H9V9Z",
-  YouTube:
-    "M23 12s0-3.3-.4-4.9a2.5 2.5 0 0 0-1.8-1.8C19.2 5 12 5 12 5s-7.2 0-8.8.3a2.5 2.5 0 0 0-1.8 1.8C1 8.7 1 12 1 12s0 3.3.4 4.9c.2.9.9 1.6 1.8 1.8C4.8 19 12 19 12 19s7.2 0 8.8-.3a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.9.4-4.9ZM9.8 15.3V8.7L15.9 12l-6.1 3.3Z",
+/** The hi-fi's social glyphs (the 21 frame's 168×24 icon row), each cell
+ *  translated back to its own 24×24 box; fill is currentColor. */
+const SOCIAL_ICONS: Record<
+  string,
+  { d: string; dx: number; evenOdd: boolean }
+> = {
+  Facebook: {
+    dx: 0,
+    evenOdd: false,
+    d: "M22 12.3033C22 6.7467 17.5229 2.24219 12 2.24219C6.47715 2.24219 2 6.7467 2 12.3033C2 17.325 5.65684 21.4874 10.4375 22.2422V15.2116H7.89844V12.3033H10.4375V10.0867C10.4375 7.56515 11.9305 6.17231 14.2146 6.17231C15.3088 6.17231 16.4531 6.36882 16.4531 6.36882V8.8448H15.1922C13.95 8.8448 13.5625 9.62041 13.5625 10.4161V12.3033H16.3359L15.8926 15.2116H13.5625V22.2422C18.3432 21.4874 22 17.3252 22 12.3033Z",
+  },
+  Instagram: {
+    dx: 36,
+    evenOdd: true,
+    d: "M52 3.24219H44C41.2386 3.24219 39 5.48077 39 8.24219V16.2422C39 19.0036 41.2386 21.2422 44 21.2422H52C54.7614 21.2422 57 19.0036 57 16.2422V8.24219C57 5.48077 54.7614 3.24219 52 3.24219ZM55.25 16.2422C55.2445 18.0348 53.7926 19.4867 52 19.4922H44C42.2074 19.4867 40.7555 18.0348 40.75 16.2422V8.24219C40.7555 6.44954 42.2074 4.99768 44 4.99219H52C53.7926 4.99768 55.2445 6.44954 55.25 8.24219V16.2422ZM52.75 8.49219C53.3023 8.49219 53.75 8.04447 53.75 7.49219C53.75 6.93991 53.3023 6.49219 52.75 6.49219C52.1977 6.49219 51.75 6.93991 51.75 7.49219C51.75 8.04447 52.1977 8.49219 52.75 8.49219ZM48 7.74219C45.5147 7.74219 43.5 9.75691 43.5 12.2422C43.5 14.7275 45.5147 16.7422 48 16.7422C50.4853 16.7422 52.5 14.7275 52.5 12.2422C52.5027 11.0479 52.0294 9.90176 51.1849 9.05727C50.3404 8.21278 49.1943 7.73953 48 7.74219ZM45.25 12.2422C45.25 13.761 46.4812 14.9922 48 14.9922C49.5188 14.9922 50.75 13.761 50.75 12.2422C50.75 10.7234 49.5188 9.49219 48 9.49219C46.4812 9.49219 45.25 10.7234 45.25 12.2422Z",
+  },
+  X: {
+    dx: 72,
+    evenOdd: false,
+    d: "M89.1761 4.24219H91.9362L85.9061 11.0196L93 20.2422H87.4456L83.0951 14.6488L78.1172 20.2422H75.3554L81.8052 12.993L75 4.24219H80.6954L84.6279 9.35481L89.1761 4.24219ZM88.2073 18.6176H89.7368L79.8644 5.78147H78.2232L88.2073 18.6176Z",
+  },
+  LinkedIn: {
+    dx: 108,
+    evenOdd: true,
+    d: "M112.5 3.24219C111.672 3.24219 111 3.91376 111 4.74219V19.7422C111 20.5706 111.672 21.2422 112.5 21.2422H127.5C128.328 21.2422 129 20.5706 129 19.7422V4.74219C129 3.91376 128.328 3.24219 127.5 3.24219H112.5ZM116.521 7.24491C116.526 8.20116 115.811 8.79038 114.961 8.78616C114.161 8.78194 113.464 8.14491 113.468 7.24632C113.472 6.40116 114.14 5.72194 115.008 5.74163C115.888 5.76132 116.526 6.40679 116.521 7.24491ZM120.28 10.0039H117.76H117.758V18.5638H120.422V18.3641C120.422 17.9842 120.421 17.6042 120.421 17.2241C120.42 16.2103 120.419 15.1954 120.425 14.1819C120.426 13.9358 120.437 13.6799 120.5 13.445C120.738 12.5675 121.527 12.0008 122.407 12.1401C122.973 12.2286 123.347 12.5563 123.504 13.0893C123.601 13.4225 123.645 13.7811 123.649 14.1285C123.661 15.1761 123.659 16.2237 123.657 17.2714C123.657 17.6412 123.656 18.0112 123.656 18.381V18.5624H126.328V18.3571C126.328 17.9051 126.328 17.4532 126.327 17.0013C126.327 15.8718 126.326 14.7423 126.329 13.6124C126.331 13.1019 126.276 12.5985 126.151 12.1049C125.964 11.3708 125.577 10.7633 124.948 10.3246C124.503 10.0124 124.013 9.81129 123.466 9.78879C123.404 9.7862 123.341 9.78281 123.278 9.7794C122.998 9.76428 122.714 9.74892 122.447 9.80285C121.682 9.95613 121.01 10.3063 120.502 10.9236C120.443 10.9944 120.385 11.0663 120.299 11.1736L120.28 11.1979V10.0039ZM113.682 18.5666H116.332V10.0095H113.682V18.5666Z",
+  },
+  YouTube: {
+    dx: 144,
+    evenOdd: true,
+    d: "M165.593 7.20301C165.479 6.78041 165.257 6.39501 164.948 6.08518C164.639 5.77534 164.254 5.55187 163.831 5.43701C162.265 5.00701 156 5.00001 156 5.00001C156 5.00001 149.736 4.99301 148.169 5.40401C147.747 5.52415 147.363 5.75078 147.054 6.06214C146.745 6.3735 146.521 6.75913 146.403 7.18201C145.99 8.74801 145.986 11.996 145.986 11.996C145.986 11.996 145.982 15.26 146.392 16.81C146.622 17.667 147.297 18.344 148.155 18.575C149.737 19.005 155.985 19.012 155.985 19.012C155.985 19.012 162.25 19.019 163.816 18.609C164.239 18.4943 164.624 18.2714 164.934 17.9622C165.244 17.653 165.468 17.2682 165.583 16.846C165.997 15.281 166 12.034 166 12.034C166 12.034 166.02 8.76901 165.593 7.20301ZM153.996 15.005L154.001 9.00501L159.208 12.01L153.996 15.005Z",
+  },
 };
 
 function SocialIcon({ name }: { name: string }) {
+  const icon = SOCIAL_ICONS[name];
   return (
     <svg viewBox="0 0 24 24" className="size-6" aria-hidden>
-      <path d={SOCIAL_ICONS[name]} fill="currentColor" />
+      <path
+        d={icon.d}
+        transform={`translate(${-icon.dx} 0)`}
+        fill="currentColor"
+        fillRule={icon.evenOdd ? "evenodd" : undefined}
+        clipRule={icon.evenOdd ? "evenodd" : undefined}
+      />
     </svg>
   );
 }
@@ -85,22 +112,31 @@ export function SiteFooter() {
       </div>
 
       <div className="relative overflow-hidden bg-charcoal">
-        {/* The artist's rings as ground — whole instances, single-digit
-            opacity, static — 8% matches the hi-fi's own fill-opacity on
-            these shapes (fill=white fill-opacity=0.08 at 100% layer
-            opacity). Same rule as §08's charcoal passage. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div className="absolute top-10 -left-56 h-190 w-190 opacity-[0.08]">
+        {/* The artist's rings as ground — the 21 frame's four instances,
+            edge-anchored so they bleed past the page at every width: the
+            dotted ring cut by the left edge beside the acknowledgement, the
+            large ring cut by the top-right corner, a second dotted ring cut
+            by the lower-right edge behind the link columns, and the third
+            ring centred under the credits and bleeding past the foot.
+            ring-a and ring-b carry the hi-fi's 8% opacity inside the file,
+            so no wrapper opacity (doubling it made them invisible); ring-c
+            is exported at full strength and takes it here. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute top-[90px] -left-3 w-[465px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/artwork/ring-a.svg" alt="" className="h-full w-full" />
+            <img src="/artwork/ring-b.svg" alt="" className="h-auto w-full" />
           </div>
-          <div className="absolute -top-24 -right-40 h-205 w-205 opacity-[0.08]">
+          <div className="absolute -top-2 -right-32 w-[416px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/artwork/ring-b.svg" alt="" className="h-full w-full" />
+            <img src="/artwork/ring-a.svg" alt="" className="h-auto w-full" />
           </div>
-          <div className="absolute right-24 bottom-0 h-140 w-140 opacity-[0.08]">
+          <div className="absolute bottom-24 -right-24 w-[470px] -scale-x-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/artwork/ring-c.svg" alt="" className="h-full w-full" />
+            <img src="/artwork/ring-b.svg" alt="" className="h-auto w-full" />
+          </div>
+          <div className="absolute -bottom-56 left-1/2 w-[447px] -translate-x-1/2 opacity-[0.08]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/artwork/ring-c.svg" alt="" className="h-auto w-full" />
           </div>
         </div>
 
@@ -139,21 +175,24 @@ export function SiteFooter() {
                 alt={`${org.name} — ${org.legalName}`}
                 width={1990}
                 height={2338}
-                className="w-56"
+                className="w-44"
               />
 
-              <p className="mt-6 text-lg text-canvas">Registration</p>
-              <p className="mt-4 text-base text-canvas/80">
+              {/* Registration — the 21 frame: label, ICN, then ABN with the
+                  R15 flag on the same line. */}
+              <p className="eyebrow mt-6 text-base text-canvas">Registration</p>
+              <p className="mt-4 text-base text-canvas">
                 ICN {registration.icn ?? "[ number ]"}
               </p>
-              <p className="mt-3 text-base text-canvas/80">
-                ABN {registration.abn ?? "[ number ]"}
+              <p className="mt-3 flex items-baseline gap-x-4 text-sm whitespace-nowrap text-canvas">
+                <span>ABN {registration.abn ?? "[ number ]"}</span>
+                {registration.icn === null || registration.abn === null ? (
+                  <span className="text-canvas/90">
+                    <span className="text-gold">&#9888;</span> R15 &mdash;
+                    registration numbers not yet supplied
+                  </span>
+                ) : null}
               </p>
-              {registration.icn === null || registration.abn === null ? (
-                <p className="eyebrow mt-6 text-xs text-gold">
-                  &#9888; R15 &mdash; registration numbers not yet supplied
-                </p>
-              ) : null}
             </div>
 
             {footerNav.map((column) => (
@@ -199,17 +238,18 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {/* The gold dot trail closes the page. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/artwork/dots-trail-gold.svg"
-            alt=""
+          {/* The thin gold dot rule closes the page (the 21 frame's
+              1278×21 rule) — the artist's rule tiled to the full width. */}
+          <div
             aria-hidden
-            className="mt-20 w-full"
+            className="mt-20 h-6 w-full bg-[url(/artwork/dots-rule-gold.svg)] bg-repeat-x"
+            style={{ backgroundSize: "auto 24px" }}
           />
 
-          <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-wrap items-center gap-x-10 gap-y-3 text-base text-canvas/85">
+          {/* Credits row — the 21 frame: 14px Work Sans, 24px gaps, the
+              icon row (24px, 12px apart) on the right. */}
+          <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-16">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-canvas">
               <p>
                 &copy; {new Date().getFullYear()} {org.name}. All rights
                 reserved.
@@ -225,7 +265,7 @@ export function SiteFooter() {
               ))}
             </div>
 
-            <ul className="flex items-center gap-5 text-turquoise">
+            <ul className="flex items-center gap-3 text-turquoise">
               {socialLinks.map((social) => (
                 <li key={social.title}>
                   {social.href ? (

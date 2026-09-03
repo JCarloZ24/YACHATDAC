@@ -270,27 +270,46 @@ export const truthEntryMedia: Record<string, MediaSlot[]> = {
       tone: "midnight",
     },
   ],
+  /**
+   * 18 · CARD Still to be found — evidence strip B (P5): a different six
+   * from the Research & discovery strip. Open work/country material,
+   * square crops, deliberately unglamorous — this is evidence.
+   */
+  opportunities: [1, 2, 3, 4, 5, 6].map((n) => ({
+    id: `open-research-${n}`,
+    bucket: "work" as const,
+    expects: "Open research on Turraburra — the openresearch batch",
+    src: `${TRUTH}/truth-openresearch${n}.webp`,
+    tone: "midnight" as const,
+  })),
+  /**
+   * 19 · ABOUT 100 MILLION YEARS AGO — P7 strata stack: surface, tree line,
+   * stone. The layout itself is a cross-section. The frame's 1.28.1, 1.76.2
+   * and 1.91.1 are the theeromangasea batch in delivery order — the deepest
+   * is the same escarpment seen at the top of the page, now as bedrock.
+   * Country bucket: no people in any layer, no cultural site (R10).
+   */
   seabed: [
     {
-      id: "seabed-prints",
+      id: "seabed-surface",
       bucket: "country",
-      expects: "The prints in the set mud",
-      src: null,
-      tone: "midnight",
+      expects: "Stratum 1 · surface — the plain under sky",
+      src: `${TRUTH}/truth-theeromangasea1.webp`,
+      tone: "charcoal",
+    },
+    {
+      id: "seabed-treeline",
+      bucket: "country",
+      expects: "Stratum 2 · the tree line at last light",
+      src: `${TRUTH}/truth-theeromangasea2.webp`,
+      tone: "charcoal",
     },
     {
       id: "seabed-stone",
       bucket: "country",
-      expects: "The sandstone, close",
-      src: null,
+      expects: "Stratum 3 · deepest — the escarpment's stone, from a lawful distance",
+      src: `${TRUTH}/truth-theeromangasea3.webp`,
       tone: "charcoal",
-    },
-    {
-      id: "seabed-country",
-      bucket: "country",
-      expects: "The escarpment's Country from a lawful distance — not the site",
-      src: null,
-      tone: "midnight",
     },
   ],
 };
@@ -335,6 +354,30 @@ export const truthDissolveMedia: { outgoing: MediaSlot; incoming: MediaSlot } = 
     bucket: "country",
     expects: "Dead trees on white sand — shot B, incoming (1.87.1, not yet delivered)",
     src: null,
+    tone: "charcoal",
+  },
+};
+
+/**
+ * 20 · UNDERNEATH ALL OF IT — DISSOLVE PAIR: the descent ends, looking up.
+ * Shot A (the frame's 1.3.1, dusk plains — truth-wattanurisisters in the
+ * batch) dissolves 1 → 0 over the band's travel; shot B beneath it is 1.1.1,
+ * the opening shot returning — the same frame the hero holds. Country
+ * bucket, both: sky, trees, grass — no people, no cultural site (R10).
+ */
+export const truthWattanuriMedia: { outgoing: MediaSlot; incoming: MediaSlot } = {
+  outgoing: {
+    id: "wattanuri-dusk-plains",
+    bucket: "country",
+    expects: "Dusk plains under a clouded sky — shot A, outgoing",
+    src: `${TRUTH}/truth-wattanurisisters.webp`,
+    tone: "charcoal",
+  },
+  incoming: {
+    id: "wattanuri-opening-shot",
+    bucket: "country",
+    expects: "The opening shot returning — Country at dusk, shot B",
+    src: truthHeroSlot.src,
     tone: "charcoal",
   },
 };

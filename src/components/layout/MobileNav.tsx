@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,9 +17,11 @@ import { org, primaryAction, primaryNav } from "@/content/site";
  * desktop header stays the transparent 130px band; this bar exists below `md`
  * only.
  *
- * The bar is fixed: it slides away as the reader scrolls down and returns on
- * the first upward scroll, so the menu is always one gesture away without
- * sitting on the photography the whole time.
+ * The bar is fixed and scroll-linked: it slides away with a downward swipe
+ * and is dragged back by any upward one, moving with the thumb rather than
+ * on a timer, so the menu is always one gesture away without sitting on the
+ * photography the whole time. The white fade across the hero's edge tracks
+ * the scroll the same way.
  *
  * The black wordmark is public/brand/logo-wordmark-black.svg — the same
  * authored vectors as the white cut, per build documentation §5 (never
@@ -27,36 +29,82 @@ import { org, primaryAction, primaryNav } from "@/content/site";
  */
 export function MobileNav() {
   const [open, setOpen] = useState(false);
-  // Hidden while scrolling down, back the moment the reader scrolls up.
-  const [hidden, setHidden] = useState(false);
-  // Transparent while the bar sits over the hero (the first viewport height);
-  // solid white for everything after it.
-  const [overHero, setOverHero] = useState(true);
+  const bar = useRef<HTMLDivElement>(null);
+  const solidMark = useRef<HTMLImageElement>(null);
+  const glassMark = useRef<HTMLImageElement>(null);
   const pathname = usePathname();
 
+  /* Scroll-linked, not timed: on a phone the bar should move WITH the thumb.
+     Two values are written straight to the DOM every frame (no React render
+     per scroll):
+       · offset — how far the bar has slid away (0 = fully shown, height =
+         fully hidden). Each scroll delta moves it by the same distance, so
+         a swipe down pushes it out and any swipe up drags it back; when the
+         scroll settles it snaps to whichever edge is nearer.
+       · solid — 0 over the hero (transparent bar, white cut of the wordmark)
+         to 1 past it, ramped over the last 96px of the hero so the white
+         fades in with the scroll instead of switching at a line.
+     With the panel open the bar is pinned shown and solid. */
   useEffect(() => {
+    const el = bar.current;
+    if (!el) return;
     let last = window.scrollY;
-    let ticking = false;
+    let offset = 0;
+    let solid = -1;
+    let raf = 0;
+    let settle = 0;
+
+    const paint = () => {
+      el.style.transform = `translate3d(0,${-offset}px,0)`;
+    };
+    const paintSolid = (next: number) => {
+      if (next === solid) return;
+      solid = next;
+      el.style.backgroundColor = `rgba(255,255,255,${next})`;
+      el.style.color = next > 0.5 ? "#000" : "#fff";
+      if (glassMark.current) glassMark.current.style.opacity = String(1 - next);
+      if (solidMark.current) solidMark.current.style.opacity = String(next);
+    };
+
     const update = () => {
+      raf = 0;
       const y = window.scrollY;
       const delta = y - last;
-      const heroY = window.innerHeight - 64;
-      // Over the hero the bar is transparent, so there is nothing to hide —
-      // it stays put. Past the hero, hiding needs deliberate downward travel
-      // (a dead-zone so rubber-banding and jitters don't flicker it) but ANY
-      // upward movement brings it straight back — a slow drag counts, not
-      // just a flick.
-      if (y < heroY) setHidden(false);
-      else if (delta > 6) setHidden(true);
-      else if (delta < 0) setHidden(false);
-      setOverHero(y < heroY);
       last = y;
-      ticking = false;
+      const height = el.offsetHeight || 64;
+      const heroY = window.innerHeight - 64;
+
+      if (el.dataset.open === "true") {
+        offset = 0;
+        el.style.transitionProperty = "none";
+        paint();
+        paintSolid(1);
+        return;
+      }
+
+      // The ramp: transparent until 96px before the hero's edge, solid at it.
+      paintSolid(Math.min(1, Math.max(0, (y - (heroY - 96)) / 96)));
+
+      // Over the hero (and rubber-banding past the top) the bar stays put.
+      if (y < heroY || y <= 0) offset = 0;
+      else offset = Math.min(height, Math.max(0, offset + delta));
+      el.style.transitionProperty = "none";
+      paint();
+
+      // When the thumb lifts and the scroll stops, settle to the nearer edge
+      // with the short quiet ease — never leave the bar half-shown.
+      window.clearTimeout(settle);
+      settle = window.setTimeout(() => {
+        if (offset === 0 || offset === height) return;
+        offset = offset > height / 2 ? height : 0;
+        el.style.transitionProperty = "transform";
+        el.style.transitionDuration = "var(--dur-small)";
+        el.style.transitionTimingFunction = "var(--ease-quiet)";
+        paint();
+      }, 120);
     };
     const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
+      if (!raf) raf = requestAnimationFrame(update);
     };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -64,8 +112,42 @@ export function MobileNav() {
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+      window.clearTimeout(settle);
     };
   }, []);
+
+  // Opening pins the bar shown and solid at once. Closing is the exit in
+  // two beats: the bar stays solid while the panel folds (the small
+  // duration), then hands back to the scroll — and over the hero that
+  // hand-back is a fade to transparent (background, colour and the wordmark
+  // crossfade all transitioned for one small beat) rather than a cut.
+  useEffect(() => {
+    const el = bar.current;
+    if (!el) return;
+    if (open) {
+      el.dataset.open = "true";
+      window.dispatchEvent(new Event("scroll"));
+      return;
+    }
+    const fade: HTMLElement[] = [el];
+    if (glassMark.current) fade.push(glassMark.current);
+    if (solidMark.current) fade.push(solidMark.current);
+    const FOLD = 320; // --dur-small
+    const t1 = window.setTimeout(() => {
+      el.dataset.open = "false";
+      fade.forEach((node) => node.classList.add("mobile-nav-exit"));
+      window.dispatchEvent(new Event("scroll"));
+    }, FOLD);
+    const t2 = window.setTimeout(() => {
+      fade.forEach((node) => node.classList.remove("mobile-nav-exit"));
+    }, FOLD * 2);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [open]);
+
   const [seenPath, setSeenPath] = useState(pathname);
 
   // A route change is a navigation — the panel closes behind it. Done during
@@ -75,35 +157,42 @@ export function MobileNav() {
     setOpen(false);
   }
 
-  // Over the hero the bar is transparent with the white cut of the wordmark;
-  // everywhere else (and whenever the panel is open) it is the solid white bar.
-  const onGlass = overHero && !open;
-
-  const isHidden = hidden && !open;
-
   return (
     <div
-      className={`fixed inset-x-0 top-0 z-30 transition-[transform,background-color] will-change-transform md:hidden ${
-        onGlass ? "bg-transparent text-white" : "bg-white text-black"
-      } ${
-        // Asymmetric character: the bar gets out of the way quickly and
-        // quietly on the way down, and glides back in on the way up — the
-        // long `country` tail so it lands without a stop, like the section
-        // moves elsewhere on the site.
-        isHidden
-          ? "-translate-y-full duration-(--dur-small) ease-quiet"
-          : "translate-y-0 duration-(--dur-large) ease-country"
-      }`}
+      ref={bar}
+      data-open={open}
+      /* Initial paint: transparent over the hero with the white cut; the
+         effect takes over from the first frame. Background/colour are
+         written per frame, so only the wordmark crossfade is transitioned. */
+      className="fixed inset-x-0 top-0 z-30 bg-transparent text-white will-change-transform md:hidden"
     >
       <div className="flex h-16 items-center justify-between pl-5 pr-3">
-        <Link href="/" aria-label={`${org.name} — home`} className="shrink-0">
+        <Link
+          href="/"
+          aria-label={`${org.name} — home`}
+          className="relative block h-10 shrink-0"
+        >
+          {/* Both cuts of the wordmark are in the DOM, stacked, and crossfade
+              with the bar — swapping the image source at the threshold
+              popped (and refetched) the mark on every crossing. */}
           <Image
-            src={onGlass ? "/brand/logo-wordmark.svg" : "/brand/logo-wordmark-black.svg"}
+            ref={glassMark}
+            src="/brand/logo-wordmark.svg"
             alt={org.name}
             width={135}
             height={40}
             priority
             className="h-10 w-auto"
+          />
+          <Image
+            ref={solidMark}
+            src="/brand/logo-wordmark-black.svg"
+            alt=""
+            aria-hidden
+            width={135}
+            height={40}
+            priority
+            className="absolute inset-0 h-10 w-auto opacity-0"
           />
         </Link>
         <button
@@ -113,28 +202,84 @@ export function MobileNav() {
           onClick={() => setOpen((v) => !v)}
           className="flex size-12 items-center justify-center"
         >
-          {/* The frame's own menu icon — three rounded rules. */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-            {open ? (
-              <path
-                d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 1 0 1.4 1.4L12 13.4l5.3 5.3a1 1 0 0 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"
-                fill="currentColor"
+          {/* The frame's own menu icon — three rounded rules. The outer two
+              turn into the cross and the middle one fades, the rules
+              themselves moving rather than a swap between two glyphs. */}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden
+            className="overflow-visible"
+          >
+            {[
+              { y: 7, open: "translate(0, 5px) rotate(45deg)" },
+              { y: 12, open: "scaleX(0)" },
+              { y: 17, open: "translate(0, -5px) rotate(-45deg)" },
+            ].map((rule) => (
+              <line
+                key={rule.y}
+                x1="5"
+                x2="19"
+                y1={rule.y}
+                y2={rule.y}
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                className={`origin-center transition-transform ${
+                  open
+                    ? "duration-(--dur-medium) ease-country"
+                    : "duration-(--dur-small) ease-quiet"
+                }`}
+                style={{
+                  transformBox: "fill-box",
+                  transform: open ? rule.open : "none",
+                }}
               />
-            ) : (
-              <path
-                d="M19 17a1 1 0 1 1 0 2H4.938v-.004A1.001 1.001 0 0 1 4 18c0-.531.414-.965.938-.997V17H19Zm0-5a1 1 0 1 1 0 2H5a1 1 0 1 1 0-2h14Zm0-5a1 1 0 1 1 0 2H5a1 1 0 0 1 0-2h14Z"
-                fill="currentColor"
-              />
-            )}
+            ))}
           </svg>
         </button>
       </div>
 
-      {open ? (
-        <nav aria-label="Primary" className="border-t border-black/10 px-5 pb-10 pt-2">
-          <ul>
-            {primaryNav.map((item) => (
-              <li key={item.href}>
+      {/* The panel is always in the DOM and folds open/closed on a grid row
+          (0fr → 1fr), so it can animate both ways: opening unfolds at the
+          medium duration with the country ease, the links stepping in on the
+          line stagger; closing folds at the small duration with the quiet
+          ease and the links leaving together, so the exit is quicker and
+          quieter than the entrance. Reduced motion cuts both (global rule in
+          motion-tokens.css). inert/aria-hidden keep the closed panel out of
+          the tab order and the accessibility tree. */}
+      <div
+        className={`grid ${
+          open
+            ? "grid-rows-[1fr] duration-(--dur-medium) ease-country"
+            : "grid-rows-[0fr] duration-(--dur-small) ease-quiet"
+        } transition-[grid-template-rows]`}
+        aria-hidden={!open}
+        inert={!open}
+      >
+        <nav
+          aria-label="Primary"
+          className={`min-h-0 overflow-hidden px-5 transition-[padding] ${
+            open ? "pb-10 pt-2" : "py-0"
+          }`}
+        >
+          <ul className={`border-t transition-colors ${open ? "border-black/10" : "border-transparent"}`}>
+            {primaryNav.map((item, i) => (
+              <li
+                key={item.href}
+                className={`transition-[opacity,transform] ${
+                  open
+                    ? "translate-y-0 opacity-100 duration-(--dur-medium) ease-country"
+                    : "translate-y-2 opacity-0 duration-(--dur-small) ease-quiet"
+                }`}
+                style={{
+                  transitionDelay: open
+                    ? `calc(${i + 1} * var(--stagger-line))`
+                    : "0ms",
+                }}
+              >
                 <Link
                   href={item.href}
                   className="block py-3 text-base leading-6 text-black"
@@ -146,11 +291,22 @@ export function MobileNav() {
           </ul>
           {/* The same CONNECT blob as the desktop header — one CTA, one asset,
               one water fill (see ConnectButton). */}
-          <div className="mt-4">
+          <div
+            className={`mt-4 transition-[opacity,transform] ${
+              open
+                ? "translate-y-0 opacity-100 duration-(--dur-medium) ease-country"
+                : "translate-y-2 opacity-0 duration-(--dur-small) ease-quiet"
+            }`}
+            style={{
+              transitionDelay: open
+                ? `calc(${primaryNav.length + 1} * var(--stagger-line))`
+                : "0ms",
+            }}
+          >
             <ConnectButton href={primaryAction.href} label={primaryAction.title} />
           </div>
         </nav>
-      ) : null}
+      </div>
     </div>
   );
 }
