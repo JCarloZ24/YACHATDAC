@@ -3,6 +3,7 @@ import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
 import { V2TruthMotion } from "@/components/v2/V2TruthMotion";
 import {
+  DissolveBreak,
   EraSection,
   FullBleedBreak,
   GoldTrail,
@@ -39,8 +40,9 @@ export const metadata: Metadata = {
  *
  * Band mapping (content eras are finer-grained than the six grounds):
  * hero + Ahead + Today → present · Bought back → return · 1950s →
- * named-wrong · 1902 + 1840s → count · Older than the record →
- * before-record · the seabed + Wattanuri → deep-time.
+ * named-wrong · 1902 → count · 1840s + Older than the record →
+ * before-record (the 16 frame sets the 1840s on navy) · the seabed +
+ * Wattanuri → deep-time.
  */
 export default function TruthPage() {
   const [ahead, today, boughtBack, namedWrong] = erasBefore;
@@ -74,18 +76,21 @@ export default function TruthPage() {
           <EraSection era={boughtBack} prependEntries={todayRecords} />
         </section>
 
+        {/* No trail divider here (2026-09-03): the 13 frame runs the 2003
+            ground straight into the 1950s brown — the band between them
+            showed the descent's cross-fade as a green strip. */}
         <section data-descent-band="named-wrong">
-          <GoldTrail variant="trail" />
           <EraSection era={namedWrong} />
-          <FullBleedBreak which="duskCountry" />
+          {/* 14 — the escarpment dissolve pair, charcoal wave into the count. */}
+          <DissolveBreak />
         </section>
 
         <section data-descent-band="count">
           <SuzanneBand />
-          <EraSection era={mitchell} />
         </section>
 
-        <section data-descent-band="before-record">
+        <section data-descent-band="before-record" className="bg-midnight">
+          <EraSection era={mitchell} />
           <EraSection era={olderThanRecord} />
         </section>
 

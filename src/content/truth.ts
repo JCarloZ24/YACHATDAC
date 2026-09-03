@@ -70,6 +70,13 @@ export type TruthEntry = {
   claim?: string;
   /** Footnote-weight material — citations, dating caveats. */
   footnotes?: readonly string[];
+  /**
+   * Quoted speech beside a portrait (the 12 · ENTRY 2003 frame). Left unset
+   * until the words exist in the governing draft — a quotation is never
+   * paraphrased from narration (D15/R17). The frame's own placeholder text
+   * was a paraphrase of the body and is NOT carried.
+   */
+  testimony?: { quote: string; attribution: string; role: string };
 };
 
 export type TruthEra = {
@@ -241,7 +248,14 @@ export const erasBefore: readonly TruthEra[] = [
         body: [
           "He spent his life fencing and protecting the sites out here, and holding two families together with photographs and envelopes and names. When she came back after he died, nothing had been done since.",
         ],
-        coda: "He was carrying on his own father's work, and his grandfather's. The relationships that kept this Country reachable were held by people who never owned an acre of it.",
+        /* Suzanne's words (confirmed 3 September 2026) — quoted beside the
+           portrait, not a coda. Never edit them (D15/R17). */
+        testimony: {
+          quote:
+            "He was carrying on his own father's work, and his grandfather's. The relationships that kept this Country reachable were held by people who never owned an acre of it.",
+          attribution: "Suzanne Thompson",
+          role: "Iningai custodian",
+        },
         source: "Living memory",
         cta: {
           label: "My father's dream",
@@ -473,6 +487,10 @@ export const truthBreaks = {
   duskCountry: {
     id: "break-dusk",
     alt: "Open Country at dusk, trees against the last light.",
+  },
+  escarpment: {
+    id: "break-escarpment",
+    alt: "The escarpment — a bare tree against a grey sky, dissolving to dead trees on white sand.",
   },
 } as const;
 

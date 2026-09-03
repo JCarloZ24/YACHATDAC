@@ -27,6 +27,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MotionModule } from "@/lib/motion-controller";
 import { registerYachatdacEffects } from "@/lib/motion/effects";
 import { SCRUB } from "@/lib/motion/tokens";
+import { Y2_DIM } from "@/lib/sections/y2";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -59,21 +60,31 @@ export function createTruthDescentV2(): MotionModule {
           ) => {
             const layer = document.querySelector<HTMLElement>(selector);
             if (!layer) return;
+            // Tween a number, not the clip-path string: the browser
+            // re-serialises `inset(0% 0% X% 0%)` as `inset(0% 0% X%)` (and
+            // `inset(0%)` at rest), so when GSAP re-read the layer on a
+            // refresh the value counts no longer matched and the
+            // interpolation ran off — a 489% bottom inset mid-descent, the
+            // strand gone. The proxy's start is re-evaluated on refresh.
+            const startBottom = () =>
+              Math.max(
+                0,
+                100 -
+                  ((headStart * window.innerHeight) / root.offsetHeight) * 100,
+              );
+            const proxy = { bottom: startBottom() };
+            const paint = () => {
+              layer.style.clipPath = `inset(0% 0% ${proxy.bottom.toFixed(3)}% 0%)`;
+            };
+            paint();
             gsap.fromTo(
-              layer,
+              proxy,
+              { bottom: startBottom },
               {
-                clipPath: () =>
-                  `inset(0% 0% ${Math.max(
-                    0,
-                    100 -
-                      ((headStart * window.innerHeight) / root.offsetHeight) *
-                        100,
-                  ).toFixed(3)}% 0%)`,
-              },
-              {
-                clipPath: "inset(0% 0% 0% 0%)",
+                bottom: 0,
                 ease: "none",
                 immediateRender: true,
+                onUpdate: paint,
                 scrollTrigger: {
                   trigger: root,
                   start: "top top",
@@ -142,6 +153,73 @@ export function createTruthDescentV2(): MotionModule {
               },
             );
           });
+
+        // 14 · BREAK The Escarpment — shot A dissolves 1 → 0 over the
+        // break's own travel, revealing shot B (which carries the plates'
+        // pull-back). Opacity only. The attribute is absent while B is
+        // undelivered, so A simply holds.
+        gsap.utils.toArray<HTMLElement>("[data-v2-dissolve]").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 1 },
+            {
+              opacity: 0,
+              ease: "none",
+              immediateRender: true,
+              scrollTrigger: {
+                trigger: el,
+                start: "top 60%",
+                end: "bottom 40%",
+                scrub: SCRUB.normal,
+              },
+            },
+          );
+        });
+
+        // The 2003 portrait (12 · ENTRY 2003) — "push in, slowest on the
+        // page": a smaller travel than the plates, at the heavy scrub, over
+        // the portrait's whole pass through the viewport. Frame-graded slots
+        // never carry the attribute.
+        gsap.utils.toArray<HTMLElement>("[data-v2-portrait]").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { scale: 1.04 },
+            {
+              scale: 1,
+              ease: "none",
+              immediateRender: true,
+              scrollTrigger: {
+                trigger: el,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: SCRUB.heavy,
+              },
+            },
+          );
+        });
+
+        // Y2 — testimony beside the portrait. Per-word opacity ramp from the
+        // 0.28 dim state, no movement. The dim state is applied here, not in
+        // markup, so reduced motion and no-JS read the words at full.
+        gsap.utils.toArray<HTMLElement>("[data-y2]").forEach((block) => {
+          const words = block.querySelectorAll<HTMLElement>("[data-y2-word]");
+          if (!words.length) return;
+          gsap.fromTo(
+            words,
+            { opacity: Y2_DIM },
+            {
+              opacity: 1,
+              ease: "none",
+              stagger: { each: 0.04 },
+              scrollTrigger: {
+                trigger: block,
+                start: "top 85%",
+                end: "top 40%",
+                scrub: SCRUB.normal,
+              },
+            },
+          );
+        });
 
         // The cue's brightness pulse (CSS) dies on the first scroll, for good.
         const cue = document.querySelector<HTMLElement>("[data-hero-cue]");
