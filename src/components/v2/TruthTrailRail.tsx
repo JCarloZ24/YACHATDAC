@@ -47,7 +47,9 @@ const MARKS: Array<{ anchor: string; label: string; sub?: string }> = [
   { anchor: "just-us", label: "2019", sub: "2:30pm, 30 April 2019" },
   { anchor: "father", label: "2003" },
   { anchor: "art-gallery", label: "1950s" },
-  { anchor: "the-count", label: "1902 – 1886" },
+  // 1902 carries no mark: the footsteps strand goes under from the
+  // escarpment break and does not resume until the 1840s (the count band's
+  // own note), so there is no strand for a pointer to sit on.
   { anchor: "mitchell", label: "1840s" },
   { anchor: "engraving", label: "Older than the record" },
   { anchor: "beginning", label: "100 million years ago" },
@@ -62,13 +64,24 @@ const AMPLITUDE = 8;
 const WAVELENGTH = 214;
 const SAMPLE = 12;
 
+/** The strands surface below the wordmark rather than running over it: the
+ *  dots fade in from nothing across this band (viewport-anchored — the header
+ *  logo sits in the first ~100px of the page). */
+const STRAND_FADE = "linear-gradient(to bottom, transparent 100px, black 230px)";
+const strandFade = { maskImage: STRAND_FADE, WebkitMaskImage: STRAND_FADE };
+
 function strandX(y: number, center: number, phase: number): number {
   return center + AMPLITUDE * Math.sin((y / WAVELENGTH) * Math.PI * 2 + phase);
 }
 
-function strandPath(height: number, center: number, phase: number): string {
-  const pts: string[] = [`M ${strandX(0, center, phase)} 0`];
-  for (let y = SAMPLE; y <= height; y += SAMPLE) {
+function strandPath(
+  height: number,
+  center: number,
+  phase: number,
+  from = 0,
+): string {
+  const pts: string[] = [`M ${strandX(from, center, phase)} ${from}`];
+  for (let y = from + SAMPLE; y <= height; y += SAMPLE) {
     pts.push(`L ${strandX(y, center, phase).toFixed(1)} ${y}`);
   }
   return pts.join(" ");
@@ -81,6 +94,10 @@ export function TruthTrailRail() {
     Array<{ anchor: string; top: number }>
   >([]);
   const [active, setActive] = useState(0);
+  /** Where the footsteps strand goes under: from the top of the escarpment
+   *  break, through the count, back at the 1840s mark. [start, end] in rail
+   *  coordinates; null until measured (or if either anchor is absent). */
+  const [gap, setGap] = useState<[number, number] | null>(null);
 
   useEffect(() => {
     const root = document.querySelector<HTMLElement>("[data-descent-root]");
@@ -91,15 +108,17 @@ export function TruthTrailRail() {
     const measure = () => {
       const rootTop = root.getBoundingClientRect().top + window.scrollY;
       setHeight(root.offsetHeight);
-      // The strand pair centres on the "A" of the YACHATDAC wordmark (its
-      // second letter): the descent drops out of the logo's own letterform.
+      // The strand pair centres on the "C" of the YACHATDAC wordmark (its
+      // third letter): the descent drops out of the logo's own letterform.
+      // More than one wordmark is in the DOM (the mobile bar's is first but
+      // display:none at lg, measuring a zero rect), so take the visible one.
       // Falls back to the content container's margin if the logo is absent.
-      const logo = document.querySelector<HTMLElement>(
-        'img[src*="logo-wordmark"]',
-      );
+      const logo = [
+        ...document.querySelectorAll<HTMLElement>('img[src*="logo-wordmark"]'),
+      ].find((el) => el.getBoundingClientRect().width > 0);
       if (logo) {
         const rect = logo.getBoundingClientRect();
-        const aCenter = rect.left + rect.width * (1.5 / 9); // 2nd of 9 letters
+        const aCenter = rect.left + rect.width * (2.5 / 9); // "C", 3rd of 9 letters
         const pairCenter = (INK_X + STEP_X) / 2;
         setLeft(Math.max(Math.round(aCenter - pairCenter), 0));
       } else {
@@ -127,6 +146,16 @@ export function TruthTrailRail() {
         ];
       });
       setMarks(tops);
+      const breakEl = document.getElementById("break-escarpment");
+      const resume = tops.find((mark) => mark.anchor === "mitchell");
+      setGap(
+        breakEl && resume
+          ? [
+              breakEl.getBoundingClientRect().top + window.scrollY - rootTop,
+              resume.top,
+            ]
+          : null,
+      );
     };
 
     // The reading line: a mark lights when its section crosses mid-viewport.
@@ -184,6 +213,7 @@ export function TruthTrailRail() {
           viewBox={`0 0 ${RAIL_W} ${height}`}
           fill="none"
           className="absolute left-0 top-0 text-canvas/15"
+          style={strandFade}
         >
           <path
             d={strandPath(height, INK_X, 0)}
@@ -202,7 +232,7 @@ export function TruthTrailRail() {
       <div
         data-v2-trail-fill
         className="absolute left-0 top-0"
-        style={{ clipPath: "inset(0% 0% 100% 0%)" }}
+        style={{ clipPath: "inset(0% 0% 100% 0%)", ...strandFade }}
       >
         {height > 0 ? (
           <svg
@@ -228,7 +258,7 @@ export function TruthTrailRail() {
       <div
         data-v2-steps-fill
         className="absolute left-0 top-0"
-        style={{ clipPath: "inset(0% 0% 100% 0%)" }}
+        style={{ clipPath: "inset(0% 0% 100% 0%)", ...strandFade }}
       >
         {height > 0 ? (
           <svg
@@ -238,13 +268,24 @@ export function TruthTrailRail() {
             fill="none"
             className="text-canvas/35"
           >
-            <path
-              d={strandPath(height, STEP_X, 0.9)}
-              stroke="currentColor"
-              strokeWidth={3.5}
-              strokeLinecap="round"
-              strokeDasharray="0.1 12"
-            />
+            {/* The strand goes under at the escarpment break and surfaces
+                again at the 1840s — two runs, nothing drawn between. */}
+            {(gap
+              ? [
+                  [0, gap[0]],
+                  [gap[1], height],
+                ]
+              : [[0, height]]
+            ).map(([from, to]) => (
+              <path
+                key={from}
+                d={strandPath(to, STEP_X, 0.9, from)}
+                stroke="currentColor"
+                strokeWidth={3.5}
+                strokeLinecap="round"
+                strokeDasharray="0.1 12"
+              />
+            ))}
           </svg>
         ) : null}
       </div>

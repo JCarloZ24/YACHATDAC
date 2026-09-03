@@ -13,6 +13,7 @@ import { MOTION_GRADE, type MediaSlot } from "@/content/lofi/media";
 import { truthBreaks, wattanuri } from "@/content/truth";
 import {
   truthBreakMedia,
+  truthDissolveMedia,
   truthEntryMedia,
   truthDeedPlateSlot,
   truthHeroSlot,
@@ -22,6 +23,7 @@ import { MediaOrField } from "@/components/v2/MediaOrField";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import { PullQuote } from "@/components/ui/PullQuote";
 import { SplitReveal } from "@/components/motion/text/SplitReveal";
+import { WordEmphasis } from "@/components/lofi/ui/WordEmphasis";
 import { SharedMorph } from "@/components/transitions/SharedMorph";
 
 /**
@@ -336,6 +338,296 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
   );
 }
 
+/**
+ * The 2020 diptych (10 · ENTRY 2020 — GROUND · brown + DIPTYCH, 2026-09-03):
+ * "the walk in, and the light on it". Two photographs on a 920 stage —
+ * the anchor 539×341 left, the detail 359×270 right and dropped 80px —
+ * deliberately unbalanced. The seam glyph (glyph-a, an existing artist
+ * mark) sits in the detail's lower-right corner; the gold dot wave rides
+ * the anchor's lower edge at 0.85. Artwork static (the GoldTrail rule),
+ * decorative, hidden from readers.
+ */
+function Diptych({
+  slots,
+  variant,
+}: {
+  slots: MediaSlot[];
+  /**
+   * `seam` — the 2020 frame: starburst in the detail's lower-right corner,
+   * dot wave along the anchor's foot. `lead` — the 2019 frame (11 · ENTRY
+   * 2019): the blue spiral (Truth/motif5) on the anchor's top-left, no wave.
+   */
+  variant: "seam" | "lead";
+}) {
+  const [anchor, detail] = slots;
+  const anyFrameGraded = slots.some((slot) => MOTION_GRADE[slot.bucket] === "frame");
+  return (
+    <figure className="mt-10 max-w-4xl">
+      <div
+        {...(anyFrameGraded ? {} : { "data-v2-depth": true })}
+        className="grid gap-6 sm:grid-cols-[539fr_359fr] sm:items-start"
+      >
+        <div className="relative aspect-539/341 overflow-hidden rounded-3xl">
+          <MediaOrField
+            src={presentSrc(anchor.src)}
+            alt={anchor.expects}
+            sizes="(min-width: 640px) 40vw, 100vw"
+            fieldClass={FIELD_CLASS[anchor.tone]}
+          />
+          {variant === "seam" ? (
+            /* The dot wave ON the photograph, along its lower edge — spec
+               x466 of the 440 stage, 460 wide of the anchor's 539. */
+            /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
+            <img
+              src="/artwork/dots-wave-gold.svg"
+              alt=""
+              aria-hidden
+              className="pointer-events-none absolute -bottom-1 left-[5%] w-[85%] opacity-85"
+              loading="lazy"
+            />
+          ) : (
+            /* Truth/motif5 — the blue spiral, 44px at x466 y462 of the frame:
+               26px in and 13px down from the anchor's corner. */
+            /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
+            <img
+              src="/artwork/glyph-spiral-blue.svg"
+              alt=""
+              aria-hidden
+              className="absolute left-6 top-3 w-11"
+              loading="lazy"
+            />
+          )}
+        </div>
+        {/* The detail drops 80px on the 342-high stage (~23%) — self-start
+            plus a top margin, so it never stretches to the anchor's height. */}
+        <div className="relative aspect-359/270 overflow-hidden rounded-3xl sm:mt-[21%]">
+          <MediaOrField
+            src={presentSrc(detail.src)}
+            alt={detail.expects}
+            sizes="(min-width: 640px) 27vw, 100vw"
+            fieldClass={FIELD_CLASS[detail.tone]}
+          />
+          {variant === "seam" ? (
+            /* Seam glyph — marks the image edge. glyph-a is the spec's
+               orange starburst (F9B24C / D57907 / 98470D). */
+            /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
+            <img
+              src="/artwork/glyph-a.svg"
+              alt=""
+              aria-hidden
+              className="absolute bottom-4 right-4 w-11"
+              loading="lazy"
+            />
+          ) : null}
+        </div>
+      </div>
+    </figure>
+  );
+}
+
+/**
+ * 16 · ENTRY 1840s — GROUND · navy (2026-09-03). The photograph of the
+ * Country he described, wide and shallow (920×320, radius 8), the artwork
+ * cluster on its top-right corner and the blue spiral seam glyph at its
+ * lower-right edge; beneath it the DOCUMENT slot — a scan of the journal
+ * page, not a photograph — held, dashed, labelled in the slot itself.
+ * Artwork static (the GoldTrail rule); the held slot is not for
+ * publication and says so.
+ */
+function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
+  const [country, document] = slots;
+  const documentSrc = presentSrc(document.src);
+  return (
+    <figure className="mt-10 max-w-4xl">
+      <div
+        {...(MOTION_GRADE[country.bucket] === "frame" ? {} : { "data-v2-depth": true })}
+        className="relative aspect-23/8 overflow-hidden rounded-lg"
+      >
+        <MediaOrField
+          src={presentSrc(country.src)}
+          alt={country.expects}
+          sizes="(min-width: 1024px) 64vw, 100vw"
+          fieldClass={FIELD_CLASS[country.tone]}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/artwork/cluster.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute right-[4%] top-6 w-28 opacity-95"
+          loading="lazy"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/artwork/glyph-spiral-blue.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute bottom-4 right-6 w-11"
+          loading="lazy"
+        />
+      </div>
+      {documentSrc ? (
+        <div
+          data-motion={MOTION_GRADE[document.bucket]}
+          className="relative mt-6 aspect-[768/420] max-w-3xl overflow-hidden rounded"
+        >
+          <MediaOrField
+            src={documentSrc}
+            alt={document.expects}
+            sizes="(min-width: 1024px) 54vw, 100vw"
+            fieldClass={FIELD_CLASS[document.tone]}
+          />
+        </div>
+      ) : (
+        <EditorialNote
+          tone="canvas"
+          label="HELD — this is a document slot, not a photograph."
+          className="mt-6 min-h-45 max-w-3xl"
+        >
+          Wants a scan of the journal page. Nothing is missing; nothing has
+          been supplied yet.
+        </EditorialNote>
+      )}
+    </figure>
+  );
+}
+
+/**
+ * P6 · portrait + testimony (12 · ENTRY 2003 — GROUND · brown + PORTRAIT,
+ * 2026-09-03). Portrait 294×386 left, rounded 24px; quoted speech right at
+ * Lead/24 with the gold Eyebrow/Footer-12 attribution seated at the foot.
+ *
+ * The quote is Y2 — per-word opacity ramp, dim state 0.28, NO movement —
+ * right for testimony, wrong for marketing copy. The ramp runs from the
+ * descent module; without it the words read at full opacity.
+ *
+ * "Push in, slowest on the page": the portrait carries [data-v2-portrait],
+ * and the descent module scrubs it 1.04→1.00 at the heavy scrub — slower
+ * than the plates and the hero. Withheld from frame-graded slots.
+ *
+ * No testimony in the content means no quotation on the page: the slot
+ * renders an editorial note instead. A quote is never paraphrased into
+ * being (D15/R17).
+ */
+function PortraitTestimony({
+  slot,
+  testimony,
+}: {
+  slot: MediaSlot;
+  testimony?: TruthEntry["testimony"];
+}) {
+  const frameGraded = MOTION_GRADE[slot.bucket] === "frame";
+  return (
+    <figure className="mt-10 max-w-4xl">
+      <div className="grid gap-8 sm:grid-cols-[294fr_626fr] sm:gap-14">
+        <div className="relative aspect-294/386 overflow-hidden rounded-3xl">
+          <div
+            {...(frameGraded ? {} : { "data-v2-portrait": true })}
+            data-motion={MOTION_GRADE[slot.bucket]}
+            className="absolute inset-0"
+          >
+            <MediaOrField
+              src={presentSrc(slot.src)}
+              alt={slot.expects}
+              sizes="(min-width: 640px) 22vw, 100vw"
+              fieldClass={FIELD_CLASS[slot.tone]}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col justify-between py-2 sm:py-9">
+          {testimony ? (
+            <>
+              <WordEmphasis
+                as="blockquote"
+                text={testimony.quote}
+                className="max-w-xl text-xl font-medium leading-relaxed text-canvas sm:text-2xl"
+              />
+              <figcaption className="eyebrow mt-10 max-w-xs text-xs leading-relaxed text-gold">
+                {testimony.attribution} &middot; {testimony.role}
+              </figcaption>
+            </>
+          ) : (
+            <EditorialNote label="Needs Suzanne's words — not for publication">
+              The frame sets quoted speech here, attributed to Suzanne Thompson.
+              The draft carries no quotation for this entry, and the frame&apos;s
+              placeholder line paraphrased the narration, so nothing is
+              rendered until her recorded words are supplied.
+            </EditorialNote>
+          )}
+        </div>
+      </div>
+    </figure>
+  );
+}
+
+/**
+ * The 1950s written record (13 · ENTRY 1950s — GROUND · brown, dimmed · the
+ * light is going out, 2026-09-03): the visitor photograph wide (920×300 of
+ * the 1440 frame) and dead still — no push, no depth — with the boomerang
+ * glyph and its faint ring cluster seated in the top-right corner; then the
+ * DOCUMENT slot below it, dashed, held. The slot wants a scan of the archival
+ * write-up, not a photograph, so it renders as an editorial note until one is
+ * supplied — nothing is faked into it. The band's ground (#4E3524 under a
+ * 0.34 dim) is the descent module's named-wrong layer.
+ */
+function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
+  const [visitor, document] = slots;
+  const documentSrc = presentSrc(document?.src ?? null);
+  return (
+    <figure className="mt-10 max-w-4xl">
+      <div className="relative aspect-[920/300] overflow-hidden rounded-lg">
+        <div data-motion={MOTION_GRADE[visitor.bucket]} className="absolute inset-0">
+          <MediaOrField
+            src={presentSrc(visitor.src)}
+            alt={visitor.expects}
+            sizes="(min-width: 1024px) 64vw, 100vw"
+            fieldClass={FIELD_CLASS[visitor.tone]}
+          />
+        </div>
+        {/* PENDING-MOTIF — the small ring cluster behind the glyph, 0.08
+            baked into the cut. Static, decorative. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/artwork/cluster.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute right-[5%] top-6 w-28 opacity-95"
+          loading="lazy"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/artwork/glyph-c.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute right-[8%] top-8 w-11"
+          loading="lazy"
+        />
+      </div>
+      <div className="mt-6 max-w-3xl">
+        {documentSrc ? (
+          <div className="relative aspect-[768/180] overflow-hidden rounded-sm border border-canvas/35">
+            <MediaOrField
+              src={documentSrc}
+              alt={document.expects}
+              sizes="(min-width: 1024px) 54vw, 100vw"
+              className="object-contain"
+            />
+          </div>
+        ) : (
+          <EditorialNote
+            tone="canvas"
+            label="HELD — this is a document slot, not a photograph."
+            className="min-h-45"
+          >
+            Wants a scan of the 1950s write-up. Nothing is missing; nothing has
+            been supplied yet.
+          </EditorialNote>
+        )}
+      </div>
+    </figure>
+  );
+}
+
 function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }) {
   const anyFrameGraded = slots.some((slot) => MOTION_GRADE[slot.bucket] === "frame");
   /* Six or more slots render as the hi-fi's square filmstrip (the 2022
@@ -389,6 +681,7 @@ function EntryBlock({
   kicker,
   titleOnPlate,
   gutterLabel,
+  gutterSub,
 }: {
   entry: TruthEntry;
   /**
@@ -409,9 +702,28 @@ function EntryBlock({
    * AHEAD / WITHIN FIVE YEARS. Dated entries derive the year themselves.
    */
   gutterLabel?: string;
+  /**
+   * Overrides the gutter's Link/14 sub. The 2020 frame (10 · ENTRY 2020)
+   * sets the era title — BOUGHT BACK — under the year, not the entry's
+   * full when, which the body already opens with.
+   */
+  gutterSub?: string;
 }) {
   const isPartner = entry.id === "partner";
   const isToday = entry.id === "today-fire";
+  const isRenamed = entry.id === "renamed";
+  /* The 2020 and 2019 frames (10 and 11) share one treatment: the date
+     folded into the body's first line at full off-white, the coda at
+     Lead/24 medium, the era title as the gutter sub, a diptych below. */
+  const isFather = entry.id === "father";
+  const isDiptych = isRenamed || entry.id === "just-us";
+  /* The 1950s frame (13): the visitor photograph wide, dead still, then the
+     held document slot beneath it. */
+  const isArtGallery = entry.id === "art-gallery";
+  /* 16 · ENTRY 1840s: the Country he described, then the held journal slot. */
+  const isMitchell = entry.id === "mitchell";
+  /* Frames 10, 11, 12, 13 and 16 share the ground-record treatment. */
+  const isGroundFrame = isDiptych || isFather || isArtGallery || isMitchell;
   /* The 2022 record frame (2026-09-02) sets the pattern for ground records:
      the year alone in the left gutter at gold, the title at display scale,
      the coda as a large statement, and the record label + CTA on one row.
@@ -422,14 +734,16 @@ function EntryBlock({
      it would just repeat the label. */
   const label = gutterLabel ?? year;
   const sub =
-    entry.when && entry.when !== label ? entry.when : undefined;
+    gutterSub ?? (entry.when && entry.when !== label ? entry.when : undefined);
   const whenKicker =
     !isPartner && !label && !isToday ? entry.when : undefined;
   return (
     <article
       id={entry.id}
       data-descent-arrive
-      className={`relative grid gap-6 border-t border-canvas/10 md:grid-cols-[180px_1fr] md:gap-12 ${
+      /* No rule between records (2026-09-03): the hi-fi frames run the
+         entries straight on, separated by the grounds and their spacing. */
+      className={`relative grid gap-6 md:grid-cols-[180px_1fr] md:gap-12 ${
         isPartner ? "py-16 md:py-24" : "py-10"
       }`}
     >
@@ -440,7 +754,9 @@ function EntryBlock({
         <div className="hidden self-start pt-2 md:block">
           {/* data-era-label sits on the year line itself — the rail centers
               its pointer on this element exactly. */}
-          <p data-era-label className="eyebrow text-xl text-gold">
+          {/* normal-case: the eyebrow uppercases, and a decade reads
+              "1950s", not "1950S". */}
+          <p data-era-label className="eyebrow text-xl normal-case text-gold">
             {label}
           </p>
           {sub ? (
@@ -467,7 +783,7 @@ function EntryBlock({
         ) : null}
         {label ? (
           <div className="mb-6 md:hidden">
-            <p className="eyebrow text-gold">{label}</p>
+            <p className="eyebrow normal-case text-gold">{label}</p>
             {sub ? (
               <p className="mt-1 text-xs font-normal uppercase text-canvas">
                 {sub}
@@ -492,15 +808,16 @@ function EntryBlock({
             )}
           </h3>
         )}
-        {kicker ? (
+        {kicker || isRenamed || isMitchell ? (
           /* The wireframe's dotted-trail rule under the display title — its
-             own gold cut (360×24), delivered 2026-09-02. Static, decorative. */
+             own gold cut (360×24), delivered 2026-09-02. Static, decorative.
+             The 2020 and 1840s frames carry it too, at 0.55. */
           /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
           <img
             src="/artwork/dots-rule-gold.svg"
             alt=""
             aria-hidden
-            className="mt-8 w-72"
+            className={`mt-8 w-72 ${isRenamed || isMitchell ? "opacity-55" : ""}`}
             loading="lazy"
           />
         ) : null}
@@ -510,10 +827,15 @@ function EntryBlock({
             className={`leading-relaxed ${
               isPartner
                 ? "mt-8 text-lg text-canvas sm:text-xl"
-                : "mt-4 text-canvas/75"
+                : isGroundFrame
+                  ? "mt-6 max-w-3xl text-canvas"
+                  : "mt-4 text-canvas/75"
             }`}
           >
-            {paragraph}
+            {/* The 2020 frame folds the date into the body's first line. */}
+            {isDiptych && entry.when && paragraph === entry.body[0]
+              ? `${entry.when}. ${paragraph}`
+              : paragraph}
           </p>
         ))}
         {entry.claim ? (
@@ -524,7 +846,11 @@ function EntryBlock({
         {/* The coda is the record's large statement (the 05 and 2022
             frames) — it reads before the photographs. */}
         {entry.coda ? (
-          <p className="mt-8 max-w-2xl text-xl leading-snug text-canvas sm:text-2xl">
+          <p
+            className={`mt-8 max-w-2xl text-xl leading-snug text-canvas sm:text-2xl ${
+              isGroundFrame ? "font-medium leading-relaxed" : ""
+            }`}
+          >
             {entry.coda}
           </p>
         ) : null}
@@ -536,6 +862,20 @@ function EntryBlock({
             />
           ) : isToday ? (
             <TodayMontage slots={truthEntryMedia[entry.id]} />
+          ) : isFather ? (
+            <PortraitTestimony
+              slot={truthEntryMedia[entry.id][0]}
+              testimony={entry.testimony}
+            />
+          ) : isDiptych ? (
+            <Diptych
+              slots={truthEntryMedia[entry.id]}
+              variant={isRenamed ? "seam" : "lead"}
+            />
+          ) : isArtGallery ? (
+            <WrittenRecordFrame slots={truthEntryMedia[entry.id]} />
+          ) : isMitchell ? (
+            <CountryAndDocument slots={truthEntryMedia[entry.id]} />
           ) : (
             <EntryMedia slots={truthEntryMedia[entry.id]} caption={entry.caption} />
           )
@@ -561,7 +901,13 @@ function EntryBlock({
         ) : (
           <>
             {entry.source ? (
-              <p className="eyebrow mt-5 text-[0.6rem] font-normal text-canvas/40">
+              /* The ground frames (10–12) set the tag in Burnt Ochre with or
+                 without a CTA; elsewhere it stays quiet. */
+              <p
+                className={`eyebrow mt-8 text-[0.6rem] font-normal ${
+                  isGroundFrame ? "text-burnt" : "text-canvas/40"
+                }`}
+              >
                 {entry.source}
               </p>
             ) : null}
@@ -672,6 +1018,14 @@ export function EraSection({
    */
   const foldsTitleIntoEntry = era.id === "research";
   /**
+   * The 1950s frame (13) carries the era title only as the gutter sub under
+   * the year — no big era headline above the entry.
+   */
+  const titleInGutter = era.marker === "1950s";
+  /* 16 · ENTRY 1840s does the same — BEFORE THE RUNS WERE TAKEN UP under the
+     gold year — but on the navy ground the page band paints, not roasted. */
+  const eraTitleInGutter = titleInGutter || era.entries[0]?.id === "mitchell";
+  /**
    * The Today era opens on its ENTRY plate (04, 1440×900 spec): the era
    * marker, title and lead-entry headline all live on the plate, so the
    * ground section below starts straight on the lead entry's body.
@@ -742,7 +1096,10 @@ export function EraSection({
             </div>
           ) : null}
         </EntryPlate>
-        <section className="relative overflow-hidden">
+        {/* The 10 frame sets this ground at Roasted Brown (#4E3524) outright —
+            painted here so it holds regardless of where the descent's
+            cross-fade stands when the reader arrives. */}
+        <section className="relative overflow-hidden bg-roasted">
           {/* The 06 frame's PENDING-MOTIF — Artwork Ring A (Marc's Wonder
               footer spiral, 349:3461), static behind the copy. Its 0.14 ×
               0.08 opacity is baked into the delivered cut. Spec position:
@@ -757,19 +1114,29 @@ export function EraSection({
           />
           <div className="relative mx-auto max-w-6xl px-6 py-20 lg:px-24">
             {[...(prependEntries ?? []), ...rest].map((entry) => (
-              <EntryBlock key={entry.title} entry={entry} />
+              <EntryBlock
+                key={entry.title}
+                entry={entry}
+                gutterSub={
+                  entry.id === "renamed" ||
+                  entry.id === "just-us" ||
+                  entry.id === "father"
+                    ? era.title
+                    : undefined
+                }
+              />
             ))}
           </div>
         </section>
       </>
     );
   }
-  return (
-    <section id={era.id} className="mx-auto max-w-6xl px-6 py-20 lg:px-24">
+  const inner = (
+    <div className="relative mx-auto max-w-6xl px-6 py-20 lg:px-24">
       {/* The era marker, the lore line, and the entry whens all live on the
           trail rail now (2026-09-02) — repeating them here doubled the
           timeline and crowded the gutter the rail moved into. */}
-      {foldsTitleIntoEntry ? null : (
+      {foldsTitleIntoEntry || eraTitleInGutter ? null : (
         <SplitReveal
           as="h2"
           mode="lines"
@@ -787,11 +1154,30 @@ export function EraSection({
             gutterLabel={
               foldsTitleIntoEntry && index === 0 ? era.marker : undefined
             }
+            /* The 13 frame sets the era title under the year in the gutter
+               (1950s / ADMIRED UNDER THE WRONG NAME), the same as 10–12. */
+            gutterSub={
+              entry.id === "art-gallery" || entry.id === "mitchell"
+                ? era.title
+                : undefined
+            }
           />
         ))}
       </div>
-    </section>
+    </div>
   );
+  if (titleInGutter) {
+    /* The 13 frame paints this ground outright: Roasted Brown (#4E3524)
+       under a 0.34 dim — "the light is going out of this band" — so it holds
+       regardless of where the descent's cross-fade stands on arrival. */
+    return (
+      <section id={era.id} className="relative bg-roasted">
+        <div aria-hidden className="absolute inset-0 bg-[rgba(9,14,18,0.34)]" />
+        {inner}
+      </section>
+    );
+  }
+  return <section id={era.id}>{inner}</section>;
 }
 
 /**
@@ -801,75 +1187,143 @@ export function EraSection({
  * on screen"). Everything from the testimony down is still: no arrive, no
  * depth, no split — the stated exception.
  */
+/**
+ * Held (2026-09-03): Suzanne's testimony — the count, her recorded words —
+ * is not published until she has seen and signed it off. While this is
+ * true the band renders the 15 frame's WITHHELD state only: the placeholder
+ * title, the testimony line, the held portrait slot and the build note.
+ * Flip to false once her approval is recorded and the draft copy in
+ * src/content/truth.ts (title, figures, quotes, check note) renders again.
+ */
+const SUZANNE_WITHHELD = true;
+
 export function SuzanneBand() {
   return (
-    <div id="the-count" className="mx-auto max-w-6xl px-6 lg:px-24">
-      <div className="flex min-h-[140svh] flex-col justify-center py-24">
-        <p className="eyebrow text-oxide">{suzanne.marker}</p>
-        <SplitReveal
-          as="h2"
-          mode="lines"
-          className="headline mt-6 max-w-3xl text-4xl text-canvas sm:text-6xl"
-        >
-          {suzanne.title}
-        </SplitReveal>
-        <dl className="mt-20 space-y-16">
-          {suzanne.figures.map((figure) => (
-            <div key={figure.year} data-v2-count className="max-w-3xl">
-              <dt className="headline text-7xl text-oxide sm:text-9xl">
-                {figure.year}
-              </dt>
-              <dd className="mt-4 text-lg leading-relaxed text-canvas/80">
-                {figure.detail}
-              </dd>
-            </div>
-          ))}
-        </dl>
-        <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50">
-          <a
-            href={suzanne.citation.href}
-            className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
-          >
-            {suzanne.citation.text}
-          </a>
-        </p>
-      </div>
-
-      {/* Testimony. Still, by rule — these are her words being read. */}
-      <div className="max-w-3xl pb-24">
-        <EditorialNote>{suzanne.draftWarning}</EditorialNote>
-
-        <PullQuote
-          tone="charcoal"
-          attribution={suzanne.attribution}
-          role={suzanne.role}
-          className="mt-14"
-        >
-          {suzanne.openingQuote}
-        </PullQuote>
-        <p className="mt-10 leading-relaxed text-canvas/80">{suzanne.lede}</p>
-        {suzanne.quotes.map((quote) => (
-          <PullQuote key={quote.slice(0, 32)} tone="charcoal" className="mt-10">
-            {quote}
-          </PullQuote>
-        ))}
-        <p className="mt-10 leading-relaxed text-canvas/80">
-          {suzanne.afterQuotes}
-        </p>
-        <p className="headline mt-14 text-4xl text-canvas sm:text-5xl">
-          {suzanne.standingQuote}
-        </p>
-        {suzanne.closing.map((paragraph) => (
-          <p key={paragraph.slice(0, 32)} className="mt-8 leading-relaxed text-canvas/80">
-            {paragraph}
+    <div id="the-count" className="relative overflow-hidden bg-charcoal">
+      {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B, static, behind
+          the copy. Spec: x900 y90 of the 1440 frame, 465 wide, 0.1 — the
+          delivered cut is off-white; the opacity is applied here. */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+      <img
+        src="/artwork/ring-b.svg"
+        alt=""
+        aria-hidden
+        className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
+        loading="lazy"
+      />
+      <div className="relative mx-auto max-w-6xl px-6 lg:px-24">
+        {/* The 15 frame's head: era at Eyebrow/Section-24 in off-white on
+            the gutter line, the title at Display/96 in Rust Red — the only
+            red on the page — then the testimony block: portrait slot HELD
+            (R5) left, attribution and build note right. Nothing here moves. */}
+        <div className="grid gap-6 pb-40 pt-36 md:grid-cols-[180px_1fr] md:gap-12">
+          <p className="eyebrow self-start pt-3 text-xl text-canvas">
+            {SUZANNE_WITHHELD ? <>1902 &rarr; 1886</> : suzanne.marker}
           </p>
-        ))}
-        <div className="mt-14">
-          <EditorialNote label="For Suzanne to check — not for publication">
-            {suzanne.checkNote}
-          </EditorialNote>
+          <div>
+            <h2 className="headline max-w-4xl text-5xl leading-[1.2] text-oxide sm:text-7xl lg:text-display">
+              {SUZANNE_WITHHELD ? "[ THE COUNT ]" : suzanne.title}
+            </h2>
+            <p className="mt-10 text-sm uppercase tracking-wide text-canvas">
+              {suzanne.attribution} &mdash; Testimony
+              {SUZANNE_WITHHELD ? <> &middot; Words not reproduced</> : null}
+            </p>
+            <div className="mt-6 grid gap-8 sm:grid-cols-[320px_1fr] sm:gap-8">
+              {/* ⟡ PORTRAIT SLOT — Suzanne. HELD: her image is not placed
+                  until she has seen this (R5). */}
+              <div
+                data-placeholder="portrait-held"
+                aria-hidden
+                className="aspect-4/5 w-full max-w-80 rounded-xs border border-dashed border-oxide/50"
+              />
+              <div>
+                <p className="text-sm leading-relaxed text-canvas">{suzanne.role}</p>
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-burnt">
+                  &#9888; Content withheld pending Suzanne&apos;s approval.
+                  &#9940; No photograph. No motion. The rail breaks here and
+                  does not resume until the 1840s.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {SUZANNE_WITHHELD ? null : (
+          <>
+            <div className="flex min-h-[100svh] flex-col justify-center py-24 md:pl-[calc(180px+3rem)]">
+              <dl className="space-y-16">
+                {suzanne.figures.map((figure) => (
+                  <div key={figure.year} data-v2-count className="max-w-3xl">
+                    <dt className="headline text-7xl text-canvas sm:text-9xl">
+                      {figure.year}
+                    </dt>
+                    <dd className="mt-4 text-lg leading-relaxed text-canvas/80">
+                      {figure.detail}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50">
+                <a
+                  href={suzanne.citation.href}
+                  className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
+                >
+                  {suzanne.citation.text}
+                </a>
+              </p>
+            </div>
+
+            {/* Testimony. Still, by rule — these are her words being read. */}
+            <div className="max-w-3xl pb-24 md:pl-[calc(180px+3rem)]">
+              <EditorialNote>{suzanne.draftWarning}</EditorialNote>
+
+              <PullQuote
+                tone="charcoal"
+                attribution={suzanne.attribution}
+                role={suzanne.role}
+                className="mt-14"
+              >
+                {suzanne.openingQuote}
+              </PullQuote>
+              <p className="mt-10 leading-relaxed text-canvas/80">{suzanne.lede}</p>
+              {suzanne.quotes.map((quote) => (
+                <PullQuote key={quote.slice(0, 32)} tone="charcoal" className="mt-10">
+                  {quote}
+                </PullQuote>
+              ))}
+              <p className="mt-10 leading-relaxed text-canvas/80">
+                {suzanne.afterQuotes}
+              </p>
+              <p className="headline mt-14 text-4xl text-canvas sm:text-5xl">
+                {suzanne.standingQuote}
+              </p>
+              {suzanne.closing.map((paragraph) => (
+                <p key={paragraph.slice(0, 32)} className="mt-8 leading-relaxed text-canvas/80">
+                  {paragraph}
+                </p>
+              ))}
+              <div className="mt-14">
+                <EditorialNote label="For Suzanne to check — not for publication">
+                  {suzanne.checkNote}
+                </EditorialNote>
+              </div>
+            </div>
+          </>
+        )}
       </div>
+      {/* Wave / Divider · NAVY — Marc's hand-off, filled with the ground it
+          INTRODUCES: what came before the record. */}
+      <svg
+        aria-hidden
+        viewBox="0 0 1442 151"
+        preserveAspectRatio="none"
+        className="block h-16 w-full sm:h-28"
+      >
+        <path
+          d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
+          className="fill-midnight"
+        />
+      </svg>
     </div>
   );
 }
@@ -893,7 +1347,7 @@ export function FullBleedBreak({
   which,
   waveTo,
 }: {
-  which: keyof typeof truthBreaks;
+  which: keyof typeof truthBreakMedia;
   /** Renders the hand-off wave over the break's foot, filled with the
    *  incoming section's ground. */
   waveTo?: keyof typeof WAVE_FILL;
@@ -928,6 +1382,67 @@ export function FullBleedBreak({
           />
         </svg>
       ) : null}
+    </section>
+  );
+}
+
+/**
+ * 14 · BREAK The Escarpment — DISSOLVE PAIR (2026-09-03). Two full-bleed
+ * country shots stacked: B beneath, A on top dissolving 1 → 0 across the
+ * break's travel ([data-v2-dissolve]); B pulls back a touch as it is
+ * revealed ([data-v2-plate], the plates' own push). Light scrim. Marc's
+ * charcoal wave over the foot — the last hand-off, into the count.
+ *
+ * While shot B is undelivered A holds at full: [data-v2-dissolve] is only
+ * set when there is something to dissolve TO. Country bucket only (R10).
+ */
+export function DissolveBreak() {
+  const { outgoing, incoming } = truthDissolveMedia;
+  const incomingSrc = presentSrc(incoming.src);
+  return (
+    <section
+      id={truthBreaks.escarpment.id}
+      className="relative min-h-[80svh] overflow-hidden"
+    >
+      <div
+        data-v2-plate
+        data-motion={MOTION_GRADE[incoming.bucket]}
+        className="absolute inset-0"
+      >
+        <MediaOrField
+          src={incomingSrc}
+          alt=""
+          sizes="100vw"
+          fieldClass={FIELD_CLASS[incoming.tone]}
+        />
+      </div>
+      <div
+        {...(incomingSrc ? { "data-v2-dissolve": true } : {})}
+        className="absolute inset-0"
+      >
+        <MediaOrField
+          src={presentSrc(outgoing.src)}
+          alt={truthBreaks.escarpment.alt}
+          sizes="100vw"
+          fieldClass={FIELD_CLASS[outgoing.tone]}
+        />
+      </div>
+      {/* scrim · light — 0 → .18 → .40 */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-linear-to-b from-black/0 via-black/18 to-black/40"
+      />
+      <svg
+        aria-hidden
+        viewBox="0 0 1442 151"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 bottom-0 h-16 w-full sm:h-28"
+      >
+        <path
+          d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
+          className="fill-charcoal"
+        />
+      </svg>
     </section>
   );
 }

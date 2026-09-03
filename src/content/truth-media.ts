@@ -149,25 +149,87 @@ export const truthEntryMedia: Record<string, MediaSlot[]> = {
       tone: "roasted",
     },
   ],
-  "just-us": [
+  /**
+   * The 2020 diptych (10 · ENTRY 2020 — GROUND · brown + DIPTYCH,
+   * 2026-09-03): "the walk in, and the light on it". Two images, 60/40,
+   * unequal heights, the right one dropped — deliberately unbalanced. The
+   * frame's 1.74.1 and 1.42.1 are writtenrecord3 and writtenrecord4 in the
+   * delivered batch. Work bucket — people on Country, no cultural site.
+   */
+  renamed: [
     {
-      id: "just-us-arrival",
-      bucket: "country",
-      expects: "The homestead, or the road in, on the day it changed hands",
-      src: null,
-      tone: "charcoal",
+      id: "renamed-walk-in",
+      bucket: "work",
+      expects: "The walk in — an elder coming down the rocky slope through the grass",
+      src: `${TRUTH}/truth-writtenrecord3.webp`,
+      tone: "roasted",
+    },
+    {
+      id: "renamed-light",
+      bucket: "work",
+      expects: "The light on it — standing in the long grass among the trees at dusk",
+      src: `${TRUTH}/truth-writtenrecord4.webp`,
+      tone: "burnt",
     },
   ],
-  father: [
+  /**
+   * The 2019 diptych (11 · ENTRY 2019 — GROUND · brown + DIPTYCH · this beat
+   * is private, 2026-09-03): "the drive in, and the listening". Same stage
+   * as 2020. The frame's 1.1.2 and 1.77.5 are livingmemory5 and
+   * livingmemory6 in the delivered batch. The listening frame is shot from
+   * inside a rock overhang — graded cultural-site (frame): no depth drift,
+   * the record holds.
+   */
+  "just-us": [
     {
-      id: "father-archive",
-      bucket: "story-wall",
-      expects: "Photographs and envelopes — the archive he kept",
-      src: null,
+      id: "just-us-drive-in",
+      bucket: "work",
+      expects: "The drive in — turned in the passenger seat, laughing, Country in the mirror",
+      src: `${TRUTH}/truth-livingmemory5.webp`,
+      tone: "charcoal",
+    },
+    {
+      id: "just-us-listening",
+      bucket: "cultural-site",
+      expects: "The listening — from under the overhang, looking out over Country at dusk",
+      src: `${TRUTH}/truth-livingmemory6.webp`,
       tone: "roasted",
     },
   ],
+  /**
+   * The 2003 portrait (12 · ENTRY 2003 — GROUND · brown + PORTRAIT,
+   * 2026-09-03): the frame's 1.42.5 is livingmemory7 in the delivered batch —
+   * the elder, head bowed, in black and white. Portrait 294×386 left, the
+   * testimony right. Work bucket per the batch; the frame's "push in, slowest
+   * on the page" rides [data-v2-portrait]. ⚠ The archive slot (photographs
+   * and envelopes, story-wall) is superseded by the frame and dropped.
+   */
+  father: [
+    {
+      id: "father-portrait",
+      bucket: "work",
+      expects: "The elder, head bowed, hat on — black and white, the shade of the trees behind",
+      src: `${TRUTH}/truth-livingmemory7.webp`,
+      tone: "charcoal",
+    },
+  ],
+  /**
+   * The 1950s frame (13 · ENTRY 1950s — GROUND · brown, dimmed · the light is
+   * going out, 2026-09-03): a visitor at the site — the frame's 378A7604 /
+   * 1.80.1 is writtenrecord5 in the delivered batch, an elder in a hat under
+   * the escarpment at dusk. Shot against the rock face, so graded
+   * cultural-site (frame): the spec's own note is "dead still, no push".
+   * The second slot is the DOCUMENT slot — the archival write-up wants a
+   * scan, not a photograph, and stays null until one is supplied.
+   */
   "art-gallery": [
+    {
+      id: "art-gallery-visitor",
+      bucket: "cultural-site",
+      expects: "A visitor at the site — an elder in a hat under the escarpment, looking out at dusk",
+      src: `${TRUTH}/truth-writtenrecord5.webp`,
+      tone: "roasted",
+    },
     {
       id: "art-gallery-writeup",
       bucket: "story-wall",
@@ -176,7 +238,21 @@ export const truthEntryMedia: Record<string, MediaSlot[]> = {
       tone: "charcoal",
     },
   ],
+  /**
+   * 16 · ENTRY 1840s — GROUND · navy (2026-09-03): the Country he described
+   * (the frame's 1.27.1 — writtenrecord6 in the delivered batch, trees over
+   * the plain under a blue sky) at 920×320, then the DOCUMENT slot: a scan
+   * of the journal page, NOT a photograph. Held — nothing has been
+   * supplied yet, and the frame says so in the slot itself.
+   */
   mitchell: [
+    {
+      id: "mitchell-country",
+      bucket: "country",
+      expects: "The Country he described — trees over the plain, blue sky",
+      src: `${TRUTH}/truth-writtenrecord6.webp`,
+      tone: "midnight",
+    },
     {
       id: "mitchell-journal",
       bucket: "story-wall",
@@ -232,6 +308,32 @@ export const truthBreakMedia: Record<"countryNow" | "duskCountry", MediaSlot> = 
     id: "break-dusk",
     bucket: "country",
     expects: "Open Country at dusk. No people, no caption, edge to edge.",
+    src: null,
+    tone: "charcoal",
+  },
+};
+
+/**
+ * 14 · BREAK The Escarpment — DISSOLVE PAIR (2026-09-03): "held, pull back,
+ * no people". Shot A (the frame's 1.85.1, bare tree against a grey sky) is
+ * truth-thecount in the delivered batch and dissolves out over the scroll;
+ * shot B (1.87.1, dead trees on white sand) is NOT in the batch — every
+ * Truth photograph is accounted for — so it renders as the tonal field
+ * until it lands, and A holds rather than dissolving into nothing.
+ * Country bucket, both: no people, no cultural site (R10).
+ */
+export const truthDissolveMedia: { outgoing: MediaSlot; incoming: MediaSlot } = {
+  outgoing: {
+    id: "dissolve-bare-tree",
+    bucket: "country",
+    expects: "Bare tree against a grey dusk sky — shot A, outgoing",
+    src: `${TRUTH}/truth-thecount.webp`,
+    tone: "charcoal",
+  },
+  incoming: {
+    id: "dissolve-white-sand",
+    bucket: "country",
+    expects: "Dead trees on white sand — shot B, incoming (1.87.1, not yet delivered)",
     src: null,
     tone: "charcoal",
   },

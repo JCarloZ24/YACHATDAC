@@ -8,6 +8,18 @@
 > `drive-download-20260824T052412Z-1-001`, received 24 August 2026). Prototype
 > title: *The Truth — descending*.
 >
+> **Reconciled 3 September 2026** against the client's markdown export of
+> the same content, `YACHATDAC-The-truth-August-20-2026 (1).md`. Words match
+> throughout. The export is text-only: it carries no image markers, no photo
+> captions, no hero scroll cues and no "Lore — continuous" label. Those are
+> retained here from the prototype as export losses, not deletions — confirm
+> with the client if any of them should go. A 2020 CTA added on 3 September
+> from the hi-fi frame ("How the buyback happened") was removed the same day:
+> the client's content does not contain it. The 2003 entry's closing line is
+> Suzanne's own words (confirmed 3 September 2026) — it is set as a quotation
+> with her attribution, and the 12 · ENTRY 2003 frame renders it beside the
+> portrait.
+>
 > **What survived the conversion.** The words, the headings, the link
 > destinations, the bracketed editorial notes and the image *direction*.
 > Layout, styling, scroll behaviour and interaction did **not** — under
@@ -156,7 +168,9 @@ Living memory
 
 He spent his life fencing and protecting the sites out here, and holding two families together with photographs and envelopes and names. When she came back after he died, nothing had been done since.
 
-He was carrying on his own father’s work, and his grandfather’s. The relationships that kept this Country reachable were held by people who never owned an acre of it.
+> He was carrying on his own father’s work, and his grandfather’s. The relationships that kept this Country reachable were held by people who never owned an acre of it.
+
+Suzanne Thompson · Iningai custodian
 
 Living memory
 
