@@ -83,3 +83,6 @@ next-env.d.ts
 /brand/typefaces/BantayogSans-*.woff2
 /brand/typefaces/GoodDog*.woff2
 /brand/typefaces/GOODD*.TTF
+
+# Playwright MCP session dumps — regenerated per run
+.playwright-mcp/
