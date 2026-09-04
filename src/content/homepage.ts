@@ -283,7 +283,7 @@ export const wayForward = {
       description:
         "Stories, historical accounts, research and recordings. Some of it is science, some of it is memory.",
       cta: "The Record",
-      href: "/resources",
+      href: "/the-record",
     },
   ],
   /**

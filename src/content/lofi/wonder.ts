@@ -144,5 +144,5 @@ export const downloads = {
   eyebrow: "Downloads",
   headline: "Take it with you.",
   body: "Download the brochure to share, print, or read offline.",
-  cta: { label: "Download PDF", href: "/resources?type=download" },
+  cta: { label: "Download PDF", href: "/the-record?type=download" },
 } as const;

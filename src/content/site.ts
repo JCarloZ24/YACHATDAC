@@ -82,7 +82,7 @@ export const primaryNav: NavChild[] = [
   { title: "Wonder", href: "/wonder" },
   { title: "Truth", href: "/truth" },
   { title: "Living Work", href: "/living-work" },
-  { title: "The Record", href: "/resources" },
+  { title: "The Record", href: "/the-record" },
   { title: "About", href: "/about" },
 ];
 
@@ -103,11 +103,11 @@ export const pillars: Pillar[] = [
     children: [
       { title: "Guesting on Country", href: "/wonder#experience" },
       { title: "About Turraburra", href: "/wonder#turraburra" },
-      { title: "Stories", href: "/resources?type=story" },
+      { title: "Stories", href: "/the-record?type=story" },
       /* "Downloads" was `?type=download`, which is not one of the record's
          content types and would have matched nothing. The documents and
          reports section is what it meant. */
-      { title: "Documents & reports", href: "/resources#documents" },
+      { title: "Documents & reports", href: "/the-record#documents" },
     ],
   },
   {
@@ -153,7 +153,7 @@ export const pillars: Pillar[] = [
       { title: "Our people", href: "/our-people" },
       { title: "Partnerships", href: "/partnerships" },
       { title: `About ${org.property}`, href: "/wonder#turraburra" },
-      { title: "Resources", href: "/resources" },
+      { title: "The Record", href: "/the-record" },
     ],
   },
 ];
@@ -163,8 +163,8 @@ export const pillars: Pillar[] = [
  * Query-driven and filterable, unlike the hand-curated pillar pages.
  */
 export const resourcesHub = {
-  title: "Resources",
-  href: "/resources",
+  title: "The Record",
+  href: "/the-record",
   /** Filterable content types within the single unified Blog/Editorial collection. */
   contentTypes: [
     "History",
@@ -186,11 +186,11 @@ export const resourcesHub = {
  * copy-paste, not a decision.
  */
 export const resourcesFooterLinks: NavChild[] = [
-  { title: "Stories", href: "/resources?type=story" },
-  { title: "News / Updates", href: "/resources?type=update" },
+  { title: "Stories", href: "/the-record?type=story" },
+  { title: "News / Updates", href: "/the-record?type=update" },
   /*
     "Downloads" and "Videos / Podcast" filtered on `download` and `video`,
-    neither of which is a RecordType. They did not error — resources/page.tsx
+    neither of which is a RecordType. They did not error — the-record/page.tsx
     matches the query against the closed set and falls through to no filter —
     so both links quietly delivered the WHOLE record under a promise of a
     subset. Misleading rather than broken, and worse for being neither.
@@ -199,8 +199,8 @@ export const resourcesFooterLinks: NavChild[] = [
     meant. Videos / Podcast maps onto Recording, a type that exists.
     `update` now resolves too, because D21 put Update back in the vocabulary.
   */
-  { title: "Downloads", href: "/resources#documents" },
-  { title: "Videos / Podcast", href: "/resources?type=Recording", stub: true },
+  { title: "Downloads", href: "/the-record#documents" },
+  { title: "Videos / Podcast", href: "/the-record?type=Recording", stub: true },
 ];
 
 /**

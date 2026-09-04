@@ -60,7 +60,7 @@ const ways = [
   {
     title: "Something for the record",
     body: "Photographs of the escarpment or the station, station records, letters, diaries, maps, and family papers mentioning Iningai people.",
-    cta: { label: "What is in the record", href: "/resources" },
+    cta: { label: "What is in the record", href: "/the-record" },
   },
 ];
 
