@@ -24,7 +24,7 @@
  *
  * ⚠ This list is CMS content in waiting. Build documentation §8 makes
  * Resources a filterable collection; the browser in
- * components/v2/RecordGrid.tsx filters this array today and should
+ * app/the-record/_components/Grid.tsx filters this array today and should
  * filter a query tomorrow. Do not build anything that assumes these are
  * compile-time constants.
  */

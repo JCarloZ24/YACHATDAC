@@ -1,6 +1,6 @@
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { TransitionProvider } from "@/components/motion/TransitionProvider";
-import "../v2/transitions.css";
+import "@/components/motion/transitions.css";
 
 /**
  * /truth — the descent runs on the immersive stack (Lenis + the transition

@@ -158,6 +158,28 @@ body {
    --------------------------------------------------------------------------- */
 @custom-variant deck (@media (min-width: 1024px) and (min-height: 820px));
 
+/* ---------------------------------------------------------------------------
+   hold: — the viewport AND the preference that let a frame take the screen.
+
+   Every slide in §03 holds: a row of cards takes the screen and keeps it, and
+   once per source one entry leaves its row to become the screen. Both are the
+   same layout fact — a section taller than the viewport with a frame stuck to
+   the top of it — and both are withheld by the same query.
+
+   Which is why this carries `prefers-reduced-motion` and `deck:` does not. A
+   pin is LAYOUT, not something the motion module can decline at runtime, and
+   the transition strip's own instruction is "the pin is never created and the
+   breakout never runs — the entry stays a card in the grid". Under reduced
+   motion there must be no extra viewport of scroll to travel through and no
+   frame to stick, and a class only the media query can withhold is the only
+   thing that delivers that. src/lib/motion/record.ts matches on this exact
+   query so the module and the layout cannot disagree.
+
+   The width and height thresholds are `deck:`'s, and for its reason: a slide
+   taller than its screen is a trap. Below either, the page is ordinary flow.
+   --------------------------------------------------------------------------- */
+@custom-variant hold (@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) and (min-height: 820px));
+
 @utility eyebrow {
   font-family: var(--font-eyebrow);
   font-size: 0.8125rem;
@@ -217,6 +239,31 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue,
   .scroll-cue-glow {
+    animation: none;
+  }
+}
+
+/* The Record's rail count ("13 items"), swapped on filter change.
+   160ms, quiet, and a plain fade — NOT an odometer. The rolling-figure
+   gesture belongs to the figures of loss elsewhere on the site, and the
+   interface must not borrow it to announce a filter result.
+   Replayed by keying the element on the count, so React remounts it and the
+   animation runs again; under reduced motion the number simply swaps. */
+@utility count-swap {
+  animation: count-swap 160ms var(--ease-quiet) both;
+}
+
+@keyframes count-swap {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .count-swap {
     animation: none;
   }
 }

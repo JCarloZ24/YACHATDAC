@@ -271,7 +271,8 @@ off rather than competing with them.
 **§04 is the draft's own list format, at hi-fi scale.** Title-led rows across the full column with
 the deck beneath, meta and the action on the right — exactly the structure the lo-fi drew. What the
 hi-fi adds is scale and the kit: 28px Baloo titles give the rows air, `Dots / Rule` carries the two
-group dividers instead of a hairline, `Artwork / Ring A` sits behind at 5%, and the four downloads
+group dividers instead of a hairline, `Artwork / Ring A` sits behind at 30% on its roasted path —
+the off-white path was invisible on canvas, so the frame recoloured it rather than dimmed it — and the four downloads
 are `Button / Blob`. The state of a document is said by its action — **Download** or **In
 preparation** — which is how the draft says it. The two group headings replace a 3px progress bar;
 a meter has no business on a page with a standing no-odometer rule.

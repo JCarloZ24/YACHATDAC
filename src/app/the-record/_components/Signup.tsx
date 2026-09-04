@@ -4,8 +4,9 @@ import { useId } from "react";
 import { recordGrows } from "@/content/the-record";
 
 /**
- * 06 · the signup, to the hi-fi's own shape: a labelled box field with the
- * blob button beside it, rather than the lo-fi's underline + arrow.
+ * 06 · the signup, to the hi-fi frame (2537:17313 … 2537:17320): a 520-wide
+ * column of heading, note, label and field, with the Subscribe blob set
+ * alongside the field rather than under it — not a bordered panel.
  *
  * ⚠ Not wired up, exactly as SignupField is not. The newsletter list is an
  * external service and the comms system is Phase 2; submitting prevents
@@ -24,28 +25,32 @@ export function RecordSignup() {
   const blurb = sentences.slice(0, -1).join(" ").trim();
 
   return (
-    <form
-      className="max-w-xl"
-      onSubmit={(event) => event.preventDefault()}
-      data-record-arrive
-    >
-      <p className="text-2xl leading-snug font-semibold text-canvas">
+    <form className="mt-48" onSubmit={(event) => event.preventDefault()} data-record-arrive>
+      {/* Work Sans SemiBold 24/32 — the frame does NOT set this in the
+          headline face; the section already has one headline. */}
+      <h3 className="max-w-[32.5rem] text-2xl leading-8 font-semibold">
         {signup.label}
-      </p>
-      <p className="mt-3 text-base leading-relaxed text-canvas/70">
+      </h3>
+      <p className="mt-3 max-w-[32.5rem] text-base leading-6 text-canvas/68">
         {blurb}
       </p>
 
-      <label htmlFor={id} className="eyebrow mt-8 block text-[0.6875rem] text-canvas/55">
+      <label
+        htmlFor={id}
+        className="eyebrow mt-5 block text-[0.6875rem] leading-4 tracking-[1.4px] text-canvas/55"
+      >
         Email
       </label>
-      <div className="mt-2 flex flex-wrap items-center gap-4">
+
+      {/* field 420x52 at x=100, blob 276x56 at x=548 — a 28px gutter, the
+          field centred against the taller blob. */}
+      <div className="mt-2 flex flex-wrap items-center gap-7">
         <input
           id={id}
           type="email"
           name="email"
           placeholder={signup.placeholder}
-          className="h-13 w-full max-w-105 rounded border border-canvas/28 bg-canvas/6 px-4 text-canvas placeholder:text-canvas/40 focus:border-ochre focus:outline-none"
+          className="h-13 w-105 max-w-full rounded-[4px] border border-canvas/28 bg-canvas/6 px-4 text-canvas placeholder:text-canvas/40 focus:border-ochre focus:outline-none"
         />
         {/* The blob, as a submit control rather than a link — same shape, same
             tone as BlobButton; a <button> cannot be a <Link>. */}
@@ -65,13 +70,15 @@ export function RecordSignup() {
               WebkitMaskRepeat: "no-repeat",
             }}
           />
-          <span className="eyebrow relative text-xs text-canvas">
+          <span className="eyebrow relative text-base tracking-[0.08em] text-canvas">
             {signup.cta}
           </span>
         </button>
       </div>
 
-      <p className="mt-6 text-sm text-canvas/55">{privacy}</p>
+      <p className="mt-5 max-w-[32.5rem] text-[0.8125rem] leading-5 text-canvas/56">
+        {privacy}
+      </p>
     </form>
   );
 }

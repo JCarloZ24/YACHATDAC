@@ -307,7 +307,7 @@ export const PHOTOS: Photo[] = [
 
   /* --- Living Work batch, gathered 2026-08-31 -----------------------------
      Exported per section slot rather than per frame — the filename is the
-     slot it was gathered for, and the binding in LivingWorkSections.tsx is
+     slot it was gathered for, and the binding in living-work/_components/Sections.tsx is
      the authority on where each one actually landed. Graded by looking at
      every frame, same rules as batch 1.
 

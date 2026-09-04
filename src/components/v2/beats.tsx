@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Beat } from "@/content/lofi/homepage";
 import { heroNightSlot, heroSlot } from "@/content/lofi/media";
-import { MediaOrField } from "@/components/v2/MediaOrField";
+import { MediaOrField } from "@/components/ui/MediaOrField";
 import { SplitReveal } from "@/components/motion/text/SplitReveal";
 import { SharedMorph } from "@/components/transitions/SharedMorph";
 import { TransitionLink } from "@/components/transitions/TransitionLink";

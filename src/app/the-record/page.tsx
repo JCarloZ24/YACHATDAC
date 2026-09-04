@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
-import { V2RecordMotion } from "@/components/v2/V2RecordMotion";
+import { V2RecordMotion } from "./_components/Motion";
 import {
   DocumentsLedger,
   KnowledgeGapsV2,
@@ -9,12 +9,12 @@ import {
   RecordGrowsV2,
   RecordHeroV2,
   presentSrc,
-} from "@/components/v2/RecordSections";
+} from "./_components/Sections";
 import {
   RecordGrid,
   type Breakout,
   type ResolvedSlot,
-} from "@/components/v2/RecordGrid";
+} from "./_components/Grid";
 import { recordBreakoutMedia, recordCardMedia } from "@/content/record-media";
 import {
   recordItems,
@@ -147,7 +147,9 @@ export default async function ResourcesPage({
       <OnRequestHold />
       <RecordGrowsV2 />
 
-      <FooterGround color="var(--color-charcoal)" />
+      {/* §06 ends on the off-white wave, not on charcoal — the footer's
+          band above its burnt crest is canvas here. */}
+      <FooterGround color="var(--color-canvas)" />
     </PageTransition>
   );
 }
