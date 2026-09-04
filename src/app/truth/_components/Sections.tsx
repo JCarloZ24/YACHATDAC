@@ -19,7 +19,7 @@ import {
   truthTodayPlateSlot,
   truthWattanuriMedia,
 } from "@/content/truth-media";
-import { MediaOrField } from "@/components/v2/MediaOrField";
+import { MediaOrField } from "@/components/ui/MediaOrField";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import { PullQuote } from "@/components/ui/PullQuote";
 import { SplitReveal } from "@/components/motion/text/SplitReveal";

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { photoById } from "@/content/kit";
 import { SignupField } from "@/components/ui/SignupField";
-import { RangerCarousel } from "@/components/v2/RangerCarousel";
+import { RangerCarousel } from "./RangerCarousel";
 import {
   challengeGroups,
   challenges,

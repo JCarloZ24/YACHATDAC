@@ -49,9 +49,17 @@ export function WaveDivider({
   return (
     <svg
       aria-hidden
-      /* x starts at 1 because the path's own left edge does; at 0 a sub-pixel
-         column of the crest goes unfilled down the left. */
-      viewBox="1 0 1469 105.324"
+      /* Cropped to the path's OWN box, not a rounded one, or the seam shows a
+         hairline of the wrong ground down either edge.
+           left   the path starts at x=1.00123, so a viewBox at 0 leaves a
+                  sub-pixel column of crest unfilled.
+           right  the bottom edge stops at H1468.85 and the path then closes
+                  DIAGONALLY up to 1470.04, so a viewBox out to 1470 exposes a
+                  ~1.2-unit unfilled wedge — widest at the foot, which is what
+                  read as a pale sliver on the navy wave (and a navy one on the
+                  canvas wave). Ending at 1468.85 cuts the wedge off entirely.
+         preserveAspectRatio="none" stretches the crop back to full width. */
+      viewBox="1.00123 0 1467.84877 105.324"
       preserveAspectRatio="none"
       className={`pointer-events-none absolute inset-x-0 top-0 h-16 w-full -translate-y-[calc(100%-1px)] sm:h-26 ${
         flip ? "scale-y-[-1]" : ""
@@ -73,8 +81,11 @@ export function WaveDivider({
 const BLOB_TONE = {
   burnt: "bg-burnt",
   ochre: "bg-ochre",
-  /** A held button — the shape is there, the action is not. */
-  muted: "bg-canvas/12",
+  /* A held button — the shape is there, the action is not. `current`, not
+     `canvas`: on §04's canvas ground a canvas-tinted shape and a canvas label
+     were both invisible, so the affordance R14 asks to MARK was in practice
+     silently dropped. Keyed to the section's ink it reads on either ground. */
+  muted: "bg-current/10",
 } as const;
 
 const BLOB_MASK = {
@@ -140,7 +151,7 @@ export function BlobHold({
       className={`${BLOB_BOX} ${className}`}
     >
       <BlobShape tone="muted" />
-      <span className="eyebrow relative text-[0.6875rem] text-canvas/45">
+      <span className="eyebrow relative text-[0.6875rem] text-current/55">
         {children}
       </span>
     </span>
@@ -155,7 +166,12 @@ export function DottedRule({
   tone = "gold",
   className = "",
 }: {
-  tone?: "gold" | "plain";
+  /**
+   * `canvas` is the dot vectors recoloured to Ground/Off-White — leaves
+   * recoloured, never the container — which is what the rule wants on a dark
+   * ground. Gold and black both vanish into navy.
+   */
+  tone?: "gold" | "plain" | "canvas";
   className?: string;
 }) {
   return (
@@ -163,9 +179,11 @@ export function DottedRule({
       aria-hidden
       data-artwork="dots-rule"
       className={`pointer-events-none h-6 w-full bg-repeat-x bg-[length:auto_100%] ${
-        tone === "gold"
-          ? "bg-[url(/artwork/dots-rule-gold.svg)]"
-          : "bg-[url(/artwork/dots-rule.svg)]"
+        {
+          gold: "bg-[url(/artwork/dots-rule-gold.svg)]",
+          plain: "bg-[url(/artwork/dots-rule.svg)]",
+          canvas: "bg-[url(/artwork/dots-rule-canvas.svg)]",
+        }[tone]
       } ${className}`}
     />
   );
@@ -179,12 +197,17 @@ export function DottedRule({
 export function RingArtwork({
   piece,
   className = "",
-  invert = false,
+  tone = "canvas",
 }: {
   piece: "a" | "b" | "c";
   className?: string;
-  /** The rings ship white; on canvas they need inverting to read at all. */
-  invert?: boolean;
+  /**
+   * The rings ship in Ground/Off-White, which is invisible ON canvas. There
+   * the frame swaps the path to Roasted Brown rather than filtering the
+   * artwork to black — the leaves are recoloured, the container is not.
+   * Only piece `a` has a roasted cut, which is the only one canvas asks for.
+   */
+  tone?: "canvas" | "roasted";
 }) {
   return (
     <div
@@ -194,9 +217,9 @@ export function RingArtwork({
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
       <img
-        src={`/artwork/ring-${piece}.svg`}
+        src={`/artwork/ring-${piece}${tone === "roasted" ? "-roasted" : ""}.svg`}
         alt=""
-        className={`h-full w-full ${invert ? "brightness-0" : ""}`}
+        className="h-full w-full"
         loading="lazy"
       />
     </div>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { V2LivingWorkMotion } from "@/components/v2/V2LivingWorkMotion";
+import { V2LivingWorkMotion } from "@/app/living-work/_components/Motion";
 import {
   LivingWorkAperture,
   LivingWorkBreath,
@@ -11,7 +11,7 @@ import {
   LivingWorkRangers,
   LivingWorkSpring,
   LivingWorkStreams,
-} from "@/components/v2/LivingWorkSections";
+} from "@/app/living-work/_components/Sections";
 
 export const metadata: Metadata = { title: "Screen recipes" };
 

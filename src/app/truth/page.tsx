@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
-import { V2TruthMotion } from "@/components/v2/V2TruthMotion";
+import { V2TruthMotion } from "./_components/Motion";
 import {
   DissolveBreak,
   EraSection,
@@ -9,8 +9,8 @@ import {
   SuzanneBand,
   TruthHeroV2,
   WattanuriBand,
-} from "@/components/v2/TruthSections";
-import { TruthTrailRail } from "@/components/v2/TruthTrailRail";
+} from "./_components/Sections";
+import { TruthTrailRail } from "./_components/TrailRail";
 import { erasAfter, erasBefore, truthHero } from "@/content/truth";
 
 export const metadata: Metadata = {

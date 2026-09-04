@@ -14,7 +14,7 @@
  * event, so late subscribers are told immediately.
  *
  * VT_DURATION_MS is the single source of truth for the wipe's length — the CSS
- * in src/app/v2/transitions.css states 600ms and this adds one settle frame.
+ * in src/components/motion/transitions.css states 600ms and this adds one settle frame.
  * Change them together or entrances race the snapshot.
  */
 

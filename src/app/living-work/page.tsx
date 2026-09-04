@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageTransition } from "@/components/transitions/PageTransition";
-import { LivingWorkLoader } from "@/components/v2/LivingWorkLoader";
-import { V2LivingWorkMotion } from "@/components/v2/V2LivingWorkMotion";
+import { LivingWorkLoader } from "./_components/Loader";
+import { V2LivingWorkMotion } from "./_components/Motion";
 import {
   LivingWorkAperture,
   LivingWorkBreath,
@@ -13,7 +13,7 @@ import {
   LivingWorkRangers,
   LivingWorkSpring,
   LivingWorkStreams,
-} from "@/components/v2/LivingWorkSections";
+} from "./_components/Sections";
 import { livingWorkHero } from "@/content/living-work";
 
 export const metadata: Metadata = {

@@ -3,7 +3,7 @@
 18 frames from `Downloads/Living Work Assets` transcoded into `public/media/library/`
 (WebP, 2000px, q82 — filenames kept exactly as gathered, `livingwork-*.webp`), registered
 in `src/content/kit.ts` under `lw-*` ids with grades assigned by looking at every frame,
-and bound in `src/components/v2/LivingWorkSections.tsx`. `public/media/` stays gitignored;
+and bound in `src/app/living-work/_components/Sections.tsx`. `public/media/` stays gitignored;
 this file is the record a fresh clone can rebuild from.
 
 ## Bindings

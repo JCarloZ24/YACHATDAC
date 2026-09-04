@@ -35,7 +35,7 @@ gsap.registerPlugin(useGSAP, Draggable, Flip, InertiaPlugin);
  * on mount — with JavaScript off this is still every photograph in a row.
  *
  * ⚠ Names, identification and consent are still to come (see the section's
- * note in LivingWorkSections.tsx) — the profile renders "[ name held ]" and
+ * note in living-work/_components/Sections.tsx) — the profile renders "[ name held ]" and
  * the section body as a stand-in biography until they land.
  */
 
