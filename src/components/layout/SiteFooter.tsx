@@ -112,42 +112,60 @@ export function SiteFooter() {
       </div>
 
       <div className="relative overflow-hidden bg-charcoal">
-        {/* The artist's rings as ground — the 21 frame's four instances,
+        {/* The artist's rings as ground — the 21 frame's five instances,
             edge-anchored so they bleed past the page at every width: the
             dotted ring cut by the left edge beside the acknowledgement, the
             large ring cut by the top-right corner, a second dotted ring cut
-            by the lower-right edge behind the link columns, and the third
-            ring centred under the credits and bleeding past the foot.
-            ring-a and ring-b carry the hi-fi's 8% opacity inside the file,
-            so no wrapper opacity (doubling it made them invisible); ring-c
-            is exported at full strength and takes it here. */}
+            by the lower-right edge behind the link columns, and the ring +
+            cluster pair cut by the foot behind the credits row.
+            Every one of these files carries the hi-fi's 8% opacity inside
+            it, so none takes a wrapper opacity — ring-c used to sit at the
+            foot with opacity-[0.08] on top of its own, which multiplied out
+            to 0.64% and drew nothing. The design has no ring-c here. */}
         <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute top-[90px] -left-3 w-[465px]">
+          <div className="absolute top-[90px] -left-32 w-[260px] sm:-left-3 sm:w-[465px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/artwork/ring-b.svg" alt="" className="h-auto w-full" />
           </div>
-          <div className="absolute -top-2 -right-32 w-[416px]">
+          <div className="absolute -top-2 -right-20 w-[230px] sm:-right-32 sm:w-[416px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/artwork/ring-a.svg" alt="" className="h-auto w-full" />
           </div>
-          <div className="absolute bottom-24 -right-24 w-[470px] -scale-x-100">
+          <div className="absolute bottom-24 -right-36 w-[280px] -scale-x-100 sm:-right-24 sm:w-[470px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/artwork/ring-b.svg" alt="" className="h-auto w-full" />
           </div>
-          <div className="absolute -bottom-56 left-1/2 w-[447px] -translate-x-1/2 opacity-[0.08]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/artwork/ring-c.svg" alt="" className="h-auto w-full" />
+          {/* The pair riding the foot, behind the credits row: a second
+              ring-a with the small cluster off its right shoulder. Unlike
+              the three above, these are anchored to the CONTENT COLUMN and
+              not the viewport — in the frame the ring sits against the
+              credits row and the cluster tucks just left of the social
+              icons, so they have to travel with the text. Pinned to the
+              page edge instead, they drifted out from under both on any
+              viewport wider than the 1440 frame. Percentages are of the
+              max-w-7xl track, so at 1440 they resolve to the frame's own
+              608 and 1053. Both are cut by the foot, so only their tops
+              show — the frame crops the cluster at 114 of its 128. */}
+          <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-7xl">
+            <div className="absolute -bottom-[148px] -left-10 w-[230px] sm:left-[41.25%] sm:w-[416px] sm:-bottom-[268px]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/artwork/ring-a.svg" alt="" className="h-auto w-full" />
+            </div>
+            <div className="absolute -bottom-[10px] left-[48%] w-[100px] sm:-bottom-[14px] sm:left-[76%] sm:w-[145px]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/artwork/cluster.svg" alt="" className="h-auto w-full" />
+            </div>
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-7xl px-6 pt-24 pb-10 lg:px-16">
+        <div className="relative mx-auto w-full max-w-7xl px-6 pt-16 pb-12 sm:pt-24 sm:pb-10 lg:px-16">
           {/* Acknowledgement — first, centred, above the navigation. Placement
               per open decision 3: footer, text only, no ceremony element. */}
           <div className="text-center">
             <h2 className="eyebrow text-gold">Acknowledgement of Country</h2>
             {welcomeToCountry.status === "awaiting-suzanne" ? (
               <p
-                className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-canvas/90"
+                className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-canvas/90 sm:mt-8 sm:text-lg"
                 data-placeholder="welcome-to-country"
               >
                 {welcomeToCountry.placeholder}
@@ -161,10 +179,10 @@ export function SiteFooter() {
             src="/artwork/dots-wave-gold.svg"
             alt=""
             aria-hidden
-            className="mx-auto mt-20 w-full max-w-3xl"
+            className="mx-auto mt-12 w-full max-w-3xl sm:mt-20"
           />
 
-          <div className="mt-24 grid gap-12 md:grid-cols-3 lg:grid-cols-[1.3fr_1fr_1fr_1fr_0.8fr]">
+          <div className="mt-14 grid gap-10 sm:mt-24 sm:gap-12 md:grid-cols-3 lg:grid-cols-[1.3fr_1fr_1fr_1fr_0.8fr]">
             {/* The stacked lockup — the artist's full mark (motifs, wordmark
                 and legal name in one image), exported whole from the hi-fi
                 (node 2146:3766) per build documentation §5. White type on
@@ -184,7 +202,7 @@ export function SiteFooter() {
               <p className="mt-4 text-base text-canvas">
                 ICN {registration.icn ?? "[ number ]"}
               </p>
-              <p className="mt-3 flex items-baseline gap-x-4 text-sm whitespace-nowrap text-canvas">
+              <p className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-sm text-canvas">
                 <span>ABN {registration.abn ?? "[ number ]"}</span>
                 {registration.icn === null || registration.abn === null ? (
                   <span className="text-canvas/90">
@@ -195,46 +213,50 @@ export function SiteFooter() {
               </p>
             </div>
 
-            {footerNav.map((column) => (
-              <div key={column.title}>
-                <h2 className="eyebrow text-gold">{column.title}</h2>
-                <ul className="mt-8 space-y-6">
-                  {column.links.map((link) => (
-                    <li key={link.title}>
-                      <Link
-                        href={link.href}
-                        className="text-base text-canvas/90 transition-colors duration-(--dur-small) ease-quiet hover:text-canvas"
-                      >
-                        {link.title}
-                      </Link>
+            {/* Two-up below md; md:contents dissolves this wrapper back into
+                the footer grid so the desktop columns are untouched. */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:contents">
+              {footerNav.map((column) => (
+                <div key={column.title}>
+                  <h2 className="eyebrow text-gold">{column.title}</h2>
+                  <ul className="mt-5 space-y-4 sm:mt-8 sm:space-y-6">
+                    {column.links.map((link) => (
+                      <li key={link.title}>
+                        <Link
+                          href={link.href}
+                          className="text-base text-canvas/90 transition-colors duration-(--dur-small) ease-quiet hover:text-canvas"
+                        >
+                          {link.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+              {/* FOLLOW — the hi-fi lists the first two networks by name; the
+                  rest ride the icon row below. Inert until URLs are supplied. */}
+              <div>
+                <h2 className="eyebrow text-gold">Follow</h2>
+                <ul className="mt-5 space-y-4 sm:mt-8 sm:space-y-6">
+                  {socialLinks.slice(0, 2).map((social) => (
+                    <li key={social.title}>
+                      {social.href ? (
+                        <a
+                          href={social.href}
+                          className="text-base text-canvas/90 transition-colors duration-(--dur-small) ease-quiet hover:text-canvas"
+                        >
+                          {social.title}
+                        </a>
+                      ) : (
+                        <span className="text-base text-canvas/90">
+                          {social.title}
+                        </span>
+                      )}
                     </li>
                   ))}
                 </ul>
               </div>
-            ))}
-
-            {/* FOLLOW — the hi-fi lists the first two networks by name; the
-                rest ride the icon row below. Inert until URLs are supplied. */}
-            <div>
-              <h2 className="eyebrow text-gold">Follow</h2>
-              <ul className="mt-8 space-y-6">
-                {socialLinks.slice(0, 2).map((social) => (
-                  <li key={social.title}>
-                    {social.href ? (
-                      <a
-                        href={social.href}
-                        className="text-base text-canvas/90 transition-colors duration-(--dur-small) ease-quiet hover:text-canvas"
-                      >
-                        {social.title}
-                      </a>
-                    ) : (
-                      <span className="text-base text-canvas/90">
-                        {social.title}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
 
@@ -242,7 +264,7 @@ export function SiteFooter() {
               1278×21 rule) — the artist's rule tiled to the full width. */}
           <div
             aria-hidden
-            className="mt-20 h-6 w-full bg-[url(/artwork/dots-rule-gold.svg)] bg-repeat-x"
+            className="mt-12 h-6 w-full bg-[url(/artwork/dots-rule-gold.svg)] bg-repeat-x sm:mt-20"
             style={{ backgroundSize: "auto 24px" }}
           />
 

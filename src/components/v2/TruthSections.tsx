@@ -115,69 +115,81 @@ function presentSrc(src: string | null): string | null {
  */
 export function TruthHeroV2() {
   return (
-    <header className="relative flex min-h-svh items-center overflow-hidden">
-      <SharedMorph name="v2-truth-media">
-        <div className="absolute inset-0">
-          <div data-v2-hero-media className="absolute inset-0">
-            <MediaOrField
-              src={presentSrc(truthHeroSlot.src)}
-              alt="Country at dusk — bare trees against the last light over Turraburra."
-              sizes="100vw"
-              priority
-              className="object-cover"
-              fieldClass="bg-midnight"
-            />
+    /* The wave lives OUTSIDE the clipped header so it can bleed a pixel past
+       the hero's foot. Inside it, its own antialiased bottom edge landed
+       exactly on the header boundary — with min-h-svh resolving to a
+       fractional device pixel and the band below being transparent (the
+       evergreen is the fixed descent ground), that edge read as a pale
+       hairline across the full width under the crest. */
+    <div className="relative">
+      <header className="relative flex min-h-svh items-center overflow-hidden">
+        <SharedMorph name="v2-truth-media">
+          <div className="absolute inset-0">
+            <div data-v2-hero-media className="absolute inset-0">
+              <MediaOrField
+                src={presentSrc(truthHeroSlot.src)}
+                alt="Country at dusk — bare trees against the last light over Turraburra."
+                sizes="100vw"
+                priority
+                className="object-cover"
+                fieldClass="bg-midnight"
+              />
+            </div>
           </div>
-        </div>
-      </SharedMorph>
-      {/* X5 — the spec's linear wash: heavier at the foot, never opaque. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-linear-to-t from-charcoal/80 via-charcoal/30 to-charcoal/10"
-      />
+        </SharedMorph>
+        {/* X5 — the spec's linear wash: heavier at the foot, never opaque. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-t from-charcoal/80 via-charcoal/30 to-charcoal/10"
+        />
 
-      {/* Spec column: text block ~225px in from the frame edge, lines running
-          to ~1035px — wider than the body container, so the hero opens up. */}
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-24 lg:px-12">
-        {/* Gold here is the spec's hero accent — eyebrow and cue only. */}
-        <p data-v2-arrive className="eyebrow text-gold">
-          {truthHero.eyebrow}
-        </p>
-        <SplitReveal
-          as="h1"
-          mode="lines"
-          gate="entry"
-          className="headline mt-8 max-w-4xl text-4xl text-canvas sm:text-6xl lg:max-w-none lg:text-display"
-        >
-          {truthHero.title}
-        </SplitReveal>
-        <p className="mt-10 max-w-2xl text-xl leading-relaxed text-canvas">
-          {truthHero.standfirst}
-        </p>
-        <a
-          href={truthHero.actions[0].href}
-          data-hero-cue
-          className="callout scroll-cue-glow mt-14 block w-fit text-scroll text-gold"
-        >
-          {truthHero.actions[0].label} &darr;
-        </a>
-      </div>
+        {/* Spec column: text block ~225px in from the frame edge, lines running
+            to ~1035px — wider than the body container, so the hero opens up. */}
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-24 lg:px-12">
+          {/* Gold here is the spec's hero accent — eyebrow and cue only. */}
+          <p data-v2-arrive className="eyebrow text-gold">
+            {truthHero.eyebrow}
+          </p>
+          <SplitReveal
+            as="h1"
+            mode="lines"
+            gate="entry"
+            className="headline mt-8 max-w-4xl text-4xl text-canvas sm:text-6xl lg:max-w-none lg:text-display"
+          >
+            {truthHero.title}
+          </SplitReveal>
+          <p className="mt-10 max-w-2xl text-xl leading-relaxed text-canvas">
+            {truthHero.standfirst}
+          </p>
+          <a
+            href={truthHero.actions[0].href}
+            data-hero-cue
+            className="callout scroll-cue-glow mt-14 block w-fit text-scroll text-gold"
+          >
+            {truthHero.actions[0].label} &darr;
+          </a>
+        </div>
+
+      </header>
 
       {/* The first era's ground rises into the hero — the spec's organic
           hand-off. Same wave as the footer divider, filled with the present
-          band's evergreen so the crest and the ground below read as one. */}
+          band's evergreen so the crest and the ground below read as one.
+          The viewBox starts at x=1 because the path's own left edge does:
+          at 0 a sub-pixel column of the crest went unfilled down the left.
+          -bottom-px drops the antialiased foot below the join. */}
       <svg
         aria-hidden
-        viewBox="0 0 1442 151"
+        viewBox="1 0 1469 151"
         preserveAspectRatio="none"
-        className="absolute inset-x-0 bottom-0 h-20 w-full sm:h-36"
+        className="pointer-events-none absolute inset-x-0 -bottom-px h-20 w-full sm:h-36"
       >
         <path
           d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
           className="fill-evergreen"
         />
       </svg>
-    </header>
+    </div>
   );
 }
 
