@@ -49,6 +49,25 @@ nursery, sunsets, dead trees, escarpment, rock art, and exactly one fire frame (
 ceremony, plant identification, walking and climbing, campground, signage. **Children appear
 in 15 frames**, six with identifiable faces.
 
+### Later batches — after this audit
+
+Three page batches landed after 2026-08-31 and are **not** counted in the table above. They
+live under `public/media/library/<page>/`, are tracked in git (the deployment builds from this
+repo), and each one is described slot by slot in its own manifest — that manifest, not this
+document, is the source of truth for what a frame shows and what may move.
+
+| Batch | Files | Dimensions | On disk | Manifest |
+|---|---|---|---|---|
+| `library/truth` | 34 | 3840×2024 | 13.4 MB | [`src/content/truth-media.ts`](src/content/truth-media.ts) |
+| `library/living-work` | 18 | 3840×2024 | 6.5 MB | [`src/content/kit.ts`](src/content/kit.ts) (`lw-*`) |
+| `library/record` | 13 | 3840×2024 (11), 4267×3200, 2000×1334 | 5.2 MB | [`src/content/record-media.ts`](src/content/record-media.ts) |
+
+**The Record batch (2026-09-04)** is numbered to the hi-fi's card order — `therecord-story<N>`
+is card N of the grid — and 6 and 12 are deliberately absent because the design marks those
+two cards *⟡ no image supplied*. Three frames do not depict their entry's subject and two
+carry consent questions; both are recorded in the manifest's header rather than here, so the
+note travels with the wiring.
+
 **Alpha channels: none.** All 111 raster files across every set are fully opaque. Batch 2's
 PNGs carry a 4th channel, but its minimum value is 255 in every file — no real transparency.
 
