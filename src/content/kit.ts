@@ -126,6 +126,18 @@ export const ARTWORK: ArtworkPiece[] = [
     note: "7-path dot cluster. One of the Guide's traveller candidates (the flock).",
   },
   {
+    id: "cluster-gold",
+    src: "/artwork/cluster-gold.svg",
+    node: "2892:25680",
+    width: 145,
+    height: 128,
+    paths: 7,
+    note:
+      "The Record's cut of the same cluster — Yellow Gold at full opacity. The " +
+      "`cluster` entry above is the footer's white-at-8% wash; that one is a " +
+      "ground, this one is a mark on a photograph. Not interchangeable.",
+  },
+  {
     id: "blob-mask",
     src: "/artwork/blob-mask.svg",
     node: "2051:4029",
