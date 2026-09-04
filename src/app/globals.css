@@ -140,6 +140,24 @@ body {
    is still moving. Promote to React components as they stabilise.
    --------------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------------
+   deck: — the viewport that can hold a full-screen slide.
+
+   The Record's grid runs as a deck: a row of cards, or a breakout, takes the
+   screen and the reader glides between them. That only works on a viewport
+   wide enough for three cards AND tall enough to hold a 700px card with air.
+   Below either threshold the deck is off and the page scrolls normally, which
+   matters: a slide taller than its screen is a trap, because the snapping
+   pulls the reader back to the top of the thing they were trying to see the
+   bottom of.
+
+   A named variant rather than an inline arbitrary one — `[@media...]:h-svh`
+   built from a template literal is invisible to Tailwind (the same trap
+   src/lib/tone.ts documents for `bg-${tone}`), and writing the query out at
+   every call site five times over is unreadable.
+   --------------------------------------------------------------------------- */
+@custom-variant deck (@media (min-width: 1024px) and (min-height: 820px));
+
 @utility eyebrow {
   font-family: var(--font-eyebrow);
   font-size: 0.8125rem;

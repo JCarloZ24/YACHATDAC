@@ -107,7 +107,7 @@ export const erasBefore: readonly TruthEra[] = [
         id: "precinct",
         when: "Within five years",
         title: "The Cultural Knowledge Precinct",
-        href: "/resources/cultural-knowledge-precinct",
+        href: "/the-record/cultural-knowledge-precinct",
         body: [
           "Exhibitions, teaching, research accommodation and a place for community to gather, in one place at Turraburra. Master planning is underway.",
         ],
@@ -146,7 +146,7 @@ export const erasBefore: readonly TruthEra[] = [
          * open. Left as drafted until D17 is answered.
          */
         title: "Right-way fire, springs, and two flux towers",
-        href: "/resources/right-way-fire-and-the-carbon-in-the-soil",
+        href: "/the-record/right-way-fire-and-the-carbon-in-the-soil",
         body: [
           "The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on Country managed this way, one on grazed land, checked against each other.",
         ],
@@ -155,14 +155,14 @@ export const erasBefore: readonly TruthEra[] = [
         source: "Living memory",
         cta: {
           label: "What the towers are showing",
-          href: "/resources/right-way-fire-and-the-carbon-in-the-soil",
+          href: "/the-record/right-way-fire-and-the-carbon-in-the-soil",
         },
       },
       {
         id: "study-2022",
         when: "2022",
         title: "The site is studied with its owners",
-        href: "/resources/fifteen-thousand-markings-read-in-order",
+        href: "/the-record/fifteen-thousand-markings-read-in-order",
         body: [
           "A two-year study documents Marra Wonga from both archaeological and Iningai perspectives, with Iningai community members as research partners rather than subjects. Ten clusters of engravings, read south to north, tell the Seven Sisters in sequence.",
         ],
@@ -171,7 +171,7 @@ export const erasBefore: readonly TruthEra[] = [
         source: "Science",
         cta: {
           label: "Read the findings",
-          href: "/resources/fifteen-thousand-markings-read-in-order",
+          href: "/the-record/fifteen-thousand-markings-read-in-order",
         },
       },
       {
@@ -185,7 +185,7 @@ export const erasBefore: readonly TruthEra[] = [
         ],
         cta: {
           label: "Explore our discoveries",
-          href: "/resources#research-and-discovery",
+          href: "/the-record#research-and-discovery",
         },
       },
     ],
@@ -200,7 +200,7 @@ export const erasBefore: readonly TruthEra[] = [
         id: "deed",
         when: "12:15pm, Friday 26 June 2026",
         title: "The deed of grant",
-        href: "/resources/it-nearly-didnt-happen",
+        href: "/the-record/it-nearly-didnt-happen",
         body: [
           "Turraburra is signed over outright. No longer held on our behalf, no longer shackled to anyone else's conditions.",
         ],
@@ -212,7 +212,7 @@ export const erasBefore: readonly TruthEra[] = [
         source: "Written record",
         cta: {
           label: "Suzanne's account of how it happened",
-          href: "/resources/it-nearly-didnt-happen",
+          href: "/the-record/it-nearly-didnt-happen",
         },
       },
       {
@@ -229,7 +229,7 @@ export const erasBefore: readonly TruthEra[] = [
         id: "just-us",
         when: "2:30pm, 30 April 2019",
         title: "And then it was just us",
-        href: "/resources/it-nearly-didnt-happen",
+        href: "/the-record/it-nearly-didnt-happen",
         body: [
           "The Indigenous Land and Sea Corporation had purchased the property and leased it to YACHATDAC eleven days earlier. Now the owner drove off it. There was no furniture in the house, so everyone slept on the floor. That first night Mark told them to be quiet and listen.",
         ],
@@ -237,14 +237,14 @@ export const erasBefore: readonly TruthEra[] = [
         source: "Living memory",
         cta: {
           label: "Read what it took",
-          href: "/resources/it-nearly-didnt-happen",
+          href: "/the-record/it-nearly-didnt-happen",
         },
       },
       {
         id: "father",
         when: "2003",
         title: "Suzanne's father",
-        href: "/resources/it-nearly-didnt-happen",
+        href: "/the-record/it-nearly-didnt-happen",
         body: [
           "He spent his life fencing and protecting the sites out here, and holding two families together with photographs and envelopes and names. When she came back after he died, nothing had been done since.",
         ],
@@ -259,7 +259,7 @@ export const erasBefore: readonly TruthEra[] = [
         source: "Living memory",
         cta: {
           label: "My father's dream",
-          href: "/resources/it-nearly-didnt-happen",
+          href: "/the-record/it-nearly-didnt-happen",
         },
       },
     ],
@@ -273,7 +273,7 @@ export const erasBefore: readonly TruthEra[] = [
         id: "art-gallery",
         when: "1950s",
         title: "They called it The Art Gallery",
-        href: "/resources/when-they-called-it-the-art-gallery",
+        href: "/the-record/when-they-called-it-the-art-gallery",
         body: [
           "By the 1950s the escarpment has a name given to it by visitors, and it is not an Iningai one. The site is written up, photographed and admired under that name for decades.",
         ],
@@ -282,7 +282,7 @@ export const erasBefore: readonly TruthEra[] = [
         source: "Written record",
         cta: {
           label: "Who named it, and what it was called before",
-          href: "/resources/when-they-called-it-the-art-gallery",
+          href: "/the-record/when-they-called-it-the-art-gallery",
         },
       },
     ],
@@ -363,7 +363,7 @@ export const erasAfter: readonly TruthEra[] = [
         id: "mitchell",
         when: "1840s",
         title: "What Mitchell recorded",
-        href: "/resources/what-mitchell-wrote-down",
+        href: "/the-record/what-mitchell-wrote-down",
         body: [
           "The explorer Thomas Mitchell passes through and describes the Iningai — including huts built solidly enough to carry bark tiles on the roof.",
         ],
@@ -372,7 +372,7 @@ export const erasAfter: readonly TruthEra[] = [
         source: "Written record",
         cta: {
           label: "Read the passage, and what it proves",
-          href: "/resources/what-mitchell-wrote-down",
+          href: "/the-record/what-mitchell-wrote-down",
         },
       },
     ],
@@ -386,7 +386,7 @@ export const erasAfter: readonly TruthEra[] = [
         id: "engraving",
         when: "Older than 5,000 years, and nobody knows how much older",
         title: "The engraving starts",
-        href: "/resources/fifteen-thousand-markings-read-in-order",
+        href: "/the-record/fifteen-thousand-markings-read-in-order",
         body: [
           "Over 15,000 petroglyphs and 111 stencils accumulate along 160 metres of shelter wall — animal tracks, lines, grooves, drilled holes, and human feet with six toes. The Iningai name for the place is Marra Wonga. It means place of many stories.",
           "Ten clusters of designs run south to north. They were made at different times. Read in that order, they tell the Seven Sisters — the sisters pursued, the boomerangs thrown, the Rainbow Serpent, the dingo watching over the one who stayed on Earth.",
@@ -409,7 +409,7 @@ export const erasAfter: readonly TruthEra[] = [
         ],
         cta: {
           label: "What the study found, and how",
-          href: "/resources/fifteen-thousand-markings-read-in-order",
+          href: "/the-record/fifteen-thousand-markings-read-in-order",
         },
       },
       {
@@ -443,7 +443,7 @@ export const erasAfter: readonly TruthEra[] = [
         coda: "Almost none of it has been studied.",
         cta: {
           label: "How the seabed became the escarpment",
-          href: "/resources/you-are-standing-on-a-seabed",
+          href: "/the-record/you-are-standing-on-a-seabed",
         },
       },
     ],
@@ -467,7 +467,7 @@ export const wattanuri = {
     "This is not at the bottom of the page because it is the oldest thing on it. Lore is not a date. It is the floor everything above has been resting on the whole way down — which is why the band has run beside the reader since the first screen.",
   cta: {
     label: "As much as is told away from Country",
-    href: "/resources/wattanuri-and-the-ones-he-followed",
+    href: "/the-record/wattanuri-and-the-ones-he-followed",
   },
 } as const;
 

@@ -164,7 +164,7 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 
 | | Decision | Status | Owner |
 | --- | --- | --- | --- |
-| D1 | Blog and Resources: one thing or two? | **Final** (20 Aug) — one page, labelled **Resources** | Marc, Ivy |
+| D1 | Blog and Resources: one thing or two? | **Final** (20 Aug) — one page. **Label and route amended 4 Sep** to **The Record** / `/the-record`, pending Marc and Ivy | Marc, Ivy |
 | D2 | Does Connect survive as a nav item? | **Final** (26 Aug) — retired from the nav, kept as a destination | Marc |
 | D3 | FAQs: scope, ownership, CMS or static | **Final** (20 Aug) — CMS-managed. Author named 26 Aug: August | Marc, David |
 | D4 | Legal page naming and Cookie Policy | **Final** (26 Aug) **on naming only** — content still held under R9 | David |
@@ -787,6 +787,30 @@ Record as **Final**, except F1 which is **Superseded**.
   own sitemap slide, so it costs no churn. `src/content/site.ts` keeps its
   current nav string.
 - **Note** — This closes the largest open question in the IA.
+
+### Amendment — the label and the route · **4 Sep 2026** · pending Marc and Ivy
+
+- **What changed** — The page is now **The Record**, at **`/the-record`**.
+  Directed by August on 4 Sep during the hi-fi build. The one-page decision
+  above is untouched: this is the *label and route* half of D1 only.
+- **Why it was already half-true** — the v3 drafts call this hub The Record in
+  every sentence that links to it, the hi-fi frame is titled "04 · The Record",
+  and `primaryNav` has read "The Record" since the 28 Aug nav pass. Only the
+  URL and a couple of stray link labels still said Resources, so the site was
+  already using two words for one page — the thing D1 set out to avoid.
+- **What moved** — `src/app/resources` → `src/app/the-record`;
+  `src/content/resources.ts` → `src/content/the-record.ts`; every internal
+  `/resources` link and the two remaining "Resources" link labels in
+  `site.ts`. `/resources` and `/resources/:slug` 301 to the new paths
+  (next.config.ts), because the drafts and anything already sent out still
+  carry the old URL.
+- **What did NOT move** — the client draft
+  `docs/content/drafts/resources/YACHATDAC-Resources-Copy-v1.md`. Supplied
+  documents are not ours to rename (D5). Its in-text `/resources` links are
+  covered by the redirect.
+- **Still open** — Marc and Ivy own D1. This records what was built and why;
+  it is not their sign-off. If they keep Resources, the revert is the same
+  list in reverse plus dropping the redirect.
 
 ---
 

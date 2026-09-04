@@ -6,7 +6,7 @@ import { ContactBlock } from "@/components/sections/ContactBlock";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import { Reveal } from "@/components/ui/Reveal";
-import { knowledgeGaps } from "@/content/resources";
+import { knowledgeGaps } from "@/content/the-record";
 
 export const metadata: Metadata = {
   title: "Partnerships",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
  *      verbatim from the Truth draft ("Most of this Country has never been
  *      studied…") and the Resources draft's "What we do not know". Those are
  *      the client's words about this subject, reused for the destination they
- *      already point at. `knowledgeGaps` is imported from content/resources.ts
+ *      already point at. `knowledgeGaps` is imported from content/the-record.ts
  *      rather than copied, so the two pages cannot drift apart.
  *
  *   2. A visible note saying the rest of the page is unwritten.
@@ -97,7 +97,7 @@ export default function PartnershipsPage() {
             <CtaLink href="/truth#partner" tone="canvas">
               How research works here
             </CtaLink>
-            <CtaLink href="/resources" tone="canvas">
+            <CtaLink href="/the-record" tone="canvas">
               What has been found so far
             </CtaLink>
           </div>
