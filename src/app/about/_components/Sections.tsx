@@ -134,7 +134,11 @@ export function AboutHero() {
       {/* Flex-centred, not absolutely centred. The copy is a flow child, so a
           short viewport makes this block taller instead of clipping the
           standfirst — `min-h` can only grow for content that is in the flow. */}
-      <div className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden">
+      {/* 990px of an 18,474px frame that runs at 9px per vh — so the hero is
+          110vh, not the round 100 it was. `min-h` rather than `h`: the copy is
+          a flow child, so a short viewport grows the block instead of clipping
+          the standfirst. */}
+      <div className="relative flex min-h-[110svh] w-full flex-col justify-center overflow-hidden">
         <div
           data-motion={HERO?.grade ?? "full"}
           className="absolute inset-0"
@@ -493,29 +497,25 @@ const AREA_GROUNDS = [
   "bg-midnight",
 ] as const;
 
-/** Where each card sits on the spiral: top, right, bottom, left. */
-const AREA_CELLS = [
-  "lg:col-start-2 lg:row-start-1",
-  "lg:col-start-3 lg:row-start-2",
-  "lg:col-start-2 lg:row-start-3",
-  "lg:col-start-1 lg:row-start-2",
-] as const;
-
 export function WhatWeDo() {
   /* `whatWeDo.title` is the eyebrow; the headline is the lede's own opening
      sentence, lifted out of the paragraph that follows — the page's headline
-     convention. What is left of the lede is the chain, and the chain's three
-     semicolon clauses are the connectors, verbatim, which is what the frame's
-     own layer names ask for. */
+     convention. What is left of the lede is the chain, rendered whole. */
   const [headline, ...chain] = sentences(whatWeDo.lede);
   const lede = chain.join(" ");
-  const connectors = lede.split(";").map((c) => c.trim().replace(/\.$/, ""));
 
   return (
     <section className="relative bg-canvas text-charcoal">
       {/* Figma 2668:20274 — seated on the BREATH photograph, not under it, so
-          the photograph's horizon becomes the baseline the loop sits on. */}
+          the photograph's horizon becomes the baseline this section sits on. */}
       <WaveDivider ground="var(--color-canvas)" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RingArtwork
+          piece="b"
+          tone="roasted"
+          className="top-[26%] left-[52%] w-[62.5rem] -rotate-6 opacity-[0.09]"
+        />
+      </div>
 
       <div className={`${COLUMN} relative pt-36`}>
         <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
@@ -529,50 +529,53 @@ export function WhatWeDo() {
         </p>
       </div>
 
-      <div className={`${COLUMN} relative pt-24 pb-36`}>
-        {/* The artist's spiral, and the four sit on it. */}
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-        <img
-          aria-hidden
-          src="/artwork/ring-b.svg"
-          alt=""
-          className="pointer-events-none absolute top-1/2 left-1/2 hidden w-[82%] -translate-x-1/2 -translate-y-1/2 -rotate-6 opacity-[0.14] lg:block"
-        />
+      <div className={`${COLUMN} relative pt-20 pb-36`}>
+        {/* ONE ROW OF FOUR — the house pattern, and the same grid The Record
+            §07, /partnerships §06 and the shared ContactDoors all use:
+            `gap-4 sm:grid-cols-2 lg:grid-cols-4`. Two-up on tablet, stacked on
+            a phone.
 
-        <div className="relative flex flex-col gap-10 lg:grid lg:grid-cols-3 lg:grid-rows-3 lg:gap-x-10 lg:gap-y-24">
+            It replaces a diamond arrangement that set the four around the
+            artist's spiral with the lede's clauses as connectors between them.
+            That was the frame's composition, and it was the only four-card row
+            on the site laid out that way — a reader arriving from The Record or
+            Partnerships met a different object doing the same job. The spiral
+            stays as ground artwork; the chain it carried is the lede directly
+            above, stated in full, which is where the argument actually lives.
+
+            The card itself is unchanged: it is `04 · The Record` §02's recipe —
+            coloured ground, full-width image band, 35% scrim, one motif, then
+            title, body and a verb-led label at the foot. */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {whatWeDo.areas.map((area, i) => {
             const photo = photoById(AREA_PHOTOS[i]);
             return (
               <a
                 key={area.title}
                 href={area.cta.href}
-                /* 380 x 546 is the frame's card at 1440. It is a MAXIMUM and a
-                   MINIMUM here, never a fixed size: a fixed 380 is wider than
-                   this column until the viewport reaches ~1420, which had the
-                   cards overrunning each other from lg up. */
-                className={`relative flex w-full flex-col overflow-hidden rounded-3xl ${AREA_GROUNDS[i]} ${AREA_CELLS[i]} text-canvas lg:min-h-[34.125rem] lg:max-w-[23.75rem] lg:justify-self-center`}
+                className={`relative flex min-h-[30rem] flex-col overflow-hidden rounded-3xl ${AREA_GROUNDS[i]} text-canvas`}
               >
                 <div className="relative aspect-[380/232] w-full shrink-0 overflow-hidden">
                   <div data-motion={photo?.grade ?? "full"} className="absolute inset-0">
                     <MediaOrField
                       src={photo?.src ?? null}
                       alt={photo?.subject ?? ""}
-                      sizes="(min-width: 1024px) 380px, 100vw"
+                      sizes="(min-width: 1024px) 298px, (min-width: 640px) 50vw, 100vw"
                       fieldClass="bg-canvas/6"
                     />
                   </div>
                   <span aria-hidden className="absolute inset-0 bg-black/35" />
                   <SeamGlyph
                     motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
-                    className="right-4 bottom-4 w-11"
+                    className="right-4 bottom-4 w-10"
                   />
                 </div>
 
-                <div className="flex flex-1 flex-col px-[26px] pt-7 pb-7">
-                  <h3 className="headline text-[1.875rem] leading-[1.2]">
+                <div className="flex flex-1 flex-col px-6 pt-6 pb-7">
+                  <h3 className="headline text-2xl leading-[1.2]">
                     {area.title}
                   </h3>
-                  <p className="mt-4 text-base leading-[1.5] text-canvas/86">
+                  <p className="mt-3.5 text-[0.9375rem] leading-[1.5] text-canvas/86">
                     {area.body}
                   </p>
                   {/* Verb-led. Never a route path. */}
@@ -583,39 +586,6 @@ export function WhatWeDo() {
               </a>
             );
           })}
-
-          {/* The loop's connective tissue — the lede's own clauses, and a
-              silent fourth where the loop closes.
-
-              GRID ITEMS, NOT ABSOLUTE. They used to be positioned at
-              percentages of this container, which put two of the four on top
-              of a card. The diamond leaves its four corners empty, so each
-              connector sits in the corner between the two cards it joins and
-              can no longer collide with anything. */}
-          <p
-            aria-hidden
-            className="eyebrow hidden self-end text-xs leading-[1.6] tracking-[0.08em] text-burnt lg:col-start-3 lg:row-start-1 lg:block"
-          >
-            {connectors[0]} →
-          </p>
-          <p
-            aria-hidden
-            className="eyebrow hidden self-start text-xs leading-[1.6] tracking-[0.08em] text-burnt lg:col-start-3 lg:row-start-3 lg:block"
-          >
-            {connectors[1]} →
-          </p>
-          <p
-            aria-hidden
-            className="eyebrow hidden self-start text-xs leading-[1.6] tracking-[0.08em] text-burnt lg:col-start-1 lg:row-start-3 lg:block"
-          >
-            {connectors[2]} →
-          </p>
-          <p
-            aria-hidden
-            className="eyebrow hidden self-end text-xs leading-[1.6] tracking-[0.08em] text-burnt/50 lg:col-start-1 lg:row-start-1 lg:block"
-          >
-            · · ·
-          </p>
         </div>
       </div>
     </section>
