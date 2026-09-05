@@ -38,19 +38,31 @@ The index files that describe them **are** tracked, so the knowledge survives a 
 |---|---|---|---|---|---|
 | Batch 1 | 50 | WebP, all landscape | 3840×2024 (45 of 50); one at 1440×960 | 19.5 MB | Figma `2048:9525` |
 | Batch 2 | 39 | PNG, 32 landscape + **7 portrait** | 2000px long edge | **195.4 MB** | Figma `2049:12760` |
+| Batch 3 | 44 | WebP, 39 landscape + **5 portrait** | 4096×3072 (36 of 44); one panorama 4096×906; one at 1024×768 | 38.4 MB | Figma `2756:34661` |
 | `public/media/library` | 20 | WebP, all landscape | 8 at 2000×1054, 12 at ~480×253 | 1.4 MB | derived from batch 1 |
 | `public/media` | 2 | PNG | 1537×1023 | 4.7 MB | hero day/night |
 
 **Batch 1** is an elder / knowledge shoot — portraits, seed and plant work, grinding,
-nursery, sunsets, dead trees, escarpment, rock art, and exactly one fire frame (`1.40.3`).
+nursery, sunsets, dead trees, escarpment, rock art, and exactly one fire frame (`1.40.3`) —
+which is why that single frame ended up placed on five different pages before batch 3 arrived.
 **No child appears anywhere in batch 1.**
 
 **Batch 2** is a guiding shoot — staff hosting a visiting family. Ochre grinding, a smoking
 ceremony, plant identification, walking and climbing, campground, signage. **Children appear
 in 15 frames**, six with identifiable faces.
 
-**Alpha channels: none.** All 111 raster files across every set are fully opaque. Batch 2's
+**Batch 3** is a cultural burning shoot — fire-stick farming, from reading the grass before
+a burn through to burnt ground already regenerating. Flame lines by day and night, smoke
+through timber, drone views of burn scars, hands with soil and grass, crews lighting and
+watching, and four frames at a sandstone rock shelter. **It closes the collection's largest
+subject gap: batch 1 held exactly one fire frame and batch 3 holds around thirty.** No child
+appears in it. Two frames are crowds — around twenty-five and around eighteen identifiable
+adults — which together form the largest consent block in the project.
+
+**Alpha channels: none.** All 155 raster files across every set are fully opaque. Batch 2's
 PNGs carry a 4th channel, but its minimum value is 255 in every file — no real transparency.
+Batch 3 arrived from Figma as PNG with the same spurious alpha; it was measured per file and
+dropped on transcode, so the collection keeps this property honestly rather than by omission.
 
 ### Resolution notes
 
@@ -58,6 +70,10 @@ PNGs carry a 4th channel, but its minimum value is 255 in every file — no real
   `IMG-06` and `SCR-11` need.
 - **Batch 2 does not.** 2000 ÷ 1440 = 1.39×, below the 1.5× floor. Ken Burns on a batch-2
   frame at full width will soften. Use them at ≤1333px displayed, or re-export from source.
+- **Batch 3 has the best headroom in the collection.** 4096 ÷ 1440 = **2.84×**. Every frame
+  clears the floor except `fire-slope-lowres` at 1024×768 — 0.71×, which cannot go full-bleed
+  at 1440 and cannot take a push. `burn-pano-sunset` is 4096×906, roughly 4.5:1, and is a band
+  rather than a hero.
 - **`public/media/library` 2000px derivatives are equally thin** at 1.39×.
 - ⚠ **The 12 `b1-*-proxy.webp` files are 455–480px wide and are referenced by no code
   anywhere in `src/`.** They are orphans. Either wire them up as blur-up placeholders or
@@ -177,7 +193,7 @@ the technique is wrong.
 
 | Effect | Needs | Status |
 |---|---|---|
-| **`TXT-06` occluded type** | A cut-out with alpha | **No alpha in any of 111 raster files.** §4 calls this "the single highest-impact effect available to you". It is unavailable until cut-outs are produced. |
+| **`TXT-06` occluded type** | A cut-out with alpha | **No alpha in any of 155 raster files.** §4 calls this "the single highest-impact effect available to you". It is unavailable until cut-outs are produced. |
 | **`ENT-08` stroke draw** | SVG single continuous strokes | **All 15 vectors are filled compound paths, 0 strokes.** Needs a stroke-based re-export from the artist. Cannot be fixed by redrawing. |
 | `AMB-03` live crossing | One cut-out asset | Same alpha gap. Described in MOTION-SYSTEM as the highest impact-to-effort in the set. |
 | `SCR-03` scrubbed sequence | 60–90 frame sequence | No frame sequences exist. |
@@ -236,6 +252,8 @@ Ordered by what unblocks the most.
    the artist — this is on the outstanding-asks list in `permissions.md` alongside the
    layered-vector request.
 4. **Transcode batch 2** from 195 MB PNG to WebP q82, and the two heroes from PNG to WebP.
+   Batch 3 was transcoded on ingest and is 38 MB for 44 frames at 4096px, which is the
+   standard the other two sets should meet.
 5. **Artefact and object photography.** No material at all. §4's "Artefacts and objects" type
    was deleted for this reason.
 6. **Document and record imagery.** No manuscripts, treaties, registers or letters. §4 type
@@ -243,8 +261,12 @@ Ordered by what unblocks the most.
 7. **Oral history and audio.** No recordings, waveforms or transcript assets. §4 type deleted.
 8. **Map and territory vectors.** §4's territory treatment assumes boundary and route
    geometry that does not exist. Note the standing rule: no heritage coordinates.
-9. **Portrait-orientation frames of Country.** Batch 1 is 100% landscape; mobile heroes have
-   nothing tall to work with except batch 2's seven portrait frames.
+9. ~~**Portrait-orientation frames of Country.**~~ **Largely closed by batch 3**, which adds
+   five portrait frames at 3072×4096 — `burn-sun-heath-tall`, `smoke-canopy-tall`,
+   `fire-stags-tall`, `fire-trunk-night-tall`, `burn-track-outcrop-tall`. Batch 1 is still
+   100% landscape and batch 2's seven portraits are still 1.39×; these five are the first
+   tall frames of Country with real headroom. What is still missing is a portrait frame of
+   **open Country without fire in it** — every one of the five is a burn frame.
 10. **Frame sequences**, if `SCR-03` or `SPA-07` are wanted.
 11. **A re-shoot or re-scan of the three paintings** — currently 1149–1448px, with binding and
     furniture in frame.

@@ -189,7 +189,7 @@ dropped. File-level detail for every frame named below is in
 
 ### Portraits and people
 
-*Photographs of individuals, families, groups. All contemporary — the 2024 batch-1 shoot and the March 2022 batch-2 shoot. There is no historical portraiture in the collection.*
+*Photographs of individuals, families, groups. All contemporary — the 2024 batch-1 shoot, the March 2022 batch-2 shoot and the batch-3 cultural burning shoot. There is no historical portraiture in the collection.*
 
 **Stillness is the treatment.** This is the strictest category on the site.
 
@@ -225,7 +225,7 @@ highest-risk frame in the collection.
 *Landscape, escarpment, plains, tracks, rock faces. **The best-resourced category on the site** — and where the strongest motion should live.*
 
 - **Depth:** `SCR-01` layered parallax. ⚠ **Not currently buildable** — it needs 3+ separated depth layers or a depth map, and neither exists. Generating depth maps from the batch-1 3840px frames is the cheapest route to real depth and should be the first thing tried.
-- **Occlusion:** `TXT-06` — a place name sitting *between* the landscape and a foreground element. ⚠ **Blocked.** It costs one cut-out asset with alpha, and **not one of the 111 raster files in this project has an alpha channel.** This remains the highest-impact effect available, and producing a single cut-out from a batch-1 frame is the highest-value asset request on the list.
+- **Occlusion:** `TXT-06` — a place name sitting *between* the landscape and a foreground element. ⚠ **Blocked.** It costs one cut-out asset with alpha, and **not one of the 155 raster files in this project has an alpha channel.** This remains the highest-impact effect available, and producing a single cut-out from a batch-1 frame is the highest-value asset request on the list.
 - **Drift:** `IMG-06` Ken Burns, generous. Landscapes tolerate movement that portraits don't. **Batch 1 only** — see the resolution note above.
 - **Maps:** ⚠ **No map or territory vectors exist.** `ENT-08` stroke draw was the assigned treatment and it cannot run — see the artwork section below. Note also the standing rule: no heritage coordinates in map layers, markup, comments or source, and no real elevation data or place names for Turraburra until the land-detail permission is settled.
 
@@ -234,7 +234,27 @@ from above at golden hour, clean sky across the whole right half), `_1.76.2` (**
 "empty and usable" frame in batch 1**), `_1.28.1` (entire upper half clean sky), `_1.77.5`
 (a silhouette at a shelter mouth — anonymous, so no consent question) and `March22-0267`
 (**the strongest graphic frame** — a red road across green scrub; crop the vehicle out and it
-becomes a pure colour-field plate). `March22-2432` carries scale better than any other frame.
+becomes a pure colour-field plate). `March22-2432` carries scale better than any other frame
+in batches 1 and 2 — `country-wide-track` now carries it better still, and it is the only
+frame in the collection that shows how much country 8,870 hectares is.
+
+**Batch 3 changes what this category can do.** It has the best headroom in the collection at
+2.84×, which makes it the only set where `IMG-06` Ken Burns runs at full width without
+softening. `fire-line-duskblue` has the largest single type zone anywhere — two-thirds clean
+dusk sky. `fire-horizon-night` gives two type zones on one frame. `burn-canopy-held` is the
+one frame that makes the argument for cool burning without a caption: untouched green canopy
+over cleaned black ground. And `aerial-burn-scar` shows a burn from directly above as a shape
+with a defined edge, which is the hardest thing about patch burning to convey at ground level.
+
+**The sandstone shelter is a distinct case inside this category, alongside rock art.** Batch 3
+puts four frames at a rock shelter — `shelter-fire-foreground` (which arrived from the client
+named "Cultural Site Maintenance 01"), `shelter-ledge-walking`, `shelter-worker-seated` and
+`shelter-seedling` — with fire being worked around the site. No marks or art are visible in
+any of them, but the shelter is the dominant thing in frame and all four are bucketed
+`cultural-site`. **They must be captioned.** Fire at the base of a shelter reads as a heritage
+site burning to anyone who does not know what a cool burn is, which is the exact opposite of
+what the photograph shows. Four further batch-3 frames have outcrop or escarpment in shot and
+are flagged on their entries.
 
 **Rock art is a distinct case inside this category.** Eleven frames show painted figures,
 hand stencils, engravings or possible worked marks — `March22-untitled` and `March22-2302`
@@ -266,6 +286,33 @@ outstanding.
 (distinctly bluer than Turquoise), `#f9b24c`, `#d57907`, `#98470d`, `#fefefe`, and `#d97804`
 in `blob-mask.svg`. **Do not recolour the artwork to match the palette.** It is the artist's
 work; §6 and the standing rules both bind. The discrepancy is recorded, not corrected.
+
+⚠ **In Figma the same rule is one careless line of script away from being broken.** The
+`Glyph / Truth` variants are full-colour artwork — the boomerang is `#fefefe` with `#f9b24c`
+stripes, the circle runs `#f9b24c` / `#d57907` / `#98470d`, the starburst is the off-palette
+`#31afe3`. Because instance fills are overridable, a loop that paints "every SOLID fill white"
+flattens all three into monochrome blobs that still *look* deliberate. **Instance the motif and
+set nothing.** Home is the reference: its seven glyphs carry the artist's colours untouched.
+
+**The `Artwork / Ring` watermarks are the one exception, and only on light grounds.** Ring A
+(`2051:4022`) and Ring B (`2051:4024`) ship with the path at `#f6f6ec @ 0.08` and are placed as
+background texture, the instance opacity carrying the ground: navy 0.13/0.15, charcoal and
+evergreen 0.07/0.08, roasted 0.07. **On a `#f6f6ec` canvas ground that is the same colour as
+the ground and renders nothing** — which is why The Record §04's ring had never once been
+visible. Canvas grounds take a roasted `#4e3524` path at instance 0.30.
+
+This is not a breach of the rule above. A ring is a watermark whose whole job is to sit at a
+few percent against whatever is behind it; a `Glyph / Truth` motif is a piece of the artist's
+artwork shown at full strength, and it is never recoloured. Keep the two straight: **change a
+ring's colour to make it visible, never a motif's to make it match.**
+Recolouring is authoring, and it is the rule above, not a style preference.
+
+⚠ **`Artwork / Cluster` is authored for background use and needs unwrapping for foreground
+use.** It ships as a frame at **8% opacity carrying its own `#f6f6ec` background fill**, with
+the artist's path inside at 8%. Instanced as-is on a photograph it is invisible; paint the
+wrapper and it becomes a solid rectangle. To use it as a foreground mark: clear the wrapper's
+fill, set the wrapper to 100%, and colour **the path**. The three `⚠ PENDING-MOTIF · artwork
+cluster — sits ON the photograph` instances on Truth are still invisible for this reason.
 
 ⚠ The three paintings are 1149–1448px with spiral binding and furniture in frame. They need
 cropping to use, are too small for full-bleed, and **no artist is recorded for them**. They also **cannot be re-shot** — the originals are in Australia and inaccessible — and must not be AI-upscaled, because on a dot painting an upscaler invents dots that were never placed. 1.57MP is the permanent ceiling.
@@ -321,28 +368,69 @@ Per §4. `ENT-08` for boundaries and routes, `SCR-01` for depth. Place names as 
 
 ### Stewardship / about
 
-Who maintains this, on whose authority, with what permissions, and how to contribute or correct. **Quiet page.** Text-led, minimal motion, `ENT-06` line masks at most. The credibility of the whole site rests here, and motion undermines credibility in exactly this context.
+Who maintains this, on whose authority, with what permissions, and how to contribute or correct. The credibility of the whole site rests here.
+
+⚠ **Revised 31 August 2026, under F7 and F9.** This archetype used to read *"Quiet page. Text-led, minimal motion, `ENT-06` line masks at most… motion undermines credibility in exactly this context."* That is superseded. What undermines credibility is **decoration**, not motion — and the distinction is what the page's motion is *doing*.
+
+**Design a stewardship page's motion to be evidentiary.** It should show the organisation being measured, the record admitting its own gaps, a claim being checked against the thing that authorises it. About's signature moment is still a line mask, as the old rule wanted — but at full scale, on a pinned screen, as the page's argument rather than as a ration. The page's ⚠ pink markers, its unfilled partner slots and its future-tense sentences are part of that argument: a stewardship page that shows what it does not yet know is more credible than one that is merely still.
+
+What stays true from the old wording: this page type is **type-led more often than any other**, its loud channel is `type` on most screens, and it takes fewer pins than a narrative page. See `05 · About` in `docs/motion/scenes.md` for the worked example.
 
 ---
 
 ## 6. What this site does not do
 
-Most of these are catalogued in the motion system. They are correct techniques that are wrong for this material.
+### The excluded-techniques table is retired — F9, Ivy, 31 August 2026
 
-**Never applied to portraits, artefacts, or archival photographs:**
+This section used to carry a table banning six techniques outright on portraits, artefacts and
+archival photographs: dissolve `IMG-03`, chromatic split / glitch `IMG-04`, velocity warp
+`IMG-01`, character decode `ENT-07`, image trail `INT-07` and duotone recolour `IMG-05`.
+**All six are now available, on depicted subjects as well as abstract elements**, along with the
+overshoot easings `back`, `elastic` and `bounce` that `motion-grammar.md` used to ban. Ivy:
+*"these are definitely permitted… these things would make motions, transitions, way more alive
+and fun which is what i want."* Full reasoning in **F9**, `docs/decisions-and-risks.md`.
 
-| Excluded | ID | Why |
-|---|---|---|
-| Dissolve / disintegration | `IMG-03` | Destroying an image of an ancestor or artefact to make a transition. Reads as the content being disposable. |
-| Chromatic split / glitch | `IMG-04` | Signals corrupted data. Applied to a historical record, that is the opposite of the message. |
-| Velocity warp | `IMG-01` | Distorting a face or a sacred object for a scroll effect. Fine on a furniture catalogue; not here. |
-| Character decode / scramble | `ENT-07` | Names and places are not loading states. |
-| Image trail | `INT-07` | Turns people into cursor confetti. |
-| Duotone recolour | `IMG-05` | Altering the colour of an archival image to match a brand palette misrepresents the record. |
+The table's stated reasons were about **meaning** — a glitch "signals corrupted data", a
+dissolve reads as "the content being disposable" — and meaning is set by where an effect is used,
+not by the effect existing. A dissolve behind a question the whole organisation is measured
+against is an argument. The same dissolve on a portrait for a scroll flourish is the thing the
+table was actually pointing at. The rule made that judgement in advance and got it wrong in both
+directions, and the pages that obeyed it all went flat the same way.
 
-`IMG-01`, `IMG-04` and `SPA-06` remain available for **abstract or decorative** elements — pattern fields, transitional graphics, ambient backgrounds. The exclusion is about depicted subjects, not the technique.
+**What replaces it is §7, applied per use.** An effect earns its place once per page, where it
+says something the copy already says. A second decorative use of the same technique on one page
+is still the failure this section exists to name, and it still comes out.
 
-**Also avoid:**
+### Fire is a practice, not atmosphere — added 1 September 2026
+
+Fire on this site means **fire-stick farming**: a responsibility, a method and a body of
+knowledge. Embers as sparkle behind an unrelated headline trivialises it. The rule existed
+already inside one sketch in `sketch-library.md`; batch 3's forty-four photographs make it a
+site rule.
+
+**This is not a revival of the retired table and it bans no technique.** Any effect may be
+used on a fire frame. What may not happen is a fire frame used as decoration behind copy that
+is not about caring for Country. The judgement is about *where*, which is exactly what F9 says
+the judgement should be about.
+
+Two practical corollaries:
+
+- **The spectacular frames are the dangerous ones.** `fire-line-duskblue`,
+  `fire-night-silhouette`, `fire-line-sunset` and `fire-horizon-night` are the strongest
+  pictures in the collection and will be reached for as heroes on unrelated pages.
+- **Several read as wildfire to anyone who does not know the practice** — a fire line across a
+  dark horizon, flame climbing a trunk, fire at the base of a rock shelter. Those carry a
+  caption requirement on their entries in `brand/photo-notes/batch-3.md`, and it is not
+  optional.
+
+**What did not change, because none of it is a rule about technique:** `MOTION_GRADE` from F8
+still decides *where* an effect lands on portraits and cultural-site material — the plate,
+ground, scrim, type and neighbouring layers carry it while the image plane holds. No generated
+Aboriginal iconography: F9 permits more things done *to* the artist's supplied vectors and never
+permits drawing new ones. No heritage coordinates. The reduced-motion cut and the performance
+floors stand, as does **no layout properties, ever** — that one is performance, not taste.
+
+**Still avoid:**
 
 - **Scroll-jacking the whole site.** Pinning is a tool for one or two sections, not a navigation model. Researchers need to find things fast.
 - **Motion gating content.** Nothing may require an animation to complete before it can be read.

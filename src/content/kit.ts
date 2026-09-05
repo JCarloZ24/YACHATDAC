@@ -252,6 +252,23 @@ export type Photo = {
   width: number;
   height: number;
   grade: MotionGrade;
+  /** Which delivered batch the master came from. */
+  batch?: 1 | 2 | 3;
+  /**
+   * Bare master stem — the key into `brand/photo-notes/batch-N.md`.
+   *
+   * Nothing used to record that `country-wide.webp` came from
+   * `378A7604_1.28.1`; the mapping lived only in somebody's memory. The stem is
+   * stored rather than a path because the stem is already the join key across
+   * the whole documentation set — the `###` heading in the notes files, the
+   * table cell in `PHOTO-INDEX.md`, the citation in `ART-DIRECTION.md` §4 and
+   * the frame list in `permissions.md`. A path would be greppable against none
+   * of them.
+   *
+   * All eight values below were recovered by matching each derivative against
+   * every master by image signature, not by guessing from the subject line.
+   */
+  master?: string;
   /** What it shows. Not a caption — naming people is Our People's job. */
   subject: string;
 };
@@ -273,8 +290,9 @@ export type Photo = {
  * Grades follow what the frames actually show, checked by looking at every one
  * of them rather than by trusting a filename:
  *
- *   - Rock engravings and the teaching wall are `frame`. The world moves around
- *     them; the record holds. Ivy's decision, 2026-08-30.
+ *   - Rock engravings and the teaching wall were `frame` — the world moves
+ *     around them, the record holds (Ivy, 2026-08-30). **Raised to `full` on
+ *     2026-08-31**, with the cultural-site bucket in `lofi/media.ts`.
  *   - The Elder portrait is `frame` too, on a separate and older rule: the
  *     brief's corollary that portraits of real people hold still. That one is
  *     not a permission anybody waived.
@@ -282,19 +300,38 @@ export type Photo = {
  *
  * Ivy's pool board in Figma (PHOTOS · Truth, 2051:7674) flags R10 material in
  * the layer names themselves, and is the authority for anything imported later.
+ *
+ * NOTE the collision: `Plate.grade` above and `Photo.grade` here are different
+ * axes that happen to share a field name. A plate's grade is the highest grade
+ * of material the plate is appropriate for; a photo's grade is what may move in
+ * the photograph itself. Do not sweep them together.
+ *
+ * No batch-3 rows yet — nothing from that batch has a derivative in
+ * `public/media/library/` to point at. See `brand/photo-notes/batch-3.md`.
  */
 export const PHOTOS: Photo[] = [
-  { id: "country-wide", src: "/media/library/country-wide.webp", width: 2000, height: 1054, grade: "full", subject: "Open Country, wide — mulga to the horizon" },
-  { id: "country-sunset-grass", src: "/media/library/country-sunset-grass.webp", width: 2000, height: 1054, grade: "full", subject: "Grass heads at last light, Country behind" },
-  { id: "work-seed", src: "/media/library/work-seed.webp", width: 2000, height: 1054, grade: "full", subject: "A seed pod held — hands working" },
-  { id: "work-botanical", src: "/media/library/work-botanical.webp", width: 2000, height: 1054, grade: "full", subject: "Two people reading a plant on Country" },
-  { id: "engravings-hand", src: "/media/library/engravings-hand.webp", width: 2000, height: 1054, grade: "frame", subject: "A hand at an engraved rock face" },
-  { id: "teaching-wall-visit", src: "/media/library/teaching-wall-visit.webp", width: 2000, height: 1054, grade: "frame", subject: "Visitors at the engraved wall, stencils above" },
-  { id: "escarpment-approach", src: "/media/library/escarpment-approach.webp", width: 2000, height: 1054, grade: "frame", subject: "Walking toward the escarpment" },
-  { id: "elder-portrait", src: "/media/library/elder-portrait.webp", width: 2000, height: 1054, grade: "frame", subject: "An Elder, working — portrait" },
+  { id: "country-wide", src: "/media/library/country-wide.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.28.1", subject: "Open Country, wide — mulga to the horizon" },
+  { id: "country-sunset-grass", src: "/media/library/country-sunset-grass.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.14.1", subject: "Grass heads at last light, Country behind" },
+  { id: "work-seed", src: "/media/library/work-seed.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.65.1", subject: "A seed pod held — hands working" },
+  { id: "work-botanical", src: "/media/library/work-botanical.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.55.1", subject: "Two people reading a plant on Country" },
+  // Raised from "frame" to "full" with the cultural-site bucket, 2026-08-31.
+  { id: "engravings-hand", src: "/media/library/engravings-hand.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.11.1", subject: "A hand at an engraved rock face" },
+  { id: "teaching-wall-visit", src: "/media/library/teaching-wall-visit.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.7.2", subject: "Visitors at the engraved wall, stencils above" },
+  { id: "escarpment-approach", src: "/media/library/escarpment-approach.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.6.1", subject: "Walking toward the escarpment" },
+  // STAYS "frame". This one is graded on the portrait rule, not the
+  // cultural-site bucket, and nobody waived the portrait rule. A mechanical
+  // frame->full sweep breaks precisely this entry.
+  { id: "elder-portrait", src: "/media/library/elder-portrait.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.42.5", subject: "An Elder, working — portrait" },
 ];
 
 /** Look-ups used by the gallery and by section modules. */
 export const photoById = (id: string) => PHOTOS.find((p) => p.id === id);
+/**
+ * The reverse look-up, which is the direction people actually need. "The index
+ * flags `1.60.2` as weak — is it on the site?" and "we cleared `_1.19.1`, where
+ * is it used?" were both unanswerable before `master` existed.
+ */
+export const photoByMaster = (master: string) =>
+  PHOTOS.find((p) => p.master === master);
 export const artworkById = (id: string) =>
   [...ARTWORK, ...GLYPHS, WAVE_DIVIDER].find((a) => a.id === id);
