@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
     // WebP is the agreed delivery format for the whole photo library
     // (18 Aug briefing). AVIF first where the browser takes it.
     formats: ["image/avif", "image/webp"],
+    // Next 16 allowlists qualities (default [75] only). 85 is for photographs
+    // that are heavily cover-cropped — The Record's cards — where 75 showed
+    // visible softening on the crop.
+    qualities: [75, 85],
   },
 
   // Australian English throughout, and the org is an Australian corporation.

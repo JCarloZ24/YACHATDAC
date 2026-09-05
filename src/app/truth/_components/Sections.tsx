@@ -26,6 +26,19 @@ import { SplitReveal } from "@/components/motion/text/SplitReveal";
 import { WordEmphasis } from "@/components/lofi/ui/WordEmphasis";
 import { SharedMorph } from "@/components/transitions/SharedMorph";
 
+/* COVER CROPS NEED HEIGHT, NOT JUST WIDTH.
+   Every photograph in the library is ~1.9:1 landscape (3840x2024). `sizes`
+   only tells the browser the WIDTH a slot renders at, so a full-bleed slot on
+   a phone (375x667, portrait) asked for a 750px-wide file and then had to
+   stretch its 395px of height up to 1334 — a 3.4x upscale, which is what
+   read as blur (up to 6x on the tall closing plate). The width a cover crop
+   really needs is box-width x (source-aspect / box-aspect), so the phone
+   values below are deliberately larger than the viewport. Measured 5 Sep
+   2026 at 375x667 and 1440x900, both @2x. */
+const COVER_FULL_BLEED = "(min-width: 1024px) 100vw, 260vw";
+/** The closing plate runs ~3.2 screens tall on a phone; 3840 is the ceiling. */
+const COVER_TALL_BLEED = "(min-width: 1024px) 100vw, 400vw";
+
 /**
  * /v2/truth — the descent, at full cinematic weight (F7).
  *
@@ -129,7 +142,8 @@ export function TruthHeroV2() {
               <MediaOrField
                 src={presentSrc(truthHeroSlot.src)}
                 alt="Country at dusk — bare trees against the last light over Turraburra."
-                sizes="100vw"
+                sizes={COVER_FULL_BLEED}
+                quality={85}
                 priority
                 className="object-cover"
                 fieldClass="bg-midnight"
@@ -416,7 +430,7 @@ function Diptych({
           <MediaOrField
             src={presentSrc(detail.src)}
             alt={detail.expects}
-            sizes="(min-width: 640px) 27vw, 100vw"
+            sizes="(min-width: 640px) 27vw, 130vw"
             fieldClass={FIELD_CLASS[detail.tone]}
           />
           {variant === "seam" ? (
@@ -541,7 +555,8 @@ function PortraitTestimony({
             <MediaOrField
               src={presentSrc(slot.src)}
               alt={slot.expects}
-              sizes="(min-width: 640px) 22vw, 100vw"
+              sizes="(min-width: 640px) 34vw, 220vw"
+              quality={85}
               fieldClass={FIELD_CLASS[slot.tone]}
             />
           </div>
@@ -734,7 +749,7 @@ function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }
             <MediaOrField
               src={presentSrc(slot.src)}
               alt={slot.expects}
-              sizes={strip ? "(min-width: 640px) 15vw, 33vw" : "(min-width: 640px) 33vw, 100vw"}
+              sizes={strip ? "(min-width: 640px) 15vw, 55vw" : "(min-width: 640px) 33vw, 100vw"}
               fieldClass={FIELD_CLASS[slot.tone]}
             />
           </div>
@@ -1064,7 +1079,8 @@ function EntryPlate({
         <MediaOrField
           src={presentSrc(slot.src)}
           alt={slot.expects}
-          sizes="100vw"
+          sizes={COVER_FULL_BLEED}
+          quality={85}
           className="object-cover"
           fieldClass={FIELD_CLASS[slot.tone]}
         />
@@ -1530,7 +1546,8 @@ export function FullBleedBreak({
       <MediaOrField
         src={slot.src}
         alt={truthBreaks[which].alt}
-        sizes="100vw"
+        sizes={COVER_FULL_BLEED}
+        quality={85}
         fieldClass={FIELD_CLASS[slot.tone]}
       />
       {/* The 08 spec's light scrim — nothing to read here. */}
@@ -1571,7 +1588,8 @@ export function DissolveBreak() {
         <MediaOrField
           src={incomingSrc}
           alt=""
-          sizes="100vw"
+          sizes={COVER_FULL_BLEED}
+          quality={85}
           fieldClass={FIELD_CLASS[incoming.tone]}
         />
       </div>
@@ -1582,7 +1600,8 @@ export function DissolveBreak() {
         <MediaOrField
           src={presentSrc(outgoing.src)}
           alt={truthBreaks.escarpment.alt}
-          sizes="100vw"
+          sizes={COVER_FULL_BLEED}
+          quality={85}
           fieldClass={FIELD_CLASS[outgoing.tone]}
         />
       </div>
@@ -1650,7 +1669,8 @@ export function WattanuriBand() {
         <MediaOrField
           src={incomingSrc}
           alt=""
-          sizes="100vw"
+          sizes={COVER_TALL_BLEED}
+          quality={85}
           fieldClass={FIELD_CLASS[incoming.tone]}
         />
       </div>
@@ -1661,7 +1681,8 @@ export function WattanuriBand() {
         <MediaOrField
           src={presentSrc(outgoing.src)}
           alt={outgoing.expects}
-          sizes="100vw"
+          sizes={COVER_TALL_BLEED}
+          quality={85}
           fieldClass={FIELD_CLASS[outgoing.tone]}
         />
       </div>

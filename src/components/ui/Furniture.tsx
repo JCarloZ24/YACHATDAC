@@ -32,7 +32,7 @@ import Link from "next/link";
  * INTO the incoming ground so the antialiased foot cannot read as a hairline
  * across the full width.
  */
-const WAVE_PATH =
+export const WAVE_PATH =
   "M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 105.324H1468.85L1470.04 7.97183V7.9544Z";
 
 export function WaveDivider({
@@ -81,6 +81,8 @@ export function WaveDivider({
 const BLOB_TONE = {
   burnt: "bg-burnt",
   ochre: "bg-ochre",
+  /* Wonder's hi-fi (2033:4367) sets its two closing buttons in Oxide Red. */
+  oxide: "bg-oxide",
   /* A held button — the shape is there, the action is not. `current`, not
      `canvas`: on §04's canvas ground a canvas-tinted shape and a canvas label
      were both invisible, so the affordance R14 asks to MARK was in practice
@@ -119,7 +121,7 @@ export function BlobButton({
 }: {
   href: string;
   children: string;
-  tone?: "burnt" | "ochre";
+  tone?: "burnt" | "ochre" | "oxide";
   /**
    * Drop the hover lift. For pages that are static by decision — /our-people,
    * /about and /partnerships do not move, and that includes under a pointer.
