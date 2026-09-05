@@ -363,6 +363,46 @@ export const PHOTOS: Photo[] = [
   { id: "lw-seed-grind-2", src: "/media/library/living-work/livingwork-work7.webp", width: 2000, height: 1054, grade: "full", subject: "Mortar and pestle at the ute — near twin of lw-seed-grind" },
   { id: "lw-seedhead", src: "/media/library/living-work/livingwork-infrastracture.webp", width: 2000, height: 1054, grade: "full", subject: "A hand and a seed head — the hi-fi's 1.65.1, the BREATH hinge" },
   { id: "lw-sunset-grass", src: "/media/library/living-work/livingwork-getinvolved.webp", width: 2000, height: 1054, grade: "full", subject: "Golden grass under trees at sunset" },
+
+  /* --- Our People batch, derived 2026-09-05 -------------------------------
+     Six frames for `06 · Our People`, derived from the batch-1 and batch-3
+     masters the hi-fi names, at the same 2000px width as batch 1.
+
+     ⚠⚠ EVERY ONE OF THESE IS A PLACEHOLDER FACE, and that is not a caption
+     nicety. R24: Ivy's photo clearances are USE clearances, not IDENTIFICATION
+     consent — you may show a face, you may not say whose it is. Batch 1 is an
+     elder-and-knowledge shoot, so one of its portraits captioned under a role
+     asserts that the person holds that role. None of these people holds the
+     role their card names.
+
+     The badge that says so lives on the card in the markup, never only here:
+     a screenshot circulated without it is exactly how a placeholder becomes a
+     claim. See src/app/our-people/_components/Sections.tsx.
+
+     ⚠ op-card-01 is NOT Graham Ambridge. No photograph of him exists in any
+     batch, so the one named card on the page carries a stand-in like the
+     other five.
+
+     ⚠ op-card-06 repeats op-card-01's subject in a different frame. The
+     library holds five card-usable faces besides Suzanne's and the grid needs
+     six; it is the only repeat on the page and it goes when the real
+     portraits arrive.
+
+     Suzanne is NOT here. She is the one person shown as herself and she is
+     already in this file as `lw-hero` (378A7604_1.40.2) — and none of her
+     frames may be reused in a team card, or a reader takes her for two
+     people. */
+  { id: "op-hero", src: "/media/library/our-people/op-hero.webp", width: 2000, height: 1500, grade: "full", batch: 3, master: "crew-walking-burnt", subject: "A crew walking burnt ground — ⟡ STAND-IN for the hero, two identifiable adults" },
+  { id: "op-card-01", src: "/media/library/our-people/op-card-01.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.80.1", subject: "Close portrait, a face at rest — ⟡ PLACEHOLDER FACE" },
+  { id: "op-card-02", src: "/media/library/our-people/op-card-02.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.77.1", subject: "Clean frontal portrait — ⟡ PLACEHOLDER FACE, carries the escape at full screen" },
+  { id: "op-card-03", src: "/media/library/our-people/op-card-03.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.42.1", subject: "Standing in grass, face legible at card size — ⟡ PLACEHOLDER FACE" },
+  { id: "op-card-05", src: "/media/library/our-people/op-card-05.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.72.1", subject: "Working at the seedling table, face in profile — ⟡ PLACEHOLDER FACE" },
+  { id: "op-card-06", src: "/media/library/our-people/op-card-06.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.74.2", subject: "⚠ Same person as op-card-01, different frame — ⟡ PLACEHOLDER FACE" },
+
+  /* The two breaths. Country only — no people in either, which is why they
+     carry no caption: a caption would make a breath an illustration. */
+  { id: "op-breath-01", src: "/media/library/our-people/op-breath-01.webp", width: 2000, height: 1500, grade: "full", batch: 3, master: "country-wide-track", subject: "A track running out across open Country — ⟡ STAND-IN" },
+  { id: "op-breath-02", src: "/media/library/our-people/op-breath-02.webp", width: 2000, height: 442, grade: "full", batch: 3, master: "burn-pano-sunset", subject: "Burnt ground at sunset, panorama — ⟡ STAND-IN" },
 ];
 
 /** Look-ups used by the gallery and by section modules. */
