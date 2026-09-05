@@ -442,6 +442,33 @@ export const PHOTOS: Photo[] = [
   { id: "about-reciprocity", src: "/media/library/about/about-reciprocity.webp", width: 2000, height: 1334, grade: "frame", batch: 2, master: "March22-1547", subject: "Ochre-marked adult palms held out over a grinding stone toward a child's — no faces in frame" },
   /* `frame` on the portrait rule, the same rule that holds `elder-portrait`. */
   { id: "about-people-02", src: "/media/library/about/about-people-02.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.77.4", subject: "⚠ Same man as op-card-01, full-length under a rock arch — ⚠ CONSENT UNRESOLVED" },
+
+  /* ----------------------------------------------------------- Partnerships.
+     Four cut for `07 · Partnerships` (Figma 2944:25988). The page's other two
+     frames are already rows above: §04's gap 2 is `work-seed` and its gap 4 is
+     `about-fire`. Gap 1 has NO photograph and is not missing one — no cleared
+     frame of Marra Wonga exists, and the card stays typographic and says so.
+
+     Every one of these is ⟡ STAND-IN on the canvas. This page has no draft and
+     no shot list; the frames are the closest honest match in the collection,
+     not art direction anyone signed off. */
+  /* `frame`, and the layer name says why: "nobody is identifiable from height,
+     the safe way to show a crew". Fifteen adults from directly above, no face
+     legible at any resolution — the permission rests on the altitude, so the
+     image plane does not move. */
+  { id: "pt-hero", src: "/media/library/partnerships/pt-hero.webp", width: 2000, height: 1492, grade: "frame", batch: 3, master: "aerial-crew-burnedge", subject: "Drone view along an escarpment burn edge, a crew walking it on foot — no faces identifiable · ⟡ STAND-IN" },
+  /* ⚠ CONSENT UNRESOLVED. The one research frame in the collection, and its
+     subject's face is visible and identifiable (batch-1.md). R24 applies here
+     exactly as it does on Our People and About §07: use was cleared,
+     identification was never asked. Badged in the markup. */
+  { id: "pt-research", src: "/media/library/partnerships/pt-research.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.45.2", subject: "An older man working a pestle in a stone mortar on a ute tray — ⚠ CONSENT UNRESOLVED · ⟡ STAND-IN" },
+  /* ⚠ NO FACE, BUT A STAR TATTOO ON THE INNER FOREARM, and the notes are
+     explicit that a distinctive tattoo is an identifier and should be treated
+     as one. batch-3.md records that cropping the left edge removes it. Not
+     cropped here — a crop is a design decision and this is the manifest — but
+     `frame` grade and the caveat travels with the row. */
+  { id: "pt-soil", src: "/media/library/partnerships/pt-soil.webp", width: 2000, height: 1500, grade: "frame", batch: 3, master: "hands-soil", subject: "A hand holding a fistful of dark soil over half-burnt ground — identifying tattoo in frame · ⟡ STAND-IN" },
+  { id: "pt-breath", src: "/media/library/partnerships/pt-breath.webp", width: 2000, height: 1125, grade: "full", batch: 1, master: "378A7604_1.27.1", subject: "A wide plain of low green scrub through a screen of slender trees — no people" },
 ];
 
 /** Look-ups used by the gallery and by section modules. */
