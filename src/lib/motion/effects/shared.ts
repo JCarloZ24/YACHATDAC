@@ -9,30 +9,35 @@
 
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
-import { BANNED_EASES } from "../tokens";
+import { KNOWN_EASE_PREFIXES } from "../tokens";
 
 /* -------------------------------------------------------------------------
    Guard rails
    ------------------------------------------------------------------------- */
 
 /**
- * The banned eases were a rule in two documents that nothing enforced.
- * Overshoot and bounce read as playful, and this site is a community's
- * testimony. Throwing in development turns "we agreed not to" into "it does not
- * build".
+ * This used to reject `back`, `elastic` and `bounce`. **F9 (Ivy, 31 Aug 2026)
+ * retired that ban** — overshoot is available, and the three now carry real
+ * values as EASE.catch / .spring / .bounce.
+ *
+ * The check is kept, pointed at the hazard that was always the real one: GSAP
+ * silently falls back to `power1.out` when handed an ease name it cannot
+ * resolve, so `EASE.quite` or `"expo-out"` becomes a different animation instead
+ * of an error. That is a bug the eye cannot reliably catch, which is exactly
+ * what a dev-time assertion is for. Taste is not.
  *
  * Stripped from production: the check costs nothing there, but neither should a
- * visitor ever hit an exception over a style rule.
+ * visitor ever hit an exception over a typo.
  */
 export function assertEase(name: string, ease: unknown): void {
   if (process.env.NODE_ENV === "production") return;
-  if (typeof ease !== "string") return;
-  const banned = BANNED_EASES.find((b) => ease.startsWith(b));
-  if (banned) {
+  if (typeof ease !== "string" || ease === "") return;
+  const known = KNOWN_EASE_PREFIXES.some((p) => ease.startsWith(p));
+  if (!known) {
     throw new Error(
-      `[motion] effect "${name}" was given the banned ease "${ease}". ` +
-        `${banned} easing overshoots, which reads as playful — the brand is grounded. ` +
-        `Use EASE.country for anything large, EASE.quiet for interface furniture.`,
+      `[motion] effect "${name}" was given the ease "${ease}", which GSAP cannot ` +
+        `resolve — it will silently fall back to power1.out. Use a value from EASE ` +
+        `in tokens.ts, or add the family to KNOWN_EASE_PREFIXES if it is a real one.`,
     );
   }
 }

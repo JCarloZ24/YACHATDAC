@@ -20,7 +20,7 @@
 
 import gsap from "gsap";
 import { clearAll, composition } from "@/lib/motion/compose";
-import { DUR } from "@/lib/motion/tokens";
+import { DUR, EASE } from "@/lib/motion/tokens";
 import type { MotionModule } from "@/lib/motion-controller";
 
 const q = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
@@ -372,6 +372,168 @@ export function quietArrival(root: HTMLElement, span = 100): MotionModule {
   });
 }
 
+/* -------------------------------------------------------------------------
+   09 — gathering (the place held)
+   ------------------------------------------------------------------------- */
+
+/**
+ * THE GATHERING. `06 · Our People` §03, and that page's signature.
+ *
+ * The first recipe not drawn from Living Work, because Our People's problem has
+ * no precedent on this site: eight of its nine people have no name, no face and
+ * no biography, and the blocker is not missing content but consent nobody has
+ * been asked for. A conventional team grid renders that as eight grey boxes — a
+ * page that looks broken, about people who are anything but.
+ *
+ * So the choreography carries the argument. Three beats:
+ *
+ *   1. The cards arrive scattered and lock into a set (`scatterResolve`,
+ *      seeded, `catch` easing — the token's own note is "cards locking into a
+ *      set"). The page's verb is GATHERS and this is it, literally.
+ *   2. The named card resolves: its name settles, its biography undims. Every
+ *      held card arrived in the same breath as the named one and now holds
+ *      absolutely still. THE DIFFERENCE IN BEHAVIOUR IS THE MESSAGE, and it is
+ *      the reason this is a recipe and not a stagger.
+ *   3. A HELD card escapes and becomes the whole screen. Not the named one —
+ *      an empty place at full size is the page's argument in one move.
+ *
+ * ⚠ A held card is not a loading skeleton, and nothing here pulses, shimmers or
+ * breathes. A skeleton says "this is arriving"; these names are not arriving
+ * until somebody is asked. Stillness is the honest state and it must survive
+ * any later polish pass.
+ *
+ * ⚠ The name in a held card is a RULE, never the string "[ Name ]". That is
+ * enforced in the markup, not here — see the note on `Person.name` in
+ * `src/content/our-people.ts`: "A placeholder that renders as a name is one
+ * careless commit away from being published as one."
+ *
+ * Loud channel: TRANSITION. `escape` is the only loud effect present;
+ * `scatterResolve` is amplitude rather than volume and the type is a plain
+ * settle throughout. The photographs never take the screen on their own.
+ *
+ * `holdPlane` is not optional. Every card carries a portrait, so without it the
+ * escape would magnify a face — a hover-scale by another name, which the
+ * grammar's corollary forbids however it was caused.
+ *
+ * Markup:
+ *   [data-card]        every card in the set, named and held alike
+ *   [data-card-media]  the image plane inside a card — counter-scaled on escape
+ *   [data-escape]      the ONE card that leaves; a held one, by design
+ *   [data-stage]       the full-bleed layer the escaping card flies to
+ *   [data-name]        the named card's name
+ *   [data-bio]         the named card's biography, undimmed as it resolves
+ */
+export function gathering(root: HTMLElement, span = 330): MotionModule {
+  return composition("gathering", root, {
+    channel: "transition",
+    span,
+    pin: true,
+    uses: ["scatterResolve", "settle", "dim", "escape"],
+    build: (tl) => {
+      const escapee = q(root, "[data-escape]");
+      const stage = q(root, "[data-stage]");
+
+      // Beat 3 only. Beats 1 and 2 are entry motion — see below.
+      if (escapee && stage) {
+        tl.escape(
+          escapee,
+          {
+            to: stage,
+            duration: DUR.large,
+            holdPlane: "[data-card-media]",
+          },
+          0.6,
+        );
+      }
+    },
+    enter: (tl) => {
+      const cards = qa(root, "[data-card]");
+      const name = q(root, "[data-name]");
+      const bio = q(root, "[data-bio]");
+
+      // Beat 1 — everyone arrives together. `catch` is deliberate: F9 retired
+      // the overshoot ban and EASE.catch exists for "cards locking into a set".
+      if (cards.length) {
+        tl.scatterResolve(
+          cards,
+          { spread: 220, duration: DUR.large, ease: EASE.catch },
+          0,
+        );
+      }
+
+      // Beat 2 — and then only one of them resolves.
+      if (name) tl.settle(name, { duration: DUR.large }, 0.45);
+      if (bio) tl.dim(bio, { duration: DUR.medium }, 0.55);
+    },
+    cut: clearAll,
+  });
+}
+
+/* -------------------------------------------------------------------------
+   10 — hosting
+   ------------------------------------------------------------------------- */
+
+/**
+ * The gaps disclose. `07 · Partnerships` §04.
+ *
+ * WHY THIS EXISTS
+ * ---------------
+ * The Record §03 already renders these four questions, from the same imported
+ * `knowledgeGaps` object, and states them as ABSENCE — typographic, on a pinned
+ * rail, step markers, no photographs. Rendering them the same way twice makes
+ * the Partnerships page pointless, which is exactly the complaint that started
+ * this build.
+ *
+ * So here they are the opposite: an OFFER. Each question is already legible;
+ * what is hidden is the answer to "and what is anyone doing about it" — the four
+ * recorders, the two flux towers, the bore samples held with QUT. A shutter over
+ * each detail flattens onto its own baseline as the reader scrolls, and the
+ * detail is underneath. Same four facts, opposite argument.
+ *
+ * `flattenReveal` had ZERO consumers anywhere in the repo before this. It is the
+ * right effect and not a stunt: the grammar files it under "accumulating,
+ * disclosure cut", and this is a disclosure.
+ *
+ * ⚠ NOT A HOVER. The effect's own comment is explicit — "content that only
+ * exists on hover does not exist on touch". Scroll-driven here.
+ *
+ * LOUD CHANNEL
+ * ------------
+ * Declared `media`, because the gap photographs are what take the screen.
+ * `flattenReveal` is deliberately NOT in compose.ts's LOUD table and should stay
+ * out: that table asks "does it take the screen", and a shutter collapsing over
+ * a paragraph does not, whatever its amplitude.
+ *
+ * Markup:
+ *   [data-heading]        the section heading
+ *   [data-shutter]        the cover over one gap's detail — the flattenReveal target
+ *   [data-vessel-source]  the detail underneath. MUST be a sibling of the shutter:
+ *                         the effect looks for it in the shutter's parentElement.
+ */
+export function hosting(root: HTMLElement, span = 190): MotionModule {
+  return composition("hosting", root, {
+    channel: "media",
+    span,
+    pin: true,
+    uses: ["flattenReveal", "settle"],
+    build: (tl) => {
+      const shutters = qa(root, "[data-shutter]");
+
+      // Staggered across the pinned span rather than fired together: the reader
+      // opens them one at a time, which is what makes it reading rather than a
+      // reveal animation. 0.12 apart on a 0-1 timeline = four beats over ~48%.
+      shutters.forEach((shutter, i) => {
+        tl.flattenReveal(shutter, { duration: DUR.medium }, 0.1 + i * 0.12);
+      });
+    },
+    enter: (tl) => {
+      const heading = q(root, "[data-heading]");
+      if (heading) tl.settle(heading, { duration: DUR.large }, 0);
+    },
+    cut: clearAll,
+  });
+}
+
 /** Everything, for the lab. */
 export const RECIPES = {
   fullBleedOpen,
@@ -382,6 +544,8 @@ export const RECIPES = {
   breath,
   vessels,
   quietArrival,
+  gathering,
+  hosting,
 } as const;
 
 export type RecipeName = keyof typeof RECIPES;

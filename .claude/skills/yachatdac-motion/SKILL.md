@@ -162,8 +162,17 @@ The brand attributes are grounded, honest, organic, human, respectful, awakened.
 In motion terms that means: things settle and never rebound; loaders report real
 progress; layers move at uneven rates; the visitor sets the pace; and motion
 finishes before reading starts. Easing is `country` for anything large and `quiet`
-for interface furniture — never overshoot or elastic, which read as playful
-against this brand. Adventurous means scale and choreography, not bounce.
+for interface furniture.
+
+**F9, 31 Aug 2026 — overshoot is available, and so are the six excluded techniques.**
+Ivy: *"you have the whole permission to be creative. the baseline is to not make up
+informations."* `catch`, `spring` and `bounce` now carry real values in
+`references/tokens.md`; dissolve, chromatic split, velocity warp, character decode,
+image trail and duotone are available on depicted subjects. `country` stays the
+default for anything large, because most things here settle rather than land — but a
+thing that catches is allowed to catch. Adventurous now means scale, choreography and
+the full effect vocabulary. What it still does not mean is decoration: each effect
+earns its place once per page, where it says something the copy already says.
 
 Truth's cinema is the descent — its dissolves, darkening grounds and rail carry
 the chronology, and they are built at full cinematic weight. Testimony is read in

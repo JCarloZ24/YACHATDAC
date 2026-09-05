@@ -101,11 +101,23 @@ export type CompositionSpec = {
  * into the next without ever competing for attention. `groundRamp` walking a
  * colour across four screens is the loud version of the same idea, and that one
  * is listed. The distinction is scale, not category.
+ *
+ * `escape` was missing and is a straightforward omission rather than a
+ * judgement: the grammar defines it as "`handoff` made reversible", `handoff`
+ * has always been listed, and a card that becomes the entire screen is the
+ * loudest transition available. It was absent because nothing had used it, so
+ * the gap never fired. Added with `gathering`, the first recipe that does.
+ *
+ * `scatterResolve` stays OUT, and that is a judgement. The grammar's variants
+ * table files it in the loud column of "what radiates", but this list asks a
+ * narrower question — does it *take the screen* — and cards arriving into their
+ * own grid does not, whatever its amplitude. Same reasoning as `emanate` and
+ * `triad`, which are loud in the grammar and absent here too.
  */
 const LOUD: Record<Exclude<LoudChannel, "none">, string[]> = {
   media: ["breakOut", "bleed", "plateParallax", "mosaic", "aperture"],
   type: ["aperture", "ghostType", "knockout", "display"],
-  transition: ["groundRamp", "overlap", "handoff"],
+  transition: ["groundRamp", "overlap", "handoff", "escape"],
 };
 
 /**

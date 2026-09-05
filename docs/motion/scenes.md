@@ -327,6 +327,445 @@ in that frame would caption them into a role.
 actually do?"*; the lo-fi (`2033:3339`) and the hi-fi both read *"right-way fire"*. The lo-fi is
 authority for a hi-fi, so the frame stands and the content file is the one to reconcile.
 
+## About — verb *answers* — 2053vh, 11 sections
+
+Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
+1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
+against 235vh drawn — the same convention as Living Work §02 and The Record §03.
+
+| # | Act | What it says | ⚡ | vh | Loud channel | Plate | Rest after? |
+|---|---|---|---|---|---|---|---|
+| 01 | I | About YACHATDAC — figures under the escarpment, people as scale | 4 | 110 | **media** | P1 | — |
+| 02 | I | What we are — the name decodes, the road runs through, the register writes itself | 3 | 299 | **type** | P3 | — |
+| 03 | II | **THE QUESTION** — the ground takes the picture and the question is asked on nothing | 5 | 235 | **type** | **P9** | ✓ pinned 300 |
+| 03b | II | **BREATH** — held, no caption, no words | 1 | 55 | **none** | **P8** | ✓✓ |
+| 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 265 | **media** | P4 | — |
+| 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 249 | **type** | P1 | ✓ |
+| 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 245 | **transition** | — | — |
+| 07 | IV | The people — the frames dance, the type holds | 3 | 145 | **media** | P6 | — |
+| 08 | IV | Partners — names, not logos | 2 | 175 | **type** | — | ✓ |
+| 09 | V | Get in touch — four doors, and ochre speaks once | 3 | 140 | **transition** | — | — |
+| 10 | V | Footer — Acknowledgement, then the traveller departs | 1 | 135 | **none** | — | — |
+
+**Reads as:** media · type · type · none · media · type · transition · media · type · transition · none.
+
+No channel runs three deep. The two `type` screens at §02 and §03 are the permitted maximum of
+two and §03b drops to `none` immediately after. The 4–5 run is §03 (⚡5) into §03b (⚡1), so the
+heaviest scene on the page gets the longest hold, which is the rule working rather than being
+survived.
+
+**§02 and §05 each carry a full-bleed band as a screen of their own.** At 299vh and 249vh these
+are three-screen sections, and the loud-channel law is per screen: §02 is decode (type) → the
+road (media) → register (type, quiet), and §05 is two values (type) → ochre held (media, at rest)
+→ the third value. Both replaced a blob-masked plate floating on the right, which read as an
+image on the side rather than as part of the page.
+
+**§03 is the page's argument and the only pin.** The ground ramps canvas → evergreen → charcoal
+across the pin; the photograph is taken by the ground in bands (`IMG-03`, released under F9); both
+claims **leave** the screen rather than dimming in place; and the question settles by line mask on
+bare charcoal with nothing behind it. That bare ground is the one place on this page a ground
+carries no artwork, and it is deliberate — see the no-bare-ground rule this page otherwise keeps.
+
+**Group G is back in build here, and only here.** The traveller and the page's thread are the same
+object: the question travels down the page and settles at each thing it measures. `G1` travel with
+trail draw-on, `G3` waypoint settle, `G4` hand-off at each seam; eight waypoints, and the Guide
+does not enter §03b. Every placement is ▲ flagged for Leonard Mickelo. `Artwork / Cluster` is not
+used — that component renders empty in the V2 file; `Dots / Trail` is the road.
+
+**The F9 releases are each spent once, where the copy already says the thing.** Character decode on
+the legal name, because the sentence says most people cannot say it. Dissolve on the picture behind
+the question everything is measured against. Velocity warp on the wheel that turns. Chromatic
+instability held on the only future-tense sentence on the page, because the Elder Advisory Group is
+not yet sitting. Duotone across §07's frames so the near-greyscale one can sit beside the warm ones.
+Overshoot twice — the four cards seating in §04, the four doors in §09. A second use of any of them
+would be decoration.
+
+**⚠ §07 has no archival photograph and the marker renders.** Neither batch holds archival material
+of any kind, so the third slot draws its own absence. Both portraits carry ⚠ CONSENT UNRESOLVED and
+are `frame` grade: the world moves, the image plane holds, and captions describe what the frame
+shows rather than who the person is.
+
+## Partnerships — verb *hosts* — 1190vh, 10 sections
+
+Built to `07 · Partnerships — HI-FI · Desktop · the page hosts` (Figma `2944:25988` at
+`x = −26353, y = 39760`, 1440 × 11,205→**11,430px**). §04 pins 190vh.
+
+**The verb.** *A researcher on Country is a guest on Country* — the page's own first sentence.
+Hosting carries the obligation, which greeting does not, and the obligation is the argument.
+
+**Why this page was hard.** Our People had a consent problem. This one has a **content**
+problem: *"This page has no draft"* (`lofi-spec.md:556`). It is the only one of the three new
+routes the client never wrote, and `D22` made it exist because four live links already point
+at it. Worse, the lo-fi's three sections are **two-thirds duplication** — §02 renders the same
+imported `knowledgeGaps` object as The Record §03, and §03 is the same contact block as Our
+People §06.
+
+**The audit that decided the shape.** `/about#partners` was carrying *more* partnership content
+than `/partnerships` did. The commercial offer was all on Living Work; the research protocol was
+on The Record; the roster and the mutual-obligation sentence were on About. The guest principle
+was hand-copied **three times byte-identical**. So the page was built as a **hub**: the spokes
+keep their excerpt and their link, the hub is the only place the whole set sits together, and
+where the same fact appears in both, the hub frames it differently.
+
+| § | Section | ⚡ | vh | Ground | Loud | Source |
+|---|---|---|---|---|---|---|
+| 01 | Hero — FULL BLEED · *a guest on Country* | 4 | 150 | photo → evergreen | **media** | `truth.ts:118` |
+| 02 | **The obligation** — alone on a screen | 4 | 100 | evergreen | **type** | `about.ts:117` · `R22` |
+| 03 | Open research — three disciplines resolve | 3 | 120 | canvas | **type** | `truth.ts:393` |
+| 04 | **What we do not know** — ⚑ the gaps as an OFFER | 5 | 190 | canvas | **media** | `resources.ts:274-300` |
+| 04b | BREATH | 1 | 55 | full bleed | **none** | — |
+| 05 | Who we already work with — nine names | 3 | 130 | charcoal | **type** | `about.ts:158-187` |
+| 06 | **Ways in** — ⚑ the section the site never had | 4 | 140 | evergreen | **transition** | `living-work.ts:359-386` |
+| 07 | How work is agreed — the container never fills | 2 | 100 | roasted | **none** | `resources.ts:366-372` |
+| 08 | Get in touch — cloned from Our People §06 | 3 | 150 | canvas → dark | **transition** | `contact.ts` |
+| 09 | Footer | 1 | 135 | charcoal | **none** | shared |
+
+**Reads as:** media · type · type · media · none · type · transition · none · transition · none.
+No channel three deep; both ⚡4–5 runs are broken by a rest.
+
+### The inversion — §04 is the page's argument
+
+The Record §03 states the four gaps as **absence**: typographic, on a pinned rail, numbered, no
+photographs. Here they are an **offer** — each question stays legible and a shutter over the
+answer flattens onto its own baseline, disclosing *what is already measuring it*. Same four
+questions, same imported object, opposite argument. **If those two sections ever read the same,
+this page has no reason to exist**, and the transition strip's frame 07 draws The Record's
+treatment beside this one so the difference stays checkable.
+
+§05 runs the same discipline: About §08 carries the identical nine names and is **also
+evergreen**, setting them in rows on `Dots / Rule`. The hub uses cards on charcoal, grouped by
+what each group is for.
+
+### Two orphaned effects spent
+
+`flattenReveal` (§04) and `display` (§03) both had **zero consumers anywhere in the repo**. Both
+were proved in the browser before being drawn — `hosting` in `recipes.ts`, at
+`/lab/compose?screen=hosting` — the same order that caught the `escape` portrait-rule bug on
+Our People. `mosaic` was planned for §05 and **dropped**: Flip measures at trigger time, so it
+cannot be scrubbed, and the composition API has no way to fire a Flip move at the end of a
+pinned span. Forcing it would have been decoration, which the grammar's own first rule forbids.
+
+`flattenReveal` is deliberately **not** added to `compose.ts`'s `LOUD` table. That table asks
+"does it take the screen", and a shutter collapsing over a paragraph does not.
+
+### What is held
+
+`R9` no form until the legal pages exist · `R12` names not logos · `R22` the Ngapartji-Ngapartji
+attribution · `R23` phone hours · `R15` every contact field · `D7` fee-for-service stays on Living
+Work and its button label is unsettled · the research protocol is *in preparation* and its
+container never fills · no cleared photograph exists for *"How old is the wall?"* · the contact
+router's *"Research or partnership"* door ~~is a **self-link** on this page~~ — **retargeted
+2 Sep** at §06 *Ways in*; every other page keeps the shared destination.
+
+### The action layer — added 2 September
+
+The page is 1,270vh and originally offered nothing to press until §08, about 8,900px down.
+Someone arriving at `/partnerships` has already decided to partner, so the actions now sit
+where the intent is:
+
+| Where | What | Why there |
+|---|---|---|
+| §01 hero | filled gold pill **SEE THE WAYS IN** → §06, with **WHAT WE DO NOT KNOW** → §04 beside it | the page's first action, one beat after the standfirst `arrive`s |
+| §04, under the lede | quiet gold link **SEE THE WAYS IN** | the peak of interest — the reader has just been shown four projects they could take on. Quiet on purpose: the shutters are the loud thing here |
+| §06, closing | one filled **GET IN TOUCH** pill | the section's cards use text links, so the pill is unambiguously the primary |
+| §08 | **`[ EMAIL US — NO CONFIRMED ADDRESS YET ]`**, dashed and unfilled | ⚑ drawn and never filled, per Living Work §08. The site has no working contact channel: every field is bracketed, `R9` blocks a form, and all four doors lead to other pages |
+
+**No CTA anywhere on this page renders a route path.** Twenty across three pages did until
+2 Sep; `01 · Wonder` never did, and its `LEARN MORE` / `EXPLORE EXPERIENCES` /
+`REGISTER YOUR INTEREST` set is the house pattern the others now follow.
+
+### The link sweep — 2 September, later the same day
+
+**§04 is now `Four open questions`.** It shared a heading and four questions with The
+Record §03, so arriving there from that page's CTA read as a repeat. The Record now sets
+the four questions **with no answers**, which is its own argument; the shutters here
+answer them, and the label on each is **WHAT IS RUNNING** rather than `ALREADY RUNNING`
+— two of the four answers are *"Nothing"* and *"Almost nothing has been examined"*, so
+the old label promised activity the card does not have.
+
+**§08 is now `The ending`, 70vh.** The router and the six bracketed fields are gone: D5
+puts that block on About and Our People because their drafts carry it, and this page has
+no draft. One filled **GET IN TOUCH** → `/connect` is the only action on the screen. The
+page runs `media · type · type · media · none · type · transition · none · transition ·
+none` — unchanged in shape, no channel three deep.
+
+**Section total `11,430 → 10,710`.** Sections still tile the frame exactly, and the
+charcoal wave that hands §08 into the footer was missing entirely — 6 waves where the
+ledger says 7 — and is restored.
+
+**Every section that was a plain colour now carries `bg · Artwork / Ring`.** Twenty
+placements across six pages. The opacity convention is read off the built pages: navy
+0.13/0.15, charcoal and evergreen 0.07/0.08, roasted 0.07. ⚠ **On canvas the shipped
+artwork is invisible** — the ring path is `#f6f6ec` and so is the ground, which is why
+The Record §04's ring has never been visible. Canvas grounds take a roasted `#4e3524`
+path at instance 0.30. The rings are watermarks, not `Glyph / Truth` motifs, so the
+never-recolour rule does not bind them.
+
+⚠ **Partnerships was the only page in the file with `clipsContent: false`**, on the frame
+and on all ten sections, so any bleeding artwork spilled onto the canvas. Fixed to match
+every other page.
+
+---
+
+## Connect — verb *reaches* — 645vh, 5 sections
+
+Built to `08 · Connect — HI-FI · Desktop · the page reaches` (Figma `3028:28875` at
+`x = −11105, y = 40626`, 1440 × 5,805px). No pin.
+
+**The verb.** Every other page hands off; this is the one you reach them at. Free of *opens ·
+descends · accumulates · surfaces · answers · gathers · hosts* and of every motion-token name.
+
+**Deliberately the shortest page on the site.** Its neighbours run 1,190–2,229vh. Someone
+arrives at `/connect` to do one thing, and making them scroll a kilometre first is the opposite
+of what the page is for. Length here is a service level, not a ration.
+
+| § | Section | vh | Ground | Loud | Source |
+|---|---|---|---|---|---|
+| 01 | Hero — *Get in touch* | 130 | evergreen | **type** | `contactRoutes.lede` |
+| 02 | **Ways in** — the four routes at full size | 190 | canvas | **transition** | `connect/page.tsx:45–62` |
+| 03 | No form, and that is on purpose | 100 | roasted | **none** | `connect/page.tsx:100` · `R9` |
+| 04 | Contact details — the ending | 90 | charcoal | **transition** | `contact.ts` |
+| 05 | Footer | 135 | charcoal | **none** | shared |
+
+**Reads as:** type · transition · none · transition · none. No channel twice in a row.
+
+### §02 is the router, and §04 deliberately is not
+
+`connect/page.tsx` renders `<ContactBlock showRoutes={false} />`, and its own comment says why:
+the four routes `ContactBlock` would draw are the same four as *Ways in*, which carries them in
+fuller words. **The hi-fi honours that** — §02 has the four cards at 600×420, coloured ground and
+a motif, no photographs; §04 carries only the six contact fields. Drawing both would put one
+list on one page twice, which is the duplication this whole pass exists to remove.
+
+### The button that cannot be filled
+
+§04's primary action is **drawn and never filled** — `[ EMAIL US — NO CONFIRMED ADDRESS YET ]`,
+dashed, unfilled, per Living Work §08's rule for unconfirmed status. Every arrow on the site
+ends on this screen. It is the one control on the project that has to work, and it cannot until
+one address is confirmed.
+
+### What is held
+
+`R9` no form until the legal pages exist · `R15` every field but Office is bracketed · `R23`
+phone answering hours · `R1` the Acknowledgement wording · **no hero image** — the lo-fi gives
+no direction and no frame was chosen, so the hero is typographic and says so on the canvas ·
+**D2** — whether Connect survives as a nav item is still open, and building the page does not
+settle it either way.
+
+⚠ §03's second paragraph (*"There is also no Connect draft…"*) renders live today and reads as
+internal build talk to a visitor. Recommended for removal when a Connect draft arrives; drawn
+as-is because it is what the page currently renders.
+
+---
+
+## Legal — verb *holds* — 645vh, 5 sections
+
+Built to `09 · Legal — HI-FI · Desktop · the page holds` (Figma `3113:27146` at
+`x = 9319, y = 41046`, 1440 × 5,805px). No pin, no photograph, no card.
+
+**The verb.** *Holds* — in both senses the page carries at once: it holds three documents, and
+every one of them is held. Free of *opens · descends · accumulates · surfaces · answers ·
+gathers · hosts · reaches* and of every motion-token name.
+
+**One frame, three routes.** There is no `/legal` page in the codebase. `00` is a route index,
+marked ⚑ NOT A ROUTE on the canvas, and `01–03` are three separate pages that share one
+template. Drawing them identically is the argument; three frames would read as three unfinished
+pages.
+
+| § | Section | vh | Ground | Loud | Source |
+|---|---|---|---|---|---|
+| 00 | Route index — ⚑ not a route | 120 | evergreen | **type** | `site.ts:228` · `D4` |
+| 01 | Privacy Policy · `/legal/privacy` | 130 | canvas | **none** | `legal/privacy/page.tsx` |
+| 02 | Terms of Service · `/legal/terms` | 130 | canvas | **none** | `legal/terms/page.tsx` |
+| 03 | Cookie Settings · `/legal/cookies` | 130 | canvas | **none** | `legal/cookies/page.tsx` |
+| 04 | Footer | 135 | charcoal | **none** | shared |
+
+**Reads as:** type · none · none · none · none.
+
+**This is the one page where four consecutive `none` channels is right.** The rule exists to stop
+a page going flat by accident. Here the flatness is the content: a legal document that animates
+is a legal document nobody trusts. The only motion is the index at the top, which is the one
+part a visitor navigates rather than reads.
+
+### The bodies are specimen text, and the page says so
+
+Each document carries six clauses of generic boilerplate under a dashed oxide banner reading
+*⟡ SPECIMEN TEXT · NOT LEGAL ADVICE · REPLACE ENTIRELY WHEN COUNSEL SUPPLIES THE DOCUMENT*. It
+exists so the page can be reviewed at its real length and rhythm rather than as a skeleton.
+
+**No organisation-specific fact is asserted.** Every value that would come from YACHATDAC is
+bracketed and set in oxide — retention periods, the providers data is shared with, the contact
+address, refund terms, the analytics provider, the last-updated date. The clause *headings* are
+the standard subject areas and survive the rewrite; none of the prose does.
+
+**Terms §03 is not boilerplate and is marked so.** *Indigenous Cultural and Intellectual
+Property* — flagged on the canvas as a clause that must be drafted with the Traditional Owners,
+not taken from a precedent. It governs whether the stories, language and images of Country here
+may be reused for research, teaching, media or AI training.
+
+### What is held
+
+`R9` legal review — owner **David**, due **14 September 2026** — holds all three bodies · the
+cookie wording is additionally held on the **analytics setup**, because it must describe the
+cookies actually set and GA4 is not configured · `R1` the Acknowledgement wording in the footer ·
+`R15` the registration numbers.
+
+⚠ **D4 is Final on the label, and the label still promises the wrong artefact.** *Cookie
+Settings* implies a consent preferences dialog with toggles; what is drawn is a policy page.
+Those are two different things and both may be wanted. Flagged, not resolved.
+
+---
+
+## Our People — verb *gathers* — 1835vh, 11 sections
+
+Built to `06 · Our People — HI-FI · Desktop · the page gathers` (Figma `2841:25358` at x=0,
+1440 × 16,515px). The frame is 1,835vh; the scroll span is ~1,865vh because §03 pins 330vh
+against 270vh drawn — the same convention as About §03 and Living Work §02.
+
+**Why this page needed a grammar of its own.** Eight of its nine people have no name, and the
+blocker is not missing content: consent to be named and photographed has never been sought
+(`R24`). A conventional team grid renders that as eight grey boxes — a page that looks broken,
+about people who are anything but. So the choreography carries the argument instead.
+
+| # | Act | What it says | ⚡ | vh | Loud channel | Plate | Rest after? |
+|---|---|---|---|---|---|---|---|
+| 00 | I | The advisory — the one thing on this page that never moves | 1 | 45 | **none** | **P8** | — |
+| 01 | I | Our people — the photograph leaves the screen and survives inside the word | 4 | 210 | **type** | P1 | — |
+| 02 | II | Suzanne Thompson — her own photograph, testimony undimming word by word, then the ground goes | 3 | 250 | **transition** | P6 | — |
+| 02b | II | **Her decision** — the operative sentence on the site, alone on a screen | 4 | 140 | **type** | — | ✓ |
+| 03 | III | **THE GATHERING** — six cards lock into a set, one name resolves, a held card takes the screen | 5 | 270 | **transition** | P4 | ✓ pinned 330 |
+| 03b | III | **BREATH** — held, no caption, no words | 1 | 55 | **none** | **P8** | ✓✓ |
+| 04 | IV | Board and governance — the ratio drawn to scale, three seats held, one group not yet sitting | 4 | 220 | **transition** | — | — |
+| 05 | IV | **The ones who got us here** — the only names set large on this page | 5 | 260 | **type** | — | ✓ |
+| 05b | V | **BREATH** — the pivot from the ones who are gone to the ask | 1 | 55 | **none** | **P8** | ✓✓ |
+| 06 | V | Get in touch — four doors | 3 | 195 | **transition** | — | — |
+| 07 | V | Footer — Acknowledgement, artwork band | 1 | 135 | **none** | — | — |
+
+**Reads as:** none · type · transition · type · transition · none · transition · type · none · transition · none.
+
+No channel runs three deep. §03 and §04 are both `transition`-loud with only the 03b breath
+between them — permitted at two, and they are different kinds of transition: grid choreography
+against radial assembly plus a ground change. Flagged on the flow board; if it reads as a repeat
+on review, §04 moves to `type` on the 80/20 figures. Both ⚡5 screens are followed immediately by
+a rest, and they never touch.
+
+### The 2 September pass — Ivy's review
+
+**§04 governance was rebuilt because it did not parse.** The constitutional sentence had been
+broken across a column at `x = 820`, so the 80/20 read as two loose figures with an orphaned
+clause beside them. The numbers, their labels and the rest of the sentence now run in one
+left-to-right line, and the ratio is **drawn to scale** — a 1240px bar split 992 / 248. That bar
+is the stat's own transition: it wipes to 80% while the figures stagger in, which is the
+"intense" treatment the numbers were asked for and earns them more than a `display` stagger
+alone. 190vh → 220vh to give the choreography scroll room; the page is 1,805 → 1,835vh.
+
+**Cards.** The six Gathering cards and the four Get-in-touch doors were plain bordered boxes —
+a hi-fi that could pass for the lo-fi. Both now use **The Record §02's card template**: coloured
+ground, 24px radius, a motif, type in canvas and gold. The Gathering cards take a photograph
+and a 35% scrim; **the doors deliberately take no photograph** (Ivy, 2 September) — colour and
+the artist's motif carry them. The rule is now in `CLAUDE.md`: *a card is a coloured ground, a
+photograph and a tiny artwork, never a white box.*
+
+All six Gathering cards share **one ground**. Varying it would code a difference between the
+named card and the five held ones, and §03's whole argument is that there is none.
+
+**§05 acknowledgements** gained `Artwork / Ring A` and `Ring B` behind the names at the file's
+held opacities (7% and 8%), instanced canvas-coloured and not recoloured.
+
+**Two new transition strips**, each placed in the REF lane **beside the section it documents**
+rather than stacked at the row top — and the Gathering and Procession strips were moved to
+match:
+
+| Strip | Frames | Beside |
+|---|---|---|
+| `§01 — THE KNOCKOUT` | 8 | §01, the photograph entering the letterforms |
+| `§02 — TESTIMONY UNDIMS WORD BY WORD` | 7 | §02, the quote at 0.28 → spoken → whole |
+
+The testimony strip renders the dim states with real per-range fills, so frames 04/05/06 show
+the actual 0.28 → 1 progression rather than describing it.
+
+### The artwork, added 1 September
+
+The page shipped with **no `Wave / Divider`, no `Glyph / Truth`, no rings and no dot bands** —
+the only built page carrying none of the brand artwork, and Ivy caught it. It now runs the
+file's own conventions rather than new ones:
+
+- **Seven waves, one per ground change**, at the established geometry: 1442×151 at `x = −1`,
+  `y = ground foot − 105`, drawn in the **incoming** ground's colour. Canvas out of the hero,
+  roasted into Her decision, canvas back for the team, evergreen out of the breath, charcoal
+  into the ones who got us here, canvas out of the second breath, charcoal into the footer.
+  The hero's wave sits at the **section** foot, not the photograph's: the ground under the
+  knockout is charcoal, so the photograph's edge is not a ground change and its hard cut is
+  annotated as deliberate.
+- **The three motifs rotate across the six Gathering cards** — boomerang, circle, starburst,
+  repeating — placed bottom-right of each image plane, because top-left is the `⟡ PLACEHOLDER
+  FACE` badge and a face sits high in a 380×320 crop. The rotation deliberately **cuts across
+  the roles** rather than encoding them: assigning a motif to a role would ascribe meaning to
+  the artist's marks, which is not ours to author.
+- **The hero and both breaths** carry an `Artwork / Cluster` and a seam glyph, following Truth.
+
+⚠ **Suzanne's photograph carries no artwork, deliberately.** It is the one frame on this page
+of a named, living person, and a decorative mark laid over her portrait is a different act from
+one laid over Country. If it should have a seam glyph, that is her call, not ours.
+
+⚠ Motif colour is the artist's and is never overridden — see `ART-DIRECTION.md` §Artworks. The
+first pass here painted all three white and flattened them; the fix was to copy fills back down
+from the main component.
+
+### The two inversions this page runs on
+
+**A held card is not a lesser card.** Same size, same ground, role at full weight — and where a
+name would be, **a gold rule**. Never the string `[ Name ]`, which `src/content/our-people.ts`
+already refuses in code, and never a shimmering skeleton: a skeleton says *this is arriving*, and
+these names are not arriving until somebody is asked. In §03 the five held cards arrive in the
+same breath as the named one and then **hold absolutely still while it resolves**. The difference
+in behaviour is the message.
+
+**§05 is where the names are.** Everywhere else on this page a name is a rule; in *The ones who
+got us here*, and only there, names are set at sixty points and **stay lit — nothing dims out**,
+which is the deliberate opposite of §02's `dim`. The living are unnamed because consent has not
+been asked for; the ones who got us here are named because it has. The client's own sentence
+makes the argument: *"We name them because that is how the record stays straight."* The section
+ends on a sixth place held — a gold rule at name scale.
+
+### Effects this page spends that nothing else had
+
+`scatterResolve`, `escape` and `knockout` were all built and had **zero consumers** in the repo.
+The §03 choreography is prototyped as the `gathering` composition in `src/lib/motion/recipes.ts`
+and runs at `/lab/compose?screen=gathering`, because drawing eight frames of a behaviour nobody
+had watched run is the wrong order.
+
+`escape` gained a **`holdPlane`** option here, and it is not optional on this page. A card that
+flies to full-bleed scales everything inside it, so a card carrying a portrait magnifies that
+portrait — a hover-scale on a face by another name, and the corollary does not care that a Flip
+caused it. `holdPlane` counter-scales the image plane against the flier's live scale every frame,
+so the frame opens and reveals more of the photograph while the face holds the size it had. That
+is `frameOpen`'s rule — revealed, not resized — and it makes `escape` legal on `frame`-grade
+media rather than forbidden on it.
+
+`escape` was also missing from `compose.ts`'s loud-channel table. The grammar defines it as
+"`handoff` made reversible", `handoff` was always listed, and a card that becomes the entire
+screen is the loudest transition available. It was absent because nothing had used it, so the gap
+never fired.
+
+### What is held
+
+**Suzanne Thompson is the only person on this page shown as herself** — `378A7604_1.40.2`,
+identified by Ivy. Five further frames of her exist (`1.10.1`, `1.69.1`, `1.69.5`,
+`March22-1512`, `March22-1668`) and none of them may be reused in a team card, because a reader
+would take her for two people.
+
+Every other face is a **placeholder**, badged on the card itself rather than only in a layer name
+— a screenshot circulated without the badge is exactly how a placeholder becomes a claim. That
+includes **the face on the named card, which is not Graham Ambridge**: no photograph of him
+exists in any batch. The library holds five card-usable faces besides Suzanne's, so one card
+repeats another's subject in a different frame; it is the only repeat and it goes when the real
+portraits arrive. `R24` is the page's blocker; `D16` is open on
+the page's own title; `CR4` holds "settler" in Graham Ambridge's biography, which is his own word
+about himself.
+
+---
+
 ## The scrub exceptions, marked
 
 Per `spine.md`, scroll advances time in exactly three places. Everywhere else it reveals:

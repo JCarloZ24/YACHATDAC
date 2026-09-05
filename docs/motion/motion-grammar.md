@@ -34,9 +34,15 @@ grow, because several effects can serve one role at different volumes. See Varia
 | **accumulating** | Things add up: a count advances, a mark fills, an index lights. | `country` / `machine` | X3 | — | `stepCounter` `vesselFill` `flattenReveal` |
 | **the rest** | Nothing moves, for a stated duration. | — | brief §3 | **P1, P8** | `hold` |
 
-¹ `guide` is specified and permitted but **not built**. Dropped from the current pass on Ivy's
-call, 2026-08-30: the traveller was a fix for flatness, and flatness is being fixed by density
-instead. The row stays because the behaviour is still designed and permitted.
+¹ `guide` was specified and permitted but **not built**. Dropped on Ivy's call, 2026-08-30: the
+traveller was a fix for flatness, and flatness was being fixed by density instead.
+
+**Back in build, 31 Aug 2026 — About.** Density is the right fix for a page whose argument is
+accumulation, and the wrong one for a page whose argument is a single question. On `05 · About`
+the traveller and the page's thread are the same object: the question travels down the page and
+settles at each thing it measures, so the Guide is carrying meaning rather than covering for
+flatness. `G1` travel + trail draw-on, `G3` waypoint settle, `G4` hand-off at the seams;
+traveller is the trail lead rosette. Every placement ▲ flagged for Leonard Mickelo.
 
 ## Variants — more effects, same rows
 
@@ -111,12 +117,20 @@ than quietly inheriting whatever the component does.
 
 ## Bans, restated because they are grammar too
 
-- **No overshoot.** `back`, `elastic` and `bounce` are banned site-wide. They are the sound of a
-  brand enjoying itself. `registerEffect` throws on them in development.
+- ~~**No overshoot.**~~ **Retired 31 Aug 2026 by F9.** `back`, `elastic` and `bounce` are
+  available, and `registerEffect`'s development throw comes out. The old reasoning — "the sound
+  of a brand enjoying itself" — was a taste call, and Ivy's is the one that counts: *"definitely
+  can use… you have the whole permission to be creative."* Overshoot still has to mean something
+  where it is used; a thing that catches should be a thing that holds.
+- ~~The §6 excluded-techniques table~~ is retired by the same decision. Dissolve, chromatic
+  split, velocity warp, character decode, image trail and duotone are available on depicted
+  subjects. See `ART-DIRECTION.md` §6 and F9.
 - **No count-up on figures of loss.** A number describing people who died or land taken is
   stated and held, never ticked upward like a sales metric.
-- **No character splits on testimony.** Anything a person actually said is split by line or
-  word. Characters are for short display headings only.
+- **Testimony is split by line or word, not by character.** Note what this is and is not:
+  `ENT-07` decode is available everywhere under F9 — on headings, on names of organisations, on
+  interface text. This one line is about a *content type*, not a technique. Anything a person
+  actually said keeps its words intact as words.
 - **No layout properties, ever.** Transform, opacity and `clip-path` only. Animating
   `width`/`height`/`top`/`left` is what makes an "immersive" site stutter, and one janky frame
   costs more reverence than any effect buys.
