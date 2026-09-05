@@ -114,17 +114,29 @@ export function BlobButton({
   href,
   children,
   tone = "burnt",
+  still = false,
   className = "",
 }: {
   href: string;
   children: string;
   tone?: "burnt" | "ochre";
+  /**
+   * Drop the hover lift. For pages that are static by decision — /our-people,
+   * /about and /partnerships do not move, and that includes under a pointer.
+   * The blob is already a hand-drawn shape rather than a rectangle; it does
+   * not need to answer a cursor to read as a button.
+   */
+  still?: boolean;
   className?: string;
 }) {
   return (
     <Link
       href={href}
-      className={`group ${BLOB_BOX} transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-0.5 ${className}`}
+      className={`group ${BLOB_BOX} ${
+        still
+          ? ""
+          : "transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-0.5"
+      } ${className}`}
     >
       <BlobShape tone={tone} />
       <span className="eyebrow relative text-xs text-canvas">{children}</span>
