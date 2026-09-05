@@ -85,7 +85,7 @@ export function TruthRailV2() {
       aria-hidden
       className="fixed left-6 top-1/2 z-20 hidden -translate-y-1/2 lg:block"
     >
-      <p className="eyebrow mb-6 origin-top-left text-[0.55rem] tracking-[0.2em] text-ochre/70">
+      <p className="eyebrow mb-6 origin-top-left text-[9px] tracking-[0.2em] text-ochre/70">
         {loreMarker}
       </p>
       <div className="relative h-[46svh] w-px bg-canvas/15">
@@ -99,7 +99,7 @@ export function TruthRailV2() {
           <li
             key={mark.id}
             data-descent-mark={mark.id}
-            className="eyebrow text-[0.55rem] text-canvas/30 transition-colors duration-300 data-[state=active]:text-ochre data-[state=passed]:text-canvas/60"
+            className="eyebrow text-[9px] text-canvas/30 transition-colors duration-300 data-[state=active]:text-ochre data-[state=passed]:text-canvas/60"
           >
             {mark.label}
           </li>
@@ -1000,7 +1000,7 @@ function EntryBlock({
         {entry.source && entry.cta ? (
           /* The wireframe sets the record label and the CTA on one row. */
           <div className="mt-8 flex flex-wrap items-baseline justify-between gap-4">
-            <p className="eyebrow text-[0.6rem] font-normal text-burnt">
+            <p className="eyebrow text-[10px] font-normal text-burnt">
               {entry.source}
             </p>
             <Link
@@ -1019,7 +1019,7 @@ function EntryBlock({
               /* The ground frames (10–12) set the tag in Burnt Ochre with or
                  without a CTA; elsewhere it stays quiet. */
               <p
-                className={`eyebrow mt-8 text-[0.6rem] font-normal ${
+                className={`eyebrow mt-8 text-[10px] font-normal ${
                   isGroundFrame ? "text-burnt" : "text-canvas/40"
                 }`}
               >
@@ -1211,7 +1211,7 @@ export function EraSection({
           ) : null}
           {deed.source && deed.cta ? (
             <div className="mt-10 flex flex-wrap items-baseline gap-x-16 gap-y-4">
-              <p className="eyebrow text-[0.6rem] font-normal text-burnt">
+              <p className="eyebrow text-[10px] font-normal text-burnt">
                 {deed.source}
               </p>
               <Link

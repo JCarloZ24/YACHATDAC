@@ -57,7 +57,7 @@ export default function LabIndexPage() {
         Each one runs at the full viewport, at your screen&rsquo;s own aspect
         ratio, so what you judge is the frame the behaviour would really have.
         The settings float bottom right over the top of it and hide with{" "}
-        <kbd className="rounded-xs border border-canvas/30 px-1.5 py-0.5 text-[0.625rem] tracking-[0.12em]">
+        <kbd className="rounded-xs border border-canvas/30 px-1.5 py-0.5 text-[10px] tracking-[0.12em]">
           C
         </kbd>
         , so the frame can be seen clean.

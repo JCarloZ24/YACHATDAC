@@ -148,7 +148,7 @@ export function RecordHeroV2() {
           resolves against the containing block's WIDTH, which on a 1440x900
           frame put the block 110px too high. svh matches min-h-svh above, so
           the block's foot lands on the frame's 716 at any viewport. */}
-      <div className="relative w-full px-6 pt-32 pb-[20.4svh] lg:px-25">
+      <div className="relative mx-auto w-full max-w-[1440px] px-6 pt-24 pb-[15svh] lg:px-25">
         <p
           data-record-hero-arrive
           className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
@@ -209,7 +209,7 @@ export function KnowledgeGapsV2() {
         <RingArtwork piece="b" className="top-[28%] left-[61%] h-[910px] w-225 opacity-[0.15]" />
       </div>
 
-      <div data-record-gaps-stage className="relative w-full px-6 py-32 lg:px-25">
+      <div data-record-gaps-stage className="relative mx-auto w-full max-w-[1440px] px-6 py-24 lg:px-25">
         <p data-record-arrive className="eyebrow text-lg text-gold sm:text-eyebrow-hero">
           {knowledgeGaps.title}
         </p>
@@ -331,7 +331,7 @@ export function DocumentsLedger() {
         />
       </div>
 
-      <div className="relative w-full px-6 py-28 lg:px-25">
+      <div className="relative mx-auto w-full max-w-[1440px] px-6 py-20 lg:px-25">
         <p data-record-arrive className="eyebrow text-lg text-ochre sm:text-eyebrow-hero">
           Documents and reports
         </p>
@@ -459,7 +459,7 @@ function LedgerRow({
         </p>
       </div>
       <div>
-        <p className="eyebrow text-[0.6875rem] text-charcoal/45">{meta}</p>
+        <p className="eyebrow text-[11px] text-charcoal/45">{meta}</p>
         <div className="mt-3">{children}</div>
       </div>
     </li>
@@ -519,7 +519,7 @@ export function OnRequestHold() {
         </div>
       </div>
 
-      <div className="relative w-full px-6 py-28 lg:px-25">
+      <div className="relative mx-auto w-full max-w-[1440px] px-6 py-20 lg:px-25">
         <div className="relative pl-8 lg:pl-15">
           {/* rule — the page stops offering and starts asking. */}
           <span
@@ -591,7 +591,7 @@ export function RecordGrowsV2() {
       {/* motif=circle at x=1283 / y=90 — 113px from the right edge of 1440. */}
       <SeamGlyph motif="a" className="top-[90px] right-[7.85%] hidden w-11 lg:block" />
 
-      <div className="relative w-full px-6 py-24 lg:px-25 lg:pt-30 lg:pb-[249px]">
+      <div className="relative mx-auto w-full max-w-[1440px] px-6 py-24 lg:px-25 lg:pt-24 lg:pb-[160px]">
         <p
           data-record-arrive
           className="eyebrow text-lg leading-[1.5] tracking-[0.1em] text-gold sm:text-2xl"

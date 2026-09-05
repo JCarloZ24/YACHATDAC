@@ -165,7 +165,7 @@ export function BlobHold({
       className={`${BLOB_BOX} ${className}`}
     >
       <BlobShape tone="muted" />
-      <span className="eyebrow relative text-[0.6875rem] text-current/55">
+      <span className="eyebrow relative text-[11px] text-current/55">
         {children}
       </span>
     </span>

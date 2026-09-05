@@ -651,7 +651,7 @@ export function RecordGrid({
             <button
               type="button"
               onClick={() => setTag("")}
-              className="eyebrow mt-5 rounded-sm border border-current/40 px-3 py-1.5 text-[0.625rem]"
+              className="eyebrow mt-5 rounded-sm border border-current/40 px-3 py-1.5 text-[10px]"
             >
               #{tag} &times;
             </button>
@@ -980,7 +980,7 @@ function RecordCard({
       </div>
 
       <div className="flex flex-1 flex-col px-9 pt-5 pb-9">
-        <p className="eyebrow text-[0.6875rem] text-gold">
+        <p className="eyebrow text-[11px] text-gold">
           {item.type}&ensp;&middot;&ensp;{item.source}
         </p>
         <h3 className="headline mt-3 flex min-h-[5.25rem] items-end text-[2rem] leading-tight">
@@ -1293,12 +1293,12 @@ function BoreDiagram() {
           />
         ))}
         <span
-          className="eyebrow absolute left-12 text-[0.625rem] whitespace-nowrap text-gold"
+          className="eyebrow absolute left-12 text-[10px] whitespace-nowrap text-gold"
           style={{ top: `${(POLLEN_DEPTH / BORE_DEPTH) * 100}%` }}
         >
           60 m &mdash; the pollen
         </span>
-        <span className="eyebrow absolute -bottom-6 -left-8 text-[0.625rem] text-canvas/50">
+        <span className="eyebrow absolute -bottom-6 -left-8 text-[10px] text-canvas/50">
           480 m
         </span>
       </div>

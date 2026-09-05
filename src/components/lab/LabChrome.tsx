@@ -43,7 +43,7 @@ export function LabHeader({
         Scroll on. The sketch runs at the full viewport — the frame it would get
         on the page, at your screen&rsquo;s own aspect ratio, with nothing
         cropping it. Controls float bottom right and hide with{" "}
-        <kbd className="rounded-xs border border-canvas/30 px-1.5 py-0.5 text-[0.625rem] tracking-[0.12em]">
+        <kbd className="rounded-xs border border-canvas/30 px-1.5 py-0.5 text-[10px] tracking-[0.12em]">
           C
         </kbd>
         .

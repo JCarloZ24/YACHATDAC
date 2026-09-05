@@ -304,7 +304,7 @@ function Panel({ demo, reduced }: { demo: Demo; reduced: boolean }) {
           </h3>
           <p className="eyebrow mt-1 text-ochre">{demo.role}</p>
         </div>
-        <div className="flex items-center gap-3 text-[0.65rem] tracking-[0.12em] text-canvas/45 uppercase">
+        <div className="flex items-center gap-3 text-[10px] tracking-[0.12em] text-canvas/45 uppercase">
           <span>sketch {demo.sketch}</span>
           {demo.plate ? <span>plate {demo.plate}</span> : null}
           <button
@@ -355,7 +355,7 @@ function KitInventory() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={a.src} alt="" className="max-h-full max-w-full object-contain" />
               </div>
-              <figcaption className="mt-2 text-[0.65rem] leading-snug text-canvas/55">
+              <figcaption className="mt-2 text-[10px] leading-snug text-canvas/55">
                 <code className="text-ochre">{a.id}</code>
                 <br />
                 {a.paths} path{a.paths === 1 ? "" : "s"} · {a.node}
@@ -367,7 +367,7 @@ function KitInventory() {
 
       <Group title="Plates — the image presentation patterns">
         <table className="w-full text-left text-xs text-canvas/70">
-          <thead className="text-[0.6rem] tracking-[0.12em] text-canvas/40 uppercase">
+          <thead className="text-[10px] tracking-[0.12em] text-canvas/40 uppercase">
             <tr>
               <th className="py-2">Plate</th>
               <th>Title</th>
@@ -399,7 +399,7 @@ function KitInventory() {
           {PHOTOS.map((p) => (
             <figure key={p.id}>
               <Frame photo={p.id} className="aspect-3/2" />
-              <figcaption className="mt-2 text-[0.65rem] leading-snug text-canvas/55">
+              <figcaption className="mt-2 text-[10px] leading-snug text-canvas/55">
                 {p.subject}
                 <br />
                 <span className={p.grade === "frame" ? "text-ochre" : "text-eucalyptus"}>
@@ -416,7 +416,7 @@ function KitInventory() {
           {DESCENT_LADDER.map((c) => (
             <div key={c.id} className="w-28">
               <div className="h-14 rounded-xs" style={{ background: c.hex }} />
-              <p className="mt-1 text-[0.6rem] leading-snug text-canvas/55">
+              <p className="mt-1 text-[10px] leading-snug text-canvas/55">
                 {c.label}
                 <br />
                 <code>{c.hex}</code>

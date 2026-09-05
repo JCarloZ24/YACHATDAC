@@ -63,7 +63,7 @@ export function Frame({
         className="absolute inset-0 h-full w-full object-cover"
       />
       {p.grade === "frame" ? (
-        <span className="absolute top-2 left-2 rounded-xs bg-charcoal/80 px-2 py-1 text-[0.6rem] tracking-widest text-ochre uppercase">
+        <span className="absolute top-2 left-2 rounded-xs bg-charcoal/80 px-2 py-1 text-[10px] tracking-widest text-ochre uppercase">
           frame
         </span>
       ) : null}
