@@ -14,7 +14,7 @@ import { wayForward } from "@/content/lofi/homepage";
 export function WayForward() {
   return (
     <section id="way-forward" className="bg-evergreen">
-      <div className="mx-auto max-w-7xl px-6 py-28 lg:px-16">
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-16 lg:py-28">
         <Reveal>
           <Eyebrow className="text-ochre">{wayForward.eyebrow}</Eyebrow>
         </Reveal>

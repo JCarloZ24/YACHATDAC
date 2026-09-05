@@ -70,7 +70,7 @@ export function Section({
          anything with more content simply grows past it. */
       className={`relative flex min-h-[60svh] items-center ${tone} ${className}`}
     >
-      <div className="mx-auto w-full max-w-7xl px-6 py-24 lg:px-16 lg:py-28">
+      <div className="mx-auto w-full max-w-7xl px-6 py-16 lg:px-16 lg:py-28">
         {children}
       </div>
     </section>

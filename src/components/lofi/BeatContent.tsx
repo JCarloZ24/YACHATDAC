@@ -65,7 +65,7 @@ export function BeatContent({
   const onCanvas = beat.tone === "canvas";
 
   return (
-    <div className="relative mx-auto w-full max-w-7xl px-6 py-28 lg:px-16">
+    <div className="relative mx-auto w-full max-w-7xl px-6 py-16 lg:px-16 lg:py-28">
       <Step reveal={reveal} index={0}>
         <Eyebrow className={onCanvas ? "text-oxide" : "text-ochre"}>
           {beat.eyebrow}
