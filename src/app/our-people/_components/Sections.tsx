@@ -883,7 +883,7 @@ export function Acknowledgements() {
           {acknowledgements.lede}
         </p>
 
-        <ul className="mt-14 lg:mt-14">
+        <ul className="mt-14">
           {acknowledgements.people.map((entry) => (
             <li key={entry.name} className="border-t border-canvas/15 py-8">
               <p
@@ -1028,7 +1028,7 @@ export function GetInTouch() {
 
         {/* Three across, two rows, 360 wide. */}
         {/* Three across, two rows, 360 wide. */}
-        <div className="mt-14 lg:mt-14">
+        <div className="mt-14">
           <ContactDetails />
         </div>
 

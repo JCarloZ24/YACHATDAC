@@ -238,7 +238,7 @@ export function WaysIn() {
         </h2>
 
         <CardRail
-          className="mt-12 lg:mt-12"
+          className="mt-12"
           columns="sm:grid-cols-2"
           gap="sm:gap-10"
         >
