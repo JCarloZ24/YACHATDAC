@@ -117,7 +117,7 @@ export function registerGrid(): void {
   gsap.registerEffect({
     name: "escape",
     extendTimeline: true,
-    defaults: { to: null, duration: DUR.large, ease: EASE.country },
+    defaults: { to: null, duration: DUR.large, ease: EASE.country, holdPlane: null },
     effect: (targets: object, config: Record<string, unknown>) => {
       assertEase("escape", config.ease);
       const cell = gsap.utils.toArray<HTMLElement>(targets)[0];
@@ -144,7 +144,36 @@ export function registerGrid(): void {
             ease: config.ease as string,
             absolute: true,
           }),
+          0,
         );
+
+      /* --- the held plane -------------------------------------------------
+         Grammar: "Portraits of real people hold still. The world moves around
+         them. No parallax drift on a face, no hover-scale on an archival
+         photograph."
+
+         A card that flies to full-bleed scales everything inside it, so a card
+         carrying a portrait magnifies that portrait — a hover-scale on a face
+         by another name, and the rule does not care that a Flip caused it.
+
+         `holdPlane` names a selector inside the card whose rendered size must
+         not change. It is counter-scaled against the flier's own live scale
+         every frame, so the product stays 1: the frame opens to the screen and
+         reveals more of the photograph while the face stays exactly the size it
+         was. Which is `frameOpen`'s rule — revealed, not resized — and it makes
+         `escape` legal on `frame`-grade media rather than forbidden on it.
+
+         Read-and-set on transform only. No layout properties, per the ban. */
+      const sel = config.holdPlane as string | null;
+      const plane = sel ? flier.querySelector<HTMLElement>(sel) : null;
+      if (plane) {
+        const counter = () => {
+          const s = Number(gsap.getProperty(flier, "scaleX")) || 1;
+          gsap.set(plane, { scale: 1 / s });
+        };
+        counter();
+        tl.eventCallback("onUpdate", counter);
+      }
 
       tl.eventCallback("onReverseComplete", () => {
         gsap.set(cell, { opacity: 1 });

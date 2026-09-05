@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GatheringDemo } from "@/components/lab/GatheringDemo";
+import { HostingDemo } from "@/components/lab/HostingDemo";
 import { V2LivingWorkMotion } from "@/components/v2/V2LivingWorkMotion";
 import {
   LivingWorkAperture,
@@ -91,6 +93,20 @@ const SCREENS = {
     note: "Hi-fi §09. A screen that simply arrives. Most of a site is this.",
     render: () => <LivingWorkInvitation />,
   },
+  gathering: {
+    label: "gathering",
+    channel: "transition",
+    span: "330vh · pinned",
+    note: "06 · Our People §03, and the first recipe not drawn from Living Work. Six cards arrive scattered and lock into a set; one resolves and five hold still, because eight of the nine people on that page have no name and the blocker is consent, not content. Then a HELD card escapes to the whole screen — with its photograph counter-scaled, so the frame opens and the face never magnifies.",
+    render: () => <GatheringDemo />,
+  },
+  hosting: {
+    label: "hosting",
+    channel: "media",
+    span: "190vh · pinned",
+    note: "07 · Partnerships §04. The Record §03 already renders these four questions from the same imported object, and states them as ABSENCE — typographic, on a rail, no photographs. Here they are an OFFER: the question stays legible and a shutter over each answer flattens onto its own baseline as you scroll, disclosing what is already measuring it. Same four facts, opposite argument — which is the only thing that makes a hub page worth building when its spokes already carry the content.",
+    render: () => <HostingDemo />,
+  },
 } as const;
 
 type ScreenKey = keyof typeof SCREENS;
@@ -106,7 +122,9 @@ export default async function ComposeLabPage({
 
   return (
     <>
-      <V2LivingWorkMotion />
+      {/* gathering and hosting each wire their own controller; running two
+          would let one screen's unmount stop the other's modules. */}
+      {key === "gathering" || key === "hosting" ? null : <V2LivingWorkMotion />}
 
       <header className="border-b border-canvas/15 bg-charcoal px-6 pt-32 pb-6 lg:px-16">
         <Link href="/lab" className="eyebrow text-ochre hover:text-burnt">

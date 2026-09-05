@@ -10,7 +10,9 @@ and that only happens if the timing numbers are shared.
 | `country` | `cubic-bezier(.16,1,.3,1)` / `expo.out` | Anything large — sections, images, headlines. Heavy settle, no rebound. |
 | `quiet` | `cubic-bezier(.33,1,.68,1)` / `power2.out` | Interface furniture — hovers, menus, small reveals. |
 | `machine` | `none` / linear | Scrubbed video, image sequences, progress bars only. |
-| overshoot | `back.out`, `elastic` | **Banned.** Reads playful; the brand is grounded. |
+| `catch` | `back.out(1.4)` | **Released by F9, 31 Aug 2026.** A thing that seats into place — cards locking into a set, doors offering themselves. Keep the overshoot short; 1.4 is the ceiling, and `country` is still the default for anything large. |
+| `spring` | `elastic.out(1, 0.55)` | Released by F9. For a thing that is genuinely elastic — a trail snapping to its waypoint, a mask releasing. Rare by nature: if two screens on one page need it, one of them does not. |
+| `bounce` | `bounce.out` | Released by F9. Available, and still the loudest thing in the table — reserve it for a physical event the copy already describes. |
 
 ## Duration
 
