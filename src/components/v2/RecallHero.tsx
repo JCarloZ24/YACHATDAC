@@ -1,6 +1,6 @@
 import type { Beat } from "@/content/lofi/homepage";
 import { heroSlot } from "@/content/lofi/media";
-import { MediaOrField } from "@/components/v2/MediaOrField";
+import { MediaOrField } from "@/components/ui/MediaOrField";
 
 /**
  * A5 — The Recall. Home hero, proposal 1 (Ivy's blur-into-the-past opening).

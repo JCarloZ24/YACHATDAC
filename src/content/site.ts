@@ -82,12 +82,16 @@ export const primaryNav: NavChild[] = [
   { title: "Wonder", href: "/wonder" },
   { title: "Truth", href: "/truth" },
   { title: "Living Work", href: "/living-work" },
-  { title: "The Record", href: "/resources" },
+  { title: "The Record", href: "/the-record" },
   { title: "About", href: "/about" },
 ];
 
-/** The header's single button. Connect survives here, and only here. */
-export const primaryAction = { title: "Get in touch", href: "/connect" } as const;
+/**
+ * The header's single button. Connect survives here, and only here.
+ * "Connect" per the 31 Aug wireframe (it renders CONNECT — the eyebrow style
+ * uppercases), replacing D2's "Get in touch" and matching the hi-fi pill.
+ */
+export const primaryAction = { title: "Connect", href: "/connect" } as const;
 
 export const pillars: Pillar[] = [
   {
@@ -99,11 +103,11 @@ export const pillars: Pillar[] = [
     children: [
       { title: "Guesting on Country", href: "/wonder#experience" },
       { title: "About Turraburra", href: "/wonder#turraburra" },
-      { title: "Stories", href: "/resources?type=story" },
+      { title: "Stories", href: "/the-record?type=story" },
       /* "Downloads" was `?type=download`, which is not one of the record's
          content types and would have matched nothing. The documents and
          reports section is what it meant. */
-      { title: "Documents & reports", href: "/resources#documents" },
+      { title: "Documents & reports", href: "/the-record#documents" },
     ],
   },
   {
@@ -135,8 +139,8 @@ export const pillars: Pillar[] = [
     href: "/living-work",
     children: [
       { title: "The Iningai Rangers", href: "/living-work#rangers" },
-      { title: "Caring for Country in Practice", href: "/living-work#practice" },
-      { title: "How We Built This", href: "/living-work#how-we-built-this" },
+      { title: "Caring for Country in Practice", href: "/living-work#streams" },
+      { title: "How We Built This", href: "/living-work#infrastructure" },
     ],
   },
   {
@@ -156,7 +160,7 @@ export const pillars: Pillar[] = [
       { title: "Our people", href: "/our-people" },
       { title: "Partnerships", href: "/partnerships" },
       { title: `About ${org.property}`, href: "/wonder#turraburra" },
-      { title: "Resources", href: "/resources" },
+      { title: "The Record", href: "/the-record" },
     ],
   },
 ];
@@ -166,8 +170,8 @@ export const pillars: Pillar[] = [
  * Query-driven and filterable, unlike the hand-curated pillar pages.
  */
 export const resourcesHub = {
-  title: "Resources",
-  href: "/resources",
+  title: "The Record",
+  href: "/the-record",
   /** Filterable content types within the single unified Blog/Editorial collection. */
   contentTypes: [
     "History",
@@ -189,11 +193,11 @@ export const resourcesHub = {
  * copy-paste, not a decision.
  */
 export const resourcesFooterLinks: NavChild[] = [
-  { title: "Stories", href: "/resources?type=story" },
-  { title: "News / Updates", href: "/resources?type=update" },
+  { title: "Stories", href: "/the-record?type=story" },
+  { title: "News / Updates", href: "/the-record?type=update" },
   /*
     "Downloads" and "Videos / Podcast" filtered on `download` and `video`,
-    neither of which is a RecordType. They did not error — resources/page.tsx
+    neither of which is a RecordType. They did not error — the-record/page.tsx
     matches the query against the closed set and falls through to no filter —
     so both links quietly delivered the WHOLE record under a promise of a
     subset. Misleading rather than broken, and worse for being neither.
@@ -202,10 +206,10 @@ export const resourcesFooterLinks: NavChild[] = [
     meant. Videos / Podcast maps onto Recording, a type that exists.
     `update` now resolves too, because D21 put Update back in the vocabulary.
   */
-  { title: "Downloads", href: "/resources#documents" },
-  /* Was stub: true. One Recording exists (resources.ts:217), so the filter
-     returns a result and the flag was stale. */
-  { title: "Videos / Podcast", href: "/resources?type=Recording" },
+  { title: "Downloads", href: "/the-record#documents" },
+  /* Was stub: true. One Recording exists, so the filter returns a result and
+     the flag was stale. Route follows the /resources -> /the-record rename. */
+  { title: "Videos / Podcast", href: "/the-record?type=Recording" },
 ];
 
 /**
@@ -230,6 +234,58 @@ export const legalLinks: NavChild[] = [
   { title: "Terms of Service", href: "/legal/terms" },
   { title: "Cookie Settings", href: "/legal/cookies" },
 ];
+
+/**
+ * Footer navigation — the hi-fi footer's four columns (frame 2137:2623),
+ * replacing the earlier pillar-derived columns. PAGES is the primary nav minus
+ * About (which moves under ORGANISATION as "About YACHATDAC"); GET IN TOUCH
+ * names the three enquiry types and routes each to /connect, the one contact
+ * destination D2 kept.
+ */
+export const footerNav: { title: string; links: NavChild[] }[] = [
+  {
+    title: "Pages",
+    links: primaryNav.filter((link) => link.title !== "About"),
+  },
+  {
+    title: "Organisation",
+    links: [
+      { title: `About ${org.name}`, href: "/about" },
+      { title: "Our people", href: "/our-people" },
+      { title: "Partners", href: "/partnerships" },
+    ],
+  },
+  {
+    title: "Get in touch",
+    links: [
+      { title: "Guesting enquiries", href: "/connect" },
+      { title: "Research & partnerships", href: "/connect" },
+      { title: "Ranger exchange", href: "/connect" },
+    ],
+  },
+];
+
+/**
+ * ⚠ Social profiles — the hi-fi footer lists these (FOLLOW column and the icon
+ * row), but no profile URLs have been supplied. `href: null` renders each as a
+ * held placeholder rather than a dead link; fill in the URL and it becomes one.
+ */
+export const socialLinks: { title: string; href: string | null }[] = [
+  { title: "Facebook", href: null },
+  { title: "Instagram", href: null },
+  { title: "X", href: null },
+  { title: "LinkedIn", href: null },
+  { title: "YouTube", href: null },
+];
+
+/**
+ * ⚠ R15 — corporation registration numbers, not yet supplied. The footer
+ * renders bracketed holds and a visible warning until both are filled.
+ */
+export const registration: { icn: string | null; abn: string | null } = {
+  icn: null,
+  abn: null,
+};
 
 /**
  * Deliberately out of scope this phase (§2). Listed so nobody re-adds them by

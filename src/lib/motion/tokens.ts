@@ -29,26 +29,22 @@
  * the same curve. Registration happens inside registerYachatdacEffects(), which
  * every motion host calls before it animates anything.
  *
- * Overshoot used to have no entry here: `back`, `elastic` and `bounce` were banned
- * site-wide and asserted against in development. **F9 (Ivy, 31 Aug 2026) retired
- * that ban** — see docs/decisions-and-risks.md. The three below carry real values
- * now, under names that say what they are for rather than what curve they are.
+ * Overshoot eases (`back`, `elastic`, `bounce`) were banned until decision F8
+ * (31 Aug 2026) lifted the grounded-character rule. Using them directly is
+ * allowed — add named entries as designs call for them.
  *
- * `country` is still the default for anything large. Most things on this site
- * settle; the overshoot easings are for the smaller class of things that *land*,
- * and each use should be answerable to something the copy already says.
+ * `catch` is the first one a design called for: `gathering` needs cards that
+ * seat into a set rather than settle into one. `elastic` and `bounce` stay
+ * unnamed until something actually asks.
  */
 export const EASE = {
   country: "country",
   quiet: "quiet",
   machine: "none",
 
-  /** A thing seating into place — cards locking into a set, a door offering itself. */
+  /** A thing seating into place — cards locking into a set. Keep the overshoot
+      short; `country` is still the default for anything large. */
   catch: "back.out(1.4)",
-  /** A thing genuinely elastic — a trail snapping to a waypoint, a mask releasing. */
-  spring: "elastic.out(1, 0.55)",
-  /** The loudest in the table. For a physical event the copy already describes. */
-  bounce: "bounce.out",
 } as const;
 
 /** The CSS cubic-beziers the same curves compile to, for non-GSAP transitions. */
@@ -56,34 +52,8 @@ export const EASE_CSS = {
   country: "cubic-bezier(.16,1,.3,1)",
   quiet: "cubic-bezier(.33,1,.68,1)",
   machine: "linear",
-  /* CSS cannot express elastic or bounce; `catch` is the only one that ports. */
   catch: "cubic-bezier(.34,1.56,.64,1)",
 } as const;
-
-/**
- * Every ease name this codebase is allowed to hand GSAP.
- *
- * This replaces BANNED_EASES, which encoded a taste rule F9 has withdrawn. The
- * real hazard was never overshoot — it is that GSAP silently falls back to
- * `power1.out` when handed a name it cannot resolve, so a typo turns into a
- * different animation rather than an error.
- */
-export const KNOWN_EASE_PREFIXES = [
-  "country",
-  "quiet",
-  "none",
-  "linear",
-  "power",
-  "expo",
-  "sine",
-  "circ",
-  "back",
-  "elastic",
-  "bounce",
-  "steps",
-  "rough",
-  "slow",
-] as const;
 
 /* -------------------------------------------------------------------------
    Duration and stagger — seconds, because GSAP takes seconds

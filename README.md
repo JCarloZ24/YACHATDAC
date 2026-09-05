@@ -47,22 +47,21 @@ npm run lint       # eslint
 npm run typecheck  # tsc --noEmit
 ```
 
-## Read this before writing motion code
+## Motion, since decision F8 (31 Aug 2026)
 
-`.claude/skills/yachatdac-motion/` is the source of truth for every animation
-decision on this project, and it is consulted **before** writing animation code,
-not after. Several of its rules are cultural rather than technical:
+The `yachatdac-motion` skill and its permissions board were removed under
+**F8** (`docs/decisions-and-risks.md`): the team builds freely and the work is
+reviewed by Steve (FNAN) and the Elder Advisory Group at presentation, with
+corrections coming back as change requests. Motion character, artwork motion
+and cultural-imagery treatment are design choices, not gated rules.
+`docs/motion/` still documents the motion system itself.
 
-- No animation of cultural-site imagery, in any form. Marra Wonga, the rock
-  engravings, the teaching wall — these are shown as still photographs with
-  their story in words. Motion turns a record into a spectacle.
-- No generated Aboriginal iconography in code — no procedural concentric
-  circles, dot fields, meandering waypoint paths, U-shapes or animal tracks.
-  Artwork comes from the commissioned artist as a supplied asset.
+Two lines survive F8 because a later review cannot walk them back:
+
 - No heritage coordinates in map layers, markup, comments or source files.
-
-`references/permissions.md` inside the skill is a live status board. Update it
-when a decision comes back — "someone said it was fine" is not a record.
+- No generated Aboriginal iconography in code — the artist's *supplied*
+  vectors may be used and animated freely; new iconography is not drawn
+  procedurally.
 
 ## Layout
 

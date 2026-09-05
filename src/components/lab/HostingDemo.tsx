@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { register, start, stop, watchVisibility } from "@/lib/motion-controller";
-import { knowledgeGaps } from "@/content/resources";
+import { knowledgeGaps } from "@/content/the-record";
 import { hosting } from "@/lib/motion/recipes";
 
 /**

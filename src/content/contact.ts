@@ -92,7 +92,7 @@ export const contactRoutes = {
     {
       title: "Something for the record",
       description: "Photographs, papers, family records",
-      href: "/resources",
+      href: "/the-record",
     },
   ],
 } as const;

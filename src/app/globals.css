@@ -92,6 +92,22 @@ html {
      If a specific link ever wants an eased jump, do it on that link with
      scrollIntoView({behavior:"smooth"}) — not on every scroll on the site. */
   -webkit-text-size-adjust: 100%;
+
+  /* No scrollbar UI, site-wide (1 Sep direction). Scrolling itself is
+     untouched — wheel, keys, touch and drag all still work; only the bar is
+     hidden, on the document and on every inner scroller (the ranger profile,
+     any overflow strip). */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
 }
 
 body {
@@ -123,6 +139,46 @@ body {
    Kept as utility classes so they stay in one place while the design system
    is still moving. Promote to React components as they stabilise.
    --------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+   deck: — the viewport that can hold a full-screen slide.
+
+   The Record's grid runs as a deck: a row of cards, or a breakout, takes the
+   screen and the reader glides between them. That only works on a viewport
+   wide enough for three cards AND tall enough to hold a 700px card with air.
+   Below either threshold the deck is off and the page scrolls normally, which
+   matters: a slide taller than its screen is a trap, because the snapping
+   pulls the reader back to the top of the thing they were trying to see the
+   bottom of.
+
+   A named variant rather than an inline arbitrary one — `[@media...]:h-svh`
+   built from a template literal is invisible to Tailwind (the same trap
+   src/lib/tone.ts documents for `bg-${tone}`), and writing the query out at
+   every call site five times over is unreadable.
+   --------------------------------------------------------------------------- */
+@custom-variant deck (@media (min-width: 1024px) and (min-height: 820px));
+
+/* ---------------------------------------------------------------------------
+   hold: — the viewport AND the preference that let a frame take the screen.
+
+   Every slide in §03 holds: a row of cards takes the screen and keeps it, and
+   once per source one entry leaves its row to become the screen. Both are the
+   same layout fact — a section taller than the viewport with a frame stuck to
+   the top of it — and both are withheld by the same query.
+
+   Which is why this carries `prefers-reduced-motion` and `deck:` does not. A
+   pin is LAYOUT, not something the motion module can decline at runtime, and
+   the transition strip's own instruction is "the pin is never created and the
+   breakout never runs — the entry stays a card in the grid". Under reduced
+   motion there must be no extra viewport of scroll to travel through and no
+   frame to stick, and a class only the media query can withhold is the only
+   thing that delivers that. src/lib/motion/record.ts matches on this exact
+   query so the module and the layout cannot disagree.
+
+   The width and height thresholds are `deck:`'s, and for its reason: a slide
+   taller than its screen is a trap. Below either, the page is ordinary flow.
+   --------------------------------------------------------------------------- */
+@custom-variant hold (@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) and (min-height: 820px));
 
 @utility eyebrow {
   font-family: var(--font-eyebrow);
@@ -164,8 +220,82 @@ body {
   animation: y-scroll-cue 2.4s var(--ease-quiet) infinite alternate;
 }
 
+/* The Truth hero's cue: the same 2.4s breath, but as brightness — it rises
+   and falls faintly, never a bounce (the hi-fi motion note, 2026-09-02).
+   Killed permanently on first scroll, like the homepage cue. */
+@keyframes y-scroll-cue-glow {
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility scroll-cue-glow {
+  animation: y-scroll-cue-glow 2.4s var(--ease-quiet) infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .scroll-cue {
+  .scroll-cue,
+  .scroll-cue-glow {
     animation: none;
   }
+}
+
+/* The Record's rail count ("13 items"), swapped on filter change.
+   160ms, quiet, and a plain fade — NOT an odometer. The rolling-figure
+   gesture belongs to the figures of loss elsewhere on the site, and the
+   interface must not borrow it to announce a filter result.
+   Replayed by keying the element on the count, so React remounts it and the
+   animation runs again; under reduced motion the number simply swaps. */
+@utility count-swap {
+  animation: count-swap 160ms var(--ease-quiet) both;
+}
+
+@keyframes count-swap {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .count-swap {
+    animation: none;
+  }
+}
+
+/* Disclosure rows (`<details data-line>`, the challenge bands). The content
+   expands and collapses smoothly — and the page reflows with it — via the
+   CSS-only `interpolate-size` + `::details-content` path, so the behaviour
+   ships in the server markup with no JS in the loop. Browsers without either
+   feature simply snap open, which is the same disclosure, unanimated.
+   `--ease-country` because a band opening is a section-scale move. */
+@media (prefers-reduced-motion: no-preference) {
+  details[data-line] {
+    interpolate-size: allow-keywords;
+  }
+  details[data-line]::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 0.45s var(--ease-country),
+      content-visibility 0.45s allow-discrete;
+  }
+  details[data-line][open]::details-content {
+    block-size: auto;
+  }
+}
+
+/* Mobile nav — the exit hand-back after the panel folds: one small beat in
+   which the bar's background and colour, and the two wordmark cuts, fade
+   instead of cutting. Applied by MobileNav for --dur-small, then removed;
+   the inline transition-property the scroll loop writes must not win. */
+.mobile-nav-exit {
+  transition-property: background-color, color, opacity !important;
+  transition-duration: var(--dur-small) !important;
+  transition-timing-function: var(--ease-quiet) !important;
 }

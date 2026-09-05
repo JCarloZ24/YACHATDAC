@@ -31,7 +31,7 @@ grow, because several effects can serve one role at different volumes. See Varia
 | **time handing over** | Two stacked plates cross-dissolve. One whole frame hands to another. | `country` · 0.82s | A5 | **P9** | `dissolve` |
 | **the guide leading the eye** | The traveller flies a leg; its trail draws behind by mask reveal. | `country` · 2.0s | G1 + G3 | — | `guide` ¹ |
 | **a person speaking** | Words undim as they are spoken. No movement at all. Dim state 0.28. | `quiet` · 0.55s · 0.045 stagger | Y2 | P6 | `dim` |
-| **accumulating** | Things add up: a count advances, a mark fills, an index lights. | `country` / `machine` | X3 | — | `stepCounter` `vesselFill` `flattenReveal` |
+| **accumulating** | Things add up: a count advances, a mark fills, an index lights. | `country` / `machine` | X3 | — | `stepCounter` `splitFlap` `vesselFill` `flattenReveal` |
 | **the rest** | Nothing moves, for a stated duration. | — | brief §3 | **P1, P8** | `hold` |
 
 ¹ `guide` was specified and permitted but **not built**. Dropped on Ivy's call, 2026-08-30: the
@@ -117,11 +117,8 @@ than quietly inheriting whatever the component does.
 
 ## Bans, restated because they are grammar too
 
-- ~~**No overshoot.**~~ **Retired 31 Aug 2026 by F9.** `back`, `elastic` and `bounce` are
-  available, and `registerEffect`'s development throw comes out. The old reasoning — "the sound
-  of a brand enjoying itself" — was a taste call, and Ivy's is the one that counts: *"definitely
-  can use… you have the whole permission to be creative."* Overshoot still has to mean something
-  where it is used; a thing that catches should be a thing that holds.
+- ~~**No overshoot.**~~ **Lifted by F8 (31 Aug 2026).** `back`, `elastic` and `bounce` are
+  allowed; the dev-mode guard in `effects/shared.ts` is a no-op. Character is a design choice.
 - ~~The §6 excluded-techniques table~~ is retired by the same decision. Dissolve, chromatic
   split, velocity warp, character decode, image trail and duotone are available on depicted
   subjects. See `ART-DIRECTION.md` §6 and F9.

@@ -5,31 +5,33 @@ The three faces above the fold are preloaded in the root layout.
 
 | Role | Family | Files | Licence |
 | --- | --- | --- | --- |
-| Headline | Block Berthold | `BlockBerthold.woff2` | ⚠ **commercial — webfont licence not confirmed** |
-| Subheadline / eyebrow | Bantayog Sans | `BantayogSans-{Regular,Medium,SemiBold,Bold,Black}.woff2` | ⚠ **unverified — no licence shipped** |
+| Headline | Block Berthold | Adobe Fonts kit `qqn2php` (family `berthold-block-w1g`); `BlockBerthold.woff2` kept as fallback only | ✅ **Adobe Fonts web project** — the kit stylesheet in the root layout is the licensed delivery |
+| Subheadline / eyebrow | Bantayog Sans | `BantayogSans-{Regular,Medium,SemiBold,Bold,Black}.woff2` | ✅ **commercial licence held** — key below |
 | Body | Work Sans | `WorkSans-Variable.woff2`, `WorkSans-Italic-Variable.woff2` | ✅ SIL OFL 1.1 — `WorkSans-OFL.txt` |
-| Callouts | Good Dog Cool | — | not supplied; slot reserved in `fonts.css` |
+| Callouts | GoodDog Plain / Good Dog Cool | — files still missing | ✅ freeware — `GoodDog-LICENCE.txt`; drop `GoodDogPlain.woff2` in here |
 
-## ⚠ Licensing — resolve before production
+## Licensing — resolved 2026-09-02 (from admin)
 
-This is a compliance question, not a preference. Build documentation §17
-decision 9 already flags it; here is what the supplied files actually say.
+**Block Berthold** is licensed through **Adobe Fonts**, web project `qqn2php`
+(`https://use.typekit.net/qqn2php.css`, linked in `src/app/layout.tsx`). The
+kit serves the family as `berthold-block-w1g` at 400/700, normal and italic,
+and that kit IS the web licence — Adobe Fonts terms cover hosted delivery
+only. The self-hosted `BlockBerthold.woff2` stays solely as the second entry
+in the font stack (offline/kit-outage fallback) and stays out of git; if
+compliance review objects to keeping any local copy, delete the file and the
+fallback entry together.
 
-**Block Berthold** ships with `BlockBerthold-COPYRIGHT.txt`:
+**Bantayog Sans** — commercial licence key held by the organisation:
 
-> Copyright (c) 1992 Adobe Systems Incorporated. All Rights Reserved.
-> Block Berthold is a registered trademark of H. Berthold AG.
+> `A15B292D-4B744BC-9E903E9B-7C320135`
 
-That is a commercial retail typeface. A desktop licence does **not** cover
-serving the file over the web — `@font-face` distribution needs a separate
-webfont licence, usually priced by pageviews or domain. Someone has to confirm
-YACHATDAC (or the brand team) holds one before this goes to a public server.
+Keep the purchase record (invoice / licence PDF) with the brand assets in the
+Proyekto resources section; if this repository ever goes public, move the key
+there too and reference it here instead of quoting it.
 
-**Bantayog Sans** arrived with no licence file at all. Terms need confirming
-with whoever supplied it.
-
-Neither is a reason to stop building — both are installed and working now. Both
-are a reason not to ship without an answer.
+Missing files (declared in `fonts.css`, 404 today): `GoodDogPlain.woff2` and
+`BantayogSans-ExtraBold.woff2` — get both from the Proyekto resources section
+and drop them in this folder.
 
 ## Not in git
 

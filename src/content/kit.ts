@@ -126,6 +126,18 @@ export const ARTWORK: ArtworkPiece[] = [
     note: "7-path dot cluster. One of the Guide's traveller candidates (the flock).",
   },
   {
+    id: "cluster-gold",
+    src: "/artwork/cluster-gold.svg",
+    node: "2892:25680",
+    width: 145,
+    height: 128,
+    paths: 7,
+    note:
+      "The Record's cut of the same cluster — Yellow Gold at full opacity. The " +
+      "`cluster` entry above is the footer's white-at-8% wash; that one is a " +
+      "ground, this one is a mark on a photograph. Not interchangeable.",
+  },
+  {
     id: "blob-mask",
     src: "/artwork/blob-mask.svg",
     node: "2051:4029",
@@ -322,6 +334,35 @@ export const PHOTOS: Photo[] = [
   // cultural-site bucket, and nobody waived the portrait rule. A mechanical
   // frame->full sweep breaks precisely this entry.
   { id: "elder-portrait", src: "/media/library/elder-portrait.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.42.5", subject: "An Elder, working — portrait" },
+
+  /* --- Living Work batch, gathered 2026-08-31 -----------------------------
+     Exported per section slot rather than per frame — the filename is the
+     slot it was gathered for, and the binding in living-work/_components/Sections.tsx is
+     the authority on where each one actually landed. Graded by looking at
+     every frame, same rules as batch 1.
+
+     ⚠ CONSENT — lw-rangers2 and lw-rangers5 show visiting children. The Our
+     People consent question (R10's sibling) is unresolved; neither is bound
+     to a page slot until that is answered. Registered so the record shows
+     what was gathered, not as a licence to use. */
+  { id: "lw-hero", src: "/media/library/living-work/livingwork-hero.webp", width: 2000, height: 1126, grade: "frame", subject: "An Iningai woman standing in the country being brought back — the hi-fi's 1.40.2. Portrait: holds still." },
+  { id: "lw-plain", src: "/media/library/living-work/livingwork-thenumbers.webp", width: 2000, height: 1054, grade: "full", subject: "The plain from a rise — mulga to the horizon" },
+  { id: "lw-escarpment-sunset", src: "/media/library/living-work/livingwork-ourchallenges.webp", width: 2000, height: 1067, grade: "frame", subject: "Red rock outcrop at last light, the plain behind — escarpment country" },
+  { id: "lw-rangers1", src: "/media/library/living-work/livingwork-rangers1.webp", width: 2000, height: 1334, grade: "frame", subject: "A woman on Country, smiling — portrait" },
+  { id: "lw-rangers2", src: "/media/library/living-work/livingwork-rangers2.webp", width: 2000, height: 1334, grade: "frame", subject: "A man walking Country with two visiting children — ⚠ consent unresolved" },
+  { id: "lw-rangers3", src: "/media/library/living-work/livingwork-rangers3.webp", width: 2000, height: 1054, grade: "full", subject: "Silhouette at the seedling nursery, checking trays" },
+  { id: "lw-rangers4", src: "/media/library/living-work/livingwork-rangers4.webp", width: 2000, height: 1054, grade: "full", subject: "A hand at seedlings in a propagation tray" },
+  { id: "lw-rangers5", src: "/media/library/living-work/livingwork-rangers5.webp", width: 2000, height: 1334, grade: "frame", subject: "Guiding visitors through seed grass — ⚠ consent unresolved (child in frame)" },
+  { id: "lw-spring-dry", src: "/media/library/living-work/livingwork-spring.webp", width: 2000, height: 1054, grade: "full", subject: "Emus moving through dry mulga — the dry state the copy describes first" },
+  { id: "lw-fire", src: "/media/library/living-work/livingwork-work1.webp", width: 2000, height: 1054, grade: "full", subject: "A cool burn — right-way fire, black ash not scorched ground" },
+  { id: "lw-seed-collect", src: "/media/library/living-work/livingwork-work2.webp", width: 2000, height: 1054, grade: "full", subject: "Collecting seed from the tree, bowl in hand" },
+  { id: "lw-seed-sort", src: "/media/library/living-work/livingwork-work3.webp", width: 2000, height: 1054, grade: "full", subject: "Seeds falling from a hand into the grinding stone" },
+  { id: "lw-seed-grind", src: "/media/library/living-work/livingwork-work4.webp", width: 2000, height: 1054, grade: "full", subject: "Grinding seed at the ute tailgate, dusk" },
+  { id: "lw-regrowth-dusk", src: "/media/library/living-work/livingwork-work5.webp", width: 2000, height: 1054, grade: "full", subject: "A dead tree over regrowth at dusk" },
+  { id: "lw-yumba-sign", src: "/media/library/living-work/livingwork-work6.webp", width: 1333, height: 2000, grade: "full", subject: "Doodtha Yumba amenities sign at the camp — portrait format" },
+  { id: "lw-seed-grind-2", src: "/media/library/living-work/livingwork-work7.webp", width: 2000, height: 1054, grade: "full", subject: "Mortar and pestle at the ute — near twin of lw-seed-grind" },
+  { id: "lw-seedhead", src: "/media/library/living-work/livingwork-infrastracture.webp", width: 2000, height: 1054, grade: "full", subject: "A hand and a seed head — the hi-fi's 1.65.1, the BREATH hinge" },
+  { id: "lw-sunset-grass", src: "/media/library/living-work/livingwork-getinvolved.webp", width: 2000, height: 1054, grade: "full", subject: "Golden grass under trees at sunset" },
 ];
 
 /** Look-ups used by the gallery and by section modules. */

@@ -88,7 +88,7 @@ export const whatWeDo = {
     {
       title: "Research and the record",
       body: "Two-way science with universities, and a public record of what is known about this Country.",
-      cta: { label: "The Record", href: "/resources" },
+      cta: { label: "The Record", href: "/the-record" },
     },
   ],
 } as const;
@@ -131,7 +131,7 @@ export const whoDecides = {
   cta: {
     label:
       "Governance documents, the Ten Year Plan and our financial statements are in The Record",
-    href: "/resources",
+    href: "/the-record",
   },
   /**
    * ⚠ Keep the Elder Advisory Group in the future tense until it is sitting.

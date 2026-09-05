@@ -16,6 +16,27 @@ const nextConfig: NextConfig = {
 
   // Australian English throughout, and the org is an Australian corporation.
   // Keep this in mind for date/number formatting in any future locale work.
+
+  /**
+   * `/resources` became `/the-record` on 2026-09-04 (amends D1 — see
+   * docs/decisions-and-risks.md). Every internal link was rewritten with it,
+   * so these exist for links written OUTSIDE the repo: the drafts in
+   * docs/content/drafts still say /resources, and so will anything already
+   * sent to Marc, Ivy or the client.
+   *
+   * Permanent, and the query string carries over on its own — so
+   * /resources?type=story still lands filtered.
+   */
+  async redirects() {
+    return [
+      { source: "/resources", destination: "/the-record", permanent: true },
+      {
+        source: "/resources/:slug",
+        destination: "/the-record/:slug",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

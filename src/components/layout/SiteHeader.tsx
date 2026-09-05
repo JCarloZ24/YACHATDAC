@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { org, primaryAction, primaryNav } from "@/content/site";
+import { ConnectButton } from "@/components/layout/ConnectButton";
+import { MobileNav } from "@/components/layout/MobileNav";
 
 /**
  * Site header.
@@ -20,25 +22,28 @@ import { org, primaryAction, primaryNav } from "@/content/site";
  * a nav item and kept as a destination. This is the shape both the v2 and v3
  * client drafts independently produced.
  *
- * ⚠ D24 — FINAL (26 Aug), AND THIS FILE DOES NOT YET IMPLEMENT IT. The homepage
- * copy draft specifies NO navigation until The Invitation, and says so as an
- * argument rather than an oversight: "Blocks 1–5 carry NO nav bar and NO links.
- * First navigation is block 6. This is the page's argument, not an oversight."
- * D24 went Final in favour of the draft, so this header should not render over
- * the homepage hero — it should appear when The Invitation does.
- *
- * That is a scroll-driven behaviour change in a shared layout component and it
- * belongs with whoever owns the header, so it is recorded here rather than
- * done: the lo-fi draws it correctly (no header band on the Home frame, an
- * annotation saying where it appears) and the code still renders persistently.
+ * D24 (no nav until The Invitation on the homepage) is SUPERSEDED by the
+ * 31 Aug wireframe direction: this header is persistent and reused on every
+ * page, homepage included. The code has always rendered it persistently, so
+ * the direction and the behaviour now agree.
  */
 
+/**
+ * Geometry is Marc's `Navbar / 1 /` (127:5287): a 130px band, 64px side
+ * padding at desktop, links gap 32, actions gap 16, and the CTA as a light
+ * pill with dark text so it reads over photography. Items stay content-driven
+ * (D2). The 31 Aug wireframe settled the pill wording on CONNECT (now in
+ * `primaryAction`), links in canvas cream, and the pill's text in midnight.
+ */
 export function SiteHeader() {
   return (
     <header className="absolute inset-x-0 top-0 z-30">
+      {/* Navbar / Mobile — the solid white bar with the black wordmark and
+          the hamburger panel. Below md only; the band below is desktop's. */}
+      <MobileNav />
       <nav
         aria-label="Primary"
-        className="mx-auto flex max-w-7xl items-center justify-between gap-8 px-6 py-8 lg:px-16"
+        className="mx-auto hidden h-[130px] max-w-[1440px] items-center justify-between gap-8 px-6 md:flex lg:px-16"
       >
         <Link href="/" aria-label={`${org.name} — home`} className="shrink-0">
           <Image
@@ -51,13 +56,13 @@ export function SiteHeader() {
           />
         </Link>
 
-        <div className="flex items-center gap-6 lg:gap-10">
-          <ul className="hidden items-center gap-6 md:flex lg:gap-10">
+        <div className="flex items-center gap-4">
+          <ul className="hidden items-center gap-8 md:flex">
             {primaryNav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="eyebrow text-xs text-white transition-colors hover:text-gold"
+                  className="eyebrow text-xs whitespace-nowrap text-canvas transition-colors duration-(--dur-small) ease-quiet hover:text-gold"
                 >
                   {item.title}
                 </Link>
@@ -65,12 +70,9 @@ export function SiteHeader() {
             ))}
           </ul>
 
-          <Link
-            href={primaryAction.href}
-            className="eyebrow rounded-full bg-charcoal px-6 py-3 text-xs text-white transition-colors hover:bg-oxide"
-          >
-            {primaryAction.title}
-          </Link>
+          {/* The CTA is the supplied blob asset with the water-fill hover —
+              see ConnectButton. Label is baked into the asset. */}
+          <ConnectButton href={primaryAction.href} label={primaryAction.title} />
         </div>
       </nav>
     </header>

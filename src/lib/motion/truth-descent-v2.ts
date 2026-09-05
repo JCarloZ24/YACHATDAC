@@ -14,6 +14,10 @@
  *   [data-v2-count]        the 1902/1886 numerals — they arrive at scale and
  *                          take the screen; the count is the page's loudest
  *                          typographic moment and everything near it is still
+ *   [data-v2-steps-fill]   the record strand's ochre fill — clipped open
+ *                          linearly with document scroll, trailing it on a
+ *                          heavy scrub (scroll-derived; the lag is the only
+ *                          easing, and it settles to the true position)
  *
  * Suzanne's testimony itself carries NO motion attributes. That stillness is
  * the doctrine's stated exception (F7 rule 1): the reader is being read to.
@@ -24,6 +28,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MotionModule } from "@/lib/motion-controller";
 import { registerYachatdacEffects } from "@/lib/motion/effects";
 import { SCRUB } from "@/lib/motion/tokens";
+import { Y2_DIM } from "@/lib/sections/y2";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,26 +42,200 @@ export function createTruthDescentV2(): MotionModule {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        // Grammar row "being drawn in" — M1, plate P2.
+        // The winding trail. Two clipped layers, both derived from scroll:
+        //   · the gold ink ([data-v2-trail-fill]) carries a short scrub lag
+        //     so it reads as liquid flowing through the dots — it still maps
+        //     linearly to scroll and works in both directions, so a jump
+        //     (e.g. "Start from the beginning") just flows down to meet you;
+        //   · the gray footsteps ([data-v2-steps-fill]) track the READING
+        //     LINE — the same 60%-of-viewport line that lights each pointer.
+        //     Its tip starts 0.6vh down the trail and stays glued to that
+        //     line the whole descent, so it meets every pointer exactly as
+        //     the pointer bursts — top of the page or bottom.
+        const root = document.querySelector<HTMLElement>("[data-descent-root]");
+        if (root) {
+          const wireFill = (
+            selector: string,
+            lag: number,
+            headStart: number,
+          ) => {
+            const layer = document.querySelector<HTMLElement>(selector);
+            if (!layer) return;
+            // Tween a number, not the clip-path string: the browser
+            // re-serialises `inset(0% 0% X% 0%)` as `inset(0% 0% X%)` (and
+            // `inset(0%)` at rest), so when GSAP re-read the layer on a
+            // refresh the value counts no longer matched and the
+            // interpolation ran off — a 489% bottom inset mid-descent, the
+            // strand gone. The proxy's start is re-evaluated on refresh.
+            const startBottom = () =>
+              Math.max(
+                0,
+                100 -
+                  ((headStart * window.innerHeight) / root.offsetHeight) * 100,
+              );
+            const proxy = { bottom: startBottom() };
+            const paint = () => {
+              layer.style.clipPath = `inset(0% 0% ${proxy.bottom.toFixed(3)}% 0%)`;
+            };
+            paint();
+            gsap.fromTo(
+              proxy,
+              { bottom: startBottom },
+              {
+                bottom: 0,
+                ease: "none",
+                immediateRender: true,
+                onUpdate: paint,
+                scrollTrigger: {
+                  trigger: root,
+                  start: "top top",
+                  end: "bottom bottom",
+                  scrub: lag,
+                  invalidateOnRefresh: true,
+                },
+              },
+            );
+          };
+          // The record strand's colour drops behind the scroll on purpose
+          // (2026-09-03): a heavy scrub, so the ochre trails the reader
+          // down the dots and catches up when they pause. Still scroll-
+          // derived, still both directions. The tip aims at the 0.6vh
+          // reading line, arriving there once the lag settles.
+          wireFill("[data-v2-steps-fill]", SCRUB.heavy * 1.5, 0.6);
+        }
+
+        // The hero settle — the hi-fi motion note (2026-09-02) supersedes the
+        // old M1 push-in: the photograph is on screen before anything
+        // animates, starts ~4% over frame, and settles to rest over a long
+        // scroll. It breathes rather than sits still; the settling IS scroll
+        // position, so the scrub stays.
         //
         // GRADE: this selector deliberately excludes frame-graded media. The
         // Truth hero may carry escarpment or engraving material, and on that
-        // the plate moves while the record holds — pushing into the image
+        // the plate moves while the record holds — moving the image plane
         // itself is the one thing the grade forbids.
         const hero = document.querySelector<HTMLElement>(
           "[data-v2-hero-media]:not([data-motion='frame'])",
         );
         if (hero) {
-          gsap
-            .timeline({
+          gsap.fromTo(
+            hero,
+            { scale: 1.04 },
+            {
+              scale: 1,
+              ease: "none",
+              immediateRender: true,
               scrollTrigger: {
                 trigger: hero,
                 start: "top top",
                 end: "bottom top",
                 scrub: SCRUB.light,
               },
-            })
-            .pushIn(hero, { scale: 1.1, y: "0%", duration: 1 });
+            },
+          );
+        }
+
+        // Entry plates (04 · ENTRY TODAY) — the spec's push in, 1.06→1.00,
+        // scrubbed over the plate's travel through the viewport so it works
+        // in both directions. Same grade exclusion as the hero: a
+        // frame-graded record never has its image plane moved.
+        gsap.utils
+          .toArray<HTMLElement>("[data-v2-plate]:not([data-motion='frame'])")
+          .forEach((plate) => {
+            gsap.fromTo(
+              plate,
+              { scale: 1.06 },
+              {
+                scale: 1,
+                ease: "none",
+                immediateRender: true,
+                scrollTrigger: {
+                  trigger: plate,
+                  start: "top bottom",
+                  end: "top top",
+                  scrub: SCRUB.light,
+                },
+              },
+            );
+          });
+
+        // 14 · BREAK The Escarpment — shot A dissolves 1 → 0 over the
+        // break's own travel, revealing shot B (which carries the plates'
+        // pull-back). Opacity only. The attribute is absent while B is
+        // undelivered, so A simply holds.
+        gsap.utils.toArray<HTMLElement>("[data-v2-dissolve]").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 1 },
+            {
+              opacity: 0,
+              ease: "none",
+              immediateRender: true,
+              scrollTrigger: {
+                trigger: el,
+                start: "top 60%",
+                end: "bottom 40%",
+                scrub: SCRUB.normal,
+              },
+            },
+          );
+        });
+
+        // The 2003 portrait (12 · ENTRY 2003) — "push in, slowest on the
+        // page": a smaller travel than the plates, at the heavy scrub, over
+        // the portrait's whole pass through the viewport. Frame-graded slots
+        // never carry the attribute.
+        gsap.utils.toArray<HTMLElement>("[data-v2-portrait]").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { scale: 1.04 },
+            {
+              scale: 1,
+              ease: "none",
+              immediateRender: true,
+              scrollTrigger: {
+                trigger: el,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: SCRUB.heavy,
+              },
+            },
+          );
+        });
+
+        // Y2 — testimony beside the portrait. Per-word opacity ramp from the
+        // 0.28 dim state, no movement. The dim state is applied here, not in
+        // markup, so reduced motion and no-JS read the words at full.
+        gsap.utils.toArray<HTMLElement>("[data-y2]").forEach((block) => {
+          const words = block.querySelectorAll<HTMLElement>("[data-y2-word]");
+          if (!words.length) return;
+          gsap.fromTo(
+            words,
+            { opacity: Y2_DIM },
+            {
+              opacity: 1,
+              ease: "none",
+              stagger: { each: 0.04 },
+              scrollTrigger: {
+                trigger: block,
+                start: "top 85%",
+                end: "top 40%",
+                scrub: SCRUB.normal,
+              },
+            },
+          );
+        });
+
+        // The cue's brightness pulse (CSS) dies on the first scroll, for good.
+        const cue = document.querySelector<HTMLElement>("[data-hero-cue]");
+        if (cue) {
+          window.addEventListener(
+            "scroll",
+            () => {
+              cue.style.animation = "none";
+            },
+            { once: true, passive: true },
+          );
         }
 
         gsap.utils.toArray<HTMLElement>("[data-v2-depth]").forEach((el) => {
@@ -92,9 +271,16 @@ export function createTruthDescentV2(): MotionModule {
         });
       });
 
-      // Reduced motion: nothing to do — every element's resting markup IS the
-      // final state, and the base descent module handles ground/rail snapping.
-      mm.add("(prefers-reduced-motion: reduce)", () => undefined);
+      // Reduced motion: the trail shows the whole record, statically open —
+      // its resting markup clips it shut, which would read as "no progress".
+      // Everything else's resting markup IS the final state, and the base
+      // descent module handles ground/rail snapping.
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        ["[data-v2-steps-fill]"].forEach((selector) => {
+          const layer = document.querySelector<HTMLElement>(selector);
+          if (layer) gsap.set(layer, { clipPath: "inset(0% 0% 0% 0%)" });
+        });
+      });
     });
   };
 

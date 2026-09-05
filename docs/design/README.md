@@ -524,9 +524,10 @@ page's verb is.
 `March22` frame are story-wall material. They and the eight tagged batch-1 frames are
 quarantined in `PHOTOS · Living Work`; that group is the only record of the batch-2 two.
 
-Behaviours come from the sketch library in
-`.claude/skills/yachatdac-motion/references/sketch-library.md`, by ID. Naming
-the ID in the wireframe is what makes the handoff to front-end unambiguous.
+Behaviours were specified from the yachatdac-motion skill's sketch library, by
+ID (skill removed under F8, 31 Aug 2026 — the IDs remain in wireframes and
+code as names; `docs/motion/` documents the system). Naming the ID in the
+wireframe is what makes the handoff to front-end unambiguous.
 
 ## Reference sites
 
