@@ -724,7 +724,7 @@ export function WaysIn() {
           Ways in
         </h2>
 
-        <CardRail className="mt-12 lg:mt-12" columns="sm:grid-cols-2 lg:grid-cols-4">
+        <CardRail className="mt-12" columns="sm:grid-cols-2 lg:grid-cols-4">
           {WAYS.map((way, i) => (
             <a
               key={way.title}

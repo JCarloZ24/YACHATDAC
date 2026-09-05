@@ -303,7 +303,7 @@ export function WhatWeAre() {
       </div>
 
       {/* The road. Full bleed — a screen, not an inset. */}
-      <figure className="relative mt-16 lg:mt-16">
+      <figure className="relative mt-16">
         <div
           data-motion={ROAD?.grade ?? "full"}
           className="relative h-[44svh] w-full overflow-hidden lg:h-[62svh]"
