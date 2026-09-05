@@ -1,25 +1,19 @@
-import { FooterGround } from "@/components/layout/FooterGround";
 import type { Metadata } from "next";
-import { Band, BandHeading } from "@/components/layout/Band";
-import { PageHero } from "@/components/layout/PageHero";
-import { ContactBlock } from "@/components/sections/ContactBlock";
-import { CtaLink } from "@/components/ui/CtaLink";
-import { EditorialNote } from "@/components/ui/EditorialNote";
-import { Eyebrow } from "@/components/ui/Eyebrow";
-import { FactGrid } from "@/components/ui/FactGrid";
-import { ImageSlot } from "@/components/ui/ImageSlot";
-import { PullQuote } from "@/components/ui/PullQuote";
-import { Reveal } from "@/components/ui/Reveal";
+import { FooterGround } from "@/components/layout/FooterGround";
+import { PageTransition } from "@/components/transitions/PageTransition";
+import { aboutHero } from "@/content/about";
 import {
-  aboutHero,
-  howWeWork,
-  partners,
-  thePeople,
-  whatWeAre,
-  whatWeDo,
-  whoDecides,
-  whyWeExist,
-} from "@/content/about";
+  AboutHero,
+  Breath,
+  GetInTouch,
+  HowWeWork,
+  Partners,
+  ThePeople,
+  WhatWeAre,
+  WhatWeDo,
+  WhoDecides,
+  WhyWeExist,
+} from "./_components/Sections";
 
 export const metadata: Metadata = {
   title: "About",
@@ -27,231 +21,56 @@ export const metadata: Metadata = {
 };
 
 /**
- * About YACHATDAC.
+ * About — the hi-fi build (Figma 2653:19666, 05 · About — HI-FI · Desktop ·
+ * the page answers), promoted onto the real route the way /truth,
+ * /living-work, /the-record and /our-people were.
  *
- * New route. Every v3 draft links to `/about` and nothing was there — one of
- * the three missing routes the change-request register lists as evidence
- * against D2. Building the route is not an answer to D2; the site navigation
- * is unchanged and Connect still exists.
+ * The page's verb is ANSWERS: one question travels it, and everything on the
+ * page is measured against that question. §03 asks it — "What does it leave
+ * for the generations who come after us?" — and every section after answers
+ * some part of it.
  *
- * `#partners` is load-bearing: the v3 homepage footer links to it.
+ * Eleven frames, 2,053vh. The eleventh is the site footer, already built to
+ * Marc's styling and not rebuilt here; the page just declares the ground it
+ * hands over on.
+ *
+ * ⚠ THIS PAGE IS STATIC BY DECISION, not by omission. It mounts no motion
+ * module and carries no scroll animation; it renders the same with JavaScript
+ * on or off. The frame's layer names describe a motion build that is not built
+ * — see the header of ./_components/Sections.tsx before changing anything.
+ *
+ * `PageTransition` stays: it paints the page's own ground behind everything,
+ * and its route transition is site-wide chrome that every page.tsx carries
+ * rather than motion belonging to this page.
+ *
+ * FIVE INBOUND LINKS point here and are load-bearing: `primaryNav`, the
+ * Connect nav's children, and the footer's Organisation column, all in
+ * src/content/site.ts — plus `/about#partners`, which src/app/partnerships
+ * links to by anchor. The two anchors this page owns are #partners (§08) and
+ * #contact (§09); neither may be renamed.
+ *
+ * ⚠ R24 REACHES THIS PAGE TOO. §07 shows two photographs of people who have
+ * not been asked whether they may be identified, and it must not go to
+ * `in-review` until that is answered. R15, R22, R12 and the Elder Advisory
+ * Group's tense are all held as well; each is documented at its section.
  */
 export default function AboutPage() {
   return (
-    <>
-      <PageHero
-        eyebrow={aboutHero.eyebrow}
-        title={aboutHero.title}
-        standfirst={aboutHero.standfirst}
-        tone="evergreen"
-      />
+    <PageTransition ground="#090e12">
+      <AboutHero />
+      <WhatWeAre />
+      <WhyWeExist />
+      <Breath />
+      <WhatWeDo />
+      <HowWeWork />
+      <WhoDecides />
+      <ThePeople />
+      <Partners />
+      <GetInTouch />
 
-      <Band tone="canvas">
-        <div className="grid gap-14 lg:grid-cols-2 lg:items-start">
-          <div>
-            <BandHeading title={whatWeAre.title} tone="canvas" />
-            <div className="mt-6 max-w-xl space-y-5">
-              {whatWeAre.body.map((paragraph, index) => (
-                <Reveal key={paragraph} index={index}>
-                  <p className="text-base leading-relaxed text-evergreen/80">
-                    {paragraph}
-                  </p>
-                </Reveal>
-              ))}
-            </div>
-
-            <FactGrid
-              facts={whatWeAre.facts}
-              tone="canvas"
-              columns={2}
-              className="mt-12"
-            />
-
-            {/* R15 — the legal name, and both registration numbers. */}
-            <div className="mt-10 max-w-xl">
-              <EditorialNote>
-                <p>{whatWeAre.pending}</p>
-              </EditorialNote>
-            </div>
-          </div>
-
-          <Reveal index={1}>
-            <ImageSlot note={aboutHero.image} tone="canvas" aspect="portrait" />
-          </Reveal>
-        </div>
-      </Band>
-
-      <Band tone="roasted">
-        <BandHeading title={whyWeExist.title} tone="roasted" />
-
-        <div className="mt-6 max-w-2xl space-y-5">
-          {whyWeExist.body.map((paragraph, index) => (
-            <Reveal key={paragraph} index={index}>
-              <p className="text-base leading-relaxed text-canvas/75">
-                {paragraph}
-              </p>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal index={2}>
-          <PullQuote
-            tone="roasted"
-            className="mt-12"
-            attribution={whyWeExist.attribution}
-          >
-            {whyWeExist.quote}
-          </PullQuote>
-        </Reveal>
-
-        <Reveal index={3}>
-          <p className="headline mt-14 max-w-2xl text-xl text-ochre">
-            {whyWeExist.tagline}
-          </p>
-        </Reveal>
-      </Band>
-
-      <Band tone="canvas">
-        <BandHeading
-          title={whatWeDo.title}
-          lede={whatWeDo.lede}
-          tone="canvas"
-        />
-
-        <div className="mt-14 grid gap-8 sm:grid-cols-2">
-          {whatWeDo.areas.map((area, index) => (
-            <Reveal key={area.title} index={index}>
-              <article className="flex h-full flex-col justify-between gap-6 border-t border-evergreen/20 pt-5">
-                <div>
-                  <h3 className="headline text-xl text-evergreen">
-                    {area.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-evergreen/80">
-                    {area.body}
-                  </p>
-                </div>
-                <CtaLink href={area.cta.href} tone="canvas">
-                  {area.cta.label}
-                </CtaLink>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </Band>
-
-      <Band tone="evergreen">
-        <BandHeading title={howWeWork.title} tone="evergreen" />
-
-        <div className="mt-12 grid gap-8 md:grid-cols-3">
-          {howWeWork.values.map((value, index) => (
-            <Reveal key={value.title} index={index}>
-              <div className="border-t border-canvas/20 pt-5">
-                <h3 className="eyebrow text-ochre">{value.title}</h3>
-                <p className="mt-4 text-sm leading-relaxed text-canvas/75">
-                  {value.body}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-12 max-w-2xl">
-          <EditorialNote label="Editorial note — why the list is three, not seven">
-            <p>{howWeWork.pending}</p>
-          </EditorialNote>
-        </div>
-      </Band>
-
-      <Band tone="canvas">
-        <BandHeading title={whoDecides.title} tone="canvas" />
-
-        <div className="mt-6 max-w-2xl space-y-5">
-          {whoDecides.body.map((paragraph, index) => (
-            <Reveal key={paragraph} index={index}>
-              <p className="text-base leading-relaxed text-evergreen/80">
-                {paragraph}
-              </p>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal index={3}>
-          <div className="mt-10">
-            <CtaLink href={whoDecides.cta.href} tone="canvas">
-              {whoDecides.cta.label}
-            </CtaLink>
-          </div>
-        </Reveal>
-
-        <div className="mt-12 max-w-2xl">
-          <EditorialNote label="Editorial note — tense">
-            <p>{whoDecides.pending}</p>
-          </EditorialNote>
-        </div>
-      </Band>
-
-      <Band tone="roasted">
-        <BandHeading title={thePeople.title} tone="roasted" />
-        <Reveal index={2}>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-canvas/75">
-            {thePeople.body}
-          </p>
-        </Reveal>
-        <Reveal index={3}>
-          <div className="mt-8">
-            <CtaLink href={thePeople.cta.href} tone="roasted">
-              {thePeople.cta.label}
-            </CtaLink>
-          </div>
-        </Reveal>
-      </Band>
-
-      <Band id="partners" tone="canvas">
-        <BandHeading
-          title={partners.title}
-          lede={partners.body}
-          tone="canvas"
-        />
-
-        <div className="mt-14 grid gap-10 md:grid-cols-3">
-          {partners.groups.map((group, index) => (
-            <Reveal key={group.title} index={index}>
-              <div className="border-t border-evergreen/20 pt-5">
-                <Eyebrow className="text-oxide">{group.title}</Eyebrow>
-                <ul className="mt-4 space-y-2">
-                  {group.names.map((name) => (
-                    <li key={name} className="text-sm text-evergreen/80">
-                      {name}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        {/*
-          Names, not logos. The draft asks for approved logo files and does not
-          have them; an unapproved partner logo is a worse problem than a plain
-          name, and half this list may not be current.
-        */}
-        <div className="mt-12 max-w-2xl">
-          <EditorialNote label="Not confirmed — list and logo files">
-            <p>{partners.pending}</p>
-          </EditorialNote>
-        </div>
-
-        <Reveal index={4}>
-          <div className="mt-10">
-            <CtaLink href={partners.cta.href} tone="canvas">
-              {partners.cta.label}
-            </CtaLink>
-          </div>
-        </Reveal>
-      </Band>
-
-      <ContactBlock />
+      {/* §09 ends on charcoal, so the footer's band above its burnt crest is
+          charcoal here — the dark run carries straight into the footer. */}
       <FooterGround color="var(--color-charcoal)" />
-    </>
+    </PageTransition>
   );
 }
