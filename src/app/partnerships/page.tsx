@@ -1,12 +1,17 @@
-import { FooterGround } from "@/components/layout/FooterGround";
 import type { Metadata } from "next";
-import { Band, BandHeading } from "@/components/layout/Band";
-import { PageHero } from "@/components/layout/PageHero";
-import { ContactBlock } from "@/components/sections/ContactBlock";
-import { CtaLink } from "@/components/ui/CtaLink";
-import { EditorialNote } from "@/components/ui/EditorialNote";
-import { Reveal } from "@/components/ui/Reveal";
-import { knowledgeGaps } from "@/content/the-record";
+import { FooterGround } from "@/components/layout/FooterGround";
+import { PageTransition } from "@/components/transitions/PageTransition";
+import {
+  AlreadyWorkingWith,
+  Breath,
+  HowWorkIsAgreed,
+  OpenQuestions,
+  OpenResearch,
+  PartnershipsHero,
+  TheEnding,
+  TheObligation,
+  WaysIn,
+} from "./_components/Sections";
 
 export const metadata: Metadata = {
   title: "Partnerships",
@@ -15,131 +20,54 @@ export const metadata: Metadata = {
 };
 
 /**
- * Partnerships.
+ * Partnerships — the hi-fi build (Figma 2944:25988, 07 · Partnerships — HI-FI ·
+ * Desktop · the page hosts), promoted onto the real route the way /truth,
+ * /living-work, /the-record, /our-people and /about were.
  *
- * ⚠ THIS PAGE HAS NO DRAFT. It is the third of the three routes the v3
- * prototypes link to and the IA does not contain — `/about` and `/our-people`
- * had drafts of their own, and this one does not.
+ * The page's verb is HOSTS. Greeting carries no obligation; hosting does, and
+ * the obligation is the argument — §02 states it alone on a screen and every
+ * section after is a way of meeting it.
  *
- * Two pages link to `#research-opportunities` specifically: Truth's "Open
- * research" entry and the Resources knowledge-gaps section. Left unbuilt, both
- * are dead links to a 404.
+ * Ten frames, 1,190vh. The tenth is the site footer, already built to Marc's
+ * styling and not rebuilt here; the page just declares the ground it hands
+ * over on.
  *
- * So this page carries exactly two things and invents nothing:
+ * ⚠ THIS PAGE IS STATIC BY DECISION, not by omission. No motion module, no
+ * scroll animation, no hover. It renders the same with JavaScript on or off.
+ * The frame describes a motion build — a 190vh pin on §04 and a shutter over
+ * each disclosure — and none of it is built; see docs/motion/scenes.md and the
+ * header of ./_components/Sections.tsx before changing anything.
  *
- *   1. The **research opportunities** the client has already written, taken
- *      verbatim from the Truth draft ("Most of this Country has never been
- *      studied…") and the Resources draft's "What we do not know". Those are
- *      the client's words about this subject, reused for the destination they
- *      already point at. `knowledgeGaps` is imported from content/the-record.ts
- *      rather than copied, so the two pages cannot drift apart.
+ * ⚠⚠ THIS PAGE HAS NO DRAFT. It exists under D22 because four live links
+ * already pointed at it, and every word on it is borrowed from a page that
+ * does have one — About, Living Work, The Record and Truth. That is the
+ * page's defining constraint and the reason each section names its source.
+ * Do not add copy here without a provenance.
  *
- *   2. A visible note saying the rest of the page is unwritten.
+ * THREE ANCHORS ARE LOAD-BEARING. `#research-opportunities` (§03) is linked
+ * from Truth and from The Record's knowledge-gaps section; unbuilt, both are
+ * dead links. `#ways-in` (§06) and `#open-questions` (§04) are this page's
+ * own, used by the hero and by §04's action.
  *
- * It does NOT invent partnership tiers, benefits, process copy or a form. When
- * a Partnerships draft arrives, replace the note with it.
- *
- * ⚠ This route existing is not an answer to D2. The site nav is unchanged.
+ * ⚠ WHAT IS HELD: R12, R9/R15, R22 and R24 all reach this page, and the
+ * research protocol is in preparation. Each is documented at its section.
  */
-
-/** Verbatim from the Truth v3 draft's "Open research" entry. */
-const openResearch = {
-  title: "Open research",
-  body: "Most of this Country has never been studied. We are looking for researchers in palaeontology and archaeology, ecology and biodiversity, and medicinal botany.",
-};
-
-/** Verbatim from the Truth v3 draft's "Partnerships" entry. */
-const partnershipPrinciple =
-  "A researcher on Country is a guest on Country. Partnerships here are expected to give something back to the land and the people.";
-
 export default function PartnershipsPage() {
   return (
-    <>
-      <PageHero
-        eyebrow="Work with us"
-        title="Partnerships"
-        standfirst={partnershipPrinciple}
-        tone="evergreen"
-      />
+    <PageTransition ground="#22372b">
+      <PartnershipsHero />
+      <TheObligation />
+      <OpenResearch />
+      <OpenQuestions />
+      <Breath />
+      <AlreadyWorkingWith />
+      <WaysIn />
+      <HowWorkIsAgreed />
+      <TheEnding />
 
-      <Band id="research-opportunities" tone="canvas">
-        <BandHeading
-          eyebrow="Still to be found"
-          title={openResearch.title}
-          lede={openResearch.body}
-          tone="canvas"
-        />
-
-        <div className="mt-14">
-          <h3 className="eyebrow text-oxide">{knowledgeGaps.title}</h3>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-evergreen/80">
-            {knowledgeGaps.lede}
-          </p>
-
-          <div className="mt-10 grid gap-8 sm:grid-cols-2">
-            {knowledgeGaps.gaps.map((gap, index) => (
-              <Reveal key={gap.question} index={index}>
-                <div className="border-t border-evergreen/20 pt-5">
-                  <h4 className="headline text-lg text-evergreen">
-                    {gap.question}
-                  </h4>
-                  <p className="mt-3 text-sm leading-relaxed text-evergreen/75">
-                    {gap.detail}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-
-        <Reveal index={4}>
-          <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3">
-            {/*
-              Was "How research works here" -> /truth#partner. That anchor
-              resolves, but to a two-sentence card whose own CTA now points
-              back here — a loop — and the label promised a page nobody has
-              written. No page anywhere explains how research works here; the
-              protocol is "in preparation" (resources.ts:366). Replaced with a
-              link that delivers what it says. The missing page stays on the
-              record as a content ask, not as a dead promise.
-            */}
-            <CtaLink href="/about#partners" tone="canvas">
-              Who we already work with
-            </CtaLink>
-            <CtaLink href="/the-record" tone="canvas">
-              What has been found so far
-            </CtaLink>
-          </div>
-        </Reveal>
-      </Band>
-
-      <Band tone="roasted">
-        <div className="max-w-2xl">
-          <EditorialNote label="No draft — this page is a landing point, not a page yet">
-            <p>
-              Three v3 prototypes link to <code>/partnerships</code> and there is
-              no Partnerships draft. The section above reuses the research copy
-              the client has already written, on the Truth and Resources drafts,
-              because that is the anchor both of them link to.
-            </p>
-            <p>
-              Everything a partnerships page would normally carry — what a
-              partnership involves, what is expected of a partner, the research
-              protocol, who to approach and how — is unwritten. The research
-              protocol is already listed as &ldquo;in preparation&rdquo; in The
-              Record, so this page and that document want writing together.
-            </p>
-            <p>
-              This route existing does not settle D2. Whether Partnerships,
-              About and Our People sit under Connect or at top level is still
-              the open information-architecture question.
-            </p>
-          </EditorialNote>
-        </div>
-      </Band>
-
-      <ContactBlock />
-      <FooterGround color="var(--color-charcoal)" />
-    </>
+      {/* §08 ends on canvas, so the footer's band above its burnt crest is
+          canvas here — the same handover The Record and Our People make. */}
+      <FooterGround color="var(--color-canvas)" />
+    </PageTransition>
   );
 }
