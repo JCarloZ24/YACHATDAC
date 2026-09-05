@@ -276,6 +276,23 @@ export const browserCopy = {
  * "What we do not know". The most useful section on the page for a researcher,
  * and the reason the record is kept at all.
  */
+/**
+ * `running` — what is ALREADY measuring each gap.
+ *
+ * Added for /partnerships §04, which inverts this object. The Record states
+ * the four questions as ABSENCE and puts no answers under them; Partnerships
+ * states them as an OFFER and discloses what is already running, so a
+ * researcher can see where they would be joining rather than starting. Same
+ * four questions, same object, opposite argument — and if those two sections
+ * ever read the same, the Partnerships page has no reason to exist.
+ *
+ * It lives here rather than in the page module so the answer cannot drift from
+ * the question it answers. The Record does not render it.
+ *
+ * ⚠ EVERY LINE TRACES. These are compressions of facts already in the content
+ * set, not new claims, and each carries its source. Nothing here asserts a
+ * research programme that is not recorded somewhere else in this repo.
+ */
 export const knowledgeGaps = {
   title: "What we do not know",
   lede: "Most of this Country has never been studied. These are the gaps we would like filled, and the reason we keep the record in the first place.",
@@ -284,21 +301,32 @@ export const knowledgeGaps = {
       question: "How old is the wall?",
       detail:
         "Marra Wonga has never been scientifically dated. Mud wasp nests over some engravings could give minimum ages if anyone samples them.",
+      /** Source: this gap's own `detail`, directly above. */
+      running: "Nothing. It has never been scientifically dated.",
     },
     {
       question: "What lives here?",
       detail:
         "Four recorders are logging species and a good deal of it is unidentified. There is no full list of what is on this property.",
+      /** Source: living-work.ts:250 — "Four acoustic recorders log birds and
+        frogs into a database held with QUT". */
+      running: "Four recorders, logging into a database held with QUT.",
     },
     {
       question: "What is in the ground?",
       detail:
         "Fossil footprints, petrified trees, and what one visiting specialist thought might be dinosaur eggs. Almost none of it examined.",
+      /** Source: this gap's own `detail` — "Almost none of it examined." */
+      running: "Almost nothing has been examined.",
     },
     {
       question: "What does fire-stick farming actually do?",
       detail:
         "Two flux towers are measuring it. More work is welcome, particularly on soil carbon at depth.",
+      /** Source: living-work.ts:300 "Two flux towers — managed Country and
+        grazed control" and :303 "Soil samples every six metres from the bore,
+        held with QUT". */
+      running: "Two flux towers, and the bore samples.",
     },
   ],
   cta: { label: "Research with us", href: "/partnerships#research-opportunities" },
