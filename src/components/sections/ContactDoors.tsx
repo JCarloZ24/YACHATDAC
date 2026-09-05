@@ -1,3 +1,4 @@
+import { CardRail } from "@/components/ui/CardRail";
 import { SeamGlyph } from "@/components/ui/Furniture";
 import type { SeamGlyphMotif } from "@/components/ui/Furniture";
 import { contactRoutes } from "@/content/contact";
@@ -60,7 +61,7 @@ export function ContactDoors({
   accent?: string;
 }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <CardRail columns="sm:grid-cols-2 lg:grid-cols-4">
       {contactRoutes.routes.map((route, i) => (
         <a
           key={route.href}
@@ -68,14 +69,20 @@ export function ContactDoors({
           /* min-h, not h. 320 is the frame's door and it holds at the widths
              the frame draws, but at 1024 a four-up row gives each door 194px
              and "Something for the record" wraps to three lines — a fixed
-             height spills that text out of the card instead of growing. */
-          className={`relative flex min-h-80 flex-col rounded-3xl ${grounds[i % grounds.length]} p-6 text-canvas`}
+             height spills that text out of the card instead of growing.
+
+             ⚠ AND IT IS `lg:`-ONLY. 320 is a floor for a 194px column; on a
+             phone the door is the full width, its natural height is ~200px,
+             and the floor was injecting ~120px of empty ground per door —
+             480px per page, on two pages. In the rail below `sm` the cards
+             stretch to their tallest sibling anyway. */
+          className={`relative flex flex-col rounded-3xl ${grounds[i % grounds.length]} p-6 text-canvas lg:min-h-80`}
         >
           <SeamGlyph
             motif={glyphs[i % glyphs.length]}
             className="relative top-1 left-0 w-14 shrink-0"
           />
-          <h3 className="headline mt-8 text-[1.75rem] leading-[1.2]">
+          <h3 className="headline mt-8 text-2xl leading-[1.2] sm:text-[1.75rem]">
             {route.title}
           </h3>
           <p className="mt-3 text-[0.9375rem] leading-[1.5] text-canvas/75">
@@ -86,6 +93,6 @@ export function ContactDoors({
           </p>
         </a>
       ))}
-    </div>
+    </CardRail>
   );
 }

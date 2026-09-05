@@ -34,8 +34,11 @@ export function ContactDetails({
   /** The field column's cap — the two frames draw 360 and 390. */
   width?: string;
 }) {
+  // gap-y compresses on a phone. Stacked one-up, six fields at 56px of gap is
+  // 280px of dead space inside a ~700px block — the gap stops reading as
+  // rhythm and starts reading as an unfinished section.
   return (
-    <dl className="grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+    <dl className="grid gap-x-10 gap-y-9 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-3">
       {contactDetails.map((detail) => (
         <div key={detail.label} className={width}>
           <dt className={`eyebrow text-xs tracking-[0.08em] ${accent}`}>
