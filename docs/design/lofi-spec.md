@@ -22,11 +22,11 @@ wording from Suzanne — drawn in pink so it cannot be mistaken for finished cop
 | [Truth](#truth) | 4440 | 1704 | 21 | *descends* |
 | [Living Work](#living-work) | 6660 | 992 | 9 | *accumulates* |
 | [The Record](#the-record) | 8880 | 1155 | 10 | TBD |
-| [About](#about) | 11100 | 1091 | 11 | TBD |
-| [Our People](#our-people) | 13320 | 820 | 9 | TBD |
-| [Partnerships](#partnerships) | 15540 | 433 | 5 | TBD |
+| [About](#about) | 11100 | 1091 | 11 | *answers* |
+| [Our People](#our-people) | 13320 | 820 | 9 | *gathers* |
+| [Partnerships](#partnerships) | 15540 | 418 | 3 | ***hosts*** |
 | [Connect](#connect) | 17760 | 393 | 6 | TBD |
-| [Legal](#legal) | 19980 | 265 | 6 | TBD |
+| [Legal](#legal) | 19980 | 265 | 6 | *holds* |
 
 ---
 
@@ -301,11 +301,22 @@ the floor everything above has been resting on the whole way down."* Putting fou
 filterable grids underneath the floor contradicts the structural claim the page
 has just made about itself.
 
-### One `#partner` anchor
+### One `#partner` anchor — rewritten 2 September
 
-v3 puts Partnerships near the top as a card whose CTA leaves for `/connect`, and
-that is what `/truth#partner` resolves to. About and Our People both route
-*"Research or partnership"* there, and both land on that card.
+The anchor works. `TruthEra.tsx:30` renders each era's id and `:68` each entry's,
+so `/truth#partner`, `#precinct`, `#opportunities`, `#researched`, `#research` and
+`#beginning` all resolve. **An earlier note in this file said they were broken; that
+was wrong**, and it came from grepping `id="` in `src/app` only, which misses every
+id bound through a component.
+
+What was wrong was the *destination*. `#partner` resolves to a two-sentence card
+inside Truth's descent, and the footer's **Partner with Us** — the site's most
+commercial link — pointed at it. Three different destinations were serving one
+intent: `/connect`, `/truth#partner` and `/partnerships`.
+
+**Now there is one.** Every partnership CTA routes to `/partnerships`; the card's own
+CTA does too, so Truth states the principle and hands off. Only *"get in touch"*
+continues to `/connect`.
 
 ### The floor is Wattanuri, not the seabed
 
@@ -467,7 +478,7 @@ has no form (R9).
 
 ## About
 
-**Route** `/about` · verb TBD · **1091vh** · 11 sections · frame `115:2`
+**Route** `/about` · verb *answers* · **1091vh** · 11 sections · frame `2033:2863`
 
 Source: `docs/content/drafts/about/YACHATDAC-About-Copy-v1.md`, 21 Aug 2026.
 Governance circle: open. Copy is the draft's, verbatim.
@@ -510,7 +521,10 @@ draft calls The Record.
 
 ## Our People
 
-**Route** `/our-people` · verb TBD · **820vh** · 9 sections · frame `222:1996`
+**Route** `/our-people` · verb ***gathers*** · **814vh** · 9 sections · frame `2033:3789`
+
+Hi-fi built 1 September as `2841:25358` — **1,805vh, eleven sections**. The lo-fi
+is the information; the hi-fi's structure is its own.
 
 Drawn new on 26 Aug — neither designer had a frame for it and four inbound links
 point at it: the homepage Belonging CTA, About's *Meet the people*, and the
@@ -542,7 +556,27 @@ answered.** Governance circle: shared with care.
 
 ## Partnerships
 
-**Route** `/partnerships` · verb TBD · **433vh** · 5 sections · frame `225:1996`
+**Route** `/partnerships` · verb ***hosts*** · **418vh** · 3 sections · frame `2033:3988`
+
+**Hi-fi built 2 September** — `07 · Partnerships — HI-FI · Desktop · the page hosts`,
+Figma `2944:25988`, **1,190vh over 10 sections**.
+
+⚠ **§08 is no longer a contact block.** It was a second copy of the router and the six
+bracketed fields. D5 puts that block on About and Our People because both v1 drafts
+carry it word for word; **Partnerships has no draft**, so its copy was never sourced —
+it was assembled. §08 is now 70vh: the one contact detail that is not a placeholder
+(*Barcaldine, Central Western Queensland*, `contact.ts:38`) and a single
+**GET IN TOUCH** → `/connect`. Partnerships persuades; Connect transacts.
+
+⚠ **§04 renamed** `What we do not know` → **`Four open questions`**. It shared a heading
+with The Record §03 and rendered the same four questions from the same imported object,
+so arriving from that page's CTA read as a repeat. The Record now states the four
+questions **with no answers under them** — which is its own argument, absence — and
+hands off with **WHAT IS RUNNING →**. The shutters here answer them.
+
+⚠ **Three different vh numbers were on record** — 433 here (twice), 423 in `design/README.md`,
+and the frame itself measures 3762px = **418vh**. The frame wins; the other two were stale.
+“5 sections” was also wrong: the lo-fi draws **3** plus header and footer.
 
 Drawn new on 26 Aug, deliberately minimal. **D22, Final** — the page exists. Four
 live links point at it: the homepage Way Forward, the footer's Get in touch
@@ -562,6 +596,24 @@ Not moved — that is a separate decision someone should take deliberately.
 ## Connect
 
 **Route** `/connect` · verb TBD · **393vh** · 6 sections · frame `239:1996`
+
+**Hi-fi built 2 September** — `08 · Connect — HI-FI · Desktop · the page reaches`, Figma
+`3028:28875` at `x = −11105, y = 40626`, **645vh over 5 sections**. Verb ***reaches***.
+
+**The shortest page on the site, deliberately.** Its neighbours run 1,190–2,229vh. Someone
+arrives at `/connect` to do one thing; length here is a service level, not a ration.
+
+⚠ **§02 is the router and §04 is not.** `connect/page.tsx` renders `<ContactBlock
+showRoutes={false} />` because the four routes it would draw are the same four as *Ways in*
+in shorter words. The hi-fi honours that: §02 carries the four cards, §04 only the six fields.
+An earlier draft of this frame cloned About §09 whole and drew both — one list, twice.
+
+⚠ **No hero image.** The lo-fi supplies no direction and no frame was chosen, so §01 is
+typographic and the absence is marked on the canvas rather than filled with a stand-in.
+
+⚠ **§03's second paragraph** — *"There is also no Connect draft…"* — renders live today and
+reads as internal build talk to a visitor. Recommended for removal when a Connect draft
+arrives; drawn as-is because it is what the page currently renders.
 
 Drawn new on 26 Aug. **The most-linked destination in the project** — twelve
 inbound links from Truth, Living Work, The Record, About and Our People — and it
@@ -610,8 +662,9 @@ appear, which is correct. `contactRoutes`' research destination moved to
 
 ## Legal
 
-**Route** `/legal/privacy` · `/legal/terms` · `/legal/cookies` · verb TBD ·
-**265vh** · 6 sections · frame `242:1996`
+**Route** `/legal/privacy` · `/legal/terms` · `/legal/cookies` · verb *holds* ·
+**265vh** · 6 sections · frame `242:1996` ·
+**hi-fi `3113:27146` — 645vh, 5 sections**
 
 Three routes drawn as one frame because they are one template — the shape is
 `src/components/layout/LegalStub.tsx`: eyebrow, title, and a bordered *awaiting
@@ -638,3 +691,51 @@ it needs the analytics decision first.
 **Why this matters beyond legal:** R9 blocks every form on the site until these
 exist. The newsletter field, Truth's cut enquiry form and Connect's absent one
 are all downstream of this frame.
+
+### The hi-fi — 2 September
+
+`3113:27146` at `x 9319, y 41046`, **5,805px = 645vh**, tiling
+`1080 · 1170 · 1170 · 1170 · 1215`. One frame, three pages, exactly as the lo-fi
+argued.
+
+| # | section | ground | vh |
+| --- | --- | --- | --- |
+| 00 | Route index — ⚑ not a route | evergreen | 120 |
+| 01 | Privacy Policy · `/legal/privacy` | canvas | 130 |
+| 02 | Terms of Service · `/legal/terms` | canvas | 130 |
+| 03 | Cookie Settings · `/legal/cookies` | canvas | 130 |
+| 04 | Footer | charcoal | 135 |
+
+**The bodies are specimen text, and the frame says so.** Ivy asked for a page that
+reads finished rather than a skeleton of held bars. Each document carries six
+clauses of generic boilerplate — enough prose to show the real page's shape, length
+and rhythm — under a dashed oxide banner reading *⟡ SPECIMEN TEXT · NOT LEGAL
+ADVICE · REPLACE ENTIRELY WHEN COUNSEL SUPPLIES THE DOCUMENT*.
+
+**No organisation-specific fact is asserted anywhere in it.** Every value that would
+have to come from YACHATDAC is bracketed and set in oxide: retention periods, the
+providers data is shared with, the contact address, refund terms, the analytics
+provider, the last-updated date. The clause *headings* are the standard subject
+areas — the Australian Privacy Principles' own, for Privacy — so they survive the
+rewrite even though none of the prose does.
+
+**One clause is deliberately not boilerplate.** Terms §03 is *Indigenous Cultural and
+Intellectual Property*, flagged on the canvas as **not a template clause — it must be
+drafted with the Traditional Owners**. It is the clause a generic terms precedent does
+not carry and the one this organisation most needs: it governs whether the stories,
+language and images of Country on this site may be reused for research, teaching,
+media or AI training.
+
+**Two blockers, and they are not the same one.** R9 is legal review — owner David, due
+14 September 2026, and it is what holds all three bodies. The cookie wording is
+additionally held on the analytics setup, because it has to describe the cookies
+actually set and GA4 is not configured. Neither is a content gap the client can close
+by supplying copy.
+
+**The route path under each title is an identifier, not a CTA.** One frame draws three
+separate pages, so the reader needs to know which one they are looking at. It is the
+only place on the frame a route is rendered, and it is not styled as an action.
+
+Ring watermarks on the three canvas sections use the roasted path at instance
+`0.10` — the shipped `#f6f6ec` path is invisible on a canvas ground. Notes lane at
+`x 11214`, five notes.

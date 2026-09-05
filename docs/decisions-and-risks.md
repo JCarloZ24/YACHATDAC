@@ -192,8 +192,10 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 | F5 | Only Work Sans is tracked in git | **Final** | August |
 | F6 | Local dev runs on port 3001 | **Final** | August |
 | F7 | The immersive mandate — motion is the default site-wide | **Final** (29 Aug) | August, via Ivy |
+| F8 | Everything we hold is usable; motion grade replaces the motion ban | **Final** (30 Aug) | Ivy |
+| F9 | The excluded-techniques table is retired; overshoot is unbanned | **Final** (31 Aug) | Ivy |
 
-Risks and issues are in Part 4: R1–R15 and R22–R23 here; R16–R21 are in
+Risks and issues are in Part 4: R1–R15 and R22–R24 here; R16–R21 are in
 `docs/change-requests.md`.
 
 ---
@@ -592,6 +594,44 @@ and these moved. D15–D18 live there, not here.
   bears on **D7** — fee-for-service land management has no home in the sitemap
   and its audience is landholders, which is closer to a partnerships page than to
   any of the three pillars.
+
+### Findings from the hi-fi build, 2 September — not yet acted on
+
+Building the Partnerships hi-fi required auditing partnership content across every page. Four
+things surfaced that are **findings, not tasks** — each needs a decision, and none was taken
+as a side-effect of drawing a page.
+
+1. **The hub was the thinnest partnership page in the repo.** `/about#partners` carried more
+   partnership content than `/partnerships` did — the nine-name roster, the categories
+   sentence, *"partners rather than subjects"* as a standing rule, and the mutual-obligation
+   sentence. The commercial offer (Fund the work, Land management services, the natural-capital
+   cards) was entirely on `/living-work`; the research protocol entirely on `/resources`. The
+   hi-fi brings the whole set together **additively** — no built page was edited.
+
+2. **The guest principle is hand-copied three times, byte-identical** —
+   `src/content/truth.ts:118`, `src/app/partnerships/page.tsx:52`, `src/app/connect/page.tsx:51`,
+   plus a truncated fourth in that page's metadata. *"Ranger exchange"* likewise ×3. QUT appears
+   in four different wordings, the flux towers in four, *"partners not subjects"* in three. Only
+   `knowledgeGaps` is shared properly, by import, and it is the one thing that provably cannot
+   drift. **A `src/content/partnerships.ts` would fix all of it**; the hub/spoke model needs a
+   single source or it drifts by design.
+
+3. **Two routing contradictions.** `src/content/site.ts:120` still sends the footer's
+   *"Partner with Us"* to `/truth#partner`, while `src/content/contact.ts:78` sends the same
+   intent to `/partnerships`. And `/partnerships`'s own CTA *"How research works here"*
+   (`page.tsx:96`) points at `/truth#partner`, which resolves to a two-sentence card — **no page
+   anywhere explains how research works here.** The protocol that would is *in preparation*
+   (`resources.ts:366`).
+
+4. **The contact router self-links on this page.** Its *"Research or partnership"* door points
+   at `/partnerships`. Correct on About and Our People; a self-link here. Either point it at the
+   page's own *Ways in* section or hide that one card on this route.
+
+Also recorded: **`D7`'s button label is unsettled** — the decision says *"book a consultation"*,
+the draft says *"Enquire"*. Both appear on the canvas as a held marker rather than one being
+picked silently. And the four knowledge-gap questions differ between code and drawing — the code
+says *"What does fire-stick farming actually do?"* (`resources.ts:296`); The Record hi-fi drew
+*"What does right-way fire actually do?"* One of the two is wrong.
 
 ---
 
@@ -1050,6 +1090,52 @@ The reasoning as it stood when this was Final:
 
 ---
 
+## F9 — The excluded-techniques table is retired; overshoot is unbanned
+
+- **Category** — Motion · **Status** — Final (31 Aug 2026) · **Owner** — Ivy
+- **The decision** — Three parts.
+  1. **`ART-DIRECTION.md` §6's "Never applied to portraits, artefacts, or archival
+     photographs" table is withdrawn.** Dissolve `IMG-03`, chromatic split / glitch
+     `IMG-04`, velocity warp `IMG-01`, character decode `ENT-07`, image trail
+     `INT-07` and duotone recolour `IMG-05` are **available**, on depicted subjects
+     as well as on abstract and decorative elements. Ivy: *"these are definitely
+     permitted. you can do this. these things would make motions, transitions, way
+     more alive and fun which is what i want."*
+  2. **Overshoot is unbanned.** `back`, `elastic` and `bounce` are available.
+     `registerEffect`'s development throw comes out and the easing tokens gain
+     overshoot values instead of a refusal.
+  3. **The baseline replaces them, and it is the only one:** *"you have the whole
+     permission to be creative. the baseline is to not make up informations."*
+     Every fact, name, date, count and caption stays sourced to a draft or a
+     content file.
+- **Why** — The table read as a list of the liveliest things in the vocabulary, and
+  every page that obeyed it went flat in the same way. Its stated reasons were about
+  *meaning* — a glitch "signals corrupted data", a dissolve reads as "the content
+  being disposable" — but meaning is set by where an effect is used, not by the
+  effect existing. A dissolve behind a question the whole organisation is measured
+  against is an argument; the same dissolve on a portrait for a scroll flourish is
+  the thing §6 was actually pointing at. The rule was doing that judgement in
+  advance and getting it wrong in both directions.
+- **How to use them without the table** — each technique earns its place once per
+  page, where it says something the copy already says. A second decorative use of the
+  same effect on one page is the failure §6 was written against, and it still comes
+  out. This is §7's four questions doing the work the table was doing badly.
+- **What it does not change** — F8's `frame` grade still governs *where* an effect
+  lands on portraits and cultural-site material: the plate, ground, scrim, type and
+  neighbouring layers carry it. No generated Aboriginal iconography — F9 permits more
+  things done *to* Leonard Mickelo's supplied vectors and never permits drawing new
+  ones. No heritage coordinates. The reduced-motion cut, the performance floors and
+  **no layout properties, ever** are untouched; that last one is performance, not
+  taste. Material awaiting the Elder Advisory Group, Leonard's sign-off or an
+  individual's consent is drawn and ▲ flagged, never withheld.
+- **Where it is enforced** — `ART-DIRECTION.md` §6 and §5, `docs/motion/motion-grammar.md`,
+  the motion skill's `SKILL.md` and `references/tokens.md`, and `registerEffect` in
+  `src/lib/motion/`.
+- **First page built under it** — `05 · About — HI-FI · Desktop · the page answers`,
+  which spends each of the six once and brings group G, the Guide, back into build.
+
+---
+
 ## F8 — Everything we hold is usable; motion grade replaces the motion ban
 
 - **Category** — Motion / cultural · **Status** — Final (30 Aug 2026) · **Owner** — Ivy
@@ -1485,6 +1571,53 @@ permission is recorded, not when a design is drawn.
 
 ---
 
+## R24 · RISK · High — Nobody has been asked whether they may be named or photographed
+
+- **Form** — kind `risk` · severity `high` · likelihood `high` (nothing has been
+  asked, so nothing changes on its own) · status `open` · visibility `internal`
+  · owner Suzanne, via August
+- **Owner** — Suzanne Thompson. This is not an editorial decision and cannot be
+  taken by the design or content side.
+- **What could go wrong** — Eight of the nine people on `/our-people` have no
+  name, and the reason is not that the draft is incomplete. It is that **consent
+  to be named and photographed has never been sought** — from the two Rangers,
+  from operations, from cultural heritage, from guesting, or from the three
+  board seats. The draft says so itself: *"Rangers are the heart of Living Work
+  and are currently unnamed across the site. Full list needed, with consent to
+  be named and photographed."*
+- **Why it needs its own number** — Every other hard constraint on this site
+  carries an ID; this one did not, and it is the single hardest constraint on
+  page 07. **R10 does not cover it.** R10 is artwork motion, land and terrain
+  detail level, and story-wall material. Consent to identify a living person is
+  a different question with a different owner, and filing it under R10 would
+  have routed it to the wrong person.
+- **Impact** — `/our-people` cannot go to `in-review`, which
+  `docs/design/README.md` has recorded since 26 August. Downstream it reaches
+  every page: Living Work's ranger sections, About §07, and any caption anywhere
+  that names a person in a photograph.
+- **The distinction that matters** — Ivy's photo clearances of 31 August and
+  1 September (*"all batch of photos are free to use"*) are **use** clearances.
+  They are not **identification** consent. You may show a face; you may not say
+  whose it is. `brand/PHOTO-INDEX.md` already states it: *"Naming people is Our
+  People's job, and identification travels with consent."*
+- **Current mitigation** — The hi-fi is built so the gap is legible rather than
+  hidden. A held person renders as a role at full weight and a **gold rule where
+  a name would be** — never the string "[ Name ]", and never a shimmering
+  skeleton, because a skeleton says "this is arriving" and these names are not
+  arriving until somebody is asked. `src/content/our-people.ts` models
+  placeholders as `name: null` for the same reason. Every face on the page is a
+  **placeholder badged on the card itself**, including the one on the named
+  card, which is **not Graham Ambridge** — no photograph of him exists in any
+  batch. **Suzanne Thompson is the only person shown as herself**
+  (`378A7604_1.40.2`), which is possible precisely because she is the one person
+  whose identification is not in question.
+- **Next step** — Ask. The list of who to ask is the six team roles and three
+  board seats in `docs/content/drafts/connect/YACHATDAC-OurPeople-Copy-v1.md`.
+  Record each answer with who gave it and when, per D14's attribution
+  requirement.
+
+---
+
 ## R11 · RISK · Medium — Media pipeline has no size or compression targets
 
 - **Form** — kind `risk` · severity `medium` · likelihood `high` (no targets
@@ -1757,3 +1890,415 @@ the cultural approval.
   approval recorded with date and basis
 - **Links** — R5, R17, D15, CR4, CR10. The Truth page publishes only behind
   this deliverable.
+
+### The 2 September UX pass — what changed, and the one thing that cannot be designed around
+
+Ivy reviewed the finished Partnerships hi-fi as a visitor rather than as a designer: *"are
+buttons clear, are messages clear for the people who visits this part? is it easy for them to
+see the needed buttons or links so they can apply or connect easily?"* Three answers.
+
+5. **File paths were being rendered as button labels.** Twenty CTAs across `05 · About`,
+   `06 · Our People` and `07 · Partnerships` read `→ /living-work#rangers`, `→ /connect`,
+   `→ /resources`. A route is a developer artefact; a visitor cannot be expected to parse one.
+   **`01 · Wonder` never had this** — Marc's page uses `LEARN MORE`, `EXPLORE EXPERIENCES`,
+   `REGISTER YOUR INTEREST`, `DOWNLOAD THE BROCHURE`. That is the house pattern and the three
+   later pages broke it. All twenty are now verb-led labels drawn from `site.ts` destination
+   names (`PLAN A VISIT`, `SEE PARTNERSHIPS`, `MEET THE RANGERS`, `VISIT THE RECORD`,
+   `GET IN TOUCH`). The route survives in the layer name, where it belongs.
+
+6. **The page had no action until 87% of the way down.** `/partnerships` is 1,270vh and the
+   first thing a visitor could press was §08, roughly 8,900px of scroll from the top. Someone
+   who lands on this page has already decided to partner — making them read the whole argument
+   first is a design choice nobody took. Fixed with three placements: a filled primary in the
+   hero (`SEE THE WAYS IN`), a quiet link at the page's peak of interest under §04's lede, and
+   a single filled `GET IN TOUCH` pill closing §06. §06's cards use text links so the pill is
+   unambiguously primary.
+
+7. **⚑ THE BLOCKER — the site has no working contact channel, anywhere.** Every field in the
+   contact block is a bracketed placeholder: street address, postal, email, phone, ICN and ABN
+   (`contact.ts`, all `pending`). There is no `mailto:` and no `tel:` in the codebase. `R9`
+   forbids a form until the Privacy Policy and Terms exist. The four router doors lead to other
+   pages. So the honest answer to *"is it easy for them to apply or connect"* is **it is not
+   possible**, on any page, and no amount of layout fixes it. §08 now draws the missing primary
+   action as an unfilled dashed pill — `[ EMAIL US — NO CONFIRMED ADDRESS YET ]` — following
+   Living Work §08's rule that unconfirmed things are drawn and never filled. **Clearing one
+   email address turns the whole site's contact story on.** That is the highest-value unblocked
+   item on this project.
+
+**Taken, not just recorded:** finding 4 is now actioned on the drawing. The
+*"Research or partnership"* door on `/partnerships` points at §06 *Ways in* instead of at
+itself; every other page keeps the shared destination, so the block does not fork.
+
+**Also done in this pass:** the design-process annotations were lifted out of the section
+frames and into the notes lanes on all three pages — Ivy: *"theres too much notes inside the
+sections and its lookig like a lofi."* Partnerships went 13 → 5, Our People 20 → 12, About
+8 → 2. What stays on canvas is only what marks unreal content: `⟡ PLACEHOLDER FACE`,
+`⟡ STAND-IN`, `⚠ ROLE TO CONFIRM`, the bracketed contact fields and the held Acknowledgement.
+Everything else — risk IDs, source citations, motion descriptions, the hub/spoke rationale —
+is in the notes lane, which is what the notes lane is for. **About had no notes lane at all**;
+its six held items now sit in a column at `x = −648` and the full per-section lane is still
+outstanding.
+
+### The link sweep — 2 September · the architecture decision, and one correction
+
+Ivy asked whether partnership content is genuinely centralised, whether every button has
+somewhere to go, and whether arriving there is worth the click: *"theres a partnership card
+on living work plus a link… they click the link only to be redirected on partnership but then
+its just showing the same exact cards with no other info. thats redundant and of no use right?"*
+
+**⚠ CORRECTION.** An earlier note in this pass said six `/truth#…` anchors were broken. **They
+are not.** `TruthEra.tsx:30` renders each era's id and `:68` each entry's, so every one
+resolves. The claim came from grepping `id="` in `src/app` only, which misses every id bound
+through a component. A full check — 97 links across `src/content` and `src/app`, resolved
+against every route including `/resources/[slug]` and every id in the codebase — returns
+**97 resolve, 0 broken**. The site has no dead links.
+
+**8. The architecture — Partnerships persuades, Connect transacts.** Nothing on
+`/partnerships` is unique content; every string traces to another page, and its contribution
+is assembly. The real duplication was never Partnerships vs the pillars — it was **Partnerships
+vs Connect**: two audience-routing pages built from other pages' copy, carrying the same
+contact block, with Connect's *ways in* being Living Work's *Get involved*, which is also
+Partnerships §06. Resolved by removing the duplicated **ending**, not the page. The rule that
+decides who keeps a contact block is **whether the client wrote one there** — D5 puts it on
+About and Our People because both v1 drafts carry it word for word; Partnerships has no draft.
+
+**9. One destination for one intent.** Three were serving it — `/connect`, `/truth#partner`
+and `/partnerships`. Five CTAs bypassed the hub for `/connect`, which holds no partnership
+content: `truth.ts:111`, `truth.ts:120`, `about.ts:186`, `living-work.ts:372`, `living-work.ts:377`,
+plus the footer at `site.ts:120`. All now route to `/partnerships`. `living-work.ts:367`
+*"Get in touch"* stays on `/connect` — that one is a genuine contact intent. **D7's button
+label is still unsettled and was not picked**; only the destination moved.
+
+**10. The loop.** `partnerships/page.tsx:96` sent *"How research works here"* to
+`/truth#partner`, whose CTA now points back at `/partnerships`. The label also promised a page
+nobody has written — the protocol is *in preparation* (`resources.ts:366`). Replaced with
+*"Who we already work with"* → `/about#partners`, which delivers what it says. **The missing
+page stays on the record as a content ask, not as a dead promise.**
+
+**11. Redundancy resolved by inversion, not by deletion.** The Record §03 rendered all four
+knowledge gaps **with their answers**, then invited the reader to a Partnerships section with
+the same heading and the same four questions. The Record now sets the four questions **with
+nothing under them** — which is that page's own argument, absence — and hands off with
+**WHAT IS RUNNING →**. Partnerships §04 is renamed **Four open questions** and its shutters
+carry the answers. Same source object, opposite arguments, and the arrival is a gain.
+
+**12. The content ask, drawn.** `REF · 07 PARTNERSHIPS — WHAT THIS PAGE STILL NEEDS`
+(`3033:27244`). Six items, each a question with no source: what a partnership involves start
+to finish · what is expected of a researcher beyond *"give something back"* · how long things
+take · who to approach and for what · the research protocol · **one confirmed email address.**
+Until these land the hub can assemble but not elaborate.
+
+**13. The ending is still the blocker, and it is one decision wide.** `REF · FLOW · SITE LINK
+GRAPH` (`3033:27184`) plots every CTA to its destination. Every arrow on the site terminates
+at `/connect`, whose six contact fields are all bracketed placeholders, with no `mailto:` or
+`tel:` anywhere in the codebase and R9 forbidding a form. **Nothing on this site reaches a
+person.** Connect's ending is now drawn (`3028:28875`) with the missing action as an unfilled
+dashed button. One confirmed address turns the whole chain on.
+
+**Also fixed while sweeping:** Partnerships was the only page in the file with
+`clipsContent: false` on the frame and all ten sections · its §08 charcoal wave was missing
+entirely (6 where the ledger says 7) · About §08's lede overlapped the first dotted rule ·
+The Record §04's ring artwork has never been visible, because a `#f6f6ec` ring on a `#f6f6ec`
+ground is the same colour as the ground.
+
+### Connect built — 2 September, verb *reaches*
+
+`08 · Connect — HI-FI · Desktop · the page reaches` (`3028:28875`), **645vh over 5 sections**,
+with a notes lane at `x = −9210`. Nine of ten pages now have a hi-fi; **Legal is the last**.
+
+**14. The duplication inside Connect, caught before it was drawn.** The first pass at this frame
+cloned About §09 whole, which meant the four router doors *and* the six contact fields. But
+`connect/page.tsx` renders `<ContactBlock showRoutes={false} />`, and its own comment gives the
+reason: the routes `ContactBlock` draws are the same four as *Ways in* above it, in shorter
+words. The built page has always known this; the drawing briefly did not. **§02 is the router
+— four cards, coloured ground and a motif, no photographs. §04 carries the six fields and
+nothing else.**
+
+**15. Connect is the shortest page on the site, and that is the design.** 645vh against
+neighbours running 1,190–2,229vh. Someone arrives at `/connect` to do one thing. F7 makes motion
+the default site-wide; it does not make length a virtue, and the superseded page-weight ration
+never applied to a page whose whole job is to end a journey.
+
+**16. Two things are drawn as absences rather than filled.** §01 has **no hero image** — the
+lo-fi supplies no direction and no frame was chosen, so it is typographic and says so. §04's
+primary action is **drawn and never filled**, because there is no confirmed address to put in
+it. Every arrow on the site ends on that screen, so it is the one control on the project that
+has to work.
+
+**Recommended, not done:** §03's second paragraph (*"There is also no Connect draft…"*) renders
+live today and reads as internal build talk to a visitor. The first paragraph is the one a
+visitor needs. It is drawn as-is because removing rendered copy is a decision to take
+deliberately, not a side-effect of drawing a page. **D2** — whether Connect survives as a
+navigation item — remains open, and building the page does not settle it either way.
+
+### Content audit, 2 September — every string on every hi-fi
+
+Ivy: *"double check if all infos are correct and if theres redundancy accross pages."* 239
+substantive strings across nine hi-fi pages, checked against `src/content`, `src/app` and the
+client drafts.
+
+#### ⚑ The one that matters most
+
+**The Wonder hi-fi carried an Acknowledgement of Country naming the wrong people and the wrong
+jurisdiction** — *"the Aboriginal people of the **Northern Territory**"* — on desktop **and**
+mobile. YACHATDAC is Iningai, Central Western Queensland. It was template boilerplate that had
+never been replaced, and it rendered as though it were real. Replaced on both with the held
+placeholder every other page uses (**R1** — the wording is Suzanne Thompson's to give).
+
+The `START HERE` board had already recorded the Acknowledgement slot as empty pending Suzanne;
+the Wonder page contradicted it in the one place a visitor would read.
+
+#### Ten errors found and corrected
+
+| # | Error | Where | Fixed to |
+|---|---|---|---|
+| 1 | Acknowledgement names the Northern Territory | Wonder desktop + mobile | held placeholder, R1 |
+| 2 | **“INIGAI CUSTODIAN”** — Iningai misspelled | `Plate / P6` **component**, so every instance (Truth §12) | corrected at component level |
+| 3 | Lorem ipsum rendering as body copy | Wonder desktop ×2, mobile ×1 | marked `[ COPY NOT SUPPLIED ]` |
+| 4 | **15 × “Link One”** template links rendering as real nav | Wonder, Home, Truth, Living Work, The Record, the kit specimen | removed |
+| 5 | “Open **Search** Opportunities” | Wonder footer, desktop + mobile | `site.ts:118` — Open Research Opportunities |
+| 6 | “**Cookies** Settings” | Wonder footer, desktop + mobile | `site.ts:222`, D4 Final — Cookie Settings |
+| 7 | Stray “Downloads” in the TRUTH column | Wonder footer, desktop + mobile | `site.ts:119` — The Cultural Knowledge Precinct |
+| 8 | “Downloads” listed twice in RESOURCES | Wonder footer, desktop + mobile | removed — `site.ts:190` already records this as a copy-paste and fixed it **in code only** |
+| 9 | SaaS newsletter boilerplate — *“features and releases”*, *“our company”*, *“agree to with”*, and a promise of a Privacy Policy that does not exist | Wonder footer | house copy `living-work.ts:386`; consent line held under **R9** |
+| 10 | *“It has never been dated”* dropped the source's qualifier | Partnerships §04 shutter | “never been **scientifically** dated” (`resources.ts:281`) |
+
+**The pattern behind 5–8: the code was corrected and the drawing never was.**
+`resourcesFooterLinks`' own comment says *"Marc's hi-fi footer listed 'Downloads' twice here…
+the duplicate was a copy-paste, not a decision."* It was fixed in `site.ts` weeks ago and left
+standing in Figma. Worth a standing check — a decision recorded in code is not a decision
+applied to the canvas.
+
+**On “Link One”:** the footer note argued these had to stay or the footer would fork from every
+other page. But About, Our People, Partnerships and Connect were rebuilt without them, so it had
+already forked. All fifteen are gone and every footer now matches. The note is corrected.
+
+#### What checked out clean
+
+Every hard figure traces to both `src/content` and a client draft — 8,870 hectares · 120km north
+of Barcaldine · 15,000 markings and 111 stencils over 160 metres · thirty-seven survivors and
+eighteen pairs of blankets at Lake Dolly · Bowen Downs at fifteen hundred square miles · the
+480-metre bore, pollen at sixty metres, samples every six metres · four acoustic recorders · two
+flux towers · 30 April 2019, 1 October 2020, 26 June 2026 (**a Friday, as drawn**). 97 links
+resolve, 0 broken. Of 31 substantive strings on Partnerships and Connect, 25 are verbatim from
+source; the other six are photo captions and shutter restatements, each traceable and adding no
+new claim.
+
+#### Redundancy — 13 of 239 strings appear on more than one page
+
+**⚑ Still unresolved, and it is Ivy's original complaint.** **Living Work §09 and Partnerships
+§06 share three of four cards** — *Ranger exchange*, *Fund the work*, *Land management services*,
+word for word. Living Work's CTAs now point at `/partnerships`, so a reader clicks
+**PARTNER WITH US** and lands on a page showing the same three cards plus one. The Record →
+Partnerships version of this was fixed by inversion (questions without answers, then the answers);
+**Living Work → Partnerships has not been.** Needs the same treatment or a deliberate decision.
+
+Also repeating, in descending order of concern:
+
+- *“On-Country training camps and exchanges…”* on **four** pages — Living Work §09, Home §06,
+  Partnerships §06, Connect §02.
+- The research protocol sentence, in full, on The Record §04 and Partnerships §07.
+- The board and Elder Advisory paragraphs on About §06 **and** Our People §04 — two pages whose
+  job overlaps by design, but the copy is identical.
+- The Marra Wonga cluster description on Truth §20 and The Record §02.
+- The obligation sentence on About §05 and Partnerships §02 — **decided**, and framed differently
+  on each (a value in a list vs. a screen of its own).
+- The contact block on About §09 and Our People §06 — **D5**, both drafts carry it verbatim.
+
+#### One thing to settle, not a bug
+
+**Three terms are in use for what may be one practice:** *fire-stick farming* (38 uses),
+*right-way fire* (13) and *cool burn* (7). They may be genuinely distinct — a technique, a
+practice and a cultural framing — or they may be drift. Not resolvable from the repo, and not
+ours to standardise: it is a question for Suzanne.
+
+---
+
+# The Legal hi-fi, and the blob button standardised — 2 September
+
+## The Legal page is built · `3113:27146` · 645vh
+
+Nine of ten pages had a hi-fi. This closes the set. `x 9319, y 41046`, 5,805px, tiling
+`1080 · 1170 · 1170 · 1170 · 1215`.
+
+**The row label had drifted.** `docs/design/README.md` carried Legal at `−25473 / 46224`,
+a band-C position it no longer occupies; the label actually reads `9479 / 40626`. The hi-fi
+lane is `label x − 160`, so the frame sits at `9319`. The column was verified empty before
+drawing. The README's own standing instruction — *read row y from the Figma labels, not from
+the lo-fi frames* — is exactly the step that had been skipped, and the table is now corrected.
+
+## Specimen copy, and where the line is
+
+Ivy asked for a page that reads finished: *"no like, literally add a mockup information, not
+just placeholder."* The first build drew clause headings over dashed held-content bars, which
+is honest but reads as a wireframe and cannot be reviewed for length.
+
+**What was built instead:** six clauses per document of generic boilerplate — the prose a
+privacy policy, a terms page and a cookie notice each contain — under a dashed oxide banner
+reading *⟡ SPECIMEN TEXT · NOT LEGAL ADVICE · REPLACE ENTIRELY WHEN COUNSEL SUPPLIES THE
+DOCUMENT*.
+
+**This does not breach F9.** F9 forbids inventing information about YACHATDAC. Nothing on the
+frame asserts an organisation-specific fact. Every value that would have to come from the
+client is bracketed and set in oxide:
+
+| Bracketed on the canvas | Document |
+| --- | --- |
+| retention periods | Privacy §03 |
+| the providers data is shared with | Privacy §04 |
+| the contact address for access requests | Privacy §06 |
+| refund and cancellation terms | Terms §04 |
+| the analytics provider — GA4 is not configured | Cookies §03 |
+| the third-party services that set cookies | Cookies §04 |
+| the last-updated date | all three |
+
+The clause **headings** are the standard subject areas — the Australian Privacy Principles' own,
+for Privacy — so they survive the rewrite even though none of the prose does. Anything the
+specimen text says about YACHATDAC's own practice is generic to the point of being unfalsifiable
+and is marked for wholesale replacement, not correction.
+
+## One clause is deliberately not a template
+
+**Terms §03 — Indigenous Cultural and Intellectual Property.** Flagged in oxide on the canvas:
+*this clause is not a template — it must be drafted with the Traditional Owners.*
+
+It is the clause a generic terms precedent does not carry and the one this organisation most
+needs. It governs whether the stories, knowledge, language and images of Country on this site
+may be reused for research, teaching, media or **AI training**. Naming it is a flag for whoever
+drafts the document, not an attempt to write it.
+
+## Two blockers, and they are not the same one
+
+R9 held all three bodies before this build and holds them still — **legal review, owner David,
+due 14 September 2026**. It is not a content gap the client closes by supplying copy.
+
+The **cookie wording** carries a second, independent blocker: it has to describe the cookies
+actually set, and GA4 is not configured. Settling R9 does not settle it.
+
+⚠ **D4 is Final on the label, and the label still promises the wrong artefact.** *Cookie
+Settings* implies a consent preferences dialog with toggles; what is drawn is a policy page.
+Two different things, and both may be wanted. Flagged, not resolved — it needs the analytics
+decision first.
+
+## The route path under each title is an identifier, not a CTA
+
+One frame draws three separate pages, so the reader has to know which one they are looking at.
+The small grey `/legal/privacy` under each title is the only place on the frame a route is
+rendered, and it is not styled as an action. This is the sole exception to *a button says what
+happens, never where the file is*, and it applies to no other page.
+
+## The blob button, on Partnerships and Connect
+
+Four rounded rectangles were replaced with `Button / Blob` instances — the component that was
+already carrying every other primary action in the file.
+
+| Page | § | Was | Now | Tone |
+| --- | --- | --- | --- | --- |
+| Partnerships | 01 | rect 253×56, gold | `3117:27283` `SEE THE WAYS IN →` | ochre |
+| Partnerships | 06 | rect 284×64, gold | `3117:27286` `GET IN TOUCH →` | ochre |
+| Partnerships | 08 | rect 284×64, gold | `3117:27289` `GET IN TOUCH →` | **rust** |
+| Connect | 01 | text link, gold | `3117:27292` `CONTACT DETAILS →` | ochre |
+
+**Tone is chosen by ground, not by taste.** Ochre `#cb7722` separates from evergreen at 3.9:1;
+rust `#af231c` on evergreen is dark-on-dark at 2.1:1 and would disappear. On Partnerships §08's
+canvas ground the reverse holds — rust reads at 6.2:1, and it is the component's own default
+variant, authored for the terminal action.
+
+**The blob vector does not follow an instance resize.** `inst.resize(252, 56)` leaves the vector
+at its natural 276 and simply recentres it at `x = −12`. Labels are fitted to the natural width
+instead — 276 for ochre, 264 for rust — which is what every other blob in the file does.
+
+## Three corrections found while swapping them
+
+1. **Partnerships §08's eyebrow read `GET IN TOUCH`, directly above a button reading
+   `GET IN TOUCH →`.** The eyebrow now reads `WHERE WE ARE`, which names the OFFICE detail
+   under it. Sourced, not invented.
+2. **Two CTAs still named §04 by its old heading** — `→ WHAT WE DO NOT KNOW`, on the §01 hero
+   and on §06's research card. §04 was renamed *Four open questions* in the 1 September pass and
+   the labels were not carried across. Both now read `→ FOUR OPEN QUESTIONS`.
+3. **Connect's hero action sat below a placeholder warning.** The `[ NO HERO IMAGE ]` note was
+   above the CTA; the button now follows the lede directly and the note sits last.
+
+## Open, and Ivy's call
+
+**Partnerships §06 shows `GET IN TOUCH` three times in one viewport** — the section blob plus
+two of the four card CTAs (*Fund the work*, *Land management services*), all pointing at
+`/connect`. Not introduced by this pass; the rectangles said the same thing. Either the cards
+lose their CTA and the section blob carries the action, or the section blob goes and §08 stays
+the page's only ending. Left as-is rather than redesigning a signed-off section unasked.
+
+---
+
+# The Iningai rail on Home §03 — 3 September
+
+Ten photographs down the left of `§03 Truth`, one per sentence of the 1861 run. The text
+column moved right `100 → 360` to open the rail; every text width is unchanged, so no line
+break moved and the 340vh pin is untouched. Only the 1902 paragraph was narrowed
+(`1060 → 1020`) and it still sets in three lines.
+
+| # | Sentence | Frame | Batch |
+| --- | --- | --- | --- |
+| 01 | Nineteen and a half thousand square miles | `378A7604_1.91.1` | 1 |
+| 02 | Sandy plains, wooded country | `378A7604_1.27.1` | 1 |
+| 03 | Our people living into their nineties | `378A7604_1.42.5` | 1 |
+| 04 | Landsborough comes through | `March22-0261` | 2 |
+| 05 | One cattle station takes fifteen hundred square miles | `March22-0267` | 2 |
+| 06 | The Native Police are sent to disperse us | `378A7604_1.85.1` | 1 |
+| 07 | Drought | `378A7604_1.87.1` | 1 |
+| 08 | By 1902 there were thirty-seven of us left | `378A7604_1.3.1` | 1 |
+| 09 | Fifteen thousand markings cut into a wall | `March22-2302` | 2 |
+| 10 | We tell it in the order that explains it | `378A7604_1.77.5` | 1 |
+
+## The rule the selection is built on
+
+Every frame in the collection is **contemporary** — Turraburra now, and living Iningai
+people. None can depict 1861–1902. They carry the **place** the sentences happened in, never
+the event.
+
+**No living person appears beside sentences 4–8.** A face next to *"The Native Police are
+sent to disperse us"* or *"thirty-seven of us left"* reads as though that person is the
+subject of the sentence, and nobody consented to that. Those five are land only. People
+return at 09 and 10, where the sentences are about the nation still being here.
+
+**The strip opens and closes on the same country** — 01 is the plain from height with nobody
+in it, 10 is a person at a shelter mouth looking out over it. That carries *"we are still
+here"* without a caption having to.
+
+**08 is held at 0.40 opacity.** The layer it sits beside is named *"bare charcoal, NO
+artwork, deliberate"*. The emptiness is the design; the frame is dimmed so it survives.
+
+**Batch 3 is excluded on purpose.** It is a cool-burning shoot — fire as a practice, today.
+Beside *"Drought"* or *"The Native Police"*, a fire frame reads as wildfire and destruction,
+which is the misreading PHOTO-INDEX rule 3 exists to prevent, in the one context where it
+would do most damage. Spread is batch 1 ×7, batch 2 ×3.
+
+## ⚠ Frame 09 is rock art, on a permission Ivy granted
+
+The first pass left sentence 09 without a rock-art frame and said so. Ivy authorised it on
+**3 September**: *"for sentence 9 feel free to use the wall. im giving you permissions."*
+
+`March22-2302` was chosen over the painted panels for two reasons. The sentence says markings
+**cut** into a wall — that is an engraving, which `2302` shows (three-toed bird tracks, rows
+of pits) and which a stencil is not. And it is a tight detail with no landscape in shot, so
+nothing in frame identifies the location, which answers its own index caveat.
+
+**`March22-untitled` stays out.** Highest sensitivity in the collection, and its entry says in
+as many words: *not decorative, not full-bleed, not a background.* In a ten-image rail it
+would be all three.
+
+**⚑ This permission covers the design file only.** Publishing clearance for rock art sits with
+the Traditional Owners, not with us. The Figma layer name and the notes-lane entry both carry
+that line so the frame cannot reach a build unnoticed.
+
+## The gap to raise with the client
+
+**There is no photograph of water anywhere in the collection.** Sentences 2, 5 and 6 all turn
+on it — the Alice and the Thomson, the river taken with the station, the fouled waterholes.
+The only water frame is `March22-1908`, a cultural site feature with publishing unconfirmed.
+
+There are also **no cattle, fence or stockyard frames**, which is why 05 is carried by a
+graded road rather than the thing it names. If a second shoot is ever commissioned, **the
+Thomson is the highest-value missing frame on the project.**
+
+Housekeeping: crop the 4WD out of 04 and 05 — a vehicle drags them into the present. 03 is an
+identifiable adult under `R24`, consent outstanding.
