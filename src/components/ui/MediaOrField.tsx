@@ -13,6 +13,7 @@ export function MediaOrField({
   alt,
   sizes,
   priority = false,
+  quality,
   className = "object-cover",
   fieldClass = "bg-evergreen/40",
 }: {
@@ -20,6 +21,8 @@ export function MediaOrField({
   alt: string;
   sizes: string;
   priority?: boolean;
+  /** Must be one of `images.qualities` in next.config.ts (Next 16 allowlist). */
+  quality?: number;
   className?: string;
   fieldClass?: string;
 }) {
@@ -38,6 +41,7 @@ export function MediaOrField({
       alt={alt}
       fill
       priority={priority}
+      quality={quality}
       sizes={sizes}
       className={className}
     />

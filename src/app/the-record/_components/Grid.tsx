@@ -224,9 +224,14 @@ const BLOCK_GAP = RECORD_STICKY_ROWS ? "lg:mt-12 hold:mt-0" : "lg:mt-12";
    the rail's eyebrow sits — and closes it 168 below the last row: the section
    is 6640 and the last card row ends at 6472. Held, the first frame IS the
    screen and there is nothing to inset it by. */
+/* Below lg the navy wave that introduces the next section hangs 64px
+   (sm: 104px) ABOVE that section's top edge — i.e. over the foot of this
+   deck. The card rows' own py-14 (56px) was less than the overhang, so the
+   crest sat on the last card. pb-20 / sm:pb-32 clears it with room to
+   breathe; lg resets to the frame's 168. */
 const DECK_TOP = RECORD_STICKY_ROWS
-  ? "lg:pt-20 lg:pb-[168px] hold:pt-0 hold:pb-0"
-  : "lg:pt-20 lg:pb-[168px]";
+  ? "pb-20 sm:pb-32 lg:pt-20 lg:pb-[168px] hold:pt-0 hold:pb-0"
+  : "pb-20 sm:pb-32 lg:pt-20 lg:pb-[168px]";
 
 /** The card motifs rotate across the set — the frame's own instruction. */
 const CARD_GLYPHS: SeamGlyphMotif[] = ["a", "b", "c"];
@@ -951,7 +956,14 @@ function RecordCard({
             <MediaOrField
               src={slot.src}
               alt={slot.expects}
-              sizes="(min-width: 1024px) 362px, (min-width: 640px) 50vw, 100vw"
+              /* NOT the band's width. The band is 362x320 but the library's
+                 photographs are ~1.9:1, so object-cover scales them by HEIGHT
+                 and the rendered image runs ~608 wide behind a 362 crop. Sizes
+                 must describe that covered width or the browser picks the 750w
+                 rendition for a 2x screen that needs ~1216 and upscales it —
+                 which is what made the cards soft. The hover scale adds 5%. */
+              sizes="(min-width: 1024px) 640px, (min-width: 640px) 90vw, 180vw"
+              quality={85}
               fieldClass={FIELD_TONE[slot.tone]}
               className={
                 /* frame grade: the world moves and the record holds, so a
