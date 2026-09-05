@@ -12,6 +12,7 @@ import {
 import { contactRoutes } from "@/content/contact";
 import { ContactDetails } from "@/components/sections/ContactDetails";
 import { ContactDoors } from "@/components/sections/ContactDoors";
+import { CardRail } from "@/components/ui/CardRail";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
@@ -74,12 +75,41 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  */
 
 /**
+ * THE MOBILE RAMP, read off the one mobile design that exists.
+ *
+ * Figma `01 · Wonder — HI-FI · Mobilep` (node 2576:21896, 375 wide) carries
+ * the file's `Typography/Mobile/*` styles, and its numbers are:
+ *
+ *   H1 56 · H2 36 · H3 32 · H4 (lead) 24 · H5 (eyebrow) 16 · H6 14
+ *
+ * against the desktop 96 / 56 / 40 / 36 / 20 / 14. These bases follow it for
+ * the roles it settles cleanly — the page title at 56, section headings at 36,
+ * the section eyebrow at 16.
+ *
+ * ⚠ WHAT IS NOT TAKEN FROM IT. The frame's mobile gutter is 20px; the code
+ * keeps `px-6` (24), because the header, the footer and every other page in
+ * this repo are built on 24 and a 4px disagreement inside the chrome is worse
+ * than a 4px disagreement with one frame. Card headings stay at 24 rather than
+ * the frame's 32: Wonder's card is 335 wide with 20px padding, ours is a rail
+ * card with about 244px across the copy, and 32 wraps a short title to three
+ * lines there. Body copy stays at `text-lg`, which is the ramp the rest of the
+ * codebase already uses (`the-record/…:168`).
+ */
+
+/**
  * The column. Every body in the frame measures at x=100 of 1440, so the
  * padding alone is the column — `lg:px-25` and NO max-width. Adding
  * `mx-auto max-w-7xl` centres a 1280 box in 1440 and lands content at x=180,
  * which is the mistake The Record already made and documented.
+ *
+ * ⚠ `sm:px-10` IS A DELIBERATE ADDITION, and the one place this page departs
+ * from the house convention. Every other page steps `px-6` straight to its
+ * `lg:` value with nothing in between, which leaves a 768px viewport holding
+ * `sm:text-2xl` body copy across a 720px measure inside 24px gutters — the
+ * worst-served width in the codebase. Raise it with Juan Carlos before
+ * spreading it; his pages have the same gap and are not touched here.
  */
-const COLUMN = "w-full px-6 lg:px-25";
+const COLUMN = "w-full px-6 sm:px-10 lg:px-25";
 
 /** boomerang, circle, starburst — the frame's rotation, in repo glyph names. */
 const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
@@ -138,7 +168,7 @@ export function AboutHero() {
           110vh, not the round 100 it was. `min-h` rather than `h`: the copy is
           a flow child, so a short viewport grows the block instead of clipping
           the standfirst. */}
-      <div className="relative flex min-h-[110svh] w-full flex-col justify-center overflow-hidden">
+      <div className="relative flex min-h-[86svh] w-full flex-col justify-end overflow-hidden lg:min-h-[110svh] lg:justify-center">
         <div
           data-motion={HERO?.grade ?? "full"}
           className="absolute inset-0"
@@ -146,7 +176,7 @@ export function AboutHero() {
           <MediaOrField
             src={HERO?.src ?? null}
             alt="Three figures on a ledge beneath a long banded sandstone escarpment"
-            sizes="100vw"
+            sizes="(min-width: 1024px) 100vw, 260vw"
             priority
             fieldClass="bg-charcoal"
           />
@@ -164,7 +194,7 @@ export function AboutHero() {
         {/* X5 band · under the copy block only. */}
         <div
           aria-hidden
-          className="absolute inset-x-0 top-[38%] h-[37%]"
+          className="absolute inset-0 lg:top-[38%] lg:bottom-auto lg:h-[37%]"
           style={{
             backgroundImage:
               "linear-gradient(180deg, rgba(9,14,18,0) 0%, rgba(9,14,18,0.34) 35%, rgba(9,14,18,0.34) 70%, rgba(9,14,18,0) 100%)",
@@ -181,11 +211,11 @@ export function AboutHero() {
           className="pointer-events-none absolute top-[15%] left-[10%] hidden w-[57%] rotate-4 opacity-60 lg:block"
         />
 
-        <div className={`${COLUMN} relative py-32`}>
-          <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+        <div className={`${COLUMN} relative py-16 lg:py-32`}>
+          <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
             {aboutHero.eyebrow}
           </p>
-          <h1 className="headline mt-4 max-w-[1100px] text-5xl leading-[1.2] sm:text-7xl lg:text-[6rem]">
+          <h1 className="headline mt-4 max-w-[1100px] text-[3.5rem] leading-[1.2] sm:text-7xl lg:text-[6rem]">
             {aboutHero.title}
           </h1>
           <p className="mt-8 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-2xl">
@@ -244,13 +274,13 @@ export function WhatWeAre() {
         />
       </div>
 
-      <div className={`${COLUMN} relative pt-40`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+      <div className={`${COLUMN} relative pt-16 lg:pt-40`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           {whatWeAre.title}
         </p>
 
         {/* The long name, held back so the short one can land. */}
-        <p className="headline mt-8 max-w-[1240px] text-3xl leading-[1.2] text-evergreen/30 sm:text-5xl lg:text-[4rem]">
+        <p className="headline mt-8 max-w-[1240px] text-4xl leading-[1.2] text-evergreen/30 sm:text-5xl lg:text-[4rem]">
           {legalName}
         </p>
         <p className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-6xl lg:text-[6rem]">
@@ -266,7 +296,7 @@ export function WhatWeAre() {
       </div>
 
       {/* The road. Full bleed — a screen, not an inset. */}
-      <figure className="relative mt-28">
+      <figure className="relative mt-16 lg:mt-28">
         <div
           data-motion={ROAD?.grade ?? "full"}
           className="relative h-[44svh] w-full overflow-hidden lg:h-[62svh]"
@@ -274,7 +304,7 @@ export function WhatWeAre() {
           <MediaOrField
             src={ROAD?.src ?? null}
             alt="An aerial view down a straight sandy two-wheel track through low bushland"
-            sizes="100vw"
+            sizes="(min-width: 1024px) 100vw, 260vw"
             fieldClass="bg-roasted/40"
           />
         </div>
@@ -283,7 +313,7 @@ export function WhatWeAre() {
         </figcaption>
       </figure>
 
-      <div className={`${COLUMN} relative pt-32 pb-40`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-32 lg:pb-40`}>
         {/* The thread enters. Ochre reads 2.30:1 on canvas, so on this ground
             it is a line and never a word. */}
         <div aria-hidden className="h-[3px] w-full bg-ochre" />
@@ -374,7 +404,7 @@ export function WhyWeExist() {
           <MediaOrField
             src={QUESTION?.src ?? null}
             alt="Open Country, wide — mulga running to the horizon"
-            sizes="100vw"
+            sizes="(min-width: 1024px) 100vw, 260vw"
             fieldClass="bg-evergreen/40"
           />
         </div>
@@ -389,8 +419,8 @@ export function WhyWeExist() {
           }}
         />
 
-        <div className={`${COLUMN} relative pt-36 pb-[34svh]`}>
-          <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+        <div className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-36 lg:pb-[34svh]`}>
+          <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
             {whyWeExist.title}
           </p>
           <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl">
@@ -403,7 +433,7 @@ export function WhyWeExist() {
       </div>
 
       {/* The screen has cleared. Nothing behind the question but ground. */}
-      <div className={`${COLUMN} relative pb-40`}>
+      <div className={`${COLUMN} relative pb-16 lg:pb-40`}>
         <blockquote>
           <p className="headline max-w-[1240px] text-4xl leading-[1.2] text-canvas sm:text-6xl lg:text-[6rem]">
             {whyWeExist.quote}
@@ -416,7 +446,7 @@ export function WhyWeExist() {
           </footer>
         </blockquote>
 
-        <p className="mt-24 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl">
+        <p className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl lg:mt-24">
           {whyWeExist.tagline}
         </p>
       </div>
@@ -444,7 +474,7 @@ export function Breath() {
         <MediaOrField
           src={BREATH?.src ?? null}
           alt="Open woodland at sunset, the sun low behind the trunks"
-          sizes="100vw"
+          sizes="(min-width: 1024px) 100vw, 260vw"
           fieldClass="bg-evergreen/40"
         />
       </div>
@@ -517,11 +547,11 @@ export function WhatWeDo() {
         />
       </div>
 
-      <div className={`${COLUMN} relative pt-36`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+      <div className={`${COLUMN} relative pt-16 lg:pt-36`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           {whatWeDo.title}
         </p>
-        <h2 className="headline mt-6 max-w-[1240px] text-3xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
           {headline}
         </h2>
         <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
@@ -529,11 +559,12 @@ export function WhatWeDo() {
         </p>
       </div>
 
-      <div className={`${COLUMN} relative pt-20 pb-36`}>
+      <div className={`${COLUMN} relative pt-10 pb-16 lg:pt-20 lg:pb-36`}>
         {/* ONE ROW OF FOUR — the house pattern, and the same grid The Record
             §07, /partnerships §06 and the shared ContactDoors all use:
-            `gap-4 sm:grid-cols-2 lg:grid-cols-4`. Two-up on tablet, stacked on
-            a phone.
+            `gap-4 sm:grid-cols-2 lg:grid-cols-4`. Two-up on tablet, and a
+            swipe rail on a phone — `CardRail` supplies the row and leaves the
+            grid from 640 up exactly as it was.
 
             It replaces a diamond arrangement that set the four around the
             artist's spiral with the lede's clauses as connectors between them.
@@ -546,21 +577,21 @@ export function WhatWeDo() {
             The card itself is unchanged: it is `04 · The Record` §02's recipe —
             coloured ground, full-width image band, 35% scrim, one motif, then
             title, body and a verb-led label at the foot. */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <CardRail columns="sm:grid-cols-2 lg:grid-cols-4">
           {whatWeDo.areas.map((area, i) => {
             const photo = photoById(AREA_PHOTOS[i]);
             return (
               <a
                 key={area.title}
                 href={area.cta.href}
-                className={`relative flex min-h-[30rem] flex-col overflow-hidden rounded-3xl ${AREA_GROUNDS[i]} text-canvas`}
+                className={`relative flex flex-col overflow-hidden rounded-3xl lg:min-h-[30rem] ${AREA_GROUNDS[i]} text-canvas`}
               >
                 <div className="relative aspect-[380/232] w-full shrink-0 overflow-hidden">
                   <div data-motion={photo?.grade ?? "full"} className="absolute inset-0">
                     <MediaOrField
                       src={photo?.src ?? null}
                       alt={photo?.subject ?? ""}
-                      sizes="(min-width: 1024px) 298px, (min-width: 640px) 50vw, 100vw"
+                      sizes="(min-width: 1024px) 298px, (min-width: 640px) 50vw, 78vw"
                       fieldClass="bg-canvas/6"
                     />
                   </div>
@@ -572,7 +603,7 @@ export function WhatWeDo() {
                 </div>
 
                 <div className="flex flex-1 flex-col px-6 pt-6 pb-7">
-                  <h3 className="headline text-2xl leading-[1.2]">
+                  <h3 className="headline text-2xl leading-[1.2] sm:text-[1.75rem]">
                     {area.title}
                   </h3>
                   <p className="mt-3.5 text-[0.9375rem] leading-[1.5] text-canvas/86">
@@ -586,7 +617,7 @@ export function WhatWeDo() {
               </a>
             );
           })}
-        </div>
+        </CardRail>
       </div>
     </section>
   );
@@ -624,8 +655,8 @@ export function HowWeWork() {
         className="-left-56 top-[34%] w-[47.5rem] -rotate-11 opacity-[0.07]"
       />
 
-      <div className={`${COLUMN} relative pt-36`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+      <div className={`${COLUMN} relative pt-16 lg:pt-36`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
           {howWeWork.title}
         </p>
         {/* The absence, marked. Not a headline, and not nothing. */}
@@ -647,7 +678,7 @@ export function HowWeWork() {
             {/* The band lands before the third value, not after the second —
                 it is the rest scene RECIPROCITY arrives out of. */}
             {i === 2 ? (
-              <figure className="relative mt-28 mb-4">
+              <figure className="relative mt-16 mb-4 lg:mt-28">
                 <div
                   data-motion={RECIPROCITY?.grade ?? "frame"}
                   className="relative h-[40svh] w-full overflow-hidden lg:h-[56svh]"
@@ -655,7 +686,7 @@ export function HowWeWork() {
                   <MediaOrField
                     src={RECIPROCITY?.src ?? null}
                     alt="Ochre-marked adult palms held out over a grinding stone toward a child's"
-                    sizes="100vw"
+                    sizes="(min-width: 1024px) 100vw, 260vw"
                     fieldClass="bg-charcoal/40"
                   />
                 </div>
@@ -667,7 +698,7 @@ export function HowWeWork() {
               </figure>
             ) : null}
 
-            <div className={`${COLUMN} relative pt-16`}>
+            <div className={`${COLUMN} relative pt-12 lg:pt-16`}>
               {/* The thread, one line again. */}
               <div aria-hidden className="h-[2px] w-full bg-gold/55" />
               <p className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold">
@@ -684,7 +715,7 @@ export function HowWeWork() {
         );
       })}
 
-      <div className={`${COLUMN} relative pt-20 pb-36`}>
+      <div className={`${COLUMN} relative pt-10 pb-16 lg:pt-20 lg:pb-36`}>
         <div className="max-w-[900px]">
           <EditorialNote tone="canvas">
             <p>{howWeWork.pending}</p>
@@ -734,11 +765,11 @@ export function WhoDecides() {
         className="-left-64 top-[56%] w-[51.25rem] -rotate-13 opacity-[0.13]"
       />
 
-      <div className={`${COLUMN} relative pt-36 pb-40`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-40`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
           {whoDecides.title}
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-3xl leading-[1.2] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[4rem]">
           {claim[0]}
         </h2>
 
@@ -776,7 +807,7 @@ export function WhoDecides() {
           </div>
         </div>
 
-        <p className="headline mt-28 text-6xl leading-[1.2] text-gold sm:text-8xl lg:text-[6rem]">
+        <p className="headline mt-16 text-6xl leading-[1.2] text-gold sm:text-8xl lg:mt-28 lg:text-[6rem]">
           2031
         </p>
         <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl">
@@ -857,11 +888,11 @@ export function ThePeople() {
         className="pointer-events-none absolute -left-20 bottom-8 w-[120%] opacity-[0.09]"
       />
 
-      <div className={`${COLUMN} relative pt-40 pb-36`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-40 lg:pb-36`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           {thePeople.title}
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-3xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
           {sentences(thePeople.body)[0]}
         </h2>
         <p className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
@@ -905,7 +936,7 @@ export function ThePeople() {
             data-placeholder="no-archival-photograph"
             role="img"
             aria-label="No archival photograph exists for this slot"
-            className="flex aspect-[250/410] w-full items-end rounded-sm border-[1.5px] border-dashed border-oxide/60 p-5 lg:mt-[6.875rem]"
+            className="flex aspect-[16/10] w-full items-end rounded-sm border-[1.5px] border-dashed border-oxide/60 p-5 lg:mt-[6.875rem] lg:aspect-[250/410]"
           >
             <p className="eyebrow text-[0.625rem] leading-[1.6] tracking-[0.08em] text-oxide">
               ⟡ No archival photograph exists
@@ -964,11 +995,11 @@ export function Partners() {
         className="-left-48 top-[54%] w-[40rem] opacity-7"
       />
 
-      <div className={`${COLUMN} relative pt-36 pb-36`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
           {partners.title}
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-3xl leading-[1.2] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[4rem]">
           {`${claim}.`}
         </h2>
         <p className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
@@ -982,15 +1013,40 @@ export function Partners() {
               <p className="eyebrow mt-6 text-xs tracking-[0.08em] text-gold">
                 {group.title}
               </p>
-              <p className="headline mt-5 max-w-[1240px] text-xl leading-[1.53] text-canvas/95 sm:text-[1.875rem]">
-                {group.names.join("   ·   ")}
+              {/* Names as list items, not one joined string.
+                  `names.join("   ·   ")` set at 30px reads as a single line of
+                  names in a 1240px column and as a run-on sentence in a 327px
+                  one: the middots orphan at line ends and nothing distinguishes
+                  a break INSIDE a name from a break BETWEEN two names. Each
+                  name is now its own flex item, so it wraps as a unit, and the
+                  separator trails its name (never leads the next) so it can
+                  never start a line. The separator is decorative — the list
+                  semantics carry the meaning for a screen reader. */}
+              <ul className="mt-5 flex max-w-[1240px] flex-wrap items-baseline gap-y-1">
+                {group.names.map((name, n) => (
+                  <li
+                    key={name}
+                    className="headline text-xl leading-[1.53] text-canvas/95 sm:text-[1.875rem]"
+                  >
+                    {name}
+                    {n < group.names.length - 1 ||
+                    i === partners.groups.length - 1 ? (
+                      <span aria-hidden className="mx-3 text-canvas/40 sm:mx-5">
+                        ·
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
                 {/* The list is short and the draft says so. */}
                 {i === partners.groups.length - 1 ? (
-                  <span data-placeholder="add-partner" className="text-canvas/45">
-                    {"   ·   [ add ]"}
-                  </span>
+                  <li
+                    data-placeholder="add-partner"
+                    className="headline text-xl leading-[1.53] text-canvas/45 sm:text-[1.875rem]"
+                  >
+                    [ add ]
+                  </li>
                 ) : null}
-              </p>
+              </ul>
             </div>
           ))}
         </div>
@@ -1059,11 +1115,11 @@ export function GetInTouch() {
         className="-left-44 top-[54%] w-[36.6875rem] opacity-7"
       />
 
-      <div className={`${COLUMN} relative pt-36 pb-40`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-40`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
           Get in touch
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-3xl leading-[1.2] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[4rem]">
           Different things go to different people.
         </h2>
         <p className="mt-8 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
@@ -1079,7 +1135,7 @@ export function GetInTouch() {
         </div>
 
         {/* The thread, arrived. */}
-        <div aria-hidden className="mt-24 h-[2px] w-full bg-ochre" />
+        <div aria-hidden className="mt-14 h-[2px] w-full bg-ochre lg:mt-24" />
 
         {/* Three across, two rows, 390 wide — the same fix already made on
             Our People, which carries this block word for word under D5. */}
