@@ -21,7 +21,7 @@ that the codebase needs to stay in step with it.
 | --- | --- | --- | --- |
 | Figma file — **official, V2** | Ivy + Marc | — | ✅ [YACHATDAC-V2](https://www.figma.com/design/7XBvi0Mdbtmym10nkF9IGp/YACHATDAC-V2?node-id=0-1) — restructured 29 Aug into two pages |
 | Figma link — lo-fi wireframes | Ivy (Jasmin Ivy C. Fedilo) | Lo-Fi Wireframes, 21 Aug | ✅ **Complete, ten frames** — now lane 2 of each page row in V2 |
-| Figma link — hi-fi mockups | Marc + Ivy | Hi-Fi Mockups Approved, 31 Aug | ▲ **Three built** — Wonder (1,322vh), Truth (2,229vh), Living Work (2,045vh). Seven rows still empty |
+| Figma link — hi-fi mockups | Marc + Ivy | Hi-Fi Mockups Approved, 31 Aug | ▲ **Seven built** — Home (1,775vh), Wonder (1,322vh), Truth (2,229vh), Living Work (2,045vh), The Record (1,624vh), About (2,053vh), Our People (1,805vh). Three rows still empty |
 | Figma link — UI design system / component library | Marc | — | ✅ In V2 — 12 `Colour/*` paint styles, `Typography/*` text styles, `Desktop/1440` + `Mobile/375` grid styles, `Scrim/Media` |
 | Relume Figma kit link | Marc → JC | — | ⏳ not supplied. Relume's leftovers are quarantined in V2 as `_relume (legacy — do not bind)` |
 | Whiteboard sketches — scroll and animation behaviour | JC | Lo-Fi Wireframes | ⏳ not supplied |
@@ -57,36 +57,65 @@ hours land against the right name.
 
 ### Frames on the canvas — ten, complete
 
-Now in **YACHATDAC-V2**, restructured on 29 August. Each frame is **lane 2** of its
-page's row on the `YACHATDAC — Design` page. There is **one row per page**,
-stacked vertically in site order, every row starting at `x = 0` with 5,000px of
-headroom beneath it. Scrolling *down* walks the site; scrolling *right* within a
-row walks that page's material. Marc's superseded Relume v1 frames moved to the
-`Archive — superseded` page; nothing was deleted.
+Now in **YACHATDAC-V2**. Each frame is **lane 2** of its page's row on the
+`YACHATDAC — Design` page, and there is **one row per page** — scrolling *right*
+within a row walks that page's material. Marc's superseded Relume v1 frames moved
+to the `Archive — superseded` page; nothing was deleted.
+
+**Rows are laid out in bands, not one vertical stack — Ivy rearranged the file by
+hand on 1 September and that arrangement is the live one.** A single 152,000px
+column meant the built pages could only be compared by scrolling past one another.
+Three bands now sit side by side, so a whole band is legible at one zoom level.
+Read the coordinates off the row labels before quoting them; they move whenever
+Ivy re-lays the canvas, and the table below is a snapshot, not a contract.
 
 Rows are deliberately **not** wrapped in Figma Sections. A section has to be
 resized every time something is added to it, and these rows are built to grow —
 adding photos, proposals or a mobile mockup extends a row to the right and moves
 nothing else in the file. Large text labels are the row headers instead.
 
-The `y` column below is the row's top edge; the lo-fi frame sits at `x = 2560`.
+The `x`/`y` columns below are the row **label's** top-left corner. Within a row the
+hi-fi sits at `label x − 160` and the lo-fi at `label x + 3780`.
 
 **The full spec now lives in [`lofi-spec.md`](lofi-spec.md)** — one section per
 page, with the motion sketch IDs, the span arithmetic, the decisions behind each
 page, and what is still held on it.
 
-| # | Page | row y | vh | Sections | Hi-fi |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Home | 3896 | 903 | 7 | — |
-| 2 | Wonder | 13923 | 1363 | 14 | ✅ 1,322vh |
-| 3 | Truth | 27452 | 1704 | 21 | ✅ 2,229vh |
-| 4 | Living Work | 50422 | 986 | 9 | ✅ 2,045vh — **11 sections**, reordered, swept |
-| 5 | The Record | 67317 | 1123 | 10 | — |
-| 6 | About | 78919 | 1106 | 11 | — |
-| 7 | Our People | 90300 | 814 | 9 | — |
-| 8 | Partnerships | 99165 | 423 | 5 | — |
-| 9 | Connect | 104890 | 393 | 6 | — |
-| 10 | Legal | 136118 | 295 | 6 | — |
+| # | Page | band | label x | label y | vh | Sections | Hi-fi |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Home | A | −24826 | −8071 | 903 | 7 | ✅ 1,775vh |
+| 2 | Wonder | A | −10874 | −8221 | 1363 | 14 | ✅ 1,322vh |
+| 3 | Truth | A | 8427 | −8588 | 1704 | 21 | ✅ 2,229vh |
+| 4 | Living Work | A | 41649 | −9308 | 986 | 9 | ✅ 2,045vh — **11 sections**, reordered, swept |
+| 5 | The Record | B | −25473 | 17049 | 1123 | 10 | ✅ 1,624vh |
+| 6 | About | B | −2383 | 16452 | 1106 | 11 | ✅ 2,053vh — two full-bleed bands, §03 pinned |
+| 7 | Our People | B | 18944 | 16646 | 814 | 9 | ✅ 1,835vh — **11 sections**, §03 pinned |
+| 8 | Partnerships | C | −26193 | 39340 | 418 | 3 | ✅ 1,190vh — **10 sections**, §04 pinned, §08 is one action |
+| 9 | Connect | C | −25473 | 40263 | 393 | 6 | ✅ 645vh — **5 sections**, the site’s single ending |
+| 10 | Legal | C | 9479 | 40626 | 265 | 6 | ✅ 645vh — **5 sections**, one frame for three routes |
+
+**Legal's row label reads `x 9479, y 40626`, not the `−25473 / 46224` this table carried until
+2 September.** Row `y` drifts every time a hi-fi grows, and Legal's had moved out from under the
+band-C column entirely. Re-read it from the label before quoting it — that is the standing rule
+two paragraphs down, and this row is the example of what happens when it is skipped.
+
+**Band C, 1 September.** Partnerships, Connect and Legal were left behind at `y ≈ 136000`
+when the file was rearranged — roughly 100,000px below everything else, which is why they
+could not be found. They now stack in a column **directly beneath The Record** at `x = −25473`,
+on a 2,000px gutter, ending at `y = 49299`. They are three unbuilt pages: a row label and a
+lo-fi each, nothing more.
+
+**Two earlier diagnoses, both superseded by the band layout.** A uniform 2,000px restack of
+the old vertical stack closed a 14,810px hole between Connect and Legal — that hole was real
+and pre-existing, and it was why Legal read as deleted. Dashed **slot plates** were then added
+at `x = 0` for rows 07–09, because those rows have no hi-fi and the column ran 15,000px empty
+past Our People. Ivy removed the plates when she re-laid the canvas; band C solves the same
+problem by putting the three rows where the eye already is, so they have not been rebuilt.
+`04 THE RECORD`'s marker, which still read *"not started"* on a built page, stays retexted.
+
+**Row y is read from the Figma row labels, not from the lo-fi frames.** Every value except
+Home's had drifted — rows move whenever a hi-fi grows, and About's build moved rows 06–08
+down twice. Re-read them before quoting them.
 
 ### Living Work — the correction pass, 29 Aug
 
@@ -455,7 +484,10 @@ faces are real.
   Rainbow Credits' body is empty.
 - **Wonder stage 03 keeps a held story-wall image slot** — R10.
 - **Our People** should not go to `in-review` until the consent question is
-  answered. Eight of nine cards are unnamed.
+  answered. Eight of nine cards are unnamed. **The question now has an ID:
+  `R24`** — it had none, and R10 does not cover it. The hi-fi is built so the
+  gap is legible rather than hidden: a held person is a role at full weight and
+  a gold rule where a name would be.
 - **The Record's on-request response time** is the last unfilled field on that
   page (R23), owned by August per D10.
 - **The Acknowledgement slot** is empty pending Suzanne (R1); ICN and ABN blank
@@ -479,9 +511,13 @@ decided at wireframe stage or they get retrofitted badly:
 **One verb per page — decided 29 Aug, extended under F7.** Truth *descends*: its
 dissolves, breaks, darkening grounds and rail all encode chronology, so the motion is
 the argument. Living Work *accumulates*: a working field notebook, quantities doing the
-talking. Home *opens*. Every remaining page is assigned its verb when its v2 script is
-written. **Contrast between pages now comes from different grammars, not from motion vs
-stillness** — do not carry Truth's grammar onto another page without asking what that
+talking. Home *opens*. The Record *surfaces*: a catalogue that brings things up out of
+itself. About *answers*: one question travels the page and everything on it is measured
+against that question, including the photographs. Our People *gathers*: everything
+on it converges — and the five held cards arrive in the same breath as the named
+one and then hold still, which is how a page about people it may not name says so. Every remaining page is assigned its
+verb when its v2 script is written. **Contrast between pages now comes from different
+grammars, not from motion vs stillness** — do not carry Truth's grammar onto another page without asking what that
 page's verb is.
 
 ⚠ **R10 extends to batch 2, and is untagged there.** `March22-2302` and the untitled
