@@ -65,8 +65,15 @@ import { contactNote } from "@/content/contact";
  * ⚠ `sm:px-10` is the deliberate addition the other three hi-fi pages carry:
  * without it a 768px viewport holds `sm:text-2xl` copy across a 720px measure
  * inside 24px gutters. Raise it with Juan Carlos before spreading it further.
+ *
+ * ⚠ `max-w-[1440px]` CAPS THE COLUMN BOX, NOT THE CONTENT BOX, and it is not
+ * a reversal of the note above. `mx-auto max-w-7xl` was rejected because 1280
+ * centred in 1440 lands the content at x=180 when the frame draws it at x=100.
+ * This caps the box the gutters live in, so at 1440 the content still lands at
+ * exactly x=100 — the number that objection is defending — and above 1440 it
+ * stops growing instead of stretching to 1400 at 1600 and 1720 at 1920.
  */
-const COLUMN = "w-full px-6 sm:px-10 lg:px-25";
+const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
 
 /**
  * The section eyebrow on a dark ground — 24px on 8px of tracking, which is
@@ -165,7 +172,7 @@ export function ConnectHero() {
 
       <div className={`${COLUMN} relative flex min-h-[92svh] flex-col justify-center py-24 lg:min-h-[130svh] lg:py-0`}>
         <p className={EYEBROW_DARK}>Connect</p>
-        <h1 className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.05] tracking-[-0.017em] sm:text-7xl lg:text-[7.5rem]">
+        <h1 className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.05] tracking-[-0.017em] sm:text-7xl lg:text-[6.25rem]">
           Get in touch
         </h1>
         <p className="mt-8 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl">
@@ -222,16 +229,16 @@ export function WaysIn() {
         <RingArtwork piece="a" className="-left-48 top-[52%] w-[40rem] opacity-30" />
       </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-40`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
         <p className="eyebrow text-base leading-[1.3] tracking-[0.16em] text-ochre sm:text-2xl sm:tracking-[0.333em]">
           What are you after?
         </p>
-        <h2 className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.016em] text-evergreen sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.016em] text-evergreen sm:text-5xl lg:text-[3.5rem]">
           Ways in
         </h2>
 
         <CardRail
-          className="mt-12 lg:mt-20"
+          className="mt-12 lg:mt-12"
           columns="sm:grid-cols-2"
           gap="sm:gap-10"
         >
@@ -239,7 +246,7 @@ export function WaysIn() {
             <a
               key={way.title}
               href={way.href}
-              className={`relative flex flex-col overflow-hidden rounded-3xl ${WAY_GROUNDS[i]} p-6 text-canvas lg:min-h-[26.25rem] lg:p-9`}
+              className={`relative flex flex-col overflow-hidden rounded-3xl ${WAY_GROUNDS[i]} p-6 text-canvas lg:min-h-[25rem] lg:p-9`}
             >
               <SeamGlyph
                 motif={WAY_GLYPHS[i]}
@@ -291,7 +298,7 @@ export function NoForm() {
         <RingArtwork piece="b" className="top-[9%] left-[66%] w-[47.5rem]" />
       </div>
 
-      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+      <div className={`${COLUMN} relative py-16 lg:py-24`}>
         <p className="eyebrow text-base leading-[1.3] tracking-[0.16em] text-gold sm:text-2xl sm:tracking-[0.25em]">
           No form — and that is on purpose
         </p>
@@ -348,7 +355,7 @@ export function ContactDetailsSection() {
         <RingArtwork piece="b" className="top-[2%] left-[64.4%] w-[56.25rem]" />
       </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-32 lg:pb-28`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
         <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
           Contact details
         </p>

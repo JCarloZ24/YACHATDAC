@@ -158,7 +158,7 @@ export function LabControlPanel({
             ▾
           </span>
           {open ? "Hide controls" : "Controls"}
-          <kbd className="rounded-xs border border-current/40 px-1.5 py-0.5 text-[0.625rem] tracking-[0.12em]">
+          <kbd className="rounded-xs border border-current/40 px-1.5 py-0.5 text-[10px] tracking-[0.12em]">
             C
           </kbd>
         </button>

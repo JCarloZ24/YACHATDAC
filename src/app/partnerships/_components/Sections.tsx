@@ -99,8 +99,15 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * `sm:text-2xl` body copy across a 720px measure inside 24px gutters — the
  * worst-served width in the codebase. Raise it with Juan Carlos before
  * spreading it; his pages have the same gap and are not touched here.
+ *
+ * ⚠ `max-w-[1440px]` CAPS THE COLUMN BOX, NOT THE CONTENT BOX, and it is not
+ * a reversal of the note above. `mx-auto max-w-7xl` was rejected because 1280
+ * centred in 1440 lands the content at x=180 when the frame draws it at x=100.
+ * This caps the box the gutters live in, so at 1440 the content still lands at
+ * exactly x=100 — the number that objection is defending — and above 1440 it
+ * stops growing instead of stretching to 1400 at 1600 and 1720 at 1920.
  */
-const COLUMN = "w-full px-6 sm:px-10 lg:px-25";
+const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
 
 /**
  * The eyebrow tracking on THIS page is the frame's own, and it is not the
@@ -221,7 +228,7 @@ export function PartnershipsHero() {
         {/* ⟡ STAND-IN, on the photograph. The chip keeps it legible on sky. */}
         <p
           data-placeholder="stand-in"
-          className="eyebrow absolute top-6 left-6 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[0.625rem] text-gold"
+          className="eyebrow absolute top-6 left-6 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-gold"
         >
           ⟡ Stand-in
         </p>
@@ -229,9 +236,9 @@ export function PartnershipsHero() {
         {/* pb clears the wave. The divider is 104px tall at sm and up and it
             is seated ON this picture, so a symmetric block would put the CTA
             row under it. */}
-        <div className={`${COLUMN} relative pt-16 pb-28 lg:pt-32 lg:pb-48`}>
+        <div className={`${COLUMN} relative pt-16 pb-28 lg:pt-24 lg:pb-32`}>
           <p className={EYEBROW_DARK}>Work with us</p>
-          <h1 className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:text-[5.25rem]">
+          <h1 className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:text-[4.5rem]">
             {claim}
           </h1>
           <p className="mt-10 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl">
@@ -288,9 +295,9 @@ export function TheObligation() {
         piece="b"
         className="-top-32 left-[44%] w-[62.5rem] opacity-8"
       />
-      <div className={`${COLUMN} relative py-16 lg:py-40`}>
+      <div className={`${COLUMN} relative py-16 lg:py-28`}>
         <p className={EYEBROW_DARK}>The obligation</p>
-        <h2 className="headline mt-8 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-8 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]">
           {claim}
         </h2>
         <p className="mt-14 max-w-[1000px] text-xl leading-[1.5] font-medium sm:text-[1.75rem]">
@@ -340,11 +347,11 @@ export function OpenResearch() {
         />
       </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
         <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           Still to be found
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]">
           Open research
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
@@ -381,7 +388,7 @@ export function OpenResearch() {
               <SeamGlyph motif="b" className="right-4 bottom-4 w-11" />
               <p
                 data-placeholder="consent-unresolved"
-                className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[0.625rem] text-canvas"
+                className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
               >
                 ⟡ Stand-in · ⚠ consent unresolved
               </p>
@@ -442,11 +449,11 @@ export function OpenQuestions() {
         />
       </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-40`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
         <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           The offer
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]">
           {knowledgeGaps.title}
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
@@ -468,7 +475,7 @@ export function OpenQuestions() {
             return (
               <article
                 key={gap.question}
-                className={`relative flex flex-col overflow-hidden rounded-3xl ${GAP_GROUNDS[i]} text-canvas lg:min-h-[32.5rem]`}
+                className={`relative flex flex-col overflow-hidden rounded-3xl ${GAP_GROUNDS[i]} text-canvas lg:min-h-[29.5rem]`}
               >
                 {photo ? (
                   <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden lg:aspect-[610/200]">
@@ -487,7 +494,7 @@ export function OpenQuestions() {
                     />
                     <p
                       data-placeholder="stand-in"
-                      className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-2.5 py-1 text-[0.5625rem] text-gold"
+                      className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-2.5 py-1 text-[9px] text-gold"
                     >
                       ⟡ Stand-in
                     </p>
@@ -522,7 +529,7 @@ export function OpenQuestions() {
 
                   {/* The disclosure, at rest: already open. */}
                   <div className="mt-auto pt-10">
-                    <p className="eyebrow text-[0.625rem] leading-[1.3] tracking-[0.5em] text-gold">
+                    <p className="eyebrow text-[10px] leading-[1.3] tracking-[0.5em] text-gold">
                       What is running
                     </p>
                     <p className="mt-2 text-[1.0625rem] leading-[1.4] font-medium">
@@ -598,9 +605,9 @@ export function AlreadyWorkingWith() {
         <RingArtwork piece="a" className="-left-52 bottom-[6%] w-[45rem] opacity-7" />
       </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
         <p className={EYEBROW_DARK}>Already here</p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]">
           Who we already work with
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
@@ -611,7 +618,7 @@ export function AlreadyWorkingWith() {
           {partners.groups.map((group, i) => (
             <div
               key={group.title}
-              className="relative rounded-3xl border border-canvas/12 p-6 lg:min-h-[27.5rem] lg:p-8"
+              className="relative rounded-3xl border border-canvas/12 p-6 lg:min-h-[25rem] lg:p-8"
             >
               <SeamGlyph
                 motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
@@ -711,13 +718,13 @@ export function WaysIn() {
         <RingArtwork piece="a" className="-left-48 bottom-[14%] w-[40rem] opacity-7" />
       </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
         <p className={EYEBROW_DARK}>Get involved</p>
-        <h2 className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.023em] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.023em] sm:text-5xl lg:text-[3.5rem]">
           Ways in
         </h2>
 
-        <CardRail className="mt-12 lg:mt-20" columns="sm:grid-cols-2 lg:grid-cols-4">
+        <CardRail className="mt-12 lg:mt-12" columns="sm:grid-cols-2 lg:grid-cols-4">
           {WAYS.map((way, i) => (
             <a
               key={way.title}
@@ -778,9 +785,9 @@ export function HowWorkIsAgreed() {
         <RingArtwork piece="b" className="top-[8%] left-[66%] w-[56.25rem] opacity-8" />
       </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
         <p className={EYEBROW_DARK}>How work is agreed</p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]">
           {protocol?.title ?? "Working with us — research protocol"}
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
@@ -793,7 +800,7 @@ export function HowWorkIsAgreed() {
           className="relative mt-12 max-w-[900px] rounded-3xl border-[1.5px] border-dashed border-gold/55 p-6 lg:mt-16 lg:p-9"
         >
           <SeamGlyph motif="a" className="right-6 bottom-6 hidden w-11 lg:block" />
-          <p className="eyebrow inline-block rounded-xs border border-gold/55 px-3 py-1.5 text-[0.625rem] tracking-[0.28em] text-gold">
+          <p className="eyebrow inline-block rounded-xs border border-gold/55 px-3 py-1.5 text-[10px] tracking-[0.28em] text-gold">
             In preparation
           </p>
           <p className="mt-6 max-w-[640px] text-base leading-[1.6] text-canvas/85">
@@ -838,7 +845,7 @@ export function TheEnding() {
           the address's baseline rather than floating it against the eyebrow.
           One column below lg — at 1024 the two would be 392px apiece and the
           button would sit a screen-width from the words it answers. */}
-      <div className={`${COLUMN} relative grid gap-x-12 gap-y-12 pt-16 pb-16 lg:grid-cols-2 lg:items-end lg:pt-36 lg:pb-40`}>
+      <div className={`${COLUMN} relative grid gap-x-12 gap-y-12 pt-16 pb-16 lg:grid-cols-2 lg:items-end lg:pt-24 lg:pb-28`}>
         <div>
           <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
             Where we are

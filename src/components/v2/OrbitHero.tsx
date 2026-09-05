@@ -76,7 +76,7 @@ export function OrbitHero({ beat }: { beat: Beat }) {
                 <div
                   className={`flex h-full w-full flex-col justify-between p-4 ${slat.className}`}
                 >
-                  <span className="eyebrow text-[0.6rem] opacity-80">
+                  <span className="eyebrow text-[10px] opacity-80">
                     {slat.label}
                   </span>
                   <span className="headline text-lg leading-tight">

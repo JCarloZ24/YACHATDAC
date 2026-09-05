@@ -33,8 +33,17 @@ import type { LegalDoc } from "@/content/legal";
  * lane, not on the page. See CLAUDE.md.
  */
 
-/** Every body in the frame measures at x=100 of 1440 — the padding IS the column. */
-const COLUMN = "w-full px-6 sm:px-10 lg:px-25";
+/**
+ * Every body in the frame measures at x=100 of 1440 — the padding IS the column.
+ *
+ * ⚠ `max-w-[1440px]` CAPS THE COLUMN BOX, NOT THE CONTENT BOX, and it is not
+ * a reversal of the note above. `mx-auto max-w-7xl` was rejected because 1280
+ * centred in 1440 lands the content at x=180 when the frame draws it at x=100.
+ * This caps the box the gutters live in, so at 1440 the content still lands at
+ * exactly x=100 — the number that objection is defending — and above 1440 it
+ * stops growing instead of stretching to 1400 at 1600 and 1720 at 1920.
+ */
+const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
 
 export function LegalDocument({ doc }: { doc: LegalDoc }) {
   return (
@@ -57,7 +66,7 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
         />
       </div>
 
-      <div className={`${COLUMN} relative pt-32 pb-20 lg:pt-40 lg:pb-28`}>
+      <div className={`${COLUMN} relative pt-32 pb-20 lg:pt-28 lg:pb-28`}>
         {/* The motif sits with the title, not in the margin: at 375 there is
             no margin to sit in, and a glyph pinned to the corner of a text
             page lands on the words. */}
@@ -96,7 +105,7 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
             100px gutter. One column below that: at 640 a two-up would give
             each clause 260px, and "Accessing your information, and complaints"
             is a heading that needs a line to itself. */}
-        <dl className="mt-14 grid gap-x-25 gap-y-12 lg:mt-20 lg:grid-cols-2 lg:gap-y-16">
+        <dl className="mt-14 grid gap-x-25 gap-y-12 lg:mt-12 lg:grid-cols-2 lg:gap-y-16">
           {doc.clauses.map((clause) => (
             <div key={clause.number} className="max-w-[570px]">
               <dt className="eyebrow text-base leading-[1.4] tracking-[0.125em] text-evergreen">
@@ -124,7 +133,7 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
           ))}
         </dl>
 
-        <p className="eyebrow mt-16 text-xs leading-[1.5] tracking-[0.08em] text-oxide lg:mt-20">
+        <p className="eyebrow mt-16 text-xs leading-[1.5] tracking-[0.08em] text-oxide lg:mt-12">
           Last updated{" "}
           <span data-placeholder="legal-date">{LAST_UPDATED_HELD}</span>
         </p>

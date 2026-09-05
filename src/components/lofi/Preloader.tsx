@@ -166,7 +166,7 @@ export function Preloader() {
           priority
           className="h-12 w-auto sm:h-16"
         />
-        <p className="eyebrow mt-5 max-w-md text-center text-[0.65rem] leading-relaxed text-canvas/40">
+        <p className="eyebrow mt-5 max-w-md text-center text-[10px] leading-relaxed text-canvas/40">
           {org.legalName}
         </p>
 

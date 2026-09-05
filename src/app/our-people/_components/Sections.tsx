@@ -152,8 +152,15 @@ const BREATH_PIVOT = photoById("op-breath-02");
  * `sm:text-2xl` body copy across a 720px measure inside 24px gutters — the
  * worst-served width in the codebase. Raise it with Juan Carlos before
  * spreading it; his pages have the same gap and are not touched here.
+ *
+ * ⚠ `max-w-[1440px]` CAPS THE COLUMN BOX, NOT THE CONTENT BOX, and it is not
+ * a reversal of the note above. `mx-auto max-w-7xl` was rejected because 1280
+ * centred in 1440 lands the content at x=180 when the frame draws it at x=100.
+ * This caps the box the gutters live in, so at 1440 the content still lands at
+ * exactly x=100 — the number that objection is defending — and above 1440 it
+ * stops growing instead of stretching to 1400 at 1600 and 1720 at 1920.
  */
-const COLUMN = "w-full px-6 sm:px-10 lg:px-25";
+const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
 
 /** boomerang, circle, starburst — the frame's rotation, in repo glyph names. */
 const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
@@ -253,20 +260,20 @@ export function OurPeopleHero() {
             job, not the page's. */}
         <p
           data-placeholder="stand-in"
-          className="eyebrow absolute top-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[0.625rem] text-canvas"
+          className="eyebrow absolute top-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
         >
           ⟡ Stand-in
         </p>
       </div>
 
-      <div className={`${COLUMN} pt-8 pb-16 lg:pb-32`}>
+      <div className={`${COLUMN} pt-8 pb-16 lg:pb-24`}>
         {/* Captioned by what the frame SHOWS, never by who the people are —
             which is the rule this caption obeys, not a sentence for a reader. */}
         <p className="max-w-[760px] text-sm leading-[1.5] text-canvas/60">
           Rangers walking burnt Country.
         </p>
 
-        <div className="mt-12 text-center lg:mt-20">
+        <div className="mt-12 text-center lg:mt-12">
           <p
             className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl"
           >
@@ -275,7 +282,7 @@ export function OurPeopleHero() {
 
           {/* Y1 · the picture leaves the screen and survives inside the word. */}
           <h1
-            className="headline mt-4 bg-center bg-no-repeat bg-clip-text text-[3.5rem] leading-[1] text-canvas lg:supports-[background-clip:text]:text-transparent sm:text-8xl lg:text-[12.5rem]"
+            className="headline mt-4 bg-center bg-no-repeat bg-clip-text text-[3.5rem] leading-[1] text-canvas lg:supports-[background-clip:text]:text-transparent sm:text-8xl lg:text-[10rem]"
             style={
               HERO
                 ? {
@@ -335,7 +342,7 @@ export function SuzanneTestimony() {
     <section className="relative bg-canvas text-charcoal">
       <WaveDivider ground="var(--color-canvas)" />
 
-      <div className={`${COLUMN} pt-24 pb-20 lg:pt-40 lg:pb-32`}>
+      <div className={`${COLUMN} pt-24 pb-20 lg:pt-28 lg:pb-24`}>
         <figure>
           <div
             data-media
@@ -354,7 +361,7 @@ export function SuzanneTestimony() {
           </figcaption>
         </figure>
 
-        <p className="eyebrow mt-16 text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl lg:mt-24">
+        <p className="eyebrow mt-16 text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl lg:mt-14">
           Iningai custodian
         </p>
         <h2 className="headline mt-3 max-w-[900px] text-4xl leading-[1.16] text-evergreen sm:text-7xl">
@@ -377,10 +384,10 @@ export function SuzanneTestimony() {
         </div>
 
         {/* The testimony. Sits low on purpose — a screen of canvas above it. */}
-        <blockquote className="mt-24 lg:mt-56">
+        <blockquote className="mt-24 lg:mt-32">
           <span
             aria-hidden
-            className="headline block text-[5rem] leading-[1] text-ochre/30 sm:text-[7.5rem] lg:text-[10rem]"
+            className="headline block text-[5rem] leading-[1] text-ochre/30 sm:text-[7.5rem] lg:text-[8rem]"
           >
             &ldquo;
           </span>
@@ -443,11 +450,11 @@ export function HerDecision() {
         <RingArtwork piece="b" className="top-[7%] left-[64.4%] w-[56.25rem]" />
       </div>
 
-      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+      <div className={`${COLUMN} relative py-16 lg:py-24`}>
         <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
           Who decides
         </p>
-        <p className="headline mt-12 max-w-[1180px] text-4xl leading-[1.24] sm:text-6xl lg:text-[4.75rem]">
+        <p className="headline mt-12 max-w-[1180px] text-4xl leading-[1.24] sm:text-6xl lg:text-[4rem]">
           {suzanneProfile.authority}
         </p>
       </div>
@@ -545,7 +552,7 @@ function PersonCard({
             bottom-right: a face sits high in a 380x320 crop. */}
         <p
           data-placeholder="face"
-          className="eyebrow absolute top-2.5 left-1.5 z-10 rounded-xs bg-charcoal/70 px-2 py-1 text-[0.625rem] tracking-[0.08em] text-canvas"
+          className="eyebrow absolute top-2.5 left-1.5 z-10 rounded-xs bg-charcoal/70 px-2 py-1 text-[10px] tracking-[0.08em] text-canvas"
         >
           ⟡ Placeholder face
         </p>
@@ -594,7 +601,7 @@ export function TheGathering() {
     <section
       className="relative overflow-hidden bg-canvas text-charcoal"
     >
-      <div className={`${COLUMN} py-16 lg:py-32`}>
+      <div className={`${COLUMN} py-16 lg:py-24`}>
         <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           The team
         </p>
@@ -606,7 +613,7 @@ export function TheGathering() {
         </p>
 
         <div
-          className="mt-14 grid gap-y-12 sm:grid-cols-2 sm:gap-6 lg:mt-24 lg:grid-cols-3 lg:gap-x-12"
+          className="mt-14 grid gap-y-12 sm:grid-cols-2 sm:gap-6 lg:mt-14 lg:grid-cols-3 lg:gap-x-12"
         >
           {team.people.map((person, i) => (
             <PersonCard key={person.role + i} person={person} index={i} />
@@ -662,7 +669,7 @@ export function BreathTeam() {
       />
       <p
         data-placeholder="stand-in"
-        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[0.625rem] text-canvas"
+        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
       >
         ⟡ Stand-in
       </p>
@@ -734,7 +741,7 @@ export function Governance() {
         <RingArtwork piece="a" className="-left-48 bottom-[16%] w-[40rem]" />
       </div>
 
-      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+      <div className={`${COLUMN} relative py-16 lg:py-24`}>
         <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
           Governance
         </p>
@@ -749,7 +756,7 @@ export function Governance() {
           cultural integrity.
         </p>
 
-        <p className="eyebrow mt-16 text-xs tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-24">
+        <p className="eyebrow mt-16 text-xs tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-14">
           Under our constitution
         </p>
 
@@ -789,7 +796,7 @@ export function Governance() {
           formal Iningai Nation representative.
         </p>
 
-        <p className="eyebrow mt-16 text-xs tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-28">
+        <p className="eyebrow mt-16 text-xs tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-16">
           Board seats · held
         </p>
         <div
@@ -803,7 +810,7 @@ export function Governance() {
         {/* ⚑ The container NEVER FILLS. It is not sitting yet. */}
         <div
           data-placeholder="elder-advisory"
-          className="relative mt-14 overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/60 p-6 lg:mt-20 lg:min-h-[420px] lg:p-[38px]"
+          className="relative mt-14 overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/60 p-6 lg:mt-12 lg:min-h-[420px] lg:p-[38px]"
         >
           <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2 text-xs tracking-[0.3em] text-charcoal sm:tracking-[0.66em]">
             Not yet sitting
@@ -865,7 +872,7 @@ export function Acknowledgements() {
         <RingArtwork piece="a" className="-left-45 bottom-[10%] w-[44rem]" />
       </div>
 
-      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+      <div className={`${COLUMN} relative py-16 lg:py-24`}>
         <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
           Acknowledgements
         </p>
@@ -876,7 +883,7 @@ export function Acknowledgements() {
           {acknowledgements.lede}
         </p>
 
-        <ul className="mt-14 lg:mt-24">
+        <ul className="mt-14 lg:mt-14">
           {acknowledgements.people.map((entry) => (
             <li key={entry.name} className="border-t border-canvas/15 py-8">
               <p
@@ -950,7 +957,7 @@ export function BreathPivot() {
       />
       <p
         data-placeholder="stand-in"
-        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[0.625rem] text-canvas"
+        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
       >
         ⟡ Stand-in
       </p>
@@ -1011,7 +1018,7 @@ export function GetInTouch() {
         />
       </div>
 
-      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+      <div className={`${COLUMN} relative py-16 lg:py-24`}>
         <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           Get in touch
         </p>
@@ -1021,11 +1028,11 @@ export function GetInTouch() {
 
         {/* Three across, two rows, 360 wide. */}
         {/* Three across, two rows, 360 wide. */}
-        <div className="mt-14 lg:mt-24">
+        <div className="mt-14 lg:mt-14">
           <ContactDetails />
         </div>
 
-        <p className="mt-14 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-[1.375rem] lg:mt-24">
+        <p className="mt-14 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-[1.375rem] lg:mt-14">
           {contactRoutes.lede}
         </p>
 

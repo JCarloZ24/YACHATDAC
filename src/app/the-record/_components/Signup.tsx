@@ -37,7 +37,7 @@ export function RecordSignup() {
 
       <label
         htmlFor={id}
-        className="eyebrow mt-5 block text-[0.6875rem] leading-4 tracking-[1.4px] text-canvas/55"
+        className="eyebrow mt-5 block text-[11px] leading-4 tracking-[1.4px] text-canvas/55"
       >
         Email
       </label>
