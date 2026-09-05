@@ -289,15 +289,15 @@ export type Photo = {
  * Batch 1, transcoded from the Figma masters (72MB of PNG to 1.4MB of WebP at
  * 2000px, which is the delivery format agreed in the 18 Aug briefing).
  *
- * ⚠ THESE FILES ARE NOT IN GIT. `.gitignore` excludes `/public/media/` on a
- * deliberate decision — the client media library lives in Drive today and moves
- * into the CMS at launch. So this manifest describes files a fresh clone will
- * not have, and the gallery at /lab/effects will show empty frames until they
- * are fetched.
+ * THESE FILES ARE IN GIT. They did not used to be: the library lived in Drive
+ * and `.gitignore` excluded `/public/media/`. That reversed at `79d90f5` because
+ * Vercel builds from this repo and an untracked library deploys a site with no
+ * photographs. The Drive originals remain the source of truth; this is the
+ * web-sized set. `.gitignore` still carries the reasoning at its line 57.
  *
- * To repopulate: pull the source images from YACHATDAC-V2 `PHOTO LIBRARY · 1st
- * batch` (2048:9525) and transcode to WebP at 2000px, quality 82. The artwork in
- * `public/artwork/` IS tracked — vectors are brand assets, like `public/brand/`.
+ * To add a row: transcode the Drive original to WebP at 2000px, quality 82, and
+ * commit the derivative beside the row. The artwork in `public/artwork/` is
+ * tracked too — vectors are brand assets, like `public/brand/`.
  *
  * Grades follow what the frames actually show, checked by looking at every one
  * of them rather than by trusting a filename:
@@ -403,6 +403,45 @@ export const PHOTOS: Photo[] = [
      carry no caption: a caption would make a breath an illustration. */
   { id: "op-breath-01", src: "/media/library/our-people/op-breath-01.webp", width: 2000, height: 1500, grade: "full", batch: 3, master: "country-wide-track", subject: "A track running out across open Country — ⟡ STAND-IN" },
   { id: "op-breath-02", src: "/media/library/our-people/op-breath-02.webp", width: 2000, height: 442, grade: "full", batch: 3, master: "burn-pano-sunset", subject: "Burnt ground at sunset, panorama — ⟡ STAND-IN" },
+
+  /* ------------------------------------------------------------------ About.
+     Six derivatives cut for `05 · About` (Figma 2653:19666). The other two
+     frames that page draws are already here: §03's is `country-wide`
+     (378A7604_1.28.1) and §07's left portrait is `op-card-01` (378A7604_1.80.1).
+
+     ⚠ THE TWO §07 PORTRAITS ARE THE SAME MAN. batch-1.md:355 opens 1.77.4 with
+     "The same older man" — the same person as 1.80.1, which the page already
+     renders beside it. So `about-people-02` is a second frame of `op-card-01`'s
+     subject, exactly the repeat `op-card-06` is. The library holds no second
+     cleared face, the frame draws two, and inventing a third person is not an
+     option. Both carry ⚠ CONSENT UNRESOLVED in the markup and neither is
+     captioned with a name, which is what keeps this honest rather than false.
+     It goes when real portraits arrive.
+
+     Four of the six show no people at all, which is why they read as Country
+     rather than as illustration. `about-reciprocity` shows hands only — the
+     notes record no faces in frame at all (batch-2.md:109). */
+  { id: "about-hero", src: "/media/library/about/about-hero.webp", width: 2000, height: 1334, grade: "full", batch: 2, master: "March22-2432", subject: "Three figures on a ledge beneath a banded sandstone escarpment — people as scale, no identifiable faces" },
+  { id: "about-road", src: "/media/library/about/about-road.webp", width: 2000, height: 1124, grade: "full", batch: 2, master: "March22-0261", subject: "Aerial down a sandy two-wheel track through low bushland, one vehicle at the end — no people" },
+  { id: "about-breath", src: "/media/library/about/about-breath.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.76.2", subject: "Open woodland at sunset, sun low behind the trunks — no people" },
+  { id: "about-fire", src: "/media/library/about/about-fire.webp", width: 2000, height: 1500, grade: "full", batch: 3, master: "fire-line-daylight", subject: "A flame line working through open timber, unburnt green grass in front of it — no people" },
+  /* §04's cards 2 and 3. Their Figma image layers are unnamed — the only ones
+     on the page that are — so the masters were identified by matching the
+     frame's own exported fills against every original in the three batches
+     (exact signature match, distance 0.0), not chosen. Card 4's fill matched
+     `work-seed`, which is already a row above. */
+  { id: "about-ochre", src: "/media/library/about/about-ochre.webp", width: 2000, height: 1334, grade: "full", batch: 2, master: "March22-1521", subject: "Two hands grinding ochre on a sandstone slab — hands only, nobody identifiable" },
+  /* `frame` for the same reason `about-reciprocity` is: two children are in
+     shot. They are walking away, incidental and unidentifiable (batch-2.md),
+     which is what makes the frame usable at all — but the world moves around
+     a picture with children in it, not the picture. */
+  { id: "about-walking", src: "/media/library/about/about-walking.webp", width: 2000, height: 1334, grade: "frame", batch: 2, master: "March22-1641", subject: "Five walking away in single file along a woodland track — all from behind, no face identifiable" },
+  /* `frame` grade, and not by default. The notes record at least four people
+     cropped to hands and torsos and one of them a child (batch-2.md:109). The
+     world moves around a picture of a child's hands; the picture does not. */
+  { id: "about-reciprocity", src: "/media/library/about/about-reciprocity.webp", width: 2000, height: 1334, grade: "frame", batch: 2, master: "March22-1547", subject: "Ochre-marked adult palms held out over a grinding stone toward a child's — no faces in frame" },
+  /* `frame` on the portrait rule, the same rule that holds `elder-portrait`. */
+  { id: "about-people-02", src: "/media/library/about/about-people-02.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.77.4", subject: "⚠ Same man as op-card-01, full-length under a rock arch — ⚠ CONSENT UNRESOLVED" },
 ];
 
 /** Look-ups used by the gallery and by section modules. */
