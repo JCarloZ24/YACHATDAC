@@ -108,7 +108,15 @@ export const erasBefore: readonly TruthEra[] = [
         caption: "Concept render of the Cultural Knowledge Precinct.",
         coda: "It is being built because there is something here worth building it for.",
         source: "Written record",
-        cta: { label: "Talk to us about being part of it", href: "#partner" },
+        /*
+          Was #partner — the card two entries down, which is two sentences.
+          Partnership intent belongs on the hub, which is the only page that
+          says what is open, who is already here and what is expected (D22).
+        */
+        cta: {
+          label: "Talk to us about being part of it",
+          href: "/partnerships",
+        },
       },
       {
         id: "partner",
@@ -117,7 +125,11 @@ export const erasBefore: readonly TruthEra[] = [
         body: [
           "A researcher on Country is a guest on Country. Partnerships here are expected to give something back to the land and the people.",
         ],
-        cta: { label: "Partner with us", href: "/connect" },
+        /*
+          Was /connect, which routes every intent and holds no partnership
+          content. This card is the teaser; /partnerships is the page.
+        */
+        cta: { label: "Partner with us", href: "/partnerships" },
       },
     ],
   },

@@ -369,12 +369,17 @@ export const getInvolved = {
     {
       title: "Fund the work",
       body: "Ranger wages, water infrastructure, monitoring equipment and restoration. What is needed is specific and can be costed.",
-      cta: { label: "Partner with us", href: "/connect" },
+      cta: { label: "Partner with us", href: "/partnerships" },
     },
     {
       title: "Land management services",
       body: "Fire-stick farming, cultural heritage advice and Country management for properties in the district.",
-      cta: { label: "Enquire", href: "/connect" },
+      /*
+        ⚠ D7 leaves this label unsettled — D7 says "book a consultation", the
+        draft says "Enquire". Not picked here. The destination is the hub
+        either way; fee-for-service itself stays on this page.
+      */
+      cta: { label: "Enquire", href: "/partnerships" },
     },
   ],
   signup: {
