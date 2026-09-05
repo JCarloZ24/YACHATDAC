@@ -7,7 +7,9 @@ import {
   suzanneProfile,
   team,
 } from "@/content/our-people";
-import { contactDetails, contactRoutes } from "@/content/contact";
+import { contactRoutes } from "@/content/contact";
+import { ContactDetails } from "@/components/sections/ContactDetails";
+import { ContactDoors } from "@/components/sections/ContactDoors";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
@@ -946,14 +948,6 @@ const DOOR_GROUNDS = [
   "bg-charcoal",
 ] as const;
 
-/** Verb-led, drawn from each destination's own name. Never a route path. */
-const DOOR_LABELS = [
-  "Plan a visit",
-  "See partnerships",
-  "Meet the rangers",
-  "Visit the record",
-] as const;
-
 export function GetInTouch() {
   return (
     <section
@@ -980,73 +974,17 @@ export function GetInTouch() {
         </h2>
 
         {/* Three across, two rows, 360 wide. */}
-        <dl className="mt-24 grid gap-x-10 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {contactDetails.map((detail) => (
-            <div key={detail.label} className="max-w-[360px]">
-              <dt className="eyebrow text-xs tracking-[0.08em] text-burnt">
-                {detail.label}
-              </dt>
-              {/* Bracketed and NOT a link while `pending`. The brackets are
-                  the drafter's own mark for "not confirmed", which is how the
-                  frame sets these too.
-
-                  Two of the six carry no value at all — contact.ts writes
-                  them as the literal "To be confirmed", standing in for the
-                  draft's own `[ street address ]` and `[ number ]`. Bracketing
-                  that verbatim gives "[ To be confirmed ]", which says the
-                  same thing twice, so the marker carries it alone. */}
-              <dd
-                {...(detail.pending
-                  ? { "data-placeholder": "contact-field" }
-                  : {})}
-                className={`mt-3 text-base leading-[1.5] ${
-                  detail.pending ? "text-oxide" : "text-charcoal"
-                }`}
-              >
-                {detail.pending
-                  ? `[ ${
-                      detail.value.toLowerCase() === "to be confirmed"
-                        ? "to be confirmed"
-                        : detail.value
-                    } ]`
-                  : detail.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        {/* Three across, two rows, 360 wide. */}
+        <div className="mt-24">
+          <ContactDetails />
+        </div>
 
         <p className="mt-24 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-[1.375rem]">
           {contactRoutes.lede}
         </p>
 
-        <div
-          className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {contactRoutes.routes.map((route, i) => (
-            <a
-              key={route.href}
-              href={route.href}
-              /* No hover lift and no transition: this page does not move, and
-                 that includes under a pointer. The door is distinguished by
-                 its ground and its motif, not by responding to a cursor. */
-              className={`relative flex h-80 flex-col rounded-3xl ${DOOR_GROUNDS[i]} p-6 text-canvas`}
-            >
-              <SeamGlyph
-                motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
-                className="relative top-1 left-0 w-14 shrink-0"
-              />
-              <h3 className="headline mt-8 text-[1.75rem] leading-[1.2]">
-                {route.title}
-              </h3>
-              <p className="mt-3 text-[0.9375rem] leading-[1.5] text-canvas/75">
-                {route.description}
-              </p>
-              {/* A button says what happens, never where the file is. */}
-              <p className="eyebrow mt-auto text-[0.8125rem] tracking-[0.3em] text-gold">
-                → {DOOR_LABELS[i]}
-              </p>
-            </a>
-          ))}
+        <div className="mt-14">
+          <ContactDoors grounds={DOOR_GROUNDS} glyphs={CARD_GLYPHS} />
         </div>
       </div>
     </section>
