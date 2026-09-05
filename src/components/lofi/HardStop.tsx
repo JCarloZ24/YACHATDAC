@@ -120,7 +120,7 @@ export function HardStop() {
       data-motion="scroll-lock"
       data-tier1-exception="D9"
       data-locked={locked || undefined}
-      className="relative flex min-h-svh flex-col items-center justify-center bg-charcoal px-6 py-32 text-center"
+      className="relative flex min-h-svh flex-col items-center justify-center bg-charcoal px-6 py-20 text-center lg:py-32"
     >
       <p className="eyebrow text-canvas/40">{hardStop.years}</p>
 

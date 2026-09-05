@@ -646,7 +646,16 @@ export function RecordGrowsV2() {
             {recordGrows.contribute.items.map((item, i) => (
               <li
                 key={item}
-                className={`relative h-[198px] overflow-hidden rounded-3xl ${
+                /* The copy was absolutely positioned at a fixed 15.125rem —
+                   exactly the 242px it gets inside the frame's 298px plate.
+                   At 1024 the four-up row gives each plate 194px and that
+                   fixed width overflowed it, so `overflow-hidden` cut the
+                   item off mid-word; on a phone it could not use the width it
+                   had. It is a flow child now, with `pt-23` holding the
+                   frame's own 92px offset and `min-h` letting a plate grow
+                   rather than swallow its last line. At 1440 the geometry is
+                   identical to what it was. */
+                className={`relative min-h-[198px] overflow-hidden rounded-3xl px-7 pt-23 pb-7 ${
                   i % 2 === 0 ? "bg-evergreen" : "bg-roasted"
                 }`}
               >
@@ -659,7 +668,7 @@ export function RecordGrowsV2() {
                     className="absolute top-7 left-7 size-9 border border-dashed border-burnt/50"
                   />
                 )}
-                <p className="absolute top-23 left-7 w-[15.125rem] text-[1.0625rem] leading-[1.625rem] font-medium">
+                <p className="text-[1.0625rem] leading-[1.625rem] font-medium">
                   {item}
                 </p>
               </li>

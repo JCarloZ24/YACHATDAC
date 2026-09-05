@@ -1268,7 +1268,7 @@ export function LivingWorkInvitation() {
                 key={path.title}
                 data-cluster
                 data-tier="mid"
-                className={`group relative flex min-h-[420px] flex-col overflow-hidden rounded-3xl p-9 ${p.ground}`}
+                className={`group relative flex flex-col overflow-hidden rounded-3xl p-6 ${p.ground} lg:min-h-[420px] lg:p-9`}
               >
                 {/* The hover lift — the ground lightens 4%, per the card note.
                     A canvas veil rather than a filter, so the motifs and type
@@ -1280,7 +1280,7 @@ export function LivingWorkInvitation() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.glyph} alt="" className="size-11" aria-hidden />
                 <p className="eyebrow mt-6 text-xs text-gold">{p.audience}</p>
-                <div className="mt-2 flex h-21 items-end">
+                <div className="mt-2 flex min-h-21 items-end">
                   <h3 className="headline text-2xl leading-[1.3] text-canvas">
                     {path.title}
                   </h3>

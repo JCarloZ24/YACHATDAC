@@ -736,7 +736,7 @@ export function RecordGrid({
         /* Same column as the cards — this used to sit on pl-70/pr-10, a
            different left edge from the grid it replaces. */
         <div className="px-6 py-24 lg:pr-[50px] lg:pl-60">
-          <div className="max-w-xl rounded-3xl border border-dashed border-evergreen/30 p-10">
+          <div className="max-w-xl rounded-3xl border border-dashed border-evergreen/30 p-6 lg:p-10">
             <p className="eyebrow text-oxide">Nothing found</p>
             <p className="mt-3 text-sm leading-relaxed text-evergreen/70">
               {browserCopy.empty}

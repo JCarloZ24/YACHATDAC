@@ -519,10 +519,15 @@ export function WonderBeforeYouCome() {
           <p className={`${H5} text-gold text-center`}>{beforeYouCome.eyebrow}</p>
           <div className="flex w-full flex-col items-center gap-10">
             <h2 className={`${H2} text-center`}>{beforeYouCome.title}</h2>
+            {/* `max-w-full` on the cells below is a guard, not a responsive
+                pass — this file is desktop-first by decision and its own pass
+                is still to come. Without it a 378px cell sits in a 247px
+                column with nothing clipping it and pans the whole document
+                sideways; the row at :178 already carries the same guard. */}
             {[row1, row2].map((row, i) => (
               <dl key={i} className="flex gap-6">
                 {row.map((fact) => (
-                  <div key={fact.label} className="flex w-[378px] flex-col gap-2">
+                  <div key={fact.label} className="flex w-[378px] max-w-full flex-col gap-2">
                     <dt className={`${H5} text-gold`}>{fact.label}</dt>
                     <dd className="text-lg leading-normal">{fact.value}</dd>
                   </div>
