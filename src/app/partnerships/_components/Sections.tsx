@@ -3,6 +3,7 @@ import { howWeWork, partners } from "@/content/about";
 import { contactDetails } from "@/content/contact";
 import { getInvolved } from "@/content/living-work";
 import { documents, knowledgeGaps, onRequest } from "@/content/the-record";
+import { CardRail } from "@/components/ui/CardRail";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
@@ -67,8 +68,39 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * and stays typographic.
  */
 
-/** The column — padding alone, no max-width. See the-record Sections.tsx:59. */
-const COLUMN = "w-full px-6 lg:px-25";
+/**
+ * THE MOBILE RAMP, read off the one mobile design that exists.
+ *
+ * Figma `01 · Wonder — HI-FI · Mobilep` (node 2576:21896, 375 wide) carries
+ * the file's `Typography/Mobile/*` styles, and its numbers are:
+ *
+ *   H1 56 · H2 36 · H3 32 · H4 (lead) 24 · H5 (eyebrow) 16 · H6 14
+ *
+ * against the desktop 96 / 56 / 40 / 36 / 20 / 14. These bases follow it for
+ * the roles it settles cleanly — the page title at 56, section headings at 36,
+ * the section eyebrow at 16.
+ *
+ * ⚠ WHAT IS NOT TAKEN FROM IT. The frame's mobile gutter is 20px; the code
+ * keeps `px-6` (24), because the header, the footer and every other page in
+ * this repo are built on 24 and a 4px disagreement inside the chrome is worse
+ * than a 4px disagreement with one frame. Card headings stay at 24 rather than
+ * the frame's 32: Wonder's card is 335 wide with 20px padding, ours is a rail
+ * card with about 244px across the copy, and 32 wraps a short title to three
+ * lines there. Body copy stays at `text-lg`, which is the ramp the rest of the
+ * codebase already uses (`the-record/…:168`).
+ */
+
+/**
+ * The column — padding alone, no max-width. See the-record Sections.tsx:59.
+ *
+ * ⚠ `sm:px-10` IS A DELIBERATE ADDITION, and the one place this page departs
+ * from the house convention. Every other page steps `px-6` straight to its
+ * `lg:` value with nothing in between, which leaves a 768px viewport holding
+ * `sm:text-2xl` body copy across a 720px measure inside 24px gutters — the
+ * worst-served width in the codebase. Raise it with Juan Carlos before
+ * spreading it; his pages have the same gap and are not touched here.
+ */
+const COLUMN = "w-full px-6 sm:px-10 lg:px-25";
 
 /**
  * The eyebrow tracking on THIS page is the frame's own, and it is not the
@@ -78,7 +110,8 @@ const COLUMN = "w-full px-6 lg:px-25";
  * rather than assumed, because the two pages share a Figma style name and
  * disagree on its value.
  */
-const EYEBROW_DARK = "eyebrow text-xl leading-[1.3] tracking-[0.333em] text-gold sm:text-2xl";
+const EYEBROW_DARK =
+  "eyebrow text-base leading-[1.3] tracking-[0.16em] text-gold sm:text-2xl sm:tracking-[0.333em]";
 
 /** boomerang, circle, starburst — the frame's rotation, in repo glyph names. */
 const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
@@ -156,12 +189,12 @@ export function PartnershipsHero() {
       {/* Flex-centred with `min-h`, not a fixed `h` with absolute copy: the
           copy is a flow child, so a short viewport grows the block instead of
           clipping the obligation off the bottom of the picture. */}
-      <div className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden">
+      <div className="relative flex min-h-[100svh] w-full flex-col justify-end overflow-hidden lg:justify-center">
         <div data-motion={HERO?.grade ?? "frame"} className="absolute inset-0">
           <MediaOrField
             src={HERO?.src ?? null}
             alt="A drone view along an escarpment burn edge, a crew walking it on foot"
-            sizes="100vw"
+            sizes="(min-width: 1024px) 100vw, 260vw"
             priority
             fieldClass="bg-evergreen"
           />
@@ -179,7 +212,7 @@ export function PartnershipsHero() {
         {/* X5 band · under the copy block only. */}
         <div
           aria-hidden
-          className="absolute inset-x-0 top-[34%] h-[42%]"
+          className="absolute inset-0 lg:top-[34%] lg:bottom-auto lg:h-[42%]"
           style={{
             backgroundImage:
               "linear-gradient(180deg, rgba(9,14,18,0) 0%, rgba(9,14,18,0.34) 35%, rgba(9,14,18,0.34) 70%, rgba(9,14,18,0) 100%)",
@@ -196,9 +229,9 @@ export function PartnershipsHero() {
         {/* pb clears the wave. The divider is 104px tall at sm and up and it
             is seated ON this picture, so a symmetric block would put the CTA
             row under it. */}
-        <div className={`${COLUMN} relative pt-32 pb-48`}>
+        <div className={`${COLUMN} relative pt-16 pb-28 lg:pt-32 lg:pb-48`}>
           <p className={EYEBROW_DARK}>Work with us</p>
-          <h1 className="headline mt-6 max-w-[1240px] text-4xl leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:text-[5.25rem]">
+          <h1 className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:text-[5.25rem]">
             {claim}
           </h1>
           <p className="mt-10 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl">
@@ -255,9 +288,9 @@ export function TheObligation() {
         piece="b"
         className="-top-32 left-[44%] w-[62.5rem] opacity-8"
       />
-      <div className={`${COLUMN} relative py-40`}>
+      <div className={`${COLUMN} relative py-16 lg:py-40`}>
         <p className={EYEBROW_DARK}>The obligation</p>
-        <h2 className="headline mt-8 max-w-[1180px] text-3xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-8 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
           {claim}
         </h2>
         <p className="mt-14 max-w-[1000px] text-xl leading-[1.5] font-medium sm:text-[1.75rem]">
@@ -307,11 +340,11 @@ export function OpenResearch() {
         />
       </div>
 
-      <div className={`${COLUMN} relative pt-36 pb-36`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
         <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           Still to be found
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-3xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
           Open research
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
@@ -409,18 +442,27 @@ export function OpenQuestions() {
         />
       </div>
 
-      <div className={`${COLUMN} relative pt-36 pb-40`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-40`}>
         <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           The offer
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-3xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[4rem]">
           {knowledgeGaps.title}
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
           {knowledgeGaps.lede}
         </p>
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-2">
+        {/* `label` is set HERE and nowhere else: these cards are `article`s
+            with nothing focusable inside them, so without a tab stop on the
+            rail a keyboard cannot reach questions two to four on a phone.
+            The other three rails are rows of links and need none. */}
+        <CardRail
+          className="mt-12 lg:mt-16"
+          columns="lg:grid-cols-2"
+          gap="sm:gap-8"
+          label="The four open questions"
+        >
           {knowledgeGaps.gaps.map((gap, i) => {
             const photo = GAP_PHOTOS[i] ? photoById(GAP_PHOTOS[i]!) : undefined;
             return (
@@ -429,12 +471,12 @@ export function OpenQuestions() {
                 className={`relative flex flex-col overflow-hidden rounded-3xl ${GAP_GROUNDS[i]} text-canvas lg:min-h-[32.5rem]`}
               >
                 {photo ? (
-                  <div className="relative aspect-[610/200] w-full shrink-0 overflow-hidden">
+                  <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden lg:aspect-[610/200]">
                     <div data-motion={photo.grade} className="absolute inset-0">
                       <MediaOrField
                         src={photo.src}
                         alt={photo.subject}
-                        sizes="(min-width: 1024px) 610px, 100vw"
+                        sizes="(min-width: 1024px) 610px, (min-width: 640px) 100vw, 78vw"
                         fieldClass="bg-canvas/6"
                       />
                     </div>
@@ -452,7 +494,7 @@ export function OpenQuestions() {
                   </div>
                 ) : null}
 
-                <div className="flex flex-1 flex-col p-[34px]">
+                <div className="flex flex-1 flex-col p-6 lg:p-[34px]">
                   {!photo ? (
                     <SeamGlyph
                       motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
@@ -491,7 +533,7 @@ export function OpenQuestions() {
               </article>
             );
           })}
-        </div>
+        </CardRail>
 
         {/* The peak of interest — four projects a reader could take on, and
             the action sits right under them. Quiet on purpose: the questions
@@ -523,7 +565,7 @@ export function Breath() {
         <MediaOrField
           src={BREATH?.src ?? null}
           alt="A wide plain of low green scrub seen through a screen of slender trees"
-          sizes="100vw"
+          sizes="(min-width: 1024px) 100vw, 260vw"
           fieldClass="bg-evergreen/40"
         />
       </div>
@@ -556,20 +598,20 @@ export function AlreadyWorkingWith() {
         <RingArtwork piece="a" className="-left-52 bottom-[6%] w-[45rem] opacity-7" />
       </div>
 
-      <div className={`${COLUMN} relative pt-36 pb-36`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
         <p className={EYEBROW_DARK}>Already here</p>
-        <h2 className="headline mt-6 max-w-[1180px] text-3xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
           Who we already work with
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
           {partners.body}
         </p>
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-3">
+        <div className="mt-12 grid gap-8 lg:mt-16 lg:grid-cols-3">
           {partners.groups.map((group, i) => (
             <div
               key={group.title}
-              className="relative rounded-3xl border border-canvas/12 p-8 lg:min-h-[27.5rem]"
+              className="relative rounded-3xl border border-canvas/12 p-6 lg:min-h-[27.5rem] lg:p-8"
             >
               <SeamGlyph
                 motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
@@ -582,7 +624,7 @@ export function AlreadyWorkingWith() {
                 {group.names.map((name) => (
                   <li
                     key={name}
-                    className="border-t border-canvas/12 py-4 text-lg leading-[1.35] font-medium first:border-t-0 first:pt-0"
+                    className="border-t border-canvas/12 py-5 text-lg leading-[1.25] font-medium first:border-t-0 first:pt-0 lg:py-4 lg:leading-[1.35]"
                   >
                     {name}
                   </li>
@@ -669,24 +711,24 @@ export function WaysIn() {
         <RingArtwork piece="a" className="-left-48 bottom-[14%] w-[40rem] opacity-7" />
       </div>
 
-      <div className={`${COLUMN} relative pt-36 pb-36`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
         <p className={EYEBROW_DARK}>Get involved</p>
-        <h2 className="headline mt-6 text-3xl leading-[1.2] tracking-[-0.023em] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.023em] sm:text-5xl lg:text-[4rem]">
           Ways in
         </h2>
 
-        <div className="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <CardRail className="mt-12 lg:mt-20" columns="sm:grid-cols-2 lg:grid-cols-4">
           {WAYS.map((way, i) => (
             <a
               key={way.title}
               href={way.href}
-              className={`relative flex min-h-[22.5rem] flex-col rounded-3xl ${way.ground} p-6 text-canvas`}
+              className={`relative flex flex-col rounded-3xl ${way.ground} p-6 text-canvas lg:min-h-[22.5rem]`}
             >
               <SeamGlyph
                 motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
                 className="relative top-1 left-0 w-14 shrink-0"
               />
-              <h3 className="headline mt-8 text-[1.625rem] leading-[1.2] tracking-[-0.02em]">
+              <h3 className="headline mt-8 text-2xl leading-[1.2] tracking-[-0.02em] sm:text-[1.625rem]">
                 {way.title}
               </h3>
               <p className="mt-4 text-sm leading-[1.5] text-canvas/78">
@@ -698,7 +740,7 @@ export function WaysIn() {
               </p>
             </a>
           ))}
-        </div>
+        </CardRail>
 
         <div className="mt-16">
           <BlobButton href="/connect" tone="burnt" still>
@@ -736,9 +778,9 @@ export function HowWorkIsAgreed() {
         <RingArtwork piece="b" className="top-[8%] left-[66%] w-[56.25rem] opacity-8" />
       </div>
 
-      <div className={`${COLUMN} relative pt-36 pb-36`}>
+      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-36 lg:pb-36`}>
         <p className={EYEBROW_DARK}>How work is agreed</p>
-        <h2 className="headline mt-6 max-w-[1180px] text-3xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
+        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[4rem]">
           {protocol?.title ?? "Working with us — research protocol"}
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
@@ -748,9 +790,9 @@ export function HowWorkIsAgreed() {
         {/* Drawn, not filled. */}
         <div
           data-placeholder="protocol-in-preparation"
-          className="relative mt-16 max-w-[900px] rounded-3xl border-[1.5px] border-dashed border-gold/55 p-9"
+          className="relative mt-12 max-w-[900px] rounded-3xl border-[1.5px] border-dashed border-gold/55 p-6 lg:mt-16 lg:p-9"
         >
-          <SeamGlyph motif="a" className="right-6 bottom-6 w-11" />
+          <SeamGlyph motif="a" className="right-6 bottom-6 hidden w-11 lg:block" />
           <p className="eyebrow inline-block rounded-xs border border-gold/55 px-3 py-1.5 text-[0.625rem] tracking-[0.28em] text-gold">
             In preparation
           </p>
@@ -796,7 +838,7 @@ export function TheEnding() {
           the address's baseline rather than floating it against the eyebrow.
           One column below lg — at 1024 the two would be 392px apiece and the
           button would sit a screen-width from the words it answers. */}
-      <div className={`${COLUMN} relative grid gap-x-12 gap-y-12 pt-36 pb-40 lg:grid-cols-2 lg:items-end`}>
+      <div className={`${COLUMN} relative grid gap-x-12 gap-y-12 pt-16 pb-16 lg:grid-cols-2 lg:items-end lg:pt-36 lg:pb-40`}>
         <div>
           <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
             Where we are
