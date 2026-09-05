@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
  *
  * `ground` paints the page's own ground behind everything, which is what the
  * forward wipe reveals — pass the page's opening ground colour, as a hex from
- * the brand palette. The classes map to src/app/v2/transitions.css.
+ * the brand palette. The classes map to src/components/motion/transitions.css.
  */
 
 const ENTER = {

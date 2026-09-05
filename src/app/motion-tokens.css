@@ -1,13 +1,10 @@
 /* ---------------------------------------------------------------------------
    Motion tokens.
 
-   Ported from the project motion skill:
-     .claude/skills/yachatdac-motion/assets/motion-tokens.css
-     .claude/skills/yachatdac-motion/references/tokens.md
-
-   That skill is the source of truth. Values here are verbatim — do not tune
-   them per section. The whole point of a shared token set is that sections
-   built by different people feel like one site.
+   Originally ported from the yachatdac-motion skill (removed under decision
+   F8, 31 Aug 2026). This file is now the source of truth for these tokens —
+   do not tune them per section. The whole point of a shared token set is that
+   sections built by different people feel like one site.
 
    The palette itself is NOT duplicated here: the `--y-*` names the skill's
    templates expect are aliased onto the Tailwind theme colours declared in

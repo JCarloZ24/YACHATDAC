@@ -290,7 +290,7 @@ export const whoYouAreWith = {
  */
 export const wonderStories = {
   title: "Stories from out here",
-  href: "/resources?tag=lore",
+  href: "/the-record?tag=lore",
   lede: "Pulled from the Resources collection, tagged #lore, #country and #guesting.",
   cmsNote:
     "Dynamic — three most recent posts from Resources carrying #lore, #country or #guesting. Editor can pin a post to the first slot. Falls back to most recent overall if fewer than three are tagged.",
@@ -300,21 +300,21 @@ export const wonderStories = {
       title: "Wattanuri and the sisters he followed",
       summary:
         "Ten clusters of engravings run south to north along the wall. Read in that order, they tell the Seven Sisters.",
-      href: "/resources/wattanuri-and-the-ones-he-followed",
+      href: "/the-record/wattanuri-and-the-ones-he-followed",
     },
     {
       tag: "#country",
       title: "A season of bush foods",
       summary:
         "What comes on when, across the year, and the country each one grows out of.",
-      href: "/resources/a-season-of-bush-foods",
+      href: "/the-record/a-season-of-bush-foods",
     },
     {
       tag: "#guesting",
       title: "Bringing a spring back",
       summary:
         "A thousand litres twice a day through drought, until it held on its own.",
-      href: "/resources/bringing-a-spring-back",
+      href: "/the-record/bringing-a-spring-back",
     },
   ],
 } as const;

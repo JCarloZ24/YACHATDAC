@@ -54,9 +54,11 @@ next-env.d.ts
 /public/fonts/GoodDogCool.woff2
 /public/fonts/GoodDogPlain.woff2
 
-# Client media library. Lives in Google Drive today and moves into the CMS
-# media library at launch — it does not belong in git.
-/public/media/
+# Client media library. Originally kept out of git (source of truth is Google
+# Drive, moving to the CMS media library at launch), but the Vercel deployment
+# builds from this repo, so the site's rendered copies are tracked until the
+# CMS exists — an untracked library deploys a site with no photographs.
+# The Drive originals remain the source of truth; this is the web-sized set.
 
 # Raw Drive-export copies of the client prototypes, with their base64
 # photography extracted to disk. JC's converted versions — provenance header,
@@ -81,3 +83,6 @@ next-env.d.ts
 /brand/typefaces/BantayogSans-*.woff2
 /brand/typefaces/GoodDog*.woff2
 /brand/typefaces/GOODD*.TTF
+
+# Playwright MCP session dumps — regenerated per run
+.playwright-mcp/

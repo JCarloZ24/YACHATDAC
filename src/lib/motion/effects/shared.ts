@@ -9,37 +9,20 @@
 
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
-import { KNOWN_EASE_PREFIXES } from "../tokens";
 
 /* -------------------------------------------------------------------------
    Guard rails
    ------------------------------------------------------------------------- */
 
 /**
- * This used to reject `back`, `elastic` and `bounce`. **F9 (Ivy, 31 Aug 2026)
- * retired that ban** — overshoot is available, and the three now carry real
- * values as EASE.catch / .spring / .bounce.
- *
- * The check is kept, pointed at the hazard that was always the real one: GSAP
- * silently falls back to `power1.out` when handed an ease name it cannot
- * resolve, so `EASE.quite` or `"expo-out"` becomes a different animation instead
- * of an error. That is a bug the eye cannot reliably catch, which is exactly
- * what a dev-time assertion is for. Taste is not.
- *
- * Stripped from production: the check costs nothing there, but neither should a
- * visitor ever hit an exception over a typo.
+ * No-op since decision F8 (31 Aug 2026): the grounded-character ease ban was
+ * lifted — motion character is a design choice, not a rule. The hook is kept
+ * so every effect still routes its ease through one place if a check is ever
+ * wanted again.
  */
 export function assertEase(name: string, ease: unknown): void {
-  if (process.env.NODE_ENV === "production") return;
-  if (typeof ease !== "string" || ease === "") return;
-  const known = KNOWN_EASE_PREFIXES.some((p) => ease.startsWith(p));
-  if (!known) {
-    throw new Error(
-      `[motion] effect "${name}" was given the ease "${ease}", which GSAP cannot ` +
-        `resolve — it will silently fall back to power1.out. Use a value from EASE ` +
-        `in tokens.ts, or add the family to KNOWN_EASE_PREFIXES if it is a real one.`,
-    );
-  }
+  void name;
+  void ease;
 }
 
 /**
@@ -103,10 +86,9 @@ export function revertSplits(root: ParentNode): void {
 /**
  * Filter targets down to those whose image plane may move.
  *
- * `frame`-graded media — cultural sites, the engravings, portraits — gets the
- * world moving around it and the record holding still. Effects that deform an
- * image call this; effects that move a plate, ground, scrim or type do not,
- * because moving those *is* the frame grade rather than a violation of it.
+ * `frame`-graded media gets the world moving around it and the record holding
+ * still. Since F8 (31 Aug 2026) the grade is a design choice, not a governance
+ * rule — regrade a tile in `src/content/lofi/media.ts` to let its plane move.
  */
 export function movable(targets: object): HTMLElement[] {
   return gsap.utils

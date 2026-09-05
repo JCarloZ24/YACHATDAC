@@ -85,6 +85,13 @@ export type CompositionSpec = {
    * while its cards arrive.
    */
   enter?: (tl: gsap.core.Timeline, root: HTMLElement) => void;
+  /**
+   * Where the entry trigger starts. Default "top 82%". A screen that follows
+   * a pinned scene sits parked at the viewport's bottom edge until the pin
+   * releases — give it "top 95%" so its arrival reads as the pin's hand-off
+   * rather than a beat of blank ground.
+   */
+  enterStart?: string;
   /** The cut. Final state, instantly. No tweens with a duration, no pins. */
   cut: (root: HTMLElement) => void;
 };
@@ -205,7 +212,7 @@ export function composition(
       let entryTl: gsap.core.Timeline | null = null;
       if (spec.enter) {
         entryTl = gsap.timeline({
-          scrollTrigger: { trigger: root, start: "top 82%", once: true },
+          scrollTrigger: { trigger: root, start: spec.enterStart ?? "top 82%", once: true },
         });
         spec.enter(entryTl, root);
       }

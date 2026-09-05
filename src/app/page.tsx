@@ -1,3 +1,4 @@
+import { FooterGround } from "@/components/layout/FooterGround";
 import { BeatSection } from "@/components/sections/BeatSection";
 import { Hero } from "@/components/sections/Hero";
 import { Invitation } from "@/components/sections/Invitation";
@@ -35,6 +36,7 @@ export default function HomePage() {
       ))}
       <Invitation />
       <WayForward />
+      <FooterGround color="var(--color-evergreen)" />
     </>
   );
 }

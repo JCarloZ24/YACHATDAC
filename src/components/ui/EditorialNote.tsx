@@ -26,14 +26,35 @@ import type { ReactNode } from "react";
 export function EditorialNote({
   children,
   label = "Editorial note — not for publication",
+  tone = "ochre",
+  className = "",
 }: {
   children: ReactNode;
   label?: string;
+  /**
+   * `canvas` is the Truth frames' held document slot (13 · ENTRY 1950s):
+   * off-white dashed at 0.35 on a 0.05 wash, the label at Link/14 and 0.7 —
+   * a quieter register on the dark grounds. Still a placeholder, still
+   * data-placeholder — the pre-launch grep sees both tones.
+   */
+  tone?: "ochre" | "canvas";
+  className?: string;
 }) {
+  if (tone === "canvas") {
+    return (
+      <aside
+        data-placeholder="editorial-note"
+        className={`rounded border border-dashed border-canvas/35 bg-canvas/5 p-6 text-sm leading-relaxed text-canvas/70 ${className}`}
+      >
+        <p>&#9671; {label}</p>
+        <div className="space-y-2">{children}</div>
+      </aside>
+    );
+  }
   return (
     <aside
       data-placeholder="editorial-note"
-      className="rounded-sm border border-dashed border-ochre/50 bg-ochre/5 p-5"
+      className={`rounded-sm border border-dashed border-ochre/50 bg-ochre/5 p-5 ${className}`}
     >
       <p className="eyebrow text-ochre">{label}</p>
       <div className="mt-2 space-y-2 text-sm leading-relaxed text-ochre/85">

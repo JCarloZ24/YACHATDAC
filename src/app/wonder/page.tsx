@@ -1,3 +1,4 @@
+import { FooterGround } from "@/components/layout/FooterGround";
 import type { Metadata } from "next";
 import { Band, BandHeading } from "@/components/layout/Band";
 import { PageHero } from "@/components/layout/PageHero";
@@ -417,6 +418,7 @@ export default function WonderPage() {
           </div>
         </div>
       </Band>
+      <FooterGround color="var(--color-charcoal)" />
     </>
   );
 }

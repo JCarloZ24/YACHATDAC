@@ -1,3 +1,4 @@
+import { FooterGround } from "@/components/layout/FooterGround";
 import type { Metadata } from "next";
 import { Band, BandHeading } from "@/components/layout/Band";
 import { PageHero } from "@/components/layout/PageHero";
@@ -59,7 +60,7 @@ const ways = [
   {
     title: "Something for the record",
     body: "Photographs of the escarpment or the station, station records, letters, diaries, maps, and family papers mentioning Iningai people.",
-    cta: { label: "What is in the record", href: "/resources" },
+    cta: { label: "What is in the record", href: "/the-record" },
   },
 ];
 
@@ -119,6 +120,7 @@ export default function ConnectPage() {
         contact details are wanted here.
       */}
       <ContactBlock tone="charcoal" showRoutes={false} />
+      <FooterGround color="var(--color-charcoal)" />
     </>
   );
 }

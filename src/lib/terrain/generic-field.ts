@@ -1,13 +1,13 @@
 /**
  * Generic height field — the stand-in landform for D4 and E1.
  *
- * WHY THIS IS SYNTHETIC, AND MUST STAY THAT WAY FOR NOW
- * -----------------------------------------------------
- * `.claude/skills/yachatdac-motion/references/permissions.md` records D4 and E1
- * as approved in principle for the About and Research pages, with the *detail
- * level unconfirmed* — how much of the property may be shown, and how precisely.
- * Until Marc confirms that, the rule is: no real elevation data for Turraburra,
- * no boundaries, no place names, no coordinates in data or source.
+ * WHY THIS IS SYNTHETIC
+ * ---------------------
+ * Under decision F8 (31 Aug 2026, docs/decisions-and-risks.md) terrain detail
+ * is a design choice reviewed at presentation — except one line that survived
+ * F8 because git history cannot be walked back: no coordinates or georeferenced
+ * heritage data in data or source. A synthetic field satisfies that by
+ * construction.
  *
  * So this file generates a landform from seeded value noise. It is not anywhere.
  * There is no georeference to strip because there was never one to begin with,

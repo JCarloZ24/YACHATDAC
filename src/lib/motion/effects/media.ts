@@ -28,11 +28,22 @@ export function registerMedia(): void {
      The most reusable behaviour on the site. The frame's clip-path opens while
      the image counter-scales, so the picture appears to be revealed rather than
      resized. Animating width/height here is what makes an "immersive" site
-     stutter; the clip-path exception exists precisely to avoid that. */
+     stutter; the clip-path exception exists precisely to avoid that.
+
+     `edge` picks where the opening starts. "center" (default) is the letterbox
+     open. "left"/"right" wipe from that edge — a scroll unrolling from where
+     the image already sits, so a frame anchored to the page's right unrolls
+     right-to-left rather than appearing from thin air on the wrong side. */
   gsap.registerEffect({
     name: "frameOpen",
     extendTimeline: true,
-    defaults: { inset: 16, scale: 1.28, duration: DUR.large, ease: EASE.machine },
+    defaults: {
+      inset: 16,
+      scale: 1.28,
+      edge: "center",
+      duration: DUR.large,
+      ease: EASE.machine,
+    },
     effect: (targets: object, config: Record<string, unknown>) => {
       assertEase("frameOpen", config.ease);
       const frame = first(targets);
@@ -40,17 +51,43 @@ export function registerMedia(): void {
       const inset = config.inset as number;
       const duration = config.duration as number;
       const ease = config.ease as string;
+      const edge = config.edge as "center" | "left" | "right";
+      // inset(top right bottom left) — collapsing the OPPOSITE side to 100%
+      // pins the visible sliver at the named edge, so animating back to 0
+      // unrolls the picture from where it already sits.
+      const fromClip =
+        edge === "left"
+          ? "inset(0% 100% 0% 0%)"
+          : edge === "right"
+            ? "inset(0% 0% 0% 100%)"
+            : `inset(${inset}% ${inset * 0.75}% ${inset}% ${inset * 0.75}%)`;
       const tl = gsap.timeline();
       tl.fromTo(
         frame,
-        {
-          clipPath: `inset(${inset}% ${inset * 0.75}% ${inset}% ${inset * 0.75}%)`,
-        },
+        { clipPath: fromClip },
         { clipPath: "inset(0% 0% 0% 0%)", duration, ease },
         0,
       );
       if (media) {
-        tl.fromTo(media, { scale: config.scale as number }, { scale: 1, duration, ease }, 0);
+        if (edge === "left" || edge === "right") {
+          // Edge wipes must not read as a zoom — no scale at all. The media
+          // drifts in from the reveal side instead, settling as the clip
+          // finishes. The drift (6%) is always smaller than the remaining
+          // inset (from 100%), both on the same ease, so the offset never
+          // exposes the frame's far edge mid-wipe. scale:1 is the caller's
+          // "plane holds still" pin (frame grade) — honour it here too and
+          // move only the clip.
+          if ((config.scale as number) !== 1) {
+            tl.fromTo(
+              media,
+              { xPercent: edge === "right" ? 6 : -6 },
+              { xPercent: 0, duration, ease },
+              0,
+            );
+          }
+        } else {
+          tl.fromTo(media, { scale: config.scale as number }, { scale: 1, duration, ease }, 0);
+        }
       }
       return tl;
     },
