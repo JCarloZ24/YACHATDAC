@@ -6,6 +6,14 @@ Skills scoped to this repo. Claude Code picks them up automatically from
 The `gsap-*` skills are the official GSAP references (core, timelines,
 ScrollTrigger, plugins, React, frameworks, utils, performance).
 
+`yachatdac-typography` is the type system — the three licensed families, and
+the Figma→code repoint that means a correctly built page never matches the
+frame's letterforms (the file draws in Archivo and Baloo 2; the site ships
+Bantayog Sans and Block Berthold). Read it before writing markup for a hi-fi
+section, and whenever a page "looks wrong" typographically — it usually is
+this, correctly implemented. `npm run check:type` enforces the parts a script
+can enforce.
+
 `yachatdac-motion` was removed under decision **F8** (31 Aug 2026, see
 `docs/decisions-and-risks.md`): the team builds freely and the work is
 reviewed by Steve (FNAN) and the Elder Advisory Group at presentation. The
