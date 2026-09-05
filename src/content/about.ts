@@ -183,5 +183,9 @@ export const partners = {
   ],
   pending:
     "Confirm the current list, get approved logo files, and check whether each partnership is active. The 2024 flyer also listed Preston Campbell Foundation, ANFAB, Phyre Design, The Cameleers and Dixon Homes.",
-  cta: { label: "Partner with us", href: "/connect" },
+  /*
+    Was /connect. These nine names are About's evidence of credibility; the
+    reader who wants to join them needs the hub, not the contact router.
+  */
+  cta: { label: "Partner with us", href: "/partnerships" },
 } as const;

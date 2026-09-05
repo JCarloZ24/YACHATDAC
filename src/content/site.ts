@@ -117,7 +117,14 @@ export const pillars: Pillar[] = [
       { title: "What's Been Researched", href: "/truth#researched" },
       { title: "Open Research Opportunities", href: "/truth#opportunities" },
       { title: "The Cultural Knowledge Precinct", href: "/truth#precinct" },
-      { title: "Partner with Us", href: "/truth#partner" },
+      /*
+        Was /truth#partner. The anchor resolves — TruthEra renders it — but it
+        resolves to a two-sentence card inside Truth's descent, which is the
+        wrong destination for the footer's most commercial link. contact.ts
+        already sent this intent to /partnerships; now the footer agrees, and
+        the site has one destination for "partner with us" instead of three.
+      */
+      { title: "Partner with Us", href: "/partnerships" },
     ],
   },
   {
@@ -196,7 +203,9 @@ export const resourcesFooterLinks: NavChild[] = [
     `update` now resolves too, because D21 put Update back in the vocabulary.
   */
   { title: "Downloads", href: "/resources#documents" },
-  { title: "Videos / Podcast", href: "/resources?type=Recording", stub: true },
+  /* Was stub: true. One Recording exists (resources.ts:217), so the filter
+     returns a result and the flag was stale. */
+  { title: "Videos / Podcast", href: "/resources?type=Recording" },
 ];
 
 /**

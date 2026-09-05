@@ -93,8 +93,17 @@ export default function PartnershipsPage() {
 
         <Reveal index={4}>
           <div className="mt-12 flex flex-wrap gap-x-8 gap-y-3">
-            <CtaLink href="/truth#partner" tone="canvas">
-              How research works here
+            {/*
+              Was "How research works here" -> /truth#partner. That anchor
+              resolves, but to a two-sentence card whose own CTA now points
+              back here — a loop — and the label promised a page nobody has
+              written. No page anywhere explains how research works here; the
+              protocol is "in preparation" (resources.ts:366). Replaced with a
+              link that delivers what it says. The missing page stays on the
+              record as a content ask, not as a dead promise.
+            */}
+            <CtaLink href="/about#partners" tone="canvas">
+              Who we already work with
             </CtaLink>
             <CtaLink href="/resources" tone="canvas">
               What has been found so far
