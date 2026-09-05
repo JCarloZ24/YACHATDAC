@@ -335,3 +335,30 @@ export const wonderClose = {
   /** Carried so it is not lost. Not a build item yet. */
   futureNote: "FUTURE — reviews from groups who have already been.",
 } as const;
+
+/**
+ * "Before you come" — the evergreen band the hi-fi adds between the stay
+ * stages and Where you sleep (Figma 2033:6742, `01 · Wonder · HI-FI`).
+ *
+ * ⚠ HI-FI COPY, NOT DRAFT COPY. The v3 draft has no section of this name; the
+ * body below is what Marc set in the frame, and its facts are the hero facts
+ * restated. The frame's four fact cells still carry placeholder text copied
+ * from the hero (LOCATION and STAY both read "Turraburra, 120km…"), so the
+ * cells are filled from `wonderHero.facts` and `turraburra` here rather than
+ * from the frame. Put to the copy review with the rest of the hi-fi.
+ */
+export const beforeYouCome = {
+  eyebrow: "Before you come",
+  title: "Small groups. Swags. A long way from town.",
+  facts: [
+    { label: "Location", value: "Turraburra, 120km north of Barcaldine" },
+    { label: "Property", value: "8,870 hectares, renamed Turraburra in 2020" },
+    { label: "Stay", value: "Camping — swag or tent, shared meals, fire at night" },
+    { label: "Dates", value: "Arranged with you. May to September is the comfortable stretch." },
+  ],
+  body: [
+    "Turraburra sits 120km north of Barcaldine in Central Western Queensland, 8,870 hectares of it. You will camp — swag or tent, meals shared, fire at night. Groups stay small on purpose, so it stays quiet.",
+    "Dates move with the seasons and with the people hosting you, so they are arranged with you directly rather than picked off a list. Tell us who is coming and roughly when, and we will find the right time.",
+  ],
+  action: { label: "Register your interest", href: "/connect" },
+} as const;

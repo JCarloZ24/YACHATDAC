@@ -294,13 +294,13 @@ export function createRecord(): MotionModule {
                  timeline parked at its end is not evidence of that — the
                  section's own edges are. */
               let inRange = false;
-              /* DEBOUNCED AT THE BOUNDARY. A wheel does not cross a trigger
-                 point once, it crosses it several times in a few frames, and
-                 each crossing used to call play() or reverse() again —
-                 restarting a direction that was already running and making the
-                 flight stutter exactly where it is most visible. Remember
-                 which way it is going; ignore anything asking for that way. */
-              let heading: "out" | "back" | null = null;
+              /* A CLICK PLAYS THE FLIGHT IN TIME; THE SCROLL DRIVES IT
+                 OTHERWISE. While a clicked flight is running, the scrub below
+                 stands aside — the reader asked for the 0.9s and a scroll
+                 event landing mid-flight must not yank it to wherever the
+                 wheel happens to be. Cleared when the flight completes, or is
+                 put anywhere by hand. */
+              let manual = false;
               /* THE READER'S CHOICE OUTRANKS THE PAGE'S.
                  A breakout row also carries an automatic screen — the entry
                  that takes the frame unprompted as the reader scrolls past.
@@ -414,7 +414,13 @@ export function createRecord(): MotionModule {
                 };
                 drawCorner();
 
-                const t = gsap.timeline({ paused: true, onUpdate: paint });
+                const t = gsap.timeline({
+                  paused: true,
+                  onUpdate: paint,
+                  onComplete: () => {
+                    manual = false;
+                  },
+                });
 
                 /* 02 · THE CELL RELEASES. The card lifts and its neighbours
                    drop to 45% — the row stepping back so one entry can leave
@@ -555,24 +561,51 @@ export function createRecord(): MotionModule {
                  card while this one was still out. */
               const settle = (screen: Screen | null, at: number) => {
                 if (!screen?.flight) return;
+                gsap.killTweensOf(screen.flight);
+                manual = false;
                 screen.flight.pause(at);
               };
 
-              const fly = (screen: Screen) => {
-                if (open === screen && heading === "out") return;
+              /* Make a screen the row's open one, built if it has to be. */
+              const take = (screen: Screen) => {
                 if (open && open !== screen) settle(open, 0);
                 open = screen;
-                heading = "out";
                 if (!screen.flight) build(screen);
                 inRange = true;
-                screen.flight?.play();
+              };
+
+              /* THE CLICKED FLIGHT — 0.9s, `country`, from wherever the plate
+                 is now to the screen. */
+              const fly = (screen: Screen) => {
+                if (open === screen && manual && screen.flight?.isActive()) {
+                  return;
+                }
+                take(screen);
+                if (!screen.flight) return;
+                gsap.killTweensOf(screen.flight);
+                manual = true;
+                screen.flight.play();
                 paint();
               };
 
-              const returnHome = () => {
-                if (heading === "back" || !open?.flight) return;
-                heading = "back";
-                open.flight.reverse();
+              /* THE SCRUB — the flight put where the scroll is.
+                 Not set outright: a wheel tick is a step, and a plate that
+                 stepped with it would judder. The progress CHASES the scroll
+                 over a third of a second instead, so the flight moves at the
+                 speed the reader scrolls — and a rapid scroll carries it to
+                 rest rather than cutting it, because the tween finishes at
+                 the value the last event asked for whether or not the reader
+                 is still moving. */
+              const SCRUB = 0.35;
+              const scrub = (screen: Screen, to: number) => {
+                if (manual || !screen.flight) return;
+                gsap.to(screen.flight, {
+                  progress: to,
+                  duration: SCRUB,
+                  ease: "none",
+                  overwrite: true,
+                  onUpdate: paint,
+                });
               };
 
               const lighten = () => {
@@ -587,12 +620,21 @@ export function createRecord(): MotionModule {
                  screen later. That viewport is what the reverse gets to happen
                  in: leaving is as long as arriving, and it has to finish on a
                  frame that is still pinned or the reader watches a full-bleed
-                 plate slide down the page. A row nobody has clicked yet has no
-                 arrival to make room for, so its runway is nothing. */
+                 plate slide down the page.
+
+                 A PLAIN ROW HOLDS FOR ONE VIEWPORT, NOT TWO, so its runway is
+                 half of that: the screen a reader clicks open lives in the
+                 back half of the hold, and the front half is where its reverse
+                 plays when they scroll up. It used to be nothing — the return
+                 trigger was never made for these rows — so a clicked screen
+                 did not fly home, it was cut to the grid at the hard edge
+                 below. Half a viewport is short for a 0.9s reverse, but the
+                 same hard edge still catches a flick, exactly as it does on a
+                 breakout. */
               const runway = () =>
                 section.hasAttribute("data-record-breakout")
                   ? window.innerHeight
-                  : 0;
+                  : window.innerHeight * 0.5;
               const pinTop = () =>
                 section.getBoundingClientRect().top + window.scrollY;
 
@@ -600,26 +642,50 @@ export function createRecord(): MotionModule {
                  the rest wait to be clicked. */
               const autoSlug = section.dataset.breakoutAuto;
               const auto = screens.find((s) => s.slug === autoSlug);
-              if (auto) {
-                /* Which screen this row arrives at by scroll alone. */
-                const arrival = () => chosen ?? auto;
-                ScrollTrigger.create({
-                  trigger: section,
-                  /* A function, so it re-reads the viewport on every refresh
-                     rather than baking in whatever the window was at init. */
-                  start: () => `top+=${runway()} top`,
-                  end: "bottom bottom",
-                  onEnter: () => fly(arrival()),
-                  /* Coming back UP from below the pin, the reader is returning
-                     to the screen, not to the grid. */
-                  onEnterBack: () => {
-                    if (!open) fly(arrival());
-                    else heading = null;
-                  },
-                  /* 07 · RETURNING. The same timeline, backwards. */
-                  onLeaveBack: returnHome,
-                });
-              }
+              /* Which screen this row arrives at by scroll alone: the one the
+                 reader chose, else the automatic one, else nothing — a plain
+                 row nobody has clicked is just a row. */
+              const arrival = () => chosen ?? auto ?? null;
+              /* SCROLL-DRIVEN THROUGH THE RUNWAY, in both directions, on
+                 every row.
+
+                 ⚠ THIS REVISES "NEVER SCRUBBED" ABOVE, and only half of it.
+                 The objection there was to a Flip measured at trigger CREATION
+                 — at the top of the page, before the row was laid out into its
+                 frame. The flight is still built at first need, inside the
+                 pin, off real rects; what changed is what drives it. Asked for
+                 on 5 Sep: the time-based reverse lost to a fast scroll — the
+                 reader cleared the runway in a third of a second, the hard
+                 edge below caught the plate mid-air and cut it to the grid.
+                 Tied to the scroll it cannot be outrun: wherever the reader
+                 is in the runway is where the flight is, its speed is the
+                 reader's, and the top edge is progress 0 by construction.
+
+                 A clicked screen is the exception — see `manual`. It plays
+                 its 0.9s, and the scroll takes over once it has landed. */
+              ScrollTrigger.create({
+                trigger: section,
+                start: "top top",
+                /* A function, so it re-reads the viewport on every refresh
+                   rather than baking in whatever the window was at init. */
+                end: () => `top+=${runway()} top`,
+                onUpdate: (self) => {
+                  const next = arrival();
+                  if (!next) return;
+                  if (open !== next) take(next);
+                  scrub(next, self.progress);
+                },
+                /* Coming back UP from below the pin the reader is returning to
+                   the screen, not the grid — it is already at its end, the
+                   hard edge below settled it there. */
+                onEnterBack: () => {
+                  const next = arrival();
+                  if (!next) return;
+                  if (open !== next) take(next);
+                  inRange = true;
+                  paint();
+                },
+              });
 
               /* THE GUARANTEE, and it is the mirror of the one the old escape
                  carried on arrival.
@@ -653,16 +719,12 @@ export function createRecord(): MotionModule {
                 },
                 onLeave: () => {
                   inRange = false;
-                  if (open?.flight) {
-                    heading = "out";
-                    settle(open, open.flight.duration());
-                  }
+                  if (open?.flight) settle(open, open.flight.duration());
                   lighten();
                   paint();
                 },
                 onLeaveBack: () => {
                   inRange = false;
-                  heading = null;
                   settle(open, 0);
                   open = null;
                   lighten();
@@ -709,6 +771,12 @@ export function createRecord(): MotionModule {
                      the row's default, and the fly() on arrival is then the
                      no-op it should be instead of a second flight. */
                   chosen = screen;
+                  /* And the scrub stands aside NOW, before any scroll below
+                     fires it — otherwise the travel into the pin would drag
+                     the plate out by scroll and the flight on arrival would
+                     have nothing left to do. */
+                  take(screen);
+                  manual = true;
 
                   const top = pinTop();
                   const pinned =
@@ -716,6 +784,16 @@ export function createRecord(): MotionModule {
                     window.scrollY <=
                       top + section.offsetHeight - window.innerHeight;
                   if (pinned) {
+                    /* PAST THE RUNWAY FIRST. The landed screen is the far end
+                       of the scrub; opened in front of it there is no scroll
+                       for the return to travel through, and the first wheel
+                       tick would pull it half-way home. The frame is stuck, so
+                       stepping the scroll forward moves nothing they can see,
+                       and `manual` keeps the crossing from scrubbing it. */
+                    const start = top + runway() + 24;
+                    if (window.scrollY < start) {
+                      window.scrollTo({ top: start, behavior: "instant" });
+                    }
                     fly(screen);
                     return;
                   }
