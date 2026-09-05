@@ -170,6 +170,10 @@ Every description below is of the visible frame only — no names, roles or ages
 - **Light / colour:** Late afternoon into dusk, flat ambient daylight, the fire the only hot light. Orange-yellow flame `#F0821E`, blue-grey sky `#B7C6D2`, grey ground `#A29B93`.
 - **Sensitivity:** None apparent. Fire-practice content may warrant a cultural check on **captioning**, not the image.
 - **Use:** ⭐ Fire / caring-for-Country section, or a strong section opener. Full-bleed with headline upper-left. **The batch's only fire frame.**
+- **⚠ Was over-spent.** For a year this was the only fire frame in the collection and it
+  ended up on five pages at once — Truth full-bleed, Living Work cropped tight, Home, The
+  Record and About. Batch 3 holds around thirty fire frames and all five were re-cast on
+  2026-09-01. Reach for batch 3 first.
 
 ### 378A7604_1.42.1
 - **Subject:** A person facing camera in open dry woodland, arms at their sides — full-length environmental portrait.

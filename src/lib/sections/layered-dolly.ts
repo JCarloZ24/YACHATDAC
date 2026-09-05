@@ -74,6 +74,13 @@ export function createLayeredDolly(root: HTMLElement): MotionModule {
 
     // Fail closed. See the subject-matter note above for why a filter would
     // be theatre here rather than enforcement.
+    //
+    // NOTE the set this matches got smaller on 2026-08-31, when cultural-site
+    // and story-wall were raised from `frame` to `full` in lofi/media.ts. This
+    // guard now blocks on portraits and on nothing else, which is the intended
+    // effect of that decision rather than a regression — but it means sections
+    // that used to refuse to run will now run. If a dolly starts appearing
+    // somewhere it never did, this is why.
     const restricted = camera.querySelector<HTMLElement>(
       "[data-media-tile][data-motion='frame']",
     );

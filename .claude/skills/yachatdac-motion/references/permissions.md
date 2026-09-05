@@ -20,20 +20,24 @@ Update it when a decision comes back — the date and who decided both matter, b
 | Artwork motion | **Yes.** Supersedes "static imagery only". Leonard Mickelo's supplied vectors may be animated, masked, revealed, scrubbed and transformed. | Ivy | 2026-08-30 | Site-wide. Group G (the Guide), T7 artwork orbit, C4 artwork morph, A5 artwork plate, G2 band undulation — the whole ▲ queue below. |
 | Cultural-site imagery | **Available and used**, at **`frame`** grade — the world moves, the record holds. Plate, ground, scrim, type and neighbouring layers animate at full cinematic weight; the image plane does not scrub, mask, erode or warp. | Ivy | 2026-08-30 | Marra Wonga, the engravings, the teaching wall, the escarpment. Carried by plates P1, P8 and P9. |
 | Story-wall imagery | **Available.** "Everything we have can be USED." Graded `frame` for the same reason as cultural-site. | Ivy | 2026-08-30 | The Truth beat may now use it rather than being built typographically by necessity. |
-| **Photo batches 1 and 2 — use** | **Cleared, both batches, in full.** "All images on batch 1 and batch 2 are usable… there are notes there that we can't use it but I'm telling now that everything there we can use." This explicitly overrides the `⛔ R10 QUARANTINE` group in `PHOTOS · Living Work`, which covered eight tagged batch-1 frames plus `March22-2302` (petroglyph close-up) and the untitled `March22` frame (red ochre figures). **The Figma quarantine label is now stale and should be re-worded in the file.** | Ivy | **2026-08-31** | Both batches, all 89 frames. |
+| **Photo batches 1 and 2 — use** | **Cleared, both batches, in full.** "All images on batch 1 and batch 2 are usable… there are notes there that we can't use it but I'm telling now that everything there we can use." This explicitly overrides the `⛔ R10 QUARANTINE` group in `PHOTOS · Living Work`, which covered eight tagged batch-1 frames plus `March22-2302` (petroglyph close-up) and the untitled `March22` frame (red ochre figures). **The Figma quarantine label is now stale and should be re-worded in the file.** | Ivy | **2026-08-31** | Both batches, all 89 frames. **Extended to batch 3 on 2026-09-01 — see the row below.** |
+| **Photo batch 3 — use** | **Cleared, in full**, including the four sandstone rock-shelter frames and the two crowd frames. Ivy: *"all batch of photos are free to use. edit the permission restraining the use of photos because we can use them all."* The 2026-08-31 row above was scoped to 89 frames because batch 3 did not exist yet; this extends the same clearance to it. | Ivy | **2026-09-01** | All 44 frames, `2756:34661`. The collection is now 133 frames and **all of them are cleared for use.** |
 | **Cultural-site and story-wall — motion grade** | ⬆ **Raised from `frame` to `full`.** The image plane itself may now be scrubbed, masked, pushed and morphed, not only the world around it. **This supersedes the `frame` grade recorded above on 2026-08-30**, which is kept as history rather than deleted. | Ivy | **2026-08-31** | Cultural-site and story-wall buckets in `src/content/lofi/media.ts`. |
 
-⚠ **What the 2026-08-31 grade change does NOT change.** `full` governs *which channel moves*.
-ART-DIRECTION §6 governs *which techniques are never applied to a depicted subject*, and it is
-unaffected: dissolve (`IMG-03`), chromatic split (`IMG-04`), velocity warp (`IMG-01`),
-character decode (`ENT-07`), image trail (`INT-07`) and duotone recolour (`IMG-05`) remain
-banned on portraits, artefacts and archival photographs. Both rules hold at once. Ivy
-confirmed §6 stays absolute on the same day.
+⚠ **This note is superseded by F9 and is kept as history.** It used to read that ART-DIRECTION
+§6 banned dissolve, chromatic split, velocity warp, character decode, image trail and duotone
+on depicted subjects regardless of grade. **F9 (Ivy, 2026-08-31) retired that table** — all six
+are available. What survives the change is the distinction the note was drawing: `full` governs
+*which channel moves*, `MOTION_GRADE` governs *where an effect lands*, and §7 governs whether a
+given use earns its place. Those are three separate questions and all three still get asked.
 
-⚠ **Sign-off still outstanding on the grade change.** Elder Advisory Group endorsement was
-already unconfirmed under the `frame` grade (risk R10); raising to `full` widens what is being
-done under an unconfirmed endorsement. Take this to whoever D9 names, alongside the artwork
-asks below.
+⚠ **Sign-off still outstanding, and it is not a use restriction.** Elder Advisory Group
+endorsement was already unconfirmed under the `frame` grade (risk R10); raising to `full`
+widened what is being done under an unconfirmed endorsement, and batch 3's four rock-shelter
+frames widen it again. **The client's clearance is recorded above and is complete** — this is
+a separate third-party endorsement, noted here so it is not lost, not a hold on the material.
+Take it to whoever D9 names, alongside the artwork asks below. The Elder Advisory Group is not
+yet sitting; see About §06.
 
 **What none of these change.** No generated Aboriginal iconography — the unblock lets
 the artist's *supplied* vectors move, and never licenses drawing concentric circles,
@@ -84,7 +88,12 @@ Alongside the existing creative-brief deliverables:
 
 These are settled and don't get reopened per task:
 
-- No animation of cultural-site imagery, in any form.
+- ~~No animation of cultural-site imagery, in any form.~~ **Struck 2026-09-01.** This
+  contradicted two rows of the table above it — the 2026-08-30 `frame` clearance and the
+  2026-08-31 raise to `full` — and it is the restraint Ivy asked to have removed: *"all batch
+  of photos are free to use. edit the permission restraining the use of photos because we can
+  use them all."* Cultural-site imagery may be used and may move. What still applies is
+  captioning, and the sign-off note below.
 - **Recompose, never author.** Confirmed by Ivy 2026-08-31 when the question of making new
   artwork "in the same theme" was put directly. New pieces are built by instancing, masking,
   cropping, recolouring, mirroring and recombining Leonard Mickelo's **actual supplied

@@ -57,13 +57,32 @@ export type MediaBucket =
  * This replaced a boolean. A boolean could only say yes or no, so everything
  * sensitive was forced into stillness; the grade says which channel moves
  * instead, which is what Ivy actually chose on 2026-08-30.
+ *
+ * THE TIEBREAKER, which was always the practice and was never written down:
+ * **the sensitive element in frame decides the bucket, not the activity.** A
+ * person grinding ochre at an engraved wall is `cultural-site`, not `work`. A
+ * ranger burning grass beneath a rock shelter is `cultural-site`, not `work`,
+ * even though the ranger burning grass fifty metres away is `work`. Anything
+ * genuinely ambiguous goes to the more restrictive bucket.
+ *
+ * A batch is not a bucket and never has been. Batch 1 splits across `country`,
+ * `work` and `cultural-site`; so does batch 3. There is deliberately no `fire`
+ * bucket — it would grade and show exactly as `work` does and buy nothing
+ * enforceable, and it would be the first bucket meaning "which shoot" rather
+ * than "which permission". Once those two axes are conflated they do not come
+ * apart. What fire needs is a rule about meaning, and that lives in
+ * ART-DIRECTION §6: fire is a practice, never atmosphere.
  */
 export const MOTION_GRADE: Record<MediaBucket, MotionGrade> = {
   country: "full",
   work: "full",
   artwork: "full", // Ivy, 2026-08-30 — artwork motion permitted
-  "cultural-site": "frame", // Ivy, 2026-08-30 — the world moves, the record holds
-  "story-wall": "frame", // available (Ivy, 2026-08-30), graded as cultural material
+  // Was "frame" (Ivy, 2026-08-30 — the world moves, the record holds). Raised to
+  // "full" on 2026-08-31: the image plane itself may be scrubbed, masked, pushed
+  // and morphed, not only the world around it. permissions.md names this file as
+  // the enforcement point and it had not caught up.
+  "cultural-site": "full",
+  "story-wall": "full", // raised with cultural-site, same decision, same date
 };
 
 /**
@@ -99,7 +118,7 @@ export type MediaSlot = {
  */
 export const invitationGrid: MediaSlot[] = [
   { id: "grid-01", bucket: "country", expects: "First light over the range", src: null, tone: "midnight" },
-  { id: "grid-02", bucket: "work", expects: "Cool burn — right-way fire", src: null, tone: "oxide" },
+  { id: "grid-02", bucket: "work", expects: "Fire-stick farming", src: null, tone: "oxide" },
   { id: "grid-03", bucket: "country", expects: "A spring running", src: null, tone: "evergreen" },
   { id: "grid-04", bucket: "work", expects: "Seed collecting", src: null, tone: "burnt" },
   { id: "grid-05", bucket: "country", expects: "Open Country, wide", src: null, tone: "roasted" },
