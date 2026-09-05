@@ -119,12 +119,41 @@ const BREATH_TEAM = photoById("op-breath-01");
 const BREATH_PIVOT = photoById("op-breath-02");
 
 /**
+ * THE MOBILE RAMP, read off the one mobile design that exists.
+ *
+ * Figma `01 · Wonder — HI-FI · Mobilep` (node 2576:21896, 375 wide) carries
+ * the file's `Typography/Mobile/*` styles, and its numbers are:
+ *
+ *   H1 56 · H2 36 · H3 32 · H4 (lead) 24 · H5 (eyebrow) 16 · H6 14
+ *
+ * against the desktop 96 / 56 / 40 / 36 / 20 / 14. These bases follow it for
+ * the roles it settles cleanly — the page title at 56, section headings at 36,
+ * the section eyebrow at 16.
+ *
+ * ⚠ WHAT IS NOT TAKEN FROM IT. The frame's mobile gutter is 20px; the code
+ * keeps `px-6` (24), because the header, the footer and every other page in
+ * this repo are built on 24 and a 4px disagreement inside the chrome is worse
+ * than a 4px disagreement with one frame. Card headings stay at 24 rather than
+ * the frame's 32: Wonder's card is 335 wide with 20px padding, ours is a rail
+ * card with about 244px across the copy, and 32 wraps a short title to three
+ * lines there. Body copy stays at `text-lg`, which is the ramp the rest of the
+ * codebase already uses (`the-record/…:168`).
+ */
+
+/**
  * The column. Every body in the frame measures at x=100 of 1440, so the
  * padding alone is the column — `lg:px-25` and NO max-width. Adding
  * `mx-auto max-w-7xl` centres a 1280 box in 1440 and lands content at x=180,
  * which is the mistake The Record already made and documented.
+ *
+ * ⚠ `sm:px-10` IS A DELIBERATE ADDITION, and the one place this page departs
+ * from the house convention. Every other page steps `px-6` straight to its
+ * `lg:` value with nothing in between, which leaves a 768px viewport holding
+ * `sm:text-2xl` body copy across a 720px measure inside 24px gutters — the
+ * worst-served width in the codebase. Raise it with Juan Carlos before
+ * spreading it; his pages have the same gap and are not touched here.
  */
-const COLUMN = "w-full px-6 lg:px-25";
+const COLUMN = "w-full px-6 sm:px-10 lg:px-25";
 
 /** boomerang, circle, starburst — the frame's rotation, in repo glyph names. */
 const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
@@ -148,7 +177,7 @@ export function OurPeopleAdvisory() {
     <section
       className="relative flex min-h-[45svh] items-center bg-charcoal text-canvas"
     >
-      <div className={`${COLUMN} pt-28`}>
+      <div className={`${COLUMN} pt-16 lg:pt-28`}>
         {/* the threshold — gold, 3px */}
         <div aria-hidden className="h-[3px] w-[72px] bg-gold" />
         <p className="mt-10 max-w-[1040px] text-lg leading-[1.5] font-medium sm:text-2xl">
@@ -187,7 +216,7 @@ export function OurPeopleHero() {
     <section className="relative bg-charcoal text-canvas">
       {/* The photograph. 1150 of the frame's 1890, hard-cut into charcoal at
           its foot — the scrim carries the cut so it does not read as a seam. */}
-      <div className="relative h-[128svh] w-full overflow-hidden">
+      <div className="relative h-[62svh] w-full overflow-hidden sm:h-[86svh] lg:h-[128svh]">
         <div
           data-media
           data-motion={HERO?.grade ?? "full"}
@@ -196,7 +225,7 @@ export function OurPeopleHero() {
           <MediaOrField
             src={HERO?.src ?? null}
             alt="Rangers walking burnt Country"
-            sizes="100vw"
+            sizes="(min-width: 1024px) 100vw, 260vw"
             priority
             fieldClass="bg-charcoal"
           />
@@ -230,23 +259,23 @@ export function OurPeopleHero() {
         </p>
       </div>
 
-      <div className={`${COLUMN} pt-8 pb-32`}>
+      <div className={`${COLUMN} pt-8 pb-16 lg:pb-32`}>
         {/* Captioned by what the frame SHOWS, never by who the people are —
             which is the rule this caption obeys, not a sentence for a reader. */}
         <p className="max-w-[760px] text-sm leading-[1.5] text-canvas/60">
           Rangers walking burnt Country.
         </p>
 
-        <div className="mt-20 text-center">
+        <div className="mt-12 text-center lg:mt-20">
           <p
-            className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl"
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl"
           >
             {ourPeopleHero.eyebrow}
           </p>
 
           {/* Y1 · the picture leaves the screen and survives inside the word. */}
           <h1
-            className="headline mt-4 bg-center bg-no-repeat bg-clip-text text-6xl leading-[1] text-canvas supports-[background-clip:text]:text-transparent sm:text-8xl lg:text-[12.5rem]"
+            className="headline mt-4 bg-center bg-no-repeat bg-clip-text text-[3.5rem] leading-[1] text-canvas lg:supports-[background-clip:text]:text-transparent sm:text-8xl lg:text-[12.5rem]"
             style={
               HERO
                 ? {
@@ -306,12 +335,12 @@ export function SuzanneTestimony() {
     <section className="relative bg-canvas text-charcoal">
       <WaveDivider ground="var(--color-canvas)" />
 
-      <div className={`${COLUMN} pt-40 pb-32`}>
+      <div className={`${COLUMN} pt-24 pb-20 lg:pt-40 lg:pb-32`}>
         <figure>
           <div
             data-media
             data-motion={SUZANNE?.grade ?? "frame"}
-            className="relative aspect-[1240/620] w-full overflow-hidden"
+            className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-[1240/620]"
           >
             <MediaOrField
               src={SUZANNE?.src ?? null}
@@ -325,10 +354,10 @@ export function SuzanneTestimony() {
           </figcaption>
         </figure>
 
-        <p className="eyebrow mt-24 text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+        <p className="eyebrow mt-16 text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl lg:mt-24">
           Iningai custodian
         </p>
-        <h2 className="headline mt-3 max-w-[900px] text-5xl leading-[1.16] text-evergreen sm:text-7xl">
+        <h2 className="headline mt-3 max-w-[900px] text-4xl leading-[1.16] text-evergreen sm:text-7xl">
           {suzanneProfile.name}
         </h2>
         <p className="mt-5 max-w-[700px] text-xl leading-[1.5] font-semibold text-roasted">
@@ -348,15 +377,15 @@ export function SuzanneTestimony() {
         </div>
 
         {/* The testimony. Sits low on purpose — a screen of canvas above it. */}
-        <blockquote className="mt-56">
+        <blockquote className="mt-24 lg:mt-56">
           <span
             aria-hidden
-            className="headline block text-[10rem] leading-[1] text-ochre/30"
+            className="headline block text-[5rem] leading-[1] text-ochre/30 sm:text-[7.5rem] lg:text-[10rem]"
           >
             &ldquo;
           </span>
           <p
-            className="headline mt-6 max-w-[1240px] text-5xl leading-[1.22] text-evergreen sm:text-7xl"
+            className="headline mt-6 max-w-[1240px] text-4xl leading-[1.22] text-evergreen sm:text-7xl"
           >
             {suzanneProfile.quote}
           </p>
@@ -397,14 +426,25 @@ export function SuzanneTestimony() {
 export function HerDecision() {
   return (
     <section
-      className="relative flex min-h-[140svh] items-center bg-roasted text-canvas"
+      className="relative flex min-h-[92svh] items-center lg:min-h-[140svh] bg-roasted text-canvas"
     >
       <WaveDivider ground="var(--color-roasted)" />
-      <RingArtwork piece="a" className="-left-44 bottom-[8%] w-[36.7rem]" />
-      <RingArtwork piece="b" className="top-[7%] left-[64.4%] w-[56.25rem]" />
+      {/* The rings are pulled outside the column and are far wider than a
+          phone — `w-[56.25rem]` at `left-[64.4%]` reaches 1141px on a 375
+          viewport. Nothing clamps overflow-x on html or body and globals.css
+          hides every scrollbar, so unclipped they pan the whole page sideways
+          with no visible cue. The clip is the same one /about and
+          /partnerships already wrap every ring in.
 
-      <div className={`${COLUMN} relative py-32`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+          ⚠ THE WAVE STAYS OUTSIDE IT. WaveDivider is pulled entirely above
+          its own box; inside an overflow-hidden parent it renders as nothing. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RingArtwork piece="a" className="-left-44 bottom-[8%] w-[36.7rem]" />
+        <RingArtwork piece="b" className="top-[7%] left-[64.4%] w-[56.25rem]" />
+      </div>
+
+      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
           Who decides
         </p>
         <p className="headline mt-12 max-w-[1180px] text-4xl leading-[1.24] sm:text-6xl lg:text-[4.75rem]">
@@ -480,7 +520,7 @@ function PersonCard({
       /* Same size, same ground, whether the person is named or not. A held
          card is not a lesser card, and the ground never varies across the
          set — that is §03's whole argument. */
-      className="relative flex h-[520px] flex-col overflow-hidden rounded-3xl bg-evergreen text-canvas"
+      className="relative flex min-h-[520px] flex-col overflow-hidden rounded-3xl bg-evergreen text-canvas"
     >
       <div className="relative aspect-[380/320] w-full shrink-0 overflow-hidden">
         {/* The image plane. Its own element rather than a bare <img> so the
@@ -515,7 +555,7 @@ function PersonCard({
         />
       </div>
 
-      <div className="flex flex-1 flex-col px-[22px] pt-6 pb-7">
+      <div className="flex flex-1 flex-col px-5 pt-6 pb-7 lg:px-[22px]">
         {person.name ? (
           <h3 data-name className="headline text-[1.625rem] leading-[1.23]">
             {person.name}
@@ -554,11 +594,11 @@ export function TheGathering() {
     <section
       className="relative overflow-hidden bg-canvas text-charcoal"
     >
-      <div className={`${COLUMN} py-32`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+      <div className={`${COLUMN} py-16 lg:py-32`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           The team
         </p>
-        <h2 className="headline mt-3 text-5xl leading-[1.16] text-evergreen sm:text-6xl">
+        <h2 className="headline mt-3 text-4xl leading-[1.16] text-evergreen sm:text-6xl">
           {team.title}
         </h2>
         <p className="mt-7 max-w-[760px] text-lg leading-[1.5] font-medium sm:text-[1.375rem]">
@@ -566,7 +606,7 @@ export function TheGathering() {
         </p>
 
         <div
-          className="mt-24 grid gap-y-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-x-12"
+          className="mt-14 grid gap-y-12 sm:grid-cols-2 sm:gap-6 lg:mt-24 lg:grid-cols-3 lg:gap-x-12"
         >
           {team.people.map((person, i) => (
             <PersonCard key={person.role + i} person={person} index={i} />
@@ -612,7 +652,7 @@ export function BreathTeam() {
         <MediaOrField
           src={BREATH_TEAM?.src ?? null}
           alt=""
-          sizes="100vw"
+          sizes="(min-width: 1024px) 100vw, 260vw"
           fieldClass="bg-evergreen/40"
         />
       </div>
@@ -660,7 +700,7 @@ function HeldSeat({
 }) {
   return (
     <div
-      className="relative flex h-[260px] flex-col justify-between overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/55 bg-charcoal p-[26px]"
+      className="relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/55 bg-charcoal p-5 lg:p-[26px]"
     >
       <p className="eyebrow text-xs tracking-[0.5em] text-gold">Seat held</p>
       <div>
@@ -689,14 +729,16 @@ export function Governance() {
   return (
     <section className="relative bg-evergreen text-canvas">
       <WaveDivider ground="var(--color-evergreen)" />
-      <RingArtwork piece="b" className="top-[4%] left-[64.4%] w-[56.25rem]" />
-      <RingArtwork piece="a" className="-left-48 bottom-[16%] w-[40rem]" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RingArtwork piece="b" className="top-[4%] left-[64.4%] w-[56.25rem]" />
+        <RingArtwork piece="a" className="-left-48 bottom-[16%] w-[40rem]" />
+      </div>
 
-      <div className={`${COLUMN} relative py-32`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
           Governance
         </p>
-        <h2 className="headline mt-3 max-w-[1000px] text-5xl leading-[1.16] sm:text-6xl">
+        <h2 className="headline mt-3 max-w-[1000px] text-4xl leading-[1.16] sm:text-6xl">
           {governance.title}
         </h2>
 
@@ -707,7 +749,7 @@ export function Governance() {
           cultural integrity.
         </p>
 
-        <p className="eyebrow mt-24 text-xs tracking-[0.66em] text-gold">
+        <p className="eyebrow mt-16 text-xs tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-24">
           Under our constitution
         </p>
 
@@ -747,7 +789,7 @@ export function Governance() {
           formal Iningai Nation representative.
         </p>
 
-        <p className="eyebrow mt-28 text-xs tracking-[0.66em] text-gold">
+        <p className="eyebrow mt-16 text-xs tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-28">
           Board seats · held
         </p>
         <div
@@ -761,9 +803,9 @@ export function Governance() {
         {/* ⚑ The container NEVER FILLS. It is not sitting yet. */}
         <div
           data-placeholder="elder-advisory"
-          className="relative mt-20 min-h-[420px] overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/60 p-[38px]"
+          className="relative mt-14 overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/60 p-6 lg:mt-20 lg:min-h-[420px] lg:p-[38px]"
         >
-          <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2 text-xs tracking-[0.66em] text-charcoal">
+          <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2 text-xs tracking-[0.3em] text-charcoal sm:tracking-[0.66em]">
             Not yet sitting
           </p>
           {/* ⚠ THE ONLY FUTURE-TENSE PASSAGE ON THE PAGE, and it stays that
@@ -771,7 +813,7 @@ export function Governance() {
           <p className="mt-10 max-w-[1000px] text-xl leading-[1.5] font-medium text-canvas/90 sm:text-[1.625rem]">
             {governance.body[1]}
           </p>
-          <SeamGlyph motif="a" className="right-9 bottom-9 w-11" />
+          <SeamGlyph motif="a" className="right-9 bottom-9 hidden w-11 lg:block" />
         </div>
 
         <EditorialNote
@@ -818,21 +860,23 @@ export function Acknowledgements() {
   return (
     <section className="relative bg-charcoal text-canvas">
       <WaveDivider ground="var(--color-charcoal)" />
-      <RingArtwork piece="b" className="top-[7%] left-[48.6%] w-[62.5rem]" />
-      <RingArtwork piece="a" className="-left-45 bottom-[10%] w-[44rem]" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RingArtwork piece="b" className="top-[7%] left-[48.6%] w-[62.5rem]" />
+        <RingArtwork piece="a" className="-left-45 bottom-[10%] w-[44rem]" />
+      </div>
 
-      <div className={`${COLUMN} relative py-32`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
+      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
           Acknowledgements
         </p>
-        <h2 className="headline mt-3 max-w-[1100px] text-5xl leading-[1.16] sm:text-6xl">
+        <h2 className="headline mt-3 max-w-[1100px] text-4xl leading-[1.16] sm:text-6xl">
           {acknowledgements.title}
         </h2>
         <p className="mt-7 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl">
           {acknowledgements.lede}
         </p>
 
-        <ul className="mt-24">
+        <ul className="mt-14 lg:mt-24">
           {acknowledgements.people.map((entry) => (
             <li key={entry.name} className="border-t border-canvas/15 py-8">
               <p
@@ -896,7 +940,7 @@ export function BreathPivot() {
         <MediaOrField
           src={BREATH_PIVOT?.src ?? null}
           alt=""
-          sizes="100vw"
+          sizes="(min-width: 1024px) 100vw, 260vw"
           fieldClass="bg-roasted"
         />
       </div>
@@ -955,31 +999,33 @@ export function GetInTouch() {
       className="relative scroll-mt-28 bg-canvas text-charcoal"
     >
       <WaveDivider ground="var(--color-canvas)" />
-      <RingArtwork
-        piece="b"
-        className="top-[5%] left-[64.4%] w-[56.25rem] opacity-30"
-      />
-      <RingArtwork
-        piece="a"
-        tone="roasted"
-        className="-left-48 bottom-[12%] w-[40rem] opacity-30"
-      />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RingArtwork
+          piece="b"
+          className="top-[5%] left-[64.4%] w-[56.25rem] opacity-30"
+        />
+        <RingArtwork
+          piece="a"
+          tone="roasted"
+          className="-left-48 bottom-[12%] w-[40rem] opacity-30"
+        />
+      </div>
 
-      <div className={`${COLUMN} relative py-32`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+      <div className={`${COLUMN} relative py-16 lg:py-32`}>
+        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           Get in touch
         </p>
-        <h2 className="headline mt-3 max-w-[1100px] text-5xl leading-[1.16] text-evergreen sm:text-6xl">
+        <h2 className="headline mt-3 max-w-[1100px] text-4xl leading-[1.16] text-evergreen sm:text-6xl">
           Different things go to different people.
         </h2>
 
         {/* Three across, two rows, 360 wide. */}
         {/* Three across, two rows, 360 wide. */}
-        <div className="mt-24">
+        <div className="mt-14 lg:mt-24">
           <ContactDetails />
         </div>
 
-        <p className="mt-24 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-[1.375rem]">
+        <p className="mt-14 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-[1.375rem] lg:mt-24">
           {contactRoutes.lede}
         </p>
 
