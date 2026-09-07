@@ -1322,10 +1322,16 @@ The reasoning as it stood when this was Final:
 - **Why** — Block Berthold carries an Adobe / H. Berthold AG copyright. A
   commercial font binary is far easier to keep out of a repository than to
   remove from its history later.
-- **Still stands after R3 / R4 closed (2 Sep 2026)** — Licensed is not the same
-  as redistributable. Block Berthold is now served from the Adobe Fonts kit
-  rather than the repository at all, and the Bantayog Sans licence covers use,
-  not publishing the binaries in a public repo. Both stay gitignored.
+- **Amended (7 Sep 2026)** — Bantayog Sans is now **tracked**. The rule had a
+  cost that was not visible when it was written: Vercel builds from the git
+  remote, so gitignoring the binaries meant production served 404s for every
+  Bantayog face and every eyebrow on the live site rendered in Helvetica Neue.
+  The repository is private, so committing them is not redistribution. **This
+  decision is conditional on that** — if the repo is ever made public, purge
+  them from history and serve them from private storage instead.
+- **Block Berthold is the exception and stays gitignored** — it is served from
+  the Adobe Fonts kit, so no build ever needs the local woff2. Licensed still is
+  not the same as redistributable; the kit is what makes that moot here.
 
 ---
 
