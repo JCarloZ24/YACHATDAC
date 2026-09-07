@@ -36,7 +36,7 @@ session could move it.** Read live, the rows are:
 | CR1 | `approved` | yes, 28 Aug | Applied |
 | CR2 | `approved` | yes, 28 Aug | Applied |
 | CR3 | `approved` | yes, 28 Aug | Applied, partial |
-| CR4 | `submitted` | — | **Resolved 7 Sep** |
+| CR4 | `submitted` | — | **Applied 7 Sep, in the quotation** |
 | CR5 | `submitted` | — | Proposed |
 | CR6 | `submitted` | — | **Applied 7 Sep** |
 | CR7 | `approved` | yes, 28 Aug | Applied |
@@ -46,9 +46,16 @@ session could move it.** Read live, the rows are:
 | CR11 | `draft` | — | Blocked |
 
 **Two token limits, and the second is new.** The MCP token in use lacks
-`change_requests.decide`, so no status can be moved — retried 7 Sep against
-CR4 and CR6, still FORBIDDEN. The web UI, signed in as a project member, can
-do it; the connector cannot. It also turns out that
+`change_requests.decide`, so no status can be moved — retried three times on
+7 Sep (CR6, then CR4 twice as its target status changed), FORBIDDEN every time.
+The web UI, signed in as a project member, can do it; the connector cannot.
+
+**Proyekto is Prodigitality's own product**, so the durable fix is to add
+`change_requests.decide` to the connector's scopes rather than to keep pasting
+notes by hand — the permission is defined in the `prdigy` monorepo's
+`supabase/migrations/`. Until then every status flip in this register is manual.
+
+It also turns out that
 Proyekto locks a change request against **editing** once it leaves `draft` —
 not only in `withdrawn` (already known from CR8) but in `submitted` too:
 `change_request_update` on CR6 returns *"A change request in submitted can no
