@@ -148,6 +148,48 @@ and approved in this file; do not re-raise it.
   `change_request_mark_applied` with the id of a real roadmap commit; these were
   code commits, not roadmap edits. Not a defect to fix.
 
+### CR4 — the reply that goes back to Steve
+
+CR4's ruling is complete in the repo and invisible to the person who raised it.
+This is the text that closes it, for WhatsApp or email. It is written to be sent
+as-is.
+
+> Hi Steve — coming back to you on the "settlers" → "colonists" note from the
+> 24th.
+>
+> Your reasoning is right and we have not argued with it. When we went looking
+> for where to apply it, though, the word only appears twice on the whole site,
+> and both are somebody speaking about themselves.
+>
+> The first is inside Suzanne's recorded words on the Truth page — "In 1886 the
+> settlers had all come…". In the prototype that renders as a big pull quote
+> with the attribution out of shot, so it reads as our copy; it isn't. We have
+> left it exactly as spoken and put your note to Suzanne as a question, for her
+> to rule on. The same page now carries that question on its face.
+>
+> The second is Graham's biography, where he describes himself as speaking to
+> "the settler side of this history, which is his own." You didn't raise this
+> one, and we have left it as his own account of himself for the same reason.
+>
+> So there is nothing left to substitute — not because the point was rejected,
+> but because everywhere it *could* apply turned out to be someone's own words.
+> Where the site speaks in its own voice, your point stands and we have taken it.
+>
+> Same thing applies to the "our" note (CR10): applied everywhere the site is
+> narrating, held inside the quotation, and going to Suzanne with this one.
+>
+> One more for her while we are asking — you wrote "Innigai peoples"; every
+> document we hold says "Iningai". We have not switched on the strength of one
+> message, because it is the name of the nation. Worth confirming with her at
+> the same time.
+
+**What this does not do.** It does not apply the change to the quotation, and
+it should not. `CLAUDE.md` states the rule plainly — never edit a quotation —
+and **D15** and **R17** exist to hold it. FNAN is the reviewer and the route to
+the client; it is not the owner of Suzanne's words. If the instruction is ever
+to change the quote itself, that is Suzanne's call to make and nobody else's,
+and it should arrive from her rather than through this register.
+
 ---
 
 ## The Change Request form — confirmed 25 Aug
@@ -375,6 +417,13 @@ Approved in this round, and now locked: see Part 4.
 - **What can be done now** — the same point can be carried in the *surrounding*
   narration, which is the site's voice and not a quotation, leaving the quote
   intact. Offer that as the option alongside asking Suzanne directly.
+- **Outstanding, and it is the only part still open** — **Steve has not been
+  told.** The ruling, the reasoning and the fact that his point was taken
+  everywhere outside a quotation all live in this repo; from where he sits CR4
+  has been silent since 24 August. The reply that closes it is drafted above,
+  under *CR4 — the reply that goes back to Steve*. Sending it is what resolves
+  CR4 with the person who raised it; the Proyekto status flip is bookkeeping
+  after that.
 
 ---
 
