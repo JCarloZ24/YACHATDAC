@@ -144,7 +144,7 @@ export const beats: Beat[] = [
       ],
       steps: [
         {
-          text: "Landsborough comes through. The squatters follow him onto our Country.",
+          text: "Landsborough comes through. The squatters follow him onto Iningai Country.",
         },
         {
           text: "One cattle station, Bowen Downs, takes fifteen hundred square miles of it — and the Thomson River with it.",

@@ -31,10 +31,14 @@ export const whatWeAre = {
     "Yambangku Aboriginal Cultural Heritage and Tourism Development Aboriginal Corporation. Most people say YACHATDAC.",
     "We were formed by key members of the Traditional Custodian families of the Iningai lands to protect our cultural heritage, care for Country, reawaken culture, and share cultural knowledge as a business so it keeps going.",
     /**
-     * ⚠ CR10 (HELD) — "bought back for our people". Same request, same
-     * reasoning, same hold as the Wonder page. See docs/change-requests.md.
+     * ⚠ CR10 — applied 7 Sep. "our people" now reads "the Iningai people",
+     * on August's ruling: third person where the site speaks of Iningai
+     * people, in the "Iningai" spelling every draft and file uses — NOT
+     * Steve's "Innigai" (R18 still open, and it is the name of a nation).
+     * "We manage" above is untouched: that is the corporation describing its
+     * own act, which is not what CR10 objects to.
      */
-    "We manage Turraburra — 8,870 hectares 120km north of Barcaldine. It was called Gracevale until it was bought back for our people in 2019 and renamed in 2020.",
+    "We manage Turraburra — 8,870 hectares 120km north of Barcaldine. It was called Gracevale until it was bought back for the Iningai people in 2019 and renamed in 2020.",
   ],
   facts: [
     {

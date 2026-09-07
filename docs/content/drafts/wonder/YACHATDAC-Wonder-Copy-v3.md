@@ -56,7 +56,7 @@ Turraburra, 120km north of Barcaldine
 
 Getting here
 
-Fly to Barcaldine or Longreach and drive. Transfers can be arranged.
+Fly to Barcaldine or Longreach and drive, or take the train to Barcaldine via Rockhampton. Transfers can be arranged.
 
 How long
 
@@ -115,7 +115,7 @@ There are figures carved at Gray Rock that were almost certainly cut by the same
 
 ### Turraburra
 
-The property was called Gracevale for most of a century. It was bought back for our people in April 2019, and on 1 October 2020 we renamed it Turraburra, after the Terraburra clan recorded on this Country in an 1884 map. It runs to 8,870 hectares.
+The property was called Gracevale for most of a century. It was bought back for the Iningai people in April 2019, and on 1 October 2020 we renamed it Turraburra, after the Terraburra clan recorded on this Country in an 1884 map. It runs to 8,870 hectares.
 
 [ Image — The escarpment across open country. ]
 
@@ -203,7 +203,7 @@ If you want to put your hands in, you are welcome to. Most people end up wanting
 
 ##### Transfers
 
-- Available from Barcaldine or Longreach airports for an extra cost
+- Available from Barcaldine or Longreach airports, or the Barcaldine train, for an extra cost
 - Arranged when you enquire
 
 > [ NEEDS CONFIRMATION — every line above needs Suzanne or Steve to confirm before publishing. ]

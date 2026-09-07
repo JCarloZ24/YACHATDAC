@@ -38,7 +38,7 @@ Yambangku Aboriginal Cultural Heritage and Tourism Development Aboriginal Corpor
 
 We were formed by key members of the Traditional Custodian families of the Iningai lands to protect our cultural heritage, care for Country, reawaken culture, and share cultural knowledge as a business so it keeps going.
 
-We manage Turraburra — 8,870 hectares 120km north of Barcaldine. It was called Gracevale until it was bought back for our people in 2019 and renamed in 2020.
+We manage Turraburra — 8,870 hectares 120km north of Barcaldine. It was called Gracevale until it was bought back for the Iningai people in 2019 and renamed in 2020.
 
 **Registered** — Office of the Registrar of Indigenous Corporations
 

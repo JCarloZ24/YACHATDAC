@@ -218,6 +218,20 @@ To understand that number you have to go back sixteen years, to a drought, and t
 
 Population figures recorded in Hoch (1986), cited in [Taçon et al., *Australian Archaeology*, 2022](https://www.tandfonline.com/doi/full/10.1080/03122417.2022.2084666).
 
+**⚠ FOR SUZANNE — two questions about the quotation below, not edits to it.**
+FNAN (Stephen Mam, 24 Aug) asked for two wording changes that fall inside your
+recorded words. They have **not** been applied, and will not be without your
+ruling:
+
+1. **"settlers" → "colonists"** (CR4). Steve's reasoning: *"The land was
+   already settled when they got there."*
+2. **"our people" → naming the Iningai people** (CR10). Steve's note was
+   *"Don't use 'our' in reference to Indigenous people."*
+
+Both changes **have** been made everywhere else on the site, in the site's own
+narration. Only your words are untouched. Please tell us whether you want
+either change made here, or the quotation left exactly as spoken.
+
 > In 1886 the settlers had all come, and they’d established about 150 property landholdings. It was a great drought, and they were really concerned about the poor condition of the natives. Winter was coming. They were worried, because our people were off their lands and couldn’t hunt, and had no access to their country or their foods.
 
 > So they decided we needed blankets.
