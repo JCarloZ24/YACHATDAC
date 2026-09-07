@@ -98,7 +98,7 @@ export function SectionHeader({
       </Reveal>
       <Reveal index={1}>
         <h2
-          className={`headline mt-5 max-w-3xl text-3xl sm:text-4xl lg:text-(length:--text-beat) ${
+          className={`headline mt-5 max-w-3xl text-h2 ${
             onDark ? "text-canvas" : "text-evergreen"
           }`}
         >

@@ -25,7 +25,7 @@ export function InvitationV2() {
         <SplitReveal
           as="h2"
           mode="lines"
-          className="headline mt-6 max-w-3xl text-4xl sm:text-beat"
+          className="headline mt-6 max-w-3xl text-h2"
         >
           {invitation.headline}
         </SplitReveal>

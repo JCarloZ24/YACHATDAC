@@ -159,7 +159,7 @@ export function RecordHeroV2() {
           as="h1"
           mode="lines"
           gate="entry"
-          className="headline mt-3 max-w-[1100px] text-5xl leading-[1.2] sm:text-7xl lg:text-display"
+          className="headline mt-3 max-w-[1100px] text-h1 leading-[1.2]"
         >
           {recordHero.title}
         </SplitReveal>

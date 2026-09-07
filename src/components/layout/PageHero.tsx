@@ -42,7 +42,7 @@ export function PageHero({
         <Eyebrow className={ink.accent}>{eyebrow}</Eyebrow>
 
         <h1
-          className={`headline mt-6 max-w-4xl text-4xl sm:text-5xl lg:text-(length:--text-beat) ${ink.heading}`}
+          className={`headline mt-6 max-w-4xl text-h2 ${ink.heading}`}
         >
           {title}
         </h1>

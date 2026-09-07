@@ -48,7 +48,7 @@ export function TruthHero() {
           as="h1"
           mode="lines"
           gate="entry"
-          className="headline mt-8 max-w-4xl text-4xl sm:text-6xl lg:max-w-none lg:text-display"
+          className="headline mt-8 max-w-4xl text-h1 lg:max-w-none"
         >
           {truthHero.title}
         </SplitReveal>

@@ -77,13 +77,13 @@ export function BeatContent({
           <WordEmphasis
             as={Heading}
             text={beat.headline}
-            className={`headline mt-6 max-w-3xl text-4xl sm:text-5xl lg:text-(length:--text-beat) ${
+            className={`headline mt-6 max-w-3xl text-h2 ${
               onCanvas ? "text-evergreen" : "text-canvas"
             }`}
           />
         ) : (
           <Heading
-            className={`headline mt-6 max-w-3xl text-4xl sm:text-5xl lg:text-(length:--text-beat) ${
+            className={`headline mt-6 max-w-3xl text-h2 ${
               onCanvas ? "text-evergreen" : "text-canvas"
             }`}
           >
