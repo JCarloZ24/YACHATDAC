@@ -62,12 +62,13 @@ the above-the-fold faces preloaded in the root layout. Good Dog Cool has not
 been supplied; its `@font-face` slot is reserved so the file can be dropped in
 without a code change.
 
-⚠ **Licences are not settled.** Block Berthold ships an Adobe / H. Berthold AG
-copyright — a commercial retail face, and a desktop licence does not cover
-serving it over the web. Bantayog Sans arrived with no licence file at all. Only
-Work Sans (SIL OFL 1.1) is unambiguous. Both unresolved families are gitignored
-and come from the Proyekto resources section. Details in
-`public/fonts/README.md`; this is a compliance question, not a preference.
+**Licences are settled** (2 Sep 2026). Block Berthold is licensed through the
+Adobe Fonts web project `qqn2php` — the kit stylesheet in the root layout is
+the licensed delivery, and the self-hosted woff2 is a fallback only. Bantayog
+Sans is covered by a commercial licence key held by the organisation. Work Sans
+is SIL OFL 1.1. Both commercial families stay gitignored and come from the
+Proyekto resources section. Details, kit id and key in
+`public/fonts/README.md`. Closed as R3 and R4.
 
 Splitting text for animation is by **line or word, never by character** —
 character splits break screen readers and read as a gimmick against this brand.

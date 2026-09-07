@@ -11,10 +11,12 @@
  * and both of her open questions are unanswered — see `suzanne` below and
  * risk R5.
  *
- * ⚠ Do not apply terminology changes to the quotations. CR4 ("settlers" →
- * "colonists") and CR10 (the word "our") both land inside Suzanne's recorded
- * speech in the 1902 section. Both are held pending D15. The reasoning is in
- * docs/change-requests.md and the mechanics are in components/ui/PullQuote.
+ * ⚠⚠ A QUOTATION IN THIS FILE HAS BEEN EDITED, unratified. CR4 ("settlers"
+ * → "colonists") was applied inside Suzanne's recorded speech in the 1902
+ * section on 7 Sep, on August's instruction, overruling the hold. CR10 (the
+ * word "our") is NOT applied and stays as spoken. The original wording and
+ * the full record are in docs/change-requests.md; the mechanics are in
+ * components/ui/PullQuote. Suzanne must ratify the edit or it is reverted.
  *
  * ⚠ The old `src/content/page-specs.ts` entry for Truth described a section
  * stack — What's Been Researched, Open Research Opportunities, the Precinct,
@@ -343,21 +345,39 @@ export const suzanne = {
     href: "https://www.tandfonline.com/doi/full/10.1080/03122417.2022.2084666",
   },
   /**
-   * ⚠ QUOTATIONS — DO NOT EDIT THESE STRINGS.
+   * ⚠⚠ THIS QUOTATION HAS BEEN EDITED. Suzanne has not seen the change.
    *
-   * CR4 wants "settlers" replaced here; CR10 wants "our people" replaced here.
-   * Ruled 7 Sep: the words stay exactly as Suzanne said them, and the two
-   * requests go to HER as questions rather than being applied by us. This is
-   * the single line in the round that changes what a Traditional Owner is
-   * shown to have said (R17), and D15 — who may edit a recorded quotation —
-   * is still open.
+   * CR4 ("settlers" → "colonists") was APPLIED to this string on 7 Sep on
+   * August's explicit and repeated instruction, on the authority of Steve's
+   * flag. It was held first, and the hold was overruled. The word Suzanne
+   * actually said is "settlers"; the original is preserved below and in
+   * docs/change-requests.md so it can be restored in one edit.
    *
-   * Carried into the "Corrected Truth v3 package for Suzanne" deliverable,
-   * acceptance criterion "CR4 and CR10 framed as questions, not applied".
-   * Elsewhere on the site both changes ARE applied, in the site's own voice.
+   *   ORIGINAL, AS SPOKEN:
+   *   "In 1886 the settlers had all come, and they'd established about 150
+   *   property landholdings. ..."
+   *
+   * This is the site showing a Traditional Owner saying a word she did not
+   * say. R17 is realised, not mitigated. D15 — who may edit a recorded
+   * quotation — was still open when this was applied, so this edit sets a
+   * precedent D15 has not ruled on.
+   *
+   * CR10 ("our people", later in this same string) is NOT applied. It was not
+   * part of the instruction and stays as spoken.
+   *
+   * REQUIRED BEFORE PUBLICATION: Suzanne ratifies the edit or it is reverted.
+   * She is reachable only through Steve Mam (FNAN) — an Aboriginal man in
+   * direct contact with her, and the only channel we have. Ask him to put the
+   * changed word to her specifically; a general Truth approval does not cover
+   * it.
+   * Truth is held by community and cannot publish without her approval
+   * regardless — that gate is what stops this reaching the public unratified.
+   * See the "Corrected Truth v3 package for Suzanne" deliverable, whose
+   * criterion "CR4 and CR10 framed as questions, not applied" is now only
+   * half met and needs restating.
    */
   quotes: [
-    "In 1886 the settlers had all come, and they'd established about 150 property landholdings. It was a great drought, and they were really concerned about the poor condition of the natives. Winter was coming. They were worried, because our people were off their lands and couldn't hunt, and had no access to their country or their foods.",
+    "In 1886 the colonists had all come, and they'd established about 150 property landholdings. It was a great drought, and they were really concerned about the poor condition of the natives. Winter was coming. They were worried, because our people were off their lands and couldn't hunt, and had no access to their country or their foods.",
     "So they decided we needed blankets.",
   ],
   afterQuotes:

@@ -543,9 +543,9 @@ real contradiction found in the material.
 19. **No `public/noise.png`**, so `IMG-09` grain, `IMG-07` and `IMG-02` cannot run.
 20. **No frame sequences, no 3D, no map vectors, no artefact / document / audio material.**
     Full list in [`ASSETS.md`](../ASSETS.md) §10.
-21. **Font licences unresolved** — Block Berthold is a commercial Adobe / H. Berthold AG face
-    with no confirmed webfont licence; Bantayog Sans shipped none at all. Compliance, not
-    preference.
+21. ~~**Font licences unresolved**~~ — **resolved 2 Sep 2026.** Block Berthold is served
+    under the Adobe Fonts web project `qqn2php`; Bantayog Sans is covered by a commercial
+    licence key. See `public/fonts/README.md`, and R3 / R4 in `decisions-and-risks.md`.
 22. **§5 "Collection index" still lists artefacts and documents** as browsable categories.
     §5 was out of scope for this pass and was deliberately left untouched, but it now
     references two content types that §4 no longer carries.

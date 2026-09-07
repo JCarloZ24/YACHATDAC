@@ -67,31 +67,27 @@ that holds the permission can open each record and paste the note below.
 **CR8 is set aside** on August's instruction — it stays withdrawn in Proyekto
 and approved in this file; do not re-raise it.
 
-#### CR-004 → `changes_requested`
+#### CR-004 → `approved`
 
-> Resolved 7 Sep, on August's ruling — returned rather than approved, because
-> CR4 resolves as two decisions rather than an edit.
+> Applied 7 Sep, including inside Suzanne Thompson's recorded quotation on
+> Truth, on August's explicit and repeated instruction and on the authority of
+> Steve's flag.
 >
-> CR4 turned out to have no occurrence outside somebody's own words. A search of
-> `src/content/` and the drafts finds "settler" in exactly two places, and both
-> are a person speaking about themselves. There is nothing to substitute.
+> The word appears in exactly two places on the site and both are somebody
+> speaking about themselves. Suzanne's quotation (`src/content/truth.ts:360`,
+> Truth v3:235) now reads "In 1886 the colonists had all come…"; she said
+> "settlers". Graham Ambridge's self-description (`our-people.ts:80`) is
+> unchanged — not raised by Steve, not part of the instruction — so the two are
+> now inconsistent.
 >
-> 1. Suzanne's quotation (`src/content/truth.ts:360`, Truth v3:221) is left
->    exactly as spoken. The v3 draft now carries a marked block putting CR4 and
->    CR10 to her as QUESTIONS, noting that both changes have been made everywhere
->    else and only her words are untouched. This is what goes back to the client.
-> 2. Graham Ambridge's biography (`src/content/our-people.ts:80`) keeps
->    "settler". It is his own account of himself, Steve did not raise CR4 against
->    it, and the principle that protects Suzanne's words protects his. Recorded
->    as a decision, not an oversight.
+> This was held first and the hold was overruled. D15 (who may edit a recorded
+> quotation) was open at the time and remains open, so this edit precedes the
+> ruling that governs it. R17 should be moved from `mitigating` to realised.
 >
-> The reasoning behind the request is sound and is not in question — the point
-> it makes is carried in the surrounding narration, which is the site's voice
-> and not a quotation.
->
-> Still open: D15 owes the standing rule on who may edit a recorded quotation.
-> This resolves the instance without pre-empting the principle. R17 stays live
-> until Suzanne answers.
+> Suzanne has NOT ratified this. The Truth v3 draft now carries a block telling
+> her which word changed, what she actually said, and that reverting is one
+> edit. Truth is held by community and cannot publish without her approval —
+> that gate is what prevents an unratified edit to her words going public.
 
 #### CR-010 → `approved`
 
@@ -150,45 +146,33 @@ and approved in this file; do not re-raise it.
 
 ### CR4 — the reply that goes back to Steve
 
-CR4's ruling is complete in the repo and invisible to the person who raised it.
-This is the text that closes it, for WhatsApp or email. It is written to be sent
-as-is.
+Rewritten 7 Sep after the quotation was edited — the earlier draft said the
+quote had been left alone and is no longer true.
 
-> Hi Steve — coming back to you on the "settlers" → "colonists" note from the
-> 24th.
+> Hi Steve — coming back to you on the "settlers" → "colonists" note.
 >
-> Your reasoning is right and we have not argued with it. When we went looking
-> for where to apply it, though, the word only appears twice on the whole site,
-> and both are somebody speaking about themselves.
+> Done. The Truth page now reads "In 1886 the colonists had all come…", and
+> we have made the same change everywhere the site speaks in its own voice.
 >
-> The first is inside Suzanne's recorded words on the Truth page — "In 1886 the
-> settlers had all come…". In the prototype that renders as a big pull quote
-> with the attribution out of shot, so it reads as our copy; it isn't. We have
-> left it exactly as spoken and put your note to Suzanne as a question, for her
-> to rule on. The same page now carries that question on its face.
+> One thing you should know, because it wasn't visible in the prototype: that
+> line is inside Suzanne's recorded words. It renders as a large pull quote with
+> the attribution out of shot, so it reads as our copy — it isn't. We have made
+> the change and flagged it to her on the page itself, so she can keep it or put
+> her original word back. Nothing on Truth publishes until she has approved it.
 >
-> The second is Graham's biography, where he describes himself as speaking to
-> "the settler side of this history, which is his own." You didn't raise this
-> one, and we have left it as his own account of himself for the same reason.
+> We have not touched the "our" note (CR10) inside that same quotation — that
+> one is still with her.
 >
-> So there is nothing left to substitute — not because the point was rejected,
-> but because everywhere it *could* apply turned out to be someone's own words.
-> Where the site speaks in its own voice, your point stands and we have taken it.
->
-> Same thing applies to the "our" note (CR10): applied everywhere the site is
-> narrating, held inside the quotation, and going to Suzanne with this one.
->
-> One more for her while we are asking — you wrote "Innigai peoples"; every
-> document we hold says "Iningai". We have not switched on the strength of one
-> message, because it is the name of the nation. Worth confirming with her at
-> the same time.
+> Also for her while we are asking: you wrote "Innigai peoples"; every document
+> we hold says "Iningai". We haven't switched on one message, because it is the
+> name of the nation.
 
-**What this does not do.** It does not apply the change to the quotation, and
-it should not. `CLAUDE.md` states the rule plainly — never edit a quotation —
-and **D15** and **R17** exist to hold it. FNAN is the reviewer and the route to
-the client; it is not the owner of Suzanne's words. If the instruction is ever
-to change the quote itself, that is Suzanne's call to make and nobody else's,
-and it should arrive from her rather than through this register.
+**Steve is the route to Suzanne — there is no other.** Confirmed 7 Sep: Steve
+Mam is an Aboriginal man with direct contact to Suzanne; nobody on our side can
+reach her except through him. So this reply is not just a courtesy to the
+reviewer, it is **the mechanism by which Suzanne is asked**. Ask him explicitly
+to put the changed word to her and bring back her ruling — do not assume the
+reply alone reaches her.
 
 ---
 
@@ -232,9 +216,14 @@ the same day. Pablito is named as agreeing with one item.
 
 **Two things about this source that matter before anything is actioned.**
 
-1. **Steve is FNAN, not the owner of the words.** `docs/decisions-and-risks.md`
-   records this explicitly: FNAN reviews and is the route in, but Suzanne
-   Thompson is the authority on cultural content and on her own words, and
+1. **Steve is the route to Suzanne, and not a substitute for her.** Confirmed
+   7 Sep: Steve Mam is an Aboriginal man with direct contact to Suzanne, and he
+   is the **only** channel to her — nobody on our side can reach her otherwise.
+   That makes his flags better informed than a distant reviewer's, and it makes
+   him the person through whom her ruling must be sought. It does not make him
+   the author of her recorded words. `docs/decisions-and-risks.md` records that
+   Suzanne Thompson is the authority on cultural content and on her own words,
+   and
    **D10** makes August the copy owner on every page. Several requests below
    land directly on Suzanne's recorded speech. They are logged as requests, not
    as approved edits. See **D15**.
@@ -250,7 +239,7 @@ the same day. Pablito is named as agreeing with one item.
 | CR1 | "cultural sites" → "cultural heritage sites" | Terminology | Proposed — straightforward | August → Marc |
 | CR2 | Card title "Carbon" → "Biological Sequestration" | Terminology | Proposed — check it is accurate | August, with the client |
 | CR3 | "Cool burns" and "right-way fire" → "fire-stick farming" | Terminology | Proposed — **widest sweep, touches a URL** | August, JC |
-| CR4 | "settlers" → "colonists" | Terminology | **Resolved (7 Sep)** — quote to Suzanne; Graham's own word kept | August → Suzanne |
+| CR4 | "settlers" → "colonists" | Terminology | **Applied in the quotation (7 Sep)** — unratified; hold overruled | August → Suzanne |
 | CR5 | Add SWER, and on-site petrol and diesel tanks | New content | Proposed — **facts unverified**. See R19 | August, with the client |
 | CR6 | Add rail via Rockhampton to *Getting here* | New content | **APPLIED (7 Sep)** | August |
 | CR7 | "No town glow" → "Magic at night" | Copy rewrite | Proposed — offered as a suggestion | August, Ivy |
@@ -373,12 +362,46 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR4 — "settlers" becomes "colonists" · **RESOLVED (7 Sep)**
+## CR4 — "settlers" becomes "colonists" · **APPLIED INSIDE THE QUOTATION (7 Sep), unratified**
 
 - **Form** — status `submitted` in Proyekto · **needs the status moved by an
   account holding `change_requests.decide`**
 - **Type** — Terminology · **Status** — **Resolved** · **Owner** — August → Suzanne
-- **7 Sep — the resolution, on August's ruling.** CR4 turned out to have **no
+- **7 Sep, later — the hold was overruled and the quotation was edited.**
+  August instructed, twice and explicitly, that *"the quote must change based on
+  Steve's flag."* The concern below was put and was reaffirmed, so it was
+  applied:
+  - `src/content/truth.ts:360` and Truth v3:235 — Suzanne's recorded words now
+    read **"In 1886 the colonists had all come…"**. She said **"settlers"**.
+  - The change was made **before asking her**, on the authority of Steve's
+    flag. `CLAUDE.md` says never edit a quotation; **D15**, which decides who
+    may, was and is still open. This edit therefore sets a precedent D15 has
+    not ruled on.
+  - **CR10 was not applied** to the same string — it was not part of the
+    instruction. "our people" stays as spoken, so the quotation is now half
+    edited and half original.
+  - **The `FOR SUZANNE` block on Truth v3 was rewritten** rather than left
+    standing: it previously told her the changes had *not* been applied, which
+    is no longer true. It now says plainly that one word was changed, which
+    word, what she actually said, and that putting it back is one edit.
+  - **Reversion is one edit**, and the original wording is preserved in the
+    code comment at `src/content/truth.ts`, in the draft block, and here.
+- **What still protects this** — Truth is **held by community** and cannot
+  publish without Suzanne's approval (**R5**). That gate, not our process, is
+  what stops an unratified edit to her words reaching the public. If Truth's
+  approval requirement is ever relaxed, this line becomes live and must be
+  revisited first.
+- **R17 is realised, not mitigated.** Update it on the register: the risk was
+  that a Traditional Owner's recorded speech would be altered on a reviewer's
+  authority, and that has now happened.
+- **Graham Ambridge's line is unchanged** (`src/content/our-people.ts:80`). The
+  instruction was about the quotation; his self-description was not raised by
+  Steve and was not part of it. The two are now inconsistent — one person's
+  own word edited, another's kept — and that will be noticed.
+
+### The original 7 Sep ruling, kept for the record
+
+- **Superseded.** CR4 turned out to have **no
   occurrence outside somebody's own words.** A search of `src/content/` and the
   drafts finds "settler" in exactly two places, and both are a person speaking
   about themselves. So there is nothing to substitute, and the request resolves
@@ -410,9 +433,11 @@ Approved in this round, and now locked: see Part 4.
      Ambridge** describing himself: *"he speaks to the settler side of this
      history, which is his own."* Not flagged by Steve, but it is the same word
      and will be noticed if one changes and the other does not.
-- **Why it is held** — Editing a recorded quotation changes what a Traditional
-  Owner is shown to have said. FNAN is the reviewer and the route in; it is not
-  the owner of Suzanne's words. Applying this without her is the single riskiest
+- **Why it was held** — Editing a recorded quotation changes what a Traditional
+  Owner is shown to have said. Steve is the route to Suzanne and an Aboriginal
+  man who knows her directly — which is why his flag carries weight — but the
+  route to someone is not the same as their consent, and only Suzanne can
+  ratify a change to her own words. Applying this without her is the single riskiest
   item in this round. See **D15** and **R17**.
 - **What can be done now** — the same point can be carried in the *surrounding*
   narration, which is the site's voice and not a quotation, leaving the quote
@@ -702,6 +727,14 @@ option **selected** in the options list.
      reviewers can see what is quoted before they comment.
 - **Recommendation to put forward** — 1 and 3 together, with 2 available when
   the client asks for it.
+- **⚠ Overtaken by events, 7 Sep.** CR4 was applied inside Suzanne's quotation
+  on August's instruction while this decision was still `proposed`. The practice
+  has therefore been set before the rule: a reviewer's terminology flag, endorsed
+  by the copy owner, was sufficient to edit a Traditional Owner's recorded
+  speech. D15 now either ratifies that or reverses it, and it should be answered
+  before the next round rather than after — CR10 sits in the same sentence and
+  is still held, so the register currently applies two different rules to one
+  quotation.
 
 ---
 
@@ -810,18 +843,30 @@ Continuing the numbering in `docs/decisions-and-risks.md`, which ends at R15.
 
 ## R17 · RISK · **High** — Terminology edits are being asked for inside a Traditional Owner's recorded words
 
-- **Form** — kind `risk` · severity `high` · likelihood `high` (two live
-  requests already land inside the quote) · status `mitigating` (CR4 and CR10
-  are held) · visibility `internal` · owner August
+- **Form** — kind `risk` · severity `high` · likelihood `high` · status
+  **`realised` (7 Sep — CR4 was applied inside Suzanne's quotation; CR10 is
+  still held)** · visibility `internal` · owner August
 - **Owner** — August → Suzanne, via Marc
 - **What could go wrong** — CR4 and CR10 both land in the same blockquote on
   Truth v3, a page held by community and awaiting Suzanne's approval. Applied
   as received, they would alter what Suzanne is shown to have said, on the
-  authority of a reviewer who is explicitly not the owner of those words.
+  authority of someone who is the route to her but is not the owner of those
+  words. (Steve is Aboriginal and in direct contact with Suzanne — that makes
+  his flag well founded and makes him the only channel for her ruling; it is
+  still not her ruling.)
 - **Impact** — Cultural and relational, not technical, and not undone by a
   revert. It also risks Truth's approval, which **R5** already has on the
   critical path.
-- **Next step** — Hold CR4 and CR10 at the quotation. Answer **D15**. When the
+- **7 Sep — this risk has occurred.** CR4 was applied inside the quotation on
+  August's instruction, overruling the hold, before D15 was answered and before
+  Suzanne was asked. What remains is containment, not prevention: the edit is
+  disclosed to her on the page, the original is recorded in three places, and
+  reverting is one edit. **Truth's community hold (R5) is now the only thing
+  standing between an unratified edit and publication** — treat that gate as
+  load-bearing and do not relax it for schedule.
+- **Next step** — Get Suzanne's ruling on the applied edit as a priority, not
+  as part of the general Truth approval. Hold CR10 at the quotation. Answer
+  **D15**. When the
   requests go back to the client, say plainly which lines are quotations and
   why they have been held — the reviewer almost certainly did not know he was
   editing a quote, since the prototype renders it as a display pull-quote with
