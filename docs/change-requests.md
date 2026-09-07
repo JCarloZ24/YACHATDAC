@@ -46,7 +46,9 @@ session could move it.** Read live, the rows are:
 | CR11 | `draft` | — | Blocked |
 
 **Two token limits, and the second is new.** The MCP token in use lacks
-`change_requests.decide`, so no status can be moved. It also turns out that
+`change_requests.decide`, so no status can be moved — retried 7 Sep against
+CR4 and CR6, still FORBIDDEN. The web UI, signed in as a project member, can
+do it; the connector cannot. It also turns out that
 Proyekto locks a change request against **editing** once it leaves `draft` —
 not only in `withdrawn` (already known from CR8) but in `submitted` too:
 `change_request_update` on CR6 returns *"A change request in submitted can no
@@ -57,28 +59,94 @@ Note also that the 28 Aug decision notes on CR1/2/3/7/9 were stamped by a
 different account, not by the token this sync used — the presence of those
 notes is not evidence the permission is available now.
 
-### Hand-off — what an account holding `change_requests.decide` needs to do
+### Hand-off — paste-ready decision notes
 
-1. **CR6 → `approved`**, decision note: the applied wording, plus the flag that
-   the reconciled transfers line adds a second unconfirmed claim to a block
-   already open under **R13**.
-2. **CR10 → `approved`**, decision note: applied in the site's narration only;
-   Steve's *"Innigai"* spelling deliberately **not** adopted (**R18** open);
-   first-person where YACHATDAC describes its own acts deliberately untouched;
-   Suzanne's quotation untouched and going to her as a question.
-3. **CR4 → `changes_requested`**, decision note: resolved as two decisions
-   rather than an edit — Suzanne's quote left exactly as spoken and put to her
-   as a question, Graham Ambridge's "settler" kept as his own account of
-   himself. **D15** still owes the standing rule.
-4. **CR8** — an admin flips it out of `withdrawn`, or it is re-raised as a new
-   CR carrying this history. **Decided 7 Sep: neither, for now.** The approval
-   lives in this file until someone with admin can reinstate the original row;
-   re-raising was considered and declined, so the withdrawal is not papered
-   over with a duplicate.
-5. **CR1/2/3/7/9 → `applied`** cannot be hand-picked — `applied` is set only by
-   `change_request_mark_applied`, which requires the id of an actual roadmap
-   commit. These were code commits, not roadmap edits, so the rows correctly
-   stay at `approved` until the roadmap carries them. Not a defect to fix.
+Retried 7 Sep: `change_request_decide` still returns FORBIDDEN for the MCP
+token. The rows sit in **Awaiting decision** in the web UI, where an account
+that holds the permission can open each record and paste the note below.
+**CR8 is set aside** on August's instruction — it stays withdrawn in Proyekto
+and approved in this file; do not re-raise it.
+
+#### CR-004 → `changes_requested`
+
+> Resolved 7 Sep, on August's ruling — returned rather than approved, because
+> CR4 resolves as two decisions rather than an edit.
+>
+> CR4 turned out to have no occurrence outside somebody's own words. A search of
+> `src/content/` and the drafts finds "settler" in exactly two places, and both
+> are a person speaking about themselves. There is nothing to substitute.
+>
+> 1. Suzanne's quotation (`src/content/truth.ts:360`, Truth v3:221) is left
+>    exactly as spoken. The v3 draft now carries a marked block putting CR4 and
+>    CR10 to her as QUESTIONS, noting that both changes have been made everywhere
+>    else and only her words are untouched. This is what goes back to the client.
+> 2. Graham Ambridge's biography (`src/content/our-people.ts:80`) keeps
+>    "settler". It is his own account of himself, Steve did not raise CR4 against
+>    it, and the principle that protects Suzanne's words protects his. Recorded
+>    as a decision, not an oversight.
+>
+> The reasoning behind the request is sound and is not in question — the point
+> it makes is carried in the surrounding narration, which is the site's voice
+> and not a quotation.
+>
+> Still open: D15 owes the standing rule on who may edit a recorded quotation.
+> This resolves the instance without pre-empting the principle. R17 stays live
+> until Suzanne answers.
+
+#### CR-010 → `approved`
+
+> Applied 7 Sep, on August's ruling, in the site's narration only. The site now
+> speaks of the Iningai people in the third person wherever it is the site
+> narrating. Steve's note is satisfied everywhere except inside a quotation.
+> Three lines changed, in both the coded content and the drafts:
+> `src/content/wonder.ts` — "bought back for our people" → "for the Iningai
+> people"; `src/content/about.ts` — the same sentence in miniature;
+> `src/content/homepage.ts` — "the squatters follow him onto our Country" →
+> "onto Iningai Country" (not flagged by Steve, but the same word, and it would
+> have been noticed).
+>
+> Three things deliberately NOT done:
+>
+> 1. Steve's spelling was not adopted. He writes "Innigai peoples"; every draft,
+>    every file in `src/content/`, and the Taçon et al. citation on Truth say
+>    "Iningai". The applied text uses Iningai. R18 is still open — this is a
+>    nation's name and it needs confirming with Suzanne regardless of which way
+>    this CR went.
+> 2. First-person where the corporation describes its own acts is untouched —
+>    "We manage Turraburra", "we renamed it", "we were formed by". CR10 objects
+>    to "our" used OF Indigenous people, not to YACHATDAC speaking as itself, and
+>    flattening that would have cost the site its voice.
+> 3. Suzanne's quotation is untouched and goes to her as a question — see CR4.
+>
+> D16 still owes the standing ruling and the terminology sheet
+> (`docs/terminology.md`, drafted 7 Sep) still needs her on two entries. This
+> settles the instances, not the principle.
+
+#### CR-006 → `approved` — still outstanding from the same round
+
+> Applied 7 Sep. "Getting here" now reads "Fly to Barcaldine or Longreach and
+> drive, or take the train to Barcaldine via Rockhampton. Transfers can be
+> arranged." in `src/content/wonder.ts` and the v3 draft.
+>
+> The knock-on was taken, not deferred: the Transfers inclusion now reads
+> "Available from Barcaldine or Longreach airports, or the Barcaldine train, for
+> an extra cost" — naming a rail arrival while transfers listed only airports
+> would leave a reader with a supported route and no way off it.
+>
+> Carry forward: this adds a SECOND unconfirmed claim to a block already open
+> under R13 — nobody has checked that transfers actually meet the train. Flagged
+> in the code beside the R13 note, and it is the first thing to confirm in that
+> pass.
+
+#### Not to be touched
+
+- **CR-005** stays `submitted` — August is supplying the SWER and fuel-tank
+  facts directly, so `changes_requested` would misrecord what happened.
+- **CR-008** stays `withdrawn`. Set aside 7 Sep; the approval lives in this file.
+- **CR-011** stays `draft` until the rest of the thread arrives (R20).
+- **CR-001/2/3/7/9** correctly rest at `approved`. `applied` is set only by
+  `change_request_mark_applied` with the id of a real roadmap commit; these were
+  code commits, not roadmap edits. Not a defect to fix.
 
 ---
 
@@ -420,11 +488,14 @@ Approved in this round, and now locked: see Part 4.
      (`change_requests.decide` permission missing) and any edit to the row
      ("a change request in withdrawn can no longer be edited"). Reinstating CR8
      means an admin flips it, or it is **re-raised as a new CR** carrying this
-     history forward. **Decided 7 Sep: neither.** Re-raising was considered and
-     declined — a duplicate row would paper over an unexplained withdrawal
-     rather than resolve it, and the withdrawal itself (by whom, and why) is
-     still worth an answer. Until an admin reinstates the original row, this
-     file is the only record of the approval.
+     history forward. **Decided 7 Sep: neither — CR8 is set aside.** Re-raising
+     was considered and declined: a duplicate row would paper over an
+     unexplained withdrawal rather than resolve it, and the withdrawal itself
+     (by whom, and why) is still worth an answer. **This file is the only record
+     of the approval, and that is accepted rather than worked around.** The work
+     is sequenced last regardless, so nothing is blocked by the record being
+     out of step — but if this file were lost, the approval would not be
+     recoverable from Proyekto.
 - **Raised by** — Steve (FNAN), 15:31, against the homepage hero: *"Maybe
   something more heroic?"*
 - **Where it lands — this one is already built**
@@ -816,9 +887,10 @@ Steps 1–5 of the original list are done; what follows is what is left as of
 7 September 2026. Nothing here is a code change — **every remaining item needs
 a person, not a commit.**
 
-1. **Get an admin to run the Proyekto hand-off** — the five items in *Proyekto
-   sync state* above. Until then the register misrepresents four resolved
-   requests, and CR8's approval exists nowhere but this file.
+1. **Paste the three decision notes into Proyekto** — CR-004, CR-010 and
+   CR-006, ready to copy in *Proyekto sync state* above. The MCP connector
+   cannot do it; the web UI can, and the rows are sitting in **Awaiting
+   decision**. Until then the register misrepresents three resolved requests.
 2. **Suzanne, in one conversation** — this is now the only thing blocking the
    round. Three questions, all hers, and they travel together:
    - the **Iningai / Innigai** spelling (**R18**), which is the name of the
