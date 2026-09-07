@@ -44,15 +44,16 @@ next-env.d.ts
 /AGENTS.md
 /CLAUDE.md
 
-# Font binaries. Work Sans is OFL and safe to track. Block Berthold is a
-# commercial Adobe/Berthold face and Bantayog Sans shipped no licence at all —
-# both stay out of git until terms are confirmed, because a commercial binary is
-# much easier to keep out of a repo than to remove from its history. Get them
-# from the Proyekto resources section. See public/fonts/README.md.
+# Font binaries. Work Sans is OFL and safe to track. Bantayog Sans is now
+# tracked too: R4 closed 2 Sep 2026 with a commercial licence, and this repo is
+# private, so the binaries are not being redistributed — they have to be in git
+# for Vercel to serve them at all (they 404'd in prod until 7 Sep 2026). If this
+# repo is ever made public, remove them from history and serve them from private
+# storage instead. Good Dog is freeware and safe to track once supplied.
+# Block Berthold stays out: the Adobe Fonts kit qqn2php serves it in production,
+# so the local woff2 is an outage fallback only and is never needed by a build.
+# See public/fonts/README.md.
 /public/fonts/BlockBerthold.woff2
-/public/fonts/BantayogSans-*.woff2
-/public/fonts/GoodDogCool.woff2
-/public/fonts/GoodDogPlain.woff2
 
 # Client media library. Originally kept out of git (source of truth is Google
 # Drive, moving to the CMS media library at launch), but the Vercel deployment
@@ -78,7 +79,9 @@ next-env.d.ts
 # hence the glob + negation rather than ignoring the directory itself.
 /brand/video/*
 !/brand/video/README.md
-# Unlicensed font families, mirroring the /public/fonts/ rules above.
+# Source font masters. These mirror /public/fonts/ but are never served, so a
+# build never needs them and there is nothing to gain by tracking the binaries;
+# the served copies under /public/fonts/ are the ones in git.
 /brand/typefaces/BlockBerthold.woff2
 /brand/typefaces/BantayogSans-*.woff2
 /brand/typefaces/GoodDog*.woff2

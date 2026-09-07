@@ -33,6 +33,20 @@ Missing files (declared in `fonts.css`, 404 today): `GoodDogPlain.woff2` and
 `BantayogSans-ExtraBold.woff2` — get both from the Proyekto resources section
 and drop them in this folder.
 
+## Tracked in git — changed 7 Sep 2026
+
+Bantayog Sans is **committed**. It had to be: Vercel builds from the git remote,
+so while the binaries were gitignored the production site served 404s for every
+Bantayog face and each eyebrow on the site fell through to Helvetica Neue. This
+repository is private, so committing them is not redistribution.
+
+**If this repository is ever made public, this must be undone** — purge the
+binaries from history and serve them from private storage or a build-time fetch
+instead. The licence covers use, not handing the files to anyone who clones.
+
+Block Berthold stays out of git and needs no equivalent: the Adobe Fonts kit
+serves it in production, so a build never touches the local woff2.
+
 ## Not in git
 
 Font binaries are gitignored except Work Sans, which is OFL and unambiguous.
