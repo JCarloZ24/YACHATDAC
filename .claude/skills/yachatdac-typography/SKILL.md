@@ -63,6 +63,51 @@ wrong", check that first — it is usually this, correctly implemented.
    `text-eyebrow-hero` (32), `text-lead` (24), `text-scroll` (32),
    `text-beat` (44). These match the Figma text styles by number.
 
+## The size scale — `YACHATDAC Type` variables, V2 Figma
+
+**The V2 Figma variable collection is the source of truth for these numbers.**
+Audited 7 Sep 2026 from `YACHATDAC Type` (18 variables, three groups).
+
+| Figma variable | Desktop | Mobile | Family / utility |
+| --- | --- | --- | --- |
+| `Type/Desktop/Heading 1` | 56 | 40 | Block Berthold — `.headline` |
+| `Type/Desktop/Heading 2` | 48 | 36 | Block Berthold — `.headline` |
+| `Type/Desktop/Heading 3` | 40 | 32 | Block Berthold — `.headline` |
+| `Type/Desktop/Heading 4` | 32 | 24 | Bantayog Sans ExtraBold **Alt** |
+| `Type/Desktop/Heading 5` | 24 | 20 | Bantayog Sans ExtraBold **Alt** |
+| `Type/Desktop/Heading 6` | 20 | 18 | Bantayog Sans ExtraBold **Alt** |
+| `Type/Text/X-Large` | 20 | — | Work Sans (default) |
+| `Type/Text/Large` | 18 | — | Work Sans (default) |
+| `Type/Text/Medium` | 16 | — | Work Sans (default) |
+| `Type/Text/Small` | 14 | — | Work Sans (default) |
+| `Type/Text/X-Small` | 12 | — | Work Sans (default) |
+| `Type/Tagline` | 16 | — | Good Dog — `.callout` |
+
+The headline face **stops at H3** — H4–H6 are Bantayog Sans ExtraBold Alt, not
+Block Berthold. Audited in V2 on 29 Aug 2026; see `docs/brand.md`.
+
+### ⚠ The shipped scale does not match this yet
+
+`src/app/globals.css` still carries the hi-fi scale — `--text-display` 96,
+`--text-beat` 44, `--text-eyebrow-hero` 32, `--text-lead` 24 — taken from the
+earlier hi-fi frames, where the hero headline was 96 and section headlines 64.
+Nothing in the codebase resolves to 56, 48 or 40.
+
+So **a token is not automatically the answer**. Where a V2 frame gives a heading
+size, take the number from the frame (step 3 below) rather than reaching for
+`text-display`. Reconciling the two scales is a separate job — roughly 19 call
+sites across 15 files — and has not been done. Do not half-migrate a page.
+
+Two faces this scale needs that are not shipped:
+
+- **Bantayog Sans ExtraBold Alt** for H4–H6. `fonts.css` declares roman cuts
+  only. `BantayogSans-ExtraBoldAlt.woff2` exists in the supplied font drop.
+  Until it is declared, H4–H6 render in plain ExtraBold — close, but not the
+  drawn letterforms.
+- **Good Dog** for the Tagline. `brand.md` reads the V2 Tagline style as GoodDog
+  **Cool**; the table at the top of this file says Plain. Unresolved, and
+  neither binary is in `public/fonts/` — settle it before either is wired up.
+
 ## Rules
 
 - **A font utility is never conditional or interpolated.** `.headline` and
