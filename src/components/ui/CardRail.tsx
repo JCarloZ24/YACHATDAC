@@ -60,6 +60,7 @@ export function CardRail({
   gap = "",
   className = "",
   label,
+  bleed = "-mx-6 px-6 scroll-px-6",
   children,
 }: {
   /**
@@ -88,6 +89,15 @@ export function CardRail({
    */
   label?: string;
   /**
+   * The gutter the rail bleeds through, as a LITERAL class triple — the
+   * negative margin that cancels the page gutter, the padding that restores
+   * it inside the scroller, and the matching snap padding. The default is
+   * the `px-6` gutter the static pages use; /wonder's frame sets its phone
+   * gutter at 20 (`px-5`), and a 24px bleed inside a 20px column would
+   * overhang by 4px a side and pan the page.
+   */
+  bleed?: string;
+  /**
    * ONE element per card. A fragment counts as a single child and would put
    * two cards in one rail cell.
    */
@@ -98,7 +108,7 @@ export function CardRail({
       {...(label
         ? { tabIndex: 0, role: "group", "aria-label": label }
         : null)}
-      className={`-mx-6 -my-2 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-px-6 px-6 py-2 sm:mx-0 sm:my-0 sm:grid sm:snap-none sm:overflow-visible sm:px-0 sm:py-0 ${gap} ${columns} ${className}`}
+      className={`${bleed} -my-2 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain py-2 sm:mx-0 sm:my-0 sm:grid sm:snap-none sm:overflow-visible sm:px-0 sm:py-0 ${gap} ${columns} ${className}`}
     >
       {/* The cell exists for equal heights and nothing else. A flex item
           stretches but its block child does not, so `[&>*]:h-full` squares the
