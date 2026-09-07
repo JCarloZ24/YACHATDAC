@@ -42,7 +42,7 @@ export const truthTodayPlateSlot: MediaSlot = {
   id: "truth-today-plate",
   bucket: "work",
   expects:
-    "A flame line working through timber, light shafts in the smoke — right-way fire",
+    "A flame line working through timber, light shafts in the smoke — fire-stick farming",
   src: `${TRUTH}/truth-theworkgoingon.webp`,
   tone: "burnt",
 };

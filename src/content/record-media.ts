@@ -164,7 +164,7 @@ export const recordCardMedia: Record<string, MediaSlot> = {
   "right-way-fire-and-the-carbon-in-the-soil": {
     id: "card-fire",
     bucket: "work",
-    expects: "A handful of dark soil held over burnt ground after a cool burn",
+    expects: "A handful of dark soil held over burnt ground after fire-stick farming",
     src: `${RECORD}/therecord-story10.webp`,
     tone: "evergreen",
   },

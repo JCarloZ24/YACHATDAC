@@ -40,15 +40,19 @@ export const wonderHero = {
     "Families & school groups",
   ],
   /**
-   * ⚠ CR6 (pending) adds rail — "They can also travel by train via Rockhampton
-   * to Barcaldine" — to "Getting here", and would need reconciling with the
-   * transfers line in `inclusions`. Not applied.
+   * ⚠ CR6 — applied. Steve (FNAN), 15:19: "They can also travel by train via
+   * Rockhampton to Barcaldine." Rail is now a named arrival route here, and
+   * the `inclusions` transfers line is reconciled to match — a supported route
+   * a reader cannot get a transfer from would be worse than not listing it.
+   * Whether transfers actually meet the train is unconfirmed and rides on R13
+   * with the rest of that block.
    */
   facts: [
     { label: "Where", value: "Turraburra, 120km north of Barcaldine" },
     {
       label: "Getting here",
-      value: "Fly to Barcaldine or Longreach and drive. Transfers can be arranged.",
+      value:
+        "Fly to Barcaldine or Longreach and drive, or take the train to Barcaldine via Rockhampton. Transfers can be arranged.",
     },
     { label: "How long", value: "Half-day walks through to multi-day stays" },
     {
@@ -129,14 +133,15 @@ export const gettingHere = {
 export const turraburra = {
   title: "Turraburra",
   /**
-   * ⚠ CR10 (HELD) asks that "our people" not be used of Indigenous people, and
-   * proposes "Innigai peoples". Not applied, for two reasons recorded in
-   * docs/change-requests.md: on this site "our" is the client speaking in the
-   * first person about themselves, and the proposed spelling conflicts with
-   * the "Iningai" used in every draft and every file in this directory (R18).
-   * Both need Suzanne, not us. See D16.
+   * ⚠ CR10 — applied 7 Sep on August's ruling. "bought back for our people"
+   * now reads "bought back for the Iningai people". Two things this does NOT
+   * do: it does not adopt Steve's "Innigai" — every draft and every file here
+   * says "Iningai", R18 is still open, and it is the name of a nation; and it
+   * does not touch "we renamed it", which is YACHATDAC describing its own act
+   * rather than speaking of Iningai people in the first person.
+   * D16 (the terminology sheet) still owes the standing ruling.
    */
-  body: "The property was called Gracevale for most of a century. It was bought back for our people in April 2019, and on 1 October 2020 we renamed it Turraburra, after the Terraburra clan recorded on this Country in an 1884 map. It runs to 8,870 hectares.",
+  body: "The property was called Gracevale for most of a century. It was bought back for the Iningai people in April 2019, and on 1 October 2020 we renamed it Turraburra, after the Terraburra clan recorded on this Country in an 1884 map. It runs to 8,870 hectares.",
   image: "The escarpment across open country.",
   caption: "The escarpment runs along the edge of the Aramac Range.",
 } as const;
@@ -218,6 +223,9 @@ export const stayStages: readonly StayStage[] = [
 
 /**
  * ⚠ R13. Every line here needs Suzanne or Steve to confirm before publishing,
+ * and the Transfers line now carries a second unconfirmed claim: CR6 added rail
+ * as an arrival route, so this says transfers meet the train. Nobody has
+ * confirmed that they do — it is the first thing to check in the R13 pass.
  * and the draft says so in its own words — carried through as
  * `inclusionsNote` and rendered on the page rather than dropped.
  *
@@ -243,7 +251,7 @@ export const inclusions = [
   {
     title: "Transfers",
     points: [
-      "Available from Barcaldine or Longreach airports for an extra cost",
+      "Available from Barcaldine or Longreach airports, or the Barcaldine train, for an extra cost",
       "Arranged when you enquire",
     ],
   },

@@ -14,11 +14,10 @@
  * images and names of people who have passed away. It renders first, above
  * everything, and it is not a dismissible banner — see the page.
  *
- * ⚠ CR4 (HELD). Graham Ambridge's biography contains the word "settler",
- * describing himself. FNAN asked for "settlers" to become "colonists"; the
- * request was raised against Suzanne's quotation on Truth, not against this
- * line, and this line is a person's own account of himself. Held with the
- * rest of CR4 pending D15.
+ * ⚠ CR4 — ruled 7 Sep: this line KEEPS "settler". Graham Ambridge's
+ * biography describes himself, in his own word, and FNAN raised CR4 against
+ * Suzanne's quotation on Truth, not against this line. The same principle
+ * that protects her words protects his. Not an oversight — a decision.
  *
  * ⚠ Placeholder people are modelled with `name: null` rather than with the
  * string "[ Name ]". A placeholder that renders as a name is one careless

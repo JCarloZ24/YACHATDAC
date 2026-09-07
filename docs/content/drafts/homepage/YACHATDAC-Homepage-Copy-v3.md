@@ -65,7 +65,7 @@ Sandy plains, wooded country, and the Alice and the Thomson running through it
 
 Our people living into their nineties
 
-Landsborough comes through. The squatters follow him onto our Country.
+Landsborough comes through. The squatters follow him onto Iningai Country.
 
 One cattle station, Bowen Downs, takes fifteen hundred square miles of it — and the Thomson River with it.
 

@@ -343,8 +343,18 @@ export const suzanne = {
     href: "https://www.tandfonline.com/doi/full/10.1080/03122417.2022.2084666",
   },
   /**
-   * ⚠ QUOTATIONS. CR4 wants "settlers" replaced here. CR10 wants "our people"
-   * replaced here. Both HELD pending D15 — see R17. Do not edit these strings.
+   * ⚠ QUOTATIONS — DO NOT EDIT THESE STRINGS.
+   *
+   * CR4 wants "settlers" replaced here; CR10 wants "our people" replaced here.
+   * Ruled 7 Sep: the words stay exactly as Suzanne said them, and the two
+   * requests go to HER as questions rather than being applied by us. This is
+   * the single line in the round that changes what a Traditional Owner is
+   * shown to have said (R17), and D15 — who may edit a recorded quotation —
+   * is still open.
+   *
+   * Carried into the "Corrected Truth v3 package for Suzanne" deliverable,
+   * acceptance criterion "CR4 and CR10 framed as questions, not applied".
+   * Elsewhere on the site both changes ARE applied, in the site's own voice.
    */
   quotes: [
     "In 1886 the settlers had all come, and they'd established about 150 property landholdings. It was a great drought, and they were really concerned about the poor condition of the natives. Winter was coming. They were worried, because our people were off their lands and couldn't hunt, and had no access to their country or their foods.",

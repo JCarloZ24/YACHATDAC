@@ -354,7 +354,7 @@ export const PHOTOS: Photo[] = [
   { id: "lw-rangers4", src: "/media/library/living-work/livingwork-rangers4.webp", width: 2000, height: 1054, grade: "full", subject: "A hand at seedlings in a propagation tray" },
   { id: "lw-rangers5", src: "/media/library/living-work/livingwork-rangers5.webp", width: 2000, height: 1334, grade: "frame", subject: "Guiding visitors through seed grass — ⚠ consent unresolved (child in frame)" },
   { id: "lw-spring-dry", src: "/media/library/living-work/livingwork-spring.webp", width: 2000, height: 1054, grade: "full", subject: "Emus moving through dry mulga — the dry state the copy describes first" },
-  { id: "lw-fire", src: "/media/library/living-work/livingwork-work1.webp", width: 2000, height: 1054, grade: "full", subject: "A cool burn — right-way fire, black ash not scorched ground" },
+  { id: "lw-fire", src: "/media/library/living-work/livingwork-work1.webp", width: 2000, height: 1054, grade: "full", subject: "Fire-stick farming — black ash, not scorched ground" },
   { id: "lw-seed-collect", src: "/media/library/living-work/livingwork-work2.webp", width: 2000, height: 1054, grade: "full", subject: "Collecting seed from the tree, bowl in hand" },
   { id: "lw-seed-sort", src: "/media/library/living-work/livingwork-work3.webp", width: 2000, height: 1054, grade: "full", subject: "Seeds falling from a hand into the grinding stone" },
   { id: "lw-seed-grind", src: "/media/library/living-work/livingwork-work4.webp", width: 2000, height: 1054, grade: "full", subject: "Grinding seed at the ute tailgate, dusk" },

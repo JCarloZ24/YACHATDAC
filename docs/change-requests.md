@@ -84,13 +84,13 @@ the same day. Pablito is named as agreeing with one item.
 | CR1 | "cultural sites" → "cultural heritage sites" | Terminology | Proposed — straightforward | August → Marc |
 | CR2 | Card title "Carbon" → "Biological Sequestration" | Terminology | Proposed — check it is accurate | August, with the client |
 | CR3 | "Cool burns" and "right-way fire" → "fire-stick farming" | Terminology | Proposed — **widest sweep, touches a URL** | August, JC |
-| CR4 | "settlers" → "colonists" | Terminology | **Held** — lands inside Suzanne's quote. See D15 | August → Suzanne |
+| CR4 | "settlers" → "colonists" | Terminology | **Resolved (7 Sep)** — quote to Suzanne; Graham's own word kept | August → Suzanne |
 | CR5 | Add SWER, and on-site petrol and diesel tanks | New content | Proposed — **facts unverified**. See R19 | August, with the client |
-| CR6 | Add rail via Rockhampton to *Getting here* | New content | Proposed — straightforward | August |
+| CR6 | Add rail via Rockhampton to *Getting here* | New content | **APPLIED (7 Sep)** | August |
 | CR7 | "No town glow" → "Magic at night" | Copy rewrite | Proposed — offered as a suggestion | August, Ivy |
-| CR8 | Homepage hero — "maybe something more heroic" | Copy rewrite | Proposed — **a brief, not an instruction** | August, Marc |
+| CR8 | Homepage hero — "maybe something more heroic" | Copy rewrite | **Approved — sequenced last.** Proyekto still reads `withdrawn`; see CR8 | August, Marc |
 | CR9 | "Guesting On-Country" → "Be our guest" | Copy rewrite | Proposed — offered as a suggestion | August |
-| CR10 | Do not use "our" of Indigenous people; use "Iningai peoples" | Terminology | **Held** — conflicts with the client's own voice. See D16 | August → Suzanne |
+| CR10 | Do not use "our" of Indigenous people; use "Iningai peoples" | Terminology | **APPLIED (7 Sep)** in narration; quote to Suzanne | August → Suzanne |
 | CR11 | *Who comes* — instruction not captured | Unknown | **Blocked** — need the rest of the thread | August |
 
 New decisions raised: **D15**, **D16**, **D17**, **D18**.
@@ -207,12 +207,28 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR4 — "settlers" becomes "colonists"
+## CR4 — "settlers" becomes "colonists" · **RESOLVED (7 Sep)**
 
-- **Form** — status `submitted` · **decision note: HELD — lands inside
-  Suzanne's recorded quote; nothing moves until D15 is answered and Suzanne
-  rules. See R17.**
-- **Type** — Terminology · **Status** — **Held** · **Owner** — August → Suzanne
+- **Form** — status `submitted` in Proyekto · **needs the status moved by an
+  account holding `change_requests.decide`**
+- **Type** — Terminology · **Status** — **Resolved** · **Owner** — August → Suzanne
+- **7 Sep — the resolution, on August's ruling.** CR4 turned out to have **no
+  occurrence outside somebody's own words.** A search of `src/content/` and the
+  drafts finds "settler" in exactly two places, and both are a person speaking
+  about themselves. So there is nothing to substitute, and the request resolves
+  as two decisions rather than an edit:
+  1. **Suzanne's quotation** (`src/content/truth.ts:360`, Truth v3:221) —
+     **left exactly as spoken**, and now carries a marked block in the v3 draft
+     putting CR4 and CR10 to her as *questions*, with the note that both
+     changes have been made everywhere else and only her words are untouched.
+     This satisfies the "Corrected Truth v3 package" criterion *"CR4 and CR10
+     framed as questions, not applied"*.
+  2. **Graham Ambridge's biography** (`src/content/our-people.ts:80`) —
+     **keeps "settler"**. It is his own account of himself, Steve did not raise
+     CR4 against it, and the principle that protects Suzanne's words protects
+     his. Recorded in the file as a decision, not an oversight.
+- **D15 is still open** and still owes the standing rule. This resolves the
+  instance without pre-empting the principle.
 - **Raised by** — Steve (FNAN), 15:11: *"Please don't use 'settlers' in this
   case maybe use 'colonists'. The land was already settled when they got
   there."*
@@ -267,10 +283,22 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR6 — *Getting here* should include the train via Rockhampton
+## CR6 — *Getting here* should include the train via Rockhampton · **APPLIED (7 Sep)**
 
-- **Form** — status `submitted` · timeline impact 0 days
-- **Type** — New content · **Status** — Proposed · **Owner** — August
+- **Form** — status `submitted` in Proyekto · timeline impact 0 days ·
+  **needs marking applied** — this sync's token lacks `change_requests.decide`
+- **Type** — New content · **Status** — **Applied** · **Owner** — August
+- **Applied 7 Sep** — *Getting here* now reads "Fly to Barcaldine or Longreach
+  and drive, or take the train to Barcaldine via Rockhampton. Transfers can be
+  arranged." in `src/content/wonder.ts` and the v3 draft.
+- **The knock-on was taken, not deferred.** The Transfers inclusion now reads
+  "Available from Barcaldine or Longreach airports, **or the Barcaldine train**,
+  for an extra cost" — naming a rail arrival while the transfers line still
+  listed only airports would leave a reader with a supported route and no way
+  off it. **This adds a second unconfirmed claim to a block that was already
+  unconfirmed:** nobody has checked that transfers actually meet the train. It
+  is flagged in the code beside the R13 note and is the first thing to confirm
+  in that pass.
 - **Raised by** — Steve (FNAN), 15:19: *"They can also travel by train via
   Rockhampton to Barcaldine."*
 - **Where it lands** —
@@ -315,11 +343,23 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR8 — The homepage hero should be "more heroic"
+## CR8 — The homepage hero should be "more heroic" · **APPROVED (7 Sep), built last**
 
-- **Form** — status `submitted` · decision note: sequenced after R1 — the hero
-  and the Welcome are one beat
-- **Type** — Copy rewrite · **Status** — Proposed · **Owner** — August, Marc
+- **Form** — status `withdrawn` in Proyekto and **stuck there** · decision note:
+  sequenced after R1 — the hero and the Welcome are one beat
+- **Type** — Copy rewrite · **Status** — **Approved, sequenced last** · **Owner** — August, Marc
+- **7 Sep — approved, and the record does not yet show it.** August has ruled
+  that CR8 is accepted in principle and **built last, because the homepage is
+  heavier than the other pages**. It is sequenced to the end of the build, not
+  dropped. Two things stand in the way of recording that in Proyekto, and both
+  need an account this sync did not have:
+  1. The row was **withdrawn on 26 Aug** — by whom and why is not recorded, and
+     the withdrawal carries no decision note.
+  2. **`withdrawn` is terminal.** Proyekto refuses both the status change
+     (`change_requests.decide` permission missing) and any edit to the row
+     ("a change request in withdrawn can no longer be edited"). Reinstating CR8
+     means an admin flips it, or it is **re-raised as a new CR** carrying this
+     history forward. Until then this file is the only record of the approval.
 - **Raised by** — Steve (FNAN), 15:31, against the homepage hero: *"Maybe
   something more heroic?"*
 - **Where it lands — this one is already built**
@@ -367,7 +407,33 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR10 — Do not use "our" in reference to Indigenous people
+## CR10 — Do not use "our" in reference to Indigenous people · **APPLIED (7 Sep)**
+
+- **7 Sep — applied in the site's narration, on August's ruling.** The site now
+  speaks of the Iningai people in the third person wherever it is the site
+  narrating, and Steve's note is satisfied everywhere except inside a
+  quotation. Three lines changed, in both the coded content and the drafts:
+  - `src/content/wonder.ts` — "bought back for **our people**" → "bought back
+    for **the Iningai people**"
+  - `src/content/about.ts` — the same sentence in miniature, same change
+  - `src/content/homepage.ts` — "the squatters follow him onto **our
+    Country**" → "onto **Iningai Country**" (not flagged by Steve; the same
+    word, and it would have been noticed)
+- **Two things deliberately NOT done, and both matter:**
+  1. **Steve's spelling was not adopted.** He writes *"Innigai peoples"*; every
+     draft and every file in `src/content/` says **Iningai**, and so does the
+     Taçon et al. citation on Truth. The applied text uses **Iningai**.
+     **R18 is still open** — this is a nation's name and it should be confirmed
+     with Suzanne regardless of which way this CR went.
+  2. **First-person where the corporation describes its own acts is untouched**
+     — "We manage Turraburra", "we renamed it", "we were formed by". CR10
+     objects to "our" used *of Indigenous people*, not to YACHATDAC speaking as
+     itself, and flattening that would have cost the site its voice.
+- **Suzanne's quotation is untouched** and goes to her as a question — see CR4.
+- **D16 still owes the standing ruling** and the terminology sheet still needs
+  building; this settles the instances, not the principle.
+
+### The original assessment, kept for the record
 
 - **Form** — status `submitted` · **decision note: HELD — conflicts with the
   client's own first-person voice and lands partly inside Suzanne's quote;
@@ -695,7 +761,11 @@ placeholder (**R1**).
 7. **Get the rest of the thread** — CR11, the Drive link, the two emails, and
    the "better talked through" wording notes.
 8. **Start the terminology sheet** (**D16**) — it is the thing that stops this
-   round repeating in the next one.
+   round repeating in the next one. **Drafted 7 Sep: `docs/terminology.md`.**
+   It is explicitly **non-blocking** per F8 — changes requested by Steve or
+   August are applied first and the sheet updated to match, not the other way
+   round. Two entries still need Suzanne (the Iningai spelling, and
+   "Indigenous" vs "First Nations"); everything else is recorded house style.
 
 ---
 
