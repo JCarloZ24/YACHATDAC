@@ -1,6 +1,6 @@
 # Change Requests — paste-ready
 
-*Last updated: 25 August 2026*
+*Last updated: 7 September 2026*
 
 Companion to `docs/decisions-and-risks.md`. That file holds the standing
 Decision and Risk registers; this one holds **Change Requests** — a request from
@@ -15,7 +15,7 @@ Everything here is written to be **copied straight into Proyekto**:
 
 **Uploaded 25 Aug 2026:** the delivery write tools went live on
 `api.proyekto.tech/mcp` and this round was entered through them — CR1–CR11 are
-`CR-001`–`CR-011` in Proyekto (CR1–CR10 submitted, CR11 draft), D15–D18 are
+`CR-001`–`CR-011` in Proyekto, D15–D18 are
 `DEC-021`–`DEC-024`, R16–R21 are on the risk register as `internal`. Where an item is really a piece of work rather than a request for a ruling,
 it is marked **→ task** and can be created through MCP on request — and once a
 Change Request exists it can be **linked** to the epics, features, tasks and
@@ -25,6 +25,62 @@ form.
 Numbering continues the existing registers: change requests start at **CR1**,
 decisions at **D15**, risks at **R16**. Owners are as listed in
 `docs/decisions-and-risks.md`.
+
+## Proyekto sync state — checked 7 September 2026
+
+**The register in Proyekto is two rounds behind this file, and nothing in this
+session could move it.** Read live, the rows are:
+
+| CR | Proyekto status | Decision note there | This file |
+| --- | --- | --- | --- |
+| CR1 | `approved` | yes, 28 Aug | Applied |
+| CR2 | `approved` | yes, 28 Aug | Applied |
+| CR3 | `approved` | yes, 28 Aug | Applied, partial |
+| CR4 | `submitted` | — | **Resolved 7 Sep** |
+| CR5 | `submitted` | — | Proposed |
+| CR6 | `submitted` | — | **Applied 7 Sep** |
+| CR7 | `approved` | yes, 28 Aug | Applied |
+| CR8 | `withdrawn` | — | **Approved 7 Sep** |
+| CR9 | `approved` | yes, 28 Aug | Applied, partial |
+| CR10 | `submitted` | — | **Applied 7 Sep** |
+| CR11 | `draft` | — | Blocked |
+
+**Two token limits, and the second is new.** The MCP token in use lacks
+`change_requests.decide`, so no status can be moved. It also turns out that
+Proyekto locks a change request against **editing** once it leaves `draft` —
+not only in `withdrawn` (already known from CR8) but in `submitted` too:
+`change_request_update` on CR6 returns *"A change request in submitted can no
+longer be edited."* So the 7 Sep resolutions cannot even be written into the
+descriptions as a stopgap. **This file is the only record of them.**
+
+Note also that the 28 Aug decision notes on CR1/2/3/7/9 were stamped by a
+different account, not by the token this sync used — the presence of those
+notes is not evidence the permission is available now.
+
+### Hand-off — what an account holding `change_requests.decide` needs to do
+
+1. **CR6 → `approved`**, decision note: the applied wording, plus the flag that
+   the reconciled transfers line adds a second unconfirmed claim to a block
+   already open under **R13**.
+2. **CR10 → `approved`**, decision note: applied in the site's narration only;
+   Steve's *"Innigai"* spelling deliberately **not** adopted (**R18** open);
+   first-person where YACHATDAC describes its own acts deliberately untouched;
+   Suzanne's quotation untouched and going to her as a question.
+3. **CR4 → `changes_requested`**, decision note: resolved as two decisions
+   rather than an edit — Suzanne's quote left exactly as spoken and put to her
+   as a question, Graham Ambridge's "settler" kept as his own account of
+   himself. **D15** still owes the standing rule.
+4. **CR8** — an admin flips it out of `withdrawn`, or it is re-raised as a new
+   CR carrying this history. **Decided 7 Sep: neither, for now.** The approval
+   lives in this file until someone with admin can reinstate the original row;
+   re-raising was considered and declined, so the withdrawal is not papered
+   over with a duplicate.
+5. **CR1/2/3/7/9 → `applied`** cannot be hand-picked — `applied` is set only by
+   `change_request_mark_applied`, which requires the id of an actual roadmap
+   commit. These were code commits, not roadmap edits, so the rows correctly
+   stay at `approved` until the roadmap carries them. Not a defect to fix.
+
+---
 
 ## The Change Request form — confirmed 25 Aug
 
@@ -280,6 +336,11 @@ Approved in this round, and now locked: see Part 4.
   before it is written, not after.
 - **Next step** — Ask the client, through Steve, for the actual arrangement in
   one or two sentences, then write it. Do not paraphrase the definition.
+- **7 Sep** — **left at `submitted` deliberately.** August is supplying the SWER
+  and fuel-tank content directly rather than routing the ask through Steve, so
+  the move to `changes_requested` would misrecord what happened. Nothing is
+  written until that content arrives; if it does not, ship the Power block
+  without it, which is complete as it stands (**R19**).
 
 ---
 
@@ -359,7 +420,11 @@ Approved in this round, and now locked: see Part 4.
      (`change_requests.decide` permission missing) and any edit to the row
      ("a change request in withdrawn can no longer be edited"). Reinstating CR8
      means an admin flips it, or it is **re-raised as a new CR** carrying this
-     history forward. Until then this file is the only record of the approval.
+     history forward. **Decided 7 Sep: neither.** Re-raising was considered and
+     declined — a duplicate row would paper over an unexplained withdrawal
+     rather than resolve it, and the withdrawal itself (by whom, and why) is
+     still worth an answer. Until an admin reinstates the original row, this
+     file is the only record of the approval.
 - **Raised by** — Steve (FNAN), 15:31, against the homepage hero: *"Maybe
   something more heroic?"*
 - **Where it lands — this one is already built**
@@ -747,20 +812,27 @@ placeholder (**R1**).
 
 # Part 5 — What to do next
 
-1. **Do not apply anything yet for CR4 and CR10.** They are the two that cannot
-   be walked back. Answer **D15** first.
-2. **Apply CR1 and CR6** — both small, uncontested, and touching nothing on the
-   registers.
-3. **Take CR2 to the client with R14**, in one pass over the status labels
-   rather than as a separate question.
-4. **Do CR3 as an edit pass**, not a substitution, and hold the slug until
-   **D17**.
-5. **Answer CR7, CR8 and CR9 with options**, batched per page, per the
-   recommendation in **D18**.
-6. **Ask the client for the SWER and fuel facts** before writing CR5.
-7. **Get the rest of the thread** — CR11, the Drive link, the two emails, and
-   the "better talked through" wording notes.
-8. **Start the terminology sheet** (**D16**) — it is the thing that stops this
+Steps 1–5 of the original list are done; what follows is what is left as of
+7 September 2026. Nothing here is a code change — **every remaining item needs
+a person, not a commit.**
+
+1. **Get an admin to run the Proyekto hand-off** — the five items in *Proyekto
+   sync state* above. Until then the register misrepresents four resolved
+   requests, and CR8's approval exists nowhere but this file.
+2. **Suzanne, in one conversation** — this is now the only thing blocking the
+   round. Three questions, all hers, and they travel together:
+   - the **Iningai / Innigai** spelling (**R18**), which is the name of the
+     nation and appears on every page;
+   - **CR4** and **CR10** as questions against her own quotation — both changes
+     made everywhere else, her words alone untouched;
+   - "Indigenous" vs "First Nations" (**D16**), which the terminology sheet
+     leaves open pending her ruling.
+   The corrected **Truth v3** package carries all three.
+3. **CR5** — August to supply the actual SWER and fuel-tank arrangement. Do not
+   write from the pasted definition (**R19**).
+4. **CR11 and the rest of the thread** — the cut-off message, the Drive link,
+   the two emails, and the "better talked through" wording notes (**R20**).
+5. **The terminology sheet** (**D16**) — it is the thing that stops this
    round repeating in the next one. **Drafted 7 Sep: `docs/terminology.md`.**
    It is explicitly **non-blocking** per F8 — changes requested by Steve or
    August are applied first and the sheet updated to match, not the other way
