@@ -129,7 +129,7 @@ is here so the transcript can still be read against it.
 | "D8/D9 — motion guidelines" | **D9** only. D8 here is backend build priority and was not discussed. |
 | "D10 — copy ownership and CMS source of truth" | restates **D5** and **D12**. D10 itself — a named copy owner per page — is still unanswered. |
 | R1, R2, R3 | the same items |
-| "R4 — Suzanne's approvals" | **R5**. R4 here is the Bantayog Sans licence and is still open. |
+| "R4 — Suzanne's approvals" | **R5**. R4 here is the Bantayog Sans licence, closed 2 Sep 2026. |
 | "R5 — DGR" | **R8** |
 | "R6 — cultural permissions for media" | **R10** |
 
@@ -1321,8 +1321,11 @@ The reasoning as it stood when this was Final:
   section.
 - **Why** — Block Berthold carries an Adobe / H. Berthold AG copyright. A
   commercial font binary is far easier to keep out of a repository than to
-  remove from its history later. Reversing this is one line in `.gitignore`
-  once licences are confirmed.
+  remove from its history later.
+- **Still stands after R3 / R4 closed (2 Sep 2026)** — Licensed is not the same
+  as redistributable. Block Berthold is now served from the Adobe Fonts kit
+  rather than the repository at all, and the Bantayog Sans licence covers use,
+  not publishing the binaries in a public repo. Both stay gitignored.
 
 ---
 
@@ -1498,10 +1501,10 @@ permission is recorded, not when a design is drawn.
 
 ---
 
-## R3 · RISK · High — Block Berthold has no confirmed webfont licence
+## R3 · RISK · High — Block Berthold has no confirmed webfont licence · **CLOSED**
 
-- **Form** — kind `risk` · severity `high` · likelihood `high` · status `open`
-  · visibility `internal` · owner Marc
+- **Form** — kind `risk` · severity `high` · likelihood `high` · status
+  `closed` · visibility `internal` · owner Marc
 - **Owner** — Marc and August → brand team
 - **What could go wrong** — Block Berthold ships an Adobe / H. Berthold AG
   copyright. It is a commercial retail typeface, and a desktop licence does not
@@ -1520,13 +1523,22 @@ permission is recorded, not when a design is drawn.
   Berthold**. A purchase alone is not the answer — the question is specifically
   whether the licence held covers **webfont** use, since a desktop licence
   usually does not.
+- **Closed (2 Sep 2026)** — Answered by admin, and in exactly the terms the
+  question was sharpened to: the family is licensed through an **Adobe Fonts
+  web project**, kit `qqn2php`, serving `berthold-block-w1g` at 400/700 roman
+  and italic. Adobe Fonts terms cover *hosted* delivery, so the kit stylesheet
+  in `src/app/layout.tsx` — not the woff2 — is the licensed route. The
+  self-hosted `BlockBerthold.woff2` survives only as the second entry in the
+  font stack for a kit outage, and stays out of git. If compliance review
+  objects to holding any local copy, delete the file and the fallback entry
+  together. Recorded in `public/fonts/README.md`.
 
 ---
 
-## R4 · RISK · Medium — Bantayog Sans licence unknown
+## R4 · RISK · Medium — Bantayog Sans licence unknown · **CLOSED**
 
 - **Form** — kind `risk` · severity `medium` · likelihood `medium` · status
-  `open` · visibility `internal` · owner Marc
+  `closed` · visibility `internal` · owner Marc
 - **Owner** — Marc and August
 - **What could go wrong** — Bantayog Sans arrived with no licence file at all.
   Terms are simply unknown.
@@ -1535,8 +1547,17 @@ permission is recorded, not when a design is drawn.
 - **Next step** — Ask whoever supplied it for the licence, and file it beside
   `WorkSans-OFL.txt`. Fold it into the same question to Marc as R3 — one
   conversation, two fonts.
+- **Closed (2 Sep 2026)** — A commercial licence is held by the organisation,
+  purchased 22 Jul 2026 from Jad Maza Type Design. The licence key is recorded
+  in `public/fonts/README.md`; keep the invoice with the brand assets in the
+  Proyekto resources section, and move the key there if this repository ever
+  goes public.
+- **Residual** — Licensing is settled, but the binaries are still an asset gap:
+  `BantayogSans-ExtraBold.woff2` is preloaded in the root layout and declared
+  in `fonts.css` while absent from `public/fonts`. That is R-nothing — it is a
+  delivery task, not a risk.
 - **Note** — The 20 Aug walkthrough used "R4" to mean Suzanne's approvals,
-  which is **R5** in this file. This risk was not discussed and is unchanged.
+  which is **R5** in this file. This risk was not discussed there.
 
 ---
 

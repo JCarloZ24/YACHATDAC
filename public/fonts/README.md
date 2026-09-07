@@ -23,7 +23,7 @@ fallback entry together.
 
 **Bantayog Sans** — commercial licence key held by the organisation:
 
-> `A15B292D-4B744BC-9E903E9B-7C320135`
+> `A15B292D-4BA744BC-9E903E9B-7C320135`
 
 Keep the purchase record (invoice / licence PDF) with the brand assets in the
 Proyekto resources section; if this repository ever goes public, move the key
