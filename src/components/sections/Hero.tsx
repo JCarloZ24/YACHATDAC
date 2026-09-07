@@ -41,7 +41,7 @@ export function Hero({ beat }: { beat: Beat }) {
 
       <div className="relative mx-auto w-full max-w-7xl px-6 pb-28 lg:px-16">
         <Eyebrow className="text-ochre">{beat.eyebrow}</Eyebrow>
-        <h1 className="headline mt-6 max-w-4xl text-5xl text-canvas sm:text-6xl lg:text-(length:--text-display)">
+        <h1 className="headline mt-6 max-w-4xl text-h1 text-canvas">
           {beat.headline}
         </h1>
         {beat.body.map((paragraph) => (

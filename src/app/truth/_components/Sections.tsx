@@ -168,7 +168,7 @@ export function TruthHeroV2() {
             as="h1"
             mode="lines"
             gate="entry"
-            className="headline mt-8 max-w-4xl text-4xl text-canvas sm:text-6xl lg:max-w-none lg:text-display"
+            className="headline mt-8 max-w-4xl text-h1 text-canvas lg:max-w-none"
           >
             {truthHero.title}
           </SplitReveal>
@@ -1382,7 +1382,7 @@ export function SuzanneBand() {
             {SUZANNE_WITHHELD ? <>1902 &rarr; 1886</> : suzanne.marker}
           </p>
           <div>
-            <h2 className="headline max-w-4xl text-5xl leading-[1.2] text-oxide sm:text-7xl lg:text-display">
+            <h2 className="headline max-w-4xl text-h2 leading-[1.2] text-oxide">
               {SUZANNE_WITHHELD ? "[ THE COUNT ]" : suzanne.title}
             </h2>
             <p className="mt-10 text-sm uppercase tracking-wide text-canvas">

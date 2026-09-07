@@ -235,7 +235,7 @@ export function Hero({ beat }: { beat: Beat }) {
             as="h1"
             mode="enter"
             text={beat.headline}
-            className="headline text-4xl leading-[1.2] tracking-normal text-canvas sm:text-6xl lg:text-display"
+            className="headline text-h1 leading-[1.2] tracking-normal text-canvas"
           />
 
           {beat.body.map((paragraph, index) => (

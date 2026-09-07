@@ -34,7 +34,7 @@ export function WonderBeat({ beat }: { beat: Beat }) {
         <SplitReveal
           as="h2"
           mode="lines"
-          className="headline mt-6 max-w-3xl text-4xl sm:text-beat"
+          className="headline mt-6 max-w-3xl text-h2"
         >
           {beat.headline}
         </SplitReveal>
@@ -127,7 +127,7 @@ export function BelongingBeat({ beat }: { beat: Beat }) {
         <SplitReveal
           as="h2"
           mode="lines"
-          className="headline mt-6 max-w-3xl text-4xl sm:text-beat"
+          className="headline mt-6 max-w-3xl text-h2"
         >
           {beat.headline}
         </SplitReveal>
@@ -152,7 +152,7 @@ export function LivingWorkBeat({ beat }: { beat: Beat }) {
         <SplitReveal
           as="h2"
           mode="lines"
-          className="headline mt-6 max-w-3xl text-4xl sm:text-beat"
+          className="headline mt-6 max-w-3xl text-h2"
         >
           {beat.headline}
         </SplitReveal>

@@ -40,23 +40,36 @@
      nothing else. Both exist as paint styles in YACHATDAC-V2. */
   --color-gold: #fbae3d;
 
-  /* Display scale — headlines are set in Block Berthold, tight and heavy.
-     Sizes below match the Figma text styles rather than being chosen here:
-     Display/96, Eyebrow/Hero-32, Body/Lead-24, Accent/Scroll-32. The code
-     scale used to be materially smaller than the design system across the
-     board — 64px display, 13px eyebrow — so a built page could never look
-     like the hi-fi no matter how the layout was arranged. */
-  --text-display: 6rem; /* 96 — Figma Display/96 */
-  --text-display--line-height: 1.2; /* lo-fi Display/96 is 120% */
-  --text-display--letter-spacing: 0em; /* Marc: 0% */
+  /* Heading scale — the `YACHATDAC Type` VARIABLE collection in YACHATDAC-V2,
+     adopted 7 Sep 2026. Mobile values are the defaults; the desktop column
+     lands in the media query below, so `text-h1` is responsive on its own and
+     call sites do not need a text-4xl/sm:/lg: ladder.
 
+     ⚠ The V2 file contains a SECOND, conflicting scale — the `Typography/*`
+     TEXT STYLES (Display/96, Heading/64, Card Title/32), which is what this
+     file used to carry. The variables were chosen as authoritative; the text
+     styles are superseded. Do not "restore" 96 on the strength of finding
+     Display/96 in Figma. See docs/decisions-and-risks.md. */
+  --text-h1: 2.5rem; /* 40 — Type/Mobile/Heading 1 */
+  --text-h2: 2.25rem; /* 36 — Type/Mobile/Heading 2 */
+  --text-h3: 2rem; /* 32 — Type/Mobile/Heading 3 */
+  --text-h4: 1.5rem; /* 24 — Type/Mobile/Heading 4 */
+  --text-h5: 1.25rem; /* 20 — Type/Mobile/Heading 5 */
+  --text-h6: 1.125rem; /* 18 — Type/Mobile/Heading 6 */
+
+  /* Leading is not in the variable collection — these carry forward the values
+     the shipped scale was tuned to (Display/96 sat at 1.2), rather than being
+     invented here. `.headline` supplies 1.05 for anything without one. */
+  --text-h1--line-height: 1.1;
+  --text-h2--line-height: 1.1;
+  --text-h3--line-height: 1.15;
+
+  /* Not part of the heading scale and unchanged by the migration. Note that
+     Type/Text/* (20/18/16/14/12) needs no tokens — it is exactly Tailwind's
+     text-xl/lg/base/sm/xs — and Type/Tagline (16) is `.callout text-base`. */
   --text-eyebrow-hero: 2rem; /* 32 — Figma Eyebrow/Hero-32 */
   --text-lead: 1.5rem; /* 24 — Figma Body/Lead-24 */
   --text-scroll: 2rem; /* 32 — Figma Accent/Scroll-32 */
-
-  --text-beat: 2.75rem;
-  --text-beat--line-height: 1.08;
-  --text-beat--letter-spacing: -0.015em;
 
   /* Easing. Values fixed by the motion skill — `country` for anything large,
      `quiet` for interface furniture. Overshoot and elastic are banned: they
@@ -64,6 +77,21 @@
   --ease-country: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-quiet: cubic-bezier(0.33, 1, 0.68, 1);
   --ease-machine: linear;
+}
+
+/* Desktop column of the V2 heading scale. One breakpoint, not three: the V2
+   file defines exactly two grid styles, Desktop/1440 and Mobile/375, so there
+   is no intermediate step in the design to honour. Redefining the token here
+   re-points every `text-h*` utility without touching a call site. */
+@media (min-width: 64rem) {
+  :root {
+    --text-h1: 3.5rem; /* 56 — Type/Desktop/Heading 1 */
+    --text-h2: 3rem; /* 48 — Type/Desktop/Heading 2 */
+    --text-h3: 2.5rem; /* 40 — Type/Desktop/Heading 3 */
+    --text-h4: 2rem; /* 32 — Type/Desktop/Heading 4 */
+    --text-h5: 1.5rem; /* 24 — Type/Desktop/Heading 5 */
+    --text-h6: 1.25rem; /* 20 — Type/Desktop/Heading 6 */
+  }
 }
 
 /* ---------------------------------------------------------------------------

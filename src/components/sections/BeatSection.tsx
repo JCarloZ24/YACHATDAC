@@ -50,7 +50,7 @@ export function BeatSection({ beat }: { beat: Beat }) {
         {beat.headline ? (
           <Reveal index={1}>
             <h2
-              className={`headline mt-6 max-w-3xl text-4xl sm:text-5xl lg:text-(length:--text-beat) ${ink.heading}`}
+              className={`headline mt-6 max-w-3xl text-h2 ${ink.heading}`}
             >
               {beat.headline}
             </h2>

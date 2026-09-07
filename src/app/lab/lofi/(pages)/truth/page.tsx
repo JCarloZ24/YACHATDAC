@@ -163,7 +163,7 @@ export default function TruthPage() {
       {/* 00 — Intro */}
       <section className="relative flex min-h-svh items-center overflow-hidden bg-charcoal">
         <div className="relative mx-auto w-full max-w-7xl px-6 pt-32 pb-24 lg:px-16">
-          <h1 className="headline max-w-4xl text-4xl text-canvas sm:text-5xl lg:text-display">
+          <h1 className="headline max-w-4xl text-h1 text-canvas">
             {truthIntro.lead}
           </h1>
           <p className="mt-8 max-w-2xl text-base leading-relaxed text-canvas/75">

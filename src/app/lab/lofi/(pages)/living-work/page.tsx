@@ -50,7 +50,7 @@ export default function LivingWorkPage() {
         />
         <div className="relative mx-auto w-full max-w-7xl px-6 pt-32 pb-24 lg:px-16">
           <Eyebrow className="text-ochre">{livingWorkHero.eyebrow}</Eyebrow>
-          <h1 className="headline mt-6 max-w-4xl text-4xl text-canvas sm:text-5xl lg:text-display">
+          <h1 className="headline mt-6 max-w-4xl text-h1 text-canvas">
             {livingWorkHero.headline}
           </h1>
           <p className="mt-8 max-w-2xl text-base leading-relaxed text-canvas/75">
