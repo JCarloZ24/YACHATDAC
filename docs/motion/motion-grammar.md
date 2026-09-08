@@ -1,5 +1,7 @@
 # The motion grammar
 
+*Last updated: 8 September 2026*
+
 *Decided 30 August 2026. The second artefact, and the one the code answers to.*
 
 Parallax, dissolves and text effects are not the design. They are the alphabet. The design is
@@ -57,6 +59,7 @@ diluting — the brief caps the table at six to eight roles and it is right to.
 | a change of ground | `ground` (one sweep) | `groundRamp` (across four screens), `waveHandoff`, `overlap`, `stickyIndex` |
 | what endures | `settle` (lines) | `display` (chars), `ghostType` (behind everything), `knockout` (as a window) |
 | what radiates | `arrive` | `emanate`, `triad`, `scatterResolve`, `mosaic`, `handoff` |
+| the guide leading the eye | `routeDraw` (a drawn map inks itself along its own lines, loop by loop, scrubbed; the line is the guide, there is no traveller. On §02 the Queensland outline runs down from the cape as two lines that meet at the bottom, the borders draw inward, and the pin arrives and floats — the float is the one time-based movement, a slow bob on transform — Wonder §02 and §04, `src/lib/motion/route-map.ts`, 8 Sep 2026) | `guide` |
 
 `scrimRamp` belongs to no row on its own: X5 is a legibility requirement that travels with
 whatever media effect it accompanies, and it is non-negotiable wherever copy sits on a picture.
@@ -67,6 +70,12 @@ clone and leaves the real cell in place at opacity 0, so the grid behind it neve
 card returns to exactly where it was. Both are Flip, and neither may be scrubbed — Flip measures
 at trigger time, so a scrubbed Flip computed at one viewport width lands wrong at another. Pin
 for a screen, run on enter, reverse on leave-back.
+
+**The Record is static — 8 September 2026, user direction (F7 exception).**
+The route no longer mounts page or grid motion and has no animated headings,
+hover effects, count fades or route transition. Earlier motion code remains in
+source, but is not active on `/the-record`.
+See [the scene ledger](scenes.md#the-record--static-by-direction-8-september-2026).
 
 ## Compositions — the sentences
 
