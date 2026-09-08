@@ -41,11 +41,18 @@ export type SplitRevealOptions = {
    * "now" — play immediately (callers gate on awaitEntry first).
    */
   trigger?: "view" | "now";
+  /**
+   * Seconds to hold before the reveal starts. Lets a caller sequence several
+   * reveals against ONE gate — an eyebrow, then a headline, then a lede —
+   * without each needing its own trigger. Ignored when scrubbed, where the
+   * scroll is the clock.
+   */
+  delay?: number;
 };
 
 export function wireSplitReveal(
   el: HTMLElement,
-  { mode, scrub = false, trigger = "view" }: SplitRevealOptions,
+  { mode, scrub = false, trigger = "view", delay = 0 }: SplitRevealOptions,
 ): () => void {
   if (mode === "chars" && (el.textContent ?? "").trim().length > 48) {
     // B6 is capped at short display headings. Longer copy gets lines.
@@ -67,6 +74,7 @@ export function wireSplitReveal(
         duration: DUR_LARGE,
         ease: EASE_COUNTRY,
         stagger: STAGGER[mode],
+        ...(delay && !scrub ? { delay } : {}),
       };
 
       if (trigger === "view" || scrub) {

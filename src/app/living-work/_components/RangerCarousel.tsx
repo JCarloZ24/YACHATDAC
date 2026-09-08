@@ -554,9 +554,6 @@ export function RangerCarousel({
                     data-placeholder="image"
                     className="flex h-[400px] items-end rounded-sm border border-dashed border-canvas/25 bg-canvas/5 p-4"
                   >
-                    <p className="text-xs leading-relaxed text-canvas/50">
-                      1.82.1 &mdash; at the escarpment. Not yet gathered.
-                    </p>
                   </div>
                   <p className="eyebrow mt-4 text-xs text-gold">[ name held ]</p>
                   <p className="mt-1 text-sm text-canvas/70">{slot.caption}</p>
