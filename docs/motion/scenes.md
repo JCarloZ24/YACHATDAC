@@ -165,12 +165,27 @@ yet, and the two should be reconciled before this page is signed off.
 | 03 | V | Our challenges — the ground thins under you as you read | 3 | 330 | **transition** | — | — |
 | 04 | V | Iningai Rangers — the human centre, on dark ground | 4 | 100 | **media** | P1 | ✓ |
 | 05 | V | **THE SPRING** — eight days, counted | 5 | 150 | **media** | P8 | ✓ pinned, snapped |
-| 06 | V | The work — seven streams, and what it takes | 3 | 360 | **media** | P5 | — |
+| 06 | V | The work — seven streams | 3 | 360 | **media** | P5 | — |
+| 07 | V | Infrastructure — what it takes, met two at a time | 2 | 160 | **none** | — | — |
 | 07b | V | **BREATH** — held, no caption | 1 | 47 | **none** | P8 | ✓✓ |
 | 08 | V | What the work produces — five vessels, four filling | 2 | 120 | **none** | — | — |
 | 09 | V | Get involved — three paths | 2 | 100 | **type** | — | — |
 
-**Reads as:** media · type · transition · media · media · media · none · none · type.
+**Reads as:** media · type · transition · media · media · media · none · none ·
+none · type.
+
+⚠ **Corrected 8 Sep 2026 — §07 was missing from this ledger.** The page has
+built ten sections since the hi-fi; this table listed nine, and §06's row was
+carrying §07's phrase ("and what it takes") as if the two had been merged. They
+are separate: §07 Infrastructure ships as `whatItTakes` at 160vh, `channel:
+"none"`, sticky index and no pin.
+
+It does **not** relieve the §04/§05/§06 media run flagged below — it sits after
+it. What it changes is the back half: §07, §07b and §08 are now three
+consecutive `none` screens before §09 picks up `type`. That is not a
+channel-three-deep violation, because `none` is the absence of a loud channel
+rather than a fourth one, but it is 327vh of quiet in a row and should be read
+as one stretch rather than as three separate rests.
 
 ⚠ **§04, §05 and §06 are three `media` screens running.** That breaks the no-channel-three-deep
 rule. It is survivable because §05 pins and snaps — a pinned counter reads as its own kind of
