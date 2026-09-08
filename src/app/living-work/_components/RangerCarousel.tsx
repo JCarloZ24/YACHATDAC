@@ -53,6 +53,9 @@ const SPACING = 300;
     viewport centre and this at its edges on a cosine bell. */
 const SCALE_MIN = 0.78;
 
+/** How long the belt takes to settle onto the centre line after a wheel. */
+const DUR_SETTLE = 0.35;
+
 const pad = (n: number) => String(n).padStart(2, "0");
 
 export function RangerCarousel({
@@ -121,18 +124,52 @@ export function RangerCarousel({
       });
 
       const pos = { x: 0 };
+
+      /* THE BELT'S GEOMETRY, rebuilt 8 Sep on Ivy's review.
+       *
+       * Two faults, one cause. The scale came off a cosine bell measured
+       * against half the viewport while the pitch stayed a flat 300, so:
+       *
+       *   slot  0      1      2      3
+       *   scale 1.000  0.918  0.795  0.780   <- steps .082 / .123 / .015
+       *   gap          31.4   60.2   79.5    <- "different padding"
+       *
+       * The scale flattened at the edges, so only the middle three read as a
+       * hierarchy; and because a card scales about its own centre while the
+       * pitch did not, the gaps grew as the cards shrank.
+       *
+       * Now the scale ramps linearly over slot distance, and the pitch
+       * INTEGRATES that scale so the gap between neighbours is constant:
+       *
+       *   slot  0      1      2      3
+       *   scale 1.000  0.927  0.853  0.780   <- even .073 steps
+       *   gap          20.0   20.0   20.0
+       *
+       * Because the scale depends on slot distance rather than on the final
+       * pixel position, the placement has a closed form and needs no solving:
+       * X(d) = GAP*d + CARD_W*(d - k*d^2/(2*RAMP)) inside the ramp, then a
+       * straight line at SCALE_MIN beyond it. Odd-symmetric, so X(-d) = -X(d).
+       *
+       * Positions still WRAP on the raw uniform axis, so the belt stays
+       * seamless and the snap and the counter are unchanged — a card teleports
+       * at d=3.5, which is ~927px out and off screen at every width. */
+      const RAMP = 3;
+      const GAP = 20;
+      const K = 1 - SCALE_MIN;
+      const scaleAt = (d: number) => 1 - K * Math.min(d / RAMP, 1);
+      const offsetAt = (d: number) => {
+        const a = Math.min(d, RAMP);
+        let x = GAP * a + CARD_W * (a - (K * a * a) / (2 * RAMP));
+        if (d > RAMP) x += (GAP + CARD_W * SCALE_MIN) * (d - RAMP);
+        return x;
+      };
+
       const render = () => {
-        // LINEAR, per the 3 Sep direction: a flat belt, cards upright, with
-        // presence carried by scale alone — biggest at the centre, easing
-        // down toward the edges on a cosine bell so nothing steps.
-        const half = Math.max(window.innerWidth / 2, 1);
         for (let i = 0; i < n; i++) {
-          const x = wrapX(i * SPACING + pos.x);
-          const t = Math.min(Math.abs(x) / half, 1);
-          gsap.set(cards[i], {
-            x: x - CARD_W / 2,
-            scale: SCALE_MIN + (1 - SCALE_MIN) * 0.5 * (1 + Math.cos(Math.PI * t)),
-          });
+          const raw = wrapX(i * SPACING + pos.x);
+          const d = Math.abs(raw) / SPACING;
+          const x = Math.sign(raw) * offsetAt(d);
+          gsap.set(cards[i], { x: x - CARD_W / 2, scale: scaleAt(d) });
         }
         if (countRef.current) {
           const centred = wrapIndex(Math.round(-pos.x / SPACING));
@@ -161,7 +198,47 @@ export function RangerCarousel({
         },
       })[0];
 
+      /* TRACKPAD AND WHEEL. Once the belt builds, Draggable owns X and the
+       * native scroller is gone — so before this the strip only moved if you
+       * held a pointer down on it, which is what Ivy hit: a two-finger swipe
+       * did nothing.
+       *
+       * Horizontal intent only. If the gesture is more vertical than
+       * horizontal we return without preventing default, so the page scrolls
+       * through the section exactly as it always did — a carousel that eats
+       * vertical scroll is worse than one you cannot swipe. */
+      let settle = 0;
+      const onWheel = (e: WheelEvent) => {
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        e.preventDefault();
+        pos.x -= e.deltaX;
+        render();
+        // Keep the drag proxy in step, or the next pointer-drag jumps back to
+        // wherever the belt was when the wheel started.
+        gsap.set(proxy, { x: pos.x });
+        draggable.update();
+        // Settle onto the centre line when the gesture stops, the same
+        // resting state a throw lands in.
+        window.clearTimeout(settle);
+        settle = window.setTimeout(() => {
+          const to = Math.round(pos.x / SPACING) * SPACING;
+          gsap.to(pos, {
+            x: to,
+            duration: DUR_SETTLE,
+            ease: "power2.out",
+            onUpdate: render,
+            onComplete: () => {
+              gsap.set(proxy, { x: pos.x });
+              draggable.update();
+            },
+          });
+        }, 140);
+      };
+      stage.addEventListener("wheel", onWheel, { passive: false });
+
       return () => {
+        window.clearTimeout(settle);
+        stage.removeEventListener("wheel", onWheel);
         draggable.kill();
       };
     },

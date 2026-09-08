@@ -28,7 +28,7 @@ import {
  *   §02 aperture    type        400vh   ⚡5   pinned · countdown → theater → the O hand-off
  *   §03 challenges  transition  330vh   ⚡3
  *   §04 rangers     media       100vh   ⚡4   → rest
- *   §05 spring      media       150vh   ⚡5   pinned · snapped
+ *   §05 spring      media        60vh   ⚡5   pinned · the count auto-runs
  *   §06 streams     media       360vh   ⚡3
  *   §07 infra       none        160vh   ⚡2   the index lights, two at a time
  *   §07b breath     none         47vh   ⚡1   the hold
@@ -67,7 +67,7 @@ export function V2LivingWorkMotion() {
         clusterDescent(el, ["#e0d4bd", "#c9b79a", "#8a7455"], 330),
       );
       wire(find("rangers"), (el) => fullBleedOpen(el, 100));
-      wire(find("spring"), (el) => pinnedCount(el, 150));
+      wire(find("spring"), (el) => pinnedCount(el, 60));
       wire(find("streams"), (el) => stickyStreams(el, 360));
       wire(find("infrastructure"), (el) => whatItTakes(el, 160));
       wire(find("breath"), (el) => breath(el, 47));
