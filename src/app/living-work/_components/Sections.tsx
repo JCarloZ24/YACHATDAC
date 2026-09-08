@@ -301,7 +301,20 @@ function splitAtAperture(value: string): [string, string, string] {
 
 export function LivingWorkAperture() {
   return (
-    <section id="aperture" data-lw="aperture" className="relative min-h-svh bg-canvas">
+    <section
+      id="aperture"
+      data-lw="aperture"
+      /* Below `lg` the copy is vertically centred in the screen. The aperture
+         does not run at those widths (see DESKTOP in recipes.ts), so nothing
+         is coming to fill the space beneath the figure and it sat at the top
+         of a full-height section with the rest of the screen empty. The only
+         in-flow child here is [data-copy] — the artwork and the theater are
+         both absolute — so centring the section centres exactly that.
+
+         `lg:block` hands the desktop layout back untouched, where the empty
+         space below IS the composition: it is where the theater opens. */
+      className="relative flex min-h-svh flex-col justify-center bg-canvas lg:block"
+    >
       {/* The artist's rings as ground.
           
           TWO THINGS ABOUT THE OPACITY, both easy to get wrong. The ring SVGs
@@ -454,7 +467,7 @@ export function LivingWorkAperture() {
       ) : null}
 
       {/* data-copy — everything the full-bleed hold clears off the screen. */}
-      <div data-copy className={`relative ${COLUMN} pt-24 pb-16 lg:pt-32 lg:pb-24`}>
+      <div data-copy className={`relative ${COLUMN} py-16 lg:pt-32 lg:pb-24`}>
         <p data-fade className="eyebrow text-burnt-deep">The numbers</p>
 
         {/* The rail — the scroll progress bar, divided into four segments,
