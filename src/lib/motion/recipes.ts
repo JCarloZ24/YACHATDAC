@@ -638,29 +638,55 @@ export function clusterDescent(
  *   [data-media]    the plate behind them
  *   [data-release]  the withheld payoff, revealed with the final step
  */
-export function pinnedCount(root: HTMLElement, span = 150): MotionModule {
+export function pinnedCount(root: HTMLElement, span = 60): MotionModule {
   const steps = qa(root, "[data-step]");
   return composition("pinnedCount", root, {
     channel: "media",
     span,
+    // Still pinned, so the section holds still while the count runs — but the
+    // count no longer rides the scrollbar.
+    //
+    // Ivy, 8 Sep: eight days scrubbed against scroll cost 130vh of travel to
+    // show a number changing, and the only thing moving was the number. The
+    // days now run on their own the moment the section lands, in about two
+    // seconds, and the whole screen costs one swipe instead of a page and a
+    // half.
+    //
+    // This trades away the note's "the one place on the page where scrolling
+    // controls time" — deliberately, and recorded in
+    // docs/design/living-work-qa-2026-09-08.md.
+    //
+    // `snap` goes with it, and was broken anyway: snapTo was 1/(steps-1) while
+    // [data-release] stretched the timeline to 7.55, so every snap point but
+    // the first landed mid-flap.
     pin: true,
-    snap: steps.length > 1 ? 1 / (steps.length - 1) : undefined,
-    uses: ["splitFlap", "dissolve"],
-    build: (tl) => {
-      const media = qa(root, "[data-media]");
+    uses: ["splitFlap"],
+    // Nothing rides the scrub now. The pin is the whole of what the span buys.
+    build: () => {},
+    // `enterStart` is "top top" so the count begins when the section is pinned
+    // and whole on screen, not at the default 82% where it would start behind
+    // the fold and be half over by the time it arrived.
+    enterStart: "top top",
+    enter: (tl) => {
       const release = q(root, "[data-release]");
-      if (steps.length > 1) tl.splitFlap(steps, { duration: DUR.medium }, 0);
-      if (media.length > 1) tl.dissolve(media, { duration: DUR.large }, 0);
-      // The payoff rides the last flip — day 08 and the koala arrive together.
-      // The scrim is not touched: it is part of the image, holding the
-      // right-side text legible for the section's whole life.
-      const last = steps.length - 1;
+      if (steps.length > 1) {
+        // splitFlap places its transitions on integer positions, so eight days
+        // is a 6.55-unit timeline whatever the per-flip duration. Nesting it
+        // and scaling by 3 turns that into ~2.2s — about 275ms a day, which
+        // reads as a counter running rather than a slideshow. The release
+        // below stays at natural speed, outside the nested scale.
+        const count = gsap.timeline();
+        count.splitFlap(steps, { duration: DUR.medium }, 0);
+        count.timeScale(3);
+        tl.add(count, 0);
+      }
+      // The payoff arrives just after day 08 lands.
       if (release) {
         tl.fromTo(
           release,
           { autoAlpha: 0, y: 24 },
           { autoAlpha: 1, y: 0, duration: DUR.medium, ease: EASE.country },
-          last,
+          2.3,
         );
       }
     },
