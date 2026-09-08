@@ -626,6 +626,30 @@ export function LivingWorkAperture() {
 
       </div>
 
+
+      {/* THE PLAIN, PLAINLY — below lg only.
+          
+          The theater band above is the section's photograph, and it is
+          motion-only: it is `hidden lg:block` because the aperture that opens
+          it does not run at these widths. Without this the whole screen was a
+          number on cream, and the section's one idea is that the 0 is a portal
+          ONTO the plain — so the plain has to be here.
+          
+          Not the theater re-used: that is absolutely positioned at
+          top-[16svh] h-[68svh] and would sit straight over the figure. This is
+          an ordinary band in flow, under the number, which is where the frame
+          puts the break-out too. */}
+      {PLAIN ? (
+        <div className="relative mt-4 h-[46svh] w-full overflow-hidden lg:hidden">
+          <Image
+            src={PLAIN.src}
+            alt={PLAIN.subject}
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+      ) : null}
     </section>
   );
 }
