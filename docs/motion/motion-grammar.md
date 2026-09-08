@@ -1,5 +1,7 @@
 # The motion grammar
 
+*Last updated: 8 September 2026*
+
 *Decided 30 August 2026. The second artefact, and the one the code answers to.*
 
 Parallax, dissolves and text effects are not the design. They are the alphabet. The design is
@@ -68,6 +70,12 @@ clone and leaves the real cell in place at opacity 0, so the grid behind it neve
 card returns to exactly where it was. Both are Flip, and neither may be scrubbed — Flip measures
 at trigger time, so a scrubbed Flip computed at one viewport width lands wrong at another. Pin
 for a screen, run on enter, reverse on leave-back.
+
+**The Record is static — 8 September 2026, user direction (F7 exception).**
+The route no longer mounts page or grid motion and has no animated headings,
+hover effects, count fades or route transition. Earlier motion code remains in
+source, but is not active on `/the-record`.
+See [the scene ledger](scenes.md#the-record--static-by-direction-8-september-2026).
 
 ## Compositions — the sentences
 
