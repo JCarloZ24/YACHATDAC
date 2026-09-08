@@ -1,5 +1,7 @@
 # The scene ledger
 
+*Last updated: 8 September 2026*
+
 *Decided 30 August 2026. The third artefact — pacing, on paper, before it is pacing at 60fps.*
 
 A film is not continuously intense, and heaviness only reads as heavy next to stillness. If
@@ -202,7 +204,19 @@ photograph, no caption, nothing moving. The composition declares `channel: "none
 build fails if anything loud is added to it — the only screen on the site where stillness is
 enforced by the compiler rather than by discipline.
 
-## The Record — verb *surfaces* — ~2050vh, 7 sections
+## The Record — static by direction, 8 September 2026
+
+**Current build — F7 exception, user direction on 8 September 2026.** All
+animations on `/the-record` are removed: route transition, heading and section
+reveals, hero pushes and scrim ramps, card flights and held rows, filter reflows,
+count fades, the travelling rail marker, gap dimming and hover motion. Cards
+render in ordinary flow and link directly to their entries. All four gaps and
+their details stay visible. The filter rail retains native CSS sticky positioning;
+search, type/source/tag filters, sorting, counts and the empty-state link still work.
+Media assignments and copy are unchanged. The earlier motion module and effect
+work is retained in source, but this route no longer imports or registers it.
+
+### Earlier motion design — superseded for this route
 
 Built to `04 · The Record — HI-FI · Desktop · the record surfaces` (Figma `2463:8492` at x=0,
 1440 x 14,612px). The frame is 1,624vh; the scroll span is ~2,050vh because §02's three breakouts

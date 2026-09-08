@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
-import { PageTransition } from "@/components/transitions/PageTransition";
-import { V2RecordMotion } from "./_components/Motion";
 import {
   DocumentsLedger,
   KnowledgeGapsV2,
@@ -10,17 +8,9 @@ import {
   RecordHeroV2,
   presentSrc,
 } from "./_components/Sections";
-import {
-  RecordGrid,
-  type Breakout,
-  type ResolvedSlot,
-} from "./_components/Grid";
-import { recordBreakoutMedia, recordCardMedia } from "@/content/record-media";
-import {
-  recordItems,
-  recordSources,
-  recordTypes,
-} from "@/content/the-record";
+import { RecordGrid, type ResolvedSlot } from "./_components/Grid";
+import { recordCardMedia } from "@/content/record-media";
+import { recordItems, recordSources, recordTypes } from "@/content/the-record";
 
 export const metadata: Metadata = {
   title: "The Record",
@@ -43,6 +33,10 @@ export const metadata: Metadata = {
  * The three ids other pages target are load-bearing and unchanged:
  * #research-and-discovery (the grid), #documents (Wonder's Downloads child)
  * and #do-you-hold-something (the record's own empty state, D25).
+ *
+ * F7 exception, user direction 2026-09-08: The Record is static. No route
+ * transition, motion module, held rows or breakout overlays. Entries remain
+ * native links and filters update immediately. See docs/motion/scenes.md.
  */
 
 /**
@@ -76,46 +70,6 @@ function resolveSlots(): Record<string, ResolvedSlot> {
   );
 }
 
-/**
- * The three breakouts and where they interrupt the stream — after cards 3, 9
- * and 12, which is where the frame puts them. Card 12 takes the screen as a
- * TYPE frame: no photograph, the bore drawn to scale instead.
- */
-function resolveBreakouts(): Breakout[] {
-  const media = (slug: string): ResolvedSlot | null => {
-    const slot = recordBreakoutMedia[slug];
-    if (!slot) return null;
-    return {
-      bucket: slot.bucket,
-      expects: slot.expects,
-      tone: slot.tone,
-      src: presentSrc(slot.src),
-    };
-  };
-
-  return [
-    {
-      slug: "it-nearly-didnt-happen",
-      after: 3,
-      media: media("it-nearly-didnt-happen"),
-      glyph: "c",
-    },
-    {
-      slug: "when-they-called-it-the-art-gallery",
-      after: 9,
-      media: media("when-they-called-it-the-art-gallery"),
-      glyph: "a",
-    },
-    {
-      slug: "pollen-at-sixty-metres",
-      after: 12,
-      media: null,
-      glyph: "b",
-      diagram: "bore",
-    },
-  ];
-}
-
 export default async function ResourcesPage({
   searchParams,
 }: {
@@ -128,15 +82,12 @@ export default async function ResourcesPage({
   };
 
   return (
-    <PageTransition ground="#090e12">
-      <V2RecordMotion />
-
+    <div data-page-root className="min-h-svh bg-charcoal">
       <RecordHeroV2 />
 
       <RecordGrid
         items={recordItems}
         media={resolveSlots()}
-        breakouts={resolveBreakouts()}
         initialType={match(first("type"), recordTypes)}
         initialSource={match(first("source"), recordSources)}
         initialTag={first("tag") ?? ""}
@@ -150,6 +101,6 @@ export default async function ResourcesPage({
       {/* §06 ends on the off-white wave, not on charcoal — the footer's
           band above its burnt crest is canvas here. */}
       <FooterGround color="var(--color-canvas)" />
-    </PageTransition>
+    </div>
   );
 }
