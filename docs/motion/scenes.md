@@ -1,5 +1,7 @@
 # The scene ledger
 
+*Last updated: 8 September 2026*
+
 *Decided 30 August 2026. The third artefact — pacing, on paper, before it is pacing at 60fps.*
 
 A film is not continuously intense, and heaviness only reads as heavy next to stillness. If
@@ -165,12 +167,27 @@ yet, and the two should be reconciled before this page is signed off.
 | 03 | V | Our challenges — the ground thins under you as you read | 3 | 330 | **transition** | — | — |
 | 04 | V | Iningai Rangers — the human centre, on dark ground | 4 | 100 | **media** | P1 | ✓ |
 | 05 | V | **THE SPRING** — eight days, counted | 5 | 150 | **media** | P8 | ✓ pinned, snapped |
-| 06 | V | The work — seven streams, and what it takes | 3 | 360 | **media** | P5 | — |
+| 06 | V | The work — seven streams | 3 | 360 | **media** | P5 | — |
+| 07 | V | Infrastructure — what it takes, met two at a time | 2 | 160 | **none** | — | — |
 | 07b | V | **BREATH** — held, no caption | 1 | 47 | **none** | P8 | ✓✓ |
 | 08 | V | What the work produces — five vessels, four filling | 2 | 120 | **none** | — | — |
 | 09 | V | Get involved — three paths | 2 | 100 | **type** | — | — |
 
-**Reads as:** media · type · transition · media · media · media · none · none · type.
+**Reads as:** media · type · transition · media · media · media · none · none ·
+none · type.
+
+⚠ **Corrected 8 Sep 2026 — §07 was missing from this ledger.** The page has
+built ten sections since the hi-fi; this table listed nine, and §06's row was
+carrying §07's phrase ("and what it takes") as if the two had been merged. They
+are separate: §07 Infrastructure ships as `whatItTakes` at 160vh, `channel:
+"none"`, sticky index and no pin.
+
+It does **not** relieve the §04/§05/§06 media run flagged below — it sits after
+it. What it changes is the back half: §07, §07b and §08 are now three
+consecutive `none` screens before §09 picks up `type`. That is not a
+channel-three-deep violation, because `none` is the absence of a loud channel
+rather than a fourth one, but it is 327vh of quiet in a row and should be read
+as one stretch rather than as three separate rests.
 
 ⚠ **§04, §05 and §06 are three `media` screens running.** That breaks the no-channel-three-deep
 rule. It is survivable because §05 pins and snaps — a pinned counter reads as its own kind of
@@ -187,7 +204,70 @@ photograph, no caption, nothing moving. The composition declares `channel: "none
 build fails if anything loud is added to it — the only screen on the site where stillness is
 enforced by the compiler rather than by discipline.
 
-## The Record — verb *surfaces* — ~2050vh, 7 sections
+## The Record — handprint opening, 8 September 2026
+
+**Latest user direction, 8 September 2026.** Build the wall and handprints in
+Three.js on a single canvas, with a real hand-shaped hole in the wall geometry.
+The user rejects the earlier photographic wall and fixed screen-space cards.
+Cards now sit on textured planes at different depths far behind the wall.
+Scrolling crosses the opening, then approaches the cards so they come forward.
+This supersedes the static intro below; the catalogue and later sections retain
+their existing behaviour.
+
+| # | What it says | Intensity | Scroll span | Loud channel | Effect | Rest after? |
+|---|---|---|---|---|---|---|
+| 01 | Through the wall, then towards the record | 4 | 360vh | transition | `handprintPortal` · SCR-11 | yes, arrived cards |
+| 02 | Everything in the record | 1 | natural flow | none | `hold` | yes |
+
+One lazy-loaded Three.js renderer, rendered only when scroll or size changes.
+The camera crosses one of the separate palm openings in the supplied ink print.
+Every black region is an opening with extruded edges; white remains wall. There
+are no repeated or painted handprints. The wall uses a generated photographic
+sandstone material, recorded in `public/artwork/record-portal-provenance.md`.
+Card planes sit at staggered depths and retain fixed
+image UVs as the camera approaches. Semantic links follow their projections.
+The user explicitly permits generated artwork on this date. No supplied
+photograph, painting or logo is re-authored. Native skip link,
+mobile composition, live reduced-motion teardown, missing-asset fallback and
+WebGL failure/context-loss fallback are part of this scene. The 360vh span is
+absent when enhancement is unavailable. SCR-09 wheel inertia stays enabled.
+Layout follows the user's wall and zoom-through direction for this
+intro rather than the earlier Figma intro frame; D5 still governs its words.
+
+### Earlier static direction — intro superseded
+
+**Earlier build — F7 exception, user direction on 8 September 2026.** All
+animations on `/the-record` are removed: route transition, heading and section
+reveals, hero pushes and scrim ramps, card flights and held rows, filter reflows,
+count fades, the travelling rail marker, gap dimming and hover motion. Cards
+render in ordinary flow and link directly to their entries. All four gaps and
+their details stay visible. The filter rail retains native CSS sticky positioning;
+search, type/source/tag filters, sorting, counts and the empty-state link still work.
+Media assignments and copy are unchanged. The earlier motion module and effect
+work is retained in source, but this route no longer imports or registers it.
+
+**Scroll-feel amendment, 8 September 2026 — user direction.** The catalogue
+now mounts the shared `SCR-09` Lenis scroller with Living Work's existing
+`lerp: 0.12` settings. Wheel scrolling eases into position while the content
+remains static. Touch and reduced motion stay native. The filter rail keeps
+its own native scrolling, and leaving the catalogue destroys its scroller.
+
+### Earlier motion design — superseded for this route
+
+**Earlier motion refinement, 8 September 2026 — F7/F8.** That build held card rows
+with CSS sticky and keeps deck snapping and the gaps pin disabled, per the 4–5 September
+requests recorded in `record-flags.ts` and the motion module. These settings supersede
+the original pin totals below. `surface` preserves image proportions through the complete
+card flight; words follow the landed plate. Filtering rebuilds the grid's motion, including
+when returning to all entries, and uses the registered `reflow` effect. The hero's entry
+settle and scroll push have separate planes. In the unpinned gaps section each question
+lights at its own reading position and remains readable after passing; only the current
+question carries the marker. Reduced motion restores every question immediately and
+removes flight styles and pending callbacks. No copy or artwork assignments change.
+The media audit found that the retired lo-fi bucket table grants `full` to cultural
+material despite this page's documented `frame` grades. `record-media.ts` now carries
+explicit per-slot grades, including held images of people; both card hovers and full-screen
+views read them. The shared lo-fi table is unchanged.
 
 Built to `04 · The Record — HI-FI · Desktop · the record surfaces` (Figma `2463:8492` at x=0,
 1440 x 14,612px). The frame is 1,624vh; the scroll span is ~2,050vh because §02's three breakouts

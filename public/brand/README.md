@@ -1,5 +1,7 @@
 # Brand assets
 
+*Last updated: 8 September 2026*
+
 ## Logo
 
 **Do not recreate or approximate the logo in code.** The real mark is a
@@ -38,12 +40,14 @@ the retired Exploration file.
 masked, revealed, scrubbed and transformed. Leonard's own artist sign-off is
 noted outstanding in `permissions.md`.
 
-What has not changed, and does not: **animating a supplied vector is permitted;
-generating one is not.** `dots-trail.svg` is exported artwork, so moving it is
-fine. Sketch C1 — a machine-drawn meandering line with lit waypoints — stays on
-hold precisely because generated geometry of that kind reads as iconography. Do
-not reimplement any of these as code because one "looks simple"; that turns a
-permitted asset into a prohibited generation.
+**Artwork amendment — 8 September 2026, user direction.** Generated artwork is
+permitted. The former restriction is removed. Supplied artwork retains its
+credit and provenance; generated interface assets are recorded separately.
+The Record uses the user's supplied `public/artwork/handprint-impression.png`
+as its aperture mask and generated `public/artwork/record-sandstone.webp` as its
+stone material. Neither is attributed to Leonard Mickelo or treated as a
+cultural record. Sources and the generation prompt are recorded in
+`public/artwork/record-portal-provenance.md` and `src/content/record-media.ts`.
 
 ## Commissioned artwork
 
@@ -63,6 +67,5 @@ per-piece sign-off queue; Leonard Mickelo reviews the work at presentation
 alongside Steve (FNAN) and the Elders. See `docs/decisions-and-risks.md` F8,
 which also preserves the permissions board's record.
 
-Never generate Aboriginal iconography in code as a stand-in — no procedural
-concentric circles, dot fields, meandering waypoint paths, U-shapes or animal
-tracks. If artwork is needed and has not arrived, leave the slot empty.
+Generated assets are permitted by the 8 September 2026 direction above. Keep
+them distinguishable in the manifest from supplied artwork and cultural records.

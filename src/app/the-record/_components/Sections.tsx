@@ -1,22 +1,28 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import {
   documents,
   knowledgeGaps,
   onRequest,
   recordGrows,
   recordHero,
+  recordItems,
+  recordPortalCopy,
 } from "@/content/the-record";
-import { recordGrowsSlot, recordHeroSlot } from "@/content/record-media";
+import {
+  recordCardMedia,
+  recordGrowsSlot,
+  recordPortalMedia,
+} from "@/content/record-media";
+import { RecordPortalMotion } from "./PortalMotion";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import { RecordSignup } from "./Signup";
-import { SplitReveal } from "@/components/motion/text/SplitReveal";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import {
   BlobButton,
   BlobHold,
-  ClusterArtwork,
   DottedRule,
   RingArtwork,
   SeamGlyph,
@@ -33,8 +39,8 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * it hands over on. The other six are:
  *
  *   01  Intro — full bleed, open Country, the wave into the grid
- *   02  The grid — sticky rail + three breakouts   (RecordGrid, client)
- *   03  What we do not know — pinned, four gaps, then the route out
+ *   02  The grid — sticky filter rail + static cards   (RecordGrid, client)
+ *   03  What we do not know — four visible gaps, then the route out
  *   04  Documents and reports — the draft's own list, grouped by state
  *   05  Items marked "on request" — the dark run begins, nothing performs
  *   06  The record grows — the work, the ask, and the shape of what is missing
@@ -43,6 +49,9 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * `/resources` on 2026-09-04 at August's direction, which amends D1's "one
  * page, labelled Resources". See docs/decisions-and-risks.md; the amendment is
  * recorded there and still wants Marc and Ivy's confirmation.
+ *
+ * F7 amendment, user direction 2026-09-08: the intro uses a Three.js
+ * handprintPortal. The catalogue and later sections retain their static cut.
  *
  * Copy is src/content/the-record.ts verbatim. Where the frame's label differs
  * from the draft's — the gaps CTA reads "WHAT IS RUNNING →" in Figma and
@@ -74,126 +83,113 @@ export function presentSrc(src: string | null): string | null {
    ------------------------------------------------------------------------- */
 
 /**
- * 01 · Intro — one photograph, and what the page is for.
- *
- * "The page opens the way Living Work does. A photograph takes the screen, the
- * scrim ramps under the copy, the heading settles, and a wave hands it into the
- * catalogue. Nothing is asked of the reader yet." — hence no scroll cue and no
- * call to action: the only thing below the lead is the wave.
- *
- * Laid out to the frame's own coordinates (1440x900):
- *   type column   x=100, so the copy sits against the VIEWPORT edge rather than
- *                 inside the body container — `lg:px-25` and no max-width on
- *                 the wrapper. Headline runs to 1100, the lead to 900.
- *   eyebrow       y=340, Eyebrow/Section-24 in Yellow Gold, tracked 0.08em
- *   headline      y=388, Display/96 at 1.2
- *   lead          y=644, Body/Lead-24 at 1.5
- *
- * Both 24px styles carry their leading explicitly. Tailwind's `text-2xl` and
- * `leading-relaxed` gave the eyebrow 32px and the lead 39px, against Figma's
- * 1.5 on each; the eyebrow's missing 4px pushed the whole stack — headline and
- * lead — up off the frame's y. `leading-[1.5]` on both puts them back.
- *   block foot    716 of 900 — 20.4% up from the join, which is what puts the
- *                 lead clear of the wave crest. `items-end` + that padding
- *                 holds the relationship at any viewport height.
- *   cluster       x=1221 y=170, gold at 90%
- *   seam glyph    x=1283 y=700, motif=starburst (glyph-b, the blue one)
- *
- * ⚠ TYPE. Figma sets the headline in Baloo 2 ExtraBold; the built page uses
- * Block Berthold, which is the repo-wide `.headline` decision (fonts.css) and
- * not this section's to change. The frame will not match the screenshot on
- * letterforms, only on size, colour and position.
+ * 01 · Intro — the wall opens onto the record.
+ * User direction 2026-09-08 replaces the Figma intro with the supplied wall
+ * and zoom-through references. D5 keeps the existing words; the new scroll
+ * and skip labels are recorded in the draft. Heading scale and brand faces
+ * remain the V2 tokens. The static server render survives failed enhancement.
  */
 export function RecordHeroV2() {
+  const maskSrc = presentSrc(recordPortalMedia.mask);
+  const stoneSrc = presentSrc(recordPortalMedia.wall.src);
+  const previews = recordPortalMedia.previewSlugs.flatMap((slug) => {
+    const item = recordItems.find((entry) => entry.slug === slug);
+    return item ? [item] : [];
+  });
+
   return (
-    <header
-      data-record-hero
-      className="relative flex min-h-svh items-end overflow-hidden bg-charcoal text-canvas"
-    >
-      <div data-record-hero-media className="absolute inset-0">
-        <MediaOrField
-          src={presentSrc(recordHeroSlot.src)}
-          alt={recordHeroSlot.expects}
-          sizes="100vw"
-          priority
-          fieldClass="bg-charcoal"
+    <header data-record-portal className="record-portal">
+      <div data-portal-stage className="record-portal-stage">
+        {/* Accessible links and optimised image sources back the WebGL planes.
+            The renderer projects their hit areas as the camera approaches;
+            the full catalogue is always reachable with the skip link. */}
+        <div data-portal-gallery className="record-portal-gallery" inert>
+          {previews.map((item) => {
+            const slot = recordCardMedia[item.slug];
+            return (
+              <Link
+                data-portal-card
+                key={item.slug}
+                href={`/the-record/${item.slug}`}
+                aria-label={item.title}
+                className="record-portal-card"
+              >
+                <div
+                  className="record-portal-card-media"
+                  data-motion-grade="frame"
+                >
+                  <MediaOrField
+                    src={presentSrc(slot?.src ?? null)}
+                    alt={slot?.expects ?? ""}
+                    sizes="(min-width: 1024px) 25vw, 57vw"
+                    fieldClass="bg-roasted"
+                  />
+                </div>
+                <div data-portal-caption className="record-portal-card-caption">
+                  <p className="eyebrow text-xs leading-[1.4] tracking-[0.06em] text-gold">
+                    {item.type}
+                  </p>
+                  <span className="text-sm leading-[1.4] lg:text-base">
+                    {item.title}
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+        <div
+          data-portal-wall
+          className="record-portal-wall bg-roasted"
+          aria-hidden="true"
         />
-      </div>
-
-      {/* scrim · X5 — bottom-weighted, measured against the brightest frame.
-          The motion pass ramps this up under the copy as the heading settles;
-          it renders at full strength so the rest state is the finished one. */}
-      <div
-        data-record-hero-scrim
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(180deg, rgba(9,14,18,0) 0%, rgba(9,14,18,0.1) 18%, rgba(9,14,18,0.62) 36%, rgba(9,14,18,0.86) 62%, rgba(9,14,18,0.94) 100%)",
-        }}
-      />
-
-      {/* The artwork sits ON the photograph, top corner. Static — the frames
-          do not ask for artwork motion and the default is stillness. */}
-      <ClusterArtwork
-        tone="gold"
-        className="top-[18.9%] right-[7.4%] hidden w-28 lg:block"
-      />
-      <SeamGlyph
-        motif="b"
-        className="top-[77.8%] right-[7.85%] hidden w-11 lg:block"
-      />
-
-      {/* pb is in svh, NOT %. A percentage padding — even a vertical one —
-          resolves against the containing block's WIDTH, which on a 1440x900
-          frame put the block 110px too high. svh matches min-h-svh above, so
-          the block's foot lands on the frame's 716 at any viewport. */}
-      <div className="relative mx-auto w-full max-w-[1440px] px-6 pt-24 pb-[15svh] lg:px-25">
-        <p
-          data-record-hero-arrive
-          className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
-        >
-          {recordHero.eyebrow}
-        </p>
-        <SplitReveal
-          as="h1"
-          mode="lines"
-          gate="entry"
-          className="headline mt-3 max-w-[1100px] text-h1 leading-[1.2]"
-        >
-          {recordHero.title}
-        </SplitReveal>
-        <p
-          data-record-hero-arrive
-          className="mt-6 max-w-[900px] text-lg leading-[1.5] sm:text-lead"
-        >
-          {recordHero.standfirst}
-        </p>
+        <RecordPortalMotion maskSrc={maskSrc} stoneSrc={stoneSrc} />
+        <div
+          data-portal-copy
+          className="record-portal-scrim"
+          aria-hidden="true"
+        />
+        <div data-portal-copy className="record-portal-copy">
+          <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold lg:text-xl">
+            {recordHero.eyebrow}
+          </p>
+          <h1 className="headline mt-3 text-h1 leading-[1.1]">
+            {recordHero.title}
+          </h1>
+          <p className="mt-4 text-base leading-[1.5] lg:text-lg">
+            {recordHero.standfirst}
+          </p>
+        </div>
+        <div className="record-portal-controls">
+          <p
+            data-portal-copy
+            className="record-portal-hint eyebrow text-xs leading-[1.5] tracking-[0.08em]"
+          >
+            {recordPortalCopy.scroll}
+          </p>
+          <a
+            data-portal-skip
+            href="#research-and-discovery"
+            className="record-portal-skip eyebrow text-xs leading-[1.5] tracking-[0.06em]"
+          >
+            {recordPortalCopy.skip}
+          </a>
+        </div>
       </div>
     </header>
   );
 }
 
 /* -------------------------------------------------------------------------
-   03 · What we do not know — ⚑ PINNED 300vh · four gaps, then the route out
+   03 · What we do not know — four gaps, then the route out
    ------------------------------------------------------------------------- */
 
 /**
- * The most useful section on the page for a researcher, and the reason the
- * record is kept at all — so the frame gives it the page's only pin. Four
- * gaps, one lit at a time as the reader travels through, snapped to thirds.
- *
- * The frame shows only the questions. Their details are real content and are
- * rendered with the question they belong to, revealed as each becomes the
- * live one: that is what the extra 300vh of pin is FOR. Without JS, or under
- * reduced motion, every gap is simply lit and the section is a plain list.
+ * The four questions and their details are all visible in ordinary flow.
+ * User direction 2026-09-08 replaces the frame's pinned, dimmed sequence.
  */
 export function KnowledgeGapsV2() {
   return (
-    <section
-      data-record-gaps
-      className="relative bg-midnight text-canvas"
-    >
+    <section className="relative bg-midnight text-canvas">
       <WaveDivider ground="var(--color-midnight)" />
       {/* The bleeding artwork is what wants `overflow-hidden`, but the wave
           hangs ABOVE this section's top edge and a clipping section erased
@@ -205,28 +201,27 @@ export function KnowledgeGapsV2() {
             figures. The assets already carry the artist's 8% inside the
             `rings` group, so these are the wrapper values, not the effective
             ones. */}
-        <RingArtwork piece="a" className="top-[55%] -left-42 h-[577px] w-160 opacity-[0.13]" />
-        <RingArtwork piece="b" className="top-[28%] left-[61%] h-[910px] w-225 opacity-[0.15]" />
+        <RingArtwork
+          piece="a"
+          className="top-[55%] -left-42 h-[577px] w-160 opacity-[0.13]"
+        />
+        <RingArtwork
+          piece="b"
+          className="top-[28%] left-[61%] h-[910px] w-225 opacity-[0.15]"
+        />
       </div>
 
-      <div data-record-gaps-stage className="relative mx-auto w-full max-w-[1440px] px-6 py-24 lg:px-25">
-        <p data-record-arrive className="eyebrow text-lg text-gold sm:text-eyebrow-hero">
+      <div className="relative mx-auto w-full max-w-[1440px] px-6 py-24 lg:px-25">
+        <p className="eyebrow text-lg text-gold sm:text-eyebrow-hero">
           {knowledgeGaps.title}
         </p>
         {/* The lede is one paragraph in the content and two lines in the
             frame: the claim at display weight, the reason beneath it. Split on
             the sentence rather than retyped. */}
-        <SplitReveal
-          as="h2"
-          mode="lines"
-          className="headline mt-3 max-w-5xl text-4xl leading-[1.16] sm:text-6xl"
-        >
+        <h2 className="headline mt-3 max-w-5xl text-4xl leading-[1.16] sm:text-6xl">
           {firstSentence(knowledgeGaps.lede)}
-        </SplitReveal>
-        <p
-          data-record-arrive
-          className="mt-8 max-w-4xl text-lg leading-relaxed text-canvas/78 sm:text-xl"
-        >
+        </h2>
+        <p className="mt-8 max-w-4xl text-lg leading-relaxed text-canvas/78 sm:text-xl">
           {restOfSentences(knowledgeGaps.lede)}
         </p>
 
@@ -236,25 +231,7 @@ export function KnowledgeGapsV2() {
 
         <ol className="mt-14">
           {knowledgeGaps.gaps.map((gap, index) => (
-            <li
-              key={gap.question}
-              data-record-gap
-              data-state="active"
-              /* 0.28 idle, the strip's own number ("all steps at 0.28"). It
-                 was 0.35 — close enough to lit that "present but dim" read as
-                 four live questions rather than as a count of what is coming.
-                 `active` is the initial render, so with no JS and under
-                 reduced motion all four are lit and stacked, which is what the
-                 reduced-motion note asks for. */
-              className="relative py-8 transition-opacity duration-(--dur-medium) ease-quiet data-[state=idle]:opacity-[0.28]"
-            >
-              {/* step marker — scrubbed, snapped to quarters. */}
-              <span
-                aria-hidden
-                className="absolute top-10 left-0 h-6 w-[3px] bg-gold opacity-0 transition-opacity duration-(--dur-medium) data-[state=active]:opacity-100"
-                data-state="idle"
-                data-record-gap-marker
-              />
+            <li key={gap.question} className="relative py-8">
               <span className="absolute top-9 left-6 text-xs font-semibold tracking-[0.1em] text-gold/80 tabular-nums">
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -262,10 +239,7 @@ export function KnowledgeGapsV2() {
                 <h3 className="headline max-w-4xl text-3xl leading-tight sm:text-5xl">
                   {gap.question}
                 </h3>
-                <p
-                  data-record-gap-detail
-                  className="mt-4 max-w-2xl text-base leading-relaxed text-canvas/70"
-                >
+                <p className="mt-4 max-w-2xl text-base leading-relaxed text-canvas/70">
                   {gap.detail}
                 </p>
               </div>
@@ -281,8 +255,8 @@ export function KnowledgeGapsV2() {
             The hi-fi frame once labelled this "WHAT IS RUNNING →" and the
             draft "Research with us"; D5 gave it to the draft, and the frame
             strip now draws the draft's words too, so the two agree. */}
-        <div data-record-arrive className="mt-16 pl-15">
-          <BlobButton href={knowledgeGaps.cta.href} tone="ochre">
+        <div className="mt-16 pl-15">
+          <BlobButton still href={knowledgeGaps.cta.href} tone="ochre">
             {knowledgeGaps.cta.label}
           </BlobButton>
         </div>
@@ -309,10 +283,7 @@ export function DocumentsLedger() {
   const inPreparation = documents.filter((d) => d.state === "in-preparation");
 
   return (
-    <section
-      id="documents"
-      className="relative bg-canvas text-charcoal"
-    >
+    <section id="documents" className="relative bg-canvas text-charcoal">
       <WaveDivider ground="var(--color-canvas)" />
       {/* The bleeding artwork is what wants `overflow-hidden`, but the wave
           hangs ABOVE this section's top edge and a clipping section erased
@@ -332,10 +303,10 @@ export function DocumentsLedger() {
       </div>
 
       <div className="relative mx-auto w-full max-w-[1440px] px-6 py-20 lg:px-25">
-        <p data-record-arrive className="eyebrow text-lg text-ochre sm:text-eyebrow-hero">
+        <p className="eyebrow text-lg text-ochre sm:text-eyebrow-hero">
           Documents and reports
         </p>
-        <p data-record-arrive className="headline mt-3 text-4xl text-charcoal">
+        <p className="headline mt-3 text-4xl text-charcoal">
           {documents.length} items
         </p>
 
@@ -440,7 +411,6 @@ function LedgerRow({
 }) {
   return (
     <li
-      data-record-arrive
       /* The frame's two columns: title+description 840 wide at x=100, meta and
          the download at x=1020 — an 80px gutter, and 1240 across, which is the
          column the section body now actually has. It was `1fr_auto` inside a
@@ -506,7 +476,10 @@ export function OnRequestHold() {
             the band is ~666 wide inside the 707 box, which is 0.8 of the
             asset's own width. */}
         <div className="pointer-events-none absolute top-[8%] -left-48 h-[638px] w-177">
-          <RingArtwork piece="a" className="inset-0 h-full w-full opacity-[0.07]" />
+          <RingArtwork
+            piece="a"
+            className="inset-0 h-full w-full opacity-[0.07]"
+          />
           {/* y = 364 of 639 in the frame's own export — the band crosses the
               lower third of the ring, not the foot of the section. */}
           <div
@@ -514,7 +487,12 @@ export function OnRequestHold() {
             className="pointer-events-none absolute inset-x-0 top-[57%] opacity-[0.09]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-            <img src="/artwork/dots-wave-gold.svg" alt="" className="w-full" loading="lazy" />
+            <img
+              src="/artwork/dots-wave-gold.svg"
+              alt=""
+              className="w-full"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>
@@ -589,26 +567,19 @@ export function RecordGrowsV2() {
         />
       </div>
       {/* motif=circle at x=1283 / y=90 — 113px from the right edge of 1440. */}
-      <SeamGlyph motif="a" className="top-[90px] right-[7.85%] hidden w-11 lg:block" />
+      <SeamGlyph
+        motif="a"
+        className="top-[90px] right-[7.85%] hidden w-11 lg:block"
+      />
 
       <div className="relative mx-auto w-full max-w-[1440px] px-6 py-24 lg:px-25 lg:pt-24 lg:pb-[160px]">
-        <p
-          data-record-arrive
-          className="eyebrow text-lg leading-[1.5] tracking-[0.1em] text-gold sm:text-2xl"
-        >
+        <p className="eyebrow text-lg leading-[1.5] tracking-[0.1em] text-gold sm:text-2xl">
           {recordGrows.eyebrow}
         </p>
-        <SplitReveal
-          as="h2"
-          mode="lines"
-          className="headline mt-2.5 max-w-[56.25rem] text-4xl leading-[1.2] sm:text-[3.5rem]"
-        >
+        <h2 className="headline mt-2.5 max-w-[56.25rem] text-4xl leading-[1.2] sm:text-[3.5rem]">
           {recordGrows.title}
-        </SplitReveal>
-        <p
-          data-record-arrive
-          className="mt-[35px] max-w-[53.75rem] text-lg text-canvas/88 sm:text-xl sm:leading-[1.875rem]"
-        >
+        </h2>
+        <p className="mt-[35px] max-w-[53.75rem] text-lg text-canvas/88 sm:text-xl sm:leading-[1.875rem]">
           {recordGrows.body}
         </p>
 
@@ -621,16 +592,10 @@ export function RecordGrowsV2() {
         {/* D25's destination. The id is load-bearing — the record's empty
             state links here rather than to a contact page with no form. */}
         <div id="do-you-hold-something" className="scroll-mt-28">
-          <h3
-            data-record-arrive
-            className="headline mt-[49px] text-3xl leading-10 sm:text-[2rem]"
-          >
+          <h3 className="headline mt-[49px] text-3xl leading-10 sm:text-[2rem]">
             {recordGrows.contribute.title}
           </h3>
-          <p
-            data-record-arrive
-            className="mt-[14px] max-w-[53.75rem] text-base leading-6 text-canvas/68"
-          >
+          <p className="mt-[14px] max-w-[53.75rem] text-base leading-6 text-canvas/68">
             {recordGrows.contribute.body}
           </p>
 
@@ -639,10 +604,7 @@ export function RecordGrowsV2() {
               fourth is the empty 44px slot: no new iconography is authored
               here, so it stays a dashed hold until the motif inventory lands
               (Glyph / Truth, 2051:2626). */}
-          <ul
-            data-record-arrive
-            className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
+          <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {recordGrows.contribute.items.map((item, i) => (
               <li
                 key={item}
@@ -660,7 +622,10 @@ export function RecordGrowsV2() {
                 }`}
               >
                 {HOLD_MOTIFS[i] ? (
-                  <SeamGlyph motif={HOLD_MOTIFS[i]!} className="top-7 left-7 w-9" />
+                  <SeamGlyph
+                    motif={HOLD_MOTIFS[i]!}
+                    className="top-7 left-7 w-9"
+                  />
                 ) : (
                   <span
                     aria-hidden
@@ -676,7 +641,11 @@ export function RecordGrowsV2() {
           </ul>
 
           {/* The frame carries the arrow inside the blob label. */}
-          <BlobButton href={recordGrows.contribute.cta.href} className="mt-11">
+          <BlobButton
+            still
+            href={recordGrows.contribute.cta.href}
+            className="mt-11"
+          >
             {`${recordGrows.contribute.cta.label}  →`}
           </BlobButton>
         </div>
@@ -699,7 +668,12 @@ export function RecordGrowsV2() {
  * — `undefined` is the slot, deliberately, rather than a fourth glyph invented
  * to fill it.
  */
-const HOLD_MOTIFS: readonly (SeamGlyphMotif | undefined)[] = ["a", "b", "c", undefined];
+const HOLD_MOTIFS: readonly (SeamGlyphMotif | undefined)[] = [
+  "a",
+  "b",
+  "c",
+  undefined,
+];
 
 /* -------------------------------------------------------------------------
    Copy helpers — the frames re-break the draft's paragraphs; these derive the

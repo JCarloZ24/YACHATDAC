@@ -94,7 +94,11 @@ export function registerAccumulate(): void {
       const half = duration / 2;
       const tl = gsap.timeline();
 
-      gsap.set(steps, { visibility: "hidden", rotationX: 90, transformOrigin: "50% 50%" });
+      // `opacity: 1` because the markup holds the resting step visible and the
+      // rest at opacity-0 — that is what makes the no-JS and reduced-motion
+      // states readable when the steps are absolutely stacked. Without it the
+      // flap would turn a digit that is still transparent.
+      gsap.set(steps, { visibility: "hidden", opacity: 1, rotationX: 90, transformOrigin: "50% 50%" });
       gsap.set(steps[0], { visibility: "visible", rotationX: 0 });
       steps.slice(1).forEach((step, i) => {
         tl.to(steps[i], { rotationX: -90, duration: half, ease }, i);

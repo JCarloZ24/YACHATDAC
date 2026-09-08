@@ -37,6 +37,25 @@ const qa = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
  * wrapper in. Whole vectors only, never redrawn (F2); the reduced cut clears
  * the transform with everything else.
  */
+/**
+ * The width below which a screen gives up its PIN. `lg` — the same breakpoint
+ * the layout uses, and the same one V2 draws: Desktop/1440 and Mobile/375,
+ * nothing between.
+ *
+ * Only §05 uses it, and only for the pin: a pin costs scroll and argues with a
+ * touch scroller, but the eight days counting IS that section and runs at
+ * every width.
+ *
+ * §02 deliberately does NOT use this. The aperture was gated off below lg for
+ * a while — it pins, measures a glyph box and flies a FLIP hand-off, which is
+ * a lot to ask of a phone — but Ivy's call on 8 Sep is that the sequence runs
+ * everywhere. Two things follow and should stay tied together: §03's header
+ * suppression is the other half of §02's hand-off, so it is unconditional
+ * too; and §02's motion layers must NOT be display:none anywhere, or the
+ * aperture opens onto nothing.
+ */
+const DESKTOP = "64rem";
+
 function driftArtwork(tl: gsap.core.Timeline, root: HTMLElement) {
   const rings = qa(root, "[data-artwork-drift]");
   if (rings.length) {
@@ -141,9 +160,20 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
     pin: true,
     uses: ["aperture"],
     build: (tl) => {
-      // The ring ground turns with the countdown — before the guard below,
-      // so the drift survives even a markup change that bails the sequence.
-      driftArtwork(tl, root);
+      /* THE RINGS TURN ONLY WHILE A FIGURE IS CHANGING.
+       *
+       * §03 keeps the continuous drift, which is right there — the ground is
+       * thinning the whole way down and the turn is weather. Here it means
+       * something specific: the artwork moves while the number is rolling and
+       * holds still on a landed figure, so the motion reads as "this is
+       * counting" rather than "time is passing". Ivy's call, 8 Sep.
+       *
+       * Ten degrees per roll, three rolls — the same 30 the continuous drift
+       * used to cover across the whole span, just spent where it says
+       * something. Scrub-linked like everything else, so scrolling back up
+       * unwinds it at the same tempo. */
+      const rings = qa(root, "[data-artwork-drift]");
+      const RING_STEP = 10;
       const container = q(root, "[data-aperture]");
       const figures = qa(root, "[data-figure]");
       const zeros = qa(root, "[data-figure] [data-zero]");
@@ -264,6 +294,10 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
         if (captions[to])
           tl.to(captions[to], { autoAlpha: 1, duration: 0.25, ease: EASE.machine }, at + dur);
         if (count) tl.set(count, { textContent: `0${to + 1} / 0${figures.length}` }, at + dur);
+        // The ground turns for exactly as long as the number is moving.
+        if (rings.length) {
+          tl.to(rings, { rotation: `+=${RING_STEP}`, ease: "none", duration: dur }, at);
+        }
       };
 
       // THE COUNTDOWN — 8,870 rolls down to 2019, to 480, to 120. Each
@@ -290,6 +324,14 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
         : [];
       const fadeEls = [...qa(root, "[data-fade]"), ...lastRest];
       if (fadeEls.length) tl.to(fadeEls, { autoAlpha: 0, duration: 0.5, ease: EASE.machine }, 5.3);
+      // The rings belong to the counting screen and go with it. Once the
+      // aperture opens onto the plain, the photograph and its caption strip
+      // own the frame — and the O hand-off after them — so a ring drifting
+      // over either is furniture on top of a picture. Out on the same beat
+      // the copy clears, back on the way up.
+      if (rings.length) {
+        tl.to(rings, { autoAlpha: 0, duration: 0.4, ease: EASE.machine }, 5.3);
+      }
       // 4 · at the END of the state the 0 becomes the pattern: the glyph
       //     melts into the blob (both show the same aligned pixels, so
       //     nothing jumps) and the blob grows — an irregular, smooth edge
@@ -315,7 +357,13 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
       const dress = q(root, "[data-band-dress]");
       if (dress) tl.to(dress, { autoAlpha: 1, duration: 0.35, ease: EASE.machine }, 6.6);
 
-      // THE HAND-OFF — still on this ONE wide shot. The O of "Our challenges"
+      // THE HAND-OFF — still on this ONE wide shot. Starts at 7.6, which is
+      // 0.45 after the blob finishes growing at 7.15: the frame and its caption
+      // get a real dwell, but not the 1.05 units (~45vh) of dead screen this
+      // carried before 8 Sep. The timeline runs to 9.4 as a result, so the span
+      // in Motion.tsx came down with it. The rail derives its own bounds from
+      // tl.duration() and needs no change.
+      // The O of "Our challenges"
       // appears as a letterform absorbing the frame, caption and all; it
       // flies into the ghost header's O, the heading assembles around it, and
       // the image drains into solid ink — the reader watches the photograph
@@ -363,31 +411,31 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
       if (oShrink && setOFlight) {
         const reveal = q(root, "[data-reveal-clipped]");
         // The O appears, absorbing the frame.
-        tl.set(oShrink, { autoAlpha: 1 }, 8.2);
+        tl.set(oShrink, { autoAlpha: 1 }, 7.6);
         tl.to(
           [bandImg, reveal, dress].filter(Boolean) as HTMLElement[],
           { autoAlpha: 0, duration: 0.35, ease: EASE.machine },
-          8.25,
+          7.65,
         );
         // It flies into the ghost header's O… (the ghost's own solid O stays
         // hidden until the flying one has arrived and drained — the flying O
         // IS the letter until then)
-        if (ghost) tl.set(ghost, { autoAlpha: 1 }, 8.4);
+        if (ghost) tl.set(ghost, { autoAlpha: 1 }, 7.8);
         if (ghostLand) gsap.set(ghostLand, { autoAlpha: 0 });
         const flight = { p: 0 };
         const fly = setOFlight;
         tl.to(
           flight,
           { p: 1, duration: 0.7, ease: EASE.machine, onUpdate: () => fly(flight.p) },
-          8.45,
+          7.85,
         );
         // …the heading assembles around it…
         if (ghostItems.length)
-          tl.to(ghostItems, { autoAlpha: 1, duration: 0.3, ease: EASE.machine, stagger: 0.15 }, 9.2);
+          tl.to(ghostItems, { autoAlpha: 1, duration: 0.3, ease: EASE.machine, stagger: 0.15 }, 8.6);
         // …and the image drains into the solid letter. The word stands.
         if (ghostLand)
-          tl.to(ghostLand, { autoAlpha: 1, duration: 0.2, ease: EASE.machine }, 9.7);
-        tl.to(oShrink, { autoAlpha: 0, duration: 0.2, ease: EASE.machine }, 9.7);
+          tl.to(ghostLand, { autoAlpha: 1, duration: 0.2, ease: EASE.machine }, 9.1);
+        tl.to(oShrink, { autoAlpha: 0, duration: 0.2, ease: EASE.machine }, 9.1);
         // The word STANDS and is never faded — it IS the section title from
         // here on. The landing is the pin's final beat: the moment the image
         // drains into the letter the pin releases, and §03's content fades in
@@ -458,18 +506,16 @@ export function clusterDescent(
     enterStart: "top 100%",
     uses: ["groundRamp", "triad", "arrive", "frameOpen"],
     build: (tl) => {
-      // While motion runs, §02's aperture has already landed the O in its own
-      // "Our challenges" header and that one stays standing as THE title —
-      // this section's duplicate pair collapses so the page never shows the
-      // heading twice. Reduced motion and no-JS keep it: there the aperture's
-      // header never appears at all.
+      // §02's aperture lands the O in ITS header and that one stays standing
+      // as THE title, so this section's duplicate pair collapses and the page
+      // never shows the heading twice. Reduced motion and no-JS keep it:
+      // there the aperture's header never appears at all.
       const titles = qa(root, "[data-handoff-title]");
       if (titles.length) gsap.set(titles, { display: "none" });
       // The ring grounds ride the section's whole descent.
       driftArtwork(tl, root);
       // With the duplicate header gone, the section's own top padding is dead
-      // air between §02's landed heading and the lede — drop it while motion
-      // runs so the lede begins right under the standing title.
+      // air between §02's landed heading and the lede.
       gsap.set(root, { paddingTop: 0 });
       // The pinned scene above ends with the landed heading standing alone in
       // an emptied theater. Pull this section up so its content begins just
@@ -500,6 +546,7 @@ export function clusterDescent(
         }
         if (pullUp > 0) gsap.set(root, { marginTop: -pullUp });
       }
+
       const ground = q(root, "[data-ground]");
       if (ground) tl.groundRamp(ground, { stops, duration: 1 }, 0);
 
@@ -632,37 +679,68 @@ export function clusterDescent(
  *   [data-media]    the plate behind them
  *   [data-release]  the withheld payoff, revealed with the final step
  */
-export function pinnedCount(root: HTMLElement, span = 150): MotionModule {
+export function pinnedCount(root: HTMLElement, span = 60): MotionModule {
   const steps = qa(root, "[data-step]");
   return composition("pinnedCount", root, {
     channel: "media",
     span,
+    // Still pinned, so the section holds still while the count runs — but the
+    // count no longer rides the scrollbar.
+    //
+    // Ivy, 8 Sep: eight days scrubbed against scroll cost 130vh of travel to
+    // show a number changing, and the only thing moving was the number. The
+    // days now run on their own the moment the section lands, in about two
+    // seconds, and the whole screen costs one swipe instead of a page and a
+    // half.
+    //
+    // This trades away the note's "the one place on the page where scrolling
+    // controls time" — deliberately, and recorded in
+    // docs/design/living-work-qa-2026-09-08.md.
+    //
+    // `snap` goes with it, and was broken anyway: snapTo was 1/(steps-1) while
+    // [data-release] stretched the timeline to 7.55, so every snap point but
+    // the first landed mid-flap.
     pin: true,
-    snap: steps.length > 1 ? 1 / (steps.length - 1) : undefined,
-    uses: ["splitFlap", "dissolve"],
-    build: (tl) => {
-      const media = qa(root, "[data-media]");
+    // Only the PIN is desktop. The eight days still count on a phone — that
+    // is the section, and gating the whole recipe took it away and left the
+    // cut showing all eight digits stacked on one another.
+    pinMinWidth: DESKTOP,
+    uses: ["splitFlap"],
+    // Nothing rides the scrub now. The pin is the whole of what the span buys.
+    build: () => {},
+    // `enterStart` is "top top" so the count begins when the section is pinned
+    // and whole on screen, not at the default 82% where it would start behind
+    // the fold and be half over by the time it arrived.
+    enterStart: "top top",
+    enter: (tl) => {
       const release = q(root, "[data-release]");
-      if (steps.length > 1) tl.splitFlap(steps, { duration: DUR.medium }, 0);
-      if (media.length > 1) tl.dissolve(media, { duration: DUR.large }, 0);
-      // The payoff rides the last flip — day 08 and the koala arrive together.
-      // The scrim is not touched: it is part of the image, holding the
-      // right-side text legible for the section's whole life.
-      const last = steps.length - 1;
+      if (steps.length > 1) {
+        // splitFlap places its transitions on integer positions, so eight days
+        // is a 6.55-unit timeline whatever the per-flip duration. Nesting it
+        // and scaling by 3 turns that into ~2.2s — about 275ms a day, which
+        // reads as a counter running rather than a slideshow. The release
+        // below stays at natural speed, outside the nested scale.
+        const count = gsap.timeline();
+        count.splitFlap(steps, { duration: DUR.medium }, 0);
+        count.timeScale(3);
+        tl.add(count, 0);
+      }
+      // The payoff arrives just after day 08 lands.
       if (release) {
         tl.fromTo(
           release,
           { autoAlpha: 0, y: 24 },
           { autoAlpha: 1, y: 0, duration: DUR.medium, ease: EASE.country },
-          last,
+          2.3,
         );
       }
     },
     cut: (el) => {
+      // clearAll is enough: the steps are absolutely STACKED, so the markup
+      // holds every day but the last at opacity-0 and the last one visible.
+      // This used to set all eight visible, which put eight digits on top of
+      // each other — the section rested on an unreadable pile.
       clearAll(el);
-      // All eight days visible as a list, in order. The story still lands —
-      // the release line is in the markup and simply reads where it sits.
-      gsap.set(qa(el, "[data-step]"), { visibility: "visible", opacity: 1, rotationX: 0 });
     },
   });
 }
@@ -770,6 +848,20 @@ export function whatItTakes(root: HTMLElement, span = 160): MotionModule {
       const blocks = qa(root, "[data-infra-block]");
       if (!items.length || !blocks.length) return;
 
+      // The index is `hidden lg:block`, but querySelectorAll still returns its
+      // items when it is display:none — so this used to run the whole lighting
+      // sequence against nodes nobody could see. offsetParent is null for a
+      // display:none element: no index on screen, nothing to light.
+      if (items[0].offsetParent === null) return;
+
+      // Pair by the grid's ACTUAL column count, not a hardcoded two. The grid
+      // is `sm:grid-cols-2`, so below 640 it is one column and pairing by two
+      // lit the wrong item — the light lagged a block behind the reader.
+      const grid = q(root, "[data-infra-grid]");
+      const perRow = grid
+        ? getComputedStyle(grid).gridTemplateColumns.split(" ").filter(Boolean).length
+        : 2;
+
       // Rest classes light the first pair (the wireframe's frame). Motion owns
       // the light from here: normalise every item to the dimmed state and let
       // setRow re-light — clearAll on revert restores the rest classes.
@@ -790,24 +882,24 @@ export function whatItTakes(root: HTMLElement, span = 160): MotionModule {
           });
         }
       };
-      const rows = Math.ceil(blocks.length / 2);
+      const rows = Math.ceil(blocks.length / perRow);
       let current = 0;
       const setRow = (r: number) => {
         const next = Math.max(0, Math.min(rows - 1, r));
         if (next === current) return;
         current = next;
-        items.forEach((_, i) => light(i, Math.floor(i / 2) === next));
+        items.forEach((_, i) => light(i, Math.floor(i / perRow) === next));
       };
 
-      gsap.set(items.slice(2), { opacity: 0.3 });
-      bars.slice(2).forEach((bar) => bar && gsap.set(bar, { scaleY: 0 }));
+      gsap.set(items.slice(perRow), { opacity: 0.3 });
+      bars.slice(perRow).forEach((bar) => bar && gsap.set(bar, { scaleY: 0 }));
 
       // One trigger per grid row, on the row's first block. "top 45%" is the
       // reading line — the light moves when the pair reaches where the reader
       // is actually looking, same reasoning as §03's accordion trigger.
       blocks.forEach((block, i) => {
-        if (i % 2 !== 0) return;
-        const row = i / 2;
+        if (i % perRow !== 0) return;
+        const row = i / perRow;
         if (row === 0) return; // row 0 is the rest state; rows hand back to it
         ScrollTrigger.create({
           trigger: block,
@@ -895,40 +987,32 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
   return composition("vessels", root, {
     channel: "none",
     span,
-    // Plain width/scale tweens, hand-rolled: `vesselFill` sweeps a mark to its
-    // proportional stop and cannot rewind — this screen fills whole and plays
-    // both ways.
+    // Hand-rolled, not `vesselFill`: that effect sweeps a mark to its
+    // proportional stop and cannot rewind, and this screen now fills whole
+    // and plays both ways.
     uses: [],
     build: () => {
       const marks = qa(root, "[data-vessel]");
       if (!marks.length) return;
 
-      // Every word starts hollow. Each row owns one paused sweep: 700ms left
-      // to right, eased out, played when the row passes 65% of the viewport —
-      // and REWOUND, at its own speed, when the row scrolls back out (client
-      // direction, 2 Sep). A rewind rather than a scrub: the fill keeps its
-      // tempo in both directions instead of dragging with the wheel.
+      // THE NAME ARRIVES WHOLE. Until 8 Sep each name was clipped to its own
+      // percentage, so four of the five sat permanently half-read and the
+      // fifth was invisible. The stroked outline behind them was a drawing of
+      // the animation on the artboard, not a thing to ship. Every name now
+      // wipes in left to right and ends solid; the proportion is the rule
+      // underneath, which is what a rule is for.
+      const WIPE_FROM = "inset(0% 100% 0% 0%)";
+      const WIPE_TO = "inset(0% 0% 0% 0%)";
+
       const sweeps: { mark: HTMLElement; sweep: gsap.core.Timeline }[] = [];
       marks.forEach((mark) => {
-        const inner = q(mark, "[data-vessel-fill]");
-        if (!inner) return;
-        gsap.set(inner, { width: "0%" });
-        const track = mark.parentElement?.querySelector<HTMLElement>(
-          "[data-vessel-track]",
-        );
+        gsap.set(mark, { clipPath: WIPE_FROM });
+        // The track is a sibling of the name, inside their shared box.
+        const track = mark.parentElement?.querySelector<HTMLElement>("[data-vessel-track]");
         if (track) gsap.set(track, { scaleX: 0, transformOrigin: "left center" });
 
-        // The sweep stops ON the line marker — the gold tick at data-fill% is
-        // the boundary, and the fill runs exactly to it, never past (client
-        // direction, 2 Sep — restoring the spec's own stop).
-        const fill = Number(mark.dataset.fill ?? 0);
         const sweep = gsap.timeline({ paused: true });
-        sweep.fromTo(
-          inner,
-          { width: "0%" },
-          { width: `${fill}%`, duration: 0.7, ease: EASE.country },
-          0,
-        );
+        sweep.fromTo(mark, { clipPath: WIPE_FROM }, { clipPath: WIPE_TO, duration: 0.7, ease: EASE.country }, 0);
         if (track) {
           sweep.fromTo(
             track,
@@ -940,18 +1024,13 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
         sweeps.push({ mark, sweep });
       });
 
-      // The 150ms cascade holds for fills: rows crossing the line together
-      // play in reading order, one queue — the same serialization §03's
-      // accordion uses. Rewinds skip the queue: an undo answers the scroll
-      // immediately.
+      // 150ms between rows, per the spec's +0.0 / +0.15 / +0.30. Rewinds skip
+      // the queue: a row scrolled back past should reverse now, not wait.
       const queue: gsap.core.Timeline[] = [];
       let draining = false;
       const drain = () => {
         const next = queue.shift();
-        if (!next) {
-          draining = false;
-          return;
-        }
+        if (!next) { draining = false; return; }
         draining = true;
         next.play();
         window.setTimeout(drain, 150);
@@ -959,11 +1038,10 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
       sweeps.forEach(({ mark, sweep }) => {
         ScrollTrigger.create({
           trigger: mark,
+          // Fires at 65% of the viewport and runs for 0.7s, so the name is
+          // whole and readable well before the row reaches the middle.
           start: "top 65%",
-          onEnter: () => {
-            queue.push(sweep);
-            if (!draining) drain();
-          },
+          onEnter: () => { queue.push(sweep); if (!draining) drain(); },
           onLeaveBack: () => {
             const waiting = queue.indexOf(sweep);
             if (waiting !== -1) queue.splice(waiting, 1);
@@ -972,8 +1050,6 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
         });
       });
     },
-    // The cut is clearAll alone: the markup's rest state already shows every
-    // fill at its true proportion (the [data-vessel-fill] widths are inline).
     cut: clearAll,
   });
 }
@@ -1000,18 +1076,37 @@ export function quietArrival(root: HTMLElement, span = 100): MotionModule {
   return composition("quietArrival", root, {
     channel: "type",
     span,
-    uses: ["settle", "triad", "arrive"],
-    build: () => {},
+    uses: ["settle"],
+    build: () => {
+      /* THE CARDS GET THEIR OWN TRIGGER.
+       *
+       * §09 opens with a 420px photograph band, then 80px of padding, then
+       * the header — so the cards sit roughly 800px below the section's top.
+       * A section-level enter at "top 82%" therefore fired while they were
+       * still well under the fold, and the whole entrance was over before a
+       * reader could see it. The section looked static because, by the time
+       * you reached it, it was.
+       *
+       * `gsap.from` with its own ScrollTrigger, so the from-state renders
+       * immediately and a page loaded already scrolled past still lands on
+       * the settled state rather than three invisible cards.
+       *
+       * 24px and 80ms apart, left to right — the card note's own numbers, and
+       * the same shape `triad` gives the rest of the page. */
+      const clusters = qa(root, "[data-cluster]");
+      if (!clusters.length) return;
+      gsap.from(clusters, {
+        autoAlpha: 0,
+        y: 24,
+        duration: DUR.medium,
+        ease: EASE.country,
+        stagger: 0.08,
+        scrollTrigger: { trigger: clusters[0], start: "top 85%", once: true },
+      });
+    },
     enter: (tl) => {
       const heading = q(root, "[data-heading]");
-      const clusters = qa(root, "[data-cluster]");
-      const lines = qa(root, "[data-cluster] [data-line]");
       if (heading) tl.settle(heading, { duration: DUR.large }, 0);
-      // The hi-fi's card note asks for 80ms left-to-right, a beat wider than
-      // the grid token — the three grounds read as three, not one.
-      if (clusters.length)
-        tl.triad(clusters, { duration: DUR.medium, each: 0.08 }, 0.1);
-      if (lines.length) tl.arrive(lines, { duration: DUR.medium }, 0.2);
     },
     cut: clearAll,
   });

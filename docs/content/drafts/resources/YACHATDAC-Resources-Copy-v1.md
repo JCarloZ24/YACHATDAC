@@ -1,5 +1,7 @@
 # Resources — "The Record" — draft copy v1
 
+*Last updated: 8 September 2026*
+
 > **Page:** Resources — "The Record" · **Version:** v1 · **State:** draft ·
 > **Governance circle:** open
 >
@@ -29,6 +31,10 @@
 ## What is known about this Country
 
 Stories, historical accounts, research and recordings from Turraburra. Some of it is science, some of it is memory. All of it comes from this Country.
+
+> **Interface amendment, 8 September 2026 — user's handprint opening (F7/F8).**
+> Scroll cue: “Scroll into the record”. Bypass link: “Skip to the record”.
+> The supplied headline and standfirst above stay verbatim.
 
 ### Everything in the record
 

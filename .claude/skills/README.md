@@ -6,6 +6,28 @@ Skills scoped to this repo. Claude Code picks them up automatically from
 The `gsap-*` skills are the official GSAP references (core, timelines,
 ScrollTrigger, plugins, React, frameworks, utils, performance).
 
+The `threejs-*` skills (fundamentals, geometry, materials, lighting, textures,
+animation, loaders, shaders, post-processing, interaction) are the
+CloudAI-X/threejs-skills bundle, installed 8 September 2026 for the `/the-record`
+handprint portal — the first scene in this build that runs a WebGL renderer
+rather than GSAP over the DOM. Source:
+https://github.com/CloudAI-X/threejs-skills (via agenticskills.io). They are a
+Three.js API reference only: motion still cites a row of
+`docs/motion/motion-grammar.md`, still registers through
+`src/lib/motion-controller.ts`, and still honours the per-slot motion grade.
+
+The same ten are installed for Codex in `.agents/skills/` — repo-level, the
+convention `AGENTS.override.md` sets for this repo, alongside the `gsap-*` and
+`yachatdac-typography` copies already there. `.agents/skills/` and
+`.codex/skills/` are both valid Codex roots; run `codex debug prompt-input` to
+print the resolved root table rather than trusting either doc.
+
+A second global copy lives in `~/.codex/skills/`. Codex does **not** de-duplicate
+by skill name — it lists every root, so each `threejs-*` skill currently appears
+twice in the model-visible skill listing. That is noise, not breakage. If it
+bothers you, `rm -rf ~/.codex/skills/threejs-*` and keep the repo copy, which is
+the one that travels with the checkout.
+
 `yachatdac-typography` is the type system — the three licensed families, and
 the Figma→code repoint that means a correctly built page never matches the
 frame's letterforms (the file draws in Archivo and Baloo 2; the site ships

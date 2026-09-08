@@ -18,6 +18,16 @@
   --color-eucalyptus: #3f6b1f; /* Olive Grove    — Vegetation (KIT · Truth ladder) */
   --color-oxide: #c23d31; /* Rust Red       — The Land (KIT · Truth ladder) */
   --color-roasted: #4e3524; /* Roasted Brown  — Earth */
+
+  /* Burnt Ochre, deepened, FOR LIGHT GROUNDS ONLY.
+     `--color-burnt` is 2.91:1 on the off-white ground and 2.16:1 at the dark
+     end of Living Work §03's ramp. The eyebrow utility is 13px, which is not
+     WCAG "large text", so those needed 4.5:1 and did not have it. This value
+     is the same hue carried down until it clears the floor:
+       off-white #f6f6ec 6.31 · ramp mid #e7decb 5.13 · ramp end #e0d4bd 4.68
+     It is 2.83:1 on charcoal, so it must NEVER be used on a dark ground —
+     dark grounds already use --color-gold and are fine. */
+  --color-burnt-deep: #8a4a02;
   --color-evergreen: #22372b; /* Deep Evergreen — Living Country */
   --color-canvas: #f6f6ec; /* Off-White      — Natural Canvas */
   --color-midnight: #122449; /* Midnight Navy  — Night Sky */
@@ -147,10 +157,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Accessibility floor (build doc §5) — visible focus everywhere. */
+/* Accessibility floor (build doc §5) — visible focus everywhere.
+   Ochre alone was 2.30:1 on the off-white ground, under WCAG 1.4.11's 3:1
+   floor for non-text (ART-DIRECTION open question #14).
+   No single colour can fix it. The site runs both cream and evergreen
+   grounds, and a value dark enough for cream (needs L ≤ 0.272) is never light
+   enough for evergreen (needs L ≥ 0.323) — the window is empty; every warm
+   candidate was measured and the best worst-case was 2.93:1.
+   So the indicator is two rings, which is the standard answer for an unknown
+   background: a charcoal outline that reads on anything light, inside a gold
+   halo that reads on anything dark. Worst ground is 6.04:1, and the two rings
+   are 10.36:1 against each other, so one of them is always visible —
+   including over the photographs in the hero and §05. */
 :focus-visible {
-  outline: 2px solid var(--color-ochre);
-  outline-offset: 3px;
+  outline: 2px solid var(--color-charcoal);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-gold);
   border-radius: 2px;
 }
 

@@ -8,6 +8,8 @@ import { recordGrows } from "@/content/the-record";
  * column of heading, note, label and field, with the Subscribe blob set
  * alongside the field rather than under it — not a bordered panel.
  *
+ * F7 exception, user direction 2026-09-08: the submit control stays still.
+ *
  * ⚠ Not wired up, exactly as SignupField is not. The newsletter list is an
  * external service and the comms system is Phase 2; submitting prevents
  * default and nothing else, deliberately, so no address is collected before
@@ -25,7 +27,7 @@ export function RecordSignup() {
   const blurb = sentences.slice(0, -1).join(" ").trim();
 
   return (
-    <form className="mt-48" onSubmit={(event) => event.preventDefault()} data-record-arrive>
+    <form className="mt-48" onSubmit={(event) => event.preventDefault()}>
       {/* Work Sans SemiBold 24/32 — the frame does NOT set this in the
           headline face; the section already has one headline. */}
       <h3 className="max-w-[32.5rem] text-2xl leading-8 font-semibold">
@@ -56,7 +58,7 @@ export function RecordSignup() {
             tone as BlobButton; a <button> cannot be a <Link>. */}
         <button
           type="submit"
-          className="relative inline-flex h-14 w-[17.25rem] max-w-full items-center justify-center px-6 transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-0.5"
+          className="relative inline-flex h-14 w-[17.25rem] max-w-full items-center justify-center px-6"
         >
           <span
             aria-hidden

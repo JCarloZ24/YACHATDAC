@@ -1,6 +1,6 @@
 # YACHATDAC website
 
-*Last updated: 19 August 2026*
+*Last updated: 8 September 2026*
 
 Website for **YACHATDAC** — Yambangku Aboriginal Cultural Heritage & Tourism
 Development Aboriginal Corporation, on Iningai Country, Barcaldine QLD.
@@ -46,6 +46,20 @@ npm run build      # production build
 npm run lint       # eslint
 npm run typecheck  # tsc --noEmit
 ```
+
+### Source inspector
+
+During `npm run dev`, hold **Windows + Shift** (Mac: **Command + Shift**) and
+hover over an element to see its source file, line and column. Click the element
+to open that location in your editor. You can also use the floating **Code
+Inspector** switch to toggle inspection without holding the keys.
+
+This uses [Code Inspector](https://inspector.fe-dev.cn/en/guide/start.html) with
+Turbopack. It detects your running editor automatically; if it chooses the wrong
+one, set `editor` in the `codeInspectorPlugin` options in `next.config.ts`
+(for example, `"code"` for VS Code or `"cursor"` for Cursor). Restart the dev
+server after changing the configuration. The inspector is loaded only by
+`next dev`; production builds contain no inspector UI or injected source paths.
 
 ## Motion, since decision F8 (31 Aug 2026)
 

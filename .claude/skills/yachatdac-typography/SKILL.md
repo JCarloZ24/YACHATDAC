@@ -86,17 +86,27 @@ Audited 7 Sep 2026 from `YACHATDAC Type` (18 variables, three groups).
 The headline face **stops at H3** — H4–H6 are Bantayog Sans ExtraBold Alt, not
 Block Berthold. Audited in V2 on 29 Aug 2026; see `docs/brand.md`.
 
-### ⚠ The shipped scale does not match this yet
+### The shipped scale — migrated, but not everywhere
 
-`src/app/globals.css` still carries the hi-fi scale — `--text-display` 96,
-`--text-beat` 44, `--text-eyebrow-hero` 32, `--text-lead` 24 — taken from the
-earlier hi-fi frames, where the hero headline was 96 and section headlines 64.
-Nothing in the codebase resolves to 56, 48 or 40.
+**Corrected 8 Sep 2026.** This section previously said the code still carried
+`--text-display` (96) and `--text-beat` (44) and that nothing resolved to
+56/48/40. `6bd7b2b` landed thirteen minutes after that was written and made it
+false. Both tokens are **deleted**; `text-h1`…`text-h6` are live in
+`globals.css` with the mobile values as defaults and the desktop column in a
+single `@media (min-width: 64rem)`.
 
-So **a token is not automatically the answer**. Where a V2 frame gives a heading
-size, take the number from the frame (step 3 below) rather than reaching for
-`text-display`. Reconciling the two scales is a separate job — roughly 19 call
-sites across 15 files — and has not been done. Do not half-migrate a page.
+⚠ **Three scales are in the tree, and you must know which page you are in:**
+
+| Where | Scale |
+| --- | --- |
+| The Record, Truth, Living Work, and the shared components (`PageHero`, `Hero`, `TruthHero`, `BeatSection`, `beats`, `InvitationV2`, `WayForwardV2`) | `text-h1`…`text-h6` |
+| **Wonder** | frame-literal, via local `H1`/`H2`/`H3` constants — `text-[56px] lg:text-[96px]` and so on |
+| Anything else | hand-built `text-4xl sm:text-5xl` ladders |
+
+So **a token is still not automatically the answer** — check what the page you
+are editing already uses, and do not half-migrate a page. Reconciling Wonder
+against the tokens is an open question for August and Marc; see
+`docs/design/living-work-qa-2026-09-08.md` §4.
 
 Two faces this scale needs that are not shipped:
 

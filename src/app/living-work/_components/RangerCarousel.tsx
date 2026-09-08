@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { Draggable } from "gsap/Draggable";
 import { Flip } from "gsap/Flip";
@@ -46,11 +47,14 @@ export type RangerSlot = {
 
 /** Card geometry. SPACING is card width + the strip's gap. */
 const CARD_W = 280;
-const SPACING = 304;
+const SPACING = 300;
 /** The edge card's scale (3 Sep direction: the belt is LINEAR — no rotation,
     no arc — and the centre card is the biggest). Cards ease between 1 at the
     viewport centre and this at its edges on a cosine bell. */
 const SCALE_MIN = 0.78;
+
+/** How long the belt takes to settle onto the centre line after a wheel. */
+const DUR_SETTLE = 0.35;
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -86,6 +90,27 @@ export function RangerCarousel({
       const n = cards.length;
       if (!n) return;
 
+      /* TWO REASONS TO LEAVE THE STRIP ALONE.
+       *
+       * REDUCED MOTION — the markup below is a native `overflow-x-auto` row
+       * that already scrolls by touch, wheel and keyboard, and it snaps.
+       * Building the belt replaces that with Draggable, so a reader who asked
+       * for less motion would be left with a strip that only moves if
+       * JavaScript is holding it up.
+       *
+       * PHONE AND TABLET — the same argument, for a different reason. The belt
+       * absolutises every card and hands X to Draggable, which on a touch
+       * device means competing with the browser's own scroller for the same
+       * gesture; and an auto-run drift on a screen showing one card at a time
+       * is a card sliding out from under the reader's thumb. The native rail
+       * is simply better there, and it is the house pattern — CardRail does
+       * exactly this on every other page.
+       *
+       * Either way the count stays at its server value, which is honest:
+       * nothing is moving. */
+      if (prefersReduced()) return;
+      if (!window.matchMedia("(min-width: 64rem)").matches) return;
+
       const total = n * SPACING;
       // Wrap around the viewport centre so the belt has no ends.
       const wrapX = gsap.utils.wrap(-total / 2, total / 2);
@@ -112,18 +137,52 @@ export function RangerCarousel({
       });
 
       const pos = { x: 0 };
+
+      /* THE BELT'S GEOMETRY, rebuilt 8 Sep on Ivy's review.
+       *
+       * Two faults, one cause. The scale came off a cosine bell measured
+       * against half the viewport while the pitch stayed a flat 300, so:
+       *
+       *   slot  0      1      2      3
+       *   scale 1.000  0.918  0.795  0.780   <- steps .082 / .123 / .015
+       *   gap          31.4   60.2   79.5    <- "different padding"
+       *
+       * The scale flattened at the edges, so only the middle three read as a
+       * hierarchy; and because a card scales about its own centre while the
+       * pitch did not, the gaps grew as the cards shrank.
+       *
+       * Now the scale ramps linearly over slot distance, and the pitch
+       * INTEGRATES that scale so the gap between neighbours is constant:
+       *
+       *   slot  0      1      2      3
+       *   scale 1.000  0.927  0.853  0.780   <- even .073 steps
+       *   gap          20.0   20.0   20.0
+       *
+       * Because the scale depends on slot distance rather than on the final
+       * pixel position, the placement has a closed form and needs no solving:
+       * X(d) = GAP*d + CARD_W*(d - k*d^2/(2*RAMP)) inside the ramp, then a
+       * straight line at SCALE_MIN beyond it. Odd-symmetric, so X(-d) = -X(d).
+       *
+       * Positions still WRAP on the raw uniform axis, so the belt stays
+       * seamless and the snap and the counter are unchanged — a card teleports
+       * at d=3.5, which is ~927px out and off screen at every width. */
+      const RAMP = 3;
+      const GAP = 20;
+      const K = 1 - SCALE_MIN;
+      const scaleAt = (d: number) => 1 - K * Math.min(d / RAMP, 1);
+      const offsetAt = (d: number) => {
+        const a = Math.min(d, RAMP);
+        let x = GAP * a + CARD_W * (a - (K * a * a) / (2 * RAMP));
+        if (d > RAMP) x += (GAP + CARD_W * SCALE_MIN) * (d - RAMP);
+        return x;
+      };
+
       const render = () => {
-        // LINEAR, per the 3 Sep direction: a flat belt, cards upright, with
-        // presence carried by scale alone — biggest at the centre, easing
-        // down toward the edges on a cosine bell so nothing steps.
-        const half = Math.max(window.innerWidth / 2, 1);
         for (let i = 0; i < n; i++) {
-          const x = wrapX(i * SPACING + pos.x);
-          const t = Math.min(Math.abs(x) / half, 1);
-          gsap.set(cards[i], {
-            x: x - CARD_W / 2,
-            scale: SCALE_MIN + (1 - SCALE_MIN) * 0.5 * (1 + Math.cos(Math.PI * t)),
-          });
+          const raw = wrapX(i * SPACING + pos.x);
+          const d = Math.abs(raw) / SPACING;
+          const x = Math.sign(raw) * offsetAt(d);
+          gsap.set(cards[i], { x: x - CARD_W / 2, scale: scaleAt(d) });
         }
         if (countRef.current) {
           const centred = wrapIndex(Math.round(-pos.x / SPACING));
@@ -135,6 +194,50 @@ export function RangerCarousel({
       // One proxy carries the drag; the belt just reads its x. The proxy's x
       // grows without bound and the wrap doesn't care, so no re-centering
       // bookkeeping is needed.
+      /* AUTO-RUN. Ivy, 8 Sep: the strip should move on its own, stop when
+       * you point at it, and still be draggable.
+       *
+       * A ticker rather than a tween, because the belt has no end to tween
+       * to — positions wrap, so this just advances `pos.x` at a constant rate
+       * and lets `render` do the rest. Frame-rate independent via GSAP's own
+       * delta, so it drifts at the same speed on a 60Hz and a 120Hz screen.
+       *
+       * It yields to everything: hover, keyboard focus (a reader tabbing the
+       * cards should not have them slide away), a pointer drag, a wheel
+       * gesture, and being off screen. */
+      const DRIFT = 40; // px/sec — a card every ~7.5s
+      let hovering = false;
+      let holding = false;
+      let inView = true;
+      const drifting = () => !hovering && !holding && inView;
+      const tick = (_t: number, dt: number) => {
+        if (!drifting()) return;
+        pos.x -= (DRIFT * dt) / 1000;
+        render();
+      };
+      gsap.ticker.add(tick);
+
+      const hold = () => { hovering = true; };
+      const release = () => { hovering = false; };
+      stage.addEventListener("pointerenter", hold);
+      stage.addEventListener("pointerleave", release);
+      stage.addEventListener("focusin", hold);
+      stage.addEventListener("focusout", release);
+
+      // Off screen it should not be burning frames, and it should not have
+      // drifted half a belt away by the time the reader arrives.
+      // IntersectionObserver rather than a ScrollTrigger: this is "is it on
+      // screen", not "where in a scroll is it", and it needs no plugin.
+      inView = false;
+      const inViewWatch = new IntersectionObserver(
+        ([entry]) => { inView = entry.isIntersecting; },
+        { rootMargin: "10% 0px" },
+      );
+      inViewWatch.observe(stage);
+
+      // One proxy carries the drag; the belt just reads its x. The proxy's x
+      // grows without bound and the wrap doesn't care, so no re-centering
+      // bookkeeping is needed.
       const proxy = document.createElement("div");
       const draggable = Draggable.create(proxy, {
         type: "x",
@@ -142,6 +245,13 @@ export function RangerCarousel({
         inertia: !prefersReduced(),
         // A throw settles with a card on the centre line.
         snap: (value: number) => Math.round(value / SPACING) * SPACING,
+        onPressInit() {
+          // The drift has moved the belt since the proxy last agreed with it,
+          // so hand the proxy the live position or the first drag jumps.
+          holding = true;
+          gsap.set(proxy, { x: pos.x });
+          this.update();
+        },
         onDrag() {
           pos.x = this.x;
           render();
@@ -150,9 +260,63 @@ export function RangerCarousel({
           pos.x = this.x;
           render();
         },
+        onRelease() {
+          if (!this.isThrowing) holding = false;
+        },
+        onThrowComplete() {
+          holding = false;
+        },
       })[0];
 
+      /* TRACKPAD AND WHEEL. Once the belt builds, Draggable owns X and the
+       * native scroller is gone — so before this the strip only moved if you
+       * held a pointer down on it, which is what Ivy hit: a two-finger swipe
+       * did nothing.
+       *
+       * Horizontal intent only. If the gesture is more vertical than
+       * horizontal we return without preventing default, so the page scrolls
+       * through the section exactly as it always did — a carousel that eats
+       * vertical scroll is worse than one you cannot swipe. */
+      let settle = 0;
+      const onWheel = (e: WheelEvent) => {
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        e.preventDefault();
+        holding = true;
+        pos.x -= e.deltaX;
+        render();
+        // Keep the drag proxy in step, or the next pointer-drag jumps back to
+        // wherever the belt was when the wheel started.
+        gsap.set(proxy, { x: pos.x });
+        draggable.update();
+        // Settle onto the centre line when the gesture stops, the same
+        // resting state a throw lands in.
+        window.clearTimeout(settle);
+        settle = window.setTimeout(() => {
+          const to = Math.round(pos.x / SPACING) * SPACING;
+          gsap.to(pos, {
+            x: to,
+            duration: DUR_SETTLE,
+            ease: "power2.out",
+            onUpdate: render,
+            onComplete: () => {
+              gsap.set(proxy, { x: pos.x });
+              draggable.update();
+              holding = false;
+            },
+          });
+        }, 140);
+      };
+      stage.addEventListener("wheel", onWheel, { passive: false });
+
       return () => {
+        window.clearTimeout(settle);
+        gsap.ticker.remove(tick);
+        inViewWatch.disconnect();
+        stage.removeEventListener("wheel", onWheel);
+        stage.removeEventListener("pointerenter", hold);
+        stage.removeEventListener("pointerleave", release);
+        stage.removeEventListener("focusin", hold);
+        stage.removeEventListener("focusout", release);
         draggable.kill();
       };
     },
@@ -315,7 +479,7 @@ export function RangerCarousel({
   return (
     <div>
       {/* The count and the drag cue, aligned with the section's column. */}
-      <div className="mx-auto flex w-full max-w-7xl items-baseline justify-between px-6 lg:px-16">
+      <div className="mx-auto flex w-full max-w-[1440px] items-baseline justify-between px-6 sm:px-10 lg:px-25">
         <p className="eyebrow text-xs text-gold">
           <span ref={countRef}>01 / {pad(slots.length)}</span>
         </p>
@@ -330,10 +494,10 @@ export function RangerCarousel({
       >
         <ul
           ref={trackRef}
-          className="flex gap-6 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] lg:px-16 [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:px-10 lg:px-25 [&::-webkit-scrollbar]:hidden"
         >
           {slots.map((slot, i) => (
-            <li key={slot.caption} className="w-[280px] shrink-0">
+            <li key={slot.caption} className="w-[280px] shrink-0 snap-start">
               {slot.photo ? (
                 <button
                   type="button"
@@ -370,16 +534,13 @@ export function RangerCarousel({
                     data-flip-id={`ranger-${i}`}
                     className="absolute inset-0 overflow-hidden rounded-sm"
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={slot.photo.src}
                       alt={slot.caption}
-                      width={slot.photo.width}
-                      height={slot.photo.height}
+                      fill
                       draggable={false}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-700 ease-quiet group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
+                      sizes="280px"
+                      className="object-cover transition-transform duration-700 ease-quiet group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
                     />
                     {/* The hover preview — a scrim rises and the invitation
                         lands. Pure CSS, so it costs nothing while dragging. */}
@@ -406,9 +567,6 @@ export function RangerCarousel({
                     data-placeholder="image"
                     className="flex h-[400px] items-end rounded-sm border border-dashed border-canvas/25 bg-canvas/5 p-4"
                   >
-                    <p className="text-xs leading-relaxed text-canvas/50">
-                      1.82.1 &mdash; at the escarpment. Not yet gathered.
-                    </p>
                   </div>
                   <p className="eyebrow mt-4 text-xs text-gold">[ name held ]</p>
                   <p className="mt-1 text-sm text-canvas/70">{slot.caption}</p>
@@ -456,7 +614,7 @@ export function RangerCarousel({
             Back to the Rangers
           </button>
 
-          <div className="mx-auto w-full max-w-7xl px-6 py-24 lg:px-16 lg:py-28">
+          <div className="mx-auto w-full max-w-[1440px] px-6 py-24 sm:px-10 lg:px-25 lg:py-28">
             <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
               {/* The holder keeps the grid cell's size while Flip absolutises
                   the portrait for the flight — without it the left column
@@ -467,13 +625,12 @@ export function RangerCarousel({
                 data-flip-id={`ranger-${openIndex}`}
                 className="absolute inset-0 overflow-hidden rounded-sm"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={open.photo.src}
                   alt={open.caption}
-                  width={open.photo.width}
-                  height={open.photo.height}
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="object-cover"
                 />
               </div>
               </div>
@@ -519,15 +676,13 @@ export function RangerCarousel({
                 {slots.map((slot, i) =>
                   i === openIndex || !slot.photo ? null : (
                     <figure key={slot.caption}>
-                      <div className="aspect-[3/4] overflow-hidden rounded-sm">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                      <div className="relative aspect-[3/4] overflow-hidden rounded-sm">
+                        <Image
                           src={slot.photo.src}
                           alt={slot.caption}
-                          width={slot.photo.width}
-                          height={slot.photo.height}
-                          loading="lazy"
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-cover"
                         />
                       </div>
                       <figcaption className="mt-3 text-sm text-canvas/70">

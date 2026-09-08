@@ -25,10 +25,10 @@ import {
  * docs/motion/scenes.md:
  *
  *   §01 hero        media       100vh   ⚡5   → rest
- *   §02 aperture    type        430vh   ⚡5   pinned · countdown → theater → the O hand-off
+ *   §02 aperture    type        400vh   ⚡5   pinned · countdown → theater → the O hand-off
  *   §03 challenges  transition  330vh   ⚡3
  *   §04 rangers     media       100vh   ⚡4   → rest
- *   §05 spring      media       150vh   ⚡5   pinned · snapped
+ *   §05 spring      media        60vh   ⚡5   pinned · the count auto-runs
  *   §06 streams     media       360vh   ⚡3
  *   §07 infra       none        160vh   ⚡2   the index lights, two at a time
  *   §07b breath     none         47vh   ⚡1   the hold
@@ -60,14 +60,14 @@ export function V2LivingWorkMotion() {
       };
 
       wire(find("hero"), (el) => fullBleedOpen(el, 100));
-      wire(find("aperture"), (el) => apertureSequence(el, 430));
+      wire(find("aperture"), (el) => apertureSequence(el, 400));
       wire(find("challenges"), (el) =>
         // bone → dust → dry earth. The ground dries out while the section is
         // read, because the section is about drought and erosion.
         clusterDescent(el, ["#e0d4bd", "#c9b79a", "#8a7455"], 330),
       );
       wire(find("rangers"), (el) => fullBleedOpen(el, 100));
-      wire(find("spring"), (el) => pinnedCount(el, 150));
+      wire(find("spring"), (el) => pinnedCount(el, 60));
       wire(find("streams"), (el) => stickyStreams(el, 360));
       wire(find("infrastructure"), (el) => whatItTakes(el, 160));
       wire(find("breath"), (el) => breath(el, 47));
@@ -79,6 +79,29 @@ export function V2LivingWorkMotion() {
 
     if (document.fonts?.status === "loaded") build();
     else void document.fonts?.ready.then(build);
+
+    // §07's header is sticky and its index has to park BELOW it rather than
+    // behind it. That is layout, not motion, so it is here rather than in the
+    // recipe: it must hold under prefers-reduced-motion too, where no
+    // composition is ever built. The CSS carries a 20rem fallback so the
+    // no-JS case still lands somewhere sensible.
+    const head = document.querySelector<HTMLElement>("[data-infra-head]");
+    const infra = document.querySelector<HTMLElement>('[data-lw="infrastructure"]');
+    let headSize: ResizeObserver | undefined;
+    if (head && infra) {
+      const applyHead = () => {
+        // The header sticks at a NEGATIVE top, so the height that actually
+        // stays on screen is its box plus that offset. Read the offset off the
+        // element rather than hardcoding it here, or the CSS and this could
+        // drift apart and the index would park in the wrong place.
+        const stuck = parseFloat(getComputedStyle(head).top);
+        const offset = Number.isFinite(stuck) ? Math.min(stuck, 0) : 0;
+        infra.style.setProperty("--infra-head", `${head.offsetHeight + offset}px`);
+      };
+      applyHead();
+      headSize = new ResizeObserver(applyHead);
+      headSize.observe(head);
+    }
 
     // The challenge bands are native <details> that expand smoothly via CSS
     // (globals.css) — the document's height changes with them, so every
@@ -95,6 +118,7 @@ export function V2LivingWorkMotion() {
     const unwatch = watchVisibility();
     return () => {
       disposed = true;
+      headSize?.disconnect();
       window.clearTimeout(refreshTimer);
       document.removeEventListener("toggle", onToggle, true);
       unwatch();
