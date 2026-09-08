@@ -134,19 +134,35 @@ export function LivingWorkHero() {
       className="relative -mb-0.5 flex min-h-svh items-end overflow-hidden bg-charcoal"
     >
       {/* 1.40.2 — the subject sits right of centre and the headline never
-          crosses her. Hold that relationship if the crop is ever adjusted:
-          object-position keeps her right of centre when narrow viewports crop
-          the sides, and the copy column below is capped so it stays left. */}
+          crosses her.
+
+          THE CROP IS LOCKED TO THE FRAME'S ASPECT. The section is min-h-svh,
+          so on a wide screen it is ~1.95 while the frame is 1440x1000 = 1.44
+          — and because the source is 1.776, a 1.95 container shows the WHOLE
+          photograph and crops nothing. That is why the built hero read as the
+          full image against a frame that is clearly cropped in.
+
+          The plane inside is held to at least 69.4vw tall (1000/1440), so it
+          keeps the frame's aspect whatever the window does, and object-cover
+          then shows the same 81.1% of the source width the frame does — at
+          1440x900, at 1920x1080 and at 2145x1100 alike. The section clips the
+          overflow; the plane is centred in it.
+
+          object-position splits: the desktop 50% reproduces the frame's own
+          centred window, where she lands at 55-92% across. A phone crops to a
+          ~26% window, so it holds 68% to keep her in frame at all. */}
       {HERO ? (
         <div data-media data-plane="far" data-motion={HERO.grade} className="absolute inset-0">
-          <Image
-            src={HERO.src}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[68%_40%]"
-          />
+          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full -translate-x-1/2 -translate-y-1/2">
+            <Image
+              src={HERO.src}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-[68%_40%] lg:object-[50%_45%]"
+            />
+          </div>
         </div>
       ) : null}
 
@@ -257,6 +273,16 @@ export function LivingWorkAperture() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
+        </div>
+        {/* Ring A, lower left — the frame carries two rings here and only one
+            was built, which left the whole left half of the screen bare. */}
+        <div
+          data-artwork="ring-a"
+          data-artwork-drift
+          className="absolute -bottom-40 -left-48 h-[577px] w-[640px] opacity-[0.11]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/ring-a.svg" alt="" className="h-full w-full brightness-0" />
         </div>
       </div>
 
@@ -397,89 +423,86 @@ export function LivingWorkAperture() {
           </span>
         </div>
 
-        {/* THE FIGURE AND WHAT IT MEANS, side by side.
-            The frame sets the label immediately under the numeral. This build
-            had grown a fixed `h-[30vw]` box around a `16vw` glyph, so roughly
-            200px of dead air sat under the number and pushed the label to the
-            foot of the screen — where, at 12px, the eye never reached it.
+        {/* THE FIGURE, THEN WHAT IT COUNTS, DIRECTLY UNDER IT.
 
-            The label now sits beside the figure at reading size and the two
-            swap on the same beats. The stack is sized by an invisible in-flow
-            copy of the widest figure, so the column has one stable width and
-            the four real figures sit absolute over it, left-aligned as the
-            frame draws them — the same trick §05's flap stack uses.
+            This is the frame's own arrangement and it took two goes to get
+            here. The build had a fixed `h-[30vw]` box around a `16vw` glyph,
+            which left ~200px of dead air and pushed the label to the foot of
+            the screen. Splitting it into two columns then pushed the label to
+            the far RIGHT of a 1240 column — a worse answer, because a label
+            600px from its number is not a label.
 
-            The frame also carries a line under the rule reading "The aperture
-            opens as the figures change…". That is a description of the motion,
-            not content, and notes belong in the notes lane — so it is not
-            rendered here. */}
-        <div className="mt-12 grid items-center gap-x-14 gap-y-8 lg:mt-16 lg:grid-cols-[auto_minmax(0,24rem)]">
-          <div className="relative">
-            <p aria-hidden className="headline invisible text-[20vw] leading-none lg:text-[15vw]">
-              8,870
-            </p>
-            {/* The live counter — the rolling number the countdown ticks
-                through between the four figures. Motion-only. */}
-            <p
-              data-count-live
-              aria-hidden
-              className="headline absolute inset-0 text-[20vw] leading-none text-evergreen opacity-0 lg:text-[15vw]"
-            />
-            {FIGURES.map((figure, i) => {
-              const [before, zero, after] = splitAtAperture(figure.value);
-              return (
-                <p
-                  key={figure.value}
-                  data-figure
-                  data-value={figure.value.replace(/\D/g, "")}
-                  className={`headline absolute inset-0 text-[20vw] leading-none text-evergreen lg:text-[15vw] ${
-                    i === APERTURE_REST ? "" : "opacity-0"
-                  }`}
-                >
-                  {/* The digits around the 0 get their own wrapper so the exit
-                      can fade them while the 0 stays and becomes the reveal. */}
-                  {before ? <span data-figure-rest>{before}</span> : null}
-                  {/* Y1 — image-in-type, one per site, spent here. Two layers:
-                      the solid ink glyph beneath, and the image-filled glyph
-                      above it. At rest the fill shows (the design's own frame);
-                      in motion the fill starts clipped away so the 0 stands in
-                      font colour, then LIQUID-FILLS bottom-up mid-way through
-                      120's stretch. */}
-                  <span data-zero className="relative inline-block">
+            So: the numeral, the artist's rule across the column, the unit
+            immediately beneath it. Nothing between the number and the words
+            that explain it. The stack is sized by an invisible in-flow copy of
+            the widest figure, so the box never resizes as the sequence runs
+            and the four real figures sit absolute over it, left-aligned as
+            drawn. */}
+        <div className="relative mt-10 lg:mt-14">
+          <p aria-hidden className="headline invisible text-[20vw] leading-none lg:text-[15vw]">
+            8,870
+          </p>
+          {/* The live counter — the rolling number the countdown ticks
+              through between the four figures. Motion-only. */}
+          <p
+            data-count-live
+            aria-hidden
+            className="headline absolute inset-0 text-[20vw] leading-none text-evergreen opacity-0 lg:text-[15vw]"
+          />
+          {FIGURES.map((figure, i) => {
+            const [before, zero, after] = splitAtAperture(figure.value);
+            return (
+              <p
+                key={figure.value}
+                data-figure
+                data-value={figure.value.replace(/\D/g, "")}
+                className={`headline absolute inset-0 text-[20vw] leading-none text-evergreen lg:text-[15vw] ${
+                  i === APERTURE_REST ? "" : "opacity-0"
+                }`}
+              >
+                {/* The digits around the 0 get their own wrapper so the exit
+                    can fade them while the 0 stays and becomes the reveal. */}
+                {before ? <span data-figure-rest>{before}</span> : null}
+                {/* Y1 — image-in-type, one per site, spent here. Two layers:
+                    the solid ink glyph beneath, and the image-filled glyph
+                    above it. At rest the fill shows (the design's own frame);
+                    in motion the fill starts clipped away so the 0 stands in
+                    font colour, then LIQUID-FILLS bottom-up mid-way through
+                    120's stretch. */}
+                <span data-zero className="relative inline-block">
+                  {zero}
+                  <span
+                    data-zero-fill
+                    aria-hidden
+                    className="absolute inset-0 bg-cover bg-center bg-clip-text text-transparent"
+                    style={PLAIN ? { backgroundImage: `url(${PLAIN.src})` } : undefined}
+                  >
                     {zero}
-                    <span
-                      data-zero-fill
-                      aria-hidden
-                      className="absolute inset-0 bg-cover bg-center bg-clip-text text-transparent"
-                      style={PLAIN ? { backgroundImage: `url(${PLAIN.src})` } : undefined}
-                    >
-                      {zero}
-                    </span>
                   </span>
-                  {after ? <span data-figure-rest>{after}</span> : null}
-                </p>
-              );
-            })}
-          </div>
+                </span>
+                {after ? <span data-figure-rest>{after}</span> : null}
+              </p>
+            );
+          })}
+        </div>
 
-          {/* What the figure beside it counts. Stacked and cross-faded in
-              place, so the unit changes with the number rather than after it.
-              The box is fixed so a one-line and a two-line label share a top
-              edge and the row never reflows mid-sequence. */}
-          <div data-fade className="border-t border-burnt/50 pt-5">
-            <div className="relative h-[4.5rem]">
-              {FIGURES.map((figure, i) => (
-                <p
-                  key={figure.value}
-                  data-figure-caption
-                  className={`eyebrow absolute inset-0 text-lg leading-snug text-burnt-deep ${
-                    i === APERTURE_REST ? "" : "opacity-0"
-                  }`}
-                >
-                  {figure.caption}
-                </p>
-              ))}
-            </div>
+        {/* The unit, on the rule, right under the numeral — cross-faded in
+            place so it changes WITH the number rather than after it. The box
+            is fixed so a wrapped label and a short one share a top edge and
+            the rule never moves mid-sequence. */}
+        <div data-fade className="mt-6 border-t border-burnt/50 pt-4">
+          <div className="relative h-12 lg:h-7">
+            {FIGURES.map((figure, i) => (
+              <p
+                key={figure.value}
+                data-figure-caption
+                className={`eyebrow absolute inset-0 text-base leading-snug text-burnt-deep ${
+                  i === APERTURE_REST ? "" : "opacity-0"
+                }`}
+              >
+                {figure.caption}
+              </p>
+            ))}
           </div>
         </div>
 
@@ -622,13 +645,11 @@ export function LivingWorkChallenges() {
               className="object-cover"
             />
           </div>
-          {/* data-frame-caption — settles in as the frame finishes opening. */}
-          <p
-            data-frame-caption
-            className="absolute bottom-6 left-6 text-sm text-canvas/90 lg:left-16"
-          >
-            The plain from the escarpment.
-          </p>
+          {/* NO CAPTION. The frame's own layer reads "BREAK · 1.91.1 the
+              plain from the escarpment — silent, no copy", and Ivy confirmed
+              it on review. The notes lane argues the opposite ("every
+              photograph on this page is captioned"); the layer name and the
+              designer agree, so the band is silent. */}
         </div>
       ) : null}
 
