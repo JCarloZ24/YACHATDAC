@@ -164,7 +164,15 @@ export function LivingWorkHero() {
           and soften the crop. */}
       {HERO ? (
         <div data-media data-plane="far" data-motion={HERO.grade} className="absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full min-w-[144svh] -translate-x-1/2 -translate-y-1/2">
+          {/* Centred on desktop, where the plane is at most a little wider
+              than the window. On a phone the plane is 1.44x the viewport
+              HEIGHT — far wider than the screen — and centring it showed the
+              middle of the frame's window while she stands at 55-92% of it,
+              so she was half out of shot. 73% puts her in the middle of what
+              a narrow screen actually sees, and because it is a fraction of
+              the plane rather than of the viewport it holds at any phone
+              size. Desktop is untouched. */}
+          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full min-w-[144svh] -translate-x-[73%] -translate-y-1/2 lg:-translate-x-1/2">
             <div className="absolute top-[-12.5%] left-[-5.49%] h-[125%] w-[154.13%]">
               <Image
                 src={HERO.src}
@@ -345,7 +353,7 @@ export function LivingWorkAperture() {
           data-aperture
           data-motion={PLAIN.grade}
           aria-hidden
-          className="absolute inset-x-0 top-[16svh] h-[68svh] opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-[16svh] h-[68svh] opacity-0"
         >
           {/* The reveal mask — a smooth, irregular blob in the brand's own
               furniture language (the wave, the Button/Blob). The 0 hands over
@@ -395,7 +403,7 @@ export function LivingWorkAperture() {
             />
           </div>
           {/* X5 + the caption — one centred line low in the frame. */}
-          <div data-band-dress aria-hidden className="absolute inset-0 opacity-0">
+          <div data-band-dress aria-hidden className="pointer-events-none absolute inset-0 opacity-0">
             <div className="absolute inset-0 bg-linear-to-t from-charcoal/50 via-transparent to-transparent" />
             <div className="absolute inset-x-0 bottom-[12%] px-6 text-center">
               <p className="eyebrow text-xs leading-relaxed text-gold">
@@ -411,7 +419,7 @@ export function LivingWorkAperture() {
               ghost header below, which assembles around it before the scene
               closes; §03 then opens with the real heading in the same voice.
               One wide shot, one transition. */}
-          <div data-o-ghost aria-hidden className="absolute inset-x-0 top-[6%] opacity-0">
+          <div data-o-ghost aria-hidden className="pointer-events-none absolute inset-x-0 top-[6%] opacity-0">
             <div className={COLUMN}>
               <p data-ghost-item className="eyebrow text-burnt-deep opacity-0">
                 Our challenges
@@ -431,7 +439,7 @@ export function LivingWorkAperture() {
           </svg>
           <div
             data-o-shrink
-            className="absolute inset-0 opacity-0 [clip-path:url(#lw-o-clip)]"
+            className="pointer-events-none absolute inset-0 opacity-0 [clip-path:url(#lw-o-clip)]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img

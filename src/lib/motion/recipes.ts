@@ -37,6 +37,19 @@ const qa = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
  * wrapper in. Whole vectors only, never redrawn (F2); the reduced cut clears
  * the transform with everything else.
  */
+/**
+ * The width below which the page's choreographed screens hand back to their
+ * static markup. `lg` — the same breakpoint the layout uses, and the same one
+ * V2 draws: Desktop/1440 and Mobile/375, nothing between.
+ *
+ * §02 and §05 pin, measure a glyph box, and fly a FLIP hand-off. All three are
+ * written for a window you can see at once. §03 is here because its hand-off
+ * is the other half of §02's — it suppresses its own heading on the
+ * assumption that the aperture will land one, and without that it would
+ * suppress a heading nothing ever replaces.
+ */
+const DESKTOP = "64rem";
+
 function driftArtwork(tl: gsap.core.Timeline, root: HTMLElement) {
   const rings = qa(root, "[data-artwork-drift]");
   if (rings.length) {
@@ -139,6 +152,7 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
     channel: "type",
     span,
     pin: true,
+    minWidth: DESKTOP,
     uses: ["aperture"],
     build: (tl) => {
       /* THE RINGS TURN ONLY WHILE A FIGURE IS CHANGING.
@@ -487,48 +501,61 @@ export function clusterDescent(
     enterStart: "top 100%",
     uses: ["groundRamp", "triad", "arrive", "frameOpen"],
     build: (tl) => {
-      // While motion runs, §02's aperture has already landed the O in its own
-      // "Our challenges" header and that one stays standing as THE title —
-      // this section's duplicate pair collapses so the page never shows the
-      // heading twice. Reduced motion and no-JS keep it: there the aperture's
-      // header never appears at all.
-      const titles = qa(root, "[data-handoff-title]");
-      if (titles.length) gsap.set(titles, { display: "none" });
-      // The ring grounds ride the section's whole descent.
-      driftArtwork(tl, root);
-      // With the duplicate header gone, the section's own top padding is dead
-      // air between §02's landed heading and the lede — drop it while motion
-      // runs so the lede begins right under the standing title.
-      gsap.set(root, { paddingTop: 0 });
-      // The pinned scene above ends with the landed heading standing alone in
-      // an emptied theater. Pull this section up so its content begins just
-      // below that heading the moment the pin releases — the overlap only
-      // ever covers ground the aperture has already faded, and the pull is
-      // capped so it can never reach the heading itself. The previous sibling
-      // is the pin spacer once §02's trigger exists; measure the section
-      // inside it.
-      const prev = root.previousElementSibling as HTMLElement | null;
-      const pinned = prev?.classList.contains("pin-spacer")
-        ? (prev.firstElementChild as HTMLElement | null)
-        : prev;
-      if (pinned) {
-        const overhang = pinned.offsetHeight - window.innerHeight;
-        const ghost = pinned.querySelector<HTMLElement>("[data-o-ghost]");
-        let pullUp = Math.max(0, overhang);
-        if (ghost) {
-          const g = ghost.getBoundingClientRect();
-          const p = pinned.getBoundingClientRect();
-          const headingBottom = g.top - p.top + g.height;
-          // Land the section's top a breath under the standing heading. The
-          // cap is the invariant: the section's opaque ground must never ride
-          // up over the heading while §02 is still pinned.
-          pullUp = Math.max(
-            pullUp,
-            overhang + window.innerHeight - headingBottom - 24,
-          );
+      /* THE HAND-OFF HALF OF THIS SECTION IS DESKTOP-ONLY.
+       *
+       * Everything in this block exists because §02's aperture lands the O in
+       * ITS header and that one stays standing as the title. Below `lg` the
+       * aperture does not run (it pins, measures a glyph and flies a FLIP —
+       * see DESKTOP), so there is no landed heading to defer to, and
+       * suppressing this section's own header would leave it with none at
+       * all. Same for the padding and the pull-up: both are shaped around a
+       * pin that is not there.
+       *
+       * The ground ramp is not part of that bargain and runs at every width —
+       * it is the section's own weather. */
+      if (window.matchMedia(`(min-width: ${DESKTOP})`).matches) {
+        // §02's header is THE title while motion runs; this section's
+        // duplicate pair collapses so the page never shows the heading twice.
+        // Reduced motion and no-JS keep it: there the aperture's header never
+        // appears at all.
+        const titles = qa(root, "[data-handoff-title]");
+        if (titles.length) gsap.set(titles, { display: "none" });
+        // With the duplicate header gone, the section's own top padding is
+        // dead air between §02's landed heading and the lede.
+        gsap.set(root, { paddingTop: 0 });
+        // The pinned scene above ends with the landed heading standing alone
+        // in an emptied theater. Pull this section up so its content begins
+        // just below that heading the moment the pin releases — the overlap
+        // only ever covers ground the aperture has already faded, and the
+        // pull is capped so it can never reach the heading itself. The
+        // previous sibling is the pin spacer once §02's trigger exists;
+        // measure the section inside it.
+        const prev = root.previousElementSibling as HTMLElement | null;
+        const pinned = prev?.classList.contains("pin-spacer")
+          ? (prev.firstElementChild as HTMLElement | null)
+          : prev;
+        if (pinned) {
+          const overhang = pinned.offsetHeight - window.innerHeight;
+          const ghost = pinned.querySelector<HTMLElement>("[data-o-ghost]");
+          let pullUp = Math.max(0, overhang);
+          if (ghost) {
+            const g = ghost.getBoundingClientRect();
+            const p = pinned.getBoundingClientRect();
+            const headingBottom = g.top - p.top + g.height;
+            // Land the section's top a breath under the standing heading. The
+            // cap is the invariant: the section's opaque ground must never
+            // ride up over the heading while §02 is still pinned.
+            pullUp = Math.max(
+              pullUp,
+              overhang + window.innerHeight - headingBottom - 24,
+            );
+          }
+          if (pullUp > 0) gsap.set(root, { marginTop: -pullUp });
         }
-        if (pullUp > 0) gsap.set(root, { marginTop: -pullUp });
       }
+      // The ring grounds ride the section's whole descent, at every width.
+      driftArtwork(tl, root);
+
       const ground = q(root, "[data-ground]");
       if (ground) tl.groundRamp(ground, { stops, duration: 1 }, 0);
 
@@ -683,6 +710,7 @@ export function pinnedCount(root: HTMLElement, span = 60): MotionModule {
     // [data-release] stretched the timeline to 7.55, so every snap point but
     // the first landed mid-flap.
     pin: true,
+    minWidth: DESKTOP,
     uses: ["splitFlap"],
     // Nothing rides the scrub now. The pin is the whole of what the span buys.
     build: () => {},

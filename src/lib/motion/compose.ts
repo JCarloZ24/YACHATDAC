@@ -58,6 +58,19 @@ export type CompositionSpec = {
   span: number;
   /** Whether the screen pins. */
   pin?: boolean;
+  /**
+   * Minimum viewport width the composition is allowed to build at, as a CSS
+   * length. Below it the screen takes its `cut` instead — the same branch
+   * reduced motion gets, which lands on the server markup.
+   *
+   * For screens whose device IS the desktop: a pin, a FLIP hand-off or a
+   * clip-path measured against a glyph box are choreography for a window you
+   * can see all of at once. On a phone they cost enormous scroll, fight the
+   * touch scroller, and measure against a layout that has since reflowed.
+   * Leaving them off is not a downgrade — the markup is already the finished
+   * document, which is the same property the reduced-motion cut relies on.
+   */
+  minWidth?: string;
   /** Snap points, for step-throughs. `1 / (steps - 1)`. */
   snap?: number;
   /**
@@ -190,7 +203,12 @@ export function composition(
     registerYachatdacEffects();
     mm = gsap.matchMedia();
 
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
+    // Three branches, not two, once a screen declares `minWidth`: full
+    // motion only when the reader wants it AND the window can carry it;
+    // otherwise the cut, whichever of the two reasons applies.
+    const wide = spec.minWidth ? ` and (min-width: ${spec.minWidth})` : "";
+
+    mm.add(`(prefers-reduced-motion: no-preference)${wide}`, () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root,
@@ -230,6 +248,20 @@ export function composition(
       revertSplits(root);
       spec.cut(root);
     });
+
+    // Narrow and motion-willing: same cut, different reason.
+    // `not (min-width: X)` rather than a max-width, so the two branches are
+    // exactly complementary — a max-width of the same value would ALSO match
+    // at the boundary itself and both branches would build.
+    if (spec.minWidth) {
+      mm.add(
+        `(prefers-reduced-motion: no-preference) and (not (min-width: ${spec.minWidth}))`,
+        () => {
+          revertSplits(root);
+          spec.cut(root);
+        },
+      );
+    }
   };
 
   const destroy = () => {
