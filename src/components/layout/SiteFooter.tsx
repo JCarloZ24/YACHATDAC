@@ -143,22 +143,28 @@ export function SiteFooter() {
               icons, so they have to travel with the text. Pinned to the
               page edge instead, they drifted out from under both on any
               viewport wider than the 1440 frame. Percentages are of the
-              max-w-7xl track, so at 1440 they resolve to the frame's own
+              content track, so at 1440 they resolve to the frame's own
               608 and 1053. Both are cut by the foot, so only their tops
-              show — the frame crops the cluster at 114 of its 128. */}
-          <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-7xl">
-            <div className="absolute -bottom-[148px] -left-10 w-[230px] sm:left-[41.25%] sm:w-[416px] sm:-bottom-[268px]">
+              show — the frame crops the cluster at 114 of its 128.
+
+              The track followed the copy onto the house column on 8 Sep, so
+              both percentages were recomputed to hold those same two x
+              positions: 41.25% of the old 1280 track (starting at x=80) and
+              42.2222% of a 1440 one both land on 608, and 76% -> 73.125%
+              both land on 1053. Re-derive them if the column moves again. */}
+          <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-[1440px]">
+            <div className="absolute -bottom-[148px] -left-10 w-[230px] sm:left-[42.2222%] sm:w-[416px] sm:-bottom-[268px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/artwork/ring-a.svg" alt="" className="h-auto w-full" />
             </div>
-            <div className="absolute -bottom-[10px] left-[48%] w-[100px] sm:-bottom-[14px] sm:left-[76%] sm:w-[145px]">
+            <div className="absolute -bottom-[10px] left-[48%] w-[100px] sm:-bottom-[14px] sm:left-[73.125%] sm:w-[145px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/artwork/cluster.svg" alt="" className="h-auto w-full" />
             </div>
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-7xl px-6 pt-16 pb-12 sm:pt-24 sm:pb-10 lg:px-16">
+        <div className="relative mx-auto w-full max-w-[1440px] px-6 pt-16 pb-12 sm:px-10 sm:pt-24 sm:pb-10 lg:px-25">
           {/* Acknowledgement — first, centred, above the navigation. Placement
               per open decision 3: footer, text only, no ceremony element. */}
           <div className="text-center">

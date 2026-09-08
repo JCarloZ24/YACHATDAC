@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { photoById } from "@/content/kit";
+import { SeamGlyph } from "@/components/ui/Furniture";
 import { SignupField } from "@/components/ui/SignupField";
 import { RangerCarousel } from "./RangerCarousel";
 import {
@@ -102,20 +103,23 @@ const FILLS = [78, 58, 42, 26, 0];
 const VESSEL_SIZE = "text-[clamp(1.25rem,calc(0.39rem+4.2vw),3.75rem)]";
 
 /**
- * The page column, written once instead of eleven times.
+ * The page column — the house column, verbatim.
  *
- * The frame's gutter is 100 on a 1440 artboard, giving 1240 of content;
- * `max-w-7xl` + `lg:px-16` gives 1152 and starts at x=144. That 88px is held
- * deliberately: it is the container every other hi-fi page uses and the one
- * `SiteFooter` uses, so matching the frame here would align this page to the
- * frame and misalign it from the site. Recorded for the review rather than
- * silently closed.
+ * `/about`, `/connect`, `/partnerships` and `/our-people` all carry this exact
+ * string, and `lg:px-25` is 100px: content 1240 starting at x=100 on a 1440
+ * viewport, which is the gutter every page artboard is drawn on. Living Work
+ * was the one page still on `max-w-7xl` (1152, starting at x=144), which is
+ * why its copy did not line up with anything.
  *
- * The phone gutter stays `px-6` and does NOT take Wonder's 20 — Wonder had a
- * drawn 375 frame specifying it and Living Work has none, and px-6 is what the
- * global header and footer use at that width.
+ * Kept byte-identical to the sibling pages so it greps as one value. If this
+ * changes, change it everywhere or not at all.
+ *
+ * The nav is a separate question: `SiteHeader` is built to Marc's `Navbar / 1 /`
+ * component, which is drawn with a 64px gutter, so the logo sits 36px outside
+ * this column on every page of the site. That is Marc's geometry and is not
+ * this page's to settle.
  */
-const COLUMN = "mx-auto w-full max-w-7xl px-6 lg:px-16";
+const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
 
 /* -------------------------------------------------------------------------
    01 — the hero
@@ -150,7 +154,7 @@ export function LivingWorkHero() {
       <div
         data-scrim
         aria-hidden
-        className="absolute inset-0 bg-linear-to-t from-charcoal via-charcoal/50 to-charcoal/20"
+        className="absolute inset-0 bg-linear-to-b from-transparent via-[42%] via-[rgba(5,10,8,0.35)] to-[rgba(5,10,8,0.88)]"
       />
 
       <div className={`relative ${COLUMN} pt-32 pb-16 lg:pb-32`}>
@@ -392,64 +396,89 @@ export function LivingWorkAperture() {
           </span>
         </div>
 
-        <div className="relative mt-16 h-[30vw] min-h-32 sm:min-h-64">
-          {/* The live counter — the rolling number the countdown ticks
-              through between the four figures. Motion-only. */}
-          <p
-            data-count-live
-            aria-hidden
-            className="headline absolute inset-0 text-center text-[20vw] leading-none text-evergreen opacity-0 sm:text-[16vw]"
-          />
-          {FIGURES.map((figure, i) => {
-            const [before, zero, after] = splitAtAperture(figure.value);
-            return (
-              <p
-                key={figure.value}
-                data-figure
-                data-value={figure.value.replace(/\D/g, "")}
-                className={`headline absolute inset-0 text-center text-[20vw] leading-none text-evergreen sm:text-[16vw] ${
-                  i === APERTURE_REST ? "" : "opacity-0"
-                }`}
-              >
-                {/* The digits around the 0 get their own wrapper so the exit
-                    can fade them while the 0 stays and becomes the reveal. */}
-                {before ? <span data-figure-rest>{before}</span> : null}
-                {/* Y1 — image-in-type, one per site, spent here. Two layers:
-                    the solid ink glyph beneath, and the image-filled glyph
-                    above it. At rest the fill shows (the design's own frame);
-                    in motion the fill starts clipped away so the 0 stands in
-                    font colour, then LIQUID-FILLS bottom-up mid-way through
-                    120's stretch. */}
-                <span data-zero className="relative inline-block">
-                  {zero}
-                  <span
-                    data-zero-fill
-                    aria-hidden
-                    className="absolute inset-0 bg-cover bg-center bg-clip-text text-transparent"
-                    style={PLAIN ? { backgroundImage: `url(${PLAIN.src})` } : undefined}
-                  >
-                    {zero}
-                  </span>
-                </span>
-                {after ? <span data-figure-rest>{after}</span> : null}
-              </p>
-            );
-          })}
-        </div>
+        {/* THE FIGURE AND WHAT IT MEANS, side by side.
+            The frame sets the label immediately under the numeral. This build
+            had grown a fixed `h-[30vw]` box around a `16vw` glyph, so roughly
+            200px of dead air sat under the number and pushed the label to the
+            foot of the screen — where, at 12px, the eye never reached it.
 
-        <div data-fade className="mt-6 border-t border-burnt/50 pt-4">
-          <div className="relative h-6">
-            {FIGURES.map((figure, i) => (
-              <p
-                key={figure.value}
-                data-figure-caption
-                className={`eyebrow absolute inset-0 text-xs text-burnt-deep ${
-                  i === APERTURE_REST ? "" : "opacity-0"
-                }`}
-              >
-                {figure.caption}
-              </p>
-            ))}
+            The label now sits beside the figure at reading size and the two
+            swap on the same beats. The stack is sized by an invisible in-flow
+            copy of the widest figure, so the column has one stable width and
+            the four real figures sit absolute over it, left-aligned as the
+            frame draws them — the same trick §05's flap stack uses.
+
+            The frame also carries a line under the rule reading "The aperture
+            opens as the figures change…". That is a description of the motion,
+            not content, and notes belong in the notes lane — so it is not
+            rendered here. */}
+        <div className="mt-12 grid items-center gap-x-14 gap-y-8 lg:mt-16 lg:grid-cols-[auto_minmax(0,24rem)]">
+          <div className="relative">
+            <p aria-hidden className="headline invisible text-[20vw] leading-none lg:text-[15vw]">
+              8,870
+            </p>
+            {/* The live counter — the rolling number the countdown ticks
+                through between the four figures. Motion-only. */}
+            <p
+              data-count-live
+              aria-hidden
+              className="headline absolute inset-0 text-[20vw] leading-none text-evergreen opacity-0 lg:text-[15vw]"
+            />
+            {FIGURES.map((figure, i) => {
+              const [before, zero, after] = splitAtAperture(figure.value);
+              return (
+                <p
+                  key={figure.value}
+                  data-figure
+                  data-value={figure.value.replace(/\D/g, "")}
+                  className={`headline absolute inset-0 text-[20vw] leading-none text-evergreen lg:text-[15vw] ${
+                    i === APERTURE_REST ? "" : "opacity-0"
+                  }`}
+                >
+                  {/* The digits around the 0 get their own wrapper so the exit
+                      can fade them while the 0 stays and becomes the reveal. */}
+                  {before ? <span data-figure-rest>{before}</span> : null}
+                  {/* Y1 — image-in-type, one per site, spent here. Two layers:
+                      the solid ink glyph beneath, and the image-filled glyph
+                      above it. At rest the fill shows (the design's own frame);
+                      in motion the fill starts clipped away so the 0 stands in
+                      font colour, then LIQUID-FILLS bottom-up mid-way through
+                      120's stretch. */}
+                  <span data-zero className="relative inline-block">
+                    {zero}
+                    <span
+                      data-zero-fill
+                      aria-hidden
+                      className="absolute inset-0 bg-cover bg-center bg-clip-text text-transparent"
+                      style={PLAIN ? { backgroundImage: `url(${PLAIN.src})` } : undefined}
+                    >
+                      {zero}
+                    </span>
+                  </span>
+                  {after ? <span data-figure-rest>{after}</span> : null}
+                </p>
+              );
+            })}
+          </div>
+
+          {/* What the figure beside it counts. Stacked and cross-faded in
+              place, so the unit changes with the number rather than after it.
+              The box is fixed so a one-line and a two-line label share a top
+              edge and the row never reflows mid-sequence. */}
+          <div data-fade className="border-t border-burnt/50 pt-5">
+            <div className="relative h-[4.5rem]">
+              {FIGURES.map((figure, i) => (
+                <p
+                  key={figure.value}
+                  data-figure-caption
+                  className={`eyebrow absolute inset-0 text-lg leading-snug text-burnt-deep ${
+                    i === APERTURE_REST ? "" : "opacity-0"
+                  }`}
+                >
+                  {figure.caption}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -664,7 +693,7 @@ export function LivingWorkRangers() {
         {/* ▲ ARTWORK — the wave rule. Draw-in is on the sign-off queue. */}
         <div data-artwork="wave-rule" aria-hidden className="mb-16">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/dots-wave.svg" alt="" className="w-full max-w-5xl" />
+          <img src="/artwork/dots-wave.svg" alt="" className="w-full" />
         </div>
 
         <p className="eyebrow text-burnt">The Rangers</p>
@@ -1247,9 +1276,9 @@ export function LivingWorkOutputs() {
  * glyphs are the artist's three existing motifs, placed whole — nothing drawn.
  */
 const PATH_PRESENTATION = [
-  { audience: "For other ranger groups", ground: "bg-evergreen", glyph: "/artwork/glyph-a.svg" },
-  { audience: "For funders and partners", ground: "bg-roasted", glyph: "/artwork/glyph-c.svg" },
-  { audience: "For properties in the district", ground: "bg-charcoal", glyph: "/artwork/glyph-b.svg" },
+  { audience: "For other ranger groups", ground: "bg-evergreen", motif: "a" },
+  { audience: "For funders and partners", ground: "bg-roasted", motif: "c" },
+  { audience: "For properties in the district", ground: "bg-charcoal", motif: "b" },
 ] as const;
 
 export function LivingWorkInvitation() {
@@ -1290,7 +1319,7 @@ export function LivingWorkInvitation() {
           properties in the district.
         </p>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-[77px]">
           {getInvolved.paths.map((path, i) => {
             const p = PATH_PRESENTATION[i];
             return (
@@ -1307,8 +1336,7 @@ export function LivingWorkInvitation() {
                   aria-hidden
                   className="pointer-events-none absolute inset-0 bg-canvas opacity-0 transition-opacity duration-(--dur-small) ease-quiet group-hover:opacity-[0.04]"
                 />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.glyph} alt="" className="size-11" aria-hidden />
+                <SeamGlyph motif={p.motif} className="relative top-0 left-0 w-11 shrink-0" />
                 <p className="eyebrow mt-6 text-xs text-gold">{p.audience}</p>
                 <div className="mt-2 flex min-h-21 items-end">
                   <h3 className="headline text-2xl leading-[1.3] text-canvas">
