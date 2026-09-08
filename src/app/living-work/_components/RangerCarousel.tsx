@@ -181,6 +181,50 @@ export function RangerCarousel({
       // One proxy carries the drag; the belt just reads its x. The proxy's x
       // grows without bound and the wrap doesn't care, so no re-centering
       // bookkeeping is needed.
+      /* AUTO-RUN. Ivy, 8 Sep: the strip should move on its own, stop when
+       * you point at it, and still be draggable.
+       *
+       * A ticker rather than a tween, because the belt has no end to tween
+       * to — positions wrap, so this just advances `pos.x` at a constant rate
+       * and lets `render` do the rest. Frame-rate independent via GSAP's own
+       * delta, so it drifts at the same speed on a 60Hz and a 120Hz screen.
+       *
+       * It yields to everything: hover, keyboard focus (a reader tabbing the
+       * cards should not have them slide away), a pointer drag, a wheel
+       * gesture, and being off screen. */
+      const DRIFT = 40; // px/sec — a card every ~7.5s
+      let hovering = false;
+      let holding = false;
+      let inView = true;
+      const drifting = () => !hovering && !holding && inView;
+      const tick = (_t: number, dt: number) => {
+        if (!drifting()) return;
+        pos.x -= (DRIFT * dt) / 1000;
+        render();
+      };
+      gsap.ticker.add(tick);
+
+      const hold = () => { hovering = true; };
+      const release = () => { hovering = false; };
+      stage.addEventListener("pointerenter", hold);
+      stage.addEventListener("pointerleave", release);
+      stage.addEventListener("focusin", hold);
+      stage.addEventListener("focusout", release);
+
+      // Off screen it should not be burning frames, and it should not have
+      // drifted half a belt away by the time the reader arrives.
+      // IntersectionObserver rather than a ScrollTrigger: this is "is it on
+      // screen", not "where in a scroll is it", and it needs no plugin.
+      inView = false;
+      const inViewWatch = new IntersectionObserver(
+        ([entry]) => { inView = entry.isIntersecting; },
+        { rootMargin: "10% 0px" },
+      );
+      inViewWatch.observe(stage);
+
+      // One proxy carries the drag; the belt just reads its x. The proxy's x
+      // grows without bound and the wrap doesn't care, so no re-centering
+      // bookkeeping is needed.
       const proxy = document.createElement("div");
       const draggable = Draggable.create(proxy, {
         type: "x",
@@ -188,6 +232,13 @@ export function RangerCarousel({
         inertia: !prefersReduced(),
         // A throw settles with a card on the centre line.
         snap: (value: number) => Math.round(value / SPACING) * SPACING,
+        onPressInit() {
+          // The drift has moved the belt since the proxy last agreed with it,
+          // so hand the proxy the live position or the first drag jumps.
+          holding = true;
+          gsap.set(proxy, { x: pos.x });
+          this.update();
+        },
         onDrag() {
           pos.x = this.x;
           render();
@@ -195,6 +246,12 @@ export function RangerCarousel({
         onThrowUpdate() {
           pos.x = this.x;
           render();
+        },
+        onRelease() {
+          if (!this.isThrowing) holding = false;
+        },
+        onThrowComplete() {
+          holding = false;
         },
       })[0];
 
@@ -211,6 +268,7 @@ export function RangerCarousel({
       const onWheel = (e: WheelEvent) => {
         if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
         e.preventDefault();
+        holding = true;
         pos.x -= e.deltaX;
         render();
         // Keep the drag proxy in step, or the next pointer-drag jumps back to
@@ -230,6 +288,7 @@ export function RangerCarousel({
             onComplete: () => {
               gsap.set(proxy, { x: pos.x });
               draggable.update();
+              holding = false;
             },
           });
         }, 140);
@@ -238,7 +297,13 @@ export function RangerCarousel({
 
       return () => {
         window.clearTimeout(settle);
+        gsap.ticker.remove(tick);
+        inViewWatch.disconnect();
         stage.removeEventListener("wheel", onWheel);
+        stage.removeEventListener("pointerenter", hold);
+        stage.removeEventListener("pointerleave", release);
+        stage.removeEventListener("focusin", hold);
+        stage.removeEventListener("focusout", release);
         draggable.kill();
       };
     },
