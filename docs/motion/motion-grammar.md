@@ -44,6 +44,14 @@ settles at each thing it measures, so the Guide is carrying meaning rather than 
 flatness. `G1` travel + trail draw-on, `G3` waypoint settle, `G4` hand-off at the seams;
 traveller is the trail lead rosette. Every placement ▲ flagged for Leonard Mickelo.
 
+**One row is proposed and not yet in the table above — `the page holding its ground`, 8 Sep
+2026.** `/about` was built as a deck: a section is read to its end, the page stops, and the
+reader charges the seam until the hand-off plays. That behaviour cites nothing here, which by
+the hard rule makes it decoration until somebody decides otherwise. It is written up in full,
+with the four deviations it carries and the questions only Ivy can answer, in
+[`deck.md`](deck.md). The row lands in this table when it is signed off, or the behaviour comes
+out.
+
 ## Variants — more effects, same rows
 
 Ten rows, thirty effects. That is deliberate: a row is a **meaning**, and several effects
