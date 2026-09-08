@@ -235,7 +235,10 @@ export const stayStages: readonly StayStage[] = [
 export const inclusions = [
   {
     title: "Meals",
-    points: ["Shared meals cooked on site", "Native foods where the season allows"],
+    points: [
+      "Shared meals cooked on site",
+      "Native foods where the season allows",
+    ],
   },
   {
     title: "Guiding",
@@ -246,7 +249,10 @@ export const inclusions = [
   },
   {
     title: "Camping",
-    points: ["What we provide and what you bring", "Toilet and washing facilities"],
+    points: [
+      "What we provide and what you bring",
+      "Toilet and washing facilities",
+    ],
   },
   {
     title: "Transfers",
@@ -302,6 +308,9 @@ export const wonderStories = {
   lede: "Pulled from the Resources collection, tagged #lore, #country and #guesting.",
   cmsNote:
     "Dynamic — three most recent posts from Resources carrying #lore, #country or #guesting. Editor can pin a post to the first slot. Falls back to most recent overall if fewer than three are tagged.",
+  /** hi-fi — the card link label is the frame's (2033:7043); the draft
+      carries no label for it. */
+  cta: "Explore experiences",
   items: [
     {
       tag: "#lore",
@@ -361,8 +370,14 @@ export const beforeYouCome = {
   facts: [
     { label: "Location", value: "Turraburra, 120km north of Barcaldine" },
     { label: "Property", value: "8,870 hectares, renamed Turraburra in 2020" },
-    { label: "Stay", value: "Camping — swag or tent, shared meals, fire at night" },
-    { label: "Dates", value: "Arranged with you. May to September is the comfortable stretch." },
+    {
+      label: "Stay",
+      value: "Camping — swag or tent, shared meals, fire at night",
+    },
+    {
+      label: "Dates",
+      value: "Arranged with you. May to September is the comfortable stretch.",
+    },
   ],
   body: [
     "Turraburra sits 120km north of Barcaldine in Central Western Queensland, 8,870 hectares of it. You will camp — swag or tent, meals shared, fire at night. Groups stay small on purpose, so it stays quiet.",

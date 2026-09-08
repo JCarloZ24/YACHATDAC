@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
 import {
   WonderBeforeYouCome,
@@ -52,6 +53,9 @@ export default function WonderPage() {
         <WonderStories />
         <WonderClose />
       </div>
+      {/* The page ends on roasted; without this the footer's double wave
+          opens onto a stray canvas band. */}
+      <FooterGround color="var(--color-roasted)" />
     </PageTransition>
   );
 }

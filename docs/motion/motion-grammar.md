@@ -57,6 +57,7 @@ diluting — the brief caps the table at six to eight roles and it is right to.
 | a change of ground | `ground` (one sweep) | `groundRamp` (across four screens), `waveHandoff`, `overlap`, `stickyIndex` |
 | what endures | `settle` (lines) | `display` (chars), `ghostType` (behind everything), `knockout` (as a window) |
 | what radiates | `arrive` | `emanate`, `triad`, `scatterResolve`, `mosaic`, `handoff` |
+| the guide leading the eye | `routeDraw` (a drawn map inks itself along its own lines, loop by loop, scrubbed; the line is the guide, there is no traveller. On §02 the Queensland outline runs down from the cape as two lines that meet at the bottom, the borders draw inward, and the pin arrives and floats — the float is the one time-based movement, a slow bob on transform — Wonder §02 and §04, `src/lib/motion/route-map.ts`, 8 Sep 2026) | `guide` |
 
 `scrimRamp` belongs to no row on its own: X5 is a legibility requirement that travels with
 whatever media effect it accompanies, and it is non-negotiable wherever copy sits on a picture.
