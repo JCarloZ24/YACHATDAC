@@ -14,6 +14,8 @@ import {
   WhoDecides,
   WhyWeExist,
 } from "./_components/Sections";
+import { AboutMotion } from "./_components/Motion";
+import { DebugRail } from "./_components/DebugRail";
 
 export const metadata: Metadata = {
   title: "About",
@@ -34,10 +36,14 @@ export const metadata: Metadata = {
  * Marc's styling and not rebuilt here; the page just declares the ground it
  * hands over on.
  *
- * ⚠ THIS PAGE IS STATIC BY DECISION, not by omission. It mounts no motion
- * module and carries no scroll animation; it renders the same with JavaScript
- * on or off. The frame's layer names describe a motion build that is not built
- * — see the header of ./_components/Sections.tsx before changing anything.
+ * ⚠ THE SEAM PASS IS MOUNTED. `<AboutMotion />` builds the ten
+ * section-to-section seams of `REF · SCORE · 05 ABOUT` (Figma 2642:19666) and
+ * the X4 baseline arrivals — and only those. The section interiors (§03's
+ * 300vh pin, IMG-03, the line-mask settle, Group G's waypoints) remain
+ * unbuilt, ledgered at docs/motion/scenes.md:331-390, and come as one pass,
+ * not piecemeal. With JavaScript off the page still renders complete — rest
+ * state is the finished state, and the reduced-motion cut is that same state.
+ * See the header of ./_components/Sections.tsx before changing anything.
  *
  * `PageTransition` stays: it paints the page's own ground behind everything,
  * and its route transition is site-wide chrome that every page.tsx carries
@@ -57,6 +63,10 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <PageTransition ground="#090e12">
+      <AboutMotion />
+      {/* Dev-only scroll readout for tuning the seams; renders nothing in
+          production. */}
+      {process.env.NODE_ENV !== "production" ? <DebugRail /> : null}
       <AboutHero />
       <WhatWeAre />
       <WhyWeExist />

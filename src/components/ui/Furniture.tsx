@@ -35,20 +35,41 @@ import Link from "next/link";
 export const WAVE_PATH =
   "M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 105.324H1468.85L1470.04 7.97183V7.9544Z";
 
+/** The path's own box, from the viewBox crop above. */
+const WAVE_X0 = 1.00123;
+const WAVE_W = 1467.84877;
+
+/**
+ * One seamless roll of the wave strip, in user units. The ink is tiled
+ * three wide — original, mirrored, original — so both junctions meet at
+ * matching heights (a raw repeat would step: the path's left foot sits at
+ * y≈93 and its right at y≈8). Rolling the strip left by exactly two tile
+ * widths lands the visible window on the third copy, which is identical to
+ * the first — so a finished roll is pixel-equal to the static markup.
+ * Exported for About's seam gates, which animate the roll.
+ */
+export const WAVE_ROLL = 2 * WAVE_W;
+
 export function WaveDivider({
   ground,
   flip = false,
+  hook,
   className = "",
 }: {
   /** CSS colour of the section this wave introduces. */
   ground: string;
   /** A crest that rises rather than falls (Figma's flip=up). */
   flip?: boolean;
+  /** Optional motion hook, rendered as `data-seam` so a page's recipes can
+      select this wave without reaching for structural classes. Inert unless a
+      motion host wires it. */
+  hook?: string;
   className?: string;
 }) {
   return (
     <svg
       aria-hidden
+      data-seam={hook}
       /* Cropped to the path's OWN box, not a rounded one, or the seam shows a
          hairline of the wrong ground down either edge.
            left   the path starts at x=1.00123, so a viewBox at 0 leaves a
@@ -65,7 +86,20 @@ export function WaveDivider({
         flip ? "scale-y-[-1]" : ""
       } ${className}`}
     >
-      <path d={WAVE_PATH} fill={ground} />
+      {/* The ink, as a three-tile strip (see WAVE_ROLL). At rest only the
+          first tile shows — the others sit beyond the viewBox crop — so the
+          static render is unchanged; a motion host may roll the group. All
+          three are the SAME exported path, transformed: nothing here is
+          hand-authored vector data. */}
+      <g data-wave-ink>
+        <path d={WAVE_PATH} fill={ground} />
+        <path
+          d={WAVE_PATH}
+          fill={ground}
+          transform={`translate(${2 * (WAVE_X0 + WAVE_W)} 0) scale(-1 1)`}
+        />
+        <path d={WAVE_PATH} fill={ground} transform={`translate(${WAVE_ROLL} 0)`} />
+      </g>
     </svg>
   );
 }
