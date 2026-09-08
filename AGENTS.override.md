@@ -58,14 +58,15 @@ retired lo-fi build kept as a record — leave their wording alone (see terminol
 
 1. **No heritage-site coordinates** anywhere: data, markup, comments, commits. Git history
    keeps what a correction cannot remove.
-2. **No generated Aboriginal iconography.** Leonard Mickelo's *supplied* vectors
-   (`public/artwork/`, manifest in `kit.ts`) may be animated, masked, recoloured, recombined.
-   Drawing new dots, rings, tracks, U-shapes or meandering paths in code or SVG is prohibited,
-   even as a "simple" stand-in. Leave the slot empty instead.
-3. **Never edit anyone's recorded words** to match house style. Suzanne Thompson's quotations
+2. **Never edit anyone's recorded words** to match house style. Suzanne Thompson's quotations
    on Truth and Graham Ambridge's on Our People stay as spoken; questions go to the speaker.
-4. **Do not recreate the logo** in code or text. Render `public/brand/logo-wordmark.svg`.
-5. **Do not AI-upscale or re-author the three paintings.** 1.57MP is the permanent ceiling.
+3. **Do not recreate the logo** in code or text. Render `public/brand/logo-wordmark.svg`.
+4. **Do not AI-upscale or re-author the three paintings.** 1.57MP is the permanent ceiling.
+
+**Artwork amendment — 8 September 2026, user direction.** Generated artwork is
+permitted, including The Record's handprint aperture. The former iconography
+restriction is removed. Record generated assets as such rather than attributing
+them to the supplied artist or treating them as cultural records.
 
 ## Governance — F8, build-first (31 Aug 2026)
 
@@ -130,8 +131,10 @@ the frame explicitly. Split text by line or word, never by character.
   type, or transition — and keeps the other two quiet. One verb per page (Truth *descends*,
   Living Work *accumulates*, Home *opens*, The Record *surfaces*, About *answers*, Our
   People *gathers*); do not carry one page's grammar onto another.
-- **The Record is static by user direction (8 September 2026), an F7 exception.**
-  No page, grid, hover or route animations; see `docs/motion/scenes.md`.
+- **The Record has a Three.js handprint opening (8 September 2026, latest user direction).**
+  The `handprintPortal` scene supersedes the static intro. The catalogue and
+  later sections stay static; shared Lenis wheel inertia remains enabled.
+  See `docs/motion/scenes.md`.
 - **Every animation cites a row of `docs/motion/motion-grammar.md`.** Add the row first, then
   the effect in `src/lib/motion/effects/<family>.ts`, then the `EffectName`. Uncited motion
   is decoration — delete it.

@@ -161,6 +161,7 @@ export function RecordGrid({
   return (
     <section
       id="research-and-discovery"
+      tabIndex={-1}
       data-record-grid
       /* `isolate` confines the rail's z-20 to this section. Without a stacking
          context here it escapes into the root one, where it outranks the LATER
@@ -177,6 +178,9 @@ export function RecordGrid({
       <div className="pointer-events-none absolute inset-y-0 left-0 z-20 hidden w-60 lg:block">
         <div
           data-record-rail
+          /* SCR-09: the rail can overflow on short screens. Its filters need
+             native wheel scrolling independent of the page's inertia. */
+          data-lenis-prevent
           className="pointer-events-auto sticky top-0 h-svh overflow-y-auto bg-canvas px-10 pt-20 text-charcoal"
         >
           {/* rail · eyebrow (2508:14442) — Yellow Ochre #d69828, which IS

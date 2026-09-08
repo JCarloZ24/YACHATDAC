@@ -25,6 +25,122 @@ import { assertEase, noise } from "./shared";
 gsap.registerPlugin(Flip);
 
 export function registerGrid(): void {
+  /* Grammar: "the world opening", Record's measured surface cut (F7/F8,
+     2026-09-08). React owns both endpoints. Counter-scaling interpolated
+     endpoints independently distorts the middle of the flight; the inverse
+     must be calculated from the plate's current transform instead. */
+  gsap.registerEffect({
+    name: "surface",
+    extendTimeline: true,
+    defaults: { release: 0.35, duration: 0.9, ease: EASE.country, radius: 24 },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      const plate = gsap.utils.toArray<HTMLElement>(targets)[0];
+      const cell = config.cell as HTMLElement;
+      const image = config.image as HTMLElement | null;
+      const scrim = config.scrim as HTMLElement | null;
+      const lane = config.lane as HTMLElement | null;
+      const copy = config.copy as HTMLElement[];
+      const neighbours = config.neighbours as HTMLElement[];
+      const release = config.release as number;
+      const duration = config.duration as number;
+      const ease = config.ease as string;
+      const tl = gsap.timeline({ paused: true });
+      if (!plate || !cell) return tl;
+
+      gsap.set(plate, { x: 0, y: 0, scaleX: 1, scaleY: 1, autoAlpha: 0 });
+      gsap.set(cell, { autoAlpha: 1 });
+      if (neighbours.length) gsap.set(neighbours, { opacity: 1 });
+      if (copy.length) gsap.set(copy, { opacity: 0, y: 20 });
+      if (image) gsap.set(image, { scaleX: 1, scaleY: 1 });
+      if (lane) gsap.set(lane, { autoAlpha: 0 });
+
+      const fit = Flip.fit(plate, cell, { getVars: true, scale: true }) as {
+        x: number;
+        y: number;
+        scaleX: number;
+        scaleY: number;
+      };
+      const corner = { radius: config.radius as number };
+      // Record the inline properties in the owning context before callbacks
+      // update them. Teardown then restores the exact pre-animation state.
+      gsap.set(plate, { clipPath: "inset(0 round 0px)" });
+      const draw = () => {
+        const sx = Number(gsap.getProperty(plate, "scaleX")) || 1;
+        const sy = Number(gsap.getProperty(plate, "scaleY")) || 1;
+        if (image) gsap.set(image, { scaleX: 1 / sx, scaleY: 1 / sy });
+        plate.style.clipPath = `inset(0 round ${corner.radius / sx}px / ${corner.radius / sy}px)`;
+      };
+
+      // The source cell holds its measured box, including at the swap. A
+      // separate lift here made the photograph jump back by 12px on release.
+      if (neighbours.length) {
+        tl.to(neighbours, { opacity: 0.45, duration: release, ease }, 0);
+      }
+      tl.to(cell, { autoAlpha: 0, duration: 0.001 }, release)
+        .to(plate, { autoAlpha: 1, duration: 0.001 }, release)
+        .fromTo(
+          plate,
+          fit,
+          {
+            x: 0,
+            y: 0,
+            scaleX: 1,
+            scaleY: 1,
+            duration,
+            ease,
+            immediateRender: false,
+            onUpdate: draw,
+          },
+          release,
+        )
+        .to(corner, { radius: 0, duration, ease, onUpdate: draw }, release);
+      if (scrim)
+        tl.fromTo(
+          scrim,
+          { opacity: 0.8 },
+          {
+            opacity: 1,
+            duration,
+            ease,
+            immediateRender: false,
+          },
+          release,
+        );
+      if (lane) tl.to(lane, { autoAlpha: 1, duration, ease }, release);
+      if (copy.length)
+        tl.to(
+          copy,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.42,
+            stagger: 0.06,
+            ease,
+          },
+          release + duration + 0.15,
+        );
+      return tl;
+    },
+  });
+
+  /* Grammar: "the world opening", reflow cut, 2026-09-08. Stable content
+     ids join the two layouts even when React has mounted a different row.
+     No absolute positioning or reparenting of React's nodes. */
+  gsap.registerEffect({
+    name: "reflow",
+    defaults: { duration: DUR.medium, ease: EASE.country },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      return Flip.from(config.state as Flip.FlipState, {
+        targets: gsap.utils.toArray<HTMLElement>(targets),
+        scale: true,
+        duration: config.duration as number,
+        ease: config.ease as string,
+        onEnter: (elements) =>
+          gsap.fromTo(elements, { opacity: 0 }, { opacity: 1, duration: 0.4 }),
+      });
+    },
+  });
+
   /* --- the handoff -------------------------------------------------------
      Grammar: "the world opening", continuity cut · sketch C2 · hi-fi §02.
 
@@ -117,7 +233,12 @@ export function registerGrid(): void {
   gsap.registerEffect({
     name: "escape",
     extendTimeline: true,
-    defaults: { to: null, duration: DUR.large, ease: EASE.country, holdPlane: null },
+    defaults: {
+      to: null,
+      duration: DUR.large,
+      ease: EASE.country,
+      holdPlane: null,
+    },
     effect: (targets: object, config: Record<string, unknown>) => {
       assertEase("escape", config.ease);
       const cell = gsap.utils.toArray<HTMLElement>(targets)[0];
@@ -137,15 +258,14 @@ export function registerGrid(): void {
       const fromCell = Flip.getState(flier);
       gsap.set(flier, { clearProps: "transform,width,height,top,left" });
 
-      tl.set(cell, { opacity: 0 })
-        .add(
-          Flip.from(fromCell, {
-            duration: config.duration as number,
-            ease: config.ease as string,
-            absolute: true,
-          }),
-          0,
-        );
+      tl.set(cell, { opacity: 0 }).add(
+        Flip.from(fromCell, {
+          duration: config.duration as number,
+          ease: config.ease as string,
+          absolute: true,
+        }),
+        0,
+      );
 
       /* --- the held plane -------------------------------------------------
          Grammar: "Portraits of real people hold still. The world moves around
@@ -197,7 +317,12 @@ export function registerGrid(): void {
   gsap.registerEffect({
     name: "scatterResolve",
     extendTimeline: true,
-    defaults: { spread: 120, duration: DUR.large, ease: EASE.country, stagger: STAGGER.grid },
+    defaults: {
+      spread: 120,
+      duration: DUR.large,
+      ease: EASE.country,
+      stagger: STAGGER.grid,
+    },
     effect: (targets: object, config: Record<string, unknown>) => {
       assertEase("scatterResolve", config.ease);
       const spread = config.spread as number;

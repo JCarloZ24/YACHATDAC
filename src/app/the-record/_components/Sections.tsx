@@ -1,21 +1,28 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import {
   documents,
   knowledgeGaps,
   onRequest,
   recordGrows,
   recordHero,
+  recordItems,
+  recordPortalCopy,
 } from "@/content/the-record";
-import { recordGrowsSlot, recordHeroSlot } from "@/content/record-media";
+import {
+  recordCardMedia,
+  recordGrowsSlot,
+  recordPortalMedia,
+} from "@/content/record-media";
+import { RecordPortalMotion } from "./PortalMotion";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import { RecordSignup } from "./Signup";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import {
   BlobButton,
   BlobHold,
-  ClusterArtwork,
   DottedRule,
   RingArtwork,
   SeamGlyph,
@@ -43,8 +50,8 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * page, labelled Resources". See docs/decisions-and-risks.md; the amendment is
  * recorded there and still wants Marc and Ivy's confirmation.
  *
- * F7 exception, user direction 2026-09-08: this page is static. Headings,
- * media and gaps render fully visible; buttons have no hover motion.
+ * F7 amendment, user direction 2026-09-08: the intro uses a Three.js
+ * handprintPortal. The catalogue and later sections retain their static cut.
  *
  * Copy is src/content/the-record.ts verbatim. Where the frame's label differs
  * from the draft's — the gaps CTA reads "WHAT IS RUNNING →" in Figma and
@@ -76,83 +83,97 @@ export function presentSrc(src: string | null): string | null {
    ------------------------------------------------------------------------- */
 
 /**
- * 01 · Intro — one photograph, and what the page is for.
- *
- * The photograph, legibility scrim and heading are visible immediately.
- * The frame's opening composition is retained, with no scroll cue or call to
- * action: the only thing below the lead is the wave.
- *
- * Laid out to the frame's own coordinates (1440x900):
- *   type column   x=100, so the copy sits against the VIEWPORT edge rather than
- *                 inside the body container — `lg:px-25` and no max-width on
- *                 the wrapper. Headline runs to 1100, the lead to 900.
- *   eyebrow       y=340, Eyebrow/Section-24 in Yellow Gold, tracked 0.08em
- *   headline      y=388, Display/96 at 1.2
- *   lead          y=644, Body/Lead-24 at 1.5
- *
- * Both 24px styles carry their leading explicitly. Tailwind's `text-2xl` and
- * `leading-relaxed` gave the eyebrow 32px and the lead 39px, against Figma's
- * 1.5 on each; the eyebrow's missing 4px pushed the whole stack — headline and
- * lead — up off the frame's y. `leading-[1.5]` on both puts them back.
- *   block foot    716 of 900 — 20.4% up from the join, which is what puts the
- *                 lead clear of the wave crest. `items-end` + that padding
- *                 holds the relationship at any viewport height.
- *   cluster       x=1221 y=170, gold at 90%
- *   seam glyph    x=1283 y=700, motif=starburst (glyph-b, the blue one)
- *
- * ⚠ TYPE. Figma sets the headline in Baloo 2 ExtraBold; the built page uses
- * Block Berthold, which is the repo-wide `.headline` decision (fonts.css) and
- * not this section's to change. The frame will not match the screenshot on
- * letterforms, only on size, colour and position.
+ * 01 · Intro — the wall opens onto the record.
+ * User direction 2026-09-08 replaces the Figma intro with the supplied wall
+ * and zoom-through references. D5 keeps the existing words; the new scroll
+ * and skip labels are recorded in the draft. Heading scale and brand faces
+ * remain the V2 tokens. The static server render survives failed enhancement.
  */
 export function RecordHeroV2() {
+  const maskSrc = presentSrc(recordPortalMedia.mask);
+  const stoneSrc = presentSrc(recordPortalMedia.wall.src);
+  const previews = recordPortalMedia.previewSlugs.flatMap((slug) => {
+    const item = recordItems.find((entry) => entry.slug === slug);
+    return item ? [item] : [];
+  });
+
   return (
-    <header className="relative flex min-h-svh items-end overflow-hidden bg-charcoal text-canvas">
-      <div className="absolute inset-0">
-        <MediaOrField
-          src={presentSrc(recordHeroSlot.src)}
-          alt={recordHeroSlot.expects}
-          sizes="100vw"
-          priority
-          fieldClass="bg-charcoal"
+    <header data-record-portal className="record-portal">
+      <div data-portal-stage className="record-portal-stage">
+        {/* Accessible links and optimised image sources back the WebGL planes.
+            The renderer projects their hit areas as the camera approaches;
+            the full catalogue is always reachable with the skip link. */}
+        <div data-portal-gallery className="record-portal-gallery" inert>
+          {previews.map((item) => {
+            const slot = recordCardMedia[item.slug];
+            return (
+              <Link
+                data-portal-card
+                key={item.slug}
+                href={`/the-record/${item.slug}`}
+                aria-label={item.title}
+                className="record-portal-card"
+              >
+                <div
+                  className="record-portal-card-media"
+                  data-motion-grade="frame"
+                >
+                  <MediaOrField
+                    src={presentSrc(slot?.src ?? null)}
+                    alt={slot?.expects ?? ""}
+                    sizes="(min-width: 1024px) 25vw, 57vw"
+                    fieldClass="bg-roasted"
+                  />
+                </div>
+                <div data-portal-caption className="record-portal-card-caption">
+                  <p className="eyebrow text-xs leading-[1.4] tracking-[0.06em] text-gold">
+                    {item.type}
+                  </p>
+                  <span className="text-sm leading-[1.4] lg:text-base">
+                    {item.title}
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+        <div
+          data-portal-wall
+          className="record-portal-wall bg-roasted"
+          aria-hidden="true"
         />
-      </div>
-
-      {/* X5 legibility scrim stays at full strength beneath the copy. */}
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(180deg, rgba(9,14,18,0) 0%, rgba(9,14,18,0.1) 18%, rgba(9,14,18,0.62) 36%, rgba(9,14,18,0.86) 62%, rgba(9,14,18,0.94) 100%)",
-        }}
-      />
-
-      {/* The artwork sits ON the photograph, top corner. Static — the frames
-          do not ask for artwork motion and the default is stillness. */}
-      <ClusterArtwork
-        tone="gold"
-        className="top-[18.9%] right-[7.4%] hidden w-28 lg:block"
-      />
-      <SeamGlyph
-        motif="b"
-        className="top-[77.8%] right-[7.85%] hidden w-11 lg:block"
-      />
-
-      {/* pb is in svh, NOT %. A percentage padding — even a vertical one —
-          resolves against the containing block's WIDTH, which on a 1440x900
-          frame put the block 110px too high. svh matches min-h-svh above, so
-          the block's foot lands on the frame's 716 at any viewport. */}
-      <div className="relative mx-auto w-full max-w-[1440px] px-6 pt-24 pb-[15svh] lg:px-25">
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
-          {recordHero.eyebrow}
-        </p>
-        <h1 className="headline mt-3 max-w-[1100px] text-h1 leading-[1.2]">
-          {recordHero.title}
-        </h1>
-        <p className="mt-6 max-w-[900px] text-lg leading-[1.5] sm:text-lead">
-          {recordHero.standfirst}
-        </p>
+        <RecordPortalMotion maskSrc={maskSrc} stoneSrc={stoneSrc} />
+        <div
+          data-portal-copy
+          className="record-portal-scrim"
+          aria-hidden="true"
+        />
+        <div data-portal-copy className="record-portal-copy">
+          <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold lg:text-xl">
+            {recordHero.eyebrow}
+          </p>
+          <h1 className="headline mt-3 text-h1 leading-[1.1]">
+            {recordHero.title}
+          </h1>
+          <p className="mt-4 text-base leading-[1.5] lg:text-lg">
+            {recordHero.standfirst}
+          </p>
+        </div>
+        <div className="record-portal-controls">
+          <p
+            data-portal-copy
+            className="record-portal-hint eyebrow text-xs leading-[1.5] tracking-[0.08em]"
+          >
+            {recordPortalCopy.scroll}
+          </p>
+          <a
+            data-portal-skip
+            href="#research-and-discovery"
+            className="record-portal-skip eyebrow text-xs leading-[1.5] tracking-[0.06em]"
+          >
+            {recordPortalCopy.skip}
+          </a>
+        </div>
       </div>
     </header>
   );
@@ -571,9 +592,7 @@ export function RecordGrowsV2() {
         {/* D25's destination. The id is load-bearing — the record's empty
             state links here rather than to a contact page with no form. */}
         <div id="do-you-hold-something" className="scroll-mt-28">
-          <h3
-            className="headline mt-[49px] text-3xl leading-10 sm:text-[2rem]"
-          >
+          <h3 className="headline mt-[49px] text-3xl leading-10 sm:text-[2rem]">
             {recordGrows.contribute.title}
           </h3>
           <p className="mt-[14px] max-w-[53.75rem] text-base leading-6 text-canvas/68">
@@ -585,9 +604,7 @@ export function RecordGrowsV2() {
               fourth is the empty 44px slot: no new iconography is authored
               here, so it stays a dashed hold until the motif inventory lands
               (Glyph / Truth, 2051:2626). */}
-          <ul
-            className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
+          <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {recordGrows.contribute.items.map((item, i) => (
               <li
                 key={item}

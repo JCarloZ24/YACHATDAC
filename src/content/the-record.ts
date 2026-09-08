@@ -252,6 +252,13 @@ export const recordHero = {
     "Stories, historical accounts, research and recordings from Turraburra. Some of it is science, some of it is memory. All of it comes from this Country.",
 } as const;
 
+/** Interface copy for the user's SCR-11 opening, 2026-09-08 (F7/F8).
+ * Recorded alongside the source draft under its interface amendment (D5). */
+export const recordPortalCopy = {
+  scroll: "Scroll into the record",
+  skip: "Skip to the record",
+} as const;
+
 export const browserCopy = {
   title: "Everything in the record",
   searchLabel: "Search the record",
