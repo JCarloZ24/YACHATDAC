@@ -472,7 +472,7 @@ export function LivingWorkAperture() {
 function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) {
   return (
     <div data-cluster>
-      <div className="flex items-baseline justify-between gap-6 border-b border-burnt/70 pb-2">
+      <div className="flex items-baseline justify-between gap-6 border-b-2 border-burnt/70 pb-2">
         <p className="eyebrow text-xs text-burnt-deep">{group.label}</p>
         <p className="eyebrow text-xs text-burnt-deep">
           {String(group.items.length).padStart(2, "0")}
@@ -505,7 +505,7 @@ function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) 
               <p className="text-sm leading-relaxed text-evergreen/80">
                 {challenge.problem}
               </p>
-              <p className="text-sm leading-relaxed text-evergreen/80 sm:border-l sm:border-burnt/60 sm:pl-6">
+              <p className="text-sm leading-relaxed text-evergreen/80 sm:border-l-2 sm:border-burnt/60 sm:pl-6">
                 {challenge.response}
               </p>
             </div>
