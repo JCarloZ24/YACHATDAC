@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { photoById } from "@/content/kit";
+import { SplitReveal } from "@/components/motion/text/SplitReveal";
 import { SeamGlyph } from "@/components/ui/Furniture";
 import { SignupField } from "@/components/ui/SignupField";
 import { RangerCarousel } from "./RangerCarousel";
@@ -136,32 +137,44 @@ export function LivingWorkHero() {
       {/* 1.40.2 — the subject sits right of centre and the headline never
           crosses her.
 
-          THE CROP IS LOCKED TO THE FRAME'S ASPECT. The section is min-h-svh,
-          so on a wide screen it is ~1.95 while the frame is 1440x1000 = 1.44
-          — and because the source is 1.776, a 1.95 container shows the WHOLE
-          photograph and crops nothing. That is why the built hero read as the
-          full image against a frame that is clearly cropped in.
+          THE CROP IS THE FRAME'S, TAKEN FROM ITS OWN TRANSFORM. The frame
+          does not use `cover` at all. Node 2139:2613 places the image at
+          `w-[154.13%] h-[125%] left-[-5.49%] top-[-12.5%]` in a 1440x1000 box,
+          which is a 1.25x zoom PAST cover:
 
-          The plane inside is held to at least 69.4vw tall (1000/1440), so it
-          keeps the frame's aspect whatever the window does, and object-cover
-          then shows the same 81.1% of the source width the frame does — at
-          1440x900, at 1920x1080 and at 2145x1100 alike. The section clips the
-          overflow; the plane is centred in it.
+            cover would paint 1776 wide = 123.3% of the container
+            the frame paints  2219 wide = 154.1%
 
-          object-position splits: the desktop 50% reproduces the frame's own
-          centred window, where she lands at 55-92% across. A phone crops to a
-          ~26% window, so it holds 68% to keep her in frame at all. */}
+          So the frame shows 64.9% of the source width and 80% of its height,
+          where a plain `object-cover` hero shows 81.1% — and on a wide window
+          (min-h-svh is ~1.95 against the frame's 1.44) it shows the whole
+          photograph and crops nothing at all. That is why this read as the
+          full image.
+
+          Two boxes reproduce it exactly at any viewport. The PLANE is held to
+          the frame's 1.44 by a min-height on wide-short windows and a
+          min-width on tall-narrow ones, and centred in the section, which
+          clips it. The CROP BOX inside carries the frame's own four numbers
+          verbatim — and because 1.5413 / (1.25 / 1.4409) is 1.7767 against the
+          source's 1.7762, the box IS the image's aspect and `object-cover`
+          inside it has nothing left to crop.
+
+          `sizes` is 160vw, not 100vw: the image is painted half again wider
+          than the viewport, so a 100vw hint would fetch a variant too small
+          and soften the crop. */}
       {HERO ? (
         <div data-media data-plane="far" data-motion={HERO.grade} className="absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full -translate-x-1/2 -translate-y-1/2">
-            <Image
-              src={HERO.src}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-[68%_40%] lg:object-[50%_45%]"
-            />
+          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full min-w-[144svh] -translate-x-1/2 -translate-y-1/2">
+            <div className="absolute top-[-12.5%] left-[-5.49%] h-[125%] w-[154.13%]">
+              <Image
+                src={HERO.src}
+                alt=""
+                fill
+                priority
+                sizes="160vw"
+                className="object-cover"
+              />
+            </div>
           </div>
         </div>
       ) : null}
@@ -175,18 +188,44 @@ export function LivingWorkHero() {
       />
 
       <div className={`relative ${COLUMN} pt-32 pb-16 lg:pb-32`}>
-        <p className="eyebrow text-gold">{livingWorkHero.eyebrow}</p>
+        {/* THE ENTRANCE — eyebrow, then the headline line by line, then the
+            lede. The notes lane asks for exactly this ("B5 settles the
+            headline line by line, eyebrow first and lede last") and it was
+            never built: the hero's copy simply existed.
+
+            SplitReveal is the house component for it — Truth's hero already
+            uses it, and `gate="entry"` waits for the X1 loader on a first
+            visit and the route wipe on a navigation, so the reveal never
+            plays behind a cover. The three share that one gate and separate
+            on `delay`, which is why they read as a sequence rather than three
+            things starting at once.
+
+            The h1 no longer carries `data-heading`: fullBleedOpen's own
+            `settle` would fight the split. §04 still has the hook and still
+            settles, which is right — it is a section heading, not a hero. */}
+        <SplitReveal as="p" mode="lines" gate="entry" className="eyebrow text-gold">
+          {livingWorkHero.eyebrow}
+        </SplitReveal>
         {/* max-w keeps the headline in the left half — it must never cross
             the subject, whatever the copy does. */}
-        <h1
-          data-heading
+        <SplitReveal
+          as="h1"
+          mode="lines"
+          gate="entry"
+          delay={0.18}
           className="headline mt-6 max-w-xl text-h1 text-canvas lg:max-w-2xl"
         >
           {livingWorkHero.title}
-        </h1>
-        <p className="mt-8 max-w-xl text-lg leading-relaxed text-canvas/85">
+        </SplitReveal>
+        <SplitReveal
+          as="p"
+          mode="lines"
+          gate="entry"
+          delay={0.55}
+          className="mt-8 max-w-xl text-lg leading-relaxed text-canvas/85"
+        >
           {livingWorkHero.standfirst}
-        </p>
+        </SplitReveal>
       </div>
 
       {/* Marc's divider hands the photograph off into the page. The path's
@@ -258,10 +297,14 @@ function splitAtAperture(value: string): [string, string, string] {
 export function LivingWorkAperture() {
   return (
     <section id="aperture" data-lw="aperture" className="relative min-h-svh bg-canvas">
-      {/* The artist's ring as ground — a whisper on the canvas behind the
-          countdown, per the 2 Sep hi-fi. White over cream so it reads as a
-          lift, not a mark; data-artwork-drift hands it to the recipe's quiet
-          scroll drift. The wrapper clips to the section's FIRST viewport —
+      {/* The artist's rings as ground. Both frame layers say "static, held at
+          30%", so that is the opacity, and `brightness-0` is gone with it —
+          forcing the artwork to black was a recolour, and the motifs are
+          never recoloured. At 11% and knocked to grey they were invisible,
+          which is what left this screen looking bare.
+
+          data-artwork-drift hands them to the recipe's quiet scroll drift.
+          The wrapper clips to the section's FIRST viewport —
           the pinned countdown's own frame — so the ring never bleeds into
           the tail where §03's hand-off rides up, and the offset never widens
           the page. */}
@@ -269,20 +312,20 @@ export function LivingWorkAperture() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute top-[4%] -right-80 h-[1100px] w-[1100px] opacity-[0.11]"
+          className="absolute top-[4%] -right-80 h-[1100px] w-[1100px] opacity-30"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full" />
         </div>
         {/* Ring A, lower left — the frame carries two rings here and only one
             was built, which left the whole left half of the screen bare. */}
         <div
           data-artwork="ring-a"
           data-artwork-drift
-          className="absolute -bottom-40 -left-48 h-[577px] w-[640px] opacity-[0.11]"
+          className="absolute -bottom-40 -left-48 h-[577px] w-[640px] opacity-30"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/ring-a.svg" alt="" className="h-full w-full brightness-0" />
+          <img src="/artwork/ring-a.svg" alt="" className="h-full w-full" />
         </div>
       </div>
 
@@ -444,10 +487,15 @@ export function LivingWorkAperture() {
           </p>
           {/* The live counter — the rolling number the countdown ticks
               through between the four figures. Motion-only. */}
+          {/* THE ROLLING NUMBER IS NOT THE FACT. It spins through values that
+              were never true — 8,870 down through 4,200 to 2019 — so it is
+              drawn in the warm ghost the rail and the label use rather than
+              the settled figure's deep green. The reader can tell at a glance
+              whether they are looking at a number or at a number arriving. */}
           <p
             data-count-live
             aria-hidden
-            className="headline absolute inset-0 text-[20vw] leading-none text-evergreen opacity-0 lg:text-[15vw]"
+            className="headline absolute inset-0 text-[20vw] leading-none text-burnt-deep/35 opacity-0 lg:text-[15vw]"
           />
           {FIGURES.map((figure, i) => {
             const [before, zero, after] = splitAtAperture(figure.value);
@@ -590,18 +638,18 @@ export function LivingWorkChallenges() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute -top-48 -right-72 h-[1000px] w-[1000px] opacity-[0.11]"
+          className="absolute -top-48 -right-72 h-[1000px] w-[1000px] opacity-25"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full" />
         </div>
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute bottom-[6%] -left-96 h-[900px] w-[900px] opacity-[0.09]"
+          className="absolute bottom-[6%] -left-96 h-[900px] w-[900px] opacity-20"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full" />
         </div>
       </div>
 
@@ -844,17 +892,22 @@ export function LivingWorkSpring() {
             JavaScript off it simply reads in order, which is the final state. */}
         <div data-release className="mt-12 max-w-2xl lg:mt-16">
           <p className="eyebrow text-xs text-gold">On release</p>
-          <p className="mt-4 text-2xl leading-snug text-canvas sm:text-3xl">
+          {/* The frame draws this in Work Sans MEDIUM at 40/43 (node
+              2143:2624) — the family was right, the weight and the size were
+              not: it was shipping Regular at 30 with looser leading, which is
+              why it read as body rather than as the payoff. */}
+          <p className="mt-4 text-[28px] leading-[1.2] font-medium text-canvas lg:text-[40px] lg:leading-[1.075]">
             {release}
           </p>
         </div>
 
-        {/* Hi-fi 2137:2617 sets the stand-in note as a gold eyebrow annotation,
-            ◇-marked with the frame reference — not faded body text. */}
-        <p className="eyebrow mt-10 max-w-xl text-xs leading-relaxed text-gold">
-          &#9671; Stand-in &middot; 1.87.1 the dry creek &mdash; the restored
-          waterhole holding water has never been photographed
-        </p>
+        {/* The stand-in note is NOT rendered. "◇ Stand-in · 1.87.1 the dry
+            creek — the restored waterhole holding water has never been
+            photographed" is production language: a frame reference and an
+            account of a gap in the shoot. It belongs in the notes lane and to
+            the photo manifest in src/content/kit.ts, which still records that
+            this frame is a stand-in. A visitor should not be reading our
+            asset log. */}
       </div>
 
       {/* The wave hands the photograph off into the canvas section below —
@@ -1025,9 +1078,15 @@ export function LivingWorkInfrastructure() {
             Phone is left alone: a header this tall pinned to a 375 screen
             would cost more than the context is worth, and the index beside it
             is `hidden` below `lg` anyway. */}
+        {/* Sticks at a NEGATIVE top so its own lead-in padding rides up off
+            the screen and only the title block and the rule stay — the blocks
+            then read nearer the middle of the window instead of starting two
+            thirds of the way down. The offset matches the padding exactly, so
+            nothing is ever cut mid-line, and the index below reads the real
+            stuck height rather than assuming one. */}
         <div
           data-infra-head
-          className="bg-evergreen lg:sticky lg:top-0 lg:z-10 lg:pt-32 lg:pb-8"
+          className="bg-evergreen lg:sticky lg:top-[-96px] lg:z-10 lg:pt-24 lg:pb-6"
         >
           <p className="eyebrow text-gold">Infrastructure</p>
           <h2 className="headline mt-5 max-w-4xl text-h2 text-canvas">

@@ -89,8 +89,15 @@ export function V2LivingWorkMotion() {
     const infra = document.querySelector<HTMLElement>('[data-lw="infrastructure"]');
     let headSize: ResizeObserver | undefined;
     if (head && infra) {
-      const applyHead = () =>
-        infra.style.setProperty("--infra-head", `${head.offsetHeight}px`);
+      const applyHead = () => {
+        // The header sticks at a NEGATIVE top, so the height that actually
+        // stays on screen is its box plus that offset. Read the offset off the
+        // element rather than hardcoding it here, or the CSS and this could
+        // drift apart and the index would park in the wrong place.
+        const stuck = parseFloat(getComputedStyle(head).top);
+        const offset = Number.isFinite(stuck) ? Math.min(stuck, 0) : 0;
+        infra.style.setProperty("--infra-head", `${head.offsetHeight + offset}px`);
+      };
       applyHead();
       headSize = new ResizeObserver(applyHead);
       headSize.observe(head);

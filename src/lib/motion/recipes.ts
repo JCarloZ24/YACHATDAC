@@ -1030,18 +1030,37 @@ export function quietArrival(root: HTMLElement, span = 100): MotionModule {
   return composition("quietArrival", root, {
     channel: "type",
     span,
-    uses: ["settle", "triad", "arrive"],
-    build: () => {},
+    uses: ["settle"],
+    build: () => {
+      /* THE CARDS GET THEIR OWN TRIGGER.
+       *
+       * §09 opens with a 420px photograph band, then 80px of padding, then
+       * the header — so the cards sit roughly 800px below the section's top.
+       * A section-level enter at "top 82%" therefore fired while they were
+       * still well under the fold, and the whole entrance was over before a
+       * reader could see it. The section looked static because, by the time
+       * you reached it, it was.
+       *
+       * `gsap.from` with its own ScrollTrigger, so the from-state renders
+       * immediately and a page loaded already scrolled past still lands on
+       * the settled state rather than three invisible cards.
+       *
+       * 24px and 80ms apart, left to right — the card note's own numbers, and
+       * the same shape `triad` gives the rest of the page. */
+      const clusters = qa(root, "[data-cluster]");
+      if (!clusters.length) return;
+      gsap.from(clusters, {
+        autoAlpha: 0,
+        y: 24,
+        duration: DUR.medium,
+        ease: EASE.country,
+        stagger: 0.08,
+        scrollTrigger: { trigger: clusters[0], start: "top 85%", once: true },
+      });
+    },
     enter: (tl) => {
       const heading = q(root, "[data-heading]");
-      const clusters = qa(root, "[data-cluster]");
-      const lines = qa(root, "[data-cluster] [data-line]");
       if (heading) tl.settle(heading, { duration: DUR.large }, 0);
-      // The hi-fi's card note asks for 80ms left-to-right, a beat wider than
-      // the grid token — the three grounds read as three, not one.
-      if (clusters.length)
-        tl.triad(clusters, { duration: DUR.medium, each: 0.08 }, 0.1);
-      if (lines.length) tl.arrive(lines, { duration: DUR.medium }, 0.2);
     },
     cut: clearAll,
   });
