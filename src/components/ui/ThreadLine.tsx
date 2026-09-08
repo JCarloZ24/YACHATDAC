@@ -27,6 +27,7 @@ export function ThreadLine() {
   return (
     <div
       aria-hidden
+      data-home-thread
       className="pointer-events-none fixed inset-y-0 left-8 z-20 hidden w-px bg-canvas/15 lg:block"
     >
       {/* transform-only per-frame path — scaleY, not height. */}

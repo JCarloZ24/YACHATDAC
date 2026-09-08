@@ -204,7 +204,11 @@ export function createRecordPortal(
       scene.add(wall.group);
       const camera = new PerspectiveCamera(FOV, 1, 0.01, 150);
       const state = { progress: 0 };
-      plane = new PlaneGeometry(1, 1);
+      // SCR-11, 9 September: enough vertices for the same radial zoom lens
+      // used by Home's painting. UVs stay attached to the whole photo frame.
+      plane = new PlaneGeometry(1, 1, 36, 24);
+      const lens = { value: 0 };
+      const lensAspect = { value: 1 };
       const cards = elements.map((element, index) => {
         // Keep the remaining photographs on their original paths when a
         // preview is removed from the composition.
@@ -223,6 +227,26 @@ export function createRecordPortal(
           depthWrite: false,
           color: texture ? new Color("white") : colour("roasted"),
         });
+        material.onBeforeCompile = (shader) => {
+          shader.uniforms.uPortalLens = lens;
+          shader.uniforms.uPortalLensAspect = lensAspect;
+          shader.vertexShader = `uniform float uPortalLens;
+uniform float uPortalLensAspect;
+${shader.vertexShader}`.replace(
+            "#include <project_vertex>",
+            `#include <project_vertex>
+            if (gl_Position.w > 0.0) {
+              vec2 screen = gl_Position.xy / gl_Position.w;
+              vec2 radial = screen * vec2(uPortalLensAspect, 1.0);
+              float radius2 = dot(radial, radial);
+              // Smooth bounded magnification: straight frame edges bow more
+              // at the periphery, without turning back toward the viewport.
+              float expansion = 1.0 + uPortalLens * 0.48 * radius2 / (1.0 + radius2);
+              gl_Position.xy *= expansion;
+            }`,
+          );
+        };
+        material.customProgramCacheKey = () => "record-photo-radial-lens-v1";
         materials.push(material);
         const mesh = new Mesh(plane!, material);
         mesh.position.z = DEPTHS[slot % DEPTHS.length];
@@ -242,6 +266,7 @@ export function createRecordPortal(
       render = () => {
         if (dead || offscreen || document.hidden || !renderer) return;
         const p = state.progress;
+        lens.value = Math.sin(Math.PI * p) ** 2;
         // Immediate scroll response: front-load travel while retaining each
         // plane's distinct depth. This is reversible, with no timed easing lag.
         const rush = 1 - (1 - p) ** 3 - p;
@@ -261,6 +286,13 @@ export function createRecordPortal(
             card.depth + card.advance * p + (11 - card.depth) * 0.6 * rush,
           );
           const distance = z - card.mesh.position.z;
+          const offsetX = card.mesh.position.x - camera.position.x;
+          const offsetY = card.mesh.position.y - camera.position.y;
+          card.mesh.rotation.set(
+            gsap.utils.clamp(-0.18, 0.18, offsetY / Math.max(distance, 3) * 0.3) * lens.value,
+            gsap.utils.clamp(-0.3, 0.3, -offsetX / Math.max(distance, 3) * 0.4) * lens.value,
+            0,
+          );
           const fade = gsap.utils.clamp(0, 1, (distance - 1.5) / 8.5);
           card.mesh.material.opacity = fade * fade * (3 - 2 * fade) * endingOpacity;
           card.mesh.visible = Boolean(card.texture) && distance > 1.5;
@@ -279,6 +311,7 @@ export function createRecordPortal(
         );
         renderer.setSize(width, height, false);
         camera.aspect = width / height;
+        lensAspect.value = camera.aspect;
         camera.updateProjectionMatrix();
         const scale =
           width < 1024 ? Math.min(0.8, Math.max(0.48, width / height)) : 1;

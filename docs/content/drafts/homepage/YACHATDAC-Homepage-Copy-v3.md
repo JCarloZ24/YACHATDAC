@@ -1,5 +1,18 @@
 # Homepage — draft copy v3
 
+*Last updated: 9 September 2026*
+
+**Painting text amendment ? 9 September 2026:** the screenshot sequence adds ?You are entering?, then ?Turraburra? at the upper left, followed by ?Story held in stone and starlight? at the lower right while the painting reveals. These are display excerpts; the complete hero paragraph remains unchanged.
+
+
+**Interface amendment — 8 September 2026:** the user-requested one-second
+homepage loading prototype shows a percentage only. Its accessible label is
+“Loading homepage”. This is timed intro progress, not measured asset loading.
+
+**Hero interface amendment — 8 September 2026:** the screenshot's “Scroll”
+label links to Wonder. The collage hero retains the headline and paragraph
+below verbatim; only their layout and timed entrance change.
+
 > **Page:** Homepage · **Version:** v3 · **State:** draft ·
 > **Governance circle:** open
 >

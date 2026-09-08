@@ -8,8 +8,9 @@ import type { Beat } from "@/content/homepage";
  * immersion, not navigation: the visitor gets no choice to make until beat 6.
  *
  * Motion status (Tier 1 — homepage only):
- *   X1  honest loader — not built. Progress must come from real asset decode,
- *       hard-capped at 2.5s, once per session. Never fake the number.
+ *   X1  HomeLoader now supplies the one-second timed prototype requested
+ *       8 September 2026. This explicitly supersedes real-asset progress for
+ *       this pass; see the homepage loading cut in the motion grammar.
  *   X2  scroll cue — the label below is static. Spec is a 2.4s yoyo killed
  *       permanently on first scroll; it is the only ambient loop allowed above
  *       the fold. Build it with the rest of the Tier 1 pass.

@@ -2,6 +2,12 @@
 
 *Last updated: 9 September 2026*
 
+**Home painting display ? 9 September 2026:** screenshot excerpts read ?You are entering?, ?Turraburra?, and ?Story held in stone and starlight?. Turraburra names the property; the full hero sentence remains unchanged.
+
+
+Homepage loading interface, 8 September 2026: “Loading homepage” is the accessible
+label for the user-requested one-second percentage intro; it adds no narrative copy.
+
 The Record's handprint opening adds two interface labels on 8 September 2026:
 “Scroll into the record” and “Skip to the record”. These appear in the content
 module and the Resources v1 draft's interface amendment; no recorded words change.
