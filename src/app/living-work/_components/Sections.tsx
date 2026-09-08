@@ -339,17 +339,26 @@ export function LivingWorkAperture() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute top-[4%] -right-80 h-[1100px] w-[1100px]"
+          /* Sized for the screen it is on. At the desktop 1100 this ring
+             spans an entire phone (x -405 to 695 of 375) and reads as a wash
+             rather than a motif. lg: is the drawn value, untouched. */
+          className="absolute top-[2%] -right-32 h-[440px] w-[440px] lg:top-[4%] lg:-right-80 lg:h-[1100px] lg:w-[1100px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
         </div>
         {/* Ring A, lower left — the frame carries two rings here and only one
-            was built, which left the whole left half of the screen bare. */}
+            was built, which left the whole left half of the screen bare.
+
+            DESKTOP ONLY. On a phone the two overlap outright: ring C already
+            covers the full width, and this one lands across its lower half,
+            so the pair read as one muddy wash behind the copy. The frame
+            draws two because it is 1440 wide; one is the right answer on a
+            narrow screen. */}
         <div
           data-artwork="ring-a"
           data-artwork-drift
-          className="absolute -bottom-40 -left-48 h-[577px] w-[640px]"
+          className="absolute -bottom-40 -left-48 hidden h-[577px] w-[640px] lg:block"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-a.svg" alt="" className="h-full w-full brightness-0" />
@@ -665,7 +674,7 @@ export function LivingWorkChallenges() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute -top-48 -right-72 h-[1000px] w-[1000px] opacity-75"
+          className="absolute -top-24 -right-32 h-[420px] w-[420px] opacity-75 lg:-top-48 lg:-right-72 lg:h-[1000px] lg:w-[1000px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
@@ -673,7 +682,9 @@ export function LivingWorkChallenges() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute bottom-[6%] -left-96 h-[900px] w-[900px] opacity-60"
+          /* Desktop only, for the same reason as §02's pair: at these sizes
+             the two rings sit on top of each other on a narrow screen. */
+          className="absolute bottom-[6%] -left-96 hidden h-[900px] w-[900px] opacity-60 lg:block"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
