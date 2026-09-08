@@ -776,6 +776,20 @@ export function whatItTakes(root: HTMLElement, span = 160): MotionModule {
       const blocks = qa(root, "[data-infra-block]");
       if (!items.length || !blocks.length) return;
 
+      // The index is `hidden lg:block`, but querySelectorAll still returns its
+      // items when it is display:none — so this used to run the whole lighting
+      // sequence against nodes nobody could see. offsetParent is null for a
+      // display:none element: no index on screen, nothing to light.
+      if (items[0].offsetParent === null) return;
+
+      // Pair by the grid's ACTUAL column count, not a hardcoded two. The grid
+      // is `sm:grid-cols-2`, so below 640 it is one column and pairing by two
+      // lit the wrong item — the light lagged a block behind the reader.
+      const grid = q(root, "[data-infra-grid]");
+      const perRow = grid
+        ? getComputedStyle(grid).gridTemplateColumns.split(" ").filter(Boolean).length
+        : 2;
+
       // Rest classes light the first pair (the wireframe's frame). Motion owns
       // the light from here: normalise every item to the dimmed state and let
       // setRow re-light — clearAll on revert restores the rest classes.
@@ -796,24 +810,24 @@ export function whatItTakes(root: HTMLElement, span = 160): MotionModule {
           });
         }
       };
-      const rows = Math.ceil(blocks.length / 2);
+      const rows = Math.ceil(blocks.length / perRow);
       let current = 0;
       const setRow = (r: number) => {
         const next = Math.max(0, Math.min(rows - 1, r));
         if (next === current) return;
         current = next;
-        items.forEach((_, i) => light(i, Math.floor(i / 2) === next));
+        items.forEach((_, i) => light(i, Math.floor(i / perRow) === next));
       };
 
-      gsap.set(items.slice(2), { opacity: 0.3 });
-      bars.slice(2).forEach((bar) => bar && gsap.set(bar, { scaleY: 0 }));
+      gsap.set(items.slice(perRow), { opacity: 0.3 });
+      bars.slice(perRow).forEach((bar) => bar && gsap.set(bar, { scaleY: 0 }));
 
       // One trigger per grid row, on the row's first block. "top 45%" is the
       // reading line — the light moves when the pair reaches where the reader
       // is actually looking, same reasoning as §03's accordion trigger.
       blocks.forEach((block, i) => {
-        if (i % 2 !== 0) return;
-        const row = i / 2;
+        if (i % perRow !== 0) return;
+        const row = i / perRow;
         if (row === 0) return; // row 0 is the rest state; rows hand back to it
         ScrollTrigger.create({
           trigger: block,
@@ -901,40 +915,32 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
   return composition("vessels", root, {
     channel: "none",
     span,
-    // Plain width/scale tweens, hand-rolled: `vesselFill` sweeps a mark to its
-    // proportional stop and cannot rewind — this screen fills whole and plays
-    // both ways.
+    // Hand-rolled, not `vesselFill`: that effect sweeps a mark to its
+    // proportional stop and cannot rewind, and this screen now fills whole
+    // and plays both ways.
     uses: [],
     build: () => {
       const marks = qa(root, "[data-vessel]");
       if (!marks.length) return;
 
-      // Every word starts hollow. Each row owns one paused sweep: 700ms left
-      // to right, eased out, played when the row passes 65% of the viewport —
-      // and REWOUND, at its own speed, when the row scrolls back out (client
-      // direction, 2 Sep). A rewind rather than a scrub: the fill keeps its
-      // tempo in both directions instead of dragging with the wheel.
+      // THE NAME ARRIVES WHOLE. Until 8 Sep each name was clipped to its own
+      // percentage, so four of the five sat permanently half-read and the
+      // fifth was invisible. The stroked outline behind them was a drawing of
+      // the animation on the artboard, not a thing to ship. Every name now
+      // wipes in left to right and ends solid; the proportion is the rule
+      // underneath, which is what a rule is for.
+      const WIPE_FROM = "inset(0% 100% 0% 0%)";
+      const WIPE_TO = "inset(0% 0% 0% 0%)";
+
       const sweeps: { mark: HTMLElement; sweep: gsap.core.Timeline }[] = [];
       marks.forEach((mark) => {
-        const inner = q(mark, "[data-vessel-fill]");
-        if (!inner) return;
-        gsap.set(inner, { width: "0%" });
-        const track = mark.parentElement?.querySelector<HTMLElement>(
-          "[data-vessel-track]",
-        );
+        gsap.set(mark, { clipPath: WIPE_FROM });
+        // The track is a sibling of the name, inside their shared box.
+        const track = mark.parentElement?.querySelector<HTMLElement>("[data-vessel-track]");
         if (track) gsap.set(track, { scaleX: 0, transformOrigin: "left center" });
 
-        // The sweep stops ON the line marker — the gold tick at data-fill% is
-        // the boundary, and the fill runs exactly to it, never past (client
-        // direction, 2 Sep — restoring the spec's own stop).
-        const fill = Number(mark.dataset.fill ?? 0);
         const sweep = gsap.timeline({ paused: true });
-        sweep.fromTo(
-          inner,
-          { width: "0%" },
-          { width: `${fill}%`, duration: 0.7, ease: EASE.country },
-          0,
-        );
+        sweep.fromTo(mark, { clipPath: WIPE_FROM }, { clipPath: WIPE_TO, duration: 0.7, ease: EASE.country }, 0);
         if (track) {
           sweep.fromTo(
             track,
@@ -946,18 +952,13 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
         sweeps.push({ mark, sweep });
       });
 
-      // The 150ms cascade holds for fills: rows crossing the line together
-      // play in reading order, one queue — the same serialization §03's
-      // accordion uses. Rewinds skip the queue: an undo answers the scroll
-      // immediately.
+      // 150ms between rows, per the spec's +0.0 / +0.15 / +0.30. Rewinds skip
+      // the queue: a row scrolled back past should reverse now, not wait.
       const queue: gsap.core.Timeline[] = [];
       let draining = false;
       const drain = () => {
         const next = queue.shift();
-        if (!next) {
-          draining = false;
-          return;
-        }
+        if (!next) { draining = false; return; }
         draining = true;
         next.play();
         window.setTimeout(drain, 150);
@@ -965,11 +966,10 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
       sweeps.forEach(({ mark, sweep }) => {
         ScrollTrigger.create({
           trigger: mark,
+          // Fires at 65% of the viewport and runs for 0.7s, so the name is
+          // whole and readable well before the row reaches the middle.
           start: "top 65%",
-          onEnter: () => {
-            queue.push(sweep);
-            if (!draining) drain();
-          },
+          onEnter: () => { queue.push(sweep); if (!draining) drain(); },
           onLeaveBack: () => {
             const waiting = queue.indexOf(sweep);
             if (waiting !== -1) queue.splice(waiting, 1);
@@ -978,8 +978,6 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
         });
       });
     },
-    // The cut is clearAll alone: the markup's rest state already shows every
-    // fill at its true proportion (the [data-vessel-fill] widths are inline).
     cut: clearAll,
   });
 }
