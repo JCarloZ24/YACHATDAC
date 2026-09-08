@@ -71,6 +71,16 @@ export type CompositionSpec = {
    * document, which is the same property the reduced-motion cut relies on.
    */
   minWidth?: string;
+  /**
+   * Minimum viewport width at which the screen is allowed to PIN. Below it the
+   * composition still builds — same timeline, same entrance — it just does not
+   * hold the section still.
+   *
+   * Different from `minWidth`, and the distinction matters: a pin is a
+   * desktop affordance (it costs scroll and argues with a touch scroller),
+   * but the thing the pin was holding still for is usually worth keeping.
+   */
+  pinMinWidth?: string;
   /** Snap points, for step-throughs. `1 / (steps - 1)`. */
   snap?: number;
   /**
@@ -208,14 +218,16 @@ export function composition(
     // otherwise the cut, whichever of the two reasons applies.
     const wide = spec.minWidth ? ` and (min-width: ${spec.minWidth})` : "";
 
-    mm.add(`(prefers-reduced-motion: no-preference)${wide}`, () => {
+    // The full branch, parameterised by whether it may pin — so a screen can
+    // keep its choreography on a phone and give up only the pin.
+    const buildFull = (pin: boolean) => () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root,
           start: "top top",
           end: `+=${spec.span}%`,
           scrub: SCRUB.normal,
-          pin: spec.pin ?? false,
+          pin,
           invalidateOnRefresh: true,
           ...(spec.snap
             ? { snap: { snapTo: spec.snap, duration: 0.3, ease: "power2.inOut" } }
@@ -241,7 +253,23 @@ export function composition(
         tl.kill();
         entryTl?.kill();
       };
-    });
+    };
+
+    const wantsPin = spec.pin ?? false;
+    if (wantsPin && spec.pinMinWidth) {
+      // Two branches so a resize across the breakpoint actually re-runs and
+      // the pin appears or disappears with it.
+      mm.add(
+        `(prefers-reduced-motion: no-preference)${wide} and (min-width: ${spec.pinMinWidth})`,
+        buildFull(true),
+      );
+      mm.add(
+        `(prefers-reduced-motion: no-preference)${wide} and (not (min-width: ${spec.pinMinWidth}))`,
+        buildFull(false),
+      );
+    } else {
+      mm.add(`(prefers-reduced-motion: no-preference)${wide}`, buildFull(wantsPin));
+    }
 
     mm.add("(prefers-reduced-motion: reduce)", () => {
       // The cut. Splits go back to plain text, styles clear, nothing pins.

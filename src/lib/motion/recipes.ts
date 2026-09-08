@@ -710,7 +710,10 @@ export function pinnedCount(root: HTMLElement, span = 60): MotionModule {
     // [data-release] stretched the timeline to 7.55, so every snap point but
     // the first landed mid-flap.
     pin: true,
-    minWidth: DESKTOP,
+    // Only the PIN is desktop. The eight days still count on a phone — that
+    // is the section, and gating the whole recipe took it away and left the
+    // cut showing all eight digits stacked on one another.
+    pinMinWidth: DESKTOP,
     uses: ["splitFlap"],
     // Nothing rides the scrub now. The pin is the whole of what the span buys.
     build: () => {},
@@ -742,10 +745,11 @@ export function pinnedCount(root: HTMLElement, span = 60): MotionModule {
       }
     },
     cut: (el) => {
+      // clearAll is enough: the steps are absolutely STACKED, so the markup
+      // holds every day but the last at opacity-0 and the last one visible.
+      // This used to set all eight visible, which put eight digits on top of
+      // each other — the section rested on an unreadable pile.
       clearAll(el);
-      // All eight days visible as a list, in order. The story still lands —
-      // the release line is in the markup and simply reads where it sits.
-      gsap.set(qa(el, "[data-step]"), { visibility: "visible", opacity: 1, rotationX: 0 });
     },
   });
 }

@@ -931,7 +931,14 @@ export function LivingWorkSpring() {
                 <p
                   key={day}
                   data-step
-                  className="headline absolute inset-0 text-[10vw] leading-none text-canvas backface-hidden min-[1440px]:text-9xl"
+                  /* The steps are absolutely stacked, so exactly one may be
+                     visible at rest — otherwise no-JS and reduced motion both
+                     render eight digits on top of each other. Day 08 is the
+                     rest state, which is what the copy beside it describes and
+                     what the 29 Aug frame QA settled. */
+                  className={`headline absolute inset-0 text-[10vw] leading-none text-canvas backface-hidden min-[1440px]:text-9xl ${
+                    day === days.length ? "" : "opacity-0"
+                  }`}
                 >
                   {day}
                 </p>
