@@ -1,10 +1,12 @@
 import { FooterGround } from "@/components/layout/FooterGround";
 import { BeatSection } from "@/components/sections/BeatSection";
-import { Hero } from "@/components/sections/Hero";
+import { HomeHero } from "./_components/HomeHero";
 import { Invitation } from "@/components/sections/Invitation";
 import { WayForward } from "@/components/sections/WayForward";
 import { ThreadLine } from "@/components/ui/ThreadLine";
 import { beats } from "@/content/homepage";
+import { HomeLoader } from "./_components/HomeLoader";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 
 /**
  * Homepage — one continuous scroll.
@@ -29,8 +31,11 @@ const [hero, ...rest] = beats;
 export default function HomePage() {
   return (
     <>
+      {/* SCR-09, 9 September 2026: match the other immersive pages' wheel inertia. */}
+      <SmoothScroll />
+      <HomeLoader />
       <ThreadLine />
-      <Hero beat={hero} />
+      <HomeHero beat={hero} wonder={rest[0]} />
       {rest.map((beat) => (
         <BeatSection key={beat.id} beat={beat} />
       ))}

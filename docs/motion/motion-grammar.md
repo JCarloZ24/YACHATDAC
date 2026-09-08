@@ -22,6 +22,9 @@ grow, because several effects can serve one role at different volumes. See Varia
 
 | Narrative role | What it does on screen | Easing / duration | Sketch | Plate | Effect |
 |---|---|---|---|---|---|
+| **the world opening**, Home photo collage | A black beat precedes 36 held photo cards gliding from offscreen right into a more strongly curved cylindrical gallery with wider gaps and moderate depth around a stationary viewer. The space extends beyond the viewport; plates keep their fixed cylinder-tangent orientation; the camera turns like a human head, so perspective changes naturally without billboarding. One continuous gallery movement has no intermediate stop. The heading reveals afterwards; mouse movement turns and gently rolls the camera from a stationary eye position; pointer exit restores the forward gaze. | black 0.14s; gallery moves for 3s with power2.out, settled at 3.14s; headline fades in together over 0.8s, no movement or stagger; pointer damping 0.16s | SCR-11 / B5, user refinement 9 September 2026 | P3 | `homeHeroOpen`, module gallery transforms |
+| **a change of ground**, Home hero dissolve | The existing hero holds while its photos, copy and dark edge scrims fade and its canvas ground gradually shifts from charcoal to oxide. After the media clears, reveal the supplied red painting outward from its central rosette, using original pixels in the same canvas. Reverse scroll restores the gallery. | 276vh pinned (first 120vh retains existing dissolve); scrub 0.8s; copy fades over first 30%, media and scrims over 40%; colour changes from 45–80%; original painting reveals from 45–95%, then holds | user direction 9 September 2026 / SCR-09 | P3 | `homeHeroDissolve` |
+| **the world opening**, homepage loading cut | Start black for 0.14s, then reveal the supplied gold dot wave left to right with a timed 0–100 percentage; the black cover fades to Home. Temporary one-second prototype requested 8 September, refined 9 September 2026; not asset-download progress. | `machine` reveal 0.78s, art fades in at 0.14s over 0.10s, hold 0.10s, fade 0.12s | SYS-02 / user reference | — | `homeLoader` |
 | **what endures** | A line rises from behind an edge and never exits. Masked at the line. | `country` · 0.82s · 0.09 stagger | B5 | — | `settle` |
 | **what endures**, display cut | A short heading resolves character by character. Six words at most. | `country` · 0.82s · 0.028 stagger | B6 | — | `display` |
 | **the world opening**, Record loading cut | Homepage gold wave and ring cover the page until portal textures, the first catalogue photos and the first canvas frame are ready. Progress reports settled resources; failure reveals a static fallback. | readiness, then 0.4s exit | SYS-02 / user direction 9 September 2026 | — | `recordLoader` |
@@ -82,6 +85,11 @@ at trigger time, so a scrubbed Flip computed at one viewport width lands wrong a
 for a screen, run on enter, reverse on leave-back.
 
 **The Record opening — 8 September 2026, latest user direction.**
+9 September photo-lens refinement: `handprintPortal` / SCR-11 also applies the
+Home painting zoom's sine-squared radial envelope to photo-plane projection.
+Peripheral frames bow and tilt during approach, with fixed image UVs; reverse
+scroll retraces the effect and the lens is neutral at both endpoints.
+
 `handprintPortal` supersedes the static hero with one Three.js aperture scene
 (200vh of scroll, transition channel). One supplied ink impression
 defines the openings: black is empty, white remains sandstone, including the
@@ -189,3 +197,12 @@ than quietly inheriting whatever the component does.
 - **No layout properties, ever.** Transform, opacity and `clip-path` only. Animating
   `width`/`height`/`top`/`left` is what makes an "immersive" site stutter, and one janky frame
   costs more reverence than any effect buys.
+
+
+Home central aperture correction, 9 September 2026: the woodland road appears inside the inner ring as soon as the painting begins revealing (painting progress 0?3.5%), before the zoom. It remains opaque while the red ground draws around it. If the landscape fails to load, the centre retains the painting.
+
+
+| **the landscape opens to Wonder** | After the portal, the supplied sky shifts from blue to pale daylight and terrain exposure, saturation and colour temperature follow the same progress while the Wonder copy rises from below the viewport; reversing scroll lowers it and restores blue. | same homeHeroDissolve timeline, 408vh total; Wonder rises 2.3?3.1, holds to 3.4; scrub 0.8s | user screenshot 9 September 2026 / SCR-09 | P3 | `homeHeroDissolve` |
+
+
+| **the painting bends open** | During the portal approach, a radial lens curve stretches the supplied painting toward the viewport edges. The centre and landscape stay stable; curvature settles to zero on arrival and reverses with scroll. | existing portal span 1.18?2.18; smooth envelope, zero distortion at both ends | user reference 9 September 2026 / SCR-09 | P3 | `homeHeroDissolve` |

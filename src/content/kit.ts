@@ -48,6 +48,29 @@ export const HOME_LOADER_ARTWORK = {
   ring: "/artwork/ring-b.svg",
 };
 
+/** User-supplied replacement, 9 September 2026; same-canvas reveal.
+ * Origin: public/media/home/painting.png. Authorship/production method unconfirmed;
+ * do not attribute this replacement to the artist of the earlier photograph.
+ * User requested the SVG source: it embeds the PNG rather than vector paths.
+ * No cropping, sharpening or resizing of the source. */
+export const HOME_PAINTING = {
+  src: "/artwork/paintings/red-radial-painting.svg",
+  origin: "User-supplied public/media/home/painting.svg (embedded painting.png); renamed without changes",
+  width: 1656, height: 950,
+  credit: "Artist unconfirmed",
+};
+
+/** 9 September 2026: exact Figma woodland road throughout the portal.
+ * Original layers retained; credit/production method unconfirmed. */
+export const HOME_PORTAL = {
+  src: "/media/home/derivatives/woodland-road-foreground.webp",
+  sky: "/media/home/derivatives/road-sky.webp",
+  width: 1440, height: 900,
+  grade: "frame",
+  credit: "Unconfirmed",
+  origin: "Figma 7XBvi0Mdbtmym10nkF9IGp, background 3371:41346 and foreground 3371:41347",
+};
+
 /* -------------------------------------------------------------------------
    Artwork — public/artwork/
    ------------------------------------------------------------------------- */

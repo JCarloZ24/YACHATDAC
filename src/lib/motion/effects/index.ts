@@ -44,6 +44,8 @@ import { registerGrid } from "./grid";
 import { registerMedia } from "./media";
 import { registerType } from "./type";
 import { registerPortal } from "./portal";
+import { registerLoading } from "./loading";
+import { registerHome } from "./home";
 
 gsap.registerPlugin(CustomEase);
 
@@ -68,6 +70,8 @@ export function registerYachatdacEffects(): void {
   registerContinuity();
   registerAccumulate();
   registerPortal();
+  registerLoading();
+  registerHome();
 }
 
 /**
@@ -100,7 +104,10 @@ function bezierOf(css: string): string {
  */
 export type EffectName =
   | "recordPatternDrift"
+  | "homeLoader"
   | "recordLoader"
+  | "homeHeroOpen"
+  | "homeHeroDissolve"
   // core — arrival, type, the rest
   | "settle"
   | "display"
