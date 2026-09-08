@@ -947,8 +947,8 @@ export function LivingWorkStreams() {
                     } ${
                       anchor
                         ? imageRight
-                          ? "h-[40svh] min-h-64 lg:mr-[calc(-1*(max((100vw-80rem)/2,0px)+4rem))]"
-                          : "h-[40svh] min-h-64 lg:ml-[calc(-1*(max((100vw-80rem)/2,0px)+4rem))]"
+                          ? "h-[40svh] min-h-64 lg:mr-[calc(-1*(max((100vw-90rem)/2,0px)+6.25rem))]"
+                          : "h-[40svh] min-h-64 lg:ml-[calc(-1*(max((100vw-90rem)/2,0px)+6.25rem))]"
                         : "aspect-[3/2] max-h-[52svh]"
                     }`}
                   >
