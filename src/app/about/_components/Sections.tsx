@@ -40,12 +40,15 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  *   09  Get in touch — four doors
  *   10  Footer — already built to Marc's styling; the page declares its ground
  *
- * ⚠ THIS PAGE IS STATIC BY DECISION. It mounts no motion module and carries no
- * scroll animation, no hover transition and no `data-*` motion hooks. It
- * renders the same with JavaScript on or off. The frame's layer names describe
- * a motion build — a 300vh pin on §03, Group G travelling the page, six F9
- * releases — and none of it is built. Those names are documented at
- * `docs/motion/scenes.md:331-390`; do not re-add any of it piecemeal.
+ * ⚠ THE SEAM PASS IS BUILT; THE INTERIORS ARE NOT. `./Motion.tsx` wires the
+ * ten section joins of Figma `REF · SCORE · 05 ABOUT` (2642:19666) — the five
+ * waves, the drawn rules, §06's overlap out, §09's doors — plus the X4
+ * baseline arrivals, and nothing further. The `data-ab*` hooks below are that
+ * contract. §03's 300vh pin, IMG-03, the animated ground ramp and every other
+ * section interior stay unbuilt; `docs/motion/scenes.md:331-390` is their
+ * ledger and the interiors pass builds from it, whole, not piecemeal. Group G
+ * (the traveller) is entirely unbuilt — every placement is ▲ Leonard
+ * Mickelo's to approve — and only named comments mark where its legs attach.
  *
  * REST STATE IS THE FINISHED STATE. Where the frame draws a thing mid-effect,
  * this renders the end of that effect, which is what the frame itself draws.
@@ -167,7 +170,7 @@ const PEOPLE_B = photoById("about-people-02");
  */
 export function AboutHero() {
   return (
-    <section className="relative bg-charcoal text-canvas">
+    <section data-ab="hero" className="relative bg-charcoal text-canvas">
       {/* Flex-centred, not absolutely centred. The copy is a flow child, so a
           short viewport makes this block taller instead of clipping the
           standfirst — `min-h` can only grow for content that is in the flow. */}
@@ -219,13 +222,22 @@ export function AboutHero() {
         />
 
         <div className={`${COLUMN} relative py-16 lg:py-24`}>
-          <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+          >
             {aboutHero.eyebrow}
           </p>
-          <h1 className="headline mt-4 max-w-[1100px] text-[3.5rem] leading-[1.2] sm:text-7xl lg:text-[5rem]">
+          <h1
+            data-arrive
+            className="headline mt-4 max-w-[1100px] text-[3.5rem] leading-[1.2] sm:text-7xl lg:text-[5rem]"
+          >
             {aboutHero.title}
           </h1>
-          <p className="mt-8 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-2xl">
+          <p
+            data-arrive
+            className="mt-8 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-2xl"
+          >
             {aboutHero.standfirst}
           </p>
         </div>
@@ -266,13 +278,16 @@ export function WhatWeAre() {
   })();
 
   return (
-    <section className="relative bg-canvas text-charcoal">
+    <section data-ab="what-we-are" className="relative bg-canvas text-charcoal">
       {/* ⚠ NO `overflow-hidden` ON THIS SECTION. The wave is pulled entirely
           above the section's own box so that it lands on the hero photograph
           below it — a clip here deletes it outright. The artwork is clipped on
           its own layer instead, which it needs (ring-b is 1000px at left-54%
           and would otherwise scroll the page sideways). */}
-      <WaveDivider ground="var(--color-canvas)" />
+      {/* Seam 01 → 02 · Wave / Divider · OFF-WHITE. "The cliff's horizontal
+          banding becomes the register's rules." The Guide's departure (G1,
+          ▲ Leonard Mickelo) would leave from here; not built. */}
+      <WaveDivider ground="var(--color-canvas)" hook="wave" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork
           piece="b"
@@ -282,15 +297,24 @@ export function WhatWeAre() {
       </div>
 
       <div className={`${COLUMN} relative pt-16 lg:pt-28`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+        <p
+          data-arrive
+          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+        >
           {whatWeAre.title}
         </p>
 
         {/* The long name, held back so the short one can land. */}
-        <p className="headline mt-8 max-w-[1240px] text-4xl leading-[1.2] text-evergreen/30 sm:text-5xl lg:text-[3.5rem]">
+        <p
+          data-arrive
+          className="headline mt-8 max-w-[1240px] text-4xl leading-[1.2] text-evergreen/30 sm:text-5xl lg:text-[3.5rem]"
+        >
           {legalName}
         </p>
-        <p className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-6xl lg:text-[5rem]">
+        <p
+          data-arrive
+          className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-6xl lg:text-[5rem]"
+        >
           {shortName}
         </p>
 
@@ -302,18 +326,26 @@ export function WhatWeAre() {
         </p>
       </div>
 
-      {/* The road. Full bleed — a screen, not an inset. */}
-      <figure className="relative mt-16">
-        <div
-          data-motion={ROAD?.grade ?? "full"}
-          className="relative h-[44svh] w-full overflow-hidden lg:h-[62svh]"
-        >
-          <MediaOrField
-            src={ROAD?.src ?? null}
-            alt="An aerial view down a straight sandy two-wheel track through low bushland"
-            sizes="(min-width: 1024px) 100vw, 260vw"
-            fieldClass="bg-roasted/40"
-          />
+      {/* The road. Full bleed — a screen, not an inset, and its OWN screen in
+          the ledger (scenes.md:358: "§02 is decode → the road → register"), so
+          it carries its own motion root and its own loud channel (media). The
+          plane is oversized past its clip so the parallax travel never exposes
+          ground; `movable()` holds it still if the photo is `frame` grade. */}
+      <figure data-ab="road" className="relative mt-16">
+        <div className="relative h-[44svh] w-full overflow-hidden lg:h-[62svh]">
+          <div
+            data-media
+            data-plane="mid"
+            data-motion={ROAD?.grade ?? "full"}
+            className="absolute inset-x-0 -inset-y-[8%]"
+          >
+            <MediaOrField
+              src={ROAD?.src ?? null}
+              alt="An aerial view down a straight sandy two-wheel track through low bushland"
+              sizes="(min-width: 1024px) 100vw, 260vw"
+              fieldClass="bg-roasted/40"
+            />
+          </div>
         </div>
         <figcaption className={`${COLUMN} mt-6 text-base leading-[1.5] text-roasted`}>
           The way in. Turraburra is 120km north of Barcaldine.
@@ -352,9 +384,14 @@ export function WhatWeAre() {
         </div>
       </div>
 
-      {/* The seam. This rule runs past the column and becomes §03's. */}
+      {/* The seam. This rule runs past the column and becomes §03's.
+          Seam 02 → 03 · "ground sweep, scrubbed — the last fact rule extends
+          and becomes the quote rule." The extension is the scrub; the quote
+          rule's echo lives in §03. G1 flies this leg (▲ Leonard Mickelo);
+          not built. */}
       <div
         aria-hidden
+        data-ab-rule="seam-out"
         className="absolute right-0 bottom-0 left-6 h-[3px] bg-ochre lg:left-25"
       />
     </section>
@@ -386,10 +423,11 @@ export function WhatWeAre() {
 export function WhyWeExist() {
   return (
     <section
+      data-ab="why-we-exist"
       className="relative overflow-hidden"
       style={{
         backgroundImage:
-          "linear-gradient(180deg, #f6f6ec 0%, #f1f0e5 26%, #22372b 40%, #090e12 53%, #090e12 100%)",
+          "linear-gradient(180deg, #f6f6ec 0%, #f1f0e5 26%, #22372b 36%, #090e12 43%, #090e12 100%)",
       }}
     >
       <RingArtwork
@@ -405,8 +443,15 @@ export function WhyWeExist() {
           block and no more — it is the intro's own background rather than a
           percentage of the section, so however tall the copy runs it can never
           reach the question below. That coupling is the whole point: the
-          picture belongs to the claims, and the question is asked on nothing. */}
-      <div className="relative">
+          picture belongs to the claims, and the question is asked on nothing.
+
+          ⚠ THE BLOCK IS A FULL SLIDE (user direction, 8 Sep). When the deck
+          seats this section, the arrival screen is the claims on a largely
+          CLEAR photograph — the coming-apart begins below the fold, so no
+          darkness shows at the bottom of the first viewport. Content-sized it
+          was 568px, which compressed the whole collapse into the arrival
+          screen; min-height makes the first beat the photograph's. */}
+      <div className="relative min-h-[100svh] lg:min-h-[130svh]">
         <div data-motion={QUESTION?.grade ?? "full"} className="absolute inset-0 opacity-50">
           <MediaOrField
             src={QUESTION?.src ?? null}
@@ -415,39 +460,64 @@ export function WhyWeExist() {
             fieldClass="bg-evergreen/40"
           />
         </div>
-        {/* The coming-apart. Resolves to solid charcoal before the block ends,
-            so the ground has taken the photograph by the time the copy does. */}
+        {/* The coming-apart. Still resolves to solid charcoal before the block
+            ends — the ground takes the photograph before the question — but
+            the collapse now lives in the block's last fifth: light through
+            60%, evergreen at 82%, charcoal by 96%. On a 130svh block that
+            puts the first dark pixel below the arrival screen's fold. */}
         <div
           aria-hidden
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(180deg, rgba(246,246,236,0.6) 0%, rgba(241,240,229,0.58) 40%, rgba(34,55,43,0.92) 66%, #090e12 88%, #090e12 100%)",
+              "linear-gradient(180deg, rgba(246,246,236,0.6) 0%, rgba(241,240,229,0.55) 60%, rgba(34,55,43,0.92) 82%, #090e12 96%, #090e12 100%)",
           }}
         />
 
         <div className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-24 lg:pb-[22svh]`}>
-          <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+          >
             {whyWeExist.title}
           </p>
-          <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl">
+          <p
+            data-arrive
+            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
+          >
             {whyWeExist.body[0]}
           </p>
-          <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl">
+          <p
+            data-arrive
+            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
+          >
             {whyWeExist.body[1]}
           </p>
         </div>
       </div>
 
-      {/* The screen has cleared. Nothing behind the question but ground. */}
-      <div className={`${COLUMN} relative pb-16 lg:pb-28`}>
+      {/* The screen has cleared. Nothing behind the question but ground.
+          A FULL BEAT (user direction, 8 Sep): the question holds a viewport
+          of bare charcoal to itself, centred, at the ramp's display size —
+          the page's argument at the scale ART-DIRECTION.md always meant for
+          it ("at full scale, on a pinned screen"). The line-mask settle and
+          the pin stay the interiors pass. */}
+      <div
+        className={`${COLUMN} relative flex min-h-[100svh] flex-col justify-center pb-16 lg:pb-28`}
+      >
         <blockquote>
-          <p className="headline max-w-[1240px] text-4xl leading-[1.2] text-canvas sm:text-6xl lg:text-[5rem]">
+          <p className="headline max-w-[1240px] text-4xl leading-[1.2] text-canvas sm:text-6xl lg:text-[6rem]">
             {whyWeExist.quote}
           </p>
           {/* The question contracts into this. The thread starts here and runs
-              to §09, where it arrives. */}
-          <div aria-hidden className="mt-14 h-[3px] w-[26.5rem] max-w-full bg-ochre" />
+              to §09, where it arrives. Seam 02 → 03's echo: the same ochre
+              line §02 extended, redrawn under the question. The question's own
+              line-mask settle is the interiors pass (scenes.md:367). */}
+          <div
+            aria-hidden
+            data-ab-rule="quote"
+            className="mt-14 h-[3px] w-[26.5rem] max-w-full bg-ochre"
+          />
           <footer className="mt-4 max-w-[900px] text-base leading-[1.5] text-canvas/72">
             {whyWeExist.attribution}
           </footer>
@@ -473,8 +543,24 @@ export function WhyWeExist() {
  */
 export function Breath() {
   return (
-    <section className="relative bg-charcoal">
+    // Seam 03 → 03b is the page's hard cut — "nothing carries; that is the
+    // point" (REF · SCORE · 05). It gates like every deck seam (user
+    // direction, 8 Sep) but carries no wave and no rule: the cut survives
+    // as this section's charcoal covering §03's. The Guide does not enter
+    // this section.
+    //
+    // ⚠ A SHORT SLIDE, DELIBERATELY (user direction, 8 Sep). Its gate starts
+    // at "top top" — coverSeams treats any outgoing slide shorter than the
+    // viewport that way — so the photograph rises, stops AT the top of the
+    // page, and only there does §04's transition play. §04 follows the
+    // photograph directly in flow, wave on its crest, the whole way up: "the
+    // photograph's horizon becomes the loop's baseline" (REF · SCORE · 05).
+    // An earlier 100svh-of-charcoal version parked blank ground between the
+    // picture and §04; the padding came out and the gate geometry moved
+    // instead.
+    <section data-ab="breath" className="relative bg-charcoal">
       <div
+        data-media
         data-motion={BREATH?.grade ?? "full"}
         className="relative h-[55svh] w-full overflow-hidden"
       >
@@ -542,10 +628,17 @@ export function WhatWeDo() {
   const lede = chain.join(" ");
 
   return (
-    <section className="relative bg-canvas text-charcoal">
+    <section data-ab="what-we-do" className="relative bg-canvas text-charcoal">
       {/* Figma 2668:20274 — seated on the BREATH photograph, not under it, so
-          the photograph's horizon becomes the baseline this section sits on. */}
-      <WaveDivider ground="var(--color-canvas)" />
+          the photograph's horizon becomes the baseline this section sits on.
+          Seam 03b → 04 · Wave / Divider · OFF-WHITE. "The photograph's horizon
+          becomes the loop's baseline." The trail re-entering and forking into
+          four is the Guide's (▲ Leonard Mickelo); not built. */}
+      <WaveDivider ground="var(--color-canvas)" hook="wave" />
+      {/* Seam 04 → 05 rides this ring: "ring contracts, transform-only scrub —
+          the closed ring becomes the bullet of COUNTRY FIRST. Not C2 — Living
+          Work's aperture already spent it." Motion.tsx scrubs the ring's scale
+          as the section leaves; §05's first value rule receives it. */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork
           piece="b"
@@ -555,13 +648,22 @@ export function WhatWeDo() {
       </div>
 
       <div className={`${COLUMN} relative pt-16 lg:pt-24`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+        <p
+          data-arrive
+          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+        >
           {whatWeDo.title}
         </p>
-        <h2 className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]">
+        <h2
+          data-arrive
+          className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+        >
           {headline}
         </h2>
-        <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
+        <p
+          data-arrive
+          className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+        >
           {lede}
         </p>
       </div>
@@ -584,7 +686,10 @@ export function WhatWeDo() {
             The card itself is unchanged: it is `04 · The Record` §02's recipe —
             coloured ground, full-width image band, 35% scrim, one motif, then
             title, body and a verb-led label at the foot. */}
-        <CardRail columns="sm:grid-cols-2 lg:grid-cols-4">
+        {/* The four seating with `catch` overshoot (scenes.md:381) is the
+            interiors pass — the rail arrives as one quiet unit until then. */}
+        <div data-arrive>
+          <CardRail columns="sm:grid-cols-2 lg:grid-cols-4">
           {whatWeDo.areas.map((area, i) => {
             const photo = photoById(AREA_PHOTOS[i]);
             return (
@@ -624,7 +729,8 @@ export function WhatWeDo() {
               </a>
             );
           })}
-        </CardRail>
+          </CardRail>
+        </div>
       </div>
     </section>
   );
@@ -656,14 +762,20 @@ export function WhatWeDo() {
  */
 export function HowWeWork() {
   return (
-    <section className="relative overflow-hidden bg-roasted text-canvas">
+    <section
+      data-ab="how-we-work"
+      className="relative overflow-hidden bg-roasted text-canvas"
+    >
       <RingArtwork
         piece="a"
         className="-left-56 top-[34%] w-[47.5rem] -rotate-11 opacity-[0.07]"
       />
 
       <div className={`${COLUMN} relative pt-16 lg:pt-24`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+        <p
+          data-arrive
+          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+        >
           {howWeWork.title}
         </p>
         {/* The absence, marked. Not a headline, and not nothing. */}
@@ -706,9 +818,19 @@ export function HowWeWork() {
             ) : null}
 
             <div className={`${COLUMN} relative pt-12 lg:pt-16`}>
-              {/* The thread, one line again. */}
-              <div aria-hidden className="h-[2px] w-full bg-gold/55" />
-              <p className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold">
+              {/* The thread, one line again. The FIRST value's rule and title
+                  are the landing of seam 04 → 05 — the frame's "bullet of
+                  COUNTRY FIRST" is not built as an element, so the contracted
+                  ring hands off to this rule and eyebrow instead. */}
+              <div
+                aria-hidden
+                data-ab-rule={i === 0 ? "value" : undefined}
+                className="h-[2px] w-full bg-gold/55"
+              />
+              <p
+                data-ab-eyebrow={i === 0 ? "" : undefined}
+                className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold"
+              >
                 {value.title}
               </p>
               <p className="mt-4 max-w-[820px] text-lg leading-[1.5] font-medium text-canvas/86 sm:text-2xl">
@@ -762,21 +884,37 @@ export function WhoDecides() {
   const claim = sentences(whoDecides.body[0]);
 
   return (
-    <section className="relative overflow-hidden bg-midnight text-canvas">
-      <RingArtwork
-        piece="b"
-        className="top-[8%] left-[55%] w-[56.25rem] rotate-9 opacity-15"
-      />
-      <RingArtwork
-        piece="a"
-        className="-left-64 top-[56%] w-[51.25rem] -rotate-13 opacity-[0.13]"
-      />
+    <section data-ab="who-decides" className="relative bg-midnight text-canvas">
+      {/* ⚠ NO `overflow-hidden` ON THIS SECTION — it carries seam 05 → 06's
+          navy wave ("three values become three board facts"), pulled entirely
+          above the section's own box onto §05's roasted foot. A clip here
+          deletes it. The rings re-clip on their own layer, as §02 and §04. */}
+      <WaveDivider ground="var(--color-midnight)" hook="wave" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RingArtwork
+          piece="b"
+          className="top-[8%] left-[55%] w-[56.25rem] rotate-9 opacity-15"
+        />
+        <RingArtwork
+          piece="a"
+          className="-left-64 top-[56%] w-[51.25rem] -rotate-13 opacity-[0.13]"
+        />
+      </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+      {/* Seam 06 → 07 lifts THIS wrapper (`overlap`, the page's one loud
+          transition effect): the board recedes and dims as the people's
+          off-white wave rides over it. */}
+      <div data-ab-lift className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
+        <p
+          data-arrive
+          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+        >
           {whoDecides.title}
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]">
+        <h2
+          data-arrive
+          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
+        >
           {claim[0]}
         </h2>
 
@@ -796,14 +934,17 @@ export function WhoDecides() {
           {whoDecides.body[1]}
         </p>
 
-        {/* The thread acquires a date. */}
+        {/* The thread acquires a date. The rule draws scrubbed, at reading
+            pace, and each beat seats with a short catch as the draw reaches
+            it — the transition channel this section is loud in. */}
         <div className="relative mt-32">
-          <div aria-hidden className="h-[2px] w-full bg-ochre" />
+          <div aria-hidden data-ab-rule="timeline" className="h-[2px] w-full bg-ochre" />
           <div className="mt-6 flex flex-col gap-5 lg:mt-0 lg:block lg:h-16">
             {BEATS.map((beat, i) => (
               <div key={beat} className={`lg:absolute lg:top-0 ${BEAT_X[i]}`}>
                 <span
                   aria-hidden
+                  data-ab-beat
                   className="block h-[18px] w-[18px] -translate-y-[10px] rounded-full bg-ochre"
                 />
                 <p className="eyebrow mt-2 text-xs tracking-[0.08em] text-ochre">
@@ -814,7 +955,13 @@ export function WhoDecides() {
           </div>
         </div>
 
-        <p className="headline mt-16 text-6xl leading-[1.2] text-gold sm:text-8xl lg:mt-16 lg:text-[5rem]">
+        {/* Reserved for the interiors pass: 2031 is stated and held, never
+            counted up to. `data-ab-date` is the attachment point; nothing
+            animates it in the seam pass. */}
+        <p
+          data-ab-date
+          className="headline mt-16 text-6xl leading-[1.2] text-gold sm:text-8xl lg:mt-16 lg:text-[5rem]"
+        >
           2031
         </p>
         <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl">
@@ -869,40 +1016,63 @@ export function WhoDecides() {
  * design note about the page, not something a visitor came to read, and it is
  * stripped. The consent markers say the same thing by being there.
  *
- * ⚠ NO WAVE, DELIBERATELY. The frame seats a wave only where a full-bleed
- * PHOTOGRAPH hands off to a ground — §01's hero and §03b's breath, and nowhere
- * else on the page. §06 is navy and this is canvas: a ground-to-ground seam,
- * and the page cuts those hard. A wave here would invent a transition the
- * design does not make, so this section keeps its clip.
+ * ⚠ THE WAVE HERE IS THE SCORE'S. An earlier reading — a wave only where a
+ * full-bleed PHOTOGRAPH hands off to a ground, every ground-to-ground seam cut
+ * hard — is superseded by `REF · SCORE · 05 ABOUT` (2642:19666), which seats
+ * Wave / Divider at five seams: into §02, §04, §06, §07 and §09. Seam 06 → 07
+ * is "Wave / Divider · OFF-WHITE — 2031's endpoint becomes §07's first caption
+ * rule; the Guide goes quiet and waits at the edge." So this section carries
+ * the off-white wave and gives up its clip; the artwork re-clips on its own
+ * layer. There is no caption rule in this markup (captions are deliberately
+ * stripped, above) — `data-ab-rule="caption"` is the reserved attachment point
+ * if design later adds one, and until then the seam's carry lands on the wave
+ * and the eyebrow's arrival.
  */
 export function ThePeople() {
   return (
-    <section className="relative overflow-hidden bg-canvas text-charcoal">
-      <RingArtwork
-        piece="b"
-        className="top-[7%] left-[64%] w-[56.25rem] opacity-30"
-      />
-      <RingArtwork
-        piece="a"
-        tone="roasted"
-        className="-left-48 top-[54%] w-[40rem] opacity-30"
-      />
-      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-      <img
-        aria-hidden
-        src="/artwork/dots-wave.svg"
-        alt=""
-        className="pointer-events-none absolute -left-20 bottom-8 w-[120%] opacity-[0.09]"
-      />
+    <section data-ab="the-people" className="relative bg-canvas text-charcoal">
+      {/* ⚠ NO `overflow-hidden` ON THIS SECTION — it carries seam 06 → 07's
+          off-white wave, pulled above its own box onto §06's navy foot. The
+          rings and the dots-wave (120% wide) re-clip on their own layer. */}
+      <WaveDivider ground="var(--color-canvas)" hook="wave" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RingArtwork
+          piece="b"
+          className="top-[7%] left-[64%] w-[56.25rem] opacity-30"
+        />
+        <RingArtwork
+          piece="a"
+          tone="roasted"
+          className="-left-48 top-[54%] w-[40rem] opacity-30"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          aria-hidden
+          src="/artwork/dots-wave.svg"
+          alt=""
+          className="pointer-events-none absolute -left-20 bottom-8 w-[120%] opacity-[0.09]"
+        />
+      </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-28 lg:pb-24`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+        {/* Reserved: data-ab-rule="caption" — §07's first caption rule, the
+            seam's scored carry target, if design adds the element. */}
+        <p
+          data-arrive
+          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+        >
           {thePeople.title}
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]">
+        <h2
+          data-arrive
+          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+        >
           {sentences(thePeople.body)[0]}
         </h2>
-        <p className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
+        <p
+          data-arrive
+          className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+        >
           {sentences(thePeople.body).slice(1).join(" ")}
         </p>
 
@@ -989,8 +1159,13 @@ export function Partners() {
   const lede = `${opening} ${rest.charAt(0).toUpperCase()}${rest.slice(1)}`;
 
   return (
+    // Seam 07 → 08 is "Dots / Rule only, no ground change — the rule, and
+    // nothing else": each group's dotted rule draws itself on; no wave, and
+    // this section KEEPS its clip. The thread becoming the artist's dotted
+    // rule is the Guide's reading (▲ Leonard Mickelo); not built.
     <section
       id="partners"
+      data-ab="partners"
       className="relative scroll-mt-28 overflow-hidden bg-evergreen text-canvas"
     >
       <RingArtwork
@@ -1003,13 +1178,22 @@ export function Partners() {
       />
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+        <p
+          data-arrive
+          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+        >
           {partners.title}
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]">
+        <h2
+          data-arrive
+          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
+        >
           {`${claim}.`}
         </h2>
-        <p className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
+        <p
+          data-arrive
+          className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl"
+        >
           {lede}
         </p>
 
@@ -1111,29 +1295,50 @@ export function GetInTouch() {
   return (
     <section
       id="contact"
-      className="relative scroll-mt-28 overflow-hidden bg-charcoal text-canvas"
+      data-ab="get-in-touch"
+      className="relative scroll-mt-28 bg-charcoal text-canvas"
     >
-      <RingArtwork
-        piece="b"
-        className="top-[7%] left-[64%] w-[56.25rem] opacity-8"
-      />
-      <RingArtwork
-        piece="a"
-        className="-left-44 top-[54%] w-[36.6875rem] opacity-7"
-      />
+      {/* ⚠ NO `overflow-hidden` ON THIS SECTION — it carries seam 08 → 09's
+          charcoal wave ("the partner groups' rules become the four doors'
+          edges"), pulled above its own box onto §08's evergreen foot. The
+          rings re-clip on their own layer. Seam 09 → 10 is continuous
+          charcoal: no device, no code — the Guide's upward departure (G4,
+          ▲ Leonard Mickelo) would happen there and is not built. */}
+      <WaveDivider ground="var(--color-charcoal)" hook="wave" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <RingArtwork
+          piece="b"
+          className="top-[7%] left-[64%] w-[56.25rem] opacity-8"
+        />
+        <RingArtwork
+          piece="a"
+          className="-left-44 top-[54%] w-[36.6875rem] opacity-7"
+        />
+      </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
+        <p
+          data-arrive
+          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl"
+        >
           Get in touch
         </p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]">
+        <h2
+          data-arrive
+          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
+        >
           Different things go to different people.
         </h2>
-        <p className="mt-8 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
+        <p
+          data-arrive
+          className="mt-8 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl"
+        >
           {contactRoutes.title} {sentences(contactRoutes.lede).slice(1).join(" ")}
         </p>
 
-        <div className="mt-14">
+        {/* The doors open from their own top edges — a thin line echoing
+            §08's rules, then the full card, with the score's short catch. */}
+        <div data-ab-doors className="mt-14">
           <ContactDoors
             grounds={DOOR_GROUNDS}
             glyphs={DOOR_GLYPHS}
@@ -1141,14 +1346,18 @@ export function GetInTouch() {
           />
         </div>
 
-        {/* The thread, arrived. */}
-        <div aria-hidden className="mt-14 h-[2px] w-full bg-ochre lg:mt-14" />
+        {/* The thread, arrived — drawn at the reader's own pace. */}
+        <div
+          aria-hidden
+          data-ab-rule="thread"
+          className="mt-14 h-[2px] w-full bg-ochre lg:mt-14"
+        />
 
         {/* Three across, two rows, 390 wide — the same fix already made on
             Our People, which carries this block word for word under D5. */}
         {/* Three across, two rows, 390 wide — the same block Our People
             carries word for word under D5. */}
-        <div className="mt-10">
+        <div data-arrive className="mt-10">
           <ContactDetails
             accent="text-ochre"
             ink="text-canvas/90"

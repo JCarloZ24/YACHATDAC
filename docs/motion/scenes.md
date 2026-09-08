@@ -410,6 +410,12 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 
 ## About — verb *answers* — 2053vh, 11 sections
 
+> **BUILT — seam pass, 8 Sep 2026.** The ten seams of `REF · SCORE · 05 ABOUT`
+> (2642:19666) and the X4 baselines are live: `src/app/about/_components/Motion.tsx`
+> hosts, `src/lib/motion/recipes-about.ts` holds the recipes. The section
+> interiors below — §03's pin, IMG-03, the animated ramp, Group G — remain
+> unbuilt and come as one later pass. Group G stays ▲ Leonard Mickelo.
+
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
 1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
 against 235vh drawn — the same convention as Living Work §02 and The Record §03.
