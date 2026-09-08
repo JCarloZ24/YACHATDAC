@@ -7,8 +7,9 @@ the review with August and Marc.
 The notes lane is the spec. Every MOTION paragraph in it is a testable
 assertion, and §2 below is that test.
 
-**Applied in this pass:** commits `04a9b15` (accessibility) and `834eb4d` (the
-page). **Not applied:** everything in §2 marked ⚠, which is held for Ivy's
+**Applied in this pass:** `04a9b15` (accessibility), `834eb4d` (spacing, type,
+§08), `34abcaa` (this document and two stale records), `aa6c054` (the image
+pipeline). **Not applied:** everything in §2 marked ⚠, which is held for Ivy's
 motion comments, and §3, which needs a decision that is not the builder's.
 
 ---
@@ -237,7 +238,14 @@ the two should be reconciled before sign-off, and they have not been.
 3. **§07's block labels are 28px**, its index 258 and its gaps 82/60 — all taken
    from the frame, which the note calls load-bearing.
 4. **§04's card pitch is 300**, not 304.
-5. **Section padding steps on the phone** (`py-16 lg:py-32`).
+5. **§03's structural rules are 2px**, matching the frame, which draws the
+   cluster underline and the damage/response divider at 2 and the row
+   separators at 1. The build had flattened both to 1.
+6. **Section padding steps on the phone** (`py-16 lg:py-32`).
+7. **The photographs go through `next/image`.** Not a visual change — the same
+   crops at the same positions — but a 375px phone now pulls a 640w variant of
+   the hero rather than the 2000px original. §02 stays on raw `<img>` on
+   purpose; the file says why.
 
 ---
 
