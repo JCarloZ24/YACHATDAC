@@ -25,6 +25,11 @@ gsap.registerPlugin(ScrollTrigger);
  * `rewind`, from → to, via the `ab:gate` event) so the deck's thinking is
  * visible.
  *
+ * Hidden until asked for: **F10** toggles it. Nothing on the page hints that
+ * it exists — an instrument the builder reaches for is not a control the
+ * reader should meet. It keeps measuring while hidden, so revealing it
+ * mid-scroll shows true state rather than starting from zero.
+ *
  * Renders nothing in production builds; the tree ships without it. Rows are
  * built imperatively and updated by direct DOM writes so a 60fps scroll never
  * touches React. Deliberately outside the motion-controller and outside the
@@ -40,6 +45,15 @@ export function DebugRail() {
     // Dev instrument: reachable from the console as `ST` for trigger
     // inspection (ST.getAll(), start/end/progress/pin).
     (window as unknown as Record<string, unknown>).ST = ScrollTrigger;
+
+    // F10 reveals it. preventDefault because F10 opens the menu bar in some
+    // browsers; the deck's own keys (paging, arrows, space) are untouched.
+    const onToggle = (e: KeyboardEvent) => {
+      if (e.key !== "F10") return;
+      e.preventDefault();
+      host.style.display = host.style.display === "none" ? "flex" : "none";
+    };
+    window.addEventListener("keydown", onToggle);
 
     const sections = Array.from(
       document.querySelectorAll<HTMLElement>("[data-ab]"),
@@ -147,6 +161,7 @@ export function DebugRail() {
     requestAnimationFrame(() => triggers.forEach((t) => t.vars.onRefresh?.(t)));
 
     return () => {
+      window.removeEventListener("keydown", onToggle);
       window.removeEventListener("ab:gate", onGate);
       window.removeEventListener("ab:buffer", onBuffer);
       triggers.forEach((t) => t.kill());
@@ -166,7 +181,7 @@ export function DebugRail() {
         top: "50%",
         transform: "translateY(-50%)",
         zIndex: 200,
-        display: "flex",
+        display: "none",
         flexDirection: "column",
         gap: 4,
         pointerEvents: "none",
