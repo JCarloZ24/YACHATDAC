@@ -169,10 +169,25 @@ export function LivingWorkHero() {
               HEIGHT — far wider than the screen — and centring it showed the
               middle of the frame's window while she stands at 55-92% of it,
               so she was half out of shot. The translate IS the visible centre
-              as a fraction of the plane, so it tracks wherever she lands: at
-              the current crop she spans 51-82%, centring at 66%. Re-derive it
-              whenever the crop box changes. Desktop is untouched. */}
-          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full min-w-[144svh] -translate-x-[66%] -translate-y-1/2 lg:-translate-x-1/2">
+              as a fraction of the plane, so it tracks wherever she lands.
+
+              60%, not the 66% that centres her, and the 6% is a legibility
+              decision. A phone sees a ~24% slice of the source, and centring
+              it on her puts her sunlit shirt directly behind the eyebrow:
+              measured off the file, the backdrop there is L=0.482 and the gold
+              lands 3.78:1, under the 4.5 a 13px label needs. Sampling the
+              photograph across the range:
+
+                t=0.66  bg L 0.482  gold 3.78      her 97% in frame
+                t=0.60  bg L 0.283  gold 4.97 AA   her 78%
+                t=0.55  bg L 0.111  gold 7.03 AA   her 62%
+
+              0.60 is the first that clears AA and still holds most of her.
+              She reads as entering from the right edge, which is the same
+              relationship the frame has, just tighter. Desktop is untouched —
+              there the copy already sits over the dark scrub at L=0.086 and
+              the gold is 7.5:1. */}
+          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full min-w-[144svh] -translate-x-[60%] -translate-y-1/2 lg:-translate-x-1/2">
             {/* ⚠ ZOOMED OUT FROM THE FRAME, on Ivy's call — the one place the
                 hero deliberately departs from 2139:2613.
 
@@ -218,12 +233,13 @@ export function LivingWorkHero() {
           standfirst, 0.94 at the foot. Cream lands 5.2-9.5:1 against every
           backdrop in the frame.
           
-          ⚠ The gold eyebrow is the one that still does not clear AA. At 0.56
-          it is 3.04:1 on sky and 4.13:1 on grass, against the 4.5 a 13px
-          label needs — and getting it there would take roughly 0.70, which
-          stops being a scrim and starts being a dark rectangle. Cream would
-          fix it outright. Flagged rather than decided: it is Marc's colour,
-          and the same gold-on-photograph pairing is on Truth's hero too. */}
+          The gold eyebrow clears AA on the strength of WHERE it sits rather
+          than how dark the scrim is. Measured against the file itself, the
+          copy lands on the photograph's dark lower-left — L=0.086 on desktop,
+          so the gold is 7.5:1. An earlier note here claimed it failed; that
+          was computed against an assumed "sunlit grass" backdrop of L=0.45,
+          which is not what is behind the copy. Sample the file before
+          trusting a number about it. */}
       <div
         data-scrim
         aria-hidden
