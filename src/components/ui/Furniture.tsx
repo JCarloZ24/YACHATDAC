@@ -31,6 +31,12 @@ import Link from "next/link";
  * directly so there is no mask-support question, and the box is pulled a pixel
  * INTO the incoming ground so the antialiased foot cannot read as a hairline
  * across the full width.
+ *
+ * HEIGHT. 104 (sm:h-26) at 1440, where the frame's Wave Line ink is 105 tall;
+ * 40 (h-10) on the phone, where every Wave Line in the 375 frames is drawn
+ * 39–40 tall (2576:22128, 2576:22626, 2576:22821 …). Measured off the frame
+ * renders on 8 Sep 2026 — the h-16 it had before was never checked against a
+ * phone frame and ran the crest 60% too deep.
  */
 export const WAVE_PATH =
   "M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 105.324H1468.85L1470.04 7.97183V7.9544Z";
@@ -38,12 +44,16 @@ export const WAVE_PATH =
 export function WaveDivider({
   ground,
   flip = false,
+  mirror = false,
   className = "",
 }: {
   /** CSS colour of the section this wave introduces. */
   ground: string;
   /** A crest that rises rather than falls (Figma's flip=up). */
   flip?: boolean;
+  /** Thick end on the left — the frame's Wave Lines laid out at x=1441
+      with a 1441 width are horizontally flipped instances. */
+  mirror?: boolean;
   className?: string;
 }) {
   return (
@@ -61,9 +71,9 @@ export function WaveDivider({
          preserveAspectRatio="none" stretches the crop back to full width. */
       viewBox="1.00123 0 1467.84877 105.324"
       preserveAspectRatio="none"
-      className={`pointer-events-none absolute inset-x-0 top-0 h-16 w-full -translate-y-[calc(100%-1px)] sm:h-26 ${
+      className={`pointer-events-none absolute inset-x-0 top-0 h-10 w-full -translate-y-[calc(100%-1px)] sm:h-26 ${
         flip ? "scale-y-[-1]" : ""
-      } ${className}`}
+      } ${mirror ? "scale-x-[-1]" : ""} ${className}`}
     >
       <path d={WAVE_PATH} fill={ground} />
     </svg>
@@ -160,10 +170,7 @@ export function BlobHold({
   className?: string;
 }) {
   return (
-    <span
-      data-placeholder="blob-hold"
-      className={`${BLOB_BOX} ${className}`}
-    >
+    <span data-placeholder="blob-hold" className={`${BLOB_BOX} ${className}`}>
       <BlobShape tone="muted" />
       <span className="eyebrow relative text-[11px] text-current/55">
         {children}
@@ -291,7 +298,9 @@ export function ClusterArtwork({
   return (
     /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
     <img
-      src={tone === "gold" ? "/artwork/cluster-gold.svg" : "/artwork/cluster.svg"}
+      src={
+        tone === "gold" ? "/artwork/cluster-gold.svg" : "/artwork/cluster.svg"
+      }
       alt=""
       aria-hidden
       data-artwork="cluster"

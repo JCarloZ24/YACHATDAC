@@ -174,9 +174,18 @@ function Chip({ children }: { children: string }) {
  */
 function WaveDrip({
   ground,
+  seat = "-top-px",
+  mirror = false,
   className = "",
 }: {
   ground: string;
+  /** Where the crest starts, as a `top-*` utility. Measured off the frame
+      render, not the layer list: the layer list seats Wave Line 2033:5430
+      at +87 but the render puts its ink from −12 to +93. */
+  seat?: string;
+  /** Wave Lines the frame lays out at x=1441 with a 1441 width are
+      flipped horizontally — thick end on the LEFT (2033:5432, 2033:5434). */
+  mirror?: boolean;
   className?: string;
 }) {
   return (
@@ -184,7 +193,9 @@ function WaveDrip({
       aria-hidden
       viewBox="1.00123 0 1467.84877 105.324"
       preserveAspectRatio="none"
-      className={`pointer-events-none absolute inset-x-0 -top-px z-10 h-16 w-full scale-y-[-1] sm:h-26 ${className}`}
+      className={`pointer-events-none absolute inset-x-0 z-10 h-10 w-full sm:h-26 ${
+        mirror ? "scale-[-1]" : "scale-y-[-1]"
+      } ${seat} ${className}`}
     >
       <path d={WAVE_PATH} fill={ground} />
     </svg>
@@ -230,68 +241,73 @@ export function WonderFacts() {
     wonderHero.facts.slice(3),
   ];
   return (
-    <section
-      className={`relative overflow-hidden bg-canvas py-16 text-charcoal ${GUTTER}`}
-    >
-      <WaveDivider ground="var(--color-canvas)" />
-      {/* The illustrated map (2033:5376 › 3238:34073) — 1129 × 783, seated
-          at x=205 y=83 in the 1440 frame, running behind the right column. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-0 left-1/2 hidden h-full w-[1440px] -translate-x-1/2 lg:block"
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-        <img
-          src="/wonder/facts-map.svg"
-          alt=""
-          className="absolute top-[83px] left-[205px] h-[783px] w-[1129px] max-w-none"
-        />
+    <section className="relative bg-canvas text-charcoal">
+      {/* Wave Line 2033:5350 — canvas rising over the hero's foot. It lives
+          ABOVE this section's top edge, so the map clip below cannot be on
+          the section itself or the wave is cut off. */}
+      <div className="absolute inset-x-0 top-0 lg:top-3">
+        <WaveDivider ground="var(--color-canvas)" />
       </div>
-      {/* The phone's cut of the same map (2576:22001 › 2576:22115) — 506 × 359,
-          seated over the frame's 240px image slot and bleeding 65px past
-          either edge and 27px past the foot, exactly as the frame draws it. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-      <img
-        src="/wonder/facts-map-mobile.svg"
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute bottom-[-27px] left-1/2 h-[359px] w-[506px] max-w-none -translate-x-1/2 lg:hidden"
-      />
-      <Container>
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
-          <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-8">
-            <p className={H4}>{wonderHero.standfirst}</p>
-            <div className="flex flex-wrap gap-2.5">
-              {wonderHero.summary.map((item) => (
-                <Chip key={item}>{item}</Chip>
-              ))}
-            </div>
-            <div className="flex flex-col gap-6 py-2 lg:flex-row lg:gap-4">
-              {[left, right].map((column, i) => (
-                <dl key={i} className="flex flex-col gap-6">
-                  {column.map((fact) => (
-                    <div
-                      key={fact.label}
-                      className="flex w-full flex-col gap-2 lg:w-[378px]"
-                    >
-                      <dt className={`${H5} text-burnt`}>{fact.label}</dt>
-                      <dd className="text-base leading-normal font-medium lg:text-lg">
-                        {fact.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              ))}
-            </div>
-          </div>
-          {/* The frame's Placeholder Image slot — empty; the map fills it. A
-              240-tall block on the phone, the right-hand column at 1440. */}
-          <div
-            aria-hidden
-            className="h-[240px] w-full lg:aspect-[600/640] lg:h-auto lg:w-auto lg:min-w-0 lg:flex-1"
+      <div className={`relative overflow-hidden py-16 ${GUTTER}`}>
+        {/* The illustrated map (2033:5376 › 3238:34073) — 1129 × 783, seated
+          at x=205 y=83 in the 1440 frame, running behind the right column. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 left-1/2 hidden h-full w-[1440px] -translate-x-1/2 lg:block"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+          <img
+            src="/wonder/facts-map.svg"
+            alt=""
+            className="absolute top-[83px] left-[205px] h-[783px] w-[1129px] max-w-none"
           />
         </div>
-      </Container>
+        {/* The phone's cut of the same map (2576:22001 › 2576:22115) — 506 × 359,
+          seated over the frame's 240px image slot and bleeding 65px past
+          either edge and 27px past the foot, exactly as the frame draws it. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/wonder/facts-map-mobile.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute bottom-[-27px] left-1/2 h-[359px] w-[506px] max-w-none -translate-x-1/2 lg:hidden"
+        />
+        <Container>
+          <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
+            <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-8">
+              <p className={H4}>{wonderHero.standfirst}</p>
+              <div className="flex flex-wrap gap-2.5">
+                {wonderHero.summary.map((item) => (
+                  <Chip key={item}>{item}</Chip>
+                ))}
+              </div>
+              <div className="flex flex-col gap-6 py-2 lg:flex-row lg:gap-4">
+                {[left, right].map((column, i) => (
+                  <dl key={i} className="flex flex-col gap-6">
+                    {column.map((fact) => (
+                      <div
+                        key={fact.label}
+                        className="flex w-full flex-col gap-2 lg:w-[378px]"
+                      >
+                        <dt className={`${H5} text-burnt`}>{fact.label}</dt>
+                        <dd className="text-base leading-normal font-medium lg:text-lg">
+                          {fact.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                ))}
+              </div>
+            </div>
+            {/* The frame's Placeholder Image slot — empty; the map fills it. A
+              240-tall block on the phone, the right-hand column at 1440. */}
+            <div
+              aria-hidden
+              className="h-[240px] w-full lg:aspect-[600/640] lg:h-auto lg:w-auto lg:min-w-0 lg:flex-1"
+            />
+          </div>
+        </Container>
+      </div>
     </section>
   );
 }
@@ -304,9 +320,12 @@ export function WonderFacts() {
 export function WonderHighlights() {
   return (
     <section
-      className={`relative bg-canvas py-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
+      className={`relative bg-white py-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
     >
-      <Container className="flex flex-col gap-6 lg:gap-10">
+      {/* Wave Line 2033:5430 / 2576:22128 — the facts' canvas dripping into
+          the white highlights ground. */}
+      <WaveDrip ground="var(--color-canvas)" seat="-top-3" />
+      <Container className="relative flex flex-col gap-6 lg:gap-10">
         {/* The one heading the phone frame keeps at the desktop size. */}
         <h2 className="font-eyebrow text-[36px] leading-[1.3] font-extrabold">
           HIGHLIGHTS
@@ -369,89 +388,101 @@ const MAP_PINS = [
 
 export function WonderGettingHere() {
   return (
-    <section
-      className={`relative overflow-hidden bg-charcoal pt-10 pb-20 text-canvas lg:min-h-[900px] lg:pb-0 ${GUTTER}`}
-    >
-      <WaveDivider ground="var(--color-charcoal)" />
-      {/* The route map (3238:34130) — 2278 × 1580, clipped to 1973 wide and
-          centred at (50% − 266px, 50% + 57px) in the frame. */}
+    <section className="relative bg-charcoal text-canvas">
+      {/* Wave Line 2033:5432 / 2576:22626 — charcoal rising over the white
+          highlights ground. Above the top edge, so the clip is inside. */}
+      <WaveDivider ground="var(--color-charcoal)" mirror />
       <div
-        aria-hidden
-        className="pointer-events-none absolute top-0 left-1/2 hidden h-full w-[1440px] -translate-x-1/2 lg:block"
+        className={`relative overflow-hidden pt-10 pb-20 lg:min-h-[900px] lg:pb-0 ${GUTTER}`}
       >
-        <div className="absolute top-[calc(50%+57px)] left-[calc(50%-266px)] h-[1580px] w-[1973px] -translate-x-1/2 -translate-y-1/2 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-          <img
-            src="/wonder/getting-here-map.svg"
-            alt=""
-            className="absolute top-0 left-0 h-[1580px] w-[2278px] max-w-none"
-          />
-        </div>
-        {MAP_PINS.map((pin) => {
-          const icon = STOP_ICONS[pin.icon];
-          return (
-            /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
+        {/* The route map (3238:34130) — 2278 × 1580, clipped to 1973 wide and
+          centred at (50% − 266px, 50% + 57px) in the frame. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 left-1/2 hidden h-full w-[1440px] -translate-x-1/2 lg:block"
+        >
+          <div className="absolute top-[calc(50%+57px)] left-[calc(50%-266px)] h-[1580px] w-[1973px] -translate-x-1/2 -translate-y-1/2 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
             <img
-              key={pin.icon}
-              src={icon.src}
+              src="/wonder/getting-here-map.svg"
               alt=""
-              width={icon.w}
-              height={icon.h}
-              className="absolute"
-              style={{ left: pin.left, top: pin.top, width: icon.w, height: icon.h }}
+              className="absolute top-0 left-0 h-[1580px] w-[2278px] max-w-none"
             />
-          );
-        })}
-      </div>
-      {/* The phone's cut (2576:22630 › 2576:22808) — 518 × 368 with the pin
-          drawn in, centred and seated 28px past the section's foot. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-      <img
-        src="/wonder/getting-here-map-mobile.svg"
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute bottom-[-28px] left-1/2 h-[368px] w-[518px] max-w-none -translate-x-1/2 lg:hidden"
-      />
-
-      <Container className="flex flex-col gap-12 lg:gap-20">
-        <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-6">
-          <p className={`${H5} text-burnt`}>Getting here</p>
-          <h2 className={H2}>{gettingHere.title}</h2>
-          <div className="flex flex-col gap-5 text-base leading-normal lg:gap-7 lg:text-xl">
-            {gettingHere.body.map((para) => (
-              <p key={para}>{para}</p>
-            ))}
           </div>
-          <ul className="flex flex-col gap-4 text-base leading-normal lg:gap-6 lg:text-xl">
-            {gettingHere.stops.map((stop, i) => {
-              const icon = STOP_ICONS[i];
-              return (
-                <li key={stop.name} className="flex items-center gap-3">
-                  <span
-                    aria-hidden
-                    className="flex w-[33px] shrink-0 items-center justify-center"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-                    <img
-                      src={icon.src}
-                      alt=""
-                      width={icon.w}
-                      height={icon.h}
-                      style={{ width: icon.w, height: icon.h }}
-                    />
-                  </span>
-                  <span>
-                    <strong className="font-medium">{stop.name}</strong> — {stop.detail}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-          <p className="text-base leading-normal lg:text-xl">{gettingHere.coda}</p>
+          {MAP_PINS.map((pin) => {
+            const icon = STOP_ICONS[pin.icon];
+            return (
+              /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
+              <img
+                key={pin.icon}
+                src={icon.src}
+                alt=""
+                width={icon.w}
+                height={icon.h}
+                className="absolute"
+                style={{
+                  left: pin.left,
+                  top: pin.top,
+                  width: icon.w,
+                  height: icon.h,
+                }}
+              />
+            );
+          })}
         </div>
-        {/* The frame's 240px image slot on the phone; the map rides over it. */}
-        <div aria-hidden className="h-[240px] w-full lg:hidden" />
-      </Container>
+        {/* The phone's cut (2576:22630 › 2576:22808) — 518 × 368 with the pin
+          drawn in, centred and seated 28px past the section's foot. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/wonder/getting-here-map-mobile.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute bottom-[-28px] left-1/2 h-[368px] w-[518px] max-w-none -translate-x-1/2 lg:hidden"
+        />
+
+        <Container className="flex flex-col gap-12 lg:gap-20">
+          <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-6">
+            <p className={`${H5} text-burnt`}>Getting here</p>
+            <h2 className={H2}>{gettingHere.title}</h2>
+            <div className="flex flex-col gap-5 text-base leading-normal lg:gap-7 lg:text-xl">
+              {gettingHere.body.map((para) => (
+                <p key={para}>{para}</p>
+              ))}
+            </div>
+            <ul className="flex flex-col gap-4 text-base leading-normal lg:gap-6 lg:text-xl">
+              {gettingHere.stops.map((stop, i) => {
+                const icon = STOP_ICONS[i];
+                return (
+                  <li key={stop.name} className="flex items-center gap-3">
+                    <span
+                      aria-hidden
+                      className="flex w-[33px] shrink-0 items-center justify-center"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+                      <img
+                        src={icon.src}
+                        alt=""
+                        width={icon.w}
+                        height={icon.h}
+                        style={{ width: icon.w, height: icon.h }}
+                      />
+                    </span>
+                    <span>
+                      <strong className="font-medium">{stop.name}</strong> —{" "}
+                      {stop.detail}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="text-base leading-normal lg:text-xl">
+              {gettingHere.coda}
+            </p>
+          </div>
+          {/* The frame's 240px image slot on the phone; the map rides over it. */}
+          <div aria-hidden className="h-[240px] w-full lg:hidden" />
+        </Container>
+      </div>
     </section>
   );
 }
@@ -471,7 +502,8 @@ export function WonderTurraburra() {
         <Slot slot={turraburraSlot} sizes={COVER_FULL_BLEED} />
       </div>
       <div aria-hidden className="absolute inset-0 bg-charcoal/10" />
-      <WaveDrip ground="var(--color-charcoal)" />
+      {/* Wave Line 2033:5434 / 2576:22821 */}
+      <WaveDrip ground="var(--color-charcoal)" mirror />
       <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
         <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
         <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
@@ -508,7 +540,10 @@ export function WonderStay() {
       id="experience"
       className={`relative bg-canvas py-10 text-charcoal lg:pt-28 lg:pb-[164px] ${GUTTER}`}
     >
-      <Container width="max-w-[1040px]" className="flex flex-col gap-5 lg:gap-10">
+      <Container
+        width="max-w-[1040px]"
+        className="flex flex-col gap-5 lg:gap-10"
+      >
         <div className="flex flex-col gap-5 lg:gap-6">
           <p className={`${H5} text-burnt`}>Itinerary</p>
           <h2 className={H2}>What a stay looks like</h2>
@@ -567,12 +602,17 @@ export function WonderStay() {
                         </ul>
                       ) : null}
                       {stage.coda ? (
-                        <p className="callout text-scroll text-burnt">{stage.coda}</p>
+                        <p className="callout text-scroll text-burnt">
+                          {stage.coda}
+                        </p>
                       ) : null}
                     </div>
                     <div className="relative h-[200px] w-full min-w-0 overflow-hidden rounded-3xl lg:h-[400px] lg:w-auto lg:flex-1">
                       {media ? (
-                        <Slot slot={media} sizes="(min-width: 1024px) 500px, 100vw" />
+                        <Slot
+                          slot={media}
+                          sizes="(min-width: 1024px) 500px, 100vw"
+                        />
                       ) : null}
                     </div>
                   </div>
@@ -602,21 +642,28 @@ export function WonderBeforeYouCome() {
       <WaveDivider ground="var(--color-evergreen)" />
       <Container className="flex flex-col items-center">
         <div className="flex w-full max-w-[768px] flex-col items-center gap-3 lg:gap-4">
-          <p className={`${H5} text-gold text-center`}>{beforeYouCome.eyebrow}</p>
+          <p className={`${H5} text-gold text-center`}>
+            {beforeYouCome.eyebrow}
+          </p>
           <div className="flex w-full flex-col items-center gap-5 lg:gap-10">
             <h2 className={`${H2} text-center`}>{beforeYouCome.title}</h2>
             {/* `max-w-full` on the cells is a guard: a 378px cell in a
                 narrower column with nothing clipping it pans the whole
                 document sideways. On the phone the cells are full-width. */}
             {[row1, row2].map((row, i) => (
-              <dl key={i} className="flex w-full flex-col gap-6 lg:w-auto lg:flex-row">
+              <dl
+                key={i}
+                className="flex w-full flex-col gap-6 lg:w-auto lg:flex-row"
+              >
                 {row.map((fact) => (
                   <div
                     key={fact.label}
                     className="flex w-full max-w-full flex-col gap-2 lg:w-[378px]"
                   >
                     <dt className={`${H5} text-gold`}>{fact.label}</dt>
-                    <dd className="text-base leading-normal lg:text-lg">{fact.value}</dd>
+                    <dd className="text-base leading-normal lg:text-lg">
+                      {fact.value}
+                    </dd>
                   </div>
                 ))}
               </dl>
@@ -651,7 +698,9 @@ export function WonderWhereYouSleep() {
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-4">
           <h2 className={H2}>{whereYouSleep.title}</h2>
-          <p className="text-base leading-normal font-medium">{whereYouSleep.body}</p>
+          <p className="text-base leading-normal font-medium">
+            {whereYouSleep.body}
+          </p>
         </div>
         <CardRail
           bleed={RAIL_BLEED}
