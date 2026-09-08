@@ -996,11 +996,24 @@ export function LivingWorkSpring() {
             JavaScript off it simply reads in order, which is the final state. */}
         <div data-release className="mt-12 max-w-2xl lg:mt-16">
           <p className="eyebrow text-xs text-gold">On release</p>
-          {/* The frame draws this in Work Sans MEDIUM at 40/43 (node
-              2143:2624) — the family was right, the weight and the size were
-              not: it was shipping Regular at 30 with looser leading, which is
-              why it read as body rather than as the payoff. */}
-          <p className="mt-4 text-[28px] leading-[1.2] font-medium text-canvas lg:text-[40px] lg:leading-[1.075]">
+          {/* THE CODA. Work Sans MEDIUM, 40/43 — the frame's own values, off
+              node 2143:2624. It had been shipping Regular at 30px with looser
+              leading, which is why it read as body rather than as the payoff.
+
+              `text-h3` rather than an arbitrary pair: the V2 scale puts
+              Heading 3 at 40 desktop / 32 mobile, so the desktop end IS the
+              frame's 40 and the phone end lands on the scale instead of the
+              28 that was here, which was on no scale at all. Leading is
+              overridden at lg to the frame's 43/40; the phone keeps the
+              token's looser 1.15, which suits a sentence that wraps.
+
+              ⚠ It carries no font utility ON PURPOSE — that resolves to Work
+              Sans, which is what the frame draws and the right family for a
+              sentence of narration. But 40 is Heading 3 in the V2 scale, and
+              the type skill maps H1-H3 to Block Berthold, so this is a
+              heading-sized line deliberately set in the body face. Worth
+              Marc confirming rather than a reviewer finding it. */}
+          <p className="mt-4 text-h3 font-medium text-canvas lg:leading-[1.075]">
             {release}
           </p>
         </div>
