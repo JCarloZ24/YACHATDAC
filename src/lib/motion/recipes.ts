@@ -141,9 +141,20 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
     pin: true,
     uses: ["aperture"],
     build: (tl) => {
-      // The ring ground turns with the countdown — before the guard below,
-      // so the drift survives even a markup change that bails the sequence.
-      driftArtwork(tl, root);
+      /* THE RINGS TURN ONLY WHILE A FIGURE IS CHANGING.
+       *
+       * §03 keeps the continuous drift, which is right there — the ground is
+       * thinning the whole way down and the turn is weather. Here it means
+       * something specific: the artwork moves while the number is rolling and
+       * holds still on a landed figure, so the motion reads as "this is
+       * counting" rather than "time is passing". Ivy's call, 8 Sep.
+       *
+       * Ten degrees per roll, three rolls — the same 30 the continuous drift
+       * used to cover across the whole span, just spent where it says
+       * something. Scrub-linked like everything else, so scrolling back up
+       * unwinds it at the same tempo. */
+      const rings = qa(root, "[data-artwork-drift]");
+      const RING_STEP = 10;
       const container = q(root, "[data-aperture]");
       const figures = qa(root, "[data-figure]");
       const zeros = qa(root, "[data-figure] [data-zero]");
@@ -264,6 +275,10 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
         if (captions[to])
           tl.to(captions[to], { autoAlpha: 1, duration: 0.25, ease: EASE.machine }, at + dur);
         if (count) tl.set(count, { textContent: `0${to + 1} / 0${figures.length}` }, at + dur);
+        // The ground turns for exactly as long as the number is moving.
+        if (rings.length) {
+          tl.to(rings, { rotation: `+=${RING_STEP}`, ease: "none", duration: dur }, at);
+        }
       };
 
       // THE COUNTDOWN — 8,870 rolls down to 2019, to 480, to 120. Each
@@ -290,6 +305,14 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
         : [];
       const fadeEls = [...qa(root, "[data-fade]"), ...lastRest];
       if (fadeEls.length) tl.to(fadeEls, { autoAlpha: 0, duration: 0.5, ease: EASE.machine }, 5.3);
+      // The rings belong to the counting screen and go with it. Once the
+      // aperture opens onto the plain, the photograph and its caption strip
+      // own the frame — and the O hand-off after them — so a ring drifting
+      // over either is furniture on top of a picture. Out on the same beat
+      // the copy clears, back on the way up.
+      if (rings.length) {
+        tl.to(rings, { autoAlpha: 0, duration: 0.4, ease: EASE.machine }, 5.3);
+      }
       // 4 · at the END of the state the 0 becomes the pattern: the glyph
       //     melts into the blob (both show the same aligned pixels, so
       //     nothing jumps) and the blob grows — an irregular, smooth edge
