@@ -1,5 +1,6 @@
 import path from "node:path";
 import type { NextConfig } from "next";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 const nextConfig: NextConfig = {
   // Pin the workspace root. There is a lockfile in the parent Code/ directory
@@ -43,4 +44,24 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default async function config(phase: string): Promise<NextConfig> {
+  // Source inspection requested on 2026-09-08. Load the plugin only for
+  // `next dev`, so source paths and the editor bridge stay out of production.
+  if (phase !== PHASE_DEVELOPMENT_SERVER) return nextConfig;
+
+  const { codeInspectorPlugin } = await import("code-inspector-plugin");
+
+  return {
+    ...nextConfig,
+    turbopack: {
+      ...nextConfig.turbopack,
+      rules: codeInspectorPlugin({
+        bundler: "turbopack",
+        // Mount on every route, regardless of which page Turbopack compiles first.
+        injectTo: path.resolve(import.meta.dirname, "src/app/layout.tsx"),
+        hotKeys: ["metaKey", "shiftKey"],
+        showSwitch: true,
+      }),
+    },
+  };
+}

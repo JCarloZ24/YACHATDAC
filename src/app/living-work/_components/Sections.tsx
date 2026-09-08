@@ -1,5 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import { photoById } from "@/content/kit";
+import { FadeIn } from "@/components/motion/text/FadeIn";
+import { SeamGlyph } from "@/components/ui/Furniture";
 import { SignupField } from "@/components/ui/SignupField";
 import { RangerCarousel } from "./RangerCarousel";
 import {
@@ -79,6 +82,47 @@ const FIGURES = [
 /** §08's fills, in the content file's order. The fifth has not started. */
 const FILLS = [78, 58, 42, 26, 0];
 
+/**
+ * §08's vessel size — one continuous ramp, and it has to be.
+ *
+ * A name that does not fit is now a wrap, not a silent truncation — the
+ * `whitespace-nowrap` and the `overflow-hidden` box went with the stroked
+ * layer on 8 Sep. The ramp still exists so the names do not wrap in practice,
+ * because a two-line name under a one-line rule reads badly.
+ *
+ * The original fault was a `clamp(…,6.4vw,2.25rem) sm:text-6xl` that stepped
+ * from 36px straight to 60px at exactly 640. The longest name, "Biological
+ * Sequestration" (24 characters), needs roughly 13.7em, and against the house
+ * column (24 / 40 / 100px gutters, capped at 1440) the ceilings are:
+ *
+ *   375  → column 327  → 23.9 max     1024 → column 824  → 60.1 max
+ *   640  → column 560  → 40.9 max     1440 → column 1240 → 90.5 max
+ *
+ * This ramp runs 22px at 375 to the drawn 60px at 1280 and holds there, which
+ * clears every one of them. If a longer name is ever added, re-run the
+ * arithmetic — do not just raise the cap.
+ */
+const VESSEL_SIZE = "text-[clamp(1.25rem,calc(0.39rem+4.2vw),3.75rem)]";
+
+/**
+ * The page column — the house column, verbatim.
+ *
+ * `/about`, `/connect`, `/partnerships` and `/our-people` all carry this exact
+ * string, and `lg:px-25` is 100px: content 1240 starting at x=100 on a 1440
+ * viewport, which is the gutter every page artboard is drawn on. Living Work
+ * was the one page still on `max-w-7xl` (1152, starting at x=144), which is
+ * why its copy did not line up with anything.
+ *
+ * Kept byte-identical to the sibling pages so it greps as one value. If this
+ * changes, change it everywhere or not at all.
+ *
+ * The nav is a separate question: `SiteHeader` is built to Marc's `Navbar / 1 /`
+ * component, which is drawn with a 64px gutter, so the logo sits 36px outside
+ * this column on every page of the site. That is Marc's geometry and is not
+ * this page's to settle.
+ */
+const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
+
 /* -------------------------------------------------------------------------
    01 — the hero
    ------------------------------------------------------------------------- */
@@ -91,45 +135,153 @@ export function LivingWorkHero() {
       className="relative -mb-0.5 flex min-h-svh items-end overflow-hidden bg-charcoal"
     >
       {/* 1.40.2 — the subject sits right of centre and the headline never
-          crosses her. Hold that relationship if the crop is ever adjusted:
-          object-position keeps her right of centre when narrow viewports crop
-          the sides, and the copy column below is capped so it stays left. */}
+          crosses her.
+
+          THE CROP IS THE FRAME'S, TAKEN FROM ITS OWN TRANSFORM. The frame
+          does not use `cover` at all. Node 2139:2613 places the image at
+          `w-[154.13%] h-[125%] left-[-5.49%] top-[-12.5%]` in a 1440x1000 box,
+          which is a 1.25x zoom PAST cover:
+
+            cover would paint 1776 wide = 123.3% of the container
+            the frame paints  2219 wide = 154.1%
+
+          So the frame shows 64.9% of the source width and 80% of its height,
+          where a plain `object-cover` hero shows 81.1% — and on a wide window
+          (min-h-svh is ~1.95 against the frame's 1.44) it shows the whole
+          photograph and crops nothing at all. That is why this read as the
+          full image.
+
+          Two boxes reproduce it exactly at any viewport. The PLANE is held to
+          the frame's 1.44 by a min-height on wide-short windows and a
+          min-width on tall-narrow ones, and centred in the section, which
+          clips it. The CROP BOX inside carries the frame's own four numbers
+          verbatim — and because 1.5413 / (1.25 / 1.4409) is 1.7767 against the
+          source's 1.7762, the box IS the image's aspect and `object-cover`
+          inside it has nothing left to crop.
+
+          `sizes` is 160vw, not 100vw: the image is painted half again wider
+          than the viewport, so a 100vw hint would fetch a variant too small
+          and soften the crop. */}
       {HERO ? (
         <div data-media data-plane="far" data-motion={HERO.grade} className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={HERO.src}
-            alt=""
-            width={HERO.width}
-            height={HERO.height}
-            fetchPriority="high"
-            decoding="async"
-            className="h-full w-full object-cover object-[68%_40%]"
-          />
+          {/* Centred on desktop, where the plane is at most a little wider
+              than the window. On a phone the plane is 1.44x the viewport
+              HEIGHT — far wider than the screen — and centring it showed the
+              middle of the frame's window while she stands at 55-92% of it,
+              so she was half out of shot. The translate IS the visible centre
+              as a fraction of the plane, so it tracks wherever she lands.
+
+              60%, not the 66% that centres her, and the 6% is a legibility
+              decision. A phone sees a ~24% slice of the source, and centring
+              it on her puts her sunlit shirt directly behind the eyebrow:
+              measured off the file, the backdrop there is L=0.482 and the gold
+              lands 3.78:1, under the 4.5 a 13px label needs. Sampling the
+              photograph across the range:
+
+                t=0.66  bg L 0.482  gold 3.78      her 97% in frame
+                t=0.60  bg L 0.283  gold 4.97 AA   her 78%
+                t=0.55  bg L 0.111  gold 7.03 AA   her 62%
+
+              0.60 is the first that clears AA and still holds most of her.
+              She reads as entering from the right edge, which is the same
+              relationship the frame has, just tighter. Desktop is untouched —
+              there the copy already sits over the dark scrub at L=0.086 and
+              the gold is 7.5:1. */}
+          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full min-w-[144svh] -translate-x-[60%] -translate-y-1/2 lg:-translate-x-1/2">
+            {/* ⚠ ZOOMED OUT FROM THE FRAME, on Ivy's call — the one place the
+                hero deliberately departs from 2139:2613.
+
+                The frame's transform is w-154.13% / h-125% / left--5.49% /
+                top--12.5%, which shows 64.9% of the source width. That read
+                too tight in the build, so the box comes back to 130%: 76.9% of
+                the source, about halfway to a plain object-cover (81.1%). She
+                sits at 51-82% across the frame where the frame puts her at
+                55-92%, so the composition holds — still right of centre, with
+                the headline clear of her.
+
+                Height and top are DERIVED, not chosen: h = k / 1.7762 x 1.4409
+                keeps the box on the source's own aspect, so object-cover
+                inside it still has nothing to crop, and top centres the
+                overflow. Change k and re-derive both, and the phone's
+                translate below with them. */}
+            <div className="absolute top-[-2.73%] left-0 h-[105.46%] w-[130%]">
+              <Image
+                src={HERO.src}
+                alt=""
+                fill
+                priority
+                sizes="160vw"
+                className="object-cover"
+              />
+            </div>
+          </div>
         </div>
       ) : null}
 
       {/* X5 — required wherever copy sits on media. Bottom-weighted, because
-          that is where the copy is. Test against the brightest frame. */}
+          that is where the copy is, and MEASURED against the brightest thing
+          under it, which the rule asks for and this had never had.
+          
+          The frame's own three stops (transparent / 0.35 at 42% / 0.88) were
+          ported exactly and were not enough once the crop zoomed out and put
+          more sunlit grass and sky behind the copy. Cream on 0.35 over bright
+          grass is 4.44:1 and over sky 3.00:1 — under the 4.5 the standfirst
+          needs.
+          
+          Five stops now, shaped to where the copy actually sits: clear sky
+          down to 25%, 0.56 across the eyebrow and headline band, 0.80 by the
+          standfirst, 0.94 at the foot. Cream lands 5.2-9.5:1 against every
+          backdrop in the frame.
+          
+          The gold eyebrow clears AA on the strength of WHERE it sits rather
+          than how dark the scrim is. Measured against the file itself, the
+          copy lands on the photograph's dark lower-left — L=0.086 on desktop,
+          so the gold is 7.5:1. An earlier note here claimed it failed; that
+          was computed against an assumed "sunlit grass" backdrop of L=0.45,
+          which is not what is behind the copy. Sample the file before
+          trusting a number about it. */}
       <div
         data-scrim
         aria-hidden
-        className="absolute inset-0 bg-linear-to-t from-charcoal via-charcoal/50 to-charcoal/20"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(5,10,8,0.15)_25%,rgba(5,10,8,0.56)_46%,rgba(5,10,8,0.80)_70%,rgba(5,10,8,0.94)_100%)]"
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 pt-32 pb-32 lg:px-16">
-        <p className="eyebrow text-gold">{livingWorkHero.eyebrow}</p>
+      <div className={`relative ${COLUMN} pt-32 pb-16 lg:pb-32`}>
+        {/* THE ENTRANCE — the three lines fade up in order: eyebrow, then
+            the headline, then the lede. A fade, not a line-by-line uncover:
+            the hero sits on a photograph and a masked rise reads as machinery
+            over a picture, where a fade reads as the page arriving.
+
+            They share ONE gate — `entry` waits for the X1 loader on a first
+            visit and the route wipe on a navigation, so this never plays
+            behind a cover — and separate on `delay`, which is what makes it a
+            sequence the eye can follow rather than three things appearing at
+            once.
+
+            The h1 carries no `data-heading`: fullBleedOpen's own `settle`
+            would fight this. §04 keeps the hook and still settles, which is
+            right — it is a section heading, not a hero. */}
+        <FadeIn as="p" gate="entry" className="eyebrow text-gold">
+          {livingWorkHero.eyebrow}
+        </FadeIn>
         {/* max-w keeps the headline in the left half — it must never cross
             the subject, whatever the copy does. */}
-        <h1
-          data-heading
-          className="headline mt-6 max-w-xl text-5xl text-canvas sm:text-6xl lg:max-w-2xl lg:text-7xl"
+        <FadeIn
+          as="h1"
+          gate="entry"
+          delay={0.22}
+          className="headline mt-6 max-w-xl text-h1 text-canvas lg:max-w-2xl"
         >
           {livingWorkHero.title}
-        </h1>
-        <p className="mt-8 max-w-xl text-lg leading-relaxed text-canvas/85">
+        </FadeIn>
+        <FadeIn
+          as="p"
+          gate="entry"
+          delay={0.48}
+          className="mt-8 max-w-xl text-lg leading-relaxed text-canvas"
+        >
           {livingWorkHero.standfirst}
-        </p>
+        </FadeIn>
       </div>
 
       {/* Marc's divider hands the photograph off into the page. The path's
@@ -200,11 +352,37 @@ function splitAtAperture(value: string): [string, string, string] {
 
 export function LivingWorkAperture() {
   return (
-    <section id="aperture" data-lw="aperture" className="relative min-h-svh bg-canvas">
-      {/* The artist's ring as ground — a whisper on the canvas behind the
-          countdown, per the 2 Sep hi-fi. White over cream so it reads as a
-          lift, not a mark; data-artwork-drift hands it to the recipe's quiet
-          scroll drift. The wrapper clips to the section's FIRST viewport —
+    <section
+      id="aperture"
+      data-lw="aperture"
+      /* Below `lg` the copy is vertically centred in the screen. The aperture
+         does not run at those widths (see DESKTOP in recipes.ts), so nothing
+         is coming to fill the space beneath the figure and it sat at the top
+         of a full-height section with the rest of the screen empty. The only
+         in-flow child here is [data-copy] — the artwork and the theater are
+         both absolute — so centring the section centres exactly that.
+
+         `lg:block` hands the desktop layout back untouched, where the empty
+         space below IS the composition: it is where the theater opens. */
+      className="relative flex min-h-svh flex-col justify-center bg-canvas lg:block"
+    >
+      {/* The artist's rings as ground.
+          
+          TWO THINGS ABOUT THE OPACITY, both easy to get wrong. The ring SVGs
+          are WHITE (#F6F6EC / white) — they are drawn for dark grounds — so on
+          cream they need `brightness-0` to read at all. And each file carries
+          its own `opacity="0.08"` internally, which the CSS then MULTIPLIES:
+          the 0.11 this used to carry rendered at 0.08 x 0.11 = 0.0088, i.e.
+          under one percent, which is why the screen looked bare and why
+          removing the filter looked like deleting the artwork.
+          
+          So the CSS opacity is left at full and the artwork's own 8% governs.
+          If these ever need tuning, tune against the EFFECTIVE number, not the
+          class — and on a dark ground (§04, §08) drop the filter instead,
+          because there the white is already correct.
+
+          data-artwork-drift hands them to the recipe's quiet scroll drift.
+          The wrapper clips to the section's FIRST viewport —
           the pinned countdown's own frame — so the ring never bleeds into
           the tail where §03's hand-off rides up, and the offset never widens
           the page. */}
@@ -212,10 +390,29 @@ export function LivingWorkAperture() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute top-[4%] -right-80 h-[1100px] w-[1100px] opacity-[0.11]"
+          /* Sized for the screen it is on. At the desktop 1100 this ring
+             spans an entire phone (x -405 to 695 of 375) and reads as a wash
+             rather than a motif. lg: is the drawn value, untouched. */
+          className="absolute top-[2%] -right-32 h-[440px] w-[440px] lg:top-[4%] lg:-right-80 lg:h-[1100px] lg:w-[1100px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
+        </div>
+        {/* Ring A, lower left — the frame carries two rings here and only one
+            was built, which left the whole left half of the screen bare.
+
+            DESKTOP ONLY. On a phone the two overlap outright: ring C already
+            covers the full width, and this one lands across its lower half,
+            so the pair read as one muddy wash behind the copy. The frame
+            draws two because it is 1440 wide; one is the right answer on a
+            narrow screen. */}
+        <div
+          data-artwork="ring-a"
+          data-artwork-drift
+          className="absolute -bottom-40 -left-48 hidden h-[577px] w-[640px] lg:block"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/ring-a.svg" alt="" className="h-full w-full brightness-0" />
         </div>
       </div>
 
@@ -223,13 +420,20 @@ export function LivingWorkAperture() {
           band with the section's own canvas (#F6F6EC) above and below, the way
           a cinema screen sits in a wall. Hidden at rest: the rest state is the
           crop inside 120's glyph below, and the motion pass grows the opening
-          from that glyph until it fills this band. */}
+          from that glyph until it fills this band.
+
+          Every motion-only layer in here is `pointer-events-none` — this band,
+          the band dressing, the ghost header and the O layer. Opacity 0 still
+          captures clicks and drags, so a 68svh invisible block was swallowing
+          taps and text selection over the middle of this screen. Nothing
+          visual changes; it is the one part of this that is not about a
+          breakpoint. */}
       {PLAIN ? (
         <div
           data-aperture
           data-motion={PLAIN.grade}
           aria-hidden
-          className="absolute inset-x-0 top-[16svh] h-[68svh] opacity-0"
+          className="pointer-events-none absolute inset-x-0 top-[16svh] h-[68svh] opacity-0"
         >
           {/* The reveal mask — a smooth, irregular blob in the brand's own
               furniture language (the wave, the Button/Blob). The 0 hands over
@@ -246,6 +450,15 @@ export function LivingWorkAperture() {
               </clipPath>
             </defs>
           </svg>
+          {/* §02 STAYS ON RAW <img>, deliberately.
+              Every other photograph on this page moved to next/image on
+              8 Sep. These three did not. They are three stacked copies of ONE
+              asset (PLAIN), so the saving is a single image, and they are the
+              geometry the aperture measures: two are clipped by `clip-path:
+              url(#…)` against SVG paths in the same coordinate space, and the
+              third is the plate the glyph zooms into. `fill` re-positions the
+              element it is applied to, which is exactly what must not move
+              here. Not worth the page's signature effect. */}
           {/* The full frame, fading in behind the zooming glyph. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -270,7 +483,7 @@ export function LivingWorkAperture() {
             />
           </div>
           {/* X5 + the caption — one centred line low in the frame. */}
-          <div data-band-dress aria-hidden className="absolute inset-0 opacity-0">
+          <div data-band-dress aria-hidden className="pointer-events-none absolute inset-0 opacity-0">
             <div className="absolute inset-0 bg-linear-to-t from-charcoal/50 via-transparent to-transparent" />
             <div className="absolute inset-x-0 bottom-[12%] px-6 text-center">
               <p className="eyebrow text-xs leading-relaxed text-gold">
@@ -286,12 +499,12 @@ export function LivingWorkAperture() {
               ghost header below, which assembles around it before the scene
               closes; §03 then opens with the real heading in the same voice.
               One wide shot, one transition. */}
-          <div data-o-ghost aria-hidden className="absolute inset-x-0 top-[6%] opacity-0">
-            <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
-              <p data-ghost-item className="eyebrow text-burnt opacity-0">
+          <div data-o-ghost aria-hidden className="pointer-events-none absolute inset-x-0 top-[6%] opacity-0">
+            <div className={COLUMN}>
+              <p data-ghost-item className="eyebrow text-burnt-deep opacity-0">
                 Our challenges
               </p>
-              <h2 className="headline mt-5 text-4xl text-evergreen sm:text-5xl">
+              <h2 className="headline mt-5 text-h2 text-evergreen">
                 <span data-o-ghost-land className="inline-block">O</span>
                 <span data-ghost-item className="opacity-0">ur challenges</span>
               </h2>
@@ -306,7 +519,7 @@ export function LivingWorkAperture() {
           </svg>
           <div
             data-o-shrink
-            className="absolute inset-0 opacity-0 [clip-path:url(#lw-o-clip)]"
+            className="pointer-events-none absolute inset-0 opacity-0 [clip-path:url(#lw-o-clip)]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -321,8 +534,8 @@ export function LivingWorkAperture() {
       ) : null}
 
       {/* data-copy — everything the full-bleed hold clears off the screen. */}
-      <div data-copy className="relative mx-auto w-full max-w-7xl px-6 pt-32 pb-24 lg:px-16">
-        <p data-fade className="eyebrow text-burnt">The numbers</p>
+      <div data-copy className={`relative ${COLUMN} py-16 lg:pt-32 lg:pb-24`}>
+        <p data-fade className="eyebrow text-burnt-deep">The numbers</p>
 
         {/* The rail — the scroll progress bar, divided into four segments,
             one per figure; each fills across its own stretch of the pin.
@@ -336,24 +549,47 @@ export function LivingWorkAperture() {
             >
               <span
                 data-seg-fill
-                className={`absolute inset-0 origin-left bg-burnt ${
+                className={`absolute inset-0 origin-left bg-burnt-deep ${
                   i === APERTURE_REST ? "" : "scale-x-0"
                 }`}
               />
             </span>
           ))}
-          <span data-rail-count className="eyebrow ml-4 text-xs text-burnt">
+          <span data-rail-count className="eyebrow ml-4 text-xs text-burnt-deep">
             {String(APERTURE_REST + 1).padStart(2, "0")} / {String(FIGURES.length).padStart(2, "0")}
           </span>
         </div>
 
-        <div className="relative mt-16 h-[30vw] min-h-32 sm:min-h-64">
+        {/* THE FIGURE, THEN WHAT IT COUNTS, DIRECTLY UNDER IT.
+
+            This is the frame's own arrangement and it took two goes to get
+            here. The build had a fixed `h-[30vw]` box around a `16vw` glyph,
+            which left ~200px of dead air and pushed the label to the foot of
+            the screen. Splitting it into two columns then pushed the label to
+            the far RIGHT of a 1240 column — a worse answer, because a label
+            600px from its number is not a label.
+
+            So: the numeral, the artist's rule across the column, the unit
+            immediately beneath it. Nothing between the number and the words
+            that explain it. The stack is sized by an invisible in-flow copy of
+            the widest figure, so the box never resizes as the sequence runs
+            and the four real figures sit absolute over it, left-aligned as
+            drawn. */}
+        <div className="relative mt-10 lg:mt-14">
+          <p aria-hidden className="headline invisible text-[20vw] leading-none lg:text-[15vw]">
+            8,870
+          </p>
           {/* The live counter — the rolling number the countdown ticks
               through between the four figures. Motion-only. */}
+          {/* THE ROLLING NUMBER IS NOT THE FACT. It spins through values that
+              were never true — 8,870 down through 4,200 to 2019 — so it is
+              drawn in the warm ghost the rail and the label use rather than
+              the settled figure's deep green. The reader can tell at a glance
+              whether they are looking at a number or at a number arriving. */}
           <p
             data-count-live
             aria-hidden
-            className="headline absolute inset-0 text-center text-[20vw] leading-none text-evergreen opacity-0 sm:text-[16vw]"
+            className="headline absolute inset-0 text-[20vw] leading-none text-burnt-deep/35 opacity-0 lg:text-[15vw]"
           />
           {FIGURES.map((figure, i) => {
             const [before, zero, after] = splitAtAperture(figure.value);
@@ -362,7 +598,7 @@ export function LivingWorkAperture() {
                 key={figure.value}
                 data-figure
                 data-value={figure.value.replace(/\D/g, "")}
-                className={`headline absolute inset-0 text-center text-[20vw] leading-none text-evergreen sm:text-[16vw] ${
+                className={`headline absolute inset-0 text-[20vw] leading-none text-evergreen lg:text-[15vw] ${
                   i === APERTURE_REST ? "" : "opacity-0"
                 }`}
               >
@@ -392,13 +628,17 @@ export function LivingWorkAperture() {
           })}
         </div>
 
+        {/* The unit, on the rule, right under the numeral — cross-faded in
+            place so it changes WITH the number rather than after it. The box
+            is fixed so a wrapped label and a short one share a top edge and
+            the rule never moves mid-sequence. */}
         <div data-fade className="mt-6 border-t border-burnt/50 pt-4">
-          <div className="relative h-6">
+          <div className="relative h-12 lg:h-7">
             {FIGURES.map((figure, i) => (
               <p
                 key={figure.value}
                 data-figure-caption
-                className={`eyebrow absolute inset-0 text-xs text-burnt ${
+                className={`eyebrow absolute inset-0 text-base leading-snug text-burnt-deep ${
                   i === APERTURE_REST ? "" : "opacity-0"
                 }`}
               >
@@ -409,6 +649,7 @@ export function LivingWorkAperture() {
         </div>
 
       </div>
+
 
     </section>
   );
@@ -427,9 +668,9 @@ export function LivingWorkAperture() {
 function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) {
   return (
     <div data-cluster>
-      <div className="flex items-baseline justify-between gap-6 border-b border-burnt/70 pb-2">
-        <p className="eyebrow text-xs text-burnt">{group.label}</p>
-        <p className="eyebrow text-xs text-burnt">
+      <div className="flex items-baseline justify-between gap-6 border-b-2 border-burnt/70 pb-2">
+        <p className="eyebrow text-xs text-burnt-deep">{group.label}</p>
+        <p className="eyebrow text-xs text-burnt-deep">
           {String(group.items.length).padStart(2, "0")}
         </p>
       </div>
@@ -449,7 +690,7 @@ function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) 
               </h3>
               <span
                 aria-hidden
-                className="shrink-0 text-2xl leading-none text-burnt"
+                className="shrink-0 text-2xl leading-none text-burnt-deep"
               >
                 <span className="group-open:hidden">+</span>
                 <span className="hidden group-open:inline">&minus;</span>
@@ -460,7 +701,7 @@ function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) 
               <p className="text-sm leading-relaxed text-evergreen/80">
                 {challenge.problem}
               </p>
-              <p className="text-sm leading-relaxed text-evergreen/80 sm:border-l sm:border-burnt/60 sm:pl-6">
+              <p className="text-sm leading-relaxed text-evergreen/80 sm:border-l-2 sm:border-burnt/60 sm:pl-6">
                 {challenge.response}
               </p>
             </div>
@@ -477,7 +718,7 @@ export function LivingWorkChallenges() {
       id="challenges"
       data-lw="challenges"
       data-ground
-      className="relative overflow-hidden py-32"
+      className="relative overflow-hidden py-16 lg:py-32"
       /* The hi-fi frame's ground: bone thinning to dry earth down the section.
          The ramp animates only the deep end (--ground), so the rest state IS
          the wireframe gradient and motion darkens it from the bottom up. */
@@ -492,7 +733,7 @@ export function LivingWorkChallenges() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute -top-48 -right-72 h-[1000px] w-[1000px] opacity-[0.11]"
+          className="absolute -top-24 -right-32 h-[420px] w-[420px] opacity-75 lg:-top-48 lg:-right-72 lg:h-[1000px] lg:w-[1000px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
@@ -500,22 +741,24 @@ export function LivingWorkChallenges() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute bottom-[6%] -left-96 h-[900px] w-[900px] opacity-[0.09]"
+          /* Desktop only, for the same reason as §02's pair: at these sizes
+             the two rings sit on top of each other on a narrow screen. */
+          className="absolute bottom-[6%] -left-96 hidden h-[900px] w-[900px] opacity-60 lg:block"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
         </div>
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={`relative ${COLUMN}`}>
         {/* data-handoff-title — this header exists for the document: with
             JavaScript off (or reduced motion) it is the section's heading.
             While motion runs, §02's aperture lands the O in ITS header and
             that one stays as the only title, so the motion pass suppresses
             this pair — rendering both would put "Our challenges" on the page
             twice. */}
-        <p data-handoff-title className="eyebrow text-burnt">Our challenges</p>
-        <h2 data-handoff-title className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
+        <p data-handoff-title className="eyebrow text-burnt-deep">Our challenges</p>
+        <h2 data-handoff-title className="headline mt-5 max-w-3xl text-h2 text-evergreen">
           {/* [data-o-land] — the glyph the capture lands in. Measured, never
               hardcoded: the display face is gitignored (F5). */}
           <span data-o-land className="inline-block">O</span>ur challenges
@@ -538,29 +781,24 @@ export function LivingWorkChallenges() {
       {BREAK ? (
         <div className="relative my-24 h-[70svh] overflow-hidden">
           <div data-frame data-motion={BREAK.grade} className="absolute inset-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               data-frame-media
               src={BREAK.src}
               alt={BREAK.subject}
-              width={BREAK.width}
-              height={BREAK.height}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
             />
           </div>
-          {/* data-frame-caption — settles in as the frame finishes opening. */}
-          <p
-            data-frame-caption
-            className="absolute bottom-6 left-6 text-sm text-canvas/90 lg:left-16"
-          >
-            The plain from the escarpment.
-          </p>
+          {/* NO CAPTION. The frame's own layer reads "BREAK · 1.91.1 the
+              plain from the escarpment — silent, no copy", and Ivy confirmed
+              it on review. The notes lane argues the opposite ("every
+              photograph on this page is captioned"); the layer name and the
+              designer agree, so the band is silent. */}
         </div>
       ) : null}
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={`relative ${COLUMN}`}>
         <div className="space-y-16">
           {challengeGroups.slice(2).map((group) => (
             <ChallengeGroup key={group.label} group={group} />
@@ -602,7 +840,7 @@ const RANGER_STRIP: { photo: ReturnType<typeof photoById>; caption: string }[] =
 
 export function LivingWorkRangers() {
   return (
-    <section id="rangers" data-lw="rangers" className="relative overflow-hidden bg-charcoal py-32">
+    <section id="rangers" data-lw="rangers" className="relative overflow-hidden bg-charcoal py-16 lg:py-32">
       {/* ▲ ARTWORK — supplied motif, whole. data-media/data-plane hand it to
           fullBleedOpen's plateParallax: the ring drifts against the scroll on
           the near plane, which is the drift the sign-off queue was holding —
@@ -618,17 +856,17 @@ export function LivingWorkRangers() {
         <img src="/artwork/ring-b.svg" alt="" className="h-full w-full" />
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={`relative ${COLUMN}`}>
         {/* ▲ ARTWORK — the wave rule. Draw-in is on the sign-off queue. */}
         <div data-artwork="wave-rule" aria-hidden className="mb-16">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/dots-wave.svg" alt="" className="w-full max-w-5xl" />
+          <img src="/artwork/dots-wave.svg" alt="" className="w-full" />
         </div>
 
         <p className="eyebrow text-burnt">The Rangers</p>
         <h2
           data-heading
-          className="headline mt-5 max-w-3xl text-4xl text-canvas sm:text-5xl"
+          className="headline mt-5 max-w-3xl text-h2 text-canvas"
         >
           {rangers.title}
         </h2>
@@ -677,15 +915,12 @@ export function LivingWorkSpring() {
     >
       {SPRING ? (
         <div data-media data-motion={SPRING.grade} aria-hidden className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={SPRING.src}
             alt=""
-            width={SPRING.width}
-            height={SPRING.height}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
         </div>
       ) : null}
@@ -703,7 +938,7 @@ export function LivingWorkSpring() {
 
       {/* Bottom padding clears the wave (7.3vw tall) plus breathing room, so
           the stand-in note never sits under the crest on short viewports. */}
-      <div className="relative mx-auto w-full max-w-7xl px-6 pt-20 pb-[calc(7.3vw+3rem)] lg:px-16">
+      <div className={`relative ${COLUMN} pt-16 pb-[calc(7.3vw+3rem)] lg:pt-20`}>
         {/* Hi-fi 2137:2617 sets this eyebrow in gold and names the stream the
             moment belongs to. */}
         <p className="eyebrow text-gold">The spring · Stream 02</p>
@@ -739,7 +974,14 @@ export function LivingWorkSpring() {
                 <p
                   key={day}
                   data-step
-                  className="headline absolute inset-0 text-[10vw] leading-none text-canvas backface-hidden min-[1440px]:text-9xl"
+                  /* The steps are absolutely stacked, so exactly one may be
+                     visible at rest — otherwise no-JS and reduced motion both
+                     render eight digits on top of each other. Day 08 is the
+                     rest state, which is what the copy beside it describes and
+                     what the 29 Aug frame QA settled. */
+                  className={`headline absolute inset-0 text-[10vw] leading-none text-canvas backface-hidden min-[1440px]:text-9xl ${
+                    day === days.length ? "" : "opacity-0"
+                  }`}
                 >
                   {day}
                 </p>
@@ -754,17 +996,35 @@ export function LivingWorkSpring() {
             JavaScript off it simply reads in order, which is the final state. */}
         <div data-release className="mt-12 max-w-2xl lg:mt-16">
           <p className="eyebrow text-xs text-gold">On release</p>
-          <p className="mt-4 text-2xl leading-snug text-canvas sm:text-3xl">
+          {/* THE CODA. Work Sans MEDIUM, 40/43 — the frame's own values, off
+              node 2143:2624. It had been shipping Regular at 30px with looser
+              leading, which is why it read as body rather than as the payoff.
+
+              `text-h3` rather than an arbitrary pair: the V2 scale puts
+              Heading 3 at 40 desktop / 32 mobile, so the desktop end IS the
+              frame's 40 and the phone end lands on the scale instead of the
+              28 that was here, which was on no scale at all. Leading is
+              overridden at lg to the frame's 43/40; the phone keeps the
+              token's looser 1.15, which suits a sentence that wraps.
+
+              ⚠ It carries no font utility ON PURPOSE — that resolves to Work
+              Sans, which is what the frame draws and the right family for a
+              sentence of narration. But 40 is Heading 3 in the V2 scale, and
+              the type skill maps H1-H3 to Block Berthold, so this is a
+              heading-sized line deliberately set in the body face. Worth
+              Marc confirming rather than a reviewer finding it. */}
+          <p className="mt-4 text-h3 font-medium text-canvas lg:leading-[1.075]">
             {release}
           </p>
         </div>
 
-        {/* Hi-fi 2137:2617 sets the stand-in note as a gold eyebrow annotation,
-            ◇-marked with the frame reference — not faded body text. */}
-        <p className="eyebrow mt-10 max-w-xl text-xs leading-relaxed text-gold">
-          &#9671; Stand-in &middot; 1.87.1 the dry creek &mdash; the restored
-          waterhole holding water has never been photographed
-        </p>
+        {/* The stand-in note is NOT rendered. "◇ Stand-in · 1.87.1 the dry
+            creek — the restored waterhole holding water has never been
+            photographed" is production language: a frame reference and an
+            account of a gap in the shoot. It belongs in the notes lane and to
+            the photo manifest in src/content/kit.ts, which still records that
+            this frame is a stand-in. A visitor should not be reading our
+            asset log. */}
       </div>
 
       {/* The wave hands the photograph off into the canvas section below —
@@ -802,11 +1062,11 @@ export function LivingWorkStreams() {
     <section
       id="streams"
       data-lw="streams"
-      className="relative overflow-x-clip bg-canvas py-32"
+      className="relative overflow-x-clip bg-canvas py-16 lg:py-32"
     >
-      <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <p className="eyebrow text-burnt">The work</p>
-        <h2 className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
+      <div className={COLUMN}>
+        <p className="eyebrow text-burnt-deep">The work</p>
+        <h2 className="headline mt-5 max-w-3xl text-h2 text-evergreen">
           The work
         </h2>
         {/* ⚠ Design-proposal standfirst, authored on the wireframe. */}
@@ -830,7 +1090,7 @@ export function LivingWorkStreams() {
                 className="grid items-start gap-10 border-t border-evergreen/20 py-14 first:border-t-0 lg:grid-cols-2 lg:gap-16"
               >
                 <div className={`flex gap-6 ${imageRight ? "" : "lg:order-2"}`}>
-                  <p className="headline w-10 shrink-0 text-2xl text-ochre">
+                  <p className="headline w-10 shrink-0 text-2xl text-burnt-deep">
                     {stream.number}
                   </p>
                   <div>
@@ -855,7 +1115,7 @@ export function LivingWorkStreams() {
                          until that page exists. */
                       <div className="mt-8">
                         <div aria-hidden className="h-px w-32 bg-burnt" />
-                        <p className="eyebrow mt-3 text-xs text-burnt">
+                        <p className="eyebrow mt-3 text-xs text-burnt-deep">
                           What stays here
                         </p>
                       </div>
@@ -878,21 +1138,18 @@ export function LivingWorkStreams() {
                     } ${
                       anchor
                         ? imageRight
-                          ? "h-[40svh] min-h-64 lg:mr-[calc(-1*(max((100vw-80rem)/2,0px)+4rem))]"
-                          : "h-[40svh] min-h-64 lg:ml-[calc(-1*(max((100vw-80rem)/2,0px)+4rem))]"
+                          ? "h-[40svh] min-h-64 lg:mr-[calc(-1*(max((100vw-90rem)/2,0px)+6.25rem))]"
+                          : "h-[40svh] min-h-64 lg:ml-[calc(-1*(max((100vw-90rem)/2,0px)+6.25rem))]"
                         : "aspect-[3/2] max-h-[52svh]"
                     }`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       data-frame-media
                       src={photo.src}
                       alt=""
-                      width={photo.width}
-                      height={photo.height}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover"
+                      fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-cover"
                     />
                   </div>
                 ) : null}
@@ -925,25 +1182,47 @@ export function LivingWorkInfrastructure() {
     <section
       id="infrastructure"
       data-lw="infrastructure"
-      className="relative bg-evergreen py-32"
+      className="relative bg-evergreen py-16 lg:pt-0 lg:pb-32"
     >
-      <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <p className="eyebrow text-gold">Infrastructure</p>
-        <h2 className="headline mt-5 max-w-4xl text-4xl text-canvas sm:text-5xl">
-          Infrastructure and technology
-        </h2>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
-          What it takes to run a property 120 kilometres from the nearest town.
-        </p>
+      <div className={COLUMN}>
+        {/* THE HEADER STAYS. Twenty-three facts in six blocks is a long read,
+            and the section's own question — what it takes to run a property
+            120km from town — was scrolling away before the first block. It
+            now holds at the top on `lg` and the blocks pass beneath the
+            artist's rule, which becomes the edge they disappear under.
 
-        {/* Dots / Rule — the artist's dotted divider, used whole. */}
-        <div data-artwork="dots-rule" aria-hidden className="mt-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/dots-rule.svg" alt="" className="w-full" />
+            Opaque ground and a z-index, or the blocks would show through it.
+            Phone is left alone: a header this tall pinned to a 375 screen
+            would cost more than the context is worth, and the index beside it
+            is `hidden` below `lg` anyway. */}
+        {/* Sticks at a NEGATIVE top so its own lead-in padding rides up off
+            the screen and only the title block and the rule stay — the blocks
+            then read nearer the middle of the window instead of starting two
+            thirds of the way down. The offset matches the padding exactly, so
+            nothing is ever cut mid-line, and the index below reads the real
+            stuck height rather than assuming one. */}
+        <div
+          data-infra-head
+          className="bg-evergreen lg:sticky lg:top-[-96px] lg:z-10 lg:pt-24 lg:pb-6"
+        >
+          <p className="eyebrow text-gold">Infrastructure</p>
+          <h2 className="headline mt-5 max-w-4xl text-h2 text-canvas">
+            Infrastructure and technology
+          </h2>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
+            What it takes to run a property 120 kilometres from the nearest town.
+          </p>
+
+          {/* Dots / Rule — the artist's dotted divider, used whole. It is the
+              header's bottom edge, so it is what the blocks clip under. */}
+          <div data-artwork="dots-rule" aria-hidden className="mt-10">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/artwork/dots-rule.svg" alt="" className="w-full" />
+          </div>
         </div>
 
-        <div className="mt-16 lg:flex lg:gap-14">
-          <aside className="hidden lg:sticky lg:top-32 lg:block lg:h-fit lg:w-56 lg:shrink-0">
+        <div className="mt-16 lg:flex lg:gap-[82px]">
+          <aside className="hidden lg:sticky lg:top-[calc(var(--infra-head,20rem)+2rem)] lg:block lg:h-fit lg:w-[258px] lg:shrink-0">
             <p className="eyebrow text-xs text-canvas/45">What it takes</p>
             <ol className="mt-6 space-y-4">
               {/* Rest state IS the wireframe's own frame: the first pair lit,
@@ -971,13 +1250,13 @@ export function LivingWorkInfrastructure() {
             </ol>
           </aside>
 
-          <div className="grid flex-1 gap-x-14 gap-y-20 sm:grid-cols-2">
+          <div data-infra-grid className="grid flex-1 gap-x-[60px] gap-y-20 sm:grid-cols-2">
             {infrastructure.map((block, i) => (
               <div key={block.title} data-infra-block>
                 <p className="eyebrow text-xs text-gold">
                   {String(i + 1).padStart(2, "0")}
                 </p>
-                <h3 className="headline mt-3 text-2xl text-canvas">
+                <h3 className="headline mt-3 text-2xl text-canvas lg:text-[28px]">
                   {block.title}
                 </h3>
                 <ul className="mt-5">
@@ -1021,15 +1300,12 @@ export function LivingWorkBreath() {
     <section id="breath" data-lw="breath" className="relative h-[47svh] overflow-hidden bg-charcoal">
       {BREATH_FRAME ? (
         <div data-media data-motion={BREATH_FRAME.grade} className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={BREATH_FRAME.src}
             alt=""
-            width={BREATH_FRAME.width}
-            height={BREATH_FRAME.height}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
         </div>
       ) : null}
@@ -1069,7 +1345,7 @@ export function LivingWorkOutputs() {
     <section
       id="outputs"
       data-lw="outputs"
-      className="relative overflow-hidden bg-charcoal py-32"
+      className="relative overflow-hidden bg-charcoal py-16 lg:py-32"
     >
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div data-artwork="ring-b" className="absolute -top-28 right-0 h-[1000px] w-[1000px] translate-x-1/3 opacity-[0.09]">
@@ -1086,9 +1362,9 @@ export function LivingWorkOutputs() {
         </div>
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={`relative ${COLUMN}`}>
         <p className="eyebrow text-gold">What it adds up to</p>
-        <h2 className="headline mt-5 max-w-4xl text-4xl text-canvas sm:text-5xl">
+        <h2 className="headline mt-5 max-w-4xl text-h2 text-canvas">
           What the work produces
         </h2>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
@@ -1113,35 +1389,23 @@ export function LivingWorkOutputs() {
                   {outputsRestsOn[output.title] ?? ""}
                 </p>
 
-                {/* The vessel — solid to where the work has got, outline for
-                    what is still to come. Rest state IS the final fill; the
-                    motion pass scrubs toward it, never past it. */}
+                {/* THE NAME — one solid text node, wiped in left to right.
+                    It used to be three: an aria-hidden stroked outline, a
+                    clipped solid copy, and an sr-only name. The stroke was
+                    Ivy's way of DRAWING the animation on the artboard, never a
+                    thing to ship, and the partial fills left names half-read.
+                    All five now arrive whole and readable; the proportion
+                    moved to the rule below, which is the better place for it —
+                    text is for reading, a rule is for measuring. */}
                 <div className="mt-3 inline-block max-w-full align-top">
-                  <div
-                    data-vessel
-                    data-fill={fill}
-                    className="relative overflow-hidden whitespace-nowrap"
-                  >
-                    <span
-                      aria-hidden
-                      className="headline block text-[clamp(1.375rem,6.4vw,2.25rem)] text-transparent sm:text-6xl [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]"
-                    >
-                      {output.title}
-                    </span>
-                    <span
-                      data-vessel-fill
-                      className="absolute inset-0 overflow-hidden"
-                      style={{ width: `${fill}%` }}
-                    >
-                      <span className="headline block text-[clamp(1.375rem,6.4vw,2.25rem)] whitespace-nowrap text-canvas sm:text-6xl">
-                        {output.title}
-                      </span>
-                    </span>
-                    {/* Accessible name, once — the two layers above are drawing. */}
-                    <span className="sr-only">{output.title}</span>
-                  </div>
+                  <h3 data-vessel className={`headline block ${VESSEL_SIZE} text-canvas`}>
+                    {output.title}
+                  </h3>
 
-                  {/* The track: the whole word is the whole job. */}
+                  {/* The track: the whole word is the whole job. Gold to where
+                      the work has got, grey after it, and the tick on the
+                      boundary. Rainbow Credits has not started, so it gets an
+                      empty track and no tick — that IS its status. */}
                   <div className="relative mt-3 h-px w-full bg-canvas/20">
                     {empty ? null : (
                       <>
@@ -1214,14 +1478,14 @@ export function LivingWorkOutputs() {
  * glyphs are the artist's three existing motifs, placed whole — nothing drawn.
  */
 const PATH_PRESENTATION = [
-  { audience: "For other ranger groups", ground: "bg-evergreen", glyph: "/artwork/glyph-a.svg" },
-  { audience: "For funders and partners", ground: "bg-roasted", glyph: "/artwork/glyph-c.svg" },
-  { audience: "For properties in the district", ground: "bg-charcoal", glyph: "/artwork/glyph-b.svg" },
+  { audience: "For other ranger groups", ground: "bg-evergreen", motif: "a" },
+  { audience: "For funders and partners", ground: "bg-roasted", motif: "c" },
+  { audience: "For properties in the district", ground: "bg-charcoal", motif: "b" },
 ] as const;
 
 export function LivingWorkInvitation() {
   return (
-    <section id="invitation" data-lw="invitation" className="relative bg-canvas pb-32">
+    <section id="invitation" data-lw="invitation" className="relative bg-canvas pb-16 lg:pb-32">
       {/* 1.76.2 — country at sunset. M1 push-in belongs to the motion pass. */}
       {SUNSET ? (
         <div
@@ -1229,28 +1493,25 @@ export function LivingWorkInvitation() {
           data-motion={SUNSET.grade}
           className="relative h-[420px] overflow-hidden"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           {/* The hi-fi band's own crop (pattern transform, 2146:2788): the
               visible slice is rows ~27–83% of the frame, centre ≈ 61% — a
               touch below object-cover's default, so the grass line carries
               the bottom of the band rather than the treetops the top. */}
-          <img
+          <Image
             src={SUNSET.src}
             alt=""
-            width={SUNSET.width}
-            height={SUNSET.height}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover object-[50%_61%]"
+            fill
+            sizes="100vw"
+            className="object-cover object-[50%_61%]"
           />
         </div>
       ) : null}
 
-      <div className="mx-auto w-full max-w-7xl px-6 pt-20 lg:px-16">
-        <p className="eyebrow text-burnt">{getInvolved.eyebrow}</p>
+      <div className={`${COLUMN} pt-16 lg:pt-20`}>
+        <p className="eyebrow text-burnt-deep">{getInvolved.eyebrow}</p>
         <h2
           data-heading
-          className="headline mt-5 max-w-5xl text-4xl text-evergreen sm:text-5xl"
+          className="headline mt-5 max-w-5xl text-h2 text-evergreen"
         >
           {getInvolved.title}
         </h2>
@@ -1260,7 +1521,7 @@ export function LivingWorkInvitation() {
           properties in the district.
         </p>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-[77px]">
           {getInvolved.paths.map((path, i) => {
             const p = PATH_PRESENTATION[i];
             return (
@@ -1277,8 +1538,7 @@ export function LivingWorkInvitation() {
                   aria-hidden
                   className="pointer-events-none absolute inset-0 bg-canvas opacity-0 transition-opacity duration-(--dur-small) ease-quiet group-hover:opacity-[0.04]"
                 />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.glyph} alt="" className="size-11" aria-hidden />
+                <SeamGlyph motif={p.motif} className="relative top-0 left-0 w-11 shrink-0" />
                 <p className="eyebrow mt-6 text-xs text-gold">{p.audience}</p>
                 <div className="mt-2 flex min-h-21 items-end">
                   <h3 className="headline text-2xl leading-[1.3] text-canvas">

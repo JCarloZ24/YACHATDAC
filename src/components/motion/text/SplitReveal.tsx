@@ -22,6 +22,8 @@ type SplitRevealProps = {
   mode?: SplitMode;
   gate?: "view" | "entry";
   scrub?: boolean;
+  /** Hold before revealing — for sequencing a stack against one gate. */
+  delay?: number;
   className?: string;
   children: ReactNode;
 };
@@ -31,6 +33,7 @@ export function SplitReveal({
   mode = "lines",
   gate = "view",
   scrub = false,
+  delay = 0,
   className,
   children,
 }: SplitRevealProps) {
@@ -46,7 +49,7 @@ export function SplitReveal({
     let ungate: (() => void) | undefined;
 
     const go = (trigger: "view" | "now") => {
-      if (!cancelled) cleanup = wireSplitReveal(el, { mode, scrub, trigger });
+      if (!cancelled) cleanup = wireSplitReveal(el, { mode, scrub, trigger, delay });
     };
 
     document.fonts.ready.then(() => {
@@ -63,7 +66,7 @@ export function SplitReveal({
       ungate?.();
       cleanup?.();
     };
-  }, [mode, gate, scrub]);
+  }, [mode, gate, scrub, delay]);
 
   const Tag = as as "div";
   return (

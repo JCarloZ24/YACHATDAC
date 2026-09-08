@@ -1,0 +1,243 @@
+/* F7/F8, 8 September 2026: one aperture scene, then the ordinary catalogue.
+   Height/stickiness only change on setup/teardown, never on a scroll frame. */
+.record-portal {
+  position: relative;
+  background: var(--color-charcoal);
+  color: var(--color-canvas);
+}
+
+.record-portal-stage {
+  position: relative;
+  height: 100svh;
+  min-height: 640px;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.record-portal[data-portal-enhanced] {
+  height: 460svh;
+}
+
+.record-portal[data-portal-enhanced] .record-portal-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 0;
+}
+
+.record-portal-wall,
+.record-portal-canvas,
+.record-portal-gallery {
+  position: absolute;
+  inset: 0;
+}
+
+.record-portal-wall {
+  z-index: 1;
+}
+.record-portal-canvas {
+  z-index: 2;
+  pointer-events: none;
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+.record-portal[data-portal-enhanced] .record-portal-canvas {
+  display: block;
+}
+.record-portal-gallery {
+  visibility: hidden;
+  z-index: 3;
+}
+.record-portal[data-portal-enhanced] .record-portal-card-media {
+  opacity: 0;
+}
+.record-portal[data-portal-enhanced] .record-portal-gallery {
+  visibility: visible;
+}
+.record-portal[data-portal-enhanced] .record-portal-wall {
+  visibility: hidden;
+}
+
+.record-portal-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  /* X5: the sole gradient exception, for navigation and copy legibility. */
+  background: linear-gradient(
+    180deg,
+    rgb(9 14 18 / 45%),
+    transparent 30%,
+    transparent 45%,
+    rgb(9 14 18 / 85%) 100%
+  );
+}
+
+.record-portal-copy {
+  position: absolute;
+  z-index: 3;
+  left: 24px;
+  right: 24px;
+  bottom: 92px;
+  pointer-events: none;
+}
+
+.record-portal-copy h1 {
+  max-width: 680px;
+}
+.record-portal-copy p:last-child {
+  max-width: 570px;
+}
+
+.record-portal-controls {
+  position: absolute;
+  z-index: 4;
+  bottom: 28px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.record-portal-hint {
+  display: none;
+}
+.record-portal[data-portal-enhanced] .record-portal-hint {
+  display: block;
+}
+.record-portal-skip {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.record-portal-skip:focus-visible,
+.record-portal-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 6px;
+}
+
+.record-portal-card {
+  position: absolute;
+  display: block;
+  color: var(--color-canvas);
+  text-decoration: none;
+}
+
+.record-portal-card-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-roasted);
+}
+.record-portal-card-caption {
+  display: none;
+  margin-top: 12px;
+  max-width: 280px;
+}
+.record-portal-card:nth-child(3) .record-portal-card-caption {
+  display: block;
+}
+.record-portal-card-caption span {
+  display: block;
+  margin-top: 5px;
+}
+.record-portal-card:nth-child(1) {
+  left: 4%;
+  top: 72%;
+  width: 42%;
+  height: 15%;
+}
+.record-portal-card:nth-child(2) {
+  left: 4%;
+  top: 13%;
+  width: 42%;
+  height: 18%;
+}
+.record-portal-card:nth-child(3) {
+  left: 20%;
+  top: 37%;
+  width: 60%;
+  height: 25%;
+}
+.record-portal-card:nth-child(4) {
+  left: 54%;
+  top: 72%;
+  width: 42%;
+  height: 15%;
+}
+.record-portal-card:nth-child(5) {
+  left: 54%;
+  top: 13%;
+  width: 42%;
+  height: 18%;
+}
+
+@media (min-width: 64rem) {
+  .record-portal-card-caption {
+    display: block;
+  }
+  .record-portal-copy {
+    left: 7%;
+    right: 7%;
+    bottom: 100px;
+  }
+  .record-portal-controls {
+    left: 7%;
+    right: 7%;
+    bottom: 36px;
+  }
+  .record-portal-card:nth-child(1) {
+    left: 2%;
+    top: 46%;
+    width: 19%;
+    height: 34%;
+  }
+  .record-portal-card:nth-child(2) {
+    left: 22%;
+    top: 18%;
+    width: 17%;
+    height: 27%;
+  }
+  .record-portal-card:nth-child(3) {
+    left: 40%;
+    top: 34%;
+    width: 25%;
+    height: 36%;
+  }
+  .record-portal-card:nth-child(4) {
+    left: 68%;
+    top: 57%;
+    width: 22%;
+    height: 27%;
+  }
+  .record-portal-card:nth-child(5) {
+    left: 77%;
+    top: 17%;
+    width: 19%;
+    height: 25%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .record-portal[data-portal-enhanced] {
+    height: auto;
+  }
+  .record-portal[data-portal-enhanced] .record-portal-stage {
+    position: relative;
+    min-height: 640px;
+  }
+  .record-portal-canvas,
+  .record-portal-gallery,
+  .record-portal-hint {
+    display: none !important;
+  }
+  .record-portal[data-portal-enhanced] .record-portal-wall {
+    visibility: visible;
+  }
+  .record-portal-copy {
+    opacity: 1 !important;
+  }
+}

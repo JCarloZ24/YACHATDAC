@@ -1,7 +1,9 @@
 "use client";
 
 /**
- * Smooth scroll — Lenis, wheel only, scoped to the /v2 segment.
+ * Smooth scroll — Lenis, wheel only, scoped to each opting-in page or segment.
+ * SCR-09; motion grammar row "being drawn in". The Record opts in on
+ * 2026-09-08 to match Living Work's scroll feel without section animation.
  *
  * WHY LENIS AND NOT SCROLLSMOOTHER
  * --------------------------------
@@ -57,7 +59,7 @@ function teardown(): void {
   lenis = null;
 }
 
-/** Mounted once by the /v2 layout. Returns the destroy for unmount. */
+/** Mounted by SmoothScroll in the active route. Returns its unmount cleanup. */
 export function createSmoothScroll(): () => void {
   build();
   const media = window.matchMedia("(prefers-reduced-motion: reduce)");

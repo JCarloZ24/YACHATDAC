@@ -23,6 +23,7 @@ import {
   whatItIsLikeSlot,
   whereYouSleepMedia,
   wonderHeroSlot,
+  wonderHeroVideo,
   wonderHighlightMedia,
   wonderStoryMedia,
 } from "@/content/wonder-media";
@@ -34,6 +35,9 @@ import {
   WAVE_PATH,
   WaveDivider,
 } from "@/components/ui/Furniture";
+import { HeroVideo } from "./HeroVideo";
+import { FactsMap, RouteMap } from "./RouteMap";
+import { factsMapMarkup, routeMapMarkup } from "./route-map-markup";
 
 /**
  * /wonder — the markup, built to `01 · Wonder · HI-FI · Desktop`
@@ -155,11 +159,20 @@ function Container({
   );
 }
 
+/**
+ * Wonder's CTA hover — this page only. The shared blob already lifts 2px;
+ * here the whole shape lifts further and the chevron slides on. Interface
+ * response under a pointer, not narrative motion, so it lives in CSS on
+ * --dur-small rather than in the controller.
+ */
+const BLOB_HOVER =
+  "hover:-translate-y-1 hover:scale-[1.03] [&>svg]:transition-transform [&>svg]:duration-(--dur-small) [&>svg]:ease-quiet hover:[&>svg]:translate-x-1";
+
 /** Chip — the eucalyptus tag the frame uses for the summary line and cards. */
 function Chip({ children }: { children: string }) {
   return (
     <span
-      className={`inline-block rounded-lg bg-eucalyptus px-3.5 py-1.5 whitespace-nowrap text-canvas ${H6}`}
+      className={`inline-block rounded-lg bg-eucalyptus px-3 py-1.5 whitespace-nowrap text-canvas ${H6}`}
     >
       {children}
     </span>
@@ -174,9 +187,18 @@ function Chip({ children }: { children: string }) {
  */
 function WaveDrip({
   ground,
+  seat = "-top-px",
+  mirror = false,
   className = "",
 }: {
   ground: string;
+  /** Where the crest starts, as a `top-*` utility. Measured off the frame
+      render, not the layer list: the layer list seats Wave Line 2033:5430
+      at +87 but the render puts its ink from −12 to +93. */
+  seat?: string;
+  /** Wave Lines the frame lays out at x=1441 with a 1441 width are
+      flipped horizontally — thick end on the LEFT (2033:5432, 2033:5434). */
+  mirror?: boolean;
   className?: string;
 }) {
   return (
@@ -184,7 +206,9 @@ function WaveDrip({
       aria-hidden
       viewBox="1.00123 0 1467.84877 105.324"
       preserveAspectRatio="none"
-      className={`pointer-events-none absolute inset-x-0 -top-px z-10 h-16 w-full scale-y-[-1] sm:h-26 ${className}`}
+      className={`pointer-events-none absolute inset-x-0 z-10 h-10 w-full sm:h-26 ${
+        mirror ? "scale-[-1]" : "scale-y-[-1]"
+      } ${seat} ${className}`}
     >
       <path d={WAVE_PATH} fill={ground} />
     </svg>
@@ -197,10 +221,37 @@ function WaveDrip({
    ------------------------------------------------------------------------- */
 
 export function WonderHero() {
+  // The film only ships when its encode is on disk; otherwise the still, and
+  // failing that the field — same contract as every other slot.
+  const tiers = {
+    small: presentSrc(wonderHeroVideo.tiers.small),
+    medium: presentSrc(wonderHeroVideo.tiers.medium),
+    large: presentSrc(wonderHeroVideo.tiers.large),
+  };
+  const film = tiers.medium ?? tiers.large ?? tiers.small;
+  const poster = presentSrc(wonderHeroSlot.src);
   return (
-    <header className="relative flex min-h-svh items-end overflow-hidden bg-roasted lg:min-h-[720px]">
+    /* Full-bleed and PINNED (decided 8 Sep 2026, a departure from the frame's
+       720 band): the film fills the viewport on load and holds while the
+       facts section — wave first — scrolls up over it. Sticky makes its own
+       stacking context, so the copy and sound button stay inside the hero
+       and every later section, being positioned, paints on top. */
+    <header className="sticky top-0 flex min-h-svh items-end overflow-hidden bg-roasted">
       <div className="absolute inset-0">
-        <Slot slot={wonderHeroSlot} sizes={COVER_FULL_BLEED} priority />
+        {film && poster ? (
+          <HeroVideo
+            tiers={{
+              small: tiers.small ?? film,
+              medium: tiers.medium ?? film,
+              large: tiers.large ?? film,
+            }}
+            poster={poster}
+            silentFrom={0}
+            label={wonderHeroVideo.label}
+          />
+        ) : (
+          <Slot slot={wonderHeroSlot} sizes={COVER_FULL_BLEED} priority />
+        )}
       </div>
       {/* X5 — copy sits on media. Foot-weighted, never opaque. */}
       <div
@@ -230,68 +281,70 @@ export function WonderFacts() {
     wonderHero.facts.slice(3),
   ];
   return (
+    /* At 1440 the section is a sticky span (the D4 lab's shape): 220vh of
+       scroll with the screen held inside it while the map draws. The phone
+       keeps its flow — the stacked layout is taller than a screen. */
     <section
-      className={`relative overflow-hidden bg-canvas py-16 text-charcoal ${GUTTER}`}
+      data-sticky-span
+      className="relative pt-10 text-charcoal sm:pt-26 lg:h-[220vh]"
     >
-      <WaveDivider ground="var(--color-canvas)" />
-      {/* The illustrated map (2033:5376 › 3238:34073) — 1129 × 783, seated
-          at x=205 y=83 in the 1440 frame, running behind the right column. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-0 left-1/2 hidden h-full w-[1440px] -translate-x-1/2 lg:block"
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-        <img
-          src="/wonder/facts-map.svg"
-          alt=""
-          className="absolute top-[83px] left-[205px] h-[783px] w-[1129px] max-w-none"
-        />
+      {/* Wave Line 2033:5350 — canvas rising over the hero's foot. With the
+          hero pinned full-bleed (8 Sep 2026) the wave belongs to THIS
+          section's first band rather than overhanging the hero: at rest the
+          film fills the screen untouched, and the crest rides up over it as
+          the section scrolls in. So the section has no ground of its own —
+          the band the wave occupies is transparent to the film beneath, and
+          canvas starts at the wave's foot on the wrapper below. Neither the
+          sticky screen (overflow-hidden at lg) nor the map clip may parent
+          the wave, or it is cut off. */}
+      <div className="absolute inset-x-0 top-10 z-10 sm:top-26">
+        <WaveDivider ground="var(--color-canvas)" />
       </div>
-      {/* The phone's cut of the same map (2576:22001 › 2576:22115) — 506 × 359,
-          seated over the frame's 240px image slot and bleeding 65px past
-          either edge and 27px past the foot, exactly as the frame draws it. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-      <img
-        src="/wonder/facts-map-mobile.svg"
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute bottom-[-27px] left-1/2 h-[359px] w-[506px] max-w-none -translate-x-1/2 lg:hidden"
-      />
-      <Container>
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
-          <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-8">
-            <p className={H4}>{wonderHero.standfirst}</p>
-            <div className="flex flex-wrap gap-2.5">
-              {wonderHero.summary.map((item) => (
-                <Chip key={item}>{item}</Chip>
-              ))}
-            </div>
-            <div className="flex flex-col gap-6 py-2 lg:flex-row lg:gap-4">
-              {[left, right].map((column, i) => (
-                <dl key={i} className="flex flex-col gap-6">
-                  {column.map((fact) => (
-                    <div
-                      key={fact.label}
-                      className="flex w-full flex-col gap-2 lg:w-[378px]"
-                    >
-                      <dt className={`${H5} text-burnt`}>{fact.label}</dt>
-                      <dd className="text-base leading-normal font-medium lg:text-lg">
-                        {fact.value}
-                      </dd>
-                    </div>
+      {/* Padding on the section, not a margin here — a margin collapses
+          through the section and shoves the whole section below the hero. */}
+      <div className="bg-canvas lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden">
+        <div className={`relative overflow-hidden py-16 lg:h-full ${GUTTER}`}>
+          {/* The illustrated map, both cuts, inlined so it draws itself on
+          scroll (route-map.ts · `the guide leading the eye` · routeDraw).
+          Placement is unchanged from the <img> version — see FactsMap. */}
+          <FactsMap {...factsMapMarkup()} />
+          <Container>
+            <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
+              <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-8">
+                <p className={H4}>{wonderHero.standfirst}</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {wonderHero.summary.map((item) => (
+                    <Chip key={item}>{item}</Chip>
                   ))}
-                </dl>
-              ))}
-            </div>
-          </div>
-          {/* The frame's Placeholder Image slot — empty; the map fills it. A
+                </div>
+                <div className="flex flex-col gap-6 py-2 lg:flex-row lg:gap-4">
+                  {[left, right].map((column, i) => (
+                    <dl key={i} className="flex flex-col gap-6">
+                      {column.map((fact) => (
+                        <div
+                          key={fact.label}
+                          className="flex w-full flex-col gap-2 lg:w-[378px]"
+                        >
+                          <dt className={`${H5} text-burnt`}>{fact.label}</dt>
+                          <dd className="text-base leading-normal font-medium lg:text-lg">
+                            {fact.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ))}
+                </div>
+              </div>
+              {/* The frame's Placeholder Image slot — empty; the map fills it. A
               240-tall block on the phone, the right-hand column at 1440. */}
-          <div
-            aria-hidden
-            className="h-[240px] w-full lg:aspect-[600/640] lg:h-auto lg:w-auto lg:min-w-0 lg:flex-1"
-          />
+              <div
+                aria-hidden
+                className="h-[240px] w-full lg:aspect-[600/640] lg:h-auto lg:w-auto lg:min-w-0 lg:flex-1"
+              />
+            </div>
+          </Container>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }
@@ -301,12 +354,26 @@ export function WonderFacts() {
         three 500px photo cards, a 400px swipe rail on the phone
    ------------------------------------------------------------------------- */
 
+/** Per-card overlay, in `wonderHighlights` order — see the note in the markup. */
+const HIGHLIGHT_OVERLAY = ["bg-black/10", "bg-black/25", "bg-black/25"];
+/** Per-card focal point, in the same order: the hand on the wall, the hand
+    over the tray, the ranger by the smoke. Literal — Tailwind cannot see a
+    computed class. */
+const HIGHLIGHT_FOCUS = [
+  "object-[28%_60%]",
+  "object-[35%_50%]",
+  "object-[23%_95%]",
+];
+
 export function WonderHighlights() {
   return (
     <section
-      className={`relative bg-canvas py-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
+      className={`relative bg-white py-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
     >
-      <Container className="flex flex-col gap-6 lg:gap-10">
+      {/* Wave Line 2033:5430 / 2576:22128 — the facts' canvas dripping into
+          the white highlights ground. */}
+      <WaveDrip ground="var(--color-canvas)" seat="-top-3" />
+      <Container className="relative flex flex-col gap-6 lg:gap-10">
         {/* The one heading the phone frame keeps at the desktop size. */}
         <h2 className="font-eyebrow text-[36px] leading-[1.3] font-extrabold">
           HIGHLIGHTS
@@ -325,14 +392,31 @@ export function WonderHighlights() {
                 className="relative flex min-h-[400px] min-w-0 flex-col justify-end gap-4 overflow-hidden rounded-3xl p-5 text-canvas lg:min-h-[500px] lg:p-10"
               >
                 <div className="absolute inset-0">
-                  <Slot slot={media} sizes="(min-width: 1024px) 400px, 78vw" />
+                  {/* A 1.9:1 photograph covering a 395 × 500 card renders
+                      about 950px wide, so the sizes hint has to say so or the
+                      browser picks a candidate half the size and the card
+                      blurs at 2×. The focal point per card is the frame's
+                      own crop (2033:5436), read off its image offsets. */}
+                  <Slot
+                    slot={media}
+                    sizes="(min-width: 1024px) 960px, 160vw"
+                    className={`object-cover ${HIGHLIGHT_FOCUS[i] ?? "object-center"}`}
+                  />
                 </div>
-                <div aria-hidden className="absolute inset-0 bg-charcoal/25" />
+                {/* The frame's overlay (2033:5436): flat black, no gradient —
+                    10% on the pale sandstone card, 25% on the two darker
+                    photographs. Literal per card; Tailwind cannot see a
+                    computed class. */}
+                <div
+                  aria-hidden
+                  className={`absolute inset-0 ${HIGHLIGHT_OVERLAY[i] ?? "bg-black/25"}`}
+                />
                 <div className="relative flex flex-col items-start gap-4">
                   <Chip>{card.eyebrow}</Chip>
                   <div className="flex flex-col gap-2">
                     <h3 className={H3}>{card.title}</h3>
-                    <p className="text-base leading-normal font-medium">
+                    {/* The frame sets the body pure white, the title off-white. */}
+                    <p className="text-base leading-normal font-medium text-white">
                       {card.body}
                     </p>
                   </div>
@@ -359,99 +443,95 @@ const STOP_ICONS = [
   { src: "/wonder/icon-grayrock.svg", w: 28, h: 28 },
 ] as const;
 
-/** The same icons as pins on the map, at the frame's own coordinates. */
+/** The same icons as legends on the map, at the frame's own coordinates in
+    the 1440 header (3238:34149, 34151, 34154, 34158) — layout positions, not
+    geographic ones. `at` is the scroll progress each lights at, after the
+    roads have inked in, in stop order (route-map.ts). */
 const MAP_PINS = [
-  { icon: 0, left: 1196, top: 325 },
-  { icon: 1, left: 1131, top: 368 },
-  { icon: 2, left: 1179, top: 403 },
-  { icon: 3, left: 1227, top: 355 },
+  { icon: 0, left: 1196, top: 325, at: 0.76 },
+  { icon: 1, left: 1131, top: 368, at: 0.81 },
+  { icon: 2, left: 1179, top: 403, at: 0.86 },
+  { icon: 3, left: 1243, top: 355, at: 0.91 },
 ] as const;
 
 export function WonderGettingHere() {
   return (
+    /* Sticky span at 1440, as §02: the screen is held while the map forms. */
     <section
-      className={`relative overflow-hidden bg-charcoal pt-10 pb-20 text-canvas lg:min-h-[900px] lg:pb-0 ${GUTTER}`}
+      data-sticky-span
+      className="relative bg-charcoal text-canvas lg:h-[220vh]"
     >
-      <WaveDivider ground="var(--color-charcoal)" />
-      {/* The route map (3238:34130) — 2278 × 1580, clipped to 1973 wide and
-          centred at (50% − 266px, 50% + 57px) in the frame. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-0 left-1/2 hidden h-full w-[1440px] -translate-x-1/2 lg:block"
-      >
-        <div className="absolute top-[calc(50%+57px)] left-[calc(50%-266px)] h-[1580px] w-[1973px] -translate-x-1/2 -translate-y-1/2 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-          <img
-            src="/wonder/getting-here-map.svg"
-            alt=""
-            className="absolute top-0 left-0 h-[1580px] w-[2278px] max-w-none"
-          />
-        </div>
-        {MAP_PINS.map((pin) => {
-          const icon = STOP_ICONS[pin.icon];
-          return (
-            /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
-            <img
-              key={pin.icon}
-              src={icon.src}
-              alt=""
-              width={icon.w}
-              height={icon.h}
-              className="absolute"
-              style={{ left: pin.left, top: pin.top, width: icon.w, height: icon.h }}
-            />
-          );
-        })}
-      </div>
-      {/* The phone's cut (2576:22630 › 2576:22808) — 518 × 368 with the pin
-          drawn in, centred and seated 28px past the section's foot. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-      <img
-        src="/wonder/getting-here-map-mobile.svg"
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute bottom-[-28px] left-1/2 h-[368px] w-[518px] max-w-none -translate-x-1/2 lg:hidden"
+      {/* Wave Line 2033:5432 / 2576:22626 — charcoal rising over the white
+          highlights ground. Above the top edge, so it sits on the section
+          itself: the sticky screen below is overflow-hidden at lg and would
+          cut it off. */}
+      <WaveDivider ground="var(--color-charcoal)" mirror />
+      {/* Wave Line 2033:5434 / 2576:22821 — charcoal dripping down over the
+          Turraburra photo. Hung off this section's foot (1px overlapped so
+          the seam never shows) because Turraburra clips its own box. On the
+          section, not the sticky screen, for the same reason as above. */}
+      <WaveDrip
+        ground="var(--color-charcoal)"
+        mirror
+        seat="top-[calc(100%-1px)]"
       />
+      <div className="lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden">
+        <div
+          className={`relative overflow-hidden pt-10 pb-20 lg:h-full lg:pb-0 ${GUTTER}`}
+        >
+          {/* The route map, both cuts, inlined so it inks itself in on scroll
+          (route-map.ts · `the guide leading the eye` · routeDraw). Placement
+          is unchanged from the <img> version — see RouteMap.tsx. */}
+          <RouteMap
+            {...routeMapMarkup()}
+            pins={MAP_PINS.map((pin) => ({ ...STOP_ICONS[pin.icon], ...pin }))}
+          />
 
-      <Container className="flex flex-col gap-12 lg:gap-20">
-        <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-6">
-          <p className={`${H5} text-burnt`}>Getting here</p>
-          <h2 className={H2}>{gettingHere.title}</h2>
-          <div className="flex flex-col gap-5 text-base leading-normal lg:gap-7 lg:text-xl">
-            {gettingHere.body.map((para) => (
-              <p key={para}>{para}</p>
-            ))}
-          </div>
-          <ul className="flex flex-col gap-4 text-base leading-normal lg:gap-6 lg:text-xl">
-            {gettingHere.stops.map((stop, i) => {
-              const icon = STOP_ICONS[i];
-              return (
-                <li key={stop.name} className="flex items-center gap-3">
-                  <span
-                    aria-hidden
-                    className="flex w-[33px] shrink-0 items-center justify-center"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-                    <img
-                      src={icon.src}
-                      alt=""
-                      width={icon.w}
-                      height={icon.h}
-                      style={{ width: icon.w, height: icon.h }}
-                    />
-                  </span>
-                  <span>
-                    <strong className="font-medium">{stop.name}</strong> — {stop.detail}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-          <p className="text-base leading-normal lg:text-xl">{gettingHere.coda}</p>
+          <Container className="flex flex-col gap-12 lg:gap-20">
+            <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-6">
+              <p className={`${H5} text-burnt`}>Getting here</p>
+              <h2 className={H2}>{gettingHere.title}</h2>
+              <div className="flex flex-col gap-5 text-base leading-normal lg:gap-7 lg:text-xl">
+                {gettingHere.body.map((para) => (
+                  <p key={para}>{para}</p>
+                ))}
+              </div>
+              <ul className="flex flex-col gap-4 text-base leading-normal lg:gap-6 lg:text-xl">
+                {gettingHere.stops.map((stop, i) => {
+                  const icon = STOP_ICONS[i];
+                  return (
+                    <li key={stop.name} className="flex items-center gap-3">
+                      <span
+                        aria-hidden
+                        className="flex w-[33px] shrink-0 items-center justify-center"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+                        <img
+                          src={icon.src}
+                          alt=""
+                          width={icon.w}
+                          height={icon.h}
+                          style={{ width: icon.w, height: icon.h }}
+                        />
+                      </span>
+                      {/* The frame (2033:5572) sets the whole line regular;
+                          the name carries no weight of its own. */}
+                      <span>
+                        {stop.name} — {stop.detail}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="text-base leading-normal lg:text-xl">
+                {gettingHere.coda}
+              </p>
+            </div>
+            {/* The frame's 240px image slot on the phone; the map rides over it. */}
+            <div aria-hidden className="h-[240px] w-full lg:hidden" />
+          </Container>
         </div>
-        {/* The frame's 240px image slot on the phone; the map rides over it. */}
-        <div aria-hidden className="h-[240px] w-full lg:hidden" />
-      </Container>
+      </div>
     </section>
   );
 }
@@ -471,7 +551,10 @@ export function WonderTurraburra() {
         <Slot slot={turraburraSlot} sizes={COVER_FULL_BLEED} />
       </div>
       <div aria-hidden className="absolute inset-0 bg-charcoal/10" />
-      <WaveDrip ground="var(--color-charcoal)" />
+      {/* Wave Line 2033:5434 / 2576:22821 is seated at the FOOT of Getting
+          here, not here: this section clips (overflow-hidden), and a drip
+          seated inside the clip left a hairline of photo between the
+          charcoal and the crest. */}
       <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
         <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
         <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
@@ -508,7 +591,10 @@ export function WonderStay() {
       id="experience"
       className={`relative bg-canvas py-10 text-charcoal lg:pt-28 lg:pb-[164px] ${GUTTER}`}
     >
-      <Container width="max-w-[1040px]" className="flex flex-col gap-5 lg:gap-10">
+      <Container
+        width="max-w-[1040px]"
+        className="flex flex-col gap-5 lg:gap-10"
+      >
         <div className="flex flex-col gap-5 lg:gap-6">
           <p className={`${H5} text-burnt`}>Itinerary</p>
           <h2 className={H2}>What a stay looks like</h2>
@@ -567,12 +653,17 @@ export function WonderStay() {
                         </ul>
                       ) : null}
                       {stage.coda ? (
-                        <p className="callout text-scroll text-burnt">{stage.coda}</p>
+                        <p className="callout text-scroll text-burnt">
+                          {stage.coda}
+                        </p>
                       ) : null}
                     </div>
                     <div className="relative h-[200px] w-full min-w-0 overflow-hidden rounded-3xl lg:h-[400px] lg:w-auto lg:flex-1">
                       {media ? (
-                        <Slot slot={media} sizes="(min-width: 1024px) 500px, 100vw" />
+                        <Slot
+                          slot={media}
+                          sizes="(min-width: 1024px) 500px, 100vw"
+                        />
                       ) : null}
                     </div>
                   </div>
@@ -602,21 +693,28 @@ export function WonderBeforeYouCome() {
       <WaveDivider ground="var(--color-evergreen)" />
       <Container className="flex flex-col items-center">
         <div className="flex w-full max-w-[768px] flex-col items-center gap-3 lg:gap-4">
-          <p className={`${H5} text-gold text-center`}>{beforeYouCome.eyebrow}</p>
+          <p className={`${H5} text-gold text-center`}>
+            {beforeYouCome.eyebrow}
+          </p>
           <div className="flex w-full flex-col items-center gap-5 lg:gap-10">
             <h2 className={`${H2} text-center`}>{beforeYouCome.title}</h2>
             {/* `max-w-full` on the cells is a guard: a 378px cell in a
                 narrower column with nothing clipping it pans the whole
                 document sideways. On the phone the cells are full-width. */}
             {[row1, row2].map((row, i) => (
-              <dl key={i} className="flex w-full flex-col gap-6 lg:w-auto lg:flex-row">
+              <dl
+                key={i}
+                className="flex w-full flex-col gap-6 lg:w-auto lg:flex-row"
+              >
                 {row.map((fact) => (
                   <div
                     key={fact.label}
                     className="flex w-full max-w-full flex-col gap-2 lg:w-[378px]"
                   >
                     <dt className={`${H5} text-gold`}>{fact.label}</dt>
-                    <dd className="text-base leading-normal lg:text-lg">{fact.value}</dd>
+                    <dd className="text-base leading-normal lg:text-lg">
+                      {fact.value}
+                    </dd>
                   </div>
                 ))}
               </dl>
@@ -629,7 +727,13 @@ export function WonderBeforeYouCome() {
           </div>
         </div>
       </Container>
-      <BlobButton href={beforeYouCome.action.href} tone="oxide">
+      <BlobButton
+        href={beforeYouCome.action.href}
+        tone="oxide"
+        icon="right"
+        size="lg"
+        className={BLOB_HOVER}
+      >
         {beforeYouCome.action.label}
       </BlobButton>
     </section>
@@ -651,7 +755,9 @@ export function WonderWhereYouSleep() {
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-4">
           <h2 className={H2}>{whereYouSleep.title}</h2>
-          <p className="text-base leading-normal font-medium">{whereYouSleep.body}</p>
+          <p className="text-base leading-normal font-medium">
+            {whereYouSleep.body}
+          </p>
         </div>
         <CardRail
           bleed={RAIL_BLEED}
@@ -688,7 +794,9 @@ export function WonderOutHere() {
         <Slot slot={whatItIsLikeSlot} sizes={COVER_FULL_BLEED} />
       </div>
       <div aria-hidden className="absolute inset-0 bg-charcoal/10" />
-      <WaveDrip ground="var(--color-canvas)" />
+      {/* No wave at this join — the frame runs Where you sleep straight
+          into the photo (the next Wave Line is 2033's at y=8265, which is
+          Your hosts rising). */}
       <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
         <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
         <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
@@ -740,8 +848,11 @@ export function WonderHosts() {
 export function WonderStories() {
   return (
     <section
-      className={`relative bg-canvas pt-10 pb-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
+      className={`relative bg-white pt-10 pb-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
     >
+      {/* Wave Line at y=9096 in the 1440 frame — Your hosts' canvas dripping
+          into this white ground. The frame seats it ~100 below the join. */}
+      <WaveDrip ground="var(--color-canvas)" seat="-top-px" />
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex flex-col gap-5 lg:gap-4">
           {/* 16 on both frames — the one eyebrow that does not step up. */}
@@ -760,14 +871,18 @@ export function WonderStories() {
             return (
               <article
                 key={item.href}
-                className="flex min-w-0 flex-col overflow-hidden rounded-3xl bg-charcoal text-canvas"
+                className="group/card relative flex min-w-0 flex-col overflow-hidden rounded-3xl bg-charcoal text-canvas transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-1"
               >
+                {/* Marra Wonga is frame-grade: the image plane holds under
+                    the pointer; the card lifts, the label answers. */}
                 <div className="relative h-[240px] w-full lg:h-[320px]">
                   <Slot slot={media} sizes="(min-width: 1024px) 400px, 78vw" />
                 </div>
-                <div className="flex flex-col items-start gap-4 p-6 lg:px-9 lg:py-10">
+                {/* flex-1 + mt-auto: the link seats on the card's foot so
+                    the three CTAs line up whatever the summary's length. */}
+                <div className="flex flex-1 flex-col items-start gap-4 p-6 lg:px-9 lg:py-10">
                   <Chip>{item.tag.replace("#", "")}</Chip>
-                  <div className="flex flex-col gap-10">
+                  <div className="flex flex-1 flex-col gap-10">
                     <div className="flex flex-col gap-4">
                       <h3 className={H3}>{item.title}</h3>
                       <p className="text-base leading-normal font-medium">
@@ -776,15 +891,15 @@ export function WonderStories() {
                     </div>
                     <Link
                       href={item.href}
-                      className="group inline-flex items-center gap-2 font-eyebrow text-base leading-normal font-bold text-gold uppercase"
+                      className="mt-auto inline-flex items-center gap-2 font-eyebrow text-base leading-normal font-bold text-gold uppercase after:absolute after:inset-0 group-hover/card:underline group-hover/card:underline-offset-4"
                     >
-                      Read the story
+                      {wonderStories.cta}
                       {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
                       <img
                         src="/wonder/chevron-right.svg"
                         alt=""
                         aria-hidden
-                        className="size-6 transition-transform duration-(--dur-small) ease-quiet group-hover:translate-x-1"
+                        className="size-6 transition-transform duration-(--dur-small) ease-quiet group-hover/card:translate-x-1"
                       />
                     </Link>
                   </div>
@@ -808,7 +923,9 @@ export function WonderStories() {
 export function WonderClose() {
   return (
     <section className="relative flex flex-col items-center gap-12 bg-roasted px-5 pt-16 pb-28 text-canvas lg:gap-14 lg:px-[120px] lg:pt-20 lg:pb-[300px]">
-      <WaveDivider ground="var(--color-roasted)" />
+      {/* Wave Line at y=9975, laid out at x=1440 — a flipped instance, so
+          the thick end is on the LEFT like 2033:5432. */}
+      <WaveDivider ground="var(--color-roasted)" mirror />
       <Container className="flex flex-col items-center">
         <div className="flex w-full max-w-[768px] flex-col items-center gap-3 lg:gap-4">
           <p className={`${H5} text-center text-gold`}>{wonderClose.eyebrow}</p>
@@ -832,11 +949,20 @@ export function WonderClose() {
         </div>
       </Container>
       <div className="flex flex-col items-center gap-6 lg:flex-row">
-        <BlobButton href="/connect" tone="oxide">
+        <BlobButton
+          href="/connect"
+          tone="oxide"
+          icon="right"
+          size="lg"
+          className={BLOB_HOVER}
+        >
           Register your interest
         </BlobButton>
-        {/* R14 — no brochure file exists yet; the shape renders held. */}
-        <BlobHold>Download the brochure</BlobHold>
+        {/* R14 — no brochure file exists yet; the shape renders held, but in
+            the frame's own Burnt Ochre (2033:7110) rather than muted. */}
+        <BlobHold tone="burnt" icon="down" size="lg">
+          Download the brochure
+        </BlobHold>
       </div>
     </section>
   );

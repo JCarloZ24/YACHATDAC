@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
 import {
   WonderBeforeYouCome,
@@ -14,6 +15,7 @@ import {
   WonderTurraburra,
   WonderWhereYouSleep,
 } from "./_components/Sections";
+import { WonderLoader } from "./_components/Loader";
 import { wonderHero } from "@/content/wonder";
 
 export const metadata: Metadata = {
@@ -38,6 +40,9 @@ export const metadata: Metadata = {
 export default function WonderPage() {
   return (
     <PageTransition ground="#4E3524">
+      {/* Hard loads and refreshes only: holds scroll and covers the hero film's
+          first buffer — see _components/Loader. */}
+      <WonderLoader />
       <div className="relative">
         <WonderHero />
         <WonderFacts />
@@ -52,6 +57,9 @@ export default function WonderPage() {
         <WonderStories />
         <WonderClose />
       </div>
+      {/* The page ends on roasted; without this the footer's double wave
+          opens onto a stray canvas band. */}
+      <FooterGround color="var(--color-roasted)" />
     </PageTransition>
   );
 }

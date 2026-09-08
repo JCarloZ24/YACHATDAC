@@ -31,6 +31,12 @@ import Link from "next/link";
  * directly so there is no mask-support question, and the box is pulled a pixel
  * INTO the incoming ground so the antialiased foot cannot read as a hairline
  * across the full width.
+ *
+ * HEIGHT. 104 (sm:h-26) at 1440, where the frame's Wave Line ink is 105 tall;
+ * 40 (h-10) on the phone, where every Wave Line in the 375 frames is drawn
+ * 39–40 tall (2576:22128, 2576:22626, 2576:22821 …). Measured off the frame
+ * renders on 8 Sep 2026 — the h-16 it had before was never checked against a
+ * phone frame and ran the crest 60% too deep.
  */
 export const WAVE_PATH =
   "M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 105.324H1468.85L1470.04 7.97183V7.9544Z";
@@ -53,6 +59,7 @@ export const WAVE_ROLL = 2 * WAVE_W;
 export function WaveDivider({
   ground,
   flip = false,
+  mirror = false,
   hook,
   className = "",
 }: {
@@ -60,9 +67,13 @@ export function WaveDivider({
   ground: string;
   /** A crest that rises rather than falls (Figma's flip=up). */
   flip?: boolean;
+  /** Thick end on the left — the frame's Wave Lines laid out at x=1441
+      with a 1441 width are horizontally flipped instances. */
+  mirror?: boolean;
   /** Optional motion hook, rendered as `data-seam` so a page's recipes can
       select this wave without reaching for structural classes. Inert unless a
-      motion host wires it. */
+      motion host wires it. ⚠ A mirrored wave is flipped on x, so an animated
+      roll reads in the opposite direction — About's seams do not mirror. */
   hook?: string;
   className?: string;
 }) {
@@ -82,9 +93,9 @@ export function WaveDivider({
          preserveAspectRatio="none" stretches the crop back to full width. */
       viewBox="1.00123 0 1467.84877 105.324"
       preserveAspectRatio="none"
-      className={`pointer-events-none absolute inset-x-0 top-0 h-16 w-full -translate-y-[calc(100%-1px)] sm:h-26 ${
+      className={`pointer-events-none absolute inset-x-0 top-0 h-10 w-full -translate-y-[calc(100%-1px)] sm:h-26 ${
         flip ? "scale-y-[-1]" : ""
-      } ${className}`}
+      } ${mirror ? "scale-x-[-1]" : ""} ${className}`}
     >
       {/* The ink, as a three-tile strip (see WAVE_ROLL). At rest only the
           first tile shows — the others sit beyond the viewBox crop — so the
@@ -144,13 +155,46 @@ function BlobShape({ tone }: { tone: keyof typeof BLOB_TONE }) {
 }
 
 const BLOB_BOX =
-  "relative inline-flex h-14 w-[17.25rem] max-w-full items-center justify-center px-6";
+  "relative inline-flex h-14 w-[17.25rem] max-w-full items-center justify-center gap-2 px-6";
+
+/**
+ * The chevron the Wonder hi-fi (2033:7104) sets after its two closing labels:
+ * a plain stroke, right for a link and down for a download. Drawn inline
+ * because /wonder/chevron-up.svg is the artist's hand-drawn mark, which
+ * cannot be rotated into a UI glyph.
+ */
+function BlobChevron({ dir }: { dir: "right" | "down" }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      className={`relative size-4 shrink-0 ${dir === "down" ? "rotate-90" : ""}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M6 3l5 5-5 5" />
+    </svg>
+  );
+}
+
+/** Label sizes: the shared 12px, and the Wonder frame's CTA16 (2033:7108). */
+const BLOB_LABEL = {
+  sm: "text-xs",
+  /* CTA16 carries no tracking (like the story-card links); the utility's
+     0.12em pushed the label onto two lines inside the 276 shape. */
+  lg: "text-base tracking-normal whitespace-nowrap",
+} as const;
 
 export function BlobButton({
   href,
   children,
   tone = "burnt",
   still = false,
+  icon,
+  size = "sm",
   className = "",
 }: {
   href: string;
@@ -163,19 +207,23 @@ export function BlobButton({
    * not need to answer a cursor to read as a button.
    */
   still?: boolean;
+  /** Trailing chevron — right for a link, down for a download. */
+  icon?: "right" | "down";
+  size?: keyof typeof BLOB_LABEL;
   className?: string;
 }) {
   return (
     <Link
       href={href}
-      className={`group ${BLOB_BOX} ${
+      className={`group ${BLOB_BOX} text-canvas ${
         still
           ? ""
           : "transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-0.5"
       } ${className}`}
     >
       <BlobShape tone={tone} />
-      <span className="eyebrow relative text-xs text-canvas">{children}</span>
+      <span className={`eyebrow relative ${BLOB_LABEL[size]}`}>{children}</span>
+      {icon ? <BlobChevron dir={icon} /> : null}
     </Link>
   );
 }
@@ -188,20 +236,35 @@ export function BlobButton({
  */
 export function BlobHold({
   children,
+  tone = "muted",
+  icon,
+  size = "sm",
   className = "",
 }: {
   children: string;
+  /**
+   * The Wonder hi-fi (2033:7110) draws the brochure button in full Burnt
+   * Ochre with a down chevron. Passing a solid tone renders it as the frame
+   * does; it is still not a link, and data-placeholder still marks the hold.
+   */
+  tone?: keyof typeof BLOB_TONE;
+  icon?: "right" | "down";
+  size?: keyof typeof BLOB_LABEL;
   className?: string;
 }) {
+  const muted = tone === "muted";
   return (
     <span
       data-placeholder="blob-hold"
-      className={`${BLOB_BOX} ${className}`}
+      className={`${BLOB_BOX} ${muted ? "text-current/55" : "text-canvas"} ${className}`}
     >
-      <BlobShape tone="muted" />
-      <span className="eyebrow relative text-[11px] text-current/55">
+      <BlobShape tone={tone} />
+      <span
+        className={`eyebrow relative ${muted ? "text-[11px]" : BLOB_LABEL[size]}`}
+      >
         {children}
       </span>
+      {icon ? <BlobChevron dir={icon} /> : null}
     </span>
   );
 }
@@ -325,7 +388,9 @@ export function ClusterArtwork({
   return (
     /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
     <img
-      src={tone === "gold" ? "/artwork/cluster-gold.svg" : "/artwork/cluster.svg"}
+      src={
+        tone === "gold" ? "/artwork/cluster-gold.svg" : "/artwork/cluster.svg"
+      }
       alt=""
       aria-hidden
       data-artwork="cluster"

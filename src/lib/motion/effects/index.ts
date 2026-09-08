@@ -43,6 +43,7 @@ import { registerCore } from "./core";
 import { registerGrid } from "./grid";
 import { registerMedia } from "./media";
 import { registerType } from "./type";
+import { registerPortal } from "./portal";
 
 gsap.registerPlugin(CustomEase);
 
@@ -66,6 +67,7 @@ export function registerYachatdacEffects(): void {
   registerGrid();
   registerContinuity();
   registerAccumulate();
+  registerPortal();
 }
 
 /**
@@ -113,6 +115,7 @@ export type EffectName =
   | "scrimRamp"
   | "bleed"
   | "dissolve"
+  | "handprintPortal"
   // type at scale
   | "aperture"
   | "knockout"
@@ -121,6 +124,8 @@ export type EffectName =
   // grid and Flip
   | "handoff"
   | "escape"
+  | "surface"
+  | "reflow"
   | "mosaic"
   | "scatterResolve"
   // section-to-section continuity

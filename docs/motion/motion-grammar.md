@@ -1,5 +1,7 @@
 # The motion grammar
 
+*Last updated: 8 September 2026*
+
 *Decided 30 August 2026. The second artefact, and the one the code answers to.*
 
 Parallax, dissolves and text effects are not the design. They are the alphabet. The design is
@@ -25,7 +27,7 @@ grow, because several effects can serve one role at different volumes. See Varia
 | **arriving quietly** | 16px and a fade, once, no re-trigger. The baseline for a quiet screen. | `country` · 0.55s · 0.06 stagger | X4 | P5 | `arrive` |
 | **what radiates from a source** | Elements arrive in order of distance from a chosen origin, not DOM order, with seeded hand jitter. | `country` · 0.55s · 0.045/unit | L1 + L3 | P4 | `emanate` |
 | **what radiates**, layout cut | Three arrival tiers — anchor, mid, detail — each with its own micro-stagger. | `country` · 0.55s · at 0 / .25 / .45 | L2 | P4 | `triad` |
-| **the world opening** | A frame's clip opens while the image counter-scales, so the picture is revealed rather than resized. | `machine`, scrubbed | M2 | P3 | `frameOpen` |
+| **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. | `machine`, scrubbed; Record: 360vh | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal` |
 | **being drawn in** | A slow scrubbed push toward the subject. Transform-origin points at what matters. | `machine`, scrubbed | M1 | P2 | `pushIn` |
 | **a change of ground** | The new ground sweeps over the old as a scaleY wipe. | `machine`, scrubbed | X7 lineage | P7 | `ground` |
 | **time handing over** | Two stacked plates cross-dissolve. One whole frame hands to another. | `country` · 0.82s | A5 | **P9** | `dissolve` |
@@ -60,11 +62,12 @@ diluting — the brief caps the table at six to eight roles and it is right to.
 
 | Row | Quiet | Loud |
 |---|---|---|
-| the world opening | `frameOpen` (in its frame) | `breakOut` (frame gone), `aperture` (through a letterform), `escape` (a grid cell becomes the screen, and comes back) |
-| being drawn in | `pushIn` (one plane) | `plateParallax` (layers inside one frame), `bleed` (past the edge) |
+| the world opening | `frameOpen` (in its frame) | `breakOut` (frame gone), `aperture` (through a letterform), `escape` (a grid cell becomes the screen, and comes back), `surface` (The Record's pre-rendered screen opens from its cell), `reflow` (a filtered collection rearranges) |
+| being drawn in | `pushIn` (one plane); shared wheel inertia (`SCR-09`, `createSmoothScroll`) | `plateParallax` (layers inside one frame), `bleed` (past the edge) |
 | a change of ground | `ground` (one sweep) | `groundRamp` (across four screens), `waveHandoff`, `overlap`, `stickyIndex` |
 | what endures | `settle` (lines) | `display` (chars), `ghostType` (behind everything), `knockout` (as a window) |
 | what radiates | `arrive` | `emanate`, `triad`, `scatterResolve`, `mosaic`, `handoff` |
+| the guide leading the eye | `routeDraw` (a drawn map surfaces out of short segments that start at seeded-random points and join until the outline stands — the D4 contour-map read — scrubbed across a sticky span; the line is the guide, there is no traveller. On §02 the property is then painted in by one up-and-down brush stroke and the pin arrives and floats — the float is the one time-based movement, a slow bob on transform — Wonder §02 and §04, `src/lib/motion/route-map.ts`, 8 Sep 2026) | `guide` |
 
 `scrimRamp` belongs to no row on its own: X5 is a legibility requirement that travels with
 whatever media effect it accompanies, and it is non-negotiable wherever copy sits on a picture.
@@ -75,6 +78,45 @@ clone and leaves the real cell in place at opacity 0, so the grid behind it neve
 card returns to exactly where it was. Both are Flip, and neither may be scrubbed — Flip measures
 at trigger time, so a scrubbed Flip computed at one viewport width lands wrong at another. Pin
 for a screen, run on enter, reverse on leave-back.
+
+**The Record opening — 8 September 2026, latest user direction.**
+`handprintPortal` supersedes the static hero with one Three.js aperture scene
+(360vh of scroll, transition channel). **Latest correction:** the user rejects
+the repeated handprints and smooth silhouette. One supplied ink impression
+defines the openings: black is empty, white remains sandstone, including the
+palm's white centre and gaps between finger pads. The plain wall has a generated
+photographic sandstone material and extruded cut edges in Three.js. Cards are
+textured planes at different depths well behind the wall. The camera passes
+through the hand, then approaches the cards. Whole card frames grow through
+perspective; their image UVs remain fixed (no independent photo warp or drift).
+Only camera transforms, projected link transforms and copy opacity change. The
+opening reverses on scroll back. The user explicitly permits generated artwork
+for this direction, replacing the earlier iconography restriction. The supplied
+ink mask and generated stone are interface assets, not records of rock art.
+Reduced motion, unavailable WebGL or missing assets use the static hero and
+ordinary catalogue. A native skip link bypasses the scene at every position.
+
+**Earlier static direction — 8 September 2026 (F7 exception).**
+The route no longer mounts page or grid motion and has no animated headings,
+hover effects, count fades or route transition. The `surface` and `reflow` work
+below remains in source as an earlier design; it is not active on `/the-record`.
+**Scroll-feel amendment, 8 September 2026:** user direction adds the shared
+`SCR-09` Lenis scroller (`lerp: 0.12`, the Living Work settings) to this route.
+This is the input behaviour for the "being drawn in" row above; it creates no
+section timeline. Content stays still. Touch and reduced motion use native
+scrolling, and the scroller is destroyed when the catalogue page unmounts.
+See [the scene ledger](scenes.md#the-record--static-by-direction-8-september-2026).
+
+**Earlier measured cut — 8 September 2026, F7/F8 motion refinement.** `surface`
+uses the existing screen plate rather than a DOM clone. Its image counter-scale is the
+reciprocal of the plate's **current** scale on each axis, so the picture stays undistorted
+throughout the flight. The rectangular corner mask uses `clip-path`; copy arrives 0.15s
+after the plate lands. No new artwork is drawn. The scroll-driven return requested on
+5 September remains a local exception to the unscrubbed `escape` above: measure inside
+the held frame, rebuild after resize while preserving progress, and keep clicks timed.
+`reflow` measures cards by their stable content ids, transforms the new layout for 0.55s,
+and fades incoming cards. React retains ownership of every node. Both cuts revert when
+the grid changes, the route unmounts, or reduced motion is enabled.
 
 ## Compositions — the sentences
 
