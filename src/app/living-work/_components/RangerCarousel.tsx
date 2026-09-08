@@ -401,7 +401,7 @@ export function RangerCarousel({
   return (
     <div>
       {/* The count and the drag cue, aligned with the section's column. */}
-      <div className="mx-auto flex w-full max-w-7xl items-baseline justify-between px-6 lg:px-16">
+      <div className="mx-auto flex w-full max-w-[1440px] items-baseline justify-between px-6 sm:px-10 lg:px-25">
         <p className="eyebrow text-xs text-gold">
           <span ref={countRef}>01 / {pad(slots.length)}</span>
         </p>
@@ -416,7 +416,7 @@ export function RangerCarousel({
       >
         <ul
           ref={trackRef}
-          className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] lg:px-16 [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:px-10 lg:px-25 [&::-webkit-scrollbar]:hidden"
         >
           {slots.map((slot, i) => (
             <li key={slot.caption} className="w-[280px] shrink-0 snap-start">
@@ -539,7 +539,7 @@ export function RangerCarousel({
             Back to the Rangers
           </button>
 
-          <div className="mx-auto w-full max-w-7xl px-6 py-24 lg:px-16 lg:py-28">
+          <div className="mx-auto w-full max-w-[1440px] px-6 py-24 sm:px-10 lg:px-25 lg:py-28">
             <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
               {/* The holder keeps the grid cell's size while Flip absolutises
                   the portrait for the flight — without it the left column

@@ -7,10 +7,16 @@ the review with August and Marc.
 The notes lane is the spec. Every MOTION paragraph in it is a testable
 assertion, and §2 below is that test.
 
-**Applied in this pass:** `04a9b15` (accessibility), `834eb4d` (spacing, type,
-§08), `34abcaa` (this document and two stale records), `aa6c054` (the image
-pipeline). **Not applied:** everything in §2 marked ⚠, which is held for Ivy's
-motion comments, and §3, which needs a decision that is not the builder's.
+**Round 1, 8 Sep:** `04a9b15` (accessibility), `834eb4d` (spacing, type, §08),
+`34abcaa` (this document and two stale records), `aa6c054` (the image pipeline),
+`313321e` (§03's rules).
+
+**Round 2, 8 Sep — Ivy's review of the built page:** `c679550` (the gutter, the
+hero scrim, §02's numbers, §04's rule, §09's gap), `daf54a7` (§08 whole names,
+§07's sticky header), `47cd707` (§05 auto-runs, the ranger belt). See §6.
+
+**Still not applied:** everything in §2 marked ⚠ that round 2 did not reach,
+and the second half of §3.
 
 ---
 
@@ -157,21 +163,22 @@ The best-matched section on the page.
 
 ## 3 · Held — decisions that are not the builder's
 
-**§02's rest state.** The frame contradicts itself: the progress rail reads
-`04 / 04`, the figure drawn is `480`, and the caption beneath it is
-`KILOMETRES SOUTH TO BARCALDINE`, which belongs to `120`. Three states composited
-in one artboard.
+**§02's rest state — RETRACTED 8 Sep.** This section previously claimed the
+frame contradicted itself and that the figure order was wrong. **Both claims
+were mistaken and the build was right all along.**
 
-Separately, the sequence order disagrees. The note gives
-`8,870 → 120 → 480 → 2019` and says *"2019 is the only figure with digits after
-the aperture, and it runs past the 1340 margin to the edge of the screen"* —
-which only holds if 2019 is last. The build runs `8,870 → 2019 → 480 → 120` and
-rests on `120`, with its own documented reason (the `0` of 120 becomes the
-portal onto the plain).
+Rendering the frame settles it: `2137:2615` shows **120 at `04 / 04`**, which is
+exactly the build's rest state. The layer is *named* `figure · 480`, which is
+stale, and reading the layer name instead of the render is where the error came
+from.
 
-Both readings are coherent. **The frame needs settling, not the code** — and it
-is the same defect class as §05's rest state, which the 29 Aug Figma QA already
-fixed once by making the section rest at `08`.
+The note's `8,870→100 · 120→463 · 480→362 · 2019→624` is a table of
+**x-positions** — each figure placed so its `0` lands on the aperture's x=833 —
+not a running order. Nothing in the notes lane specifies a sequence, and the
+build's `8,870 → 2019 → 480 → 120` ending on the figure whose `0` becomes the
+portal is coherent and matches the drawn rest state.
+
+No change was made to the figure order or the rest state.
 
 **§03's ground ramp cannot carry warm text at its dark end.** Measured: the
 deepened tone clears AA on the static ramp (6.31 / 5.13 / 4.68), but the ramp's
@@ -260,3 +267,32 @@ the two should be reconciled before sign-off, and they have not been.
 - `docs/motion/scenes.md`'s Living Work ledger had **nine rows for ten built
   sections** — §07 Infrastructure was missing, and §06's row had absorbed its
   phrase ("and what it takes") as though the two had been merged. Row added.
+
+
+---
+
+## 6 · Round 2 — Ivy's review of the built page
+
+Nine comments. Two were build bugs, two were measurable divergences from the
+frame, and the rest were UX judgements about sections that were faithful to the
+artboard and still did not work for a reader.
+
+| # | Comment | What it turned out to be |
+|---|---|---|
+| 1 | Hero crop differs from Figma | **Two causes.** The scrim was darker than drawn at both ends — a 20% haze over sky the frame leaves clear, and fully opaque where the frame stops at 88%. Ported exactly. The remaining difference is **aspect, not position**: the source is 1.78, the frame 1.44, and a `min-h-svh` hero is 1.78 at 1920×1080, so a wide screen shows the whole frame and crops nothing. |
+| 2 | Should text align with the nav logo? | **Yes, and Living Work was the only page it was true of.** Four sibling pages already ship a 100px gutter; this page was the last on `max-w-7xl` at 144. Now on the house column, footer with it. The nav's 64 is Marc's `Navbar / 1 /` geometry and is left alone on every page. |
+| 3 | The numbers make no sense | **A fixed `h-[30vw]` box around a `16vw` glyph** left ~200px of dead air and pushed the label to the foot of the screen at 12px. Now a two-column grid: numeral left, label beside it at 18px, swapping together. Also closed 45vh of dead screen in the timeline; span 430 → 400vh. |
+| 4 | Rangers artwork leans left | The frame draws the rule at x=100 w=1240 — the full content width. The build capped it at `max-w-5xl` and left-aligned. |
+| 5 | Card hierarchy and drag | Scale off a cosine bell against the viewport while the pitch stayed flat: the hierarchy flattened at the edges and the gaps grew 31 → 60 → 80. Now an even ramp with the pitch integrating the scale — constant 20px gaps. Wheel/trackpad added, horizontal intent only. |
+| 6 | The Spring costs too much scroll | The eight days alone ate ~130vh. Auto-runs in ~2.2s now; pin 150 → 60vh. Trades away the note's "scrolling controls time", deliberately. |
+| 7 | Infrastructure header should stay | Header sticky on `lg`, blocks pass under the artist's rule. The index parks below it via a measured custom property. |
+| 8 | Don't ship the stroked text | It was Ivy's drawing of the animation, not a thing to ship. Three drawing layers collapse to one solid name wiped left-to-right; the rule and tick below carry the proportion, and Rainbow Credits' empty track is now the whole of how it reads as unstarted. |
+| 9 | Are the cards that wide? | **No — at 362 they are the narrowest three-up on the site.** The gap was the problem: 32 against the frame's 77. Opened to the drawn value. The glyph now goes through `SeamGlyph`. |
+
+### Two things deliberately not done
+
+- **The frame's line under §02's rule** — *"The aperture opens as the figures
+  change…"* — is a description of the motion. `CLAUDE.md` keeps notes in the
+  notes lane, so it is not rendered.
+- **No per-figure explanatory copy was written.** The label carries the meaning;
+  inventing four new sentences would need sourcing and sign-off.
