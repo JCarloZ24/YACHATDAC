@@ -84,21 +84,22 @@ const FILLS = [78, 58, 42, 26, 0];
 /**
  * §08's vessel size — one continuous ramp, and it has to be.
  *
- * The names are `whitespace-nowrap` inside an `overflow-hidden` box, so a size
- * the column cannot hold is not a reflow, it is a word silently cut in half —
- * and the fill layer, the track and the gold tick all inherit the same box, so
- * the proportion reads wrong too.
+ * A name that does not fit is now a wrap, not a silent truncation — the
+ * `whitespace-nowrap` and the `overflow-hidden` box went with the stroked
+ * layer on 8 Sep. The ramp still exists so the names do not wrap in practice,
+ * because a two-line name under a one-line rule reads badly.
  *
- * The previous `clamp(…,6.4vw,2.25rem) sm:text-6xl` stepped from 36px straight
- * to 60px at exactly 640, where the column is only ~592 wide. The longest name,
- * "Biological Sequestration" (24 characters), needs roughly 13.7em, so:
+ * The original fault was a `clamp(…,6.4vw,2.25rem) sm:text-6xl` that stepped
+ * from 36px straight to 60px at exactly 640. The longest name, "Biological
+ * Sequestration" (24 characters), needs roughly 13.7em, and against the house
+ * column (24 / 40 / 100px gutters, capped at 1440) the ceilings are:
  *
- *   375  → column 327 → 23.9 max      1024 → column 896  → 65.4 max
- *   640  → column 592 → 43.2 max      1280 → column 1152 → 84.0 max
+ *   375  → column 327  → 23.9 max     1024 → column 824  → 60.1 max
+ *   640  → column 560  → 40.9 max     1440 → column 1240 → 90.5 max
  *
  * This ramp runs 22px at 375 to the drawn 60px at 1280 and holds there, which
- * clears every one of those ceilings. If a longer name is ever added, re-run
- * the arithmetic — do not just raise the cap.
+ * clears every one of them. If a longer name is ever added, re-run the
+ * arithmetic — do not just raise the cap.
  */
 const VESSEL_SIZE = "text-[clamp(1.25rem,calc(0.39rem+4.2vw),3.75rem)]";
 
@@ -990,25 +991,41 @@ export function LivingWorkInfrastructure() {
     <section
       id="infrastructure"
       data-lw="infrastructure"
-      className="relative bg-evergreen py-16 lg:py-32"
+      className="relative bg-evergreen py-16 lg:pt-0 lg:pb-32"
     >
       <div className={COLUMN}>
-        <p className="eyebrow text-gold">Infrastructure</p>
-        <h2 className="headline mt-5 max-w-4xl text-h2 text-canvas">
-          Infrastructure and technology
-        </h2>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
-          What it takes to run a property 120 kilometres from the nearest town.
-        </p>
+        {/* THE HEADER STAYS. Twenty-three facts in six blocks is a long read,
+            and the section's own question — what it takes to run a property
+            120km from town — was scrolling away before the first block. It
+            now holds at the top on `lg` and the blocks pass beneath the
+            artist's rule, which becomes the edge they disappear under.
 
-        {/* Dots / Rule — the artist's dotted divider, used whole. */}
-        <div data-artwork="dots-rule" aria-hidden className="mt-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/dots-rule.svg" alt="" className="w-full" />
+            Opaque ground and a z-index, or the blocks would show through it.
+            Phone is left alone: a header this tall pinned to a 375 screen
+            would cost more than the context is worth, and the index beside it
+            is `hidden` below `lg` anyway. */}
+        <div
+          data-infra-head
+          className="bg-evergreen lg:sticky lg:top-0 lg:z-10 lg:pt-32 lg:pb-8"
+        >
+          <p className="eyebrow text-gold">Infrastructure</p>
+          <h2 className="headline mt-5 max-w-4xl text-h2 text-canvas">
+            Infrastructure and technology
+          </h2>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
+            What it takes to run a property 120 kilometres from the nearest town.
+          </p>
+
+          {/* Dots / Rule — the artist's dotted divider, used whole. It is the
+              header's bottom edge, so it is what the blocks clip under. */}
+          <div data-artwork="dots-rule" aria-hidden className="mt-10">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/artwork/dots-rule.svg" alt="" className="w-full" />
+          </div>
         </div>
 
         <div className="mt-16 lg:flex lg:gap-[82px]">
-          <aside className="hidden lg:sticky lg:top-32 lg:block lg:h-fit lg:w-[258px] lg:shrink-0">
+          <aside className="hidden lg:sticky lg:top-[calc(var(--infra-head,20rem)+2rem)] lg:block lg:h-fit lg:w-[258px] lg:shrink-0">
             <p className="eyebrow text-xs text-canvas/45">What it takes</p>
             <ol className="mt-6 space-y-4">
               {/* Rest state IS the wireframe's own frame: the first pair lit,
@@ -1036,7 +1053,7 @@ export function LivingWorkInfrastructure() {
             </ol>
           </aside>
 
-          <div className="grid flex-1 gap-x-[60px] gap-y-20 sm:grid-cols-2">
+          <div data-infra-grid className="grid flex-1 gap-x-[60px] gap-y-20 sm:grid-cols-2">
             {infrastructure.map((block, i) => (
               <div key={block.title} data-infra-block>
                 <p className="eyebrow text-xs text-gold">
@@ -1175,35 +1192,23 @@ export function LivingWorkOutputs() {
                   {outputsRestsOn[output.title] ?? ""}
                 </p>
 
-                {/* The vessel — solid to where the work has got, outline for
-                    what is still to come. Rest state IS the final fill; the
-                    motion pass scrubs toward it, never past it. */}
+                {/* THE NAME — one solid text node, wiped in left to right.
+                    It used to be three: an aria-hidden stroked outline, a
+                    clipped solid copy, and an sr-only name. The stroke was
+                    Ivy's way of DRAWING the animation on the artboard, never a
+                    thing to ship, and the partial fills left names half-read.
+                    All five now arrive whole and readable; the proportion
+                    moved to the rule below, which is the better place for it —
+                    text is for reading, a rule is for measuring. */}
                 <div className="mt-3 inline-block max-w-full align-top">
-                  <div
-                    data-vessel
-                    data-fill={fill}
-                    className="relative overflow-hidden whitespace-nowrap"
-                  >
-                    <span
-                      aria-hidden
-                      className={`headline block ${VESSEL_SIZE} text-transparent [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]`}
-                    >
-                      {output.title}
-                    </span>
-                    <span
-                      data-vessel-fill
-                      className="absolute inset-0 overflow-hidden"
-                      style={{ width: `${fill}%` }}
-                    >
-                      <span className={`headline block ${VESSEL_SIZE} whitespace-nowrap text-canvas`}>
-                        {output.title}
-                      </span>
-                    </span>
-                    {/* Accessible name, once — the two layers above are drawing. */}
-                    <span className="sr-only">{output.title}</span>
-                  </div>
+                  <h3 data-vessel className={`headline block ${VESSEL_SIZE} text-canvas`}>
+                    {output.title}
+                  </h3>
 
-                  {/* The track: the whole word is the whole job. */}
+                  {/* The track: the whole word is the whole job. Gold to where
+                      the work has got, grey after it, and the tick on the
+                      boundary. Rainbow Credits has not started, so it gets an
+                      empty track and no tick — that IS its status. */}
                   <div className="relative mt-3 h-px w-full bg-canvas/20">
                     {empty ? null : (
                       <>
