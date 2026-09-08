@@ -169,3 +169,6 @@ Against the deliverable's acceptance criteria:
 | "Indigenous" / "First Nations" usage ruled | ⚠ open — no rule given |
 | Fire-stick farming entry present | ✅ present; four missed strings swept 7 Sep |
 | Suzanne's approval relayed and attributed | ⚠ open |
+
+
+**Home Truth timeline, 9 September 2026 (user direction):** Figma Homepage Prototype frames 3371:45208, 45418, 45628, 45839, 46050, 46261 and 46472 supply display years 1861, 1871, 1881, 1891, 1896, 1902 and 2026 respectively. These are prototype labels, not newly researched dates. Draft wording remains authoritative: the Landsborough sentence retains "Iningai Country" where Figma says "our Country".

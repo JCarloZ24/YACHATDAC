@@ -2,7 +2,7 @@
 
 *Last updated: 9 September 2026*
 
-**Home painting text ? 9 September 2026:** within the existing 120vh dissolve, opacity-only reveals introduce ?You are entering? at 55?65%, ?Turraburra? at 65?75%, and the lower-right ?Story held in stone and starlight? at 77?89%. All finish before the painting completes at 95% and remain held. Reverse scroll hides them in reverse order; reduced motion and canvas failure retain the full original hero paragraph.
+**Home painting text - 9 September 2026 (latest direction):** the painting finishes revealing at timeline 0.95. Then You are entering fades in at 1.08 over 0.50 units, Turraburra at 1.62 over 0.50, and the story line at 2.18 over 0.55. The complete copy holds until 3.03, clears, and the portal begins at 3.18. All later scenes move two units later without changing their pace. Reverse scroll retraces the sequence; reduced motion retains the static fallback. This supersedes the earlier overlapping text/reveal timing.
 
 
 *Decided 30 August 2026. The third artefact — pacing, on paper, before it is pacing at 60fps.*
@@ -1076,3 +1076,51 @@ Painting scrim coverage, 9 September 2026: each text fragment now has a full rec
 
 
 Portal lens motion, 9 September 2026: the approach now applies a radial shader curve to the painting alone, stretching peripheral marks around the opening like the supplied motion reference. A sine-squared envelope builds and releases the bend during the existing portal span. Centre, landscape UVs, reveal timing and reduced-motion fallback remain stable. The source artwork is unchanged. Reverse scroll retraces the curve.
+
+
+Home woodland breeze (AMB-05), 9 September 2026: user authorises subtle vegetation UV motion on the supplied road photograph, superseding frame grade for this layer only. Spatial and colour masks protect the road and suppress dark trunks; grass ripples faster than canopies. This is an approximation from a still photograph, not segmented 3D trees. The existing canvas and controller own the 24-second loop, paused offscreen and in hidden tabs, absent with reduced motion. Painting, sky, other photos and scroll timing remain unchanged.
+
+
+AMB-05 correction, 9 September 2026: user found the distortion too obvious. Restrict wind to three feathered grass patches in source-image UV space, remove canopy sway, reduce grass displacement by 80%, and slow the ripple from nine to four cycles per 24-second phase. Unselected pixels remain still. This supersedes the broad vegetation mask above.
+
+
+AMB-05 visibility tuning, 9 September 2026: the reduced pass was too faint. Keep the same three grass selections and stationary trees/road, but increase horizontal displacement from 0.00015 to 0.0006 UV and vertical displacement to 0.00012 UV. Six cycles per 24-second phase give a visible four-second ripple; no broader vegetation warp is restored.
+
+
+AMB-05 stronger breeze, 9 September 2026: user still could not see the ripple. Increase horizontal displacement fourfold to 0.0024 UV, vertical to 0.00045 UV, broaden the three foreground selections, and use three-second cycles. Reduce colour-mask suppression of dry yellow grass. The road exclusion and stationary horizon remain. This supersedes the previous amplitude tuning.
+
+
+AMB-05 viewport correction, 9 September 2026: checking the 2048-by-758 landscape confirmed the cover crop removes most of the low grass selections. Add three mid-ground grass selections higher in the source image, retaining the original foreground selections for taller viewports. No amplitude increase; the road exclusion and horizon remain fixed.
+
+
+AMB-05 final scope correction, 9 September 2026: user requests all vegetation to ripple gently. Remove the six patch selections. Apply a broad vegetation mask with road exclusion and dark-trunk suppression, with 0.0009 UV grass ripple and 0.00065 UV canopy sway. This supersedes the patch-selection approach and its viewport workaround. Sky, road, pause behaviour and reduced-motion fallback remain unchanged.
+
+
+| **the landscape introduces Truth** | SCR-09: after Wonder holds, its copy rises away; the existing road canvas shifts from pale daylight to the supplied saturated blue sky. Truth, Iningai Nation and the first existing subject-detail paragraph rise into a centred upper block. | homeHeroDissolve 3.4-4.2; hold to 4.6; total pin 552vh; reversible scrub 0.8s | user screenshot 9 September 2026 | quiet type over held landscape with AMB-05 breeze | `homeHeroDissolve` |
+
+
+Truth frame verified in Figma 3371:44774 (Homepage Prototype), 9 September 2026: content 3371:44831 is 720px wide, top 124px in a 901px frame; eyebrow 20/28, heading 64/64, body Work Sans Medium 20/30, 24px gaps. Existing road and full sky assets are reused; bright sky samples follow the frame background offset -1422px in a 6996px layer. Foreground uses the frame's 25% black scrim. No draft words change; later Truth sequence remains available in normal flow and in the static fallback.
+
+
+Truth colour correction, 9 September 2026: user requests the exact Figma appearance. Replace the approximate blue-band sampling and land-only dimming with frame 3371:44774's exact visible sky and soft-light crops. A 25% black overlay covers sky and terrain before the foreground-masked soft-light blend, computed in display RGB. Existing Truth scroll progress blends into this corrected composition; timing and copy remain unchanged.
+
+
+### Home Truth years - 9 September 2026
+
+SCR-10 extends the existing canvas after the Truth introduction through the seven dated Figma frames 3371:45208-46472. Original sky and soft-light image layers use measured per-frame offsets, including the existing 25% black scrim. Exported dotted path and combined arrow/rosette marker sit over the landscape. Prose and year labels crossfade without counting or moving testimony. Every state scrubs backwards; the final Full account link goes to /truth. Static Truth remains the reduced-motion/WebGL fallback. No motion keyframes were present in Figma; timings are the scroll adaptation of its supplied states.
+
+
+Home Truth smooth scrolling - 9 September 2026: SCR-10 now interpolates the year marker and canvas lighting throughout each one-unit leg, rather than moving quickly then holding for most of the scroll distance. Text fades take 0.3 units each; the final account remains held for 0.9 units. Existing wheel inertia and reversible scrub remain active. This supersedes the earlier 0.4/0.6 transition/hold split.
+
+
+### Belonging under the stars - 9 September 2026
+
+After the final Truth reading hold, SCR-10 removes its entire copy and dotted year sequence. Belonging rises/fades over the same canvas while sky and soft-light layers move to Figma 3371:41578 offsets 5822. Existing stars twinkle through a luminance mask using the registered AMB-05 phase; no new stars or constellations are drawn. Terrain masks the effect, and shared visibility/reduced-motion cleanup applies. The draft supplies all text and the full CTA label. The static Belonging section remains the fallback.
+
+
+Belonging procedural stars - 9 September 2026: latest user direction supersedes animating the image stars. A seeded GLSL star field replaces the sky only, with antialiased points, varied luminosity and spatially independent twinkle driven by the existing registered ambient phase. This is generated decorative sky, not astronomical or cultural-record data. No extra renderer, texture or animation loop is added.
+
+
+Belonging shooting stars - 9 September 2026: occasional procedural meteors extend the existing shader star field. Three varied, screen-relative diagonal paths run in the registered 24-second AMB-05 phase, each visible for 1.4 seconds approximately eight seconds apart. A bright soft head leads a tapered fading trail; the foreground alpha occludes it. The effect appears only once Belonging has settled and inherits existing pause, teardown and reduced-motion behaviour. No textures, extra canvas or independent ticker are added.
+
+Invitation continuation, 9 September 2026: Figma 3371:41740 supplies three 400px-high photo cards, 48px gaps, 40px padding, 20px corners, and a centred 64px heading. After Belonging, the road exits into a charcoal media scrim; the Invitation overlaps its final 24svh. A 65vh reversible homeInvitation entrance lifts whole cards without image warping. D5 retains the longer draft headline, pillar titles, descriptions and destinations; screenshot copy differs. Mobile stacks cards; reduced motion uses the same content in normal flow.

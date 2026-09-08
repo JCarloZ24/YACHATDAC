@@ -17,8 +17,8 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * F7/F8, Home opens / homeHeroOpen, user direction 8 September 2026.
  * 9 September POV correction: fixed plates, a stationary eye and head rotation.
- * Only the entrance moves the gallery. No UV animation,
- * ambient loop or per-frame layout reads. A 120vh pinned dissolve closes the hero.
+ * Only the entrance moves the gallery. AMB-05 adds local vegetation wind to
+ * the road layer on arrival; gallery UVs remain held. No per-frame layout reads.
  * Render on approach/resize/scroll and
  * damped mouse navigation (latest reference, 8 September 2026).
  * The semantic DOM collage doubles as the texture source and robust fallback.
@@ -44,6 +44,8 @@ export function createHomeHero(
     let resumePointer = () => {};
     let offscreen = false;
     let timeline: gsap.core.Timeline | undefined;
+    let breeze: gsap.core.Timeline | undefined;
+    let syncBreeze = () => {};
     let geometry: PlaneGeometry | undefined;
     const textures: Texture[] = [];
     const materials: (MeshBasicMaterial | ShaderMaterial)[] = [];
@@ -61,6 +63,7 @@ export function createHomeHero(
       resizeObserver?.disconnect();
       intersection?.disconnect();
       stopPointer();
+      breeze?.kill();
       clearPointerListeners();
       context?.revert();
       materials.forEach((material) => material.dispose());
@@ -78,6 +81,7 @@ export function createHomeHero(
       release();
     };
     const onVisibility = () => {
+      syncBreeze();
       if (document.hidden) { timeline?.pause(); stopPointer(); }
       else {
         if (root.dataset.heroMotion === "entering") timeline?.resume();
@@ -110,8 +114,11 @@ export function createHomeHero(
         camera.lookAt(0, 0, 0);
         camera.updateMatrixWorld();
         const entrance = { x: 24, y: -1, z: -16, yaw: -0.3 };
-        const exit = { progress: 0, portal: 0, wonder: 0 };
+        const exit = { progress: 0, portal: 0, wonder: 0, truth: 0, truthSky: 1422, truthLight: 464, belonging: 0 };
         let landscapeReady = false;
+        syncBreeze = () => {
+          breeze?.paused(disposed || offscreen || document.hidden || !landscapeReady || exit.portal <= 0.65);
+        };
         const tokens = getComputedStyle(document.documentElement);
         const dark = new Color(tokens.getPropertyValue("--color-charcoal").trim());
         const warm = new Color(tokens.getPropertyValue("--color-oxide").trim());
@@ -134,6 +141,18 @@ export function createHomeHero(
         skyTexture.colorSpace = SRGBColorSpace;
         textures.push(skyTexture);
         paintingMaterial.uniforms.sky.value = skyTexture;
+        const truthLayers = [
+          { src: HOME_PORTAL.truthSky, uniform: "truthSkyMap" },
+          { src: HOME_PORTAL.truthLight, uniform: "truthLightMap" },
+        ].map(({ src, uniform }) => {
+          const image = new Image();
+          const texture = new Texture(image);
+          texture.colorSpace = SRGBColorSpace;
+          textures.push(texture);
+          paintingMaterial.uniforms[uniform].value = texture;
+          image.src = src;
+          return { image, texture };
+        });
         const paintingPlate = new Mesh(geometry, paintingMaterial);
         paintingPlate.frustumCulled = false;
         paintingPlate.renderOrder = 1000;
@@ -173,6 +192,7 @@ export function createHomeHero(
         });
         if (!plates.length) { release(); return; }
         const render = () => {
+          syncBreeze();
           if (disposed || document.hidden || offscreen) return;
           gallery.position.set(entrance.x, entrance.y, entrance.z);
           gallery.rotation.set(0, entrance.yaw, 0);
@@ -189,16 +209,22 @@ export function createHomeHero(
           paintingMaterial.uniforms.progress.value = gsap.utils.clamp(0, 1, (exit.progress - 0.45) / 0.5);
           paintingMaterial.uniforms.portal.value = landscapeReady ? exit.portal : 0;
           paintingMaterial.uniforms.wonder.value = exit.wonder;
+          paintingMaterial.uniforms.truth.value = exit.truth;
+          paintingMaterial.uniforms.belonging.value = exit.belonging;
+          paintingMaterial.uniforms.truthSkyOffset.value = exit.truthSky;
+          paintingMaterial.uniforms.truthLightOffset.value = exit.truthLight;
           renderer?.setClearColor(ground, 1);
           renderer?.render(scene, camera);
         };
         // Independent loading: a failed painting leaves the red-ground transition usable.
         landscapeImage.src = HOME_PORTAL.src;
         skyImage.src = HOME_PORTAL.sky;
-        void Promise.all([landscapeImage.decode(), skyImage.decode()]).then(() => {
+        void Promise.all([landscapeImage.decode(), skyImage.decode(),
+          ...truthLayers.map(({ image }) => image.decode())]).then(() => {
           if (disposed) return;
           landscapeTexture.needsUpdate = true;
           skyTexture.needsUpdate = true;
+          truthLayers.forEach(({ texture }) => { texture.needsUpdate = true; });
           landscapeReady = true;
           paintingMaterial.uniforms.landscapeReady.value = 1;
           render();
@@ -251,7 +277,10 @@ export function createHomeHero(
           event.preventDefault();
           event.stopPropagation();
           const trigger = ScrollTrigger.getById("home-hero-dissolve");
-          if (trigger) window.scrollTo({ top: trigger.start + window.innerHeight * 3.72, behavior: "instant" });
+          const wonderTime = (trigger?.animation as gsap.core.Timeline | undefined)?.labels.wonderReady;
+          if (trigger && typeof wonderTime === "number") {
+            window.scrollTo({ top: trigger.start + window.innerHeight * wonderTime * 1.2, behavior: "instant" });
+          }
         };
         scrollCue?.addEventListener("click", goToWonder);
         // Preserve ticker pausing separately from final listener teardown.
@@ -262,6 +291,7 @@ export function createHomeHero(
         };
         intersection = new IntersectionObserver(([entry]) => {
           offscreen = !entry.isIntersecting;
+          syncBreeze();
           if (offscreen) stopPointer();
           else { render(); resumePointer(); }
         });
@@ -308,6 +338,9 @@ export function createHomeHero(
         root.dataset.heroCanvas = "ready";
         context = gsap.context(() => {
           registerHome();
+          breeze = gsap.effects.homeLandscapeBreeze(root, {
+            phase: paintingMaterial.uniforms.breezePhase, render,
+          });
           timeline = gsap.effects.homeHeroOpen(root, { gallery: entrance, render });
           timeline?.eventCallback("onComplete", () => {
             root.dataset.heroMotion = "settled";
@@ -319,7 +352,7 @@ export function createHomeHero(
             id: "home-hero-dissolve",
             trigger: root,
             start: "top top",
-            end: () => `+=${window.innerHeight * 4.08}`, // 408vh: dissolve, portal, Wonder.
+            end: () => `+=${window.innerHeight * dissolve.duration() * 1.2}`, // SCR-10: 120vh per unit, through the final dated scene.
             pin: true,
             scrub: 0.8,
             animation: dissolve,
@@ -327,6 +360,8 @@ export function createHomeHero(
           });
         }, root);
         document.addEventListener("visibilitychange", onVisibility);
+        // The async canvas pin changes the Invitation document position.
+        ScrollTrigger.refresh();
 
         const begin = () => {
           if (disposed || document.hidden) return;

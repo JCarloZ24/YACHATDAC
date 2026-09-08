@@ -1,0 +1,17 @@
+/* Figma 3371:41740, 9 September 2026. Media scrim bridges the road and cards. */
+.home-invitation {
+  background: var(--color-charcoal);
+  --text-h1: 2.5rem;
+  --text-h3: 2rem;
+}
+body:has([data-hero-canvas="ready"]) .home-invitation {
+  margin-top: -24svh;
+  background: linear-gradient(to bottom, transparent, var(--color-charcoal) 24svh);
+}
+.home-landscape-exit-shade {
+  opacity: 0;
+  background: linear-gradient(to bottom, transparent, var(--color-charcoal));
+}
+@media (min-width: 64rem) {
+  .home-invitation { --text-h1: 4rem; }
+}

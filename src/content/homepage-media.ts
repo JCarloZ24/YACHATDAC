@@ -13,6 +13,14 @@ export type HomeHeroFrame = {
   depth: number; angle: number; opacity: number;
 };
 
+/** Figma 3371:41740, 9 September 2026. Exact supplied fills; credits and
+ * identities unconfirmed. F8 user-authorised; held frame grade. See media README. */
+export const homeInvitationMedia = [
+  { src: "/media/home/derivatives/sandstone-overhang-visitors.webp", icon: "/media/home/derivatives/invitation-ring.svg", position: "center bottom", grade: "frame", node: "3371:41802" },
+  { src: "/media/home/derivatives/verandah-table-people.webp", icon: "/media/home/derivatives/invitation-spiral.svg", position: "center", grade: "frame", node: "3371:41842" },
+  { src: "/media/home/derivatives/person-beside-smoking-fire.webp", icon: "/media/home/derivatives/invitation-boomerang.svg", position: "24% center", grade: "frame", node: "3371:41865" },
+];
+
 // Positions and widths are percentages of the collage stage, not geographic data.
 // 9 September: lift three lower plates into the open area above the headline.
 const slots: [string, string, number, number, number, number, number, number, number, number, number][] = [

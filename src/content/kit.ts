@@ -61,12 +61,15 @@ export const HOME_PAINTING = {
 };
 
 /** 9 September 2026: exact Figma woodland road throughout the portal.
- * Original layers retained; credit/production method unconfirmed. */
+ * Original layers retained; credit/production method unconfirmed.
+ * AMB-05: user permits local vegetation wind on this landscape only. */
 export const HOME_PORTAL = {
   src: "/media/home/derivatives/woodland-road-foreground.webp",
   sky: "/media/home/derivatives/road-sky.webp",
+  truthSky: "/media/home/derivatives/truth-sky-sequence.webp",
+  truthLight: "/media/home/derivatives/truth-light-sequence.webp",
   width: 1440, height: 900,
-  grade: "frame",
+  grade: "full",
   credit: "Unconfirmed",
   origin: "Figma 7XBvi0Mdbtmym10nkF9IGp, background 3371:41346 and foreground 3371:41347",
 };
