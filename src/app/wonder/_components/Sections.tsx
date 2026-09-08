@@ -172,7 +172,7 @@ const BLOB_HOVER =
 function Chip({ children }: { children: string }) {
   return (
     <span
-      className={`inline-block rounded-lg bg-eucalyptus px-3.5 py-1.5 whitespace-nowrap text-canvas ${H6}`}
+      className={`inline-block rounded-lg bg-eucalyptus px-3 py-1.5 whitespace-nowrap text-canvas ${H6}`}
     >
       {children}
     </span>
@@ -223,15 +223,28 @@ function WaveDrip({
 export function WonderHero() {
   // The film only ships when its encode is on disk; otherwise the still, and
   // failing that the field — same contract as every other slot.
-  const film = presentSrc(wonderHeroVideo.mp4);
+  const tiers = {
+    small: presentSrc(wonderHeroVideo.tiers.small),
+    medium: presentSrc(wonderHeroVideo.tiers.medium),
+    large: presentSrc(wonderHeroVideo.tiers.large),
+  };
+  const film = tiers.medium ?? tiers.large ?? tiers.small;
   const poster = presentSrc(wonderHeroSlot.src);
   return (
-    <header className="relative flex min-h-svh items-end overflow-hidden bg-roasted lg:min-h-[720px]">
+    /* Full-bleed and PINNED (decided 8 Sep 2026, a departure from the frame's
+       720 band): the film fills the viewport on load and holds while the
+       facts section — wave first — scrolls up over it. Sticky makes its own
+       stacking context, so the copy and sound button stay inside the hero
+       and every later section, being positioned, paints on top. */
+    <header className="sticky top-0 flex min-h-svh items-end overflow-hidden bg-roasted">
       <div className="absolute inset-0">
         {film && poster ? (
           <HeroVideo
-            mp4={film}
-            webm={presentSrc(wonderHeroVideo.webm) ?? undefined}
+            tiers={{
+              small: tiers.small ?? film,
+              medium: tiers.medium ?? film,
+              large: tiers.large ?? film,
+            }}
             poster={poster}
             silentFrom={0}
             label={wonderHeroVideo.label}
@@ -268,53 +281,69 @@ export function WonderFacts() {
     wonderHero.facts.slice(3),
   ];
   return (
-    <section className="relative bg-canvas text-charcoal">
-      {/* Wave Line 2033:5350 — canvas rising over the hero's foot. It lives
-          ABOVE this section's top edge, so the map clip below cannot be on
-          the section itself or the wave is cut off. */}
-      <div className="absolute inset-x-0 top-0 lg:top-3">
+    /* At 1440 the section is a sticky span (the D4 lab's shape): 220vh of
+       scroll with the screen held inside it while the map draws. The phone
+       keeps its flow — the stacked layout is taller than a screen. */
+    <section
+      data-sticky-span
+      className="relative pt-10 text-charcoal sm:pt-26 lg:h-[220vh]"
+    >
+      {/* Wave Line 2033:5350 — canvas rising over the hero's foot. With the
+          hero pinned full-bleed (8 Sep 2026) the wave belongs to THIS
+          section's first band rather than overhanging the hero: at rest the
+          film fills the screen untouched, and the crest rides up over it as
+          the section scrolls in. So the section has no ground of its own —
+          the band the wave occupies is transparent to the film beneath, and
+          canvas starts at the wave's foot on the wrapper below. Neither the
+          sticky screen (overflow-hidden at lg) nor the map clip may parent
+          the wave, or it is cut off. */}
+      <div className="absolute inset-x-0 top-10 z-10 sm:top-26">
         <WaveDivider ground="var(--color-canvas)" />
       </div>
-      <div className={`relative overflow-hidden py-16 ${GUTTER}`}>
-        {/* The illustrated map, both cuts, inlined so it draws itself on
+      {/* Padding on the section, not a margin here — a margin collapses
+          through the section and shoves the whole section below the hero. */}
+      <div className="bg-canvas lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden">
+        <div className={`relative overflow-hidden py-16 lg:h-full ${GUTTER}`}>
+          {/* The illustrated map, both cuts, inlined so it draws itself on
           scroll (route-map.ts · `the guide leading the eye` · routeDraw).
           Placement is unchanged from the <img> version — see FactsMap. */}
-        <FactsMap {...factsMapMarkup()} />
-        <Container>
-          <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
-            <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-8">
-              <p className={H4}>{wonderHero.standfirst}</p>
-              <div className="flex flex-wrap gap-2.5">
-                {wonderHero.summary.map((item) => (
-                  <Chip key={item}>{item}</Chip>
-                ))}
+          <FactsMap {...factsMapMarkup()} />
+          <Container>
+            <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
+              <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-8">
+                <p className={H4}>{wonderHero.standfirst}</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {wonderHero.summary.map((item) => (
+                    <Chip key={item}>{item}</Chip>
+                  ))}
+                </div>
+                <div className="flex flex-col gap-6 py-2 lg:flex-row lg:gap-4">
+                  {[left, right].map((column, i) => (
+                    <dl key={i} className="flex flex-col gap-6">
+                      {column.map((fact) => (
+                        <div
+                          key={fact.label}
+                          className="flex w-full flex-col gap-2 lg:w-[378px]"
+                        >
+                          <dt className={`${H5} text-burnt`}>{fact.label}</dt>
+                          <dd className="text-base leading-normal font-medium lg:text-lg">
+                            {fact.value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col gap-6 py-2 lg:flex-row lg:gap-4">
-                {[left, right].map((column, i) => (
-                  <dl key={i} className="flex flex-col gap-6">
-                    {column.map((fact) => (
-                      <div
-                        key={fact.label}
-                        className="flex w-full flex-col gap-2 lg:w-[378px]"
-                      >
-                        <dt className={`${H5} text-burnt`}>{fact.label}</dt>
-                        <dd className="text-base leading-normal font-medium lg:text-lg">
-                          {fact.value}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                ))}
-              </div>
-            </div>
-            {/* The frame's Placeholder Image slot — empty; the map fills it. A
+              {/* The frame's Placeholder Image slot — empty; the map fills it. A
               240-tall block on the phone, the right-hand column at 1440. */}
-            <div
-              aria-hidden
-              className="h-[240px] w-full lg:aspect-[600/640] lg:h-auto lg:w-auto lg:min-w-0 lg:flex-1"
-            />
-          </div>
-        </Container>
+              <div
+                aria-hidden
+                className="h-[240px] w-full lg:aspect-[600/640] lg:h-auto lg:w-auto lg:min-w-0 lg:flex-1"
+              />
+            </div>
+          </Container>
+        </div>
       </div>
     </section>
   );
@@ -324,6 +353,17 @@ export function WonderFacts() {
    03 — Highlights (Layout / 267, 2033:5436 · Team / 10, 2576:24607) —
         three 500px photo cards, a 400px swipe rail on the phone
    ------------------------------------------------------------------------- */
+
+/** Per-card overlay, in `wonderHighlights` order — see the note in the markup. */
+const HIGHLIGHT_OVERLAY = ["bg-black/10", "bg-black/25", "bg-black/25"];
+/** Per-card focal point, in the same order: the hand on the wall, the hand
+    over the tray, the ranger by the smoke. Literal — Tailwind cannot see a
+    computed class. */
+const HIGHLIGHT_FOCUS = [
+  "object-[28%_60%]",
+  "object-[35%_50%]",
+  "object-[23%_95%]",
+];
 
 export function WonderHighlights() {
   return (
@@ -352,14 +392,31 @@ export function WonderHighlights() {
                 className="relative flex min-h-[400px] min-w-0 flex-col justify-end gap-4 overflow-hidden rounded-3xl p-5 text-canvas lg:min-h-[500px] lg:p-10"
               >
                 <div className="absolute inset-0">
-                  <Slot slot={media} sizes="(min-width: 1024px) 400px, 78vw" />
+                  {/* A 1.9:1 photograph covering a 395 × 500 card renders
+                      about 950px wide, so the sizes hint has to say so or the
+                      browser picks a candidate half the size and the card
+                      blurs at 2×. The focal point per card is the frame's
+                      own crop (2033:5436), read off its image offsets. */}
+                  <Slot
+                    slot={media}
+                    sizes="(min-width: 1024px) 960px, 160vw"
+                    className={`object-cover ${HIGHLIGHT_FOCUS[i] ?? "object-center"}`}
+                  />
                 </div>
-                <div aria-hidden className="absolute inset-0 bg-charcoal/25" />
+                {/* The frame's overlay (2033:5436): flat black, no gradient —
+                    10% on the pale sandstone card, 25% on the two darker
+                    photographs. Literal per card; Tailwind cannot see a
+                    computed class. */}
+                <div
+                  aria-hidden
+                  className={`absolute inset-0 ${HIGHLIGHT_OVERLAY[i] ?? "bg-black/25"}`}
+                />
                 <div className="relative flex flex-col items-start gap-4">
                   <Chip>{card.eyebrow}</Chip>
                   <div className="flex flex-col gap-2">
                     <h3 className={H3}>{card.title}</h3>
-                    <p className="text-base leading-normal font-medium">
+                    {/* The frame sets the body pure white, the title off-white. */}
+                    <p className="text-base leading-normal font-medium text-white">
                       {card.body}
                     </p>
                   </div>
@@ -386,83 +443,94 @@ const STOP_ICONS = [
   { src: "/wonder/icon-grayrock.svg", w: 28, h: 28 },
 ] as const;
 
-/** The same icons as pins on the map, at the frame's own coordinates. `at`
-    is the scroll progress each lights at — after the roads have inked in,
-    in stop order (route-map.ts). */
+/** The same icons as legends on the map, at the frame's own coordinates in
+    the 1440 header (3238:34149, 34151, 34154, 34158) — layout positions, not
+    geographic ones. `at` is the scroll progress each lights at, after the
+    roads have inked in, in stop order (route-map.ts). */
 const MAP_PINS = [
-  { icon: 0, left: 1196, top: 325, at: 0.72 },
-  { icon: 1, left: 1131, top: 368, at: 0.78 },
-  { icon: 2, left: 1179, top: 403, at: 0.84 },
-  { icon: 3, left: 1227, top: 355, at: 0.9 },
+  { icon: 0, left: 1196, top: 325, at: 0.76 },
+  { icon: 1, left: 1131, top: 368, at: 0.81 },
+  { icon: 2, left: 1179, top: 403, at: 0.86 },
+  { icon: 3, left: 1243, top: 355, at: 0.91 },
 ] as const;
 
 export function WonderGettingHere() {
   return (
-    <section className="relative bg-charcoal text-canvas">
+    /* Sticky span at 1440, as §02: the screen is held while the map forms. */
+    <section
+      data-sticky-span
+      className="relative bg-charcoal text-canvas lg:h-[220vh]"
+    >
       {/* Wave Line 2033:5432 / 2576:22626 — charcoal rising over the white
-          highlights ground. Above the top edge, so the clip is inside. */}
+          highlights ground. Above the top edge, so it sits on the section
+          itself: the sticky screen below is overflow-hidden at lg and would
+          cut it off. */}
       <WaveDivider ground="var(--color-charcoal)" mirror />
       {/* Wave Line 2033:5434 / 2576:22821 — charcoal dripping down over the
           Turraburra photo. Hung off this section's foot (1px overlapped so
-          the seam never shows) because Turraburra clips its own box. */}
+          the seam never shows) because Turraburra clips its own box. On the
+          section, not the sticky screen, for the same reason as above. */}
       <WaveDrip
         ground="var(--color-charcoal)"
         mirror
         seat="top-[calc(100%-1px)]"
       />
-      <div
-        className={`relative overflow-hidden pt-10 pb-20 lg:min-h-[900px] lg:pb-0 ${GUTTER}`}
-      >
-        {/* The route map, both cuts, inlined so it inks itself in on scroll
+      <div className="lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden">
+        <div
+          className={`relative overflow-hidden pt-10 pb-20 lg:h-full lg:pb-0 ${GUTTER}`}
+        >
+          {/* The route map, both cuts, inlined so it inks itself in on scroll
           (route-map.ts · `the guide leading the eye` · routeDraw). Placement
           is unchanged from the <img> version — see RouteMap.tsx. */}
-        <RouteMap
-          {...routeMapMarkup()}
-          pins={MAP_PINS.map((pin) => ({ ...STOP_ICONS[pin.icon], ...pin }))}
-        />
+          <RouteMap
+            {...routeMapMarkup()}
+            pins={MAP_PINS.map((pin) => ({ ...STOP_ICONS[pin.icon], ...pin }))}
+          />
 
-        <Container className="flex flex-col gap-12 lg:gap-20">
-          <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-6">
-            <p className={`${H5} text-burnt`}>Getting here</p>
-            <h2 className={H2}>{gettingHere.title}</h2>
-            <div className="flex flex-col gap-5 text-base leading-normal lg:gap-7 lg:text-xl">
-              {gettingHere.body.map((para) => (
-                <p key={para}>{para}</p>
-              ))}
+          <Container className="flex flex-col gap-12 lg:gap-20">
+            <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-6">
+              <p className={`${H5} text-burnt`}>Getting here</p>
+              <h2 className={H2}>{gettingHere.title}</h2>
+              <div className="flex flex-col gap-5 text-base leading-normal lg:gap-7 lg:text-xl">
+                {gettingHere.body.map((para) => (
+                  <p key={para}>{para}</p>
+                ))}
+              </div>
+              <ul className="flex flex-col gap-4 text-base leading-normal lg:gap-6 lg:text-xl">
+                {gettingHere.stops.map((stop, i) => {
+                  const icon = STOP_ICONS[i];
+                  return (
+                    <li key={stop.name} className="flex items-center gap-3">
+                      <span
+                        aria-hidden
+                        className="flex w-[33px] shrink-0 items-center justify-center"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+                        <img
+                          src={icon.src}
+                          alt=""
+                          width={icon.w}
+                          height={icon.h}
+                          style={{ width: icon.w, height: icon.h }}
+                        />
+                      </span>
+                      {/* The frame (2033:5572) sets the whole line regular;
+                          the name carries no weight of its own. */}
+                      <span>
+                        {stop.name} — {stop.detail}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="text-base leading-normal lg:text-xl">
+                {gettingHere.coda}
+              </p>
             </div>
-            <ul className="flex flex-col gap-4 text-base leading-normal lg:gap-6 lg:text-xl">
-              {gettingHere.stops.map((stop, i) => {
-                const icon = STOP_ICONS[i];
-                return (
-                  <li key={stop.name} className="flex items-center gap-3">
-                    <span
-                      aria-hidden
-                      className="flex w-[33px] shrink-0 items-center justify-center"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-                      <img
-                        src={icon.src}
-                        alt=""
-                        width={icon.w}
-                        height={icon.h}
-                        style={{ width: icon.w, height: icon.h }}
-                      />
-                    </span>
-                    <span>
-                      <strong className="font-medium">{stop.name}</strong> —{" "}
-                      {stop.detail}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-            <p className="text-base leading-normal lg:text-xl">
-              {gettingHere.coda}
-            </p>
-          </div>
-          {/* The frame's 240px image slot on the phone; the map rides over it. */}
-          <div aria-hidden className="h-[240px] w-full lg:hidden" />
-        </Container>
+            {/* The frame's 240px image slot on the phone; the map rides over it. */}
+            <div aria-hidden className="h-[240px] w-full lg:hidden" />
+          </Container>
+        </div>
       </div>
     </section>
   );

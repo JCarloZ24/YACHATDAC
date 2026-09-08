@@ -23,7 +23,7 @@ function inlineSvg(file: string, className: string, idPrefix: string): string {
     .replace(/url\(#/g, `url(#${idPrefix}`);
 }
 
-/** §04 Getting here — 3238:34130 and 2576:22808. */
+/** §04 Getting here — 3238:34130 at 1440, 2576:22808 on the phone. */
 export function routeMapMarkup() {
   return {
     desktop: inlineSvg(

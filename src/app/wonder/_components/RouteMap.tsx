@@ -19,9 +19,10 @@ import { createRouteMap } from "@/lib/motion/route-map";
 
 /**
  * Registers the module on a host. The host is `display: contents` and has
- * no box, so at 1440 the section is the scroll box; on the phone the map is
- * a short cut at the section's foot, so it is measured on its own —
- * otherwise the whole draw would happen before it reached the screen.
+ * no box, so at 1440 the section's sticky span is the scroll box; on the
+ * phone the map is a short cut at the section's foot, so it is measured on
+ * its own — otherwise the whole draw would happen before it reached the
+ * screen.
  */
 function useDrawnMap(hostRef: RefObject<HTMLDivElement | null>) {
   const [reduced, setReduced] = useState(false);
@@ -48,10 +49,15 @@ function useDrawnMap(hostRef: RefObject<HTMLDivElement | null>) {
     const host = hostRef.current;
     if (!host) return;
     const mobileBox = host.querySelector<HTMLElement>("[data-map='mobile']");
+    // At 1440 the section is a sticky span, the shape of the D4 lab: a tall
+    // container with the screen stuck inside it, so the map draws over the
+    // whole time it is held rather than while it scrolls past.
+    const span = host.closest<HTMLElement>("[data-sticky-span]");
     const routeModule = wide
       ? createRouteMap(host, {
           reduced,
-          trigger: host.closest("section") ?? host,
+          trigger: span ?? host.closest("section") ?? host,
+          ...(span ? { start: "top top", end: "bottom bottom" } : {}),
         })
       : createRouteMap(host, {
           reduced,
@@ -69,6 +75,8 @@ export type RoutePin = {
   src: string;
   w: number;
   h: number;
+  /** Position in the 1440 frame, in px — the frame's own layout, not a
+      geographic coordinate. */
   left: number;
   top: number;
   /** Scroll progress at which the pin lights. */
@@ -91,7 +99,10 @@ export function RouteMap({
   return (
     <div ref={hostRef} aria-hidden className="pointer-events-none contents">
       {/* The route map (3238:34130) — 2278 × 1580, clipped to 1973 wide and
-          centred at (50% − 266px, 50% + 57px) in the frame. */}
+          centred at (50% − 266px, 50% + 57px) in the 1440 frame, with the
+          location pin drawn in (3238:34141 / 34142). The legend icons sit
+          at the frame's own coordinates (3238:34149 / 34151 / 34154 /
+          34158), on the frame, not the map. */}
       <div className="pointer-events-none absolute top-0 left-1/2 hidden h-full w-[1440px] -translate-x-1/2 lg:block">
         <div
           className="absolute top-[calc(50%+57px)] left-[calc(50%-266px)] h-[1580px] w-[1973px] -translate-x-1/2 -translate-y-1/2 overflow-hidden"
@@ -129,10 +140,10 @@ export function RouteMap({
 }
 
 /**
- * §02 The facts — the Queensland map. Two lines run down from the tip of
- * the cape and meet at the bottom, the borders draw inward, the property
- * fills, and the pin arrives and floats. The faint Australia behind it
- * draws first, as a lighter ink.
+ * §02 The facts — the Queensland map. The outline surfaces out of short
+ * segments starting all over it, the property is painted in, the faint
+ * Australia behind draws in as a lighter ink, and the pin arrives and
+ * floats.
  */
 export function FactsMap({
   desktop,

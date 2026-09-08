@@ -36,18 +36,28 @@ export const wonderHeroSlot: MediaSlot = {
 };
 
 /**
- * The hero film — "1MIN EDIT WITH SUPERS" from the Wonder batch, 60s, 4K
- * ProRes master (2.3 GB, Drive) → 1600-wide H.264 + AAC and VP9 + Opus, per
- * brand/video/README.md. Burned-in supers run 0–12s (`supersEnd`); the hero
- * plays the film whole from 0 in both states by decision on 8 Sep 2026, and
- * HeroVideo's `silentFrom` can skip them again if that changes. Content not
- * yet reviewed for cultural sensitivity by Suzanne or Marc — R-flag until
- * it is.
+ * The hero film — "1MIN EDIT NO SUPERS" (Downloads, 8 Sep 2026), 60s, 4K
+ * ProRes master (2.3 GB), H.264 + AAC in three tiers so the page can match
+ * the device and the connection (HeroVideo picks one before the first byte
+ * loads — see its `pickTier`):
+ *
+ *   small   960 × 540   ~0.8 Mb/s   phones, data saver, 2g/3g
+ *   medium  1440 × 810  ~2.5 Mb/s   laptops and tablets
+ *   large   1920 × 1080 ~3.5 Mb/s   wide screens on a fast link
+ *
+ * MP4 only: H.264 plays everywhere, and a VP9 set on top would double the
+ * repo's video weight for a marginal size win. It replaced the "WITH SUPERS"
+ * cut the same day: no burned-in titles, so nothing sits under the H1 and
+ * `supersEnd` is 0. Content not yet reviewed for cultural sensitivity by
+ * Suzanne or Marc — R-flag until it is.
  */
 export const wonderHeroVideo = {
-  mp4: "/media/wonder/wonder-hero.mp4",
-  webm: "/media/wonder/wonder-hero.webm",
-  supersEnd: 12,
+  tiers: {
+    small: "/media/wonder/wonder-hero-960.mp4",
+    medium: "/media/wonder/wonder-hero-1440.mp4",
+    large: "/media/wonder/wonder-hero-1920.mp4",
+  },
+  supersEnd: 0,
   label:
     "Guesting on Turraburra — Suzanne Thompson walking a family through the engraved wall, the plants and the camp",
 };

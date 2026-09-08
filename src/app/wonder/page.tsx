@@ -15,6 +15,7 @@ import {
   WonderTurraburra,
   WonderWhereYouSleep,
 } from "./_components/Sections";
+import { WonderLoader } from "./_components/Loader";
 import { wonderHero } from "@/content/wonder";
 
 export const metadata: Metadata = {
@@ -39,6 +40,9 @@ export const metadata: Metadata = {
 export default function WonderPage() {
   return (
     <PageTransition ground="#4E3524">
+      {/* Hard loads and refreshes only: holds scroll and covers the hero film's
+          first buffer — see _components/Loader. */}
+      <WonderLoader />
       <div className="relative">
         <WonderHero />
         <WonderFacts />
