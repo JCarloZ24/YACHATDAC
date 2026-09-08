@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { photoById } from "@/content/kit";
-import { SplitReveal } from "@/components/motion/text/SplitReveal";
+import { FadeIn } from "@/components/motion/text/FadeIn";
 import { SeamGlyph } from "@/components/ui/Furniture";
 import { SignupField } from "@/components/ui/SignupField";
 import { RangerCarousel } from "./RangerCarousel";
@@ -188,44 +188,41 @@ export function LivingWorkHero() {
       />
 
       <div className={`relative ${COLUMN} pt-32 pb-16 lg:pb-32`}>
-        {/* THE ENTRANCE — eyebrow, then the headline line by line, then the
-            lede. The notes lane asks for exactly this ("B5 settles the
-            headline line by line, eyebrow first and lede last") and it was
-            never built: the hero's copy simply existed.
+        {/* THE ENTRANCE — the three lines fade up in order: eyebrow, then
+            the headline, then the lede. A fade, not a line-by-line uncover:
+            the hero sits on a photograph and a masked rise reads as machinery
+            over a picture, where a fade reads as the page arriving.
 
-            SplitReveal is the house component for it — Truth's hero already
-            uses it, and `gate="entry"` waits for the X1 loader on a first
-            visit and the route wipe on a navigation, so the reveal never
-            plays behind a cover. The three share that one gate and separate
-            on `delay`, which is why they read as a sequence rather than three
-            things starting at once.
+            They share ONE gate — `entry` waits for the X1 loader on a first
+            visit and the route wipe on a navigation, so this never plays
+            behind a cover — and separate on `delay`, which is what makes it a
+            sequence the eye can follow rather than three things appearing at
+            once.
 
-            The h1 no longer carries `data-heading`: fullBleedOpen's own
-            `settle` would fight the split. §04 still has the hook and still
-            settles, which is right — it is a section heading, not a hero. */}
-        <SplitReveal as="p" mode="lines" gate="entry" className="eyebrow text-gold">
+            The h1 carries no `data-heading`: fullBleedOpen's own `settle`
+            would fight this. §04 keeps the hook and still settles, which is
+            right — it is a section heading, not a hero. */}
+        <FadeIn as="p" gate="entry" className="eyebrow text-gold">
           {livingWorkHero.eyebrow}
-        </SplitReveal>
+        </FadeIn>
         {/* max-w keeps the headline in the left half — it must never cross
             the subject, whatever the copy does. */}
-        <SplitReveal
+        <FadeIn
           as="h1"
-          mode="lines"
           gate="entry"
-          delay={0.18}
+          delay={0.22}
           className="headline mt-6 max-w-xl text-h1 text-canvas lg:max-w-2xl"
         >
           {livingWorkHero.title}
-        </SplitReveal>
-        <SplitReveal
+        </FadeIn>
+        <FadeIn
           as="p"
-          mode="lines"
           gate="entry"
-          delay={0.55}
+          delay={0.48}
           className="mt-8 max-w-xl text-lg leading-relaxed text-canvas/85"
         >
           {livingWorkHero.standfirst}
-        </SplitReveal>
+        </FadeIn>
       </div>
 
       {/* Marc's divider hands the photograph off into the page. The path's
@@ -297,11 +294,20 @@ function splitAtAperture(value: string): [string, string, string] {
 export function LivingWorkAperture() {
   return (
     <section id="aperture" data-lw="aperture" className="relative min-h-svh bg-canvas">
-      {/* The artist's rings as ground. Both frame layers say "static, held at
-          30%", so that is the opacity, and `brightness-0` is gone with it —
-          forcing the artwork to black was a recolour, and the motifs are
-          never recoloured. At 11% and knocked to grey they were invisible,
-          which is what left this screen looking bare.
+      {/* The artist's rings as ground.
+          
+          TWO THINGS ABOUT THE OPACITY, both easy to get wrong. The ring SVGs
+          are WHITE (#F6F6EC / white) — they are drawn for dark grounds — so on
+          cream they need `brightness-0` to read at all. And each file carries
+          its own `opacity="0.08"` internally, which the CSS then MULTIPLIES:
+          the 0.11 this used to carry rendered at 0.08 x 0.11 = 0.0088, i.e.
+          under one percent, which is why the screen looked bare and why
+          removing the filter looked like deleting the artwork.
+          
+          So the CSS opacity is left at full and the artwork's own 8% governs.
+          If these ever need tuning, tune against the EFFECTIVE number, not the
+          class — and on a dark ground (§04, §08) drop the filter instead,
+          because there the white is already correct.
 
           data-artwork-drift hands them to the recipe's quiet scroll drift.
           The wrapper clips to the section's FIRST viewport —
@@ -312,20 +318,20 @@ export function LivingWorkAperture() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute top-[4%] -right-80 h-[1100px] w-[1100px] opacity-30"
+          className="absolute top-[4%] -right-80 h-[1100px] w-[1100px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full" />
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
         </div>
         {/* Ring A, lower left — the frame carries two rings here and only one
             was built, which left the whole left half of the screen bare. */}
         <div
           data-artwork="ring-a"
           data-artwork-drift
-          className="absolute -bottom-40 -left-48 h-[577px] w-[640px] opacity-30"
+          className="absolute -bottom-40 -left-48 h-[577px] w-[640px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/ring-a.svg" alt="" className="h-full w-full" />
+          <img src="/artwork/ring-a.svg" alt="" className="h-full w-full brightness-0" />
         </div>
       </div>
 
@@ -638,18 +644,18 @@ export function LivingWorkChallenges() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute -top-48 -right-72 h-[1000px] w-[1000px] opacity-25"
+          className="absolute -top-48 -right-72 h-[1000px] w-[1000px] opacity-75"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full" />
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
         </div>
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute bottom-[6%] -left-96 h-[900px] w-[900px] opacity-20"
+          className="absolute bottom-[6%] -left-96 h-[900px] w-[900px] opacity-60"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full" />
+          <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
         </div>
       </div>
 
