@@ -396,6 +396,16 @@ export function coverSeams(
           const charge = { p: 0 };
           let drain: gsap.core.Tween | null = null;
 
+          // The hold announces itself to assistive tech (MOTION-SYSTEM.md
+          // §Accessibility: scroll-jacking must not trap keyboard or
+          // screen-reader users). Browse-mode readers never depended on the
+          // scroll system — the DOM is complete, rest state is the finished
+          // state — but anyone AT the hold is told how to move on.
+          const live = document.createElement("div");
+          live.className = "sr-only";
+          live.setAttribute("aria-live", "polite");
+          document.body.appendChild(live);
+
           // Bring a held page back to its 100% mark. Lenis's lerp carries
           // the page a few frames PAST the mark before the crossing is
           // seen, and an instant clamp back reads as a glitch-bounce
@@ -464,7 +474,26 @@ export function coverSeams(
             drain?.kill();
             drain = null;
             holding = null;
+            live.textContent = "";
             unlockScroll();
+          };
+
+          // The full-charge release — the crest beat, then the play. Shared
+          // by the wheel's charge, the keyboard escape and the native-jump
+          // fallback: whatever completes the charge fires the same way. The
+          // beat is rhythm, not formation (the crest grew at the dock);
+          // `firing` keeps further input from double-releasing during it.
+          const fire = (g: (typeof gates)[number]) => {
+            if (firing || playing) return;
+            firing = true;
+            charge.p = 1;
+            announceCharge(g, 1);
+            crestBeat = gsap.delayedCall(0.2, () => {
+              firing = false;
+              release();
+              g.primeWave?.();
+              glide("play", g, g.t.end, false);
+            });
           };
 
           const engage = (g: (typeof gates)[number]) => {
@@ -475,8 +504,11 @@ export function coverSeams(
             lockScroll();
             settleToMark(g);
             // The dock announces itself: the crest swells up at the fold
-            // (or simply keeps standing if it already is).
+            // (or simply keeps standing if it already is), and assistive
+            // tech is told how to move on.
             g.growWave?.();
+            live.textContent =
+              "Section complete. Scroll on, or press Page Down, to open the next section.";
           };
 
           // The wheel capture is armed only AT the mark (a hair of
@@ -523,18 +555,7 @@ export function coverSeams(
             charge.p = Math.min(1, charge.p + dy / buf());
             announceCharge(g, charge.p);
             if (charge.p >= 1) {
-              // A short breath between the full charge and the cover — the
-              // crest is already standing (it grew when the page docked),
-              // so the beat is rhythm, not formation. `firing` keeps
-              // further wheel input from double-releasing during it.
-              if (firing) return;
-              firing = true;
-              crestBeat = gsap.delayedCall(0.2, () => {
-                firing = false;
-                release();
-                g.primeWave?.();
-                glide("play", g, g.t.end, false);
-              });
+              fire(g);
             } else {
               // Partial charge is never banked: pause and it leaks away.
               drain = gsap.to(charge, {
@@ -551,6 +572,41 @@ export function coverSeams(
             capture: true,
           });
 
+          // The keyboard escape — the skip mechanism MOTION-SYSTEM.md's
+          // accessibility rules require, handled at INTENT time (keydown)
+          // rather than scroll time, where the hold's clamp and lenis's
+          // stop fight native movement before any threshold can read it.
+          // A held page treats a downward key as the full charge —
+          // keyboard paging is deliberate — and an upward key as the hand
+          // opening: release() runs synchronously inside the keydown, so
+          // the same press's native scroll executes against an
+          // already-unlocked page.
+          const onKey = (e: KeyboardEvent) => {
+            if (!holding || firing || playing) return;
+            const t = e.target as HTMLElement | null;
+            if (t?.closest?.("input, textarea, select, [contenteditable=true]"))
+              return;
+            const isSpace = e.key === " " || e.key === "Spacebar";
+            if (
+              e.key === "PageDown" ||
+              e.key === "ArrowDown" ||
+              (isSpace && !e.shiftKey)
+            ) {
+              e.preventDefault();
+              fire(holding);
+            } else if (
+              e.key === "PageUp" ||
+              e.key === "ArrowUp" ||
+              e.key === "Home" ||
+              (isSpace && e.shiftKey)
+            ) {
+              charge.p = 0;
+              announceCharge(holding, 0);
+              release();
+            }
+          };
+          window.addEventListener("keydown", onKey);
+
           const onScroll = () => {
             const y = window.scrollY;
             const dir: 1 | -1 = y >= lastY ? 1 : -1;
@@ -560,16 +616,26 @@ export function coverSeams(
               return;
             }
             if (holding) {
-              // A decisive upward native jump (keyboard paging, scrollbar)
-              // is an escape, not a drift — open the hand rather than
-              // dragging the reader back down.
-              if (y - readMark(holding) < -6) {
+              const over = y - readMark(holding);
+              // A decisive upward native jump (scrollbar, focus moving
+              // back) is an escape, not a drift — open the hand rather
+              // than dragging the reader back down.
+              if (over < -6) {
                 charge.p = 0;
                 announceCharge(holding, 0);
                 release();
                 return;
               }
-              // Everything else: a hold is a hold — settle leaks back.
+              // A decisive downward NATIVE jump (screen readers, focus
+              // scrolls, scrollIntoView) is intent, not drift — honor it
+              // as the full charge instead of fighting it. The leaks the
+              // magnet settles stay well under this; keys are caught
+              // earlier, at keydown.
+              if (over > 120 && Date.now() >= settleUntil) {
+                fire(holding);
+                return;
+              }
+              // Everything else: a hold is a hold — settle drifts back.
               settleToMark(holding);
               return;
             }
@@ -610,6 +676,8 @@ export function coverSeams(
             drain?.kill();
             crestBeat?.kill();
             if (holding) unlockScroll();
+            live.remove();
+            window.removeEventListener("keydown", onKey);
             window.removeEventListener("wheel", onWheel, { capture: true });
             window.removeEventListener("scroll", onScroll);
           };
