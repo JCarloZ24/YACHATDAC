@@ -1,10 +1,13 @@
 # Terminology sheet
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
 
 The Record's handprint opening adds two interface labels on 8 September 2026:
 “Scroll into the record” and “Skip to the record”. These appear in the content
 module and the Resources v1 draft's interface amendment; no recorded words change.
+
+The Record loading interface, 9 September 2026: “Loading the record” is the
+accessible label for resource progress, recorded in the Resources v1 amendment.
 
 *Drafted 7 September 2026. Owner: August. Cultural authority: Suzanne Thompson.*
 
