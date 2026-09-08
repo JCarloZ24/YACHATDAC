@@ -103,10 +103,12 @@ function bezierOf(css: string): string {
  * is what gives the vocabulary autocomplete and makes it discoverable.
  */
 export type EffectName =
+  | "homeLandscapeBreeze"
   | "recordPatternDrift"
   | "homeLoader"
   | "recordLoader"
   | "homeHeroOpen"
+  | "homeInvitation"
   | "homeHeroDissolve"
   // core — arrival, type, the rest
   | "settle"

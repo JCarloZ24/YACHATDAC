@@ -30,6 +30,12 @@
 }
 /* Wonder's screenshot uses a smaller display than the opening collage headline. */
 .home-wonder-copy { opacity: 0; visibility: hidden; --text-h1: clamp(2rem, 4vw, 3.75rem); }
+/* Latest screenshot: centred Truth introduction over the same road canvas. */
+.home-truth-copy { opacity: 0; visibility: hidden; --text-h1: 2.5rem; }
+@media (min-width: 64rem) {
+  /* Figma 3371:44833: local 64px display scale for this prototype frame. */
+  .home-truth-copy { --text-h1: 4rem; }
+}
 /* The existing Wonder section remains the no-WebGL/reduced-motion fallback. */
 body:has([data-hero-canvas="ready"]) #wonder { display: none; }
 /* 9 September screenshot: static media scrim (X5), feathered dark blur at
@@ -65,4 +71,36 @@ body:has([data-hero-phase="black"]) [data-home-thread] { visibility: hidden; }
   [data-home-hero] .home-hero-canvas { visibility: hidden; }
   [data-home-hero] [data-hero-fallback] { visibility: visible; }
   [data-home-hero] [data-hero-black] { display: none; }
+}
+
+/* SCR-10: Figma 1440x901 positions, scaled as a single timeline composition. */
+.home-truth-panels { display: grid; }
+.home-truth-panel { grid-area: 1 / 1; }
+.home-truth-panel:not(:first-child), .home-truth-timeline { opacity: 0; visibility: hidden; }
+.home-truth-timeline { --text-h1: clamp(2rem, 4.444vw, 4rem); }
+.home-truth-path { position: absolute; left: .625%; top: 81.02%; width: 123.472%; height: 5%; max-width: none; }
+.home-truth-marker { position: absolute; inset: 0; }
+.home-truth-marker-art { position: absolute; width: 3.333%; height: 10.433%; left: -1.666%; bottom: 97.55%; }
+.home-truth-years { position: absolute; bottom: 110.5%; left: -10%; width: 20%; display: grid; text-align: center; }
+.home-truth-years > p { grid-area: 1 / 1; }
+.home-truth-years > p:not(:first-child) { opacity: 0; visibility: hidden; }
+body:has([data-hero-canvas="ready"]) #truth { display: none; }
+@media (max-width: 63.999rem) {
+  .home-truth-copy { top: 9%; }
+  .home-truth-path { height: auto; }
+  .home-truth-marker-art { width: 32px; height: 63px; left: -16px; bottom: calc(100% - 16px); }
+  .home-truth-years { bottom: calc(100% + 62px); left: -45px; width: 90px; }
+  .home-truth-panel { font-size: clamp(.875rem, 2.7vw, 1rem); }
+}
+
+/* Figma 3371:41578: 800px column centred below the 124px navigation band. */
+.home-belonging-copy { opacity: 0; visibility: hidden; top: 18%; --text-h1: 2.5rem; }
+body:has([data-hero-canvas="ready"]) #belonging { display: none; }
+@media (min-width: 64rem) {
+  .home-belonging-copy { top: 56.9%; translate: 0 -50%; max-width: calc(100% - 160px); --text-h1: 4rem; }
+}
+@media (max-width: 63.999rem) {
+  .home-belonging-copy { top: 10%; }
+  .home-belonging-copy h2 { --text-h1: clamp(1.8rem, 7vw, 2.5rem); }
+  .home-belonging-copy > div { font-size: .875rem; }
 }

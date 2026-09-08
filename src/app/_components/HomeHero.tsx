@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { homeTruthScenes, homeTruthArtwork } from "@/content/home-truth-scenes";
 import { HomeHeroCanvas } from "./HomeHeroCanvas";
 import { homeHeroFrames } from "@/content/homepage-media";
 import { homeHero, homePaintingCopy, type Beat } from "@/content/homepage";
@@ -10,8 +11,9 @@ import "./home-hero.css";
  * R11: small WebP derivatives serve both DOM fallback and canvas textures.
  * The linked Figma node differs; latest screenshot governs (scenes.md).
  */
-export function HomeHero({ beat, wonder }: { beat: Beat; wonder: Beat }) {
+export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonder: Beat; truth: Beat; belonging: Beat }) {
   const words = beat.headline?.split(/\s+/).filter(Boolean) ?? [];
+  const truthParagraphs = [[truth.sequence?.subjectDetail[0] ?? ""], ...(truth.sequence?.steps.map(step => [step.text]) ?? []), [truth.body[0] ?? ""], truth.body.slice(1)];
   return (
     <section id={beat.id} data-home-hero className="relative isolate h-svh min-h-[680px] overflow-hidden bg-charcoal lg:min-h-[760px]">
       <div aria-hidden="true" data-hero-fallback className="home-hero-stage pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2">
@@ -27,6 +29,44 @@ export function HomeHero({ beat, wonder }: { beat: Beat; wonder: Beat }) {
         ))}
       </div>
       <HomeHeroCanvas frames={homeHeroFrames} />
+      <div data-landscape-exit-shade aria-hidden="true" className="home-landscape-exit-shade pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[30svh]" />
+      {/* SCR-09: screenshot's opening Truth frame, sourced from the v3 sequence. */}
+      <div data-home-truth className="home-truth-copy absolute inset-x-6 top-[13.75%] z-[3] mx-auto max-w-[720px] text-center text-canvas">
+        <p className="eyebrow text-base leading-[1.4] tracking-normal lg:text-xl">{truth.eyebrow}</p>
+        <h2 className="headline mt-6 text-h1 leading-none tracking-normal">{truth.sequence?.subject}</h2>
+        <div className="home-truth-panels mt-6">
+          {truthParagraphs.map((paragraphs, index) => (
+            <div key={index} data-truth-panel={index} className="home-truth-panel text-base font-medium leading-[1.5] lg:text-xl">
+              {paragraphs.map((paragraph, p) => <p key={p} className={p ? "mt-6" : undefined}>{paragraph}</p>)}
+              {index === truthParagraphs.length - 1 && truth.cta && <a href={truth.cta.href} className="relative mt-8 inline-flex min-h-14 items-center gap-5 px-6 py-4 text-charcoal focus-visible:outline-2 focus-visible:outline-offset-4">
+                <span aria-hidden="true" className="absolute inset-0 bg-canvas [mask-image:url('/artwork/blob-button.svg')] [mask-size:100%_100%]" />
+                <span className="eyebrow relative text-base leading-[1.4] tracking-normal">{truth.cta.label}</span><span aria-hidden="true" className="relative text-2xl">&rsaquo;</span>
+              </a>}
+            </div>
+          ))}
+        </div>
+        <div className="sr-only">{truth.sequence?.subjectDetail.slice(1).map((p, i) => <p key={i}>{p}</p>)}</div>
+      </div>
+      <div data-truth-timeline className="home-truth-timeline pointer-events-none absolute inset-0 z-[3] text-canvas">
+        <Image src={homeTruthArtwork.path} alt="" width={1778} height={45} unoptimized className="home-truth-path" />
+        <div data-truth-marker className="home-truth-marker">
+          <div className="home-truth-years">{homeTruthScenes.map((scene, index) => <p key={scene.year} data-truth-year={index} className="headline text-h1 leading-none">{scene.year}</p>)}</div>
+          <Image src={homeTruthArtwork.marker} alt="" width={48} height={94} unoptimized className="home-truth-marker-art" />
+        </div>
+      </div>
+      {/* SCR-10: Figma 3371:41578 composition; D5 retains full draft wording. */}
+      <div data-home-belonging className="home-belonging-copy absolute inset-x-6 z-[3] text-canvas lg:left-[5.55%] lg:right-auto lg:w-[800px]">
+        <p className="eyebrow text-base leading-[1.4] tracking-normal lg:text-xl">{belonging.eyebrow}</p>
+        <h2 className="headline mt-6 text-h1 leading-none tracking-normal">{belonging.headline}</h2>
+        <div className="mt-6 max-w-[720px] space-y-6 text-base font-medium leading-[1.5] lg:text-xl">
+          {belonging.body.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+        </div>
+        {belonging.cta && <a href={belonging.cta.href} className="relative mt-8 inline-flex min-h-14 items-center gap-4 px-6 py-4 text-charcoal focus-visible:outline-2 focus-visible:outline-offset-4">
+          <span aria-hidden="true" className="absolute inset-0 bg-canvas [mask-image:url('/artwork/blob-button.svg')] [mask-size:100%_100%]" />
+          <span className="eyebrow relative text-base leading-[1.4] tracking-normal">{belonging.cta.label}</span>
+          <span aria-hidden="true" className="relative text-2xl">&rsaquo;</span>
+        </a>}
+      </div>
       {/* SCR-09, 9 September: accessible copy over the shared canvas, scrubbed as one block. */}
       <div data-home-wonder className="home-wonder-copy absolute inset-x-6 top-[25%] z-[3] max-w-[740px] text-canvas lg:left-[5.5%] lg:right-auto lg:w-[52%]">
         <p className="eyebrow text-base leading-[1.4] tracking-normal lg:text-xl">{wonder.eyebrow}</p>

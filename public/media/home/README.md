@@ -48,3 +48,14 @@ Latest user correction, 9 September 2026: the woodland road from Figma is used t
 
 
 Daylight correction, 9 September 2026: the same canvas now composites the transparent Figma treeline over its supplied sky texture, sampling the pale grey-blue/daylight band with restrained saturation and a warm horizon. woodland-road-foreground.webp preserves the top 1440?900 foreground with alpha; road-sky.webp is the full original sky transcoded to WebP. Origin remains Figma nodes 3371:41346/41347. No change to portal timing or terrain colours.
+
+
+Truth colour layers, 9 September 2026. Origin: Figma 7XBvi0Mdbtmym10nkF9IGp, frame 3371:44774; background 3371:44776 and soft-light overlay 3371:44780. truth-blue-sky.webp is the 1440x900 visible crop of the original background at y=1422 after fitting to 1440x6996. truth-soft-light.webp is the corresponding overlay crop at y=464 after fitting to 1440x7619. Both are WebP quality 95 derivatives of the supplied assets, not generated imagery. Credit/production method unconfirmed. Original source files are unchanged. Shader applies the frame's 25% black overlay in display RGB, then soft-light masked by terrain alpha.
+
+
+### Truth timeline layers - 9 September 2026
+
+Origin: Figma YACHATDAC V2, Homepage Prototype 3371:45208-46472. `derivatives/truth-sky-sequence.webp` and `truth-light-sequence.webp` are complete supplied image layers exported to WebP (quality 95), replacing cropped views for reversible offset animation; no authored replacement pixels. Credit unconfirmed. `truth-dotted-path.svg` (3371:45366) and `truth-year-marker.svg` (3371:45367) are exact vector exports including the original arrow and rosette. Narrative and date provenance: `src/content/home-truth-scenes.ts` and homepage draft amendment.
+
+### Invitation - 9 September 2026
+Origin: Figma 7XBvi0Mdbtmym10nkF9IGp, frame 3371:41740. Photos sandstone-overhang-visitors.webp (3371:41802), verandah-table-people.webp (3371:41842), person-beside-smoking-fire.webp (3371:41865) are exact supplied fills converted with Sharp to WebP quality 88, maximum width 1000 without enlargement. Credits and identities unconfirmed; use authorised by user direction/F8. All three use frame motion. Fire photograph accompanies Caring for Country only. No generated photography. invitation-ring.svg (3371:41805), invitation-spiral.svg (3371:41845), invitation-boomerang.svg (3371:41868), invitation-chevron.svg (I3371:41841;4179:9009) are unchanged Figma exports.

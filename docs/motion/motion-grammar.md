@@ -206,3 +206,44 @@ Home central aperture correction, 9 September 2026: the woodland road appears in
 
 
 | **the painting bends open** | During the portal approach, a radial lens curve stretches the supplied painting toward the viewport edges. The centre and landscape stay stable; curvature settles to zero on arrival and reverses with scroll. | existing portal span 1.18?2.18; smooth envelope, zero distortion at both ends | user reference 9 September 2026 / SCR-09 | P3 | `homeHeroDissolve` |
+
+
+| **the woodland breathes** | AMB-05: a gentle local wind displaces grass and canopy pixels in the Home road layer; a widening exclusion holds the road still and dark trunks receive minimal motion. | 24s seamless ambient phase, starts near portal arrival; paused offscreen/hidden, absent with reduced motion | user direction 9 September 2026 | media only | `homeLandscapeBreeze` |
+
+
+AMB-05 correction, 9 September 2026: user found the distortion too obvious. Restrict wind to three feathered grass patches in source-image UV space, remove canopy sway, reduce grass displacement by 80%, and slow the ripple from nine to four cycles per 24-second phase. Unselected pixels remain still. This supersedes the broad vegetation mask above.
+
+
+AMB-05 visibility tuning, 9 September 2026: the reduced pass was too faint. Keep the same three grass selections and stationary trees/road, but increase horizontal displacement from 0.00015 to 0.0006 UV and vertical displacement to 0.00012 UV. Six cycles per 24-second phase give a visible four-second ripple; no broader vegetation warp is restored.
+
+
+AMB-05 stronger breeze, 9 September 2026: user still could not see the ripple. Increase horizontal displacement fourfold to 0.0024 UV, vertical to 0.00045 UV, broaden the three foreground selections, and use three-second cycles. Reduce colour-mask suppression of dry yellow grass. The road exclusion and stationary horizon remain. This supersedes the previous amplitude tuning.
+
+
+AMB-05 viewport correction, 9 September 2026: checking the 2048-by-758 landscape confirmed the cover crop removes most of the low grass selections. Add three mid-ground grass selections higher in the source image, retaining the original foreground selections for taller viewports. No amplitude increase; the road exclusion and horizon remain fixed.
+
+
+AMB-05 final scope correction, 9 September 2026: user requests all vegetation to ripple gently. Remove the six patch selections. Apply a broad vegetation mask with road exclusion and dark-trunk suppression, with 0.0009 UV grass ripple and 0.00065 UV canopy sway. This supersedes the patch-selection approach and its viewport workaround. Sky, road, pause behaviour and reduced-motion fallback remain unchanged.
+
+
+| **the landscape introduces Truth** | SCR-09: after Wonder holds, its copy rises away; the existing road canvas shifts from pale daylight to the supplied saturated blue sky. Truth, Iningai Nation and the first existing subject-detail paragraph rise into a centred upper block. | homeHeroDissolve 3.4-4.2; hold to 4.6; total pin 552vh; reversible scrub 0.8s | user screenshot 9 September 2026 | quiet type over held landscape with AMB-05 breeze | `homeHeroDissolve` |
+
+
+| **Country carries the years** | SCR-10: Home Truth continues on the same canvas. Figma sky/light layers travel through their measured offsets; the supplied dotted path enters, year marker follows its seven anchors, prose crossfades in stillness. Reverse scroll restores every state. | 120vh per timeline unit; 0.4-unit transitions, 0.6-unit reading holds; final 0.9-unit hold; reduced motion uses static Truth | user screenshots and Figma 3371:45208-46472, 9 September 2026 | transition leads; quiet type, existing AMB-05 breeze | `homeHeroDissolve` |
+
+
+| **the painting speaks after opening** | SCR-09 refinement: finish the painting reveal at 0.95 before introducing its three text blocks, in order, with slow opacity fades. Hold the complete copy before fading it out and entering the portal. | text at 1.08/1.62/2.18, durations 0.50/0.50/0.55; clear at 3.03; portal at 3.18; 120vh per unit, reversible scrub | user direction 9 September 2026; supersedes overlapping painting/text reveals | media first, quiet type second | `homeHeroDissolve` |
+
+
+SCR-10 smooth-scroll refinement, 9 September 2026: year-to-year marker travel and sky/light interpolation now fill each entire 120vh leg with linear scroll progress, removing the previous 0.6-unit stop after every 0.4-unit move. Prose and year labels use slower 0.3-unit fades, with a short separation to keep text legible. The final scene retains its 0.9-unit reading hold. Shared Lenis and the existing 0.8s scrub provide input smoothing; reverse scroll follows the same path.
+
+
+| **the night welcomes Belonging** | SCR-10 continuation: after the final year holds, fade out all Truth copy and timeline; move the supplied sky/light layers to Figma offset 5822 and fade/rise the Belonging block into place. AMB-05 phase gently varies existing star brightness only, masked out by terrain. | exit 0.45 units; sky 1.2; copy rise 1 unit after 0.45; hold 1.2; reversible, 120vh/unit; ambient pauses offscreen/hidden, absent in reduced motion | user screenshot and Figma 3371:41578, 9 September 2026 | quiet type arrival, subtle supplied-star twinkle | `homeHeroDissolve`, `homeLandscapeBreeze` |
+
+
+Belonging stars amendment, 9 September 2026: user requests our own Three.js implementation. The supplied star-image sky is replaced during Belonging by a procedural GLSL star field within the existing canvas. Seeded sparse stars vary in radius, brightness and twinkle phase; no constellations are traced. Terrain alpha occludes stars. The registered AMB-05 phase drives subtle twinkling, paused offscreen/hidden and absent in reduced motion.
+
+
+| **a star crosses the night** | AMB-05 Belonging refinement: one procedural shooting star roughly every eight seconds, travelling diagonally with a tapered trail and soft head. Fade in/out over its 1.4-second flight; no overlapping meteors. Screen-relative paths remain visible on mobile, terrain alpha hides the trail behind trees. | existing 24-second registered ambient phase, three varied paths; visible only in settled Belonging; pause offscreen/hidden and disable with reduced motion | user direction 9 September 2026 | subtle ambient sky | `homeLandscapeBreeze` |
+
+| **the road opens into an invitation** | SCR-09 / ENT-05: Belonging fades after its reading hold; a bottom media scrim joins the road to charcoal. The Invitation overlaps the departing landscape; its heading and three held photo cards rise into view with scroll. | 0.6-unit exit; 24svh overlap; 65vh reversible card entrance; static layout for reduced motion | Figma 3371:41740, user direction 9 September 2026 | transition; photographs stay still within their cards | homeHeroDissolve, homeInvitation |

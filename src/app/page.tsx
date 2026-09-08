@@ -35,7 +35,7 @@ export default function HomePage() {
       <SmoothScroll />
       <HomeLoader />
       <ThreadLine />
-      <HomeHero beat={hero} wonder={rest[0]} />
+      <HomeHero beat={hero} wonder={rest[0]} truth={rest[1]} belonging={rest[2]} />
       {rest.map((beat) => (
         <BeatSection key={beat.id} beat={beat} />
       ))}
