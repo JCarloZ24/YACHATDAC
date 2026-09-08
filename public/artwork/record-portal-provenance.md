@@ -1,6 +1,16 @@
 # The Record portal assets
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
+
+## Shallow carvings — procedural material
+
+Origin: user direction on 9 September 2026, using three supplied wall images
+as references for recessed grooves. Generated in `record-portal-carvings.ts`:
+uneven downward arrow-like cuts, paired scratches and shallow bent grooves.
+A runtime height texture supplies recessed shading and worn edges in the
+Three.js wall material. These marks are generated interface decoration, not
+traces of the supplied rock art, cultural records, or work attributed to any
+supplied artist. The sandstone bitmap and central handprint aperture are unchanged.
 
 ## Handprint mask — handprint-impression.png
 

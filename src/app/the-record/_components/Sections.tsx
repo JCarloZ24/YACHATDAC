@@ -17,6 +17,7 @@ import {
 } from "@/content/record-media";
 import { RecordPortalMotion } from "./PortalMotion";
 import { RecordLoadingCover } from "./LoadingCover";
+import { RecordPatternMotion } from "./PatternMotion";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import { RecordSignup } from "./Signup";
 import { EditorialNote } from "@/components/ui/EditorialNote";
@@ -195,7 +196,7 @@ export function KnowledgeGapsV2() {
           it. Clip the artwork here instead, so the section stays open and
           the wave survives. `inset-0` keeps the artwork's percentage
           anchoring resolving against the same box it did before. */}
-      <div aria-hidden className="absolute inset-0 overflow-hidden">
+      <RecordPatternMotion>
         {/* 13% / 15% are the Figma node opacities and the scene note's own
             figures. The assets already carry the artist's 8% inside the
             `rings` group, so these are the wrapper values, not the effective
@@ -208,7 +209,7 @@ export function KnowledgeGapsV2() {
           piece="b"
           className="top-[28%] left-[61%] h-[910px] w-225 opacity-[0.15]"
         />
-      </div>
+      </RecordPatternMotion>
 
       <div className="relative mx-auto w-full max-w-[1440px] px-6 py-24 lg:px-25">
         <p className="eyebrow text-lg text-gold sm:text-eyebrow-hero">

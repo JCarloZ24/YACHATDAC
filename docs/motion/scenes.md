@@ -206,6 +206,16 @@ enforced by the compiler rather than by discipline.
 
 ## The Record — handprint opening, 8 September 2026
 
+**Question artwork amendment, 9 September 2026.** The user requests movement
+in the two background ring patterns behind “What we do not know”.
+The latest correction makes `recordPatternDrift` (AMB-04) follow cursor position:
+opposing 30px / 46px drift and 3.5° / 5° tilt, with power3.out smoothing over
+0.8s horizontally and 1.05s vertically for a softer trailing response. Leaving the
+section returns both rings to centre. Touch and reduced motion retain still artwork.
+Questions, numbering and
+the CTA remain in ordinary flow. This supersedes the static-artwork direction
+below for these two instances only; their original opacity is preserved.
+
 **Latest user direction, 8 September 2026.** Build the wall and handprints in
 Three.js on a single canvas, with a real hand-shaped hole in the wall geometry.
 The user rejects the earlier photographic wall and fixed screen-space cards.

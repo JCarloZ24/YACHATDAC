@@ -15,6 +15,7 @@ import {
   Vector2,
 } from "three";
 import { mergeVertices } from "three/addons/utils/BufferGeometryUtils.js";
+import { createWallCarvings } from "./record-portal-carvings";
 import {
   createPigmentField,
   createStencilAtlas,
@@ -204,8 +205,12 @@ export function buildPortalWall(
   const pigment = createPigmentField(samples, width, height, HAND_HEIGHT);
   const atlas = stencilSheet ? createStencilAtlas(stencilSheet, HAND_HEIGHT) : null;
   const stencils = createWallStencils(HAND_HEIGHT);
+  const carvings = createWallCarvings();
 
   const uniforms = {
+    uCarvings: { value: carvings.texture },
+    uCarvingSize: { value: carvings.size },
+    uCarvingTexel: { value: carvings.texel },
     uHand: { value: hand },
     uStone: { value: stone },
     uPigment: { value: pigment.texture },
@@ -242,6 +247,8 @@ export function buildPortalWall(
     uniform vec2 uHandSize, uStoneTexel, uPigmentSize;
     uniform vec3 uPigmentColour;
     #ifndef OPENING_EDGE
+      uniform sampler2D uCarvings;
+      uniform vec2 uCarvingSize, uCarvingTexel;
       uniform sampler2D uStencilAtlas;
       uniform vec2 uStencilSize, uStencilGrid;
       uniform vec4 uStencilPlacements[WALL_STENCIL_COUNT];
@@ -338,6 +345,20 @@ export function buildPortalWall(
         float dx = heightAt(uv + vec2(uStoneTexel.x, 0.0)) - heightAt(uv - vec2(uStoneTexel.x, 0.0));
         float dy = heightAt(uv + vec2(0.0, uStoneTexel.y)) - heightAt(uv - vec2(0.0, uStoneTexel.y));
         n = normalize(n + vec3(-dx * 0.6, -dy * 0.6, 0.0));
+        // User direction 2026-09-09: shallow incisions in the solid face.
+        // The negative height makes one lip catch light and the other shade.
+        vec2 carveUV = vSurface.xy / uCarvingSize + 0.5;
+        float cut = texture2D(uCarvings, carveUV).r;
+        float cutX = texture2D(uCarvings, carveUV + vec2(uCarvingTexel.x, 0.0)).r
+                   - texture2D(uCarvings, carveUV - vec2(uCarvingTexel.x, 0.0)).r;
+        float cutY = texture2D(uCarvings, carveUV + vec2(0.0, uCarvingTexel.y)).r
+                   - texture2D(uCarvings, carveUV - vec2(0.0, uCarvingTexel.y)).r;
+        float wear = 0.72 + noise(vSurface.xy * 56.0) * 0.28;
+        // Broad cuts need stronger relief: their height changes across more
+        // texels, so the original narrow-groove lighting all but disappeared.
+        n = normalize(n + vec3(cutX, cutY, 0.0) * 8.0 * wear);
+        colour *= 1.0 - cut * 0.52 * wear;
+        colour *= 1.0 + clamp(-cutX * 0.5 + cutY * 0.8, -0.4, 0.4) * 1.2;
       #endif
       float light = 0.78 + max(dot(n, normalize(vec3(-0.5, 0.8, 1.4))), 0.0) * 0.24;
       #ifdef OPENING_EDGE
@@ -390,6 +411,7 @@ export function buildPortalWall(
       sideMaterial.dispose();
       pigment.texture.dispose();
       atlas?.texture.dispose();
+      carvings.texture.dispose();
     },
   };
 }
