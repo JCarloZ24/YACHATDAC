@@ -387,29 +387,18 @@ export function LivingWorkAperture() {
           crop inside 120's glyph below, and the motion pass grows the opening
           from that glyph until it fills this band.
 
-          EVERY MOTION-ONLY LAYER IN THIS SECTION IS `pointer-events-none` AND
-          `hidden lg:block` — this band, the band dressing, the ghost header
-          and the O layer.
-
-          pointer-events-none because opacity 0 still captures clicks and
-          drags, so a 68svh invisible block was swallowing taps and text
-          selection over the middle of this screen at every width.
-
-          `hidden` below lg because the aperture does not run there (DESKTOP in
-          recipes.ts) and these must therefore never be seen — and opacity-0
-          alone could not guarantee it. GSAP's autoAlpha writes INLINE opacity
-          and visibility, so once the desktop branch had built, narrowing to a
-          phone width could leave the O layer inline-visible on an otherwise
-          empty cream screen: a small O with sky showing through it, shrinking
-          toward a heading that was never going to arrive. display:none
-          outranks any inline opacity, so below lg the layers are simply not
-          there. */}
+          Every motion-only layer in here is `pointer-events-none` — this band,
+          the band dressing, the ghost header and the O layer. Opacity 0 still
+          captures clicks and drags, so a 68svh invisible block was swallowing
+          taps and text selection over the middle of this screen. Nothing
+          visual changes; it is the one part of this that is not about a
+          breakpoint. */}
       {PLAIN ? (
         <div
           data-aperture
           data-motion={PLAIN.grade}
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-[16svh] hidden h-[68svh] opacity-0 lg:block"
+          className="pointer-events-none absolute inset-x-0 top-[16svh] h-[68svh] opacity-0"
         >
           {/* The reveal mask — a smooth, irregular blob in the brand's own
               furniture language (the wave, the Button/Blob). The 0 hands over
@@ -459,7 +448,7 @@ export function LivingWorkAperture() {
             />
           </div>
           {/* X5 + the caption — one centred line low in the frame. */}
-          <div data-band-dress aria-hidden className="pointer-events-none absolute inset-0 hidden opacity-0 lg:block">
+          <div data-band-dress aria-hidden className="pointer-events-none absolute inset-0 opacity-0">
             <div className="absolute inset-0 bg-linear-to-t from-charcoal/50 via-transparent to-transparent" />
             <div className="absolute inset-x-0 bottom-[12%] px-6 text-center">
               <p className="eyebrow text-xs leading-relaxed text-gold">
@@ -475,7 +464,7 @@ export function LivingWorkAperture() {
               ghost header below, which assembles around it before the scene
               closes; §03 then opens with the real heading in the same voice.
               One wide shot, one transition. */}
-          <div data-o-ghost aria-hidden className="pointer-events-none absolute inset-x-0 top-[6%] hidden opacity-0 lg:block">
+          <div data-o-ghost aria-hidden className="pointer-events-none absolute inset-x-0 top-[6%] opacity-0">
             <div className={COLUMN}>
               <p data-ghost-item className="eyebrow text-burnt-deep opacity-0">
                 Our challenges
@@ -495,7 +484,7 @@ export function LivingWorkAperture() {
           </svg>
           <div
             data-o-shrink
-            className="pointer-events-none absolute inset-0 hidden opacity-0 [clip-path:url(#lw-o-clip)] lg:block"
+            className="pointer-events-none absolute inset-0 opacity-0 [clip-path:url(#lw-o-clip)]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -627,29 +616,6 @@ export function LivingWorkAperture() {
       </div>
 
 
-      {/* THE PLAIN, PLAINLY — below lg only.
-          
-          The theater band above is the section's photograph, and it is
-          motion-only: it is `hidden lg:block` because the aperture that opens
-          it does not run at these widths. Without this the whole screen was a
-          number on cream, and the section's one idea is that the 0 is a portal
-          ONTO the plain — so the plain has to be here.
-          
-          Not the theater re-used: that is absolutely positioned at
-          top-[16svh] h-[68svh] and would sit straight over the figure. This is
-          an ordinary band in flow, under the number, which is where the frame
-          puts the break-out too. */}
-      {PLAIN ? (
-        <div className="relative mt-4 h-[46svh] w-full overflow-hidden lg:hidden">
-          <Image
-            src={PLAIN.src}
-            alt={PLAIN.subject}
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
-      ) : null}
     </section>
   );
 }
