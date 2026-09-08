@@ -8,7 +8,7 @@ The three faces above the fold are preloaded in the root layout.
 | Headline | Block Berthold | Adobe Fonts kit `qqn2php` (family `berthold-block-w1g`); `BlockBerthold.woff2` kept as fallback only | ✅ **Adobe Fonts web project** — the kit stylesheet in the root layout is the licensed delivery |
 | Subheadline / eyebrow | Bantayog Sans | `BantayogSans-{Regular,Medium,SemiBold,Bold,Black}.woff2` | ✅ **commercial licence held** — key below |
 | Body | Work Sans | `WorkSans-Variable.woff2`, `WorkSans-Italic-Variable.woff2` | ✅ SIL OFL 1.1 — `WorkSans-OFL.txt` |
-| Callouts | GoodDog Plain / Good Dog Cool | — files still missing | ✅ freeware — `GoodDog-LICENCE.txt`; drop `GoodDogPlain.woff2` in here |
+| Callouts | GoodDog Plain / Good Dog Cool | `GoodDogPlain.woff2`, `GoodDogCool.woff2` | ✅ freeware — `GoodDog-LICENCE.txt` |
 
 ## Licensing — resolved 2026-09-02 (from admin)
 
@@ -29,9 +29,9 @@ Keep the purchase record (invoice / licence PDF) with the brand assets in the
 Proyekto resources section; if this repository ever goes public, move the key
 there too and reference it here instead of quoting it.
 
-Missing files (declared in `fonts.css`, 404 today): `GoodDogPlain.woff2` and
-`BantayogSans-ExtraBold.woff2` — get both from the Proyekto resources section
-and drop them in this folder.
+Nothing declared in `fonts.css` is missing any more. `GoodDogPlain.woff2` and
+`GoodDogCool.woff2` were converted from the Fonthead TTFs with `ttf2woff2` on
+8 Sep 2026; `BantayogSans-ExtraBold.woff2` landed with the Bantayog commit.
 
 ## Tracked in git — changed 7 Sep 2026
 
