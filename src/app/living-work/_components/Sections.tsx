@@ -168,12 +168,28 @@ export function LivingWorkHero() {
               than the window. On a phone the plane is 1.44x the viewport
               HEIGHT — far wider than the screen — and centring it showed the
               middle of the frame's window while she stands at 55-92% of it,
-              so she was half out of shot. 73% puts her in the middle of what
-              a narrow screen actually sees, and because it is a fraction of
-              the plane rather than of the viewport it holds at any phone
-              size. Desktop is untouched. */}
-          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full min-w-[144svh] -translate-x-[73%] -translate-y-1/2 lg:-translate-x-1/2">
-            <div className="absolute top-[-12.5%] left-[-5.49%] h-[125%] w-[154.13%]">
+              so she was half out of shot. The translate IS the visible centre
+              as a fraction of the plane, so it tracks wherever she lands: at
+              the current crop she spans 51-82%, centring at 66%. Re-derive it
+              whenever the crop box changes. Desktop is untouched. */}
+          <div className="absolute top-1/2 left-1/2 h-full min-h-[69.4vw] w-full min-w-[144svh] -translate-x-[66%] -translate-y-1/2 lg:-translate-x-1/2">
+            {/* ⚠ ZOOMED OUT FROM THE FRAME, on Ivy's call — the one place the
+                hero deliberately departs from 2139:2613.
+
+                The frame's transform is w-154.13% / h-125% / left--5.49% /
+                top--12.5%, which shows 64.9% of the source width. That read
+                too tight in the build, so the box comes back to 130%: 76.9% of
+                the source, about halfway to a plain object-cover (81.1%). She
+                sits at 51-82% across the frame where the frame puts her at
+                55-92%, so the composition holds — still right of centre, with
+                the headline clear of her.
+
+                Height and top are DERIVED, not chosen: h = k / 1.7762 x 1.4409
+                keeps the box on the source's own aspect, so object-cover
+                inside it still has nothing to crop, and top centres the
+                overflow. Change k and re-derive both, and the phone's
+                translate below with them. */}
+            <div className="absolute top-[-2.73%] left-0 h-[105.46%] w-[130%]">
               <Image
                 src={HERO.src}
                 alt=""
