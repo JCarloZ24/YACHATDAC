@@ -117,6 +117,9 @@ the frame explicitly. Split text by line or word, never by character.
   washes; the media scrim is the one exception.
 - The V2 file has two grids only, Desktop/1440 and Mobile/375. Classes are the 375 value by
   default and the 1440 value under `lg:`. Do not invent a tablet step.
+- **Viewport margins:** 20 px / 1.25 rem on mobile (`px-5`), 64 px / 4 rem on desktop
+  (`lg:px-16`). Every section's outer padding uses these two values and nothing else;
+  full-bleed media is the only thing that touches the viewport edge.
 - Figma → code: load the `figma:figma-design-to-code` skill before `get_design_context`.
   Row coordinates in `docs/design/README.md` are a snapshot — re-read them from the row
   labels before quoting. Never set the brand fonts through the Figma plugin API.

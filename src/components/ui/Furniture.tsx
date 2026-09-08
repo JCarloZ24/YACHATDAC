@@ -120,13 +120,46 @@ function BlobShape({ tone }: { tone: keyof typeof BLOB_TONE }) {
 }
 
 const BLOB_BOX =
-  "relative inline-flex h-14 w-[17.25rem] max-w-full items-center justify-center px-6";
+  "relative inline-flex h-14 w-[17.25rem] max-w-full items-center justify-center gap-2 px-6";
+
+/**
+ * The chevron the Wonder hi-fi (2033:7104) sets after its two closing labels:
+ * a plain stroke, right for a link and down for a download. Drawn inline
+ * because /wonder/chevron-up.svg is the artist's hand-drawn mark, which
+ * cannot be rotated into a UI glyph.
+ */
+function BlobChevron({ dir }: { dir: "right" | "down" }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      className={`relative size-4 shrink-0 ${dir === "down" ? "rotate-90" : ""}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M6 3l5 5-5 5" />
+    </svg>
+  );
+}
+
+/** Label sizes: the shared 12px, and the Wonder frame's CTA16 (2033:7108). */
+const BLOB_LABEL = {
+  sm: "text-xs",
+  /* CTA16 carries no tracking (like the story-card links); the utility's
+     0.12em pushed the label onto two lines inside the 276 shape. */
+  lg: "text-base tracking-normal whitespace-nowrap",
+} as const;
 
 export function BlobButton({
   href,
   children,
   tone = "burnt",
   still = false,
+  icon,
+  size = "sm",
   className = "",
 }: {
   href: string;
@@ -139,19 +172,23 @@ export function BlobButton({
    * not need to answer a cursor to read as a button.
    */
   still?: boolean;
+  /** Trailing chevron — right for a link, down for a download. */
+  icon?: "right" | "down";
+  size?: keyof typeof BLOB_LABEL;
   className?: string;
 }) {
   return (
     <Link
       href={href}
-      className={`group ${BLOB_BOX} ${
+      className={`group ${BLOB_BOX} text-canvas ${
         still
           ? ""
           : "transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-0.5"
       } ${className}`}
     >
       <BlobShape tone={tone} />
-      <span className="eyebrow relative text-xs text-canvas">{children}</span>
+      <span className={`eyebrow relative ${BLOB_LABEL[size]}`}>{children}</span>
+      {icon ? <BlobChevron dir={icon} /> : null}
     </Link>
   );
 }
@@ -164,17 +201,35 @@ export function BlobButton({
  */
 export function BlobHold({
   children,
+  tone = "muted",
+  icon,
+  size = "sm",
   className = "",
 }: {
   children: string;
+  /**
+   * The Wonder hi-fi (2033:7110) draws the brochure button in full Burnt
+   * Ochre with a down chevron. Passing a solid tone renders it as the frame
+   * does; it is still not a link, and data-placeholder still marks the hold.
+   */
+  tone?: keyof typeof BLOB_TONE;
+  icon?: "right" | "down";
+  size?: keyof typeof BLOB_LABEL;
   className?: string;
 }) {
+  const muted = tone === "muted";
   return (
-    <span data-placeholder="blob-hold" className={`${BLOB_BOX} ${className}`}>
-      <BlobShape tone="muted" />
-      <span className="eyebrow relative text-[11px] text-current/55">
+    <span
+      data-placeholder="blob-hold"
+      className={`${BLOB_BOX} ${muted ? "text-current/55" : "text-canvas"} ${className}`}
+    >
+      <BlobShape tone={tone} />
+      <span
+        className={`eyebrow relative ${muted ? "text-[11px]" : BLOB_LABEL[size]}`}
+      >
         {children}
       </span>
+      {icon ? <BlobChevron dir={icon} /> : null}
     </span>
   );
 }
