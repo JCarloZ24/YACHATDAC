@@ -17,10 +17,7 @@
  *     data-ink="8"                 ink stroke width, in viewBox units
  *     data-stroke="#090E12"        ink colour (default the ochre token)
  *     data-from="0" data-to="0.6"  its share of the scroll (default 0 → 0.62)
- *     data-split="tip"             the outer loop is cut at its topmost point
- *                                  and drawn as two lines that run down either
- *                                  side and meet at the bottom, before the
- *                                  inner loops draw inward
+ *     data-seg="70"                segment length, in viewBox units (see below)
  *   <path data-feature>            anything that simply arrives, by opacity.
  *     data-at="0.7"                when (default: staged after the routes)
  *     data-float                   once arrived, it floats — a slow bob on
@@ -36,13 +33,15 @@
  *
  * How a route draws, within its own [from, to] window of scroll progress:
  *
- *   Each subpath is copied out as an "ink" stroke that draws itself, in
- *   order, each given scroll in proportion to its real length — the outer
- *   loop is many times longer than the holes, and an equal share made it
- *   flash across in a few scroll pixels. The band's own body then comes up
- *   under the ink and the ink lets go. Nothing here writes a layout
- *   property: stroke-dashoffset on the ink, opacity on the rest, transform on
- *   the floating pin.
+ *   Every loop is cut into short segments of roughly equal length, each
+ *   copied out as an "ink" stroke that draws itself. Each segment starts at
+ *   a seeded-random point in the window and runs in a seeded-random
+ *   direction, so lines appear all over the map at once and join up until
+ *   the whole outline stands — the D4 contour-map read (/lab/contour-map),
+ *   where the terrain surfaces rather than being traced. The band's own body
+ *   then comes up under the ink and the ink lets go. Nothing here writes a
+ *   layout property: stroke-dashoffset on the ink, opacity on the rest,
+ *   transform on the floating pin.
  *
  * Reduced motion cuts: the finished map is simply there, no ink is made and
  * nothing floats.
@@ -70,8 +69,12 @@ export type RouteMapOptions = {
 
 /** Where a route with no `data-to` finishes; the rest shows it whole. */
 const TRACE_END = 0.62;
-/** The next loop begins this much before the last one lands. */
-const LOOP_OVERLAP = 0.05;
+/** Segment length in viewBox units when a route sets no `data-seg`. */
+const SEGMENT_LENGTH = 70;
+/** How much of the route's window one segment takes to draw. */
+const SEGMENT_SPAN = 0.45;
+/** Sample spacing along a segment, in viewBox units. */
+const SAMPLE_STEP = 3;
 /** The body comes up under the ink, then the ink lets go — relative to
     the route's own `to`. */
 const BODY_IN: [number, number] = [-0.12, 0.06];
@@ -90,9 +93,6 @@ const BRUSH_COUNT = 14;
 /** The float: a slow bob, in viewBox units. */
 const FLOAT_RISE = 6;
 const FLOAT_PERIOD = 1.8;
-/** Sample spacing, in viewBox units, when a loop is cut at its tip. */
-const SPLIT_STEP = 3;
-
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 const window01 = (p: number, [a, b]: [number, number]) =>
@@ -106,31 +106,38 @@ function subpaths(d: string): string[] {
     .filter(Boolean);
 }
 
+/** A seeded hand: deterministic, so every load draws the same map. */
+function jitter(seed: number): number {
+  const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+}
+
 /**
- * Cut a closed loop at its topmost point into two open paths of equal
- * length, both starting at the tip, so drawn together they run down either
- * side and meet at the bottom. Sampled off the live path, so it works for
- * any curve commands the export used.
+ * Cut a loop into segments of about `segLen`, each a sampled polyline.
+ * Segments abut exactly; round caps hide the seams once both are drawn.
  */
-function splitAtTip(loop: SVGPathElement): [string, string] {
+function segments(
+  loop: SVGPathElement,
+  segLen: number,
+  seed: number,
+): string[] {
   const length = loop.getTotalLength();
-  const count = Math.max(8, Math.ceil(length / SPLIT_STEP));
-  const points: [number, number][] = [];
-  let tip = 0;
-  for (let i = 0; i < count; i++) {
-    const p = loop.getPointAtLength((i / count) * length);
-    points.push([p.x, p.y]);
-    if (p.y < points[tip][1]) tip = i;
+  const count = Math.max(1, Math.round(length / segLen));
+  const out: string[] = [];
+  for (let k = 0; k < count; k++) {
+    const s0 = (k / count) * length;
+    const s1 = ((k + 1) / count) * length;
+    const steps = Math.max(1, Math.ceil((s1 - s0) / SAMPLE_STEP));
+    const pts: string[] = [];
+    for (let i = 0; i <= steps; i++) {
+      const p = loop.getPointAtLength(s0 + ((s1 - s0) * i) / steps);
+      pts.push(`${p.x.toFixed(1)},${p.y.toFixed(1)}`);
+    }
+    // Half the segments draw backwards, so the joins meet from both sides.
+    if (jitter(seed + k * 3 + 1) > 0.5) pts.reverse();
+    out.push("M" + pts.join("L"));
   }
-  const at = (i: number) => points[(tip + i + count) % count];
-  const half = Math.floor(count / 2);
-  const toPath = (pts: [number, number][]) =>
-    pts.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`).join("");
-  const down = [];
-  const up = [];
-  for (let i = 0; i <= half; i++) down.push(at(i));
-  for (let i = 0; i <= count - half; i++) up.push(at(-i));
-  return [toPath(down), toPath(up)];
+  return out;
 }
 
 type Ink = { path: SVGPathElement; from: number; to: number };
@@ -285,49 +292,29 @@ export function createRouteMap(
       const to = Number(path.dataset.to ?? TRACE_END);
       const pieces = subpaths(path.getAttribute("d") ?? "");
 
-      // Each entry is one or more strokes that share a window. A split loop
-      // is two strokes drawn together; everything else is one.
-      const groups: SVGPathElement[][] = [];
-      pieces.forEach((d, i) => {
-        if (i === 0 && path.dataset.split === "tip") {
-          const loop = makeInk(d, width, stroke);
-          // Measured, then swapped for its two halves — never inserted.
-          path.parentNode?.insertBefore(loop, path.nextSibling);
-          const halves = splitAtTip(loop);
-          loop.remove();
-          groups.push(halves.map((h) => makeInk(h, width, stroke)));
-        } else {
-          groups.push([makeInk(d, width, stroke)]);
-        }
-      });
-
-      // Later groups go in first so DOM order matches draw order.
-      for (const group of [...groups].reverse()) {
-        for (const ink of [...group].reverse()) {
-          path.parentNode?.insertBefore(ink, path.nextSibling);
-        }
-      }
-
-      // Geometry, not layout: getTotalLength works inside display:none.
-      const lengths = groups.map((g) =>
-        Math.max(1, ...g.map((ink) => ink.getTotalLength())),
-      );
-      const total = lengths.reduce((sum, l) => sum + l, 0);
+      const segLen = Number(path.dataset.seg ?? SEGMENT_LENGTH);
       const span = to - from;
       const inks: Ink[] = [];
-      let before = 0;
-      groups.forEach((group, i) => {
-        const a = from + (before / total) * span;
-        before += lengths[i];
-        const b = from + (before / total) * span;
-        for (const ink of group) {
+      let seed = routes.length * 1000;
+      for (const d of pieces) {
+        // Measured, then swapped for its segments — never left in.
+        const loop = makeInk(d, width, stroke);
+        path.parentNode?.insertBefore(loop, path.nextSibling);
+        // Geometry, not layout: this works inside display:none.
+        const parts = segments(loop, segLen, seed);
+        loop.remove();
+        for (const part of parts) {
+          const ink = makeInk(part, width, stroke);
+          path.parentNode?.insertBefore(ink, path.nextSibling);
+          const start = from + jitter(seed) * span * (1 - SEGMENT_SPAN);
           inks.push({
             path: ink,
-            from: Math.max(from, a - LOOP_OVERLAP * span),
-            to: Math.min(to, b + LOOP_OVERLAP * span),
+            from: start,
+            to: start + span * SEGMENT_SPAN,
           });
+          seed += 7;
         }
-      });
+      }
 
       path.style.opacity = "0";
       routes.push({ path, to, inks });

@@ -26,15 +26,49 @@ import { useEffect, useRef, useState } from "react";
  */
 const FADE_MS = 600;
 
+export type HeroTiers = { small: string; medium: string; large: string };
+
+/**
+ * Which encode to fetch, decided once before the element has a source, so
+ * the browser never starts one download and abandons it for another.
+ *
+ *   · Data saver, or a 2g/3g effective type (Network Information API,
+ *     Chromium and Android only) → small, whatever the screen.
+ *   · Under ~1000 device pixels wide → small: a phone cannot show more.
+ *   · 1800+ device pixels and no sign of a slow link → large.
+ *   · Otherwise medium.
+ *
+ * Browsers without the API (Safari, Firefox) are judged on screen alone.
+ * The choice is not revisited mid-play: a tier switch would restart the
+ * film, which is worse than a soft frame.
+ */
+function pickTier(tiers: HeroTiers): string {
+  type Connection = {
+    saveData?: boolean;
+    effectiveType?: string;
+    downlink?: number;
+  };
+  const connection = (navigator as Navigator & { connection?: Connection })
+    .connection;
+  const slow =
+    connection?.saveData === true ||
+    /(^|-)(2g|3g)$/.test(connection?.effectiveType ?? "") ||
+    (connection?.downlink !== undefined && connection.downlink < 1.5);
+  if (slow) return tiers.small;
+  const px = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
+  if (px < 1000) return tiers.small;
+  const fast = connection?.downlink === undefined || connection.downlink >= 5;
+  if (px >= 1800 && fast) return tiers.large;
+  return tiers.medium;
+}
+
 export function HeroVideo({
-  mp4,
-  webm,
+  tiers,
   poster,
   silentFrom = 0,
   label,
 }: {
-  mp4: string;
-  webm?: string;
+  tiers: HeroTiers;
   poster: string;
   /** Seconds into the film the silent loop starts. */
   silentFrom?: number;
@@ -53,9 +87,15 @@ export function HeroVideo({
     return () => motion.removeEventListener("change", sync);
   }, []);
 
+  // The source is set here, not in markup: the tier is a client decision
+  // (screen and connection), and an element with no src fetches nothing —
+  // so the poster stands in until the chosen encode is attached, and the
+  // browser never starts one download only to abandon it for another.
   useEffect(() => {
     const video = ref.current;
-    if (!video || reduced) return;
+    if (!video) return;
+    if (!video.getAttribute("src")) video.src = pickTier(tiers);
+    if (reduced) return;
     const start = () => {
       if (video.currentTime < silentFrom) video.currentTime = silentFrom;
       void video.play().catch(() => {
@@ -65,6 +105,7 @@ export function HeroVideo({
     if (video.readyState >= 1) start();
     else video.addEventListener("loadedmetadata", start, { once: true });
     return () => video.removeEventListener("loadedmetadata", start);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- tiers are static per page
   }, [reduced, silentFrom]);
 
   // Both directions ramp the level over ~600ms: sound on rises from silence
@@ -152,15 +193,16 @@ export function HeroVideo({
         preload="metadata"
         aria-label={label}
         onTimeUpdate={onTimeUpdate}
-      >
-        {webm ? <source src={webm} type="video/webm" /> : null}
-        <source src={mp4} type="video/mp4" />
-      </video>
+      />
       <button
         type="button"
         onClick={toggle}
         aria-pressed={sound}
-        className="eyebrow absolute right-5 bottom-6 z-20 inline-flex items-center gap-2 rounded-full border border-canvas/40 bg-charcoal/50 px-4 py-2 text-canvas backdrop-blur-sm transition-colors duration-(--dur-small) ease-quiet hover:bg-charcoal/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-canvas lg:right-16 lg:bottom-10"
+        /* On the phone it sits in the hero's foot padding under the wrapped
+           title; at lg on the title's baseline (pb-[120px]) to its right. The
+           facts wave only rides up over the foot on scroll, so neither spot
+           is covered at rest. */
+        className="eyebrow absolute right-5 bottom-8 z-20 inline-flex items-center gap-2 rounded-full border border-canvas/40 bg-charcoal/50 px-4 py-2 text-canvas backdrop-blur-sm transition-colors duration-(--dur-small) ease-quiet hover:bg-charcoal/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-canvas lg:right-16 lg:bottom-[120px]"
       >
         {/* The label names the CURRENT state, not the action. */}
         <SpeakerIcon on={sound} />
