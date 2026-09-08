@@ -1,5 +1,11 @@
 # Terminology sheet
 
+*Last updated: 8 September 2026*
+
+The Record's handprint opening adds two interface labels on 8 September 2026:
+“Scroll into the record” and “Skip to the record”. These appear in the content
+module and the Resources v1 draft's interface amendment; no recorded words change.
+
 *Drafted 7 September 2026. Owner: August. Cultural authority: Suzanne Thompson.*
 
 One page settling the site's words, so the review comments that arrived in

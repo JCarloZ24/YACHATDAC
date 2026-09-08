@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import {
   DocumentsLedger,
   KnowledgeGapsV2,
@@ -11,6 +12,7 @@ import {
 import { RecordGrid, type ResolvedSlot } from "./_components/Grid";
 import { recordCardMedia } from "@/content/record-media";
 import { recordItems, recordSources, recordTypes } from "@/content/the-record";
+import "./_components/portal.css";
 
 export const metadata: Metadata = {
   title: "The Record",
@@ -34,9 +36,12 @@ export const metadata: Metadata = {
  * #research-and-discovery (the grid), #documents (Wonder's Downloads child)
  * and #do-you-hold-something (the record's own empty state, D25).
  *
- * F7 exception, user direction 2026-09-08: The Record is static. No route
- * transition, motion module, held rows or breakout overlays. Entries remain
- * native links and filters update immediately. See docs/motion/scenes.md.
+ * F7 amendment, latest user direction 2026-09-08: the intro uses a Three.js
+ * hand-shaped aperture. The catalogue stays in natural flow with native
+ * entry links and immediate filters. See docs/motion/scenes.md.
+ * The same day's follow-up adds SCR-09 wheel inertia using Living Work's
+ * shared scroller (grammar: "being drawn in"). Mount it on this page so it
+ * cleans up when leaving the catalogue, including navigation to an entry.
  */
 
 /**
@@ -83,6 +88,7 @@ export default async function ResourcesPage({
 
   return (
     <div data-page-root className="min-h-svh bg-charcoal">
+      <SmoothScroll />
       <RecordHeroV2 />
 
       <RecordGrid

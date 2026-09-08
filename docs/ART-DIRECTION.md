@@ -1,5 +1,7 @@
 # Art Direction
 
+*Last updated: 8 September 2026*
+
 What this site is, how its content is staged, and how to design a page that hasn't been designed yet.
 
 **Companion files:** `MOTION-SYSTEM.md` (behaviour and timing), `motion-tokens.css` (values as code). When this document and the motion system conflict, **this one wins** — it knows the subject matter.
@@ -425,9 +427,11 @@ Two practical corollaries:
 
 **What did not change, because none of it is a rule about technique:** `MOTION_GRADE` from F8
 still decides *where* an effect lands on portraits and cultural-site material — the plate,
-ground, scrim, type and neighbouring layers carry it while the image plane holds. No generated
-Aboriginal iconography: F9 permits more things done *to* the artist's supplied vectors and never
-permits drawing new ones. No heritage coordinates. The reduced-motion cut and the performance
+ground, scrim, type and neighbouring layers carry it while the image plane holds.
+**Artwork amendment, 8 September 2026, user direction:** generated artwork is now
+permitted, including The Record's handprint aperture. The earlier iconography
+restriction is removed; generated assets carry their own provenance and are not
+attributed to the supplied artist. No heritage coordinates. The reduced-motion cut and the performance
 floors stand, as does **no layout properties, ever** — that one is performance, not taste.
 
 **Still avoid:**
