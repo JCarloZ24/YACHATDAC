@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { Draggable } from "gsap/Draggable";
 import { Flip } from "gsap/Flip";
@@ -378,16 +379,13 @@ export function RangerCarousel({
                     data-flip-id={`ranger-${i}`}
                     className="absolute inset-0 overflow-hidden rounded-sm"
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={slot.photo.src}
                       alt={slot.caption}
-                      width={slot.photo.width}
-                      height={slot.photo.height}
+                      fill
                       draggable={false}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-700 ease-quiet group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
+                      sizes="280px"
+                      className="object-cover transition-transform duration-700 ease-quiet group-hover:scale-[1.06] group-focus-visible:scale-[1.06]"
                     />
                     {/* The hover preview — a scrim rises and the invitation
                         lands. Pure CSS, so it costs nothing while dragging. */}
@@ -475,13 +473,12 @@ export function RangerCarousel({
                 data-flip-id={`ranger-${openIndex}`}
                 className="absolute inset-0 overflow-hidden rounded-sm"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={open.photo.src}
                   alt={open.caption}
-                  width={open.photo.width}
-                  height={open.photo.height}
-                  className="h-full w-full object-cover"
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="object-cover"
                 />
               </div>
               </div>
@@ -527,15 +524,13 @@ export function RangerCarousel({
                 {slots.map((slot, i) =>
                   i === openIndex || !slot.photo ? null : (
                     <figure key={slot.caption}>
-                      <div className="aspect-[3/4] overflow-hidden rounded-sm">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                      <div className="relative aspect-[3/4] overflow-hidden rounded-sm">
+                        <Image
                           src={slot.photo.src}
                           alt={slot.caption}
-                          width={slot.photo.width}
-                          height={slot.photo.height}
-                          loading="lazy"
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-cover"
                         />
                       </div>
                       <figcaption className="mt-3 text-sm text-canvas/70">

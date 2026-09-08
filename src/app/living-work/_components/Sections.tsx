@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { photoById } from "@/content/kit";
 import { SignupField } from "@/components/ui/SignupField";
@@ -133,15 +134,13 @@ export function LivingWorkHero() {
           the sides, and the copy column below is capped so it stays left. */}
       {HERO ? (
         <div data-media data-plane="far" data-motion={HERO.grade} className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={HERO.src}
             alt=""
-            width={HERO.width}
-            height={HERO.height}
-            fetchPriority="high"
-            decoding="async"
-            className="h-full w-full object-cover object-[68%_40%]"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[68%_40%]"
           />
         </div>
       ) : null}
@@ -283,6 +282,15 @@ export function LivingWorkAperture() {
               </clipPath>
             </defs>
           </svg>
+          {/* §02 STAYS ON RAW <img>, deliberately.
+              Every other photograph on this page moved to next/image on
+              8 Sep. These three did not. They are three stacked copies of ONE
+              asset (PLAIN), so the saving is a single image, and they are the
+              geometry the aperture measures: two are clipped by `clip-path:
+              url(#…)` against SVG paths in the same coordinate space, and the
+              third is the plate the glyph zooms into. `fill` re-positions the
+              element it is applied to, which is exactly what must not move
+              here. Not worth the page's signature effect. */}
           {/* The full frame, fading in behind the zooming glyph. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -575,16 +583,13 @@ export function LivingWorkChallenges() {
       {BREAK ? (
         <div className="relative my-24 h-[70svh] overflow-hidden">
           <div data-frame data-motion={BREAK.grade} className="absolute inset-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               data-frame-media
               src={BREAK.src}
               alt={BREAK.subject}
-              width={BREAK.width}
-              height={BREAK.height}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
             />
           </div>
           {/* data-frame-caption — settles in as the frame finishes opening. */}
@@ -714,15 +719,12 @@ export function LivingWorkSpring() {
     >
       {SPRING ? (
         <div data-media data-motion={SPRING.grade} aria-hidden className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={SPRING.src}
             alt=""
-            width={SPRING.width}
-            height={SPRING.height}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
         </div>
       ) : null}
@@ -920,16 +922,13 @@ export function LivingWorkStreams() {
                         : "aspect-[3/2] max-h-[52svh]"
                     }`}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       data-frame-media
                       src={photo.src}
                       alt=""
-                      width={photo.width}
-                      height={photo.height}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover"
+                      fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-cover"
                     />
                   </div>
                 ) : null}
@@ -1058,15 +1057,12 @@ export function LivingWorkBreath() {
     <section id="breath" data-lw="breath" className="relative h-[47svh] overflow-hidden bg-charcoal">
       {BREATH_FRAME ? (
         <div data-media data-motion={BREATH_FRAME.grade} className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={BREATH_FRAME.src}
             alt=""
-            width={BREATH_FRAME.width}
-            height={BREATH_FRAME.height}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
         </div>
       ) : null}
@@ -1266,19 +1262,16 @@ export function LivingWorkInvitation() {
           data-motion={SUNSET.grade}
           className="relative h-[420px] overflow-hidden"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           {/* The hi-fi band's own crop (pattern transform, 2146:2788): the
               visible slice is rows ~27–83% of the frame, centre ≈ 61% — a
               touch below object-cover's default, so the grass line carries
               the bottom of the band rather than the treetops the top. */}
-          <img
+          <Image
             src={SUNSET.src}
             alt=""
-            width={SUNSET.width}
-            height={SUNSET.height}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover object-[50%_61%]"
+            fill
+            sizes="100vw"
+            className="object-cover object-[50%_61%]"
           />
         </div>
       ) : null}
