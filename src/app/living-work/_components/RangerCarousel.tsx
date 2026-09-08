@@ -46,7 +46,7 @@ export type RangerSlot = {
 
 /** Card geometry. SPACING is card width + the strip's gap. */
 const CARD_W = 280;
-const SPACING = 304;
+const SPACING = 300;
 /** The edge card's scale (3 Sep direction: the belt is LINEAR — no rotation,
     no arc — and the centre card is the biggest). Cards ease between 1 at the
     viewport centre and this at its edges on a cosine bell. */
@@ -85,6 +85,14 @@ export function RangerCarousel({
       const cards = Array.from(track.children) as HTMLElement[];
       const n = cards.length;
       if (!n) return;
+
+      // REDUCED MOTION — leave the strip alone. The markup below is a native
+      // `overflow-x-auto` row that already scrolls by touch, wheel and
+      // keyboard, and it snaps. Building the belt would replace that with
+      // Draggable, so a reader who asked for less motion would be left with a
+      // strip that only moves if JavaScript is holding it up. The count stays
+      // at its server value, which is honest: nothing is moving.
+      if (prefersReduced()) return;
 
       const total = n * SPACING;
       // Wrap around the viewport centre so the belt has no ends.
@@ -330,10 +338,10 @@ export function RangerCarousel({
       >
         <ul
           ref={trackRef}
-          className="flex gap-6 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] lg:px-16 [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] lg:px-16 [&::-webkit-scrollbar]:hidden"
         >
           {slots.map((slot, i) => (
-            <li key={slot.caption} className="w-[280px] shrink-0">
+            <li key={slot.caption} className="w-[280px] shrink-0 snap-start">
               {slot.photo ? (
                 <button
                   type="button"

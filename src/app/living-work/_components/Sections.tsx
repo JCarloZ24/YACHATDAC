@@ -79,6 +79,43 @@ const FIGURES = [
 /** §08's fills, in the content file's order. The fifth has not started. */
 const FILLS = [78, 58, 42, 26, 0];
 
+/**
+ * §08's vessel size — one continuous ramp, and it has to be.
+ *
+ * The names are `whitespace-nowrap` inside an `overflow-hidden` box, so a size
+ * the column cannot hold is not a reflow, it is a word silently cut in half —
+ * and the fill layer, the track and the gold tick all inherit the same box, so
+ * the proportion reads wrong too.
+ *
+ * The previous `clamp(…,6.4vw,2.25rem) sm:text-6xl` stepped from 36px straight
+ * to 60px at exactly 640, where the column is only ~592 wide. The longest name,
+ * "Biological Sequestration" (24 characters), needs roughly 13.7em, so:
+ *
+ *   375  → column 327 → 23.9 max      1024 → column 896  → 65.4 max
+ *   640  → column 592 → 43.2 max      1280 → column 1152 → 84.0 max
+ *
+ * This ramp runs 22px at 375 to the drawn 60px at 1280 and holds there, which
+ * clears every one of those ceilings. If a longer name is ever added, re-run
+ * the arithmetic — do not just raise the cap.
+ */
+const VESSEL_SIZE = "text-[clamp(1.25rem,calc(0.39rem+4.2vw),3.75rem)]";
+
+/**
+ * The page column, written once instead of eleven times.
+ *
+ * The frame's gutter is 100 on a 1440 artboard, giving 1240 of content;
+ * `max-w-7xl` + `lg:px-16` gives 1152 and starts at x=144. That 88px is held
+ * deliberately: it is the container every other hi-fi page uses and the one
+ * `SiteFooter` uses, so matching the frame here would align this page to the
+ * frame and misalign it from the site. Recorded for the review rather than
+ * silently closed.
+ *
+ * The phone gutter stays `px-6` and does NOT take Wonder's 20 — Wonder had a
+ * drawn 375 frame specifying it and Living Work has none, and px-6 is what the
+ * global header and footer use at that width.
+ */
+const COLUMN = "mx-auto w-full max-w-7xl px-6 lg:px-16";
+
 /* -------------------------------------------------------------------------
    01 — the hero
    ------------------------------------------------------------------------- */
@@ -117,13 +154,13 @@ export function LivingWorkHero() {
         className="absolute inset-0 bg-linear-to-t from-charcoal via-charcoal/50 to-charcoal/20"
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 pt-32 pb-32 lg:px-16">
+      <div className={`relative ${COLUMN} pt-32 pb-16 lg:pb-32`}>
         <p className="eyebrow text-gold">{livingWorkHero.eyebrow}</p>
         {/* max-w keeps the headline in the left half — it must never cross
             the subject, whatever the copy does. */}
         <h1
           data-heading
-          className="headline mt-6 max-w-xl text-5xl text-canvas sm:text-6xl lg:max-w-2xl lg:text-7xl"
+          className="headline mt-6 max-w-xl text-h1 text-canvas lg:max-w-2xl"
         >
           {livingWorkHero.title}
         </h1>
@@ -287,11 +324,11 @@ export function LivingWorkAperture() {
               closes; §03 then opens with the real heading in the same voice.
               One wide shot, one transition. */}
           <div data-o-ghost aria-hidden className="absolute inset-x-0 top-[6%] opacity-0">
-            <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
-              <p data-ghost-item className="eyebrow text-burnt opacity-0">
+            <div className={COLUMN}>
+              <p data-ghost-item className="eyebrow text-burnt-deep opacity-0">
                 Our challenges
               </p>
-              <h2 className="headline mt-5 text-4xl text-evergreen sm:text-5xl">
+              <h2 className="headline mt-5 text-h2 text-evergreen">
                 <span data-o-ghost-land className="inline-block">O</span>
                 <span data-ghost-item className="opacity-0">ur challenges</span>
               </h2>
@@ -321,8 +358,8 @@ export function LivingWorkAperture() {
       ) : null}
 
       {/* data-copy — everything the full-bleed hold clears off the screen. */}
-      <div data-copy className="relative mx-auto w-full max-w-7xl px-6 pt-32 pb-24 lg:px-16">
-        <p data-fade className="eyebrow text-burnt">The numbers</p>
+      <div data-copy className={`relative ${COLUMN} pt-24 pb-16 lg:pt-32 lg:pb-24`}>
+        <p data-fade className="eyebrow text-burnt-deep">The numbers</p>
 
         {/* The rail — the scroll progress bar, divided into four segments,
             one per figure; each fills across its own stretch of the pin.
@@ -336,13 +373,13 @@ export function LivingWorkAperture() {
             >
               <span
                 data-seg-fill
-                className={`absolute inset-0 origin-left bg-burnt ${
+                className={`absolute inset-0 origin-left bg-burnt-deep ${
                   i === APERTURE_REST ? "" : "scale-x-0"
                 }`}
               />
             </span>
           ))}
-          <span data-rail-count className="eyebrow ml-4 text-xs text-burnt">
+          <span data-rail-count className="eyebrow ml-4 text-xs text-burnt-deep">
             {String(APERTURE_REST + 1).padStart(2, "0")} / {String(FIGURES.length).padStart(2, "0")}
           </span>
         </div>
@@ -398,7 +435,7 @@ export function LivingWorkAperture() {
               <p
                 key={figure.value}
                 data-figure-caption
-                className={`eyebrow absolute inset-0 text-xs text-burnt ${
+                className={`eyebrow absolute inset-0 text-xs text-burnt-deep ${
                   i === APERTURE_REST ? "" : "opacity-0"
                 }`}
               >
@@ -428,8 +465,8 @@ function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) 
   return (
     <div data-cluster>
       <div className="flex items-baseline justify-between gap-6 border-b border-burnt/70 pb-2">
-        <p className="eyebrow text-xs text-burnt">{group.label}</p>
-        <p className="eyebrow text-xs text-burnt">
+        <p className="eyebrow text-xs text-burnt-deep">{group.label}</p>
+        <p className="eyebrow text-xs text-burnt-deep">
           {String(group.items.length).padStart(2, "0")}
         </p>
       </div>
@@ -449,7 +486,7 @@ function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) 
               </h3>
               <span
                 aria-hidden
-                className="shrink-0 text-2xl leading-none text-burnt"
+                className="shrink-0 text-2xl leading-none text-burnt-deep"
               >
                 <span className="group-open:hidden">+</span>
                 <span className="hidden group-open:inline">&minus;</span>
@@ -477,7 +514,7 @@ export function LivingWorkChallenges() {
       id="challenges"
       data-lw="challenges"
       data-ground
-      className="relative overflow-hidden py-32"
+      className="relative overflow-hidden py-16 lg:py-32"
       /* The hi-fi frame's ground: bone thinning to dry earth down the section.
          The ramp animates only the deep end (--ground), so the rest state IS
          the wireframe gradient and motion darkens it from the bottom up. */
@@ -507,15 +544,15 @@ export function LivingWorkChallenges() {
         </div>
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={`relative ${COLUMN}`}>
         {/* data-handoff-title — this header exists for the document: with
             JavaScript off (or reduced motion) it is the section's heading.
             While motion runs, §02's aperture lands the O in ITS header and
             that one stays as the only title, so the motion pass suppresses
             this pair — rendering both would put "Our challenges" on the page
             twice. */}
-        <p data-handoff-title className="eyebrow text-burnt">Our challenges</p>
-        <h2 data-handoff-title className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
+        <p data-handoff-title className="eyebrow text-burnt-deep">Our challenges</p>
+        <h2 data-handoff-title className="headline mt-5 max-w-3xl text-h2 text-evergreen">
           {/* [data-o-land] — the glyph the capture lands in. Measured, never
               hardcoded: the display face is gitignored (F5). */}
           <span data-o-land className="inline-block">O</span>ur challenges
@@ -560,7 +597,7 @@ export function LivingWorkChallenges() {
         </div>
       ) : null}
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={`relative ${COLUMN}`}>
         <div className="space-y-16">
           {challengeGroups.slice(2).map((group) => (
             <ChallengeGroup key={group.label} group={group} />
@@ -602,7 +639,7 @@ const RANGER_STRIP: { photo: ReturnType<typeof photoById>; caption: string }[] =
 
 export function LivingWorkRangers() {
   return (
-    <section id="rangers" data-lw="rangers" className="relative overflow-hidden bg-charcoal py-32">
+    <section id="rangers" data-lw="rangers" className="relative overflow-hidden bg-charcoal py-16 lg:py-32">
       {/* ▲ ARTWORK — supplied motif, whole. data-media/data-plane hand it to
           fullBleedOpen's plateParallax: the ring drifts against the scroll on
           the near plane, which is the drift the sign-off queue was holding —
@@ -618,7 +655,7 @@ export function LivingWorkRangers() {
         <img src="/artwork/ring-b.svg" alt="" className="h-full w-full" />
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={`relative ${COLUMN}`}>
         {/* ▲ ARTWORK — the wave rule. Draw-in is on the sign-off queue. */}
         <div data-artwork="wave-rule" aria-hidden className="mb-16">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -628,7 +665,7 @@ export function LivingWorkRangers() {
         <p className="eyebrow text-burnt">The Rangers</p>
         <h2
           data-heading
-          className="headline mt-5 max-w-3xl text-4xl text-canvas sm:text-5xl"
+          className="headline mt-5 max-w-3xl text-h2 text-canvas"
         >
           {rangers.title}
         </h2>
@@ -703,7 +740,7 @@ export function LivingWorkSpring() {
 
       {/* Bottom padding clears the wave (7.3vw tall) plus breathing room, so
           the stand-in note never sits under the crest on short viewports. */}
-      <div className="relative mx-auto w-full max-w-7xl px-6 pt-20 pb-[calc(7.3vw+3rem)] lg:px-16">
+      <div className={`relative ${COLUMN} pt-16 pb-[calc(7.3vw+3rem)] lg:pt-20`}>
         {/* Hi-fi 2137:2617 sets this eyebrow in gold and names the stream the
             moment belongs to. */}
         <p className="eyebrow text-gold">The spring · Stream 02</p>
@@ -802,11 +839,11 @@ export function LivingWorkStreams() {
     <section
       id="streams"
       data-lw="streams"
-      className="relative overflow-x-clip bg-canvas py-32"
+      className="relative overflow-x-clip bg-canvas py-16 lg:py-32"
     >
-      <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
-        <p className="eyebrow text-burnt">The work</p>
-        <h2 className="headline mt-5 max-w-3xl text-4xl text-evergreen sm:text-5xl">
+      <div className={COLUMN}>
+        <p className="eyebrow text-burnt-deep">The work</p>
+        <h2 className="headline mt-5 max-w-3xl text-h2 text-evergreen">
           The work
         </h2>
         {/* ⚠ Design-proposal standfirst, authored on the wireframe. */}
@@ -830,7 +867,7 @@ export function LivingWorkStreams() {
                 className="grid items-start gap-10 border-t border-evergreen/20 py-14 first:border-t-0 lg:grid-cols-2 lg:gap-16"
               >
                 <div className={`flex gap-6 ${imageRight ? "" : "lg:order-2"}`}>
-                  <p className="headline w-10 shrink-0 text-2xl text-ochre">
+                  <p className="headline w-10 shrink-0 text-2xl text-burnt-deep">
                     {stream.number}
                   </p>
                   <div>
@@ -855,7 +892,7 @@ export function LivingWorkStreams() {
                          until that page exists. */
                       <div className="mt-8">
                         <div aria-hidden className="h-px w-32 bg-burnt" />
-                        <p className="eyebrow mt-3 text-xs text-burnt">
+                        <p className="eyebrow mt-3 text-xs text-burnt-deep">
                           What stays here
                         </p>
                       </div>
@@ -925,11 +962,11 @@ export function LivingWorkInfrastructure() {
     <section
       id="infrastructure"
       data-lw="infrastructure"
-      className="relative bg-evergreen py-32"
+      className="relative bg-evergreen py-16 lg:py-32"
     >
-      <div className="mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={COLUMN}>
         <p className="eyebrow text-gold">Infrastructure</p>
-        <h2 className="headline mt-5 max-w-4xl text-4xl text-canvas sm:text-5xl">
+        <h2 className="headline mt-5 max-w-4xl text-h2 text-canvas">
           Infrastructure and technology
         </h2>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
@@ -942,8 +979,8 @@ export function LivingWorkInfrastructure() {
           <img src="/artwork/dots-rule.svg" alt="" className="w-full" />
         </div>
 
-        <div className="mt-16 lg:flex lg:gap-14">
-          <aside className="hidden lg:sticky lg:top-32 lg:block lg:h-fit lg:w-56 lg:shrink-0">
+        <div className="mt-16 lg:flex lg:gap-[82px]">
+          <aside className="hidden lg:sticky lg:top-32 lg:block lg:h-fit lg:w-[258px] lg:shrink-0">
             <p className="eyebrow text-xs text-canvas/45">What it takes</p>
             <ol className="mt-6 space-y-4">
               {/* Rest state IS the wireframe's own frame: the first pair lit,
@@ -971,13 +1008,13 @@ export function LivingWorkInfrastructure() {
             </ol>
           </aside>
 
-          <div className="grid flex-1 gap-x-14 gap-y-20 sm:grid-cols-2">
+          <div className="grid flex-1 gap-x-[60px] gap-y-20 sm:grid-cols-2">
             {infrastructure.map((block, i) => (
               <div key={block.title} data-infra-block>
                 <p className="eyebrow text-xs text-gold">
                   {String(i + 1).padStart(2, "0")}
                 </p>
-                <h3 className="headline mt-3 text-2xl text-canvas">
+                <h3 className="headline mt-3 text-2xl text-canvas lg:text-[28px]">
                   {block.title}
                 </h3>
                 <ul className="mt-5">
@@ -1069,7 +1106,7 @@ export function LivingWorkOutputs() {
     <section
       id="outputs"
       data-lw="outputs"
-      className="relative overflow-hidden bg-charcoal py-32"
+      className="relative overflow-hidden bg-charcoal py-16 lg:py-32"
     >
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div data-artwork="ring-b" className="absolute -top-28 right-0 h-[1000px] w-[1000px] translate-x-1/3 opacity-[0.09]">
@@ -1086,9 +1123,9 @@ export function LivingWorkOutputs() {
         </div>
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-6 lg:px-16">
+      <div className={`relative ${COLUMN}`}>
         <p className="eyebrow text-gold">What it adds up to</p>
-        <h2 className="headline mt-5 max-w-4xl text-4xl text-canvas sm:text-5xl">
+        <h2 className="headline mt-5 max-w-4xl text-h2 text-canvas">
           What the work produces
         </h2>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-canvas">
@@ -1124,7 +1161,7 @@ export function LivingWorkOutputs() {
                   >
                     <span
                       aria-hidden
-                      className="headline block text-[clamp(1.375rem,6.4vw,2.25rem)] text-transparent sm:text-6xl [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]"
+                      className={`headline block ${VESSEL_SIZE} text-transparent [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]`}
                     >
                       {output.title}
                     </span>
@@ -1133,7 +1170,7 @@ export function LivingWorkOutputs() {
                       className="absolute inset-0 overflow-hidden"
                       style={{ width: `${fill}%` }}
                     >
-                      <span className="headline block text-[clamp(1.375rem,6.4vw,2.25rem)] whitespace-nowrap text-canvas sm:text-6xl">
+                      <span className={`headline block ${VESSEL_SIZE} whitespace-nowrap text-canvas`}>
                         {output.title}
                       </span>
                     </span>
@@ -1221,7 +1258,7 @@ const PATH_PRESENTATION = [
 
 export function LivingWorkInvitation() {
   return (
-    <section id="invitation" data-lw="invitation" className="relative bg-canvas pb-32">
+    <section id="invitation" data-lw="invitation" className="relative bg-canvas pb-16 lg:pb-32">
       {/* 1.76.2 — country at sunset. M1 push-in belongs to the motion pass. */}
       {SUNSET ? (
         <div
@@ -1246,11 +1283,11 @@ export function LivingWorkInvitation() {
         </div>
       ) : null}
 
-      <div className="mx-auto w-full max-w-7xl px-6 pt-20 lg:px-16">
-        <p className="eyebrow text-burnt">{getInvolved.eyebrow}</p>
+      <div className={`${COLUMN} pt-16 lg:pt-20`}>
+        <p className="eyebrow text-burnt-deep">{getInvolved.eyebrow}</p>
         <h2
           data-heading
-          className="headline mt-5 max-w-5xl text-4xl text-evergreen sm:text-5xl"
+          className="headline mt-5 max-w-5xl text-h2 text-evergreen"
         >
           {getInvolved.title}
         </h2>
