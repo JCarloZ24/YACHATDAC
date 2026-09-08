@@ -130,6 +130,8 @@ the frame explicitly. Split text by line or word, never by character.
   type, or transition — and keeps the other two quiet. One verb per page (Truth *descends*,
   Living Work *accumulates*, Home *opens*, The Record *surfaces*, About *answers*, Our
   People *gathers*); do not carry one page's grammar onto another.
+- **The Record is static by user direction (8 September 2026), an F7 exception.**
+  No page, grid, hover or route animations; see `docs/motion/scenes.md`.
 - **Every animation cites a row of `docs/motion/motion-grammar.md`.** Add the row first, then
   the effect in `src/lib/motion/effects/<family>.ts`, then the `EffectName`. Uncited motion
   is decoration — delete it.
