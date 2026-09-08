@@ -90,13 +90,26 @@ export function RangerCarousel({
       const n = cards.length;
       if (!n) return;
 
-      // REDUCED MOTION — leave the strip alone. The markup below is a native
-      // `overflow-x-auto` row that already scrolls by touch, wheel and
-      // keyboard, and it snaps. Building the belt would replace that with
-      // Draggable, so a reader who asked for less motion would be left with a
-      // strip that only moves if JavaScript is holding it up. The count stays
-      // at its server value, which is honest: nothing is moving.
+      /* TWO REASONS TO LEAVE THE STRIP ALONE.
+       *
+       * REDUCED MOTION — the markup below is a native `overflow-x-auto` row
+       * that already scrolls by touch, wheel and keyboard, and it snaps.
+       * Building the belt replaces that with Draggable, so a reader who asked
+       * for less motion would be left with a strip that only moves if
+       * JavaScript is holding it up.
+       *
+       * PHONE AND TABLET — the same argument, for a different reason. The belt
+       * absolutises every card and hands X to Draggable, which on a touch
+       * device means competing with the browser's own scroller for the same
+       * gesture; and an auto-run drift on a screen showing one card at a time
+       * is a card sliding out from under the reader's thumb. The native rail
+       * is simply better there, and it is the house pattern — CardRail does
+       * exactly this on every other page.
+       *
+       * Either way the count stays at its server value, which is honest:
+       * nothing is moving. */
       if (prefersReduced()) return;
+      if (!window.matchMedia("(min-width: 64rem)").matches) return;
 
       const total = n * SPACING;
       // Wrap around the viewport centre so the belt has no ends.
