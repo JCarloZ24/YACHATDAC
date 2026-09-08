@@ -99,6 +99,7 @@ function bezierOf(css: string): string {
  * is what gives the vocabulary autocomplete and makes it discoverable.
  */
 export type EffectName =
+  | "recordLoader"
   // core — arrival, type, the rest
   | "settle"
   | "display"

@@ -12,7 +12,7 @@ export function registerPortal(): void {
   gsap.registerEffect({
     name: "handprintPortal",
     extendTimeline: true,
-    defaults: { duration: 1, copy: [], captions: [] },
+    defaults: { duration: 1, copy: [] },
     effect: (targets: object, config: Record<string, unknown>) => {
       const duration = config.duration as number;
       const timeline = gsap.timeline();
@@ -34,16 +34,6 @@ export function registerPortal(): void {
           ease: "none",
         },
         0,
-      );
-      timeline.fromTo(
-        config.captions as gsap.TweenTarget,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: duration * 0.06,
-          ease: "none",
-        },
-        duration * 0.94,
       );
       return timeline;
     },

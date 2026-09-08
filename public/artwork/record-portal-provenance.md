@@ -11,6 +11,50 @@ white areas remain stone. The separate finger pads, palm creases and white palm
 centre are preserved. Creator not supplied; no attribution to Leonard Mickelo.
 This is interface furniture, not a cultural record or a trace of supplied rock art.
 
+## Red-ochre pigment — procedural material
+
+Origin: user direction on 8 September 2026 to add red pigment around the
+handprint, with `orca-paste-1788878631444-ce7413e0-435c-44a4-8b10-b421d554b347.png`
+as the colour and weathering reference. Implemented in Three.js using the
+existing oxide and roasted palette tokens, a field around the supplied ink
+impression, and fixed grain variation. Pigment sits outside the impression;
+the enclosed white palm centre and the holes retain their existing treatment.
+The source mask and sandstone bitmap are unchanged. This is generated interface
+decoration, not a cultural record or an artwork attributed to a supplied artist.
+
+The latest user direction on 8 September 2026 adds other red-ochre hand stencils,
+using `orca-paste-1788879602058-bccd7352-1650-4c52-a3c8-4a66073392f7.png` as a
+placement and pigment reference. The interface footprints are transformed
+and weathered in the wall material, with varied shapes, handedness and fading.
+The latest correction on 8 September 2026 keeps every print upright (fingers
+pointing up, 90 degrees to the horizon) and almost the same size as the central
+hand: surrounding heights range from 4.0 to 4.2 against its 4.1 world units.
+The already-upright reference sheet receives no added rotation.
+These surrounding prints have no holes or extrusion; the central hand remains
+the only aperture. No marks are traced from the supplied wall photograph.
+
+A further placement correction on 8 September 2026 removes the impression
+behind the lower-left heading and the middle-right impression, as indicated
+in the user's two cropped screenshots. The remaining placements stay upright.
+
+A further user refinement on 8 September 2026 broadens and strengthens the
+pigment around every impression. The material uses large irregular deposits,
+faded edges and mineral grain, following reference
+`orca-paste-1788880179224-a940e946-56e6-4ee6-84e6-94487fd599fb.png`.
+
+## Surrounding stencil masks — handprint-variations.png
+
+Origin: the eight-print reference sheet supplied by the user on 8 September
+2026, copied unchanged from
+`orca-paste-1788880448960-b18ec2b2-84e6-48db-8b36-d8d2b3884090.png`.
+615 × 350 pixels, four columns and two rows. Used at the user's explicit
+direction to give the surrounding impressions different finger shapes,
+palms and wear. A runtime canvas reads the eight cells into a single padded
+pigment atlas; their larger internal gaps admit pigment onto solid stone.
+The central aperture continues to use `handprint-impression.png` exclusively.
+Creator not supplied; these are interface masks, not cultural records or
+artwork attributed to Leonard Mickelo. No surrounding stencil cuts the wall.
+
 ## Sandstone material — record-sandstone.webp
 
 Origin: generated with the built-in image-generation tool on 8 September 2026,

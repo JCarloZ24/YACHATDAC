@@ -1,6 +1,6 @@
 # The motion grammar
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
 
 *Decided 30 August 2026. The second artefact, and the one the code answers to.*
 
@@ -24,10 +24,11 @@ grow, because several effects can serve one role at different volumes. See Varia
 |---|---|---|---|---|---|
 | **what endures** | A line rises from behind an edge and never exits. Masked at the line. | `country` · 0.82s · 0.09 stagger | B5 | — | `settle` |
 | **what endures**, display cut | A short heading resolves character by character. Six words at most. | `country` · 0.82s · 0.028 stagger | B6 | — | `display` |
+| **the world opening**, Record loading cut | Homepage gold wave and ring cover the page until portal textures, the first catalogue photos and the first canvas frame are ready. Progress reports settled resources; failure reveals a static fallback. | readiness, then 0.4s exit | SYS-02 / user direction 9 September 2026 | — | `recordLoader` |
 | **arriving quietly** | 16px and a fade, once, no re-trigger. The baseline for a quiet screen. | `country` · 0.55s · 0.06 stagger | X4 | P5 | `arrive` |
 | **what radiates from a source** | Elements arrive in order of distance from a chosen origin, not DOM order, with seeded hand jitter. | `country` · 0.55s · 0.045/unit | L1 + L3 | P4 | `emanate` |
 | **what radiates**, layout cut | Three arrival tiers — anchor, mid, detail — each with its own micro-stagger. | `country` · 0.55s · at 0 / .25 / .45 | L2 | P4 | `triad` |
-| **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. | `machine`, scrubbed; Record: 360vh | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal` |
+| **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. | `machine`, scrubbed; Record: 200vh | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal` |
 | **being drawn in** | A slow scrubbed push toward the subject. Transform-origin points at what matters. | `machine`, scrubbed | M1 | P2 | `pushIn` |
 | **a change of ground** | The new ground sweeps over the old as a scaleY wipe. | `machine`, scrubbed | X7 lineage | P7 | `ground` |
 | **time handing over** | Two stacked plates cross-dissolve. One whole frame hands to another. | `country` · 0.82s | A5 | **P9** | `dissolve` |
@@ -81,15 +82,21 @@ for a screen, run on enter, reverse on leave-back.
 
 **The Record opening — 8 September 2026, latest user direction.**
 `handprintPortal` supersedes the static hero with one Three.js aperture scene
-(360vh of scroll, transition channel). **Latest correction:** the user rejects
-the repeated handprints and smooth silhouette. One supplied ink impression
+(200vh of scroll, transition channel). One supplied ink impression
 defines the openings: black is empty, white remains sandstone, including the
-palm's white centre and gaps between finger pads. The plain wall has a generated
-photographic sandstone material and extruded cut edges in Three.js. Cards are
+palm's white centre and gaps between finger pads. The latest user direction adds
+surrounding red-ochre hand stencils as pigment on solid stone; only the central
+hand is cut through. The wall has a generated photographic sandstone material
+and extruded cut edges in Three.js. Cards are
 textured planes at different depths well behind the wall. The camera passes
-through the hand, then approaches the cards. Whole card frames grow through
+through the hand while the cards approach immediately at different speeds.
+They continue beyond the screen edges and fade near the camera, without an
+arrived gallery or picture captions. Latest user direction: accelerate picture
+approach from the first scroll, let side frames extend outside the viewport,
+and fade the remaining upper pictures as the catalogue rises over the final
+viewport of the 200vh hero. Whole card frames grow through
 perspective; their image UVs remain fixed (no independent photo warp or drift).
-Only camera transforms, projected link transforms and copy opacity change. The
+Only camera/card transforms, card material opacity and intro copy opacity change. The
 opening reverses on scroll back. The user explicitly permits generated artwork
 for this direction, replacing the earlier iconography restriction. The supplied
 ink mask and generated stone are interface assets, not records of rock art.

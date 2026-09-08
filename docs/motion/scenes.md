@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
 
 *Decided 30 August 2026. The third artefact — pacing, on paper, before it is pacing at 60fps.*
 
@@ -216,20 +216,53 @@ their existing behaviour.
 
 | # | What it says | Intensity | Scroll span | Loud channel | Effect | Rest after? |
 |---|---|---|---|---|---|---|
-| 01 | Through the wall, then towards the record | 4 | 360vh | transition | `handprintPortal` · SCR-11 | yes, arrived cards |
+| 01 | Through the wall and past the pictures into the record | 4 | 200vh | transition | `handprintPortal` · SCR-11 | at the catalogue |
 | 02 | Everything in the record | 1 | natural flow | none | `hold` | yes |
 
 One lazy-loaded Three.js renderer, rendered only when scroll or size changes.
+A server-rendered loading cover uses the homepage's supplied gold wave and
+ring (SYS-02 / `recordLoader`, user direction 9 September 2026). Its percentage
+tracks settled portal resources and the first three catalogue photographs;
+completion waits for texture upload, shader compilation and the first submitted
+canvas frame. Scrolling and underlying page focus are locked until the cover
+exits. Missing canvas photos are omitted, and failed catalogue photographs
+retain their tonal ground. WebGL/chunk failure or a 20-second startup timeout
+reveals the static fallback and cancels pending scene activation. Escape/Tab
+also bypass to the fallback. Reduced motion and no JavaScript skip the cover;
+navigation restores scroll/focus and disposes only this loader's resources.
 The camera crosses one of the separate palm openings in the supplied ink print.
-Every black region is an opening with extruded edges; white remains wall. There
-are no repeated or painted handprints. The wall uses a generated photographic
+Every black region is an opening; white remains wall. The user's latest
+8 September 2026 refinement uses 0.65-unit stone depth for the connected palm
+opening the camera enters and a 0.36-unit rim on the finger pads, thumb and
+other openings (twice their original 0.18 depth). Pictures approach immediately
+as the camera moves through the palm. A procedural red-ochre halo surrounds the central handprint. The latest
+8 September 2026 user direction adds surrounding pigment-only hand stencils,
+using eight distinct finger/palm shapes from the user's reference sheet,
+upright and almost the same size as the central hand after the latest user
+correction on 8 September 2026. Heights vary by roughly 4%, with no added
+rotation; handedness, shape and weathering still differ. All impressions have broad,
+mottled pigment deposits spreading into the surrounding rock, following the
+user's refinement beyond narrow outlines. Their interiors remain solid
+stone; only the central hand has apertures. The wall uses a generated photographic
 sandstone material, recorded in `public/artwork/record-portal-provenance.md`.
-Card planes sit at staggered depths and retain fixed
-image UVs as the camera approaches. Semantic links follow their projections.
+Nine photo planes start at staggered depths and advance at different speeds from the
+first scroll input, retaining fixed image UVs. The 9 September 2026 refinement
+adds five supplied catalogue photos, then removes the central grass-and-sunset
+preview while preserving the other slots. It places the leftmost original farther
+back and closer to the centre for a longer, more noticeable approach. They continue outward beyond the
+screen edges and fade near the camera rather than stopping at a common gallery.
+The pictures render only in the canvas, without captions or moving hit areas;
+article links remain in the catalogue. Latest user correction on 8 September
+2026 front-loads picture travel for a much faster response to the first scroll.
+Side frames extend beyond the screen; upper frames remain visible for the
+closing fade. At 50% progress the remaining pictures start fading, while the
+catalogue rises over the final viewport of the 200vh hero through a native-flow
+overlap. Scrolling backwards restores the pictures and wall. Reduced motion
+removes both the extended hero scroll span and the catalogue overlap.
 The user explicitly permits generated artwork on this date. No supplied
 photograph, painting or logo is re-authored. Native skip link,
 mobile composition, live reduced-motion teardown, missing-asset fallback and
-WebGL failure/context-loss fallback are part of this scene. The 360vh span is
+WebGL failure/context-loss fallback are part of this scene. The 200vh span is
 absent when enhancement is unavailable. SCR-09 wheel inertia stays enabled.
 Layout follows the user's wall and zoom-through direction for this
 intro rather than the earlier Figma intro frame; D5 still governs its words.

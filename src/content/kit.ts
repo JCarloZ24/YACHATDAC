@@ -37,6 +37,17 @@
  */
 export type MotionGrade = "full" | "frame";
 
+/**
+ * Homepage loader, user reference 8 September 2026; reused by The Record's
+ * readiness loader at user direction on 9 September 2026. Origin: existing supplied
+ * vectors, dots-wave (2051:3365) gold instance and ring-b (2051:4024).
+ * F8 artwork-motion permission: reveal the wave, hold the ring. No new artwork.
+ */
+export const HOME_LOADER_ARTWORK = {
+  wave: "/artwork/dots-wave-gold.svg",
+  ring: "/artwork/ring-b.svg",
+};
+
 /* -------------------------------------------------------------------------
    Artwork — public/artwork/
    ------------------------------------------------------------------------- */
