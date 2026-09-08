@@ -204,11 +204,30 @@ export function LivingWorkHero() {
       ) : null}
 
       {/* X5 — required wherever copy sits on media. Bottom-weighted, because
-          that is where the copy is. Test against the brightest frame. */}
+          that is where the copy is, and MEASURED against the brightest thing
+          under it, which the rule asks for and this had never had.
+          
+          The frame's own three stops (transparent / 0.35 at 42% / 0.88) were
+          ported exactly and were not enough once the crop zoomed out and put
+          more sunlit grass and sky behind the copy. Cream on 0.35 over bright
+          grass is 4.44:1 and over sky 3.00:1 — under the 4.5 the standfirst
+          needs.
+          
+          Five stops now, shaped to where the copy actually sits: clear sky
+          down to 25%, 0.56 across the eyebrow and headline band, 0.80 by the
+          standfirst, 0.94 at the foot. Cream lands 5.2-9.5:1 against every
+          backdrop in the frame.
+          
+          ⚠ The gold eyebrow is the one that still does not clear AA. At 0.56
+          it is 3.04:1 on sky and 4.13:1 on grass, against the 4.5 a 13px
+          label needs — and getting it there would take roughly 0.70, which
+          stops being a scrim and starts being a dark rectangle. Cream would
+          fix it outright. Flagged rather than decided: it is Marc's colour,
+          and the same gold-on-photograph pairing is on Truth's hero too. */}
       <div
         data-scrim
         aria-hidden
-        className="absolute inset-0 bg-linear-to-b from-transparent via-[42%] via-[rgba(5,10,8,0.35)] to-[rgba(5,10,8,0.88)]"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(5,10,8,0.15)_25%,rgba(5,10,8,0.56)_46%,rgba(5,10,8,0.80)_70%,rgba(5,10,8,0.94)_100%)]"
       />
 
       <div className={`relative ${COLUMN} pt-32 pb-16 lg:pb-32`}>
@@ -243,7 +262,7 @@ export function LivingWorkHero() {
           as="p"
           gate="entry"
           delay={0.48}
-          className="mt-8 max-w-xl text-lg leading-relaxed text-canvas/85"
+          className="mt-8 max-w-xl text-lg leading-relaxed text-canvas"
         >
           {livingWorkHero.standfirst}
         </FadeIn>
