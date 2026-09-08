@@ -25,8 +25,10 @@ import { contactRoutes } from "@/content/contact";
  * on all four, and a label that lived in a page file could quietly stop
  * matching its neighbour's.
  *
- * ⚠ NO HOVER, NO TRANSITION. Both pages are static by decision. A door is
- * distinguished by its ground and its motif, not by answering a cursor.
+ * ⚠ NO HOVER. A door is distinguished by its ground and its motif, not by
+ * answering a cursor — that rule stands. About's seam pass now animates the
+ * doors' ARRIVAL from outside (its Motion host selects `[data-ab-doors] a`);
+ * Our People remains static by decision, and nothing in this component moves.
  *
  * ⚠ A LABEL SAYS WHAT HAPPENS, NEVER WHERE THE FILE IS. `→ /the-record` is a
  * developer artefact; a visitor cannot parse it. Each label is verb-led and
