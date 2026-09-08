@@ -315,7 +315,13 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
       const dress = q(root, "[data-band-dress]");
       if (dress) tl.to(dress, { autoAlpha: 1, duration: 0.35, ease: EASE.machine }, 6.6);
 
-      // THE HAND-OFF — still on this ONE wide shot. The O of "Our challenges"
+      // THE HAND-OFF — still on this ONE wide shot. Starts at 7.6, which is
+      // 0.45 after the blob finishes growing at 7.15: the frame and its caption
+      // get a real dwell, but not the 1.05 units (~45vh) of dead screen this
+      // carried before 8 Sep. The timeline runs to 9.4 as a result, so the span
+      // in Motion.tsx came down with it. The rail derives its own bounds from
+      // tl.duration() and needs no change.
+      // The O of "Our challenges"
       // appears as a letterform absorbing the frame, caption and all; it
       // flies into the ghost header's O, the heading assembles around it, and
       // the image drains into solid ink — the reader watches the photograph
@@ -363,31 +369,31 @@ export function apertureSequence(root: HTMLElement, span = 300): MotionModule {
       if (oShrink && setOFlight) {
         const reveal = q(root, "[data-reveal-clipped]");
         // The O appears, absorbing the frame.
-        tl.set(oShrink, { autoAlpha: 1 }, 8.2);
+        tl.set(oShrink, { autoAlpha: 1 }, 7.6);
         tl.to(
           [bandImg, reveal, dress].filter(Boolean) as HTMLElement[],
           { autoAlpha: 0, duration: 0.35, ease: EASE.machine },
-          8.25,
+          7.65,
         );
         // It flies into the ghost header's O… (the ghost's own solid O stays
         // hidden until the flying one has arrived and drained — the flying O
         // IS the letter until then)
-        if (ghost) tl.set(ghost, { autoAlpha: 1 }, 8.4);
+        if (ghost) tl.set(ghost, { autoAlpha: 1 }, 7.8);
         if (ghostLand) gsap.set(ghostLand, { autoAlpha: 0 });
         const flight = { p: 0 };
         const fly = setOFlight;
         tl.to(
           flight,
           { p: 1, duration: 0.7, ease: EASE.machine, onUpdate: () => fly(flight.p) },
-          8.45,
+          7.85,
         );
         // …the heading assembles around it…
         if (ghostItems.length)
-          tl.to(ghostItems, { autoAlpha: 1, duration: 0.3, ease: EASE.machine, stagger: 0.15 }, 9.2);
+          tl.to(ghostItems, { autoAlpha: 1, duration: 0.3, ease: EASE.machine, stagger: 0.15 }, 8.6);
         // …and the image drains into the solid letter. The word stands.
         if (ghostLand)
-          tl.to(ghostLand, { autoAlpha: 1, duration: 0.2, ease: EASE.machine }, 9.7);
-        tl.to(oShrink, { autoAlpha: 0, duration: 0.2, ease: EASE.machine }, 9.7);
+          tl.to(ghostLand, { autoAlpha: 1, duration: 0.2, ease: EASE.machine }, 9.1);
+        tl.to(oShrink, { autoAlpha: 0, duration: 0.2, ease: EASE.machine }, 9.1);
         // The word STANDS and is never faded — it IS the section title from
         // here on. The landing is the pin's final beat: the moment the image
         // drains into the letter the pin releases, and §03's content fades in
