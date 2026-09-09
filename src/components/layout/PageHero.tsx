@@ -11,10 +11,12 @@ import { toneBg, toneInk, type Tone } from "@/lib/tone";
  * arrived wanting something — so this states what the page is and gets on
  * with it.
  *
- * ⚠ SiteHeader is `absolute` over the top of the page with light text. Every
+ * ⚠ SiteHeader is `fixed` over the top of the page with light text. Every
  * interior hero therefore has to be a dark ground and carry `pt-36` or more,
  * or the nav lands on top of the headline and disappears. That coupling is
- * why this component exists rather than each page rolling its own.
+ * why this component exists rather than each page rolling its own. Past the
+ * first 48px the header condenses to a small cluster at the right
+ * margin, so only the hero has to hold the full band's clearance.
  */
 export function PageHero({
   eyebrow,

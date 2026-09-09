@@ -1,0 +1,12 @@
+/* NAV-02: only Record card navigation opts into the circular reveal. */
+html[data-record-reveal]::view-transition-old(root) { animation: none; }
+html[data-record-reveal]::view-transition-group(root) { animation: none; }
+html[data-record-reveal]::view-transition-image-pair(root) { isolation: isolate; }
+html[data-record-reveal]::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+[data-record-card]:is(:hover, :focus-visible) h3 { text-decoration: underline; text-underline-offset: 0.15em; text-decoration-thickness: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  html[data-record-reveal]::view-transition-new(root) { animation: none; }
+}
