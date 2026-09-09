@@ -369,7 +369,7 @@ export function coverSeams(
           const nameOf = (g: (typeof gates)[number]) =>
             (g.t.vars.pin as HTMLElement).getAttribute("data-ab") ?? "?";
 
-          // The site header is a 130px overlay that scrolls with the page,
+          // The site header is an 88px overlay that scrolls with the page,
           // and the FIRST hold parks well short of that (the hero's 100%
           // mark is ~84px in), leaving the navbar's lower half hanging on
           // screen. A scrubbed exit boost walks it out ~1.5× faster than

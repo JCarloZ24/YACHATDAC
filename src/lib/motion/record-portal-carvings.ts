@@ -7,7 +7,12 @@ import { CanvasTexture, Vector2 } from "three";
  * Generated interface decoration, not traced rock art or a cultural record.
  * A fixed height field keeps the cuts attached to the stone during the journey.
  */
+let carvingCanvas: HTMLCanvasElement | undefined;
 export function createWallCarvings() {
+  if (carvingCanvas) return {
+    texture: new CanvasTexture(carvingCanvas), size: new Vector2(20, 15),
+    texel: new Vector2(1 / carvingCanvas.width, 1 / carvingCanvas.height),
+  };
   const canvas = document.createElement("canvas");
   canvas.width = 2048;
   canvas.height = 1536;
@@ -66,6 +71,7 @@ export function createWallCarvings() {
   cut([[2.62, -2.25], [2.81, -2.04], [3.2, -1.92]], 0.05, 0.75);
   cut([[2.95, -2.5], [3.14, -2.23], [3.5, -2.11]], 0.055, 0.85);
 
+  carvingCanvas = canvas;
   const texture = new CanvasTexture(canvas);
   // Height data stays linear; the existing wall material supplies the colour.
   return { texture, size, texel: new Vector2(1 / canvas.width, 1 / canvas.height) };

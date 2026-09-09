@@ -107,6 +107,13 @@ function bezierOf(css: string): string {
 export type EffectName =
   | "landscapeApproach"
   | "landscapeGyroscope"
+  | "recordKnowledgeGround"
+  | "recordQuestionAttach"
+  | "recordDocumentsTraverse"
+  | "recordDocumentsGround"
+  | "recordCardHover"
+  | "recordMasonryPass"
+  | "recordWaveRoll"
   | "homeLandscapeBreeze"
   | "recordPatternDrift"
   | "homeLoader"

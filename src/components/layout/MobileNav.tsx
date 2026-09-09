@@ -14,7 +14,7 @@ import { org, primaryAction, primaryNav } from "@/content/site";
  * open. Over the hero — the first viewport height — the bar is transparent
  * with the white cut of the wordmark, like the desktop band; past it (or with
  * the panel open) it becomes the solid white bar with the black cut. The
- * desktop header stays the transparent 130px band; this bar exists below `md`
+ * desktop header stays the transparent 88px band; this bar exists below `md`
  * only.
  *
  * The bar is fixed and scroll-linked: it slides away with a downward swipe

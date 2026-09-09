@@ -13,6 +13,13 @@ export function createRecordLoader(cover: HTMLDivElement, portal: HTMLElement): 
     init() {
       cleanup?.();
       const documentRoot = document.documentElement;
+      // SYS-02: keep readiness for this SPA session. Returning from an article
+      // must not cover the restored catalogue or lock its scroll again.
+      if (documentRoot.dataset.recordLoaded === "true") {
+        cover.hidden = true;
+        cleanup = () => { cover.hidden = true; };
+        return;
+      }
       const overflow = documentRoot.style.overflow;
       const siblings = Array.from(cover.parentElement?.children ?? [])
         .filter((node): node is HTMLElement => node instanceof HTMLElement && node !== cover)
@@ -47,6 +54,9 @@ export function createRecordLoader(cover: HTMLDivElement, portal: HTMLElement): 
         timeline?.kill();
         observer.disconnect();
         cover.hidden = true;
+        if (portal.dataset.portalState === "ready" || portal.dataset.portalState === "fallback") {
+          documentRoot.dataset.recordLoaded = "true";
+        }
         documentRoot.style.overflow = overflow;
         siblings.forEach(({ node, inert }) => { node.inert = inert; });
         window.removeEventListener("keydown", key, true);

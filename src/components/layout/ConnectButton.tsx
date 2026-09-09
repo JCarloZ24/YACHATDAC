@@ -33,9 +33,12 @@ const TEXT_D =
 export function ConnectButton({
   href,
   label = "Connect",
+  className = "",
 }: {
   href: string;
   label?: string;
+  /** Rendered size of the blob. The header runs it small (9 Sep 2026). */
+  className?: string;
 }) {
   const uid = useId();
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -129,7 +132,7 @@ export function ConnectButton({
         height={VB_H}
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         fill="none"
-        className="block"
+        className={`block ${className}`}
       >
         <defs>
           <clipPath id={clipId}>

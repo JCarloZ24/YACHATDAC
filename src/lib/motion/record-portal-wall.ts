@@ -37,8 +37,12 @@ export const PORTAL_WALL_DEPTH = 0.65;
 // Latest user refinement: secondary openings are 2x the original 0.18 depth.
 const DETAIL_WALL_DEPTH = 0.36;
 const THRESHOLD = 0.5;
+// Weak keys let the bounded image cache evict both image and derived samples.
+const impressionCache = new WeakMap<HTMLImageElement, { width: number; height: number; samples: Float32Array }>();
 
 function readImpression(image: HTMLImageElement) {
+  const cached = impressionCache.get(image);
+  if (cached) return cached;
   const canvas = document.createElement("canvas");
   const { naturalWidth: width, naturalHeight: height } = image;
   canvas.width = width;
@@ -52,7 +56,9 @@ function readImpression(image: HTMLImageElement) {
     samples[i] = data[i * 4] / 255;
   }
   canvas.width = canvas.height = 1;
-  return { width, height, samples };
+  const result = { width, height, samples };
+  impressionCache.set(image, result);
+  return result;
 }
 
 export function buildPortalWall(

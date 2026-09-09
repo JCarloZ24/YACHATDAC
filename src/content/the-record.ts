@@ -432,6 +432,12 @@ export const documents: readonly RecordDocument[] = [
   },
 ];
 
+/** UI copy for the generated closing object, user direction 2026-09-09 / INT-04. */
+export const recordBoomerangCopy = {
+  label: "Interactive wooden boomerang. Drag or use arrow keys to rotate. Press Home to reset.",
+  hint: "Drag to explore · Arrow keys to rotate",
+};
+
 export const onRequest = {
   title: "Items marked “on request”",
   body: [

@@ -23,10 +23,21 @@ import gsap from "gsap";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { DUR, EASE } from "../tokens";
 import { assertEase } from "./shared";
+import { WAVE_ROLL } from "@/components/ui/Furniture";
 
 gsap.registerPlugin(DrawSVGPlugin);
 
 export function registerContinuity(): void {
+  // Grammar: a change of ground, Record wave / SCR-11. About's short roll
+  // and crest swell, applied to the ink so the SVG's seated offset survives.
+  gsap.registerEffect({
+    name: "recordWaveRoll",
+    extendTimeline: true,
+    effect: (targets: gsap.TweenTarget) => gsap.fromTo(targets,
+      { x: -WAVE_ROLL * 0.15, scaleY: 0.6, transformOrigin: "0% 100%" },
+      { x: 0, scaleY: 1, duration: 1, ease: "power2.inOut" },
+    ),
+  });
   /* --- a change of ground ------------------------------------------------
      Grammar: "a change of ground" · X7 lineage · plate P7.
      The new ground sweeps over the old as a scaleY wipe. Transform only, so it

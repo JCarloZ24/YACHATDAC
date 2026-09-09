@@ -2,6 +2,27 @@
 
 *Last updated: 9 September 2026*
 
+| Record interaction | Behaviour | Timing | Reference | Effect |
+| --- | --- | --- | --- | --- |
+| **lifts**, catalogue card | Inner contents lift 6px on hover/focus; the photo stays undistorted. Title underlines. | 0.25s | INT-05, user direction 9 September 2026 | `recordCardHover` |
+| **opens**, catalogue article | The actual destination page expands in a circle from the clicked card over the held catalogue. Keyboard origin is the card centre. | 0.42s | NAV-02, user direction 9 September 2026 | Native View Transition, `record-article-circle` |
+
+| Interactive addition | Behaviour | Input | Reference | Effect |
+| --- | --- | --- | --- | --- |
+| **turns**, Record boomerang | A generated wooden mesh turns with drag or arrow keys, gently following the pointer while idle. No automatic spin; reduced motion renders on input without easing. | Drag, pointer, keyboard; transform only | INT-04 / user direction 9 September 2026 | `recordBoomerang` Three.js module |
+
+SCR-16 / `recordDocumentsGround`: after the document traverse, hold the final
+card for 40vh, then release the pin on cream. Change the shelf and following
+on-request section together from cream to charcoal over 50vh, starting when
+the next section's top reaches 65% of the viewport and ending at 15%. No wave at either
+document boundary. Reverse scroll restores cream; reduced motion stays static.
+
+SCR-15 / user direction, 9 September 2026: `recordDocumentsTraverse` pins the
+document shelf while downward scroll translates its track to the final card.
+Each viewport of horizontal travel takes 100vh of vertical scroll (minimum
+100vh). Reverse scroll retraces the shelf. Reduced motion and viewports too
+short to show the shelf retain native horizontal scrolling.
+
 *Decided 30 August 2026. The second artefact, and the one the code answers to.*
 
 Parallax, dissolves and text effects are not the design. They are the alphabet. The design is
@@ -44,6 +65,10 @@ volumes. See Variants below.
 | **accumulating** | Things add up: a count advances, a mark fills, an index lights. | `country` / `machine` | X3 | — | `stepCounter` `splitFlap` `vesselFill` `flattenReveal` |
 | **the rest** | Nothing moves, for a stated duration. | — | brief §3 | **P1, P8** | `hold` |
 | **what radiates**, Record question ground | The two supplied dotted rings follow cursor position with opposing drift and slight tilt behind stationary questions. Return to centre on pointer leave; touch and reduced motion remain still. | power3.out, 0.8s horizontal / 1.05s vertical smoothing, 30px / 46px travel and 3.5° / 5° tilt | AMB-04 / user direction 9 September 2026 | — | `recordPatternDrift` |
+| **a change of ground**, Record questions | The catalogue and question section, including their crests, change together from cream to midnight blue as the questions enter; text changes from charcoal to cream. Both remain blue through reading. | 70vh question entrance, scrub 0.4s | SCR-13 / user reference 9 September 2026 | — | `recordKnowledgeGround` |
+| **attaches**, Record question panels | Each panel surfaces from below with a slight tilt and transparency, then squares up against its neighbours. Holds still for reading; reverses on upward scroll. | 70vh entrance, 12vh travel, scrub 0.8s | SCR-14 / user reference 9 September 2026 | — | `recordQuestionAttach` |
+| **being drawn in**, Record masonry | Whole photos, icons and captions drift at different rates in each desktop column and fade at the viewport edges. The centre stays fully readable; reverse scroll retraces the motion. | native card passage, 6/14/9/18vh travel, scrub 0.45s; mobile fade only | SCR-12 / user reference 9 September 2026 | — | `recordMasonryPass` |
+| **a change of ground**, Record wave | The cream divider swells from 60% height and rolls sideways by 15% of the shared two-tile strip, as on About. It settles into its original shape as the catalogue reaches the top. | 100vh natural scroll, scrub 0.3s, power2.inOut | SCR-11 / user direction 9 September 2026 | — | `recordWaveRoll` |
 
 ¹ `guide` was dropped from the first build on Ivy's call, 2026-08-30: the traveller was a fix
 for flatness, and flatness was being fixed by density instead. It is now built only on Truth's
@@ -122,6 +147,9 @@ for a screen, run on enter, reverse on leave-back.
 
 **The Record opening — 8 September 2026, latest user direction.**
 9 September photo-lens refinement: `handprintPortal` / SCR-11 also applies the
+9 September handoff correction: the hero retains its charcoal ground and fog.
+The catalogue's cream WaveDivider provides the boundary, matching About.
+
 Home painting zoom's sine-squared radial envelope to photo-plane projection.
 Peripheral frames bow and tilt during approach, with fixed image UVs; reverse
 scroll retraces the effect and the lens is neutral at both endpoints.

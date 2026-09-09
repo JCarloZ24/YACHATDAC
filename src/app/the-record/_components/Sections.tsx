@@ -1,8 +1,6 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { ReactNode } from "react";
 import {
-  documents,
   knowledgeGaps,
   onRequest,
   recordGrows,
@@ -20,11 +18,10 @@ import { RecordLoadingCover } from "./LoadingCover";
 import { RecordPatternMotion } from "./PatternMotion";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import { RecordSignup } from "./Signup";
-import { EditorialNote } from "@/components/ui/EditorialNote";
+import { DocumentsCarousel } from "./DocumentsCarousel";
+import { BoomerangCTA } from "./BoomerangCTA";
 import {
   BlobButton,
-  BlobHold,
-  DottedRule,
   RingArtwork,
   SeamGlyph,
   WaveDivider,
@@ -189,8 +186,8 @@ export function RecordHeroV2() {
  */
 export function KnowledgeGapsV2() {
   return (
-    <section className="relative bg-midnight text-canvas">
-      <WaveDivider ground="var(--color-midnight)" />
+    <section data-record-knowledge className="record-ground record-knowledge relative">
+      <WaveDivider ground="var(--record-knowledge-ground)" />
       {/* The bleeding artwork is what wants `overflow-hidden`, but the wave
           hangs ABOVE this section's top edge and a clipping section erased
           it. Clip the artwork here instead, so the section stays open and
@@ -221,25 +218,23 @@ export function KnowledgeGapsV2() {
         <h2 className="headline mt-3 max-w-5xl text-4xl leading-[1.16] sm:text-6xl">
           {firstSentence(knowledgeGaps.lede)}
         </h2>
-        <p className="mt-8 max-w-4xl text-lg leading-relaxed text-canvas/78 sm:text-xl">
+        <p className="mt-8 max-w-4xl text-lg leading-relaxed text-current/78 sm:text-xl">
           {restOfSentences(knowledgeGaps.lede)}
         </p>
 
-        <div className="mt-14 opacity-55">
-          <DottedRule tone="canvas" />
-        </div>
-
-        <ol className="mt-14">
+        {/* User reference, 2026-09-09: adjoining, staggered question panels.
+            SCR-14 attaches the panels on entry, then holds them for reading. */}
+        <ol className="record-question-panels mt-16 grid grid-cols-1 lg:mt-20 lg:grid-cols-2">
           {knowledgeGaps.gaps.map((gap, index) => (
-            <li key={gap.question} className="relative py-8">
-              <span className="absolute top-9 left-6 text-xs font-semibold tracking-[0.1em] text-gold/80 tabular-nums">
+            <li key={gap.question} className="record-question-panel relative flex flex-col px-7 py-10 text-canvas lg:px-12 lg:py-12">
+              <span className="eyebrow mb-8 text-sm tracking-[0.1em] text-gold tabular-nums lg:mb-12">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <div className="pl-15">
-                <h3 className="headline max-w-4xl text-3xl leading-tight sm:text-5xl">
+              <div>
+                <h3 className="headline max-w-xl text-h3 leading-[1.12]">
                   {gap.question}
                 </h3>
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-canvas/70">
+                <p className="mt-5 max-w-lg text-base leading-[1.6] text-canvas/80 lg:text-lg">
                   {gap.detail}
                 </p>
               </div>
@@ -255,21 +250,13 @@ export function KnowledgeGapsV2() {
             The hi-fi frame once labelled this "WHAT IS RUNNING →" and the
             draft "Research with us"; D5 gave it to the draft, and the frame
             strip now draws the draft's words too, so the two agree. */}
-        <div className="mt-16 pl-15">
+        <div className="mt-12 lg:mt-16">
           <BlobButton still href={knowledgeGaps.cta.href} tone="ochre">
             {knowledgeGaps.cta.label}
           </BlobButton>
         </div>
       </div>
 
-      {/* Wave / Divider · OFF-WHITE (2537:17343) — hands the dark run off into
-          the footer. The frame starts it at y=1427, so the ground above it is
-          padded out to meet the crest; the canvas it introduces is then the
-          footer's own band (<FooterGround color=canvas/> on this page), which
-          the footer's burnt crest rides in turn. */}
-      <div className="absolute inset-x-0 bottom-0">
-        <WaveDivider ground="var(--color-canvas)" />
-      </div>
     </section>
   );
 }
@@ -279,160 +266,13 @@ export function KnowledgeGapsV2() {
    ------------------------------------------------------------------------- */
 
 export function DocumentsLedger() {
-  const available = documents.filter((d) => d.state === "available");
-  const inPreparation = documents.filter((d) => d.state === "in-preparation");
-
   return (
-    <section id="documents" className="relative bg-canvas text-charcoal">
-      <WaveDivider ground="var(--color-canvas)" />
-      {/* The bleeding artwork is what wants `overflow-hidden`, but the wave
-          hangs ABOVE this section's top edge and a clipping section erased
-          it. Clip the artwork here instead, so the section stays open and
-          the wave survives. `inset-0` keeps the artwork's percentage
-          anchoring resolving against the same box it did before. */}
+    <section id="documents" className="record-document-ground relative">
       <div aria-hidden className="absolute inset-0 overflow-hidden">
-        {/* 30% is the Figma node's own opacity, and the roasted cut is the
-            reason it can be that high: the off-white path was invisible on
-            canvas, so the frame recoloured the path rather than dimming a
-            black filter. 30% × the asset's own 8% is the 2.4% that reads. */}
-        <RingArtwork
-          piece="a"
-          tone="roasted"
-          className="top-[16%] left-[62%] h-[686px] w-190 opacity-[0.3]"
-        />
+        <RingArtwork piece="a" tone="roasted" className="top-[16%] left-[62%] h-[686px] w-190 opacity-[0.3]" />
       </div>
-
-      <div className="relative mx-auto w-full max-w-[1440px] px-6 py-20 lg:px-25">
-        <p className="eyebrow text-lg text-ochre sm:text-eyebrow-hero">
-          Documents and reports
-        </p>
-        <p className="headline mt-3 text-4xl text-charcoal">
-          {documents.length} items
-        </p>
-
-        <LedgerGroup label="Available now" count={available.length}>
-          {available.map((document) => (
-            <LedgerRow
-              key={document.title}
-              title={document.title}
-              summary={document.summary}
-              meta={document.meta}
-            >
-              {/* No PDF for any of these is in the repo. The frame draws a
-                  Download button; a link to nothing is worse than a marked
-                  hold, and dropping the affordance hides the gap (R14). */}
-              <BlobHold>File not supplied</BlobHold>
-            </LedgerRow>
-          ))}
-        </LedgerGroup>
-
-        <LedgerGroup label="In preparation" count={inPreparation.length} muted>
-          {inPreparation.map((document) => (
-            <LedgerRow
-              key={document.title}
-              title={document.title}
-              summary={document.summary}
-              meta={document.meta}
-              pitch="tight"
-            >
-              <p className="eyebrow text-xs text-charcoal/42">In preparation</p>
-            </LedgerRow>
-          ))}
-        </LedgerGroup>
-
-        <div className="mt-16 max-w-2xl">
-          <EditorialNote label="No assets — download links cannot be built yet">
-            <p>
-              Four documents are marked published in the draft — the Ten Year
-              Strategic Plan, Governance, the research bibliography and the
-              financial statements. None of the files are in the repo, so each
-              renders the frame&rsquo;s button shape as a hold rather than as a
-              download.
-            </p>
-          </EditorialNote>
-        </div>
-      </div>
+      <DocumentsCarousel />
     </section>
-  );
-}
-
-function LedgerGroup({
-  label,
-  count,
-  muted = false,
-  children,
-}: {
-  label: string;
-  count: number;
-  muted?: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <div className="mt-16">
-      <p
-        className={`eyebrow text-xs ${muted ? "text-charcoal/50" : "text-ochre"}`}
-      >
-        {label}&ensp;&middot;&ensp;{count}
-      </p>
-      <div className="mt-3 opacity-50">
-        <DottedRule tone="plain" />
-      </div>
-      <ul>{children}</ul>
-    </div>
-  );
-}
-
-/**
- * One ledger row, on the frame's own pitch.
- *
- * The frame runs two rhythms, because the two groups carry different
- * furniture: an AVAILABLE row has a 56px Download blob under its meta and
- * sits on a 156 pitch (titles at 334, 490, 646, 802); an IN PREPARATION row
- * has only a line of text there and sits on 132 (titles at 1052, 1184, 1316).
- * Each is a fixed box plus a 32px gap — 124+32 and 100+32 — so the dividers
- * land where the frame draws them (458, 614, 770, 926 / 1152, 1284).
- *
- * Fixed, not minimum: on auto height the rows measured 150, 140 and 166
- * depending on whether the summary wrapped, and the section ran long.
- */
-function LedgerRow({
-  title,
-  summary,
-  meta,
-  pitch = "wide",
-  children,
-}: {
-  title: string;
-  summary: string;
-  meta: string;
-  /** `wide` carries a Download blob (156 pitch); `tight` does not (132). */
-  pitch?: "wide" | "tight";
-  children: ReactNode;
-}) {
-  return (
-    <li
-      /* The frame's two columns: title+description 840 wide at x=100, meta and
-         the download at x=1020 — an 80px gutter, and 1240 across, which is the
-         column the section body now actually has. It was `1fr_auto` inside a
-         narrower box, so the descriptions the frame keeps to one line wrapped
-         onto two and every row grew. */
-      className={`grid gap-6 overflow-hidden border-b border-charcoal/12 py-8 lg:grid-cols-[840px_320px] lg:items-start lg:gap-20 lg:py-0 lg:mb-8 ${
-        pitch === "wide" ? "lg:h-[124px]" : "lg:h-[100px]"
-      }`}
-    >
-      <div>
-        <h3 className="headline text-2xl text-charcoal sm:text-[1.75rem]">
-          {title}
-        </h3>
-        <p className="mt-3 text-base leading-relaxed text-charcoal/68">
-          {summary}
-        </p>
-      </div>
-      <div>
-        <p className="eyebrow text-[11px] text-charcoal/45">{meta}</p>
-        <div className="mt-3">{children}</div>
-      </div>
-    </li>
   );
 }
 
@@ -451,8 +291,7 @@ export function OnRequestHold() {
   const [claim, reason] = splitAtDash(onRequest.body[0]);
 
   return (
-    <section className="relative bg-charcoal text-canvas">
-      <WaveDivider ground="var(--color-charcoal)" />
+    <section data-record-on-request className="record-document-ground relative">
       {/* The bleeding artwork is what wants `overflow-hidden`, but the wave
           hangs ABOVE this section's top edge and a clipping section erased
           it. Clip the artwork here instead, so the section stays open and
@@ -510,20 +349,20 @@ export function OnRequestHold() {
           <h2 className="headline mt-3 max-w-4xl text-4xl leading-[1.2] sm:text-6xl">
             {claim}
           </h2>
-          <p className="mt-8 max-w-3xl text-lg leading-relaxed text-canvas/82 sm:text-xl">
+          <p className="mt-8 max-w-3xl text-lg leading-relaxed text-current/82 sm:text-xl">
             {reason}
           </p>
           {onRequest.body.slice(1).map((paragraph) => (
             <p
               key={paragraph}
-              className="mt-6 max-w-3xl text-lg leading-relaxed text-canvas/82 sm:text-xl"
+              className="mt-6 max-w-3xl text-lg leading-relaxed text-current/82 sm:text-xl"
             >
               {paragraph}
             </p>
           ))}
           <p
             data-placeholder="editorial-note"
-            className="mt-10 max-w-2xl text-base text-canvas/58"
+            className="mt-10 max-w-2xl text-base text-current/58"
           >
             [ {onRequest.pending} ]
           </p>
@@ -604,7 +443,13 @@ export function RecordGrowsV2() {
               fourth is the empty 44px slot: no new iconography is authored
               here, so it stays a dashed hold until the motif inventory lands
               (Glyph / Truth, 2051:2626). */}
-          <ul className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* User direction 2026-09-09: the boomerang sits between four cards;
+              mobile reading order puts the interactive object first. */}
+          <div className="relative mt-10 grid gap-8 lg:block">
+          <div className="min-w-0 lg:absolute lg:inset-y-0 lg:left-1/2 lg:z-10 lg:flex lg:w-[38.5%] lg:-translate-x-1/2 lg:items-center [&>div]:w-full">
+            <BoomerangCTA href={recordGrows.contribute.cta.href} label={recordGrows.contribute.cta.label} />
+          </div>
+          <ul className="record-contribution-cards grid gap-4 lg:grid-cols-[1fr_1.25fr_1fr] lg:gap-6">
             {recordGrows.contribute.items.map((item, i) => (
               <li
                 key={item}
@@ -640,14 +485,7 @@ export function RecordGrowsV2() {
             ))}
           </ul>
 
-          {/* The frame carries the arrow inside the blob label. */}
-          <BlobButton
-            still
-            href={recordGrows.contribute.cta.href}
-            className="mt-11"
-          >
-            {`${recordGrows.contribute.cta.label}  →`}
-          </BlobButton>
+          </div>
         </div>
       </div>
 

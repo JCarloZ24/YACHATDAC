@@ -1,5 +1,68 @@
 /* F7/F8, 8 September 2026: one aperture scene, then the ordinary catalogue.
    Height/stickiness only change on setup/teardown, never on a scroll frame. */
+/* SCR-13: the catalogue, questions and waves change ground together.
+   Static/reduced motion retains the original cream grid and blue questions. */
+.record-ground {
+  --record-ground-progress: 0%;
+  --record-knowledge-ground: color-mix(in srgb, var(--color-midnight) var(--record-ground-progress), var(--color-canvas));
+  background-color: var(--record-knowledge-ground);
+  color: color-mix(in srgb, var(--color-canvas) var(--record-ground-progress), var(--color-charcoal));
+}
+.record-knowledge { --record-ground-progress: 100%; }
+/* SYS-02: prevent even a first-paint loader flash on article return. */
+html[data-record-loaded="true"] [data-record-loader] { display: none !important; }
+@media (min-width: 1024px) {
+  .record-contribution-cards { pointer-events: none; }
+  .record-contribution-cards > li { pointer-events: auto; }
+  .record-contribution-cards > li:nth-child(odd) { grid-column: 1; }
+  .record-contribution-cards > li:nth-child(even) { grid-column: 3; }
+}
+.record-document-ground {
+  --document-ground-progress: 0%;
+  --document-ground: color-mix(in srgb, var(--color-charcoal) var(--document-ground-progress), var(--color-canvas));
+  background: var(--document-ground);
+  color: color-mix(in srgb, var(--color-canvas) var(--document-ground-progress), var(--color-charcoal));
+}
+[data-record-on-request] { --document-ground-progress: 100%; }
+.record-documents-shelf { background: var(--document-ground); }
+.record-documents-shelf[data-documents-pinned] { min-height: 100svh; }
+.record-documents-shelf button { color: inherit; border-color: currentColor; }
+.record-documents-shelf[data-documents-pinned] ul {
+  overflow: visible;
+  scroll-snap-type: none;
+}
+.record-documents-shelf[data-documents-pinned] {
+  overflow: hidden;
+}
+.record-documents-shelf[data-documents-pinned] [data-documents-window] {
+  overflow: visible;
+}
+
+/* User direction, 2026-09-09: stepped editorial panels in Country colours. */
+.record-question-panel { background: var(--color-roasted); }
+.record-question-panel:nth-child(4n + 2) {
+  background: var(--color-evergreen);
+}
+.record-question-panel:nth-child(4n + 3) {
+  background: var(--color-midnight);
+}
+.record-question-panel:nth-child(4n) {
+  background: var(--color-evergreen);
+}
+.record-question-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  background: var(--color-gold);
+}
+@media (min-width: 1024px) {
+  .record-question-panel:first-child { margin-top: 7rem; }
+  .record-question-panel:nth-child(2) { padding-top: 6rem; }
+}
+
 .record-portal {
   position: relative;
   background: var(--color-charcoal);

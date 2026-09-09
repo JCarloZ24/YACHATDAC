@@ -2,6 +2,46 @@
 
 *Last updated: 9 September 2026*
 
+**Record asset reuse, 9 September 2026.** Decoded portal images are cached by
+full URL for the browser session (LRU, at most 24 entries / 48 MiB decoded pixel
+estimate). Concurrent requests share a promise; failed requests are removed
+for retry. Mask samples use weak image keys. Generated carving and boomerang
+wood canvases are reused. Every scene creates its own disposable GPU textures;
+no renderer, scroll state or content response is persisted in this cache.
+
+**Record return navigation, 9 September 2026 / SYS-02.** Once the first Record
+load completes, the document retains a readiness flag across client navigation.
+Returning from an article never shows the loader or applies its scroll/focus
+lock again. CSS suppresses the returning cover before effects run. A full
+browser reload starts a fresh loading cycle; the canvas still initializes.
+
+**Record card interaction, 9 September 2026 / INT-05, NAV-02.** Hover and focus
+lift an inner card wrapper 6px independently of the masonry transform; the
+title underlines. Catalogue links use a native View Transition to reveal the
+actual article in a 420ms expanding circle from the click (keyboard: card
+centre). The persistent Record layout waits for the route commit before
+revealing. Reduced motion, unsupported browsers and modified clicks retain
+ordinary navigation. Article routes prefetch on visibility and pointer/focus intent. A 650ms cap releases stalled snapshots into ordinary navigation; the root snapshot does not resize or crossfade.
+
+**Record closing object, 9 September 2026 / INT-04.** A Three.js boomerang
+anchors the existing contribution CTA. Procedural rounded geometry and wood
+texture are a generated visual interpretation of the user's reference, not a
+scan or a cultural record. Drag or arrow keys rotate it, Home resets it. Subtle
+pointer following has no continuous idle spin. Reduced motion uses immediate
+input updates. Scene loads near the viewport and disposes on unmount.
+
+**Document exit amendment, 9 September 2026 / SCR-16.** After horizontal travel,
+hold for 40vh, then release the full-height shelf on cream. Once On Request's
+top reaches 65% of the viewport, share a cream-to-charcoal ground change over
+50vh, finishing at top 15%. Remove
+the document entrance and exit waves. Reverse scroll restores the shared cream.
+
+**Document shelf, 9 September 2026 / SCR-15.** The document shelf pins while
+vertical scroll moves the track to its rightmost extent, then releases into
+the next section. Its span is horizontal travel / viewport width × 100vh,
+minimum 100vh. Arrow buttons seek within the same scroll span. Reduced motion
+and short viewports retain the native shelf so all text stays accessible.
+
 **Home painting text - 9 September 2026 (latest direction):** the painting finishes revealing at timeline 0.95. Then You are entering fades in at 1.08 over 0.50 units, Turraburra at 1.62 over 0.50, and the story line at 2.18 over 0.55. The complete copy holds until 3.03, clears, and the portal begins at 3.18. All later scenes move two units later without changing their pace. Reverse scroll retraces the sequence; reduced motion retains the static fallback. This supersedes the earlier overlapping text/reveal timing.
 
 
@@ -349,6 +389,47 @@ build fails if anything loud is added to it — the only screen on the site wher
 enforced by the compiler rather than by discipline.
 
 ## The Record — handprint opening, 8 September 2026
+
+**Question panels amendment, 9 September 2026.** `recordQuestionAttach` / SCR-14
+brings each panel up 12vh from a translucent, slightly tilted position into its
+adjoining layout. Each entrance scrubs from top at 95% to top at 25% with 0.8s
+catch-up (slowed at user request), then holds
+still for reading. Alternate tilts vary by panel; reverse scrolling detaches them.
+Reduced motion leaves all panels fully visible and aligned.
+
+**Question ground amendment, 9 September 2026.** `recordKnowledgeGround` / SCR-13 starts
+both the catalogue and question section on cream, then changes both grounds and
+their waves together to midnight blue over 70vh at the beginning of the questions
+(question section top at 85% to top at 15%). Text changes from charcoal
+to cream alongside it. Blue holds during the questions; reverse scroll restores
+cream and reduced motion retains the original cream catalogue and blue questions. No pin is added.
+
+**Masonry motion amendment, 9 September 2026.** `recordMasonryPass` / SCR-12
+gives the four actual CSS columns 6/14/9/18vh of opposing start/end drift as
+each card crosses the viewport. Entire cards move, preserving photo UVs and
+icons. Each card fades according to its actual viewport overlap, including
+its current scroll translation, with varied entry/exit distances of 17–32vh.
+Entry starts 12vh inside the bottom edge; exit finishes 14vh before the top
+edge, per the user's timing correction. Cards are fully visible between the
+fade bands. Scroll reversal retraces it; mobile uses fade only, reduced
+motion remains still, and keyboard-focused cards stay fully opaque.
+
+**Wave handoff, 9 September 2026.** The user replaces the colour fade with the
+shared cream WaveDivider used on About, above Research and Discovery. The
+hero background and fog remain charcoal throughout the photo journey.
+The follow-up animates the divider like About: its ink swells from 60% to
+full height and rolls from -15% of WAVE_ROLL to zero over the 100vh entrance,
+with 0.3s scrub smoothing. Reverse scroll retraces it; reduced motion keeps
+the full static crest. No additional pin or scroll gate is introduced.
+
+**Catalogue layout amendment, 9 September 2026.** User reference replaces the
+sidebar and boxed cards with full-width masonry on the original cream ground
+(restored by the user's follow-up): four desktop
+columns, one mobile column, varied image proportions and bare title/source
+captions. No filter, sort or search UI remains. Incoming filter URLs still
+resolve with a clear link. Photos retain their native article links and static
+image planes. The user's follow-up retains the original rotating set of glyph
+icons over the photos; card backgrounds and summaries remain removed.
 
 **Photo lens amendment, 9 September 2026.** User direction applies the Home
 painting zoom's radial lens envelope to the Record photo journey. Subdivided

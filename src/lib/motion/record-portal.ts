@@ -12,7 +12,6 @@ import {
   Scene,
   SRGBColorSpace,
   Texture,
-  TextureLoader,
   WebGLRenderer,
 } from "three";
 import {
@@ -23,6 +22,7 @@ import {
 } from "../motion-controller";
 import { registerYachatdacEffects } from "./effects";
 import { buildPortalWall } from "./record-portal-wall";
+import { loadRecordImage } from "./record-asset-cache";
 
 /**
  * Grammar: "the world opening" / handprintPortal / SCR-11.
@@ -139,9 +139,10 @@ export function createRecordPortal(
         throw new Error("Portal shader unavailable");
       };
       canvas.addEventListener("webglcontextlost", lost);
-      const loader = new TextureLoader();
       const load = async (src: string) => {
-        const texture = await loader.loadAsync(src);
+        const image = await loadRecordImage(src);
+        const texture = new Texture(image);
+        texture.needsUpdate = true;
         if (dead || version !== generation) texture.dispose();
         else textures.push(texture);
         return texture;
