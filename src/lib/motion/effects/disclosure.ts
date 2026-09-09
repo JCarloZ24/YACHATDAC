@@ -11,7 +11,14 @@ import { DUR, EASE } from "../tokens";
  */
 export function registerDisclosure(): void {
   /** The effects-lab treatments, composed for one itinerary stop. Whole lines
-      rise, copy blocks arrive, and a clip opens over a held photograph. */
+      rise, and the copy blocks and the photograph arrive together.
+
+      10 September 2026, August's direction: the picture no longer opens on
+      its own clip (`frameOpen`, edge right, 0.08) but takes the copy's
+      entrance — same row, same 16px rise and fade, same ease, started at the
+      same 0.16 — so a stop reads as one thing arriving rather than two. The
+      photograph is still held: `arrive` moves the frame, never the image
+      plane, so the `frame` grade on the slot is intact. */
   gsap.registerEffect({
     name: "stageArrival",
     extendTimeline: true,
@@ -24,7 +31,7 @@ export function registerDisclosure(): void {
       const tl = gsap.timeline();
       if (title) tl.settle(title, { duration: DUR.medium }, 0);
       if (copy) tl.arrive(Array.from(copy.children), { stagger: 0.09 }, 0.16);
-      if (picture) tl.frameOpen(picture, { edge: "right", scale: 1, ease: EASE.country }, 0.08);
+      if (picture) tl.arrive(picture, {}, 0.16);
       return tl;
     },
   });

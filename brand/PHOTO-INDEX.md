@@ -160,6 +160,14 @@ plate to put a scrim over, not a picture)
 
 ---
 
+## Supplied outside the batches
+
+| Frame | Origin | Where it is used |
+|---|---|---|
+| `003A5805` | Supplied by August, 10 September 2026, direct to the repo — not from a Drive batch. 6720 × 4480. Master at `brand/photography/wonder/003A5805.JPG` (gitignored). | Wonder → Highlights card 3, "After dark". Derivative `public/media/library/wonder/wonder-afterdark.webp`, 2000 × 1333. No people in frame, no site features — last light behind a treeline. |
+
+---
+
 ## Consent still to confirm
 
 Batch 1 identifiable faces: `378A7604` (eight adults), `1.1.2`, `1.10.1`, `1.2.4`, `1.34.1`,

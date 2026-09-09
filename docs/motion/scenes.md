@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 **Record asset reuse, 9 September 2026.** Decoded portal images are cached by
 full URL for the browser session (LRU, at most 24 entries / 48 MiB decoded pixel
@@ -1054,7 +1054,7 @@ page deepens. There is no WebGL on this route.
 | 05 | Turraburra | 180 | full bleed | **media** | landscape behind Getting here's outgoing wave; `landscapeApproach` on entry, `landscapeGyroscope` on mouse hover; image and copy hold for 80vh before exit (user direction 9 September 2026) |
 | 06 | What a stay looks like | ~720 | canvas, sticky reading screen | **transition** | six automatic stops at one viewport position; line, copy and picture entrances from the effects lab |
 | 07 | Before you come | 100 | evergreen | **none** | `hold`, cells arrive, one beat on the call to action |
-| 08 | Where you sleep | 120 | canvas | **media** | two frames open around held photographs; no overscale or parallax |
+| 08 | Where you stay | 120 | canvas | **media** | heading and copy enter; the ten-frame carousel does not — no card entrance (10 Sep 2026) |
 | 09 | What it is like out here | 180 | full bleed | **media** | same landscape entry, mouse drift and 80vh reading hold as §05; no sweep |
 | 10 | Your hosts | 100 | canvas | **none** | the copy arrives; the pointer names three of the eight, and the faces hold |
 | 11 | From Country | 100 | white | **media** | the card rail again, quieter |

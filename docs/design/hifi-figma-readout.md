@@ -329,6 +329,42 @@ mobile.svg` is now the desktop file under the supplied window. Both are sized by
 a fixed box, so neither can be squashed again. `facts-map-mobile.svg` is left on disk unreferenced —
 supplied artwork, not ours to delete.
 
+### 11.5b §04 map — scroll length, not size — and the held screen's height threshold — 10 Sep 2026
+
+**A 75% scale was tried on the desktop route map and reverted the same day.** The complaint it
+was meant to answer ("it takes too much scrolling to show the full map including the legends")
+was about the scroll, and shrinking the drawing broke the frame instead: the map read as
+mis-positioned, and the four legend icons — which keep their frame pixel size so they stay
+legible — read a third too large against shrunken roads. **The map is back at the frame's own
+geometry and the code matches the node exactly.**
+
+Read off 2033:5572 (a 1440 × 900 frame), for anyone tempted to move it again:
+
+| Node | Value |
+| --- | --- |
+| Frame 15406 `3238:34160` | 1973 × 1580 at **(−533, −283)** — the window, which the 1440 frame crops again |
+| Layer_1 `3238:34130` | 2277.93 × 1580 at that window's origin |
+| Roads `3238:34141` | 879.68 × 1109.54 at (1388.09, 0.08) *within the artwork* |
+
+The two `calc()`s in RouteMap.tsx **are** those offsets: 720 − 1252.5 = −532.5 and
+450 − 790 + 57 = −283.
+
+**Pin percentages re-derived and confirmed.** August measured each legend icon inside the roads
+bounding box — lake 340.91/607.92, sculpture 275.91/650.92, gorge 323.91/685.92, gray rock
+387.91/637.92, at the frame's 32×24, 31×30, 33×32, 28×28. Centred and expressed against the
+2277.93 × 1580 artwork they give 76.60/39.24, 73.73/42.15, 75.88/44.43 and 78.58/41.27 — within
+0.02% of the 9 Sep numbers. The placement was never wrong.
+
+**What did change, and is where the scrolling complaint actually lived:** the sticky span is
+180vh (was 300) and the pins light at 0.50–0.68 of the draw (was 0.76–0.91), so the map
+finishes with the section still on screen.
+
+**The held screen is now gated on `deck:`, not `lg:`.** Reported from a 2560 × 1680 laptop:
+the screen is `h-svh` + `overflow-hidden`, and the column measured 873px, so the stops and the
+coda were cut off with no scroll that could reach them. It briefly took its own 900px
+threshold; the same day's copy rewrite took the column to 647px and the house `deck:` (1024
+wide and 820 tall) fits again. Below it the section is ordinary flow.
+
 ### 11.6 Frame 15423 (3439:30182) — the phone's Getting-here map, corrected
 
 Reading the node itself corrected two things in §11.5's first pass at it.
@@ -363,7 +399,7 @@ Country, so a mis-assigned symbol would be an error of substance, not of styling
 
 ### 11.6 Wonder itinerary restored - 9 September 2026
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 User direction restores desktop `2033:5889` in place of the full-screen film.
 Figma MCP `get_design_context` returned the View-seat tool-call limit;

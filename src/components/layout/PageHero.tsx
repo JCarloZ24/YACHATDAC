@@ -39,7 +39,7 @@ export function PageHero({
   const ink = toneInk[tone];
 
   return (
-    <section className={`${toneBg[tone]} relative`}>
+    <section data-nav-hero className={`${toneBg[tone]} relative`}>
       <div className="mx-auto max-w-7xl px-6 pt-36 pb-20 lg:px-16 lg:pt-44">
         <Eyebrow className={ink.accent}>{eyebrow}</Eyebrow>
 

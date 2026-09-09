@@ -102,49 +102,40 @@ export function factsCopy(root: HTMLElement, span: number): MotionModule {
  * volume, because they are the same thing: a rail of photographic cards that
  * currently does nothing.
  *
- * The cards arrive in order across the rail, and each card's frame opens from
- * its left edge — the side the eye enters from — while the picture holds
- * still inside it. The chip and the title follow a beat later, so a card is a
- * picture before it is a caption.
+ * The whole card arrives at once — picture, chip and caption as one object,
+ * on the house entrance (`arrive`, 16px and a fade). It used to open its
+ * frame's clip from the left while the copy followed a beat later; a card
+ * that assembles itself in parts in front of the reader was read as fussy
+ * (August, 10 September 2026, user direction) and the clip is gone.
  *
  * NO SCALE ON THE CARD BOX, and that is deliberate (9 Sep 2026). This was
  * `emanate`, which arrives elements from 0.7 scale. When its timeline did not
  * finish — and on this page it did not — the cards were left standing at 70%
  * of their width, which reads as a layout that does not match the frame
  * rather than as an animation that stalled. A card that only ever moves and
- * fades cannot be left the wrong size by a stalled tween. `arrive` plus the
- * clip opening carries the same reading with none of that risk.
+ * fades cannot be left the wrong size by a stalled tween.
  *
- * Hooks: `[data-card]` per card, `[data-frame-media]` on the image inside it,
- * `[data-card-copy]` on the block that follows.
+ * Hooks: `[data-card]` per card. `[data-frame-media]` and `[data-card-copy]`
+ * stay in the markup as the frame-grade and layout hooks they also are; this
+ * composition no longer animates them separately.
  */
 export function cardRail(root: HTMLElement, span: number): MotionModule {
   return composition("wonder/card-rail", root, {
     channel: "media",
     span,
-    uses: ["frameOpen", "arrive"],
+    uses: ["arrive"],
     build: () => {},
     enter: (tl) => {
       const cards = qa(root, "[data-card]");
       if (!cards.length) return;
-      // ⚠ NO STAGGER ON THE CARD BOXES (August, 9 Sep 2026). The row arrived
-      // 0.07 apart, so for the length of the entrance card one sat 24px above
-      // cards two and three — and a row of plates out of line for half a
-      // second reads as broken layout, not as a stagger. The cards travel
-      // together; the stagger stays where it costs nothing, on the clip
-      // below, which reveals rather than moves.
+      // ⚠ THE CARD ARRIVES WHOLE (August, 10 Sep 2026, user direction). The
+      // clip used to unroll the picture from the left while the chip and
+      // title followed a beat later, so a card assembled itself in three
+      // parts in front of the reader. It now uses the house entrance and
+      // nothing else — `arrive`, picture and caption together, one object.
+      // No stagger across the row, for the reason recorded above the previous
+      // version: a row of plates out of line reads as broken layout.
       tl.arrive(cards, { y: 24, stagger: 0 });
-      cards.forEach((card, i) => {
-        // `edge: "left"` and scale 1 together: the clip unrolls from the side
-        // the reader is already reading toward, and the picture inside does
-        // not move at all. These are hands, a ranger, an engraved wall.
-        tl.frameOpen(card, { edge: "left", scale: 1 }, i * 0.06);
-      });
-      // Same reading one level down: the three copy blocks are side by side,
-      // so staggering them puts the chips and headings out of line with each
-      // other. They arrive together, after the boxes.
-      const copy = qa(root, "[data-card-copy]");
-      if (copy.length) tl.arrive(copy, { stagger: 0 }, 0.15);
     },
     cut: clearAll,
   });
@@ -228,31 +219,37 @@ export function conversion(root: HTMLElement, span: number): MotionModule {
 }
 
 /**
- * §08 — Where you sleep. The quiet twin of the card rail: two cards, so a
- * spread of two would just be a stagger. The frames open around held photos.
+ * §08 — Where you stay. The heading and the copy enter; the pictures do not.
  *
- * 9 Sep 2026, image-quality pass: both supplied photos contain people and
- * have limited resolution. Remove the parallax and overscale so their
- * framing and detail hold. Grammar: "the world opening" / frameOpen;
- * "what endures" / settle; "arriving quietly" / arrive; "the rest" / hold.
+ * 9 Sep 2026, image-quality pass: the supplied photos contain people and have
+ * limited resolution. Remove the parallax and overscale so their framing and
+ * detail hold.
  *
- * Hooks: `[data-card]` per card, `[data-frame-media][data-motion="frame"]` inside.
+ * 10 Sep 2026, August's direction: the two cards became a ten-frame carousel
+ * and their `frameOpen` entrance is gone with them. A rail cannot stage an
+ * arrival per card — eight of the ten are off-screen at rest, so they would
+ * either play unseen or pop as the reader swipes them in, and neither is an
+ * entrance. `[data-card]` is no longer in the markup, so the hook cannot
+ * silently re-attach either. Grammar: "what endures" / settle; "arriving
+ * quietly" / arrive; "the rest" / hold. `frameOpen` no longer used here.
+ *
+ * Hooks: `[data-card-copy]`. The rail itself carries no motion hook; its
+ * pictures keep `[data-frame-media][data-motion="frame"]` so the grade is
+ * still declared and still enforced by MediaTile.
  */
 export function sleepCards(root: HTMLElement, span: number): MotionModule {
   return composition("wonder/sleep", root, {
     channel: "media",
     span,
-    uses: ["frameOpen", "hold", "settle", "arrive"],
+    uses: ["hold", "settle", "arrive"],
     build: (tl) => {
       tl.hold(root, { duration: DUR.large });
     },
     enter: (tl) => {
       const heading = q(root, "h2");
       const body = q(root, "[data-card-copy]");
-      const cards = qa(root, "[data-card]");
       if (heading) tl.settle(heading);
       if (body) tl.arrive(body, {}, 0.15);
-      cards.forEach((card, i) => tl.frameOpen(card, { scale: 1 }, 0.2 + i * 0.08));
     },
     cut: clearAll,
   });
