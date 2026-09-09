@@ -115,6 +115,8 @@ export type EffectName =
   // core — arrival, type, the rest
   | "settle"
   | "display"
+  | "waveClamp"
+  | "brighten"
   | "arrive"
   | "emanate"
   | "triad"

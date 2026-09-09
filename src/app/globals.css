@@ -221,6 +221,45 @@ body {
 @custom-variant deck (@media (min-width: 1024px) and (min-height: 820px));
 
 /* ---------------------------------------------------------------------------
+   Truth deck surfaces — user direction, 9 September 2026.
+
+   A story beat can sit inside the page's centred content column, but a pinned
+   beat must still paint the entire viewport or the next beat's copy shows
+   through it. The pseudo-element extends the semantic Country ground without
+   changing the measured width of the article ScrollTrigger pins.
+   --------------------------------------------------------------------------- */
+[data-truth-slide][data-truth-ground] {
+  isolation: isolate;
+}
+
+[data-truth-slide][data-truth-ground]::before {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  inset-inline: calc(50% - 50vw);
+  content: "";
+  background: var(--truth-slide-ground);
+}
+
+[data-truth-ground="present"] {
+  --truth-slide-ground: var(--color-evergreen);
+}
+
+[data-truth-ground="return"],
+[data-truth-ground="named-wrong"] {
+  --truth-slide-ground: var(--color-roasted);
+}
+
+[data-truth-ground="count"],
+[data-truth-ground="deep-time"] {
+  --truth-slide-ground: var(--color-charcoal);
+}
+
+[data-truth-ground="before-record"] {
+  --truth-slide-ground: var(--color-midnight);
+}
+
+/* ---------------------------------------------------------------------------
    hold: — the viewport AND the preference that let a frame take the screen.
 
    Every slide in §03 holds: a row of cards takes the screen and keeps it, and

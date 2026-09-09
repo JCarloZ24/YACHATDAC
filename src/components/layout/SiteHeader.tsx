@@ -37,7 +37,7 @@ import { MobileNav } from "@/components/layout/MobileNav";
  */
 export function SiteHeader() {
   return (
-    <header className="absolute inset-x-0 top-0 z-30">
+    <header data-site-header className="absolute inset-x-0 top-0 z-30">
       {/* Navbar / Mobile — the solid white bar with the black wordmark and
           the hamburger panel. Below md only; the band below is desktop's. */}
       <MobileNav />

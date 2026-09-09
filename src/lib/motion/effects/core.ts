@@ -3,8 +3,8 @@
 /**
  * Core effects — arrival, type, and the rest.
  *
- * Grammar rows: "what endures", "arriving quietly", "what radiates from a
- * source", "a person speaking", "the rest".
+ * Grammar rows: "what endures", "emerging from the ground", "arriving
+ * quietly", "what radiates from a source", "a person speaking", "the rest".
  *
  * These are the effects a quiet screen is built from. Every page uses several;
  * a page that uses *only* these is a rest page, and should say so.
@@ -69,6 +69,57 @@ export function registerCore(): void {
         stagger: (tooLong ? STAGGER.line : config.stagger) as number,
       });
     },
+  });
+
+  /* --- what endures: wave clamp -----------------------------------------
+     Grammar: "what endures", wave clamp · Truth / Today.
+     The heading shares the incoming record's exact scrubbed travel until its
+     crown reaches the viewport crown. It then holds on transform alone while
+     the higher-z wave and ground continue upward and cover it. */
+  gsap.registerEffect({
+    name: "waveClamp",
+    extendTimeline: true,
+    defaults: { duration: 1 },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      const heading = first(targets);
+      const track = config.track as HTMLElement;
+      const viewport = config.viewport as HTMLElement;
+
+      return gsap.fromTo(
+        heading,
+        { y: 0 },
+        {
+          y: () => -Math.max(0, track.scrollHeight - viewport.clientHeight),
+          duration: config.duration as number,
+          ease: "none",
+          modifiers: {
+            y: (value: string) =>
+              `${Math.max(Number.parseFloat(value) || 0, -heading.offsetTop)}px`,
+          },
+        },
+      );
+    },
+  });
+
+  /* --- emerging from the ground -----------------------------------------
+     Grammar: "emerging from the ground" · Truth-local sketch M1.
+     The element is already in its final layout and simply gains brightness
+     as the reader reaches it. No translation, scale or filter: the descent is
+     the movement, and reversing the scroll reverses the brightening. */
+  gsap.registerEffect({
+    name: "brighten",
+    extendTimeline: true,
+    defaults: { dim: 0.4, duration: DUR.medium, ease: EASE.machine },
+    effect: (targets: object, config: Record<string, unknown>) =>
+      gsap.fromTo(
+        targets,
+        { opacity: config.dim as number },
+        {
+          opacity: 1,
+          duration: config.duration as number,
+          ease: config.ease as string,
+        },
+      ),
   });
 
   /* --- arriving quietly --------------------------------------------------

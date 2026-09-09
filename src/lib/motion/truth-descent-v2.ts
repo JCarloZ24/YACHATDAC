@@ -3,21 +3,19 @@
 /**
  * /v2/truth — additions on top of the descent.
  *
- * The committed truth-descent module (grounds, bands, rail, settling
- * headings, arrivals) is mounted unchanged alongside this one; this file adds
- * only what F7 newly permits. The v1 file is not edited — its header still
- * quotes the superseded doctrine and stays as the historical record.
+ * The base descent module owns section grounds, the rail, headings, arrivals
+ * and Wave / Divider hand-offs. This file owns image-plane and scene-specific
+ * treatments that sit on top of that common scroll clock.
  *
- *   [data-v2-hero-media]   the hero photograph — slow push-in (M1), scrubbed
- *   [data-v2-depth]        era media/figures drift against the copy (D3-lite,
- *                          ±40px, transform only — depth without WebGL)
- *   [data-v2-count]        the 1902/1886 numerals — they arrive at scale and
- *                          take the screen; the count is the page's loudest
- *                          typographic moment and everything near it is still
+ *   [data-v2-hero-media]   the hero photograph — held through its read gate
+ *   [data-v2-camera]       ordinary image frames — M1 1.00→1.06 push-in,
+ *                          scrubbed; frame-grade and held scenes stay still
  *   [data-v2-steps-fill]   the record strand's ochre fill — clipped open
  *                          linearly with document scroll, trailing it on a
  *                          heavy scrub (scroll-derived; the lag is the only
  *                          easing, and it settles to the true position)
+ * The gated-deck module owns the G1 rail traveller and the navbar exit. This
+ * module keeps the chronology fill and scene-interior media treatments only.
  *
  * Suzanne's testimony itself carries NO motion attributes. That stillness is
  * the doctrine's stated exception (F7 rule 1): the reader is being read to.
@@ -42,6 +40,7 @@ export function createTruthDescentV2(): MotionModule {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const localCleanup: Array<() => void> = [];
         // The winding trail. Two clipped layers, both derived from scroll:
         //   · the gold ink ([data-v2-trail-fill]) carries a short scrub lag
         //     so it reads as liquid flowing through the dots — it still maps
@@ -102,66 +101,42 @@ export function createTruthDescentV2(): MotionModule {
           // derived, still both directions. The tip aims at the 0.6vh
           // reading line, arriving there once the lag settles.
           wireFill("[data-v2-steps-fill]", SCRUB.heavy * 1.5, 0.6);
+
         }
 
-        // The hero settle — the hi-fi motion note (2026-09-02) supersedes the
-        // old M1 push-in: the photograph is on screen before anything
-        // animates, starts ~4% over frame, and settles to rest over a long
-        // scroll. It breathes rather than sits still; the settling IS scroll
-        // position, so the scrub stays.
-        //
-        // GRADE: this selector deliberately excludes frame-graded media. The
-        // Truth hero may carry escarpment or engraving material, and on that
-        // the plate moves while the record holds — moving the image plane
-        // itself is the one thing the grade forbids.
-        const hero = document.querySelector<HTMLElement>(
-          "[data-v2-hero-media]:not([data-motion='frame'])",
-        );
-        if (hero) {
-          gsap.fromTo(
-            hero,
-            { scale: 1.04 },
-            {
-              scale: 1,
-              ease: "none",
-              immediateRender: true,
-              scrollTrigger: {
-                trigger: hero,
-                start: "top top",
-                end: "bottom top",
-                scrub: SCRUB.light,
-              },
-            },
-          );
-        }
+        // The hero is the deck's establishing still. Its photograph, copy
+        // and wave do not move during the read runway; only a committed gate
+        // lets the next opaque beat cover it. The site navbar is independent
+        // chrome and may still clear during that runway.
 
-        // Entry plates (04 · ENTRY TODAY) — the spec's push in, 1.06→1.00,
-        // scrubbed over the plate's travel through the viewport so it works
-        // in both directions. Same grade exclusion as the hero: a
-        // frame-graded record never has its image plane moved.
+        // M1 / being drawn in. Every ordinary movable image plane pushes
+        // 1.00→1.06 over its frame's viewport travel. The marker sits on the
+        // frame or group; `pushIn` filters any plane beneath frame-grade media.
         gsap.utils
-          .toArray<HTMLElement>("[data-v2-plate]:not([data-motion='frame'])")
-          .forEach((plate) => {
-            gsap.fromTo(
-              plate,
-              { scale: 1.06 },
-              {
-                scale: 1,
-                ease: "none",
-                immediateRender: true,
-                scrollTrigger: {
-                  trigger: plate,
-                  start: "top bottom",
-                  end: "top top",
-                  scrub: SCRUB.light,
-                },
-              },
-            );
+          .toArray<HTMLElement>("[data-v2-plate], [data-v2-camera]")
+          .forEach((frame) => {
+            if (frame.closest("[data-v2-static]")) return;
+            const planes = frame.querySelectorAll<HTMLElement>("[data-media-plane]");
+            if (!planes.length) return;
+            const timeline = gsap.timeline({ paused: true });
+            timeline.pushIn(planes, {
+              scale: 1.06,
+              y: "0%",
+              duration: 1,
+              ease: "none",
+            });
+            ScrollTrigger.create({
+              trigger: frame,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: SCRUB.light,
+              animation: timeline,
+            });
           });
 
         // 14 · BREAK The Escarpment — shot A dissolves 1 → 0 over the
-        // break's own travel, revealing shot B (which carries the plates'
-        // pull-back). Opacity only. The attribute is absent while B is
+        // break's own travel, revealing shot B (which carries the default
+        // push-in). Opacity only. The attribute is absent while B is
         // undelivered, so A simply holds.
         gsap.utils.toArray<HTMLElement>("[data-v2-dissolve]").forEach((el) => {
           gsap.fromTo(
@@ -176,28 +151,6 @@ export function createTruthDescentV2(): MotionModule {
                 start: "top 60%",
                 end: "bottom 40%",
                 scrub: SCRUB.normal,
-              },
-            },
-          );
-        });
-
-        // The 2003 portrait (12 · ENTRY 2003) — "push in, slowest on the
-        // page": a smaller travel than the plates, at the heavy scrub, over
-        // the portrait's whole pass through the viewport. Frame-graded slots
-        // never carry the attribute.
-        gsap.utils.toArray<HTMLElement>("[data-v2-portrait]").forEach((el) => {
-          gsap.fromTo(
-            el,
-            { scale: 1.04 },
-            {
-              scale: 1,
-              ease: "none",
-              immediateRender: true,
-              scrollTrigger: {
-                trigger: el,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: SCRUB.heavy,
               },
             },
           );
@@ -229,46 +182,18 @@ export function createTruthDescentV2(): MotionModule {
         // The cue's brightness pulse (CSS) dies on the first scroll, for good.
         const cue = document.querySelector<HTMLElement>("[data-hero-cue]");
         if (cue) {
+          const stopCue = () => {
+            cue.style.animation = "none";
+          };
           window.addEventListener(
             "scroll",
-            () => {
-              cue.style.animation = "none";
-            },
+            stopCue,
             { once: true, passive: true },
           );
+          localCleanup.push(() => window.removeEventListener("scroll", stopCue));
         }
 
-        gsap.utils.toArray<HTMLElement>("[data-v2-depth]").forEach((el) => {
-          gsap.fromTo(
-            el,
-            { y: 40 },
-            {
-              y: -40,
-              ease: "none",
-              scrollTrigger: {
-                trigger: el,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.8,
-              },
-            },
-          );
-        });
-
-        gsap.utils.toArray<HTMLElement>("[data-v2-count]").forEach((el) => {
-          gsap.from(el, {
-            scale: 0.9,
-            opacity: 0.3,
-            transformOrigin: "left center",
-            ease: "none",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              end: "top 45%",
-              scrub: 0.7,
-            },
-          });
-        });
+        return () => localCleanup.forEach((cleanup) => cleanup());
       });
 
       // Reduced motion: the trail shows the whole record, statically open —

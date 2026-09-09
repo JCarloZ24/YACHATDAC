@@ -22,9 +22,9 @@ import {
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import { EditorialNote } from "@/components/ui/EditorialNote";
 import { PullQuote } from "@/components/ui/PullQuote";
-import { SplitReveal } from "@/components/motion/text/SplitReveal";
 import { WordEmphasis } from "@/components/lofi/ui/WordEmphasis";
 import { SharedMorph } from "@/components/transitions/SharedMorph";
+import { WaveDivider } from "@/components/ui/Furniture";
 
 /* COVER CROPS NEED HEIGHT, NOT JUST WIDTH.
    Every photograph in the library is ~1.9:1 landscape (3840x2024). `sizes`
@@ -43,11 +43,10 @@ const COVER_TALL_BLEED = "(min-width: 1024px) 100vw, 400vw";
  * /v2/truth — the descent, at full cinematic weight (F7).
  *
  * Structure and copy are the committed src/content/truth.ts, unchanged. The
- * grounds come from the descent module's six-band ladder: sections carry
- * data-descent-band and the module cross-fades the fixed ground beneath them,
- * so the whole page darkens as it travels back. The rail on the left is the
- * record; its fill is scroll position (machine easing — a progress indicator
- * that eases is lying).
+ * grounds belong to their section bands and the five supplied Wave / Divider
+ * instances carry each incoming colour over the join. The rail on the left is
+ * the record; its fill is scroll position (machine easing — a progress
+ * indicator that eases is lying).
  *
  * The 1902 band is the page's hard moment: the count stands alone at
  * viewport scale with nothing else on screen (the copy draft's own build
@@ -57,8 +56,8 @@ const COVER_TALL_BLEED = "(min-width: 1024px) 100vw, 400vw";
  *
  * Era → band mapping (content eras are finer-grained than the six grounds):
  * Ahead + Today → present · Bought back → return · 1950s → named-wrong ·
- * 1902 + 1840s → count · Older than the record → before-record ·
- * 100M years → deep-time.
+ * 1902 → count · 1840s + Older than the record → before-record · 100M years
+ * → deep-time. Return and named-wrong share one roasted-brown surface.
  */
 
 export type BandId =
@@ -128,17 +127,23 @@ function presentSrc(src: string | null): string | null {
  */
 export function TruthHeroV2() {
   return (
-    /* The wave lives OUTSIDE the clipped header so it can bleed a pixel past
-       the hero's foot. Inside it, its own antialiased bottom edge landed
-       exactly on the header boundary — with min-h-svh resolving to a
-       fractional device pixel and the band below being transparent (the
-       evergreen is the fixed descent ground), that edge read as a pale
-       hairline across the full width under the crest. */
-    <div className="relative">
-      <header className="relative flex min-h-svh items-center overflow-hidden">
+    /* The hero owns no divider. Its incoming Ahead deck carries that wave,
+       keeping the crest attached to the cover rather than to this pinned
+       runway. */
+    <div data-truth-slide-runway className="relative bg-evergreen">
+      <header
+        data-truth-slide
+        data-truth-slide-label="Truth"
+        data-truth-ground="present"
+        className="relative flex min-h-svh items-center overflow-hidden"
+      >
         <SharedMorph name="v2-truth-media">
           <div className="absolute inset-0">
-            <div data-v2-hero-media className="absolute inset-0">
+            <div
+              data-v2-hero-media
+              data-motion={MOTION_GRADE[truthHeroSlot.bucket]}
+              className="absolute inset-0"
+            >
               <MediaOrField
                 src={presentSrc(truthHeroSlot.src)}
                 alt="Country at dusk — bare trees against the last light over Turraburra."
@@ -161,17 +166,12 @@ export function TruthHeroV2() {
             to ~1035px — wider than the body container, so the hero opens up. */}
         <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-24 lg:px-12">
           {/* Gold here is the spec's hero accent — eyebrow and cue only. */}
-          <p data-v2-arrive className="eyebrow text-gold">
+          <p className="eyebrow text-gold">
             {truthHero.eyebrow}
           </p>
-          <SplitReveal
-            as="h1"
-            mode="lines"
-            gate="entry"
-            className="headline mt-8 max-w-4xl text-h1 text-canvas lg:max-w-none"
-          >
+          <h1 className="headline mt-8 max-w-4xl text-h1 text-canvas lg:max-w-none">
             {truthHero.title}
-          </SplitReveal>
+          </h1>
           <p className="mt-10 max-w-2xl text-xl leading-relaxed text-canvas">
             {truthHero.standfirst}
           </p>
@@ -186,23 +186,6 @@ export function TruthHeroV2() {
 
       </header>
 
-      {/* The first era's ground rises into the hero — the spec's organic
-          hand-off. Same wave as the footer divider, filled with the present
-          band's evergreen so the crest and the ground below read as one.
-          The viewBox starts at x=1 because the path's own left edge does:
-          at 0 a sub-pixel column of the crest went unfilled down the left.
-          -bottom-px drops the antialiased foot below the join. */}
-      <svg
-        aria-hidden
-        viewBox="1 0 1469 151"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-x-0 -bottom-px h-20 w-full sm:h-36"
-      >
-        <path
-          d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
-          className="fill-evergreen"
-        />
-      </svg>
     </div>
   );
 }
@@ -211,9 +194,8 @@ export function TruthHeroV2() {
  * One entry's photo strip. Real photograph where the library has one, honest
  * tonal field where it does not (the photo-batch rule: do not fake the gap).
  *
- * Depth drift (data-v2-depth) is withheld from any strip carrying a
- * frame-graded bucket — the tile of a cultural record does not get moved to
- * decorate the scroll. The grade travels with the slot, not the call site.
+ * Default image planes use the scrubbed M1 camera push. A frame-graded tile
+ * remains held; the grade travels with the slot, not the call site.
  */
 /** Tailwind cannot see a computed class — the tone map has to be literal. */
 const FIELD_CLASS: Record<MediaSlot["tone"], string> = {
@@ -227,6 +209,31 @@ const FIELD_CLASS: Record<MediaSlot["tone"], string> = {
 };
 
 /**
+ * Each ledger beat owns an opaque ground while the previous beat is pinned.
+ * The value is semantic rather than a computed Tailwind class: globals.css
+ * paints the matching Country token across the full viewport width.
+ */
+function entryGround(id: string | undefined): BandId {
+  if (id === "precinct" || id === "partner" || id === "today-fire") {
+    return "present";
+  }
+  if (
+    id === "study-2022" ||
+    id === "research-discovery" ||
+    id === "renamed" ||
+    id === "just-us" ||
+    id === "father"
+  ) {
+    return "return";
+  }
+  if (id === "art-gallery") return "named-wrong";
+  if (id === "mitchell" || id === "engraving" || id === "opportunities") {
+    return "before-record";
+  }
+  return "deep-time";
+}
+
+/**
  * The precinct's photo pair, per the hi-fi frame (1440×1078 SVG, 2026-09-02):
  * a large rounded photograph left, a smaller one seated lower right, the
  * boomerang glyph over the big photo's top-left and the blue spiral in the
@@ -235,8 +242,12 @@ const FIELD_CLASS: Record<MediaSlot["tone"], string> = {
  */
 function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }) {
   const [lead, side] = slots;
+  const anyFrameGraded = slots.some((slot) => MOTION_GRADE[slot.bucket] === "frame");
   return (
-    <figure className="mt-10 max-w-4xl">
+    <figure
+      {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
+      className="mt-10 max-w-4xl"
+    >
       <div className="grid items-end gap-6 sm:grid-cols-[3fr_2fr] sm:gap-10">
         <div className="relative aspect-3/2 overflow-hidden rounded-2xl">
           <MediaOrField
@@ -304,7 +315,7 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
   return (
     <figure className="mt-10 max-w-4xl">
       <div
-        {...(anyFrameGraded ? {} : { "data-v2-depth": true })}
+        {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
         className="grid items-start gap-6 sm:grid-cols-[13fr_9fr]"
       >
         <div className="space-y-6">
@@ -390,7 +401,7 @@ function Diptych({
   return (
     <figure className="mt-10 max-w-4xl">
       <div
-        {...(anyFrameGraded ? {} : { "data-v2-depth": true })}
+        {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
         className="grid gap-6 sm:grid-cols-[539fr_359fr] sm:items-start"
       >
         <div className="relative aspect-539/341 overflow-hidden rounded-3xl">
@@ -466,7 +477,7 @@ function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
   return (
     <figure className="mt-10 max-w-4xl">
       <div
-        {...(MOTION_GRADE[country.bucket] === "frame" ? {} : { "data-v2-depth": true })}
+        {...(MOTION_GRADE[country.bucket] === "frame" ? {} : { "data-v2-camera": true })}
         className="relative aspect-23/8 overflow-hidden rounded-lg"
       >
         <MediaOrField
@@ -527,9 +538,8 @@ function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
  * right for testimony, wrong for marketing copy. The ramp runs from the
  * descent module; without it the words read at full opacity.
  *
- * "Push in, slowest on the page": the portrait carries [data-v2-portrait],
- * and the descent module scrubs it 1.04→1.00 at the heavy scrub — slower
- * than the plates and the hero. Withheld from frame-graded slots.
+ * The portrait uses the page's default 1.00→1.06 camera push. It remains
+ * withheld from frame-graded slots.
  *
  * No testimony in the content means no quotation on the page: the slot
  * renders an editorial note instead. A quote is never paraphrased into
@@ -548,7 +558,7 @@ function PortraitTestimony({
       <div className="grid gap-8 sm:grid-cols-[294fr_626fr] sm:gap-14">
         <div className="relative aspect-294/386 overflow-hidden rounded-3xl">
           <div
-            {...(frameGraded ? {} : { "data-v2-portrait": true })}
+            {...(frameGraded ? {} : { "data-v2-camera": true })}
             data-motion={MOTION_GRADE[slot.bucket]}
             className="absolute inset-0"
           >
@@ -601,7 +611,7 @@ function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
   const [visitor, document] = slots;
   const documentSrc = presentSrc(document?.src ?? null);
   return (
-    <figure className="mt-10 max-w-4xl">
+    <figure data-v2-static className="mt-10 max-w-4xl">
       <div className="relative aspect-[920/300] overflow-hidden rounded-lg">
         <div data-motion={MOTION_GRADE[visitor.bucket]} className="absolute inset-0">
           <MediaOrField
@@ -679,7 +689,7 @@ function StrataStack({ slots }: { slots: MediaSlot[] }) {
         <div
           key={slot.id}
           data-motion={MOTION_GRADE[slot.bucket]}
-          {...(MOTION_GRADE[slot.bucket] === "frame" ? {} : { "data-v2-depth": true })}
+          {...(MOTION_GRADE[slot.bucket] === "frame" ? {} : { "data-v2-camera": true })}
           className={`relative aspect-[699/221] w-full overflow-hidden rounded-2xl sm:w-[76%] ${offset} ${
             i > 0 ? "mt-6 sm:mt-9" : ""
           }`}
@@ -731,7 +741,7 @@ function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }
   return (
     <figure className={strip ? "mt-8 max-w-4xl" : "mt-8 max-w-3xl"}>
       <div
-        {...(anyFrameGraded || strip ? {} : { "data-v2-depth": true })}
+        {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
         className={`grid gap-3 ${cols}`}
       >
         {slots.map((slot) => (
@@ -770,6 +780,7 @@ function EntryBlock({
   titleOnPlate,
   gutterLabel,
   gutterSub,
+  withinDeck = false,
 }: {
   entry: TruthEntry;
   /**
@@ -796,6 +807,10 @@ function EntryBlock({
    * full when, which the body already opens with.
    */
   gutterSub?: string;
+  /** Related articles can share one scroll deck. In that case the parent
+   * owns the slide/runway hooks and each article keeps only its semantic
+   * anchor and interior arrival treatment. */
+  withinDeck?: boolean;
 }) {
   const isPartner = entry.id === "partner";
   const isToday = entry.id === "today-fire";
@@ -820,6 +835,9 @@ function EntryBlock({
   /* 19 · ABOUT 100 MILLION YEARS AGO: the era marker in the gutter, the era
      title as the kicker, then the P7 strata stack — a cross-section. */
   const isSeabed = entry.id === "seabed";
+  /* Figma's held beats: these articles are present at full brightness from
+     first paint and never join the generic M1 arrival system. */
+  const isStill = entry.id === "study-2022" || isEngraving;
   /* Frames 10–13 and 16–19 share the ground-record treatment. */
   const isGroundFrame =
     isDiptych ||
@@ -842,16 +860,29 @@ function EntryBlock({
     gutterSub ?? (entry.when && entry.when !== label ? entry.when : undefined);
   const whenKicker =
     !isPartner && !label && !isToday ? entry.when : undefined;
-  return (
+  const entryLayout = `relative grid gap-6 md:grid-cols-[180px_1fr] md:gap-12 ${
+    isPartner ? "py-16 md:py-24" : "py-10"
+  }`;
+  const article = (
     <article
       id={entry.id}
-      data-descent-arrive
+      {...(withinDeck
+        ? {}
+        : {
+            "data-truth-slide": true,
+            "data-truth-slide-label": entry.title,
+            "data-truth-ground": entryGround(entry.id),
+          })}
+      {...(isStill ? {} : { "data-descent-arrive": true })}
       /* No rule between records (2026-09-03): the hi-fi frames run the
          entries straight on, separated by the grounds and their spacing. */
-      className={`relative grid gap-6 md:grid-cols-[180px_1fr] md:gap-12 ${
-        isPartner ? "py-16 md:py-24" : "py-10"
-      }`}
+      className="relative"
     >
+      <div {...(withinDeck ? {} : { "data-truth-deck-viewport": true })}>
+        <div
+          {...(withinDeck ? {} : { "data-truth-deck-track": true })}
+          className={entryLayout}
+        >
       {/* The left gutter carries the era label and its sub (the 06 frame). */}
       {label ? (
         /* self-start: as a grid child this would stretch to the row height,
@@ -1039,7 +1070,45 @@ function EntryBlock({
           </>
         )}
       </div>
+        </div>
+      </div>
     </article>
+  );
+  if (withinDeck) return article;
+  return (
+    <div data-truth-slide-runway className="relative">
+      {article}
+    </div>
+  );
+}
+
+/** One viewport surface whose related records read on a single inner track. */
+function CombinedEntryDeck({
+  entries,
+  label,
+  ground,
+}: {
+  entries: TruthEntry[];
+  label: string;
+  ground: BandId;
+}) {
+  return (
+    <div data-truth-slide-runway className="relative">
+      <section
+        data-truth-slide
+        data-truth-slide-label={label}
+        data-truth-ground={ground}
+        className="relative"
+      >
+        <div data-truth-deck-viewport>
+          <div data-truth-deck-track>
+            {entries.map((entry) => (
+              <EntryBlock key={entry.title} entry={entry} withinDeck />
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -1047,10 +1116,12 @@ function EntryBlock({
  * An era's full-viewport ENTRY plate — beats 04 (TODAY, 1440×900) and
  * 09 (2026, 1440×1044) of the hi-fi (2026-09-02): a photograph full-bleed
  * under a bottom-weighted scrim, gold eyebrow, optional burnt kicker, and
- * the entry title at Heading/64. The image pushes in 1.06→1.00 on entry
- * ([data-v2-plate], scrubbed — same family as the hero settle). `deep`
+ * the entry title at Heading/64. The image pushes in 1.00→1.06 on entry
+ * ([data-v2-plate], scrubbed). `deep`
  * deepens the scrim where the plate carries copy (the 09 spec); children
- * render below the title for plates that hold the whole entry.
+ * render below the title for plates that hold the whole entry. TODAY passes
+ * `deckContent`: its original record layout rises from below as an evergreen
+ * cover, Wave / Divider on its leading edge, while the plate stays untouched.
  */
 function EntryPlate({
   id,
@@ -1060,6 +1131,7 @@ function EntryPlate({
   title,
   deep,
   children,
+  deckContent,
 }: {
   id?: string;
   slot: MediaSlot;
@@ -1068,50 +1140,80 @@ function EntryPlate({
   title: string;
   deep?: boolean;
   children?: React.ReactNode;
+  deckContent?: React.ReactNode;
 }) {
+  const hasDeckContent = Boolean(deckContent);
   return (
-    <section id={id} className="relative flex min-h-svh items-end overflow-hidden">
-      <div
-        data-v2-plate
-        data-motion={MOTION_GRADE[slot.bucket]}
-        className="absolute inset-0"
-      >
-        <MediaOrField
-          src={presentSrc(slot.src)}
-          alt={slot.expects}
-          sizes={COVER_FULL_BLEED}
-          quality={85}
-          className="object-cover"
-          fieldClass={FIELD_CLASS[slot.tone]}
-        />
-      </div>
-      {/* The spec's scrim — bottom-weighted, never opaque at the crown. */}
-      <div
-        aria-hidden
-        className={`absolute inset-0 bg-linear-to-b ${
-          deep
-            ? "from-black/0 via-black/40 to-black/85"
-            : "from-black/0 via-black/35 to-black/80"
-        }`}
-      />
-      <div
-        data-descent-arrive
-        className={`relative z-10 mx-auto w-full max-w-6xl px-6 lg:px-24 ${
-          deep ? "pb-[24svh]" : "pb-[16svh]"
+    <div data-truth-slide-runway className="relative">
+      <section
+        id={id}
+        data-truth-slide
+        data-truth-slide-label={title}
+        data-truth-ground={id === "deed" ? "return" : "present"}
+        className={`relative min-h-svh overflow-hidden ${
+          hasDeckContent ? "" : "flex items-end"
         }`}
       >
-        <p className="eyebrow text-lg text-gold sm:text-2xl">{eyebrow}</p>
-        {kicker ? <p className="eyebrow mt-1 text-burnt sm:text-base">{kicker}</p> : null}
-        <SplitReveal
-          as="h2"
-          mode="lines"
-          className="headline mt-6 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl"
+        <div
+          data-v2-plate
+          data-motion={MOTION_GRADE[slot.bucket]}
+          className="absolute inset-0 overflow-hidden"
         >
-          {title}
-        </SplitReveal>
-        {children}
-      </div>
-    </section>
+          <MediaOrField
+            src={presentSrc(slot.src)}
+            alt={slot.expects}
+            sizes={COVER_FULL_BLEED}
+            quality={85}
+            className="object-cover"
+            fieldClass={FIELD_CLASS[slot.tone]}
+          />
+          {/* The spec's scrim remains part of the untouched plate while the
+              incoming record covers both image and copy from below. */}
+          <div
+            aria-hidden
+            className={`absolute inset-0 bg-linear-to-b ${
+              deep
+                ? "from-black/0 via-black/40 to-black/85"
+                : "from-black/0 via-black/35 to-black/80"
+            }`}
+          />
+        </div>
+        <div
+          data-descent-arrive
+          data-truth-wave-heading={hasDeckContent ? true : undefined}
+          className={`mx-auto w-full max-w-6xl px-6 lg:px-24 ${
+            hasDeckContent
+              ? "absolute inset-x-0 bottom-[16svh] z-10"
+              : `relative z-30 ${deep ? "pb-[24svh]" : "pb-[16svh]"}`
+          }`}
+        >
+          <p className="eyebrow text-lg text-gold sm:text-2xl">{eyebrow}</p>
+          {kicker ? (
+            <p className="eyebrow mt-1 text-burnt sm:text-base">{kicker}</p>
+          ) : null}
+          <h2
+            data-descent-heading
+            className="headline mt-6 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl"
+          >
+            {title}
+          </h2>
+          {children}
+        </div>
+        {deckContent ? (
+          <div data-truth-deck-viewport className="relative z-20">
+            <div data-truth-deck-track className="pt-[100svh]">
+              <div className="relative bg-evergreen">
+                <WaveDivider
+                  ground="var(--color-evergreen)"
+                  hook="today-wave"
+                />
+                <div>{deckContent}</div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </section>
+    </div>
   );
 }
 
@@ -1152,6 +1254,7 @@ export function EraSection({
      ALL OF THIS WAS UNDER WATER as the seabed entry's burnt kicker. */
   const isBeginning = era.id === "beginning";
   const foldsEra = foldsTitleIntoEntry || isOlderThanRecord || isBeginning;
+  const combinesAheadDeck = era.id === "research";
   /**
    * The Today era opens on its ENTRY plate (04, 1440×900 spec): the era
    * marker, title and lead-entry headline all live on the plate, so the
@@ -1163,24 +1266,22 @@ export function EraSection({
        Bought back section as prependEntries so the descent stays in order. */
     const [lead] = era.entries;
     return (
-      <>
-        <EntryPlate
-          id={era.id}
-          slot={truthTodayPlateSlot}
-          eyebrow={
-            <>
-              {era.marker} &middot; {lead.when}
-            </>
-          }
-          kicker={era.title}
-          title={lead.title}
-        />
-        <section className="mx-auto max-w-6xl px-6 py-20 lg:px-24">
-          <div>
-            <EntryBlock entry={lead} titleOnPlate />
+      <EntryPlate
+        id={era.id}
+        slot={truthTodayPlateSlot}
+        eyebrow={
+          <>
+            {era.marker} &middot; {lead.when}
+          </>
+        }
+        kicker={era.title}
+        title={lead.title}
+        deckContent={
+          <div className="mx-auto max-w-6xl px-6 lg:px-24">
+            <EntryBlock entry={lead} titleOnPlate withinDeck />
           </div>
-        </section>
-      </>
+        }
+      />
     );
   }
 
@@ -1192,6 +1293,11 @@ export function EraSection({
    */
   if (era.entries[0]?.id === "deed") {
     const [deed, ...rest] = era.entries;
+    const orderedEntries = [...(prependEntries ?? []), ...rest];
+    const studyPair = orderedEntries.filter(
+      (entry) =>
+        entry.id === "study-2022" || entry.id === "research-discovery",
+    );
     return (
       <>
         <EntryPlate
@@ -1223,10 +1329,8 @@ export function EraSection({
             </div>
           ) : null}
         </EntryPlate>
-        {/* The 10 frame sets this ground at Roasted Brown (#4E3524) outright —
-            painted here so it holds regardless of where the descent's
-            cross-fade stands when the reader arrives. */}
-        <section className="relative overflow-hidden bg-roasted">
+        {/* The 10 frame owns its Roasted Brown (#4E3524) ground outright. */}
+        <section className="relative overflow-clip bg-roasted">
           {/* The 06 frame's PENDING-MOTIF — Artwork Ring A (Marc's Wonder
               footer spiral, 349:3461), static behind the copy. Its 0.14 ×
               0.08 opacity is baked into the delivered cut. Spec position:
@@ -1240,19 +1344,34 @@ export function EraSection({
             loading="lazy"
           />
           <div className="relative mx-auto max-w-6xl px-6 py-20 lg:px-24">
-            {[...(prependEntries ?? []), ...rest].map((entry) => (
-              <EntryBlock
-                key={entry.title}
-                entry={entry}
-                gutterSub={
-                  entry.id === "renamed" ||
-                  entry.id === "just-us" ||
-                  entry.id === "father"
-                    ? era.title
-                    : undefined
-                }
-              />
-            ))}
+            {orderedEntries.map((entry) => {
+              if (entry.id === "research-discovery" && studyPair.length === 2) {
+                return null;
+              }
+              if (entry.id === "study-2022" && studyPair.length === 2) {
+                return (
+                  <CombinedEntryDeck
+                    key="study-and-discovery"
+                    entries={studyPair}
+                    label="The site is studied with its owners and Research & discovery"
+                    ground="return"
+                  />
+                );
+              }
+              return (
+                <EntryBlock
+                  key={entry.title}
+                  entry={entry}
+                  gutterSub={
+                    entry.id === "renamed" ||
+                    entry.id === "just-us" ||
+                    entry.id === "father"
+                      ? era.title
+                      : undefined
+                  }
+                />
+              );
+            })}
           </div>
         </section>
       </>
@@ -1264,19 +1383,19 @@ export function EraSection({
           trail rail now (2026-09-02) — repeating them here doubled the
           timeline and crowded the gutter the rail moved into. */}
       {foldsEra || eraTitleInGutter ? null : (
-        <SplitReveal
-          as="h2"
-          mode="lines"
+        <h2
+          data-descent-heading
           className="headline mt-4 max-w-3xl text-3xl text-canvas sm:text-5xl"
         >
           {era.title}
-        </SplitReveal>
+        </h2>
       )}
       <div className="mt-12">
         {era.entries.map((entry, index) => (
           <EntryBlock
             key={entry.title}
             entry={entry}
+            withinDeck={combinesAheadDeck}
             /* 17 · OLDER THAN THE RECORD folds the era the same way as
                Ahead: the marker (with the dating line under it) in the
                gutter, CUT INTO THE WALL as the burnt kicker. */
@@ -1296,10 +1415,29 @@ export function EraSection({
       </div>
     </div>
   );
+  if (combinesAheadDeck) {
+    return (
+      <div data-truth-slide-runway className="relative">
+        <section
+          data-truth-slide
+          data-truth-slide-label="What is being built and Work with us"
+          data-truth-ground="present"
+          className="relative"
+        >
+          {/* The wave belongs to the incoming Ahead deck, so its crest stays
+              attached while the hero is pinned. The gated deck scrubs the
+              shared About ink over the final 20vh before the buffer. */}
+          <WaveDivider ground="var(--color-evergreen)" hook="truth-wave" />
+          <div data-truth-deck-viewport>
+            <div data-truth-deck-track>{inner}</div>
+          </div>
+        </section>
+      </div>
+    );
+  }
   if (titleInGutter) {
-    /* The 13 frame paints this ground outright: Roasted Brown (#4E3524)
-       under a 0.34 dim — "the light is going out of this band" — so it holds
-       regardless of where the descent's cross-fade stands on arrival. */
+    /* The 13 frame keeps the shared Roasted Brown (#4E3524) ground and adds
+       its local 0.34 dim — "the light is going out of this band". */
     return (
       <section id={era.id} className="relative bg-roasted">
         <div aria-hidden className="absolute inset-0 bg-[rgba(9,14,18,0.34)]" />
@@ -1309,7 +1447,7 @@ export function EraSection({
   }
   if (isOlderThanRecord) {
     return (
-      <section id={era.id} className="relative overflow-hidden pb-16 sm:pb-28">
+      <section id={era.id} className="relative overflow-clip pb-16 sm:pb-28">
         {/* ⚠ PENDING-MOTIF · Artwork Ring A — static, deliberately behind the
             copy. Spec: x900 y70 of the 1440 frame, 416px wide, 0.12 over the
             0.08 fill. The delivered cut bakes 0.14 × 0.08, so it is dimmed to
@@ -1330,8 +1468,7 @@ export function EraSection({
     );
   }
   if (isBeginning) {
-    /* The 19 frame paints this ground outright: Charcoal Black (#090E12),
-       so it holds regardless of where the descent's cross-fade stands. */
+    /* The 19 frame owns the incoming Charcoal Black (#090E12) ground. */
     return (
       <section id={era.id} className="relative bg-charcoal">
         {inner}
@@ -1358,9 +1495,20 @@ export function EraSection({
  */
 const SUZANNE_WITHHELD = true;
 
-export function SuzanneBand() {
-  return (
-    <div id="the-count" className="relative overflow-hidden bg-charcoal">
+export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
+  const content = (
+      <div
+        id="the-count"
+        data-descent-band={withinDeck ? "count" : undefined}
+        {...(withinDeck
+          ? {}
+          : {
+              "data-truth-slide": true,
+              "data-truth-slide-label": "The count",
+              "data-truth-ground": "count",
+            })}
+        className="relative overflow-hidden bg-charcoal"
+      >
       {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B, static, behind
           the copy. Spec: x900 y90 of the 1440 frame, 465 wide, 0.1 — the
           delivered cut is off-white; the opacity is applied here. */}
@@ -1372,6 +1520,8 @@ export function SuzanneBand() {
         className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
         loading="lazy"
       />
+      <div {...(withinDeck ? {} : { "data-truth-deck-viewport": true })}>
+        <div {...(withinDeck ? {} : { "data-truth-deck-track": true })}>
       <div className="relative mx-auto max-w-6xl px-6 lg:px-24">
         {/* The 15 frame's head: era at Eyebrow/Section-24 in off-white on
             the gutter line, the title at Display/96 in Rust Red — the only
@@ -1414,7 +1564,7 @@ export function SuzanneBand() {
             <div className="flex min-h-[100svh] flex-col justify-center py-24 md:pl-[calc(180px+3rem)]">
               <dl className="space-y-16">
                 {suzanne.figures.map((figure) => (
-                  <div key={figure.year} data-v2-count className="max-w-3xl">
+                  <div key={figure.year} className="max-w-3xl">
                     <dt className="headline text-7xl text-canvas sm:text-9xl">
                       {figure.year}
                     </dt>
@@ -1478,6 +1628,7 @@ export function SuzanneBand() {
       <svg
         aria-hidden
         data-count-wave
+        data-descent-wave
         viewBox="0 0 1442 151"
         preserveAspectRatio="none"
         className="block h-16 w-full sm:h-28"
@@ -1487,6 +1638,15 @@ export function SuzanneBand() {
           className="fill-midnight"
         />
       </svg>
+        </div>
+      </div>
+      </div>
+  );
+  return withinDeck ? (
+    content
+  ) : (
+    <div data-truth-slide-runway className="relative">
+      {content}
     </div>
   );
 }
@@ -1512,13 +1672,24 @@ const WAVE_FILL: Record<string, string> = {
  * the parent must be `relative`. The breaks (08, 14) and the deep-time
  * hand-off after Open research (the CHARCOAL divider at 16236) all use it.
  */
-export function HandoffWave({ to }: { to: keyof typeof WAVE_FILL }) {
+export function HandoffWave({
+  to,
+  placement = "trailing",
+}: {
+  to: keyof typeof WAVE_FILL;
+  placement?: "leading" | "trailing";
+}) {
   return (
     <svg
       aria-hidden
+      data-descent-wave
       viewBox="0 0 1442 151"
       preserveAspectRatio="none"
-      className="pointer-events-none absolute inset-x-0 bottom-0 h-16 w-full sm:h-28"
+      className={`pointer-events-none absolute inset-x-0 h-16 w-full sm:h-28 ${
+        placement === "leading"
+          ? "top-0 -translate-y-[calc(100%-1px)]"
+          : "bottom-0"
+      }`}
     >
       <path
         d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
@@ -1539,10 +1710,15 @@ export function FullBleedBreak({
 }) {
   const slot = truthBreakMedia[which];
   return (
-    <section
-      id={truthBreaks[which].id}
-      className="relative min-h-[80svh] overflow-hidden"
-    >
+    <div data-truth-slide-runway className="relative">
+      <section
+        id={truthBreaks[which].id}
+        data-truth-slide
+        data-truth-slide-label={truthBreaks[which].id}
+        data-v2-camera
+        data-motion={MOTION_GRADE[slot.bucket]}
+        className="relative min-h-[80svh] overflow-hidden"
+      >
       <MediaOrField
         src={slot.src}
         alt={truthBreaks[which].alt}
@@ -1556,7 +1732,8 @@ export function FullBleedBreak({
         className="absolute inset-0 bg-linear-to-b from-charcoal/40 via-transparent to-charcoal/40"
       />
       {waveTo ? <HandoffWave to={waveTo} /> : null}
-    </section>
+      </section>
+    </div>
   );
 }
 
@@ -1570,16 +1747,20 @@ export function FullBleedBreak({
  * While shot B is undelivered A holds at full: [data-v2-dissolve] is only
  * set when there is something to dissolve TO. Country bucket only (R10).
  */
-export function DissolveBreak() {
+export function DissolveBreak({ deckContent }: { deckContent?: React.ReactNode }) {
   const { outgoing, incoming } = truthDissolveMedia;
   const incomingSrc = presentSrc(incoming.src);
+  const hasDeckContent = Boolean(deckContent);
   return (
-    <section
-      id={truthBreaks.escarpment.id}
-      /* The frame's 900 on 1440 — the break keeps that proportion rather
-         than a viewport-height minimum, so it never towers on a wide screen. */
-      className="relative h-[62.5vw] min-h-[24rem] overflow-hidden"
-    >
+    <div data-truth-slide-runway className="relative">
+      <section
+        id={truthBreaks.escarpment.id}
+        data-truth-slide
+        data-truth-slide-label={truthBreaks.escarpment.id}
+        /* The frame's 900 on 1440 — the break keeps that proportion rather
+           than a viewport-height minimum, so it never towers on a wide screen. */
+        className="relative h-[62.5vw] min-h-[24rem] overflow-hidden"
+      >
       <div
         data-v2-plate
         data-motion={MOTION_GRADE[incoming.bucket]}
@@ -1610,8 +1791,23 @@ export function DissolveBreak() {
         aria-hidden
         className="absolute inset-0 bg-linear-to-b from-black/0 via-black/18 to-black/40"
       />
-      <HandoffWave to="charcoal" />
-    </section>
+      {hasDeckContent ? (
+        <div data-truth-deck-viewport className="relative z-20">
+          <div data-truth-deck-track className="pt-[100svh]">
+            <div className="relative bg-charcoal">
+              {/* The divider belongs to the incoming count ground. Riding
+                  this translated panel makes it close the image window in
+                  exactly the same way as TODAY's evergreen cover. */}
+              <HandoffWave to="charcoal" placement="leading" />
+              {deckContent}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <HandoffWave to="charcoal" />
+      )}
+      </section>
+    </div>
   );
 }
 
@@ -1639,45 +1835,29 @@ export function GoldTrail({ variant = "wave" }: { variant?: "wave" | "trail" }) 
 
 /**
  * The floor. Below the seabed, closing the descent — see the wattanuri note
- * in src/content/truth.ts. Still, like the testimony: the band that has run
- * beside the reader the whole way down does not need an entrance.
- */
-/**
- * 20 · UNDERNEATH ALL OF IT — DISSOLVE PAIR (2026-09-03): the descent ends,
- * looking up. Shot B beneath is the opening shot returning (the hero frame);
- * shot A, the dusk plains, dissolves 1 → 0 across the band's travel
- * ([data-v2-dissolve]). Bottom-weighted scrim 0 → .387 → .86. The copy sits
- * at the gutter's left edge, not the entry column. Text still — no arrive.
+ * in src/content/truth.ts. Still, like the testimony: one authored closing
+ * shot, no return to the hero, dissolve, push, fade or entrance.
+ *
+ * 20 · UNDERNEATH ALL OF IT. Bottom-weighted scrim 0 → .387 → .86. The copy
+ * sits at the gutter's left edge, not the entry column and carries no M1.
  *
  * The "consequence line" is spec, not draft: the frame flags it
  * [ SPEC — COPY NOT COMMISSIONED ] and so does the page — an editorial note,
  * never prose (the EditorialNote rule).
  */
 export function WattanuriBand() {
-  const { outgoing, incoming } = truthWattanuriMedia;
-  const incomingSrc = presentSrc(incoming.src);
+  const { outgoing } = truthWattanuriMedia;
   return (
-    <section
-      id={wattanuri.id}
-      className="relative flex min-h-svh items-end overflow-hidden"
-    >
-      <div
-        data-v2-plate
-        data-motion={MOTION_GRADE[incoming.bucket]}
-        className="absolute inset-0"
+    <div data-truth-slide-runway className="relative">
+      <section
+        id={wattanuri.id}
+        data-truth-slide
+        data-truth-slide-label={wattanuri.title}
+        data-truth-ground="deep-time"
+        data-v2-static
+        className="relative flex min-h-svh items-end overflow-hidden"
       >
-        <MediaOrField
-          src={incomingSrc}
-          alt=""
-          sizes={COVER_TALL_BLEED}
-          quality={85}
-          fieldClass={FIELD_CLASS[incoming.tone]}
-        />
-      </div>
-      <div
-        {...(incomingSrc ? { "data-v2-dissolve": true } : {})}
-        className="absolute inset-0"
-      >
+      <div className="absolute inset-0">
         <MediaOrField
           src={presentSrc(outgoing.src)}
           alt={outgoing.expects}
@@ -1692,6 +1872,8 @@ export function WattanuriBand() {
       />
       {/* pb clears the footer's burnt crest (13.9vw), which rides the foot of
           this photograph — the page root is pulled up under it. */}
+      <div data-truth-deck-viewport className="relative z-10">
+        <div data-truth-deck-track>
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-[calc(12svh+14vw)] pt-[36svh] lg:px-24">
         <p className="eyebrow text-lg text-gold sm:text-2xl">{wattanuri.marker}</p>
         <h2 className="headline mt-4 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl">
@@ -1714,7 +1896,9 @@ export function WattanuriBand() {
           {wattanuri.cta.label} &rarr;
         </Link>
       </div>
-    </section>
+        </div>
+      </div>
+      </section>
+    </div>
   );
 }
-
