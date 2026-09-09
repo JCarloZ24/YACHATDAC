@@ -1,7 +1,6 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { ReactNode } from "react";
-import Link from "next/link";
 import {
   documents,
   knowledgeGaps,
@@ -17,6 +16,8 @@ import {
   recordPortalMedia,
 } from "@/content/record-media";
 import { RecordPortalMotion } from "./PortalMotion";
+import { RecordLoadingCover } from "./LoadingCover";
+import { RecordPatternMotion } from "./PatternMotion";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import { RecordSignup } from "./Signup";
 import { EditorialNote } from "@/components/ui/EditorialNote";
@@ -92,26 +93,28 @@ export function presentSrc(src: string | null): string | null {
 export function RecordHeroV2() {
   const maskSrc = presentSrc(recordPortalMedia.mask);
   const stoneSrc = presentSrc(recordPortalMedia.wall.src);
-  const previews = recordPortalMedia.previewSlugs.flatMap((slug) => {
+  const stencilSrc = presentSrc(recordPortalMedia.stencilSheet);
+  const previews = recordPortalMedia.previewSlugs.flatMap((slug, portalSlot) => {
     const item = recordItems.find((entry) => entry.slug === slug);
-    return item ? [item] : [];
+    return item ? [{ ...item, portalSlot }] : [];
   });
 
   return (
-    <header data-record-portal className="record-portal">
+    <>
+    <RecordLoadingCover />
+    <header data-record-portal data-portal-state="loading" data-portal-progress="0" className="record-portal">
       <div data-portal-stage className="record-portal-stage">
-        {/* Accessible links and optimised image sources back the WebGL planes.
-            The renderer projects their hit areas as the camera approaches;
-            the full catalogue is always reachable with the skip link. */}
-        <div data-portal-gallery className="record-portal-gallery" inert>
+        {/* F8, 2026-09-08: hidden image sources and sizing guides for canvas-only
+            fly-through pictures. Article links remain in the static catalogue. */}
+        <div data-portal-gallery className="record-portal-gallery" aria-hidden="true" inert>
           {previews.map((item) => {
             const slot = recordCardMedia[item.slug];
             return (
-              <Link
+              <div
                 data-portal-card
+                data-portal-slot={item.portalSlot}
+                data-portal-position={(item.portalSlot % 5) + 1}
                 key={item.slug}
-                href={`/the-record/${item.slug}`}
-                aria-label={item.title}
                 className="record-portal-card"
               >
                 <div
@@ -125,15 +128,7 @@ export function RecordHeroV2() {
                     fieldClass="bg-roasted"
                   />
                 </div>
-                <div data-portal-caption className="record-portal-card-caption">
-                  <p className="eyebrow text-xs leading-[1.4] tracking-[0.06em] text-gold">
-                    {item.type}
-                  </p>
-                  <span className="text-sm leading-[1.4] lg:text-base">
-                    {item.title}
-                  </span>
-                </div>
-              </Link>
+              </div>
             );
           })}
         </div>
@@ -142,7 +137,11 @@ export function RecordHeroV2() {
           className="record-portal-wall bg-roasted"
           aria-hidden="true"
         />
-        <RecordPortalMotion maskSrc={maskSrc} stoneSrc={stoneSrc} />
+        <RecordPortalMotion
+          maskSrc={maskSrc}
+          stoneSrc={stoneSrc}
+          stencilSrc={stencilSrc}
+        />
         <div
           data-portal-copy
           className="record-portal-scrim"
@@ -176,6 +175,7 @@ export function RecordHeroV2() {
         </div>
       </div>
     </header>
+    </>
   );
 }
 
@@ -196,7 +196,7 @@ export function KnowledgeGapsV2() {
           it. Clip the artwork here instead, so the section stays open and
           the wave survives. `inset-0` keeps the artwork's percentage
           anchoring resolving against the same box it did before. */}
-      <div aria-hidden className="absolute inset-0 overflow-hidden">
+      <RecordPatternMotion>
         {/* 13% / 15% are the Figma node opacities and the scene note's own
             figures. The assets already carry the artist's 8% inside the
             `rings` group, so these are the wrapper values, not the effective
@@ -209,7 +209,7 @@ export function KnowledgeGapsV2() {
           piece="b"
           className="top-[28%] left-[61%] h-[910px] w-225 opacity-[0.15]"
         />
-      </div>
+      </RecordPatternMotion>
 
       <div className="relative mx-auto w-full max-w-[1440px] px-6 py-24 lg:px-25">
         <p className="eyebrow text-lg text-gold sm:text-eyebrow-hero">

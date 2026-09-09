@@ -255,6 +255,7 @@ export const recordHero = {
 /** Interface copy for the user's SCR-11 opening, 2026-09-08 (F7/F8).
  * Recorded alongside the source draft under its interface amendment (D5). */
 export const recordPortalCopy = {
+  loading: "Loading the record",
   scroll: "Scroll into the record",
   skip: "Skip to the record",
 } as const;

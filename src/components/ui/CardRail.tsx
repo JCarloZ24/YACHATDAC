@@ -1,5 +1,6 @@
 import { Children } from "react";
 import type { ReactNode } from "react";
+import { SliderDots } from "./SliderDots";
 
 /**
  * One row of cards: a swipe rail on a phone, the house grid from `sm` up.
@@ -10,12 +11,17 @@ import type { ReactNode } from "react";
  * (2026-09-05). From 640 up nothing changes — the same grid, the same
  * columns, the same gaps as before.
  *
- * ⚠ NO JAVASCRIPT. All three pages are static by decision. This is native
- * touch scrolling and CSS scroll-snap only: no drag handler, no dots, no
- * arrows, no scroll listener. It renders and works identically with JS off,
+ * ⚠ NO JAVASCRIPT IN THE MECHANISM. The row itself is native touch scrolling
+ * and CSS scroll-snap only: no drag handler, no arrows, no scroll listener on
+ * the scroller's own behaviour. It renders and works identically with JS off,
  * which is why it is NOT built on `RangerCarousel` — that component's CSS
  * idioms are borrowed here (`living-work/…:333, 336`), its GSAP Draggable is
- * not.
+ * not. The three static-by-decision pages ship exactly this and nothing else.
+ *
+ * The one addition is `dots`, added 9 Sep 2026 for /wonder alone. It is
+ * additive and opt-in: the dots indicate and shortcut, they are never the
+ * mechanism, and with JS off the row still scrolls and snaps as before. See
+ * the prop, and ui/SliderDots.
  *
  * ⚠ NOT `touch-pan-y`. RangerCarousel carries it because Draggable owns the
  * X axis there. Here it would forbid the native horizontal pan and the rail
@@ -45,10 +51,11 @@ import type { ReactNode } from "react";
  * card one flush to the viewport edge and eat the gutter. `overscroll-x-contain`
  * stops an over-swipe from triggering the browser's back gesture.
  *
- * THE PEEK IS THE AFFORDANCE. `w-[78vw]` leaves 42px of the next card visible
- * at 375 and 46px at 390 — against a 24px corner radius, so what shows is
- * plainly a second plate and not a rendering artefact. There are no dots,
- * because dots would need JavaScript to track a position.
+ * THE PEEK IS THE AFFORDANCE, unless `dots` says otherwise. `w-[78vw]` leaves
+ * 42px of the next card visible at 375 and 46px at 390 — against a 24px corner
+ * radius, so what shows is plainly a second plate and not a rendering
+ * artefact. Under `dots` the card takes the full width instead and the dots
+ * carry the affordance, which is what the Wonder frames draw.
  *
  * NOT CONVERTED: `the-record/_components/Sections.tsx` has a fifth row with
  * the identical grid, but it is a `ul`/`li` carrying `data-record-arrive` and
@@ -61,6 +68,7 @@ export function CardRail({
   className = "",
   label,
   bleed = "-mx-6 px-6 scroll-px-6",
+  dots = false,
   children,
 }: {
   /**
@@ -98,12 +106,24 @@ export function CardRail({
    */
   bleed?: string;
   /**
+   * Show the frame's slider dots under the row on a phone, and give each card
+   * the full container width instead of the 78vw peek.
+   *
+   * OPT-IN, AND ONLY /wonder PASSES IT. The peek was chosen over dots on
+   * 2026-09-05 (Ivy) because it needs no JavaScript; that is still right for
+   * the pages that are static by decision, and they are unchanged. The Wonder
+   * frames draw a one-card slider with dots (2576:24656, 2576:22542) and
+   * August asked for it on 9 Sep 2026. Requires `label`, which names the row
+   * for a screen reader.
+   */
+  dots?: boolean;
+  /**
    * ONE element per card. A fragment counts as a single child and would put
    * two cards in one rail cell.
    */
   children: ReactNode;
 }) {
-  return (
+  const rail = (
     <div
       {...(label
         ? { tabIndex: 0, role: "group", "aria-label": label }
@@ -121,10 +141,28 @@ export function CardRail({
           desktop rendering — and `display: contents` on an `li` is the one
           case with lingering list-semantics bugs. */}
       {Children.map(children, (card) => (
-        <div className="w-[78vw] shrink-0 snap-start sm:contents [&>*]:h-full sm:[&>*]:h-auto">
+        /* Literal both ways — Tailwind cannot see a computed class. `w-full`
+           is the frame's one-card slider (100% of the scroller's content box,
+           which the bleed makes exactly the container); `w-[78vw]` is the
+           peek. */
+        <div
+          className={`${dots ? "w-full" : "w-[78vw]"} shrink-0 snap-start sm:contents [&>*]:h-full sm:[&>*]:h-auto`}
+        >
           {card}
         </div>
       ))}
+    </div>
+  );
+
+  if (!dots) return rail;
+
+  // The frame seats the dots 24 under the card row (Column bottom 471 → Dots
+  // 495 on Highlights, 407 → 431 on Where you sleep), which is the `gap-6`
+  // the sections already use between their own blocks.
+  return (
+    <div className="flex flex-col gap-6">
+      {rail}
+      <SliderDots count={Children.count(children)} label={label ?? "Cards"} />
     </div>
   );
 }

@@ -1,5 +1,18 @@
 # Homepage — draft copy v3
 
+*Last updated: 9 September 2026*
+
+**Painting text amendment ? 9 September 2026:** the screenshot sequence adds ?You are entering?, then ?Turraburra? at the upper left, followed by ?Story held in stone and starlight? at the lower right while the painting reveals. These are display excerpts; the complete hero paragraph remains unchanged.
+
+
+**Interface amendment — 8 September 2026:** the user-requested one-second
+homepage loading prototype shows a percentage only. Its accessible label is
+“Loading homepage”. This is timed intro progress, not measured asset loading.
+
+**Hero interface amendment — 8 September 2026:** the screenshot's “Scroll”
+label links to Wonder. The collage hero retains the headline and paragraph
+below verbatim; only their layout and timed entrance change.
+
 > **Page:** Homepage · **Version:** v3 · **State:** draft ·
 > **Governance circle:** open
 >
@@ -206,3 +219,6 @@ Whether you come here in person or arrive on this page, you are welcome.
 © YACHATDAC · Privacy Policy · Terms of Service · Cookie Settings ICN [ number ] · ABN [ number ]
 
 > [ Confirm spelling: Yambangku or Yumbangku. ]
+
+
+**Home Truth timeline, 9 September 2026 (user direction):** Figma Homepage Prototype frames 3371:45208, 45418, 45628, 45839, 46050, 46261 and 46472 supply display years 1861, 1871, 1881, 1891, 1896, 1902 and 2026 respectively. These are prototype labels, not newly researched dates. Draft wording remains authoritative: the Landsborough sentence retains "Iningai Country" where Figma says "our Country".

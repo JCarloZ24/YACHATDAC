@@ -240,17 +240,53 @@ export function composition(
       // Entry motion gets its own trigger: starts a little before the screen
       // is centred, plays once, never reverses.
       let entryTl: gsap.core.Timeline | null = null;
+      let entryTrigger: ScrollTrigger | null = null;
       if (spec.enter) {
-        entryTl = gsap.timeline({
-          scrollTrigger: { trigger: root, start: spec.enterStart ?? "top 82%", once: true },
-        });
+        /**
+         * A PAUSED TIMELINE PLAYED BY ITS OWN TRIGGER (9 Sep 2026).
+         *
+         * This used to be `gsap.timeline({ scrollTrigger: {...} })`. Built
+         * inside a `matchMedia` context on a long page it silently never
+         * played: every entry screen on /wonder sat at its `from` state —
+         * headings invisible, cards frozen at 0.7 scale — while the scrubbed
+         * work on the same page ran perfectly. An explicit trigger with an
+         * explicit `play()` does not depend on how the attached-trigger path
+         * resolves inside a context, and it is easier to read besides.
+         *
+         * CONTENT MUST NEVER BE LEFT INVISIBLE. Entry effects are `from`
+         * tweens, so building one immediately writes opacity 0 and the copy
+         * is hidden until the timeline plays. That is right while the screen
+         * is below the fold and wrong the moment it is already above it: a
+         * reader landing on `/wonder#experience`, following a nav link into
+         * the middle of the page, or restoring a scroll position on reload
+         * jumps clean past the trigger. So on every refresh, if the page is
+         * already past the start, the entry is completed rather than waited
+         * for — the arrival has been missed, the content has not.
+         */
+        entryTl = gsap.timeline({ paused: true });
         spec.enter(entryTl, root);
+        entryTrigger = ScrollTrigger.create({
+          trigger: root,
+          start: spec.enterStart ?? "top 82%",
+          // NOT `once`. A one-shot trigger that misses its crossing — a fast
+          // scroll, a refresh landing mid-flight, a section whose height
+          // changed under it — kills itself having never played, and the
+          // screen keeps its `from` state for good. This trigger stays alive
+          // and every later crossing simply asks the timeline to play again,
+          // which for a finished timeline costs nothing.
+          onEnter: () => entryTl?.play(),
+          onEnterBack: () => entryTl?.play(),
+          onRefresh: (self) => {
+            if (self.scroll() >= self.start) entryTl?.progress(1);
+          },
+        });
       }
 
       assertChannel(name, spec, spec.uses);
 
       return () => {
         tl.kill();
+        entryTrigger?.kill();
         entryTl?.kill();
       };
     };

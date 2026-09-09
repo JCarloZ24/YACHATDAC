@@ -17,6 +17,7 @@ import {
   wonderStories,
 } from "@/content/wonder";
 import {
+  hostsPeople,
   hostsSlot,
   stayStageMedia,
   turraburraSlot,
@@ -36,8 +37,10 @@ import {
   WaveDivider,
 } from "@/components/ui/Furniture";
 import { HeroVideo } from "./HeroVideo";
+import { HostNames } from "./HostNames";
 import { FactsMap, RouteMap } from "./RouteMap";
 import { factsMapMarkup, routeMapMarkup } from "./route-map-markup";
+import itineraryStyles from "./Itinerary.module.css";
 
 /**
  * /wonder — the markup, built to `01 · Wonder · HI-FI · Desktop`
@@ -101,11 +104,13 @@ function Slot({
   slot,
   sizes,
   priority = false,
+  quality,
   className = "object-cover",
 }: {
   slot: MediaSlot;
   sizes: string;
   priority?: boolean;
+  quality?: number;
   className?: string;
 }) {
   return (
@@ -114,6 +119,7 @@ function Slot({
       alt={slot.expects}
       sizes={sizes}
       priority={priority}
+      quality={quality}
       className={className}
       fieldClass={FIELD_CLASS[slot.tone]}
     />
@@ -236,7 +242,10 @@ export function WonderHero() {
        facts section — wave first — scrolls up over it. Sticky makes its own
        stacking context, so the copy and sound button stay inside the hero
        and every later section, being positioned, paints on top. */
-    <header className="sticky top-0 flex min-h-svh items-end overflow-hidden bg-roasted">
+    <header
+      data-wonder="hero"
+      className="sticky top-0 flex min-h-svh items-end overflow-hidden bg-roasted"
+    >
       <div className="absolute inset-0">
         {film && poster ? (
           <HeroVideo
@@ -256,13 +265,16 @@ export function WonderHero() {
       {/* X5 — copy sits on media. Foot-weighted, never opaque. */}
       <div
         aria-hidden
+        data-wonder-scrim
         className="absolute inset-0 bg-linear-to-t from-charcoal/70 via-charcoal/20 to-charcoal/10"
       />
       <div className={`relative z-10 w-full pb-24 lg:pb-[120px] ${GUTTER}`}>
         <Container>
           <div className="flex w-[900px] max-w-full flex-col gap-5 text-canvas lg:gap-6">
             <p className={H5}>{wonderHero.eyebrow}</p>
-            <h1 className={H1}>{wonderHero.title}</h1>
+            <h1 data-wonder-title className={H1}>
+              {wonderHero.title}
+            </h1>
           </div>
         </Container>
       </div>
@@ -284,9 +296,12 @@ export function WonderFacts() {
     /* At 1440 the section is a sticky span (the D4 lab's shape): 220vh of
        scroll with the screen held inside it while the map draws. The phone
        keeps its flow — the stacked layout is taller than a screen. */
+    /* 320vh, up from 220 on 9 Sep 2026: the draw completed with scroll to
+       spare, which is what made it read as quick. */
     <section
       data-sticky-span
-      className="relative pt-10 text-charcoal sm:pt-26 lg:h-[220vh]"
+      data-wonder="facts"
+      className="relative pt-10 text-charcoal sm:pt-26 lg:h-[320vh]"
     >
       {/* Wave Line 2033:5350 — canvas rising over the hero's foot. With the
           hero pinned full-bleed (8 Sep 2026) the wave belongs to THIS
@@ -311,8 +326,10 @@ export function WonderFacts() {
           <Container>
             <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
               <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-8">
-                <p className={H4}>{wonderHero.standfirst}</p>
-                <div className="flex flex-wrap gap-2.5">
+                <p data-tier="anchor" className={H4}>
+                  {wonderHero.standfirst}
+                </p>
+                <div data-tier="mid" className="flex flex-wrap gap-2.5">
                   {wonderHero.summary.map((item) => (
                     <Chip key={item}>{item}</Chip>
                   ))}
@@ -323,6 +340,7 @@ export function WonderFacts() {
                       {column.map((fact) => (
                         <div
                           key={fact.label}
+                          data-tier="detail"
                           className="flex w-full flex-col gap-2 lg:w-[378px]"
                         >
                           <dt className={`${H5} text-burnt`}>{fact.label}</dt>
@@ -368,6 +386,7 @@ const HIGHLIGHT_FOCUS = [
 export function WonderHighlights() {
   return (
     <section
+      data-wonder="highlights"
       className={`relative bg-white py-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
     >
       {/* Wave Line 2033:5430 / 2576:22128 — the facts' canvas dripping into
@@ -378,20 +397,30 @@ export function WonderHighlights() {
         <h2 className="font-eyebrow text-[36px] leading-[1.3] font-extrabold">
           HIGHLIGHTS
         </h2>
+        {/* One card at a time with the frame's dots under it (2576:24613 is a
+            single 335 × 400 Column, 2576:24656 the dots 24 below it), not the
+            house peek — August, 9 Sep 2026. */}
         <CardRail
           bleed={RAIL_BLEED}
           columns="sm:grid-cols-2 lg:grid-cols-3"
           gap="sm:gap-6 lg:gap-12"
           label="Highlights"
+          dots
         >
           {wonderHighlights.map((card, i) => {
             const media = wonderHighlightMedia[i];
             return (
               <article
                 key={card.title}
+                data-card
                 className="relative flex min-h-[400px] min-w-0 flex-col justify-end gap-4 overflow-hidden rounded-3xl p-5 text-canvas lg:min-h-[500px] lg:p-10"
               >
-                <div className="absolute inset-0">
+                {/* frame grade: the clip opens, the picture inside holds. */}
+                <div
+                  data-frame-media
+                  data-motion="frame"
+                  className="absolute inset-0"
+                >
                   {/* A 1.9:1 photograph covering a 395 × 500 card renders
                       about 950px wide, so the sizes hint has to say so or the
                       browser picks a candidate half the size and the card
@@ -411,7 +440,10 @@ export function WonderHighlights() {
                   aria-hidden
                   className={`absolute inset-0 ${HIGHLIGHT_OVERLAY[i] ?? "bg-black/25"}`}
                 />
-                <div className="relative flex flex-col items-start gap-4">
+                <div
+                  data-card-copy
+                  className="relative flex flex-col items-start gap-4"
+                >
                   <Chip>{card.eyebrow}</Chip>
                   <div className="flex flex-col gap-2">
                     <h3 className={H3}>{card.title}</h3>
@@ -443,23 +475,50 @@ const STOP_ICONS = [
   { src: "/wonder/icon-grayrock.svg", w: 28, h: 28 },
 ] as const;
 
-/** The same icons as legends on the map, at the frame's own coordinates in
-    the 1440 header (3238:34149, 34151, 34154, 34158) — layout positions, not
-    geographic ones. `at` is the scroll progress each lights at, after the
-    roads have inked in, in stop order (route-map.ts). */
+/** The same icons as legends on the map (3238:34149, 34151, 34154, 34158) —
+    layout positions inside the drawing, not geographic ones. `at` is the
+    scroll progress each lights at, after the roads have inked in, in stop
+    order (route-map.ts).
+
+    PERCENTAGES OF THE MAP BOX since 9 Sep 2026, converted from the frame's
+    1440 pixel offsets: each icon's CENTRE in frame coordinates, measured
+    against the 2278 × 1580 artwork at its frame position. They used to be
+    raw frame pixels, which pinned the whole map layer to a 1440-wide box and
+    cut the artwork off on any wider screen. See RoutePin in RouteMap.tsx. */
 const MAP_PINS = [
-  { icon: 0, left: 1196, top: 325, at: 0.76 },
-  { icon: 1, left: 1131, top: 368, at: 0.81 },
-  { icon: 2, left: 1179, top: 403, at: 0.86 },
-  { icon: 3, left: 1243, top: 355, at: 0.91 },
+  { icon: 0, left: 76.58, top: 39.24, at: 0.76 },
+  { icon: 1, left: 73.71, top: 42.15, at: 0.81 },
+  { icon: 2, left: 75.86, top: 44.43, at: 0.86 },
+  { icon: 3, left: 78.56, top: 41.27, at: 0.91 },
+] as const;
+
+/**
+ * The same four stops on the PHONE cut (Frame 15423, 3439:30182 — 343 × 343).
+ *
+ * A different window on the same drawing, so a different set of numbers:
+ * these are the frame's own icon boxes (3439:30185 lake, 30186 sculpture,
+ * 30192 gorge, 30190 gray rock), centred and expressed as percentages of the
+ * 343 box. `w` here is a PERCENTAGE of the box width, not pixels — the frame
+ * draws these at 12–14px against 343, and a fixed size would shrink against
+ * the map on a wider phone.
+ *
+ * Layout positions inside one drawing. Never a geographic coordinate.
+ */
+const MOBILE_MAP_PINS = [
+  { icon: 0, left: 61.52, top: 27.11, w: 3.5, at: 0.76 },
+  { icon: 1, left: 53.64, top: 32.65, w: 3.5, at: 0.81 },
+  { icon: 2, left: 59.48, top: 37.03, w: 4.08, at: 0.86 },
+  { icon: 3, left: 66.76, top: 30.76, w: 3.5, at: 0.91 },
 ] as const;
 
 export function WonderGettingHere() {
   return (
     /* Sticky span at 1440, as §02: the screen is held while the map forms. */
+    /* 300vh, up from 220 on 9 Sep 2026 — the map now draws in stages. */
     <section
       data-sticky-span
-      className="relative bg-charcoal text-canvas lg:h-[220vh]"
+      data-wonder="getting-here"
+      className="relative bg-charcoal text-canvas lg:h-[300vh]"
     >
       {/* Wave Line 2033:5432 / 2576:22626 — charcoal rising over the white
           highlights ground. Above the top edge, so it sits on the section
@@ -485,11 +544,17 @@ export function WonderGettingHere() {
           <RouteMap
             {...routeMapMarkup()}
             pins={MAP_PINS.map((pin) => ({ ...STOP_ICONS[pin.icon], ...pin }))}
+            mobilePins={MOBILE_MAP_PINS.map((pin) => ({
+              ...STOP_ICONS[pin.icon],
+              ...pin,
+            }))}
           />
 
           <Container className="flex flex-col gap-12 lg:gap-20">
             <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-6">
-              <p className={`${H5} text-burnt`}>Getting here</p>
+              <p data-eyebrow className={`${H5} text-burnt`}>
+                Getting here
+              </p>
               <h2 className={H2}>{gettingHere.title}</h2>
               <div className="flex flex-col gap-5 text-base leading-normal lg:gap-7 lg:text-xl">
                 {gettingHere.body.map((para) => (
@@ -500,7 +565,11 @@ export function WonderGettingHere() {
                 {gettingHere.stops.map((stop, i) => {
                   const icon = STOP_ICONS[i];
                   return (
-                    <li key={stop.name} className="flex items-center gap-3">
+                    <li
+                      key={stop.name}
+                      data-cell
+                      className="flex items-center gap-3"
+                    >
                       <span
                         aria-hidden
                         className="flex w-[33px] shrink-0 items-center justify-center"
@@ -545,19 +614,39 @@ export function WonderTurraburra() {
   return (
     <section
       id="turraburra"
+      data-wonder="turraburra"
       className={`relative flex min-h-svh items-end overflow-hidden bg-burnt pb-16 text-canvas lg:min-h-[720px] lg:pb-20 ${GUTTER}`}
     >
-      <div className="absolute inset-0">
-        <Slot slot={turraburraSlot} sizes={COVER_FULL_BLEED} />
+      {/* The plate grows past its own edge as the section is scrolled
+          (`bleed`); the photograph inside is counter-scaled and never moves.
+          Country is frame grade — the corollary on held material in
+          docs/motion/motion-grammar.md. */}
+      <div data-plate className="absolute inset-0">
+        <div data-frame-media data-motion="frame" className="absolute inset-0">
+          <Slot slot={turraburraSlot} sizes={COVER_FULL_BLEED} />
+        </div>
       </div>
-      <div aria-hidden className="absolute inset-0 bg-charcoal/10" />
+      {/* X5 — copy sits on media. At 1440 the copy is a right-hand column
+          over the sky and the frame's flat 10% is enough; on the phone it
+          drops to the foot, over the sunlit rock, and 10% left the body
+          copy thin against the brightest third of the plate. So the phone
+          gets the hero's foot-weighted ramp — the same scrim, same direction
+          — and the desktop keeps the frame's flat wash exactly. */}
+      <div
+        aria-hidden
+        data-wonder-scrim
+        className="absolute inset-0 bg-linear-to-t from-charcoal/70 via-charcoal/20 to-charcoal/10 lg:bg-none lg:bg-charcoal/10"
+      />
       {/* Wave Line 2033:5434 / 2576:22821 is seated at the FOOT of Getting
           here, not here: this section clips (overflow-hidden), and a drip
           seated inside the clip left a hairline of photo between the
           charcoal and the crest. */}
       <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
         <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
-        <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
+        <div
+          data-plate-copy
+          className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6"
+        >
           <h2 className={H2}>{turraburra.title}</h2>
           <p className="text-base leading-normal font-medium lg:text-xl">
             {turraburra.body}
@@ -580,100 +669,127 @@ function DottedLine() {
       src="/wonder/dotted-line.svg"
       alt=""
       aria-hidden
-      className="block h-[7px] w-full lg:h-[10px]"
+      className="block h-[7px] w-full lg:h-[9.59848px]"
     />
   );
 }
 
+/**
+ * Restored to 2033:5889 on 9 September 2026, user direction (D5/F7).
+ * Native disclosures are the base layout at every width. Later user direction
+ * on the same day adds viewport-aligned automatic opening and scroll entrances.
+ * The controller enables the held layout only when every stop fits the screen.
+ * The supplied desktop reference includes a closing rule; the 375 frame does
+ * not, so that last rule is desktop-only.
+ */
 export function WonderStay() {
   return (
     <section
       id="experience"
-      className={`relative bg-canvas py-10 text-charcoal lg:pt-28 lg:pb-[164px] ${GUTTER}`}
+      data-wonder="itinerary"
+      className={`${itineraryStyles.itinerary} relative flex flex-col items-center gap-20 bg-canvas px-5 py-10 text-charcoal lg:px-[200px] lg:pt-28 lg:pb-[164px]`}
     >
-      <Container
-        width="max-w-[1040px]"
-        className="flex flex-col gap-5 lg:gap-10"
+      <div
+        data-itinerary-screen
+        className="w-full"
       >
-        <div className="flex flex-col gap-5 lg:gap-6">
-          <p className={`${H5} text-burnt`}>Itinerary</p>
-          <h2 className={H2}>What a stay looks like</h2>
-        </div>
+        <Container
+          width="max-w-[1040px]"
+          className="flex flex-col gap-5 lg:gap-10"
+        >
+          <div data-itinerary-heading className="flex flex-col gap-5 lg:gap-6">
+            <p data-eyebrow className={`${H5} text-burnt`}>
+              Itinerary
+            </p>
+            <h2 className={H2}>What a stay looks like</h2>
+          </div>
 
-        <div className="flex flex-col">
-          <DottedLine />
-          {stayStages.map((stage, i) => {
-            const media = stayStageMedia[stage.title];
-            return (
-              <div key={stage.title}>
-                {/* Native disclosure — works before hydration, no client
-                    boundary (see components/ui/Disclosure). The first stage
-                    opens as the frame shows it. */}
-                <details className="group py-5 lg:py-12" open={i === 0}>
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 lg:gap-8 [&::-webkit-details-marker]:hidden">
-                    <span className="flex items-center gap-4">
-                      {/* The numbered badge (2033:6000) — the artist's mark
-                          with the figure set on it. 44 × 40 on the phone,
-                          71 × 64 at 1440. */}
-                      <span className="relative block h-10 w-[44px] shrink-0 lg:h-16 lg:w-[71px]">
+          {/* A rule above each stage. The mobile frame ends on the last item;
+              the restored desktop reference also carries a closing rule. */}
+          <div data-stage-viewport>
+            <div data-stage-track className="relative flex flex-col">
+              {stayStages.map((stage, i) => {
+                const media = stayStageMedia[stage.title];
+                return (
+                  <div key={stage.title} data-stage-row>
+                    <DottedLine />
+                    <details
+                      data-stage
+                      className="group relative py-5 lg:py-12"
+                      open={i === 0}
+                    >
+                      <summary
+                        data-stage-head
+                        className="flex cursor-pointer rounded-sm focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-burnt list-none items-center justify-between gap-4 lg:gap-8 [&::-webkit-details-marker]:hidden"
+                      >
+                        <span className="flex items-center gap-4">
+                          {/* The numbered badge (2033:6000) — the artist's mark
+                            with the figure set on it. 44 × 40 on the phone,
+                            71 × 64 at 1440. */}
+                          <span className="relative block h-10 w-[44px] shrink-0 lg:h-16 lg:w-[71px]">
+                            {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+                            <img
+                              src="/wonder/stage-badge.svg"
+                              alt=""
+                              aria-hidden
+                              className="absolute inset-0 h-full w-full"
+                            />
+                            <span
+                              className={`absolute inset-0 flex items-center justify-center pt-0.5 text-canvas lg:pt-1 ${H5}`}
+                            >
+                              {i + 1}
+                            </span>
+                          </span>
+                          <span data-stage-title className={H3}>{stage.title}</span>
+                        </span>
                         {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
                         <img
-                          src="/wonder/stage-badge.svg"
+                          data-stage-chevron
+                          src="/wonder/chevron-up.svg"
                           alt=""
                           aria-hidden
-                          className="absolute inset-0 h-full w-full"
+                          className="h-8 w-[33px] shrink-0 rotate-180 group-open:rotate-0"
                         />
-                        <span
-                          className={`absolute inset-0 flex items-center justify-center pt-0.5 text-canvas lg:pt-1 ${H5}`}
-                        >
-                          {i + 1}
-                        </span>
-                      </span>
-                      <span className={H3}>{stage.title}</span>
-                    </span>
-                    {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-                    <img
-                      src="/wonder/chevron-up.svg"
-                      alt=""
-                      aria-hidden
-                      className="h-8 w-[33px] shrink-0 rotate-180 transition-transform duration-(--dur-small) ease-quiet group-open:rotate-0"
-                    />
-                  </summary>
+                      </summary>
 
-                  <div className="flex flex-col gap-5 pt-5 lg:flex-row lg:items-start lg:gap-10 lg:pt-[30px]">
-                    <div className="flex min-w-0 flex-1 flex-col gap-4 text-base leading-normal font-medium lg:text-xl">
-                      {stage.body.map((para) => (
-                        <p key={para}>{para}</p>
-                      ))}
-                      {stage.points ? (
-                        <ul className="list-disc space-y-1 pl-6">
-                          {stage.points.map((point) => (
-                            <li key={point}>{point}</li>
+                      <div data-stage-panel className="flex flex-col gap-5 pt-5 lg:flex-row lg:items-start lg:gap-10 lg:pt-[30px]">
+                        <div data-stage-copy className="flex min-w-0 flex-1 flex-col gap-4 text-base leading-normal font-medium lg:text-xl">
+                          {stage.body.map((para) => (
+                            <p key={para}>{para}</p>
                           ))}
-                        </ul>
-                      ) : null}
-                      {stage.coda ? (
-                        <p className="callout text-scroll text-burnt">
-                          {stage.coda}
-                        </p>
-                      ) : null}
-                    </div>
-                    <div className="relative h-[200px] w-full min-w-0 overflow-hidden rounded-3xl lg:h-[400px] lg:w-auto lg:flex-1">
-                      {media ? (
-                        <Slot
-                          slot={media}
-                          sizes="(min-width: 1024px) 500px, 100vw"
-                        />
-                      ) : null}
-                    </div>
+                          {stage.points ? (
+                            <ul className="list-disc space-y-1 pl-6">
+                              {stage.points.map((point) => (
+                                <li key={point}>{point}</li>
+                              ))}
+                            </ul>
+                          ) : null}
+                          {stage.coda ? (
+                            <p className="callout text-scroll text-burnt">
+                              {stage.coda}
+                            </p>
+                          ) : null}
+                        </div>
+                        <div data-stage-picture data-motion="frame" className="relative h-[200px] w-full min-w-0 overflow-hidden rounded-3xl lg:h-[400px] lg:w-auto lg:flex-1">
+                          {media ? (
+                            <Slot
+                              slot={media}
+                              sizes="(min-width: 1024px) 500px, 100vw"
+                            />
+                          ) : null}
+                        </div>
+                      </div>
+                    </details>
                   </div>
-                </details>
+                );
+              })}
+              <div data-stage-end className="hidden lg:block">
                 <DottedLine />
               </div>
-            );
-          })}
-        </div>
-      </Container>
+          </div>
+          </div>
+        </Container>
+      </div>
     </section>
   );
 }
@@ -689,11 +805,14 @@ export function WonderBeforeYouCome() {
     beforeYouCome.facts.slice(2),
   ];
   return (
-    <section className="relative flex flex-col items-center gap-12 bg-evergreen px-5 py-16 text-canvas lg:gap-14 lg:px-[120px] lg:py-24">
+    <section
+      data-wonder="before"
+      className="relative flex flex-col items-center gap-12 bg-evergreen px-5 py-16 text-canvas lg:gap-14 lg:px-[120px] lg:py-24"
+    >
       <WaveDivider ground="var(--color-evergreen)" />
       <Container className="flex flex-col items-center">
         <div className="flex w-full max-w-[768px] flex-col items-center gap-3 lg:gap-4">
-          <p className={`${H5} text-gold text-center`}>
+          <p data-eyebrow className={`${H5} text-gold text-center`}>
             {beforeYouCome.eyebrow}
           </p>
           <div className="flex w-full flex-col items-center gap-5 lg:gap-10">
@@ -709,6 +828,7 @@ export function WonderBeforeYouCome() {
                 {row.map((fact) => (
                   <div
                     key={fact.label}
+                    data-cell
                     className="flex w-full max-w-full flex-col gap-2 lg:w-[378px]"
                   >
                     <dt className={`${H5} text-gold`}>{fact.label}</dt>
@@ -727,15 +847,19 @@ export function WonderBeforeYouCome() {
           </div>
         </div>
       </Container>
-      <BlobButton
-        href={beforeYouCome.action.href}
-        tone="oxide"
-        icon="right"
-        size="lg"
-        className={BLOB_HOVER}
-      >
-        {beforeYouCome.action.label}
-      </BlobButton>
+      {/* One attention beat when the section has settled, never a loop —
+          this is the page's first conversion point. */}
+      <div data-cta>
+        <BlobButton
+          href={beforeYouCome.action.href}
+          tone="oxide"
+          icon="right"
+          size="lg"
+          className={BLOB_HOVER}
+        >
+          {beforeYouCome.action.label}
+        </BlobButton>
+      </div>
     </section>
   );
 }
@@ -748,6 +872,7 @@ export function WonderBeforeYouCome() {
 export function WonderWhereYouSleep() {
   return (
     <section
+      data-wonder="sleep"
       className={`relative bg-canvas py-10 text-charcoal lg:pt-[120px] lg:pb-28 ${GUTTER}`}
     >
       {/* The evergreen drips down into the canvas (frame wave 2033:6770). */}
@@ -755,23 +880,42 @@ export function WonderWhereYouSleep() {
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-4">
           <h2 className={H2}>{whereYouSleep.title}</h2>
-          <p className="text-base leading-normal font-medium">
+          <p data-card-copy className="text-base leading-normal font-medium">
             {whereYouSleep.body}
           </p>
         </div>
+        {/* As Highlights: 2576:22570 is one 335 × 200 Column and 2576:22542
+            the dots 24 below it. */}
         <CardRail
           bleed={RAIL_BLEED}
           columns="sm:grid-cols-2"
           gap="sm:gap-6 lg:gap-12"
           label="Where you sleep"
+          dots
         >
           {whereYouSleepMedia.map((slot) => (
             <div
               key={slot.id}
+              data-card
               className="relative min-h-[200px] min-w-0 overflow-hidden rounded-3xl lg:min-h-[400px]"
             >
-              <Slot slot={slot} sizes="(min-width: 1024px) 620px, 78vw" />
-              <div aria-hidden className="absolute inset-0 bg-charcoal/10" />
+              {/* 9 Sep 2026, image-quality pass: these supplied photographs
+                  include people. Hold the image plane still; the frame
+                  alone opens. No scrim is needed without overlaid text. */}
+              <div
+                data-frame-media
+                data-motion="frame"
+                className="absolute inset-0"
+              >
+                {/* Match the capped grid and the full-width mobile slider.
+                    At narrow desktop widths, a 400px-tall cover crop still
+                    needs 600 source pixels across the 3:2 photograph. */}
+                <Slot
+                  slot={slot}
+                  sizes="(min-width: 1408px) 616px, (min-width: 1024px) max(600px, calc(50vw - 88px)), (min-width: 640px) calc(50vw - 32px), calc(100vw - 40px)"
+                  quality={85}
+                />
+              </div>
             </div>
           ))}
         </CardRail>
@@ -788,18 +932,37 @@ export function WonderWhereYouSleep() {
 export function WonderOutHere() {
   return (
     <section
+      data-wonder="out-here"
       className={`relative flex min-h-svh items-end overflow-hidden bg-evergreen pb-16 text-canvas lg:min-h-[720px] lg:pb-28 ${GUTTER}`}
     >
-      <div className="absolute inset-0">
-        <Slot slot={whatItIsLikeSlot} sizes={COVER_FULL_BLEED} />
+      <div data-plate className="absolute inset-0">
+        <div data-frame-media data-motion="frame" className="absolute inset-0">
+          <Slot slot={whatItIsLikeSlot} sizes={COVER_FULL_BLEED} />
+        </div>
       </div>
-      <div aria-hidden className="absolute inset-0 bg-charcoal/10" />
+      {/* NO GROUND BAND HERE (removed 9 Sep 2026 on user report). The change
+          of ground was drawn as a translucent evergreen band sweeping up the
+          foot of this plate, and what it actually read as was a green film
+          over the sunset. A wipe belongs between two grounds, not on top of a
+          photograph. §09 keeps the plate's bleed and the scrim; the page has
+          no `ground` sweep. */}
+      {/* The same phone-only ramp as Turraburra, and for the same reason:
+          this plate is a sunset, so the foot the copy lands on is the
+          brightest part of it. Desktop keeps the frame's flat 10%. */}
+      <div
+        aria-hidden
+        data-wonder-scrim
+        className="absolute inset-0 bg-linear-to-t from-charcoal/70 via-charcoal/20 to-charcoal/10 lg:bg-none lg:bg-charcoal/10"
+      />
       {/* No wave at this join — the frame runs Where you sleep straight
           into the photo (the next Wave Line is 2033's at y=8265, which is
           Your hosts rising). */}
       <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
         <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
-        <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
+        <div
+          data-plate-copy
+          className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6"
+        >
           <h2 className={H2}>{whatItIsLike.title}</h2>
           <ul className="text-base leading-normal font-medium lg:text-xl">
             {whatItIsLike.points.map((point) => (
@@ -820,21 +983,30 @@ export function WonderOutHere() {
 export function WonderHosts() {
   return (
     <section
+      data-wonder="hosts"
       className={`relative bg-canvas pt-10 pb-16 text-charcoal lg:py-28 ${GUTTER}`}
     >
       <WaveDivider ground="var(--color-canvas)" />
       <Container className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
-        <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-4">
-          <p className={`${H5} text-burnt`}>Your hosts</p>
+        <div
+          data-plate-copy
+          className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-4"
+        >
+          <p data-eyebrow className={`${H5} text-burnt`}>
+            Your hosts
+          </p>
           <h2 className={H2}>{whoYouAreWith.title}</h2>
           <p className="text-base leading-normal font-medium lg:text-xl">
             {whoYouAreWith.body}
           </p>
         </div>
-        <div className="relative h-[200px] w-full min-w-0 overflow-hidden rounded-3xl lg:h-[400px] lg:w-auto lg:flex-1">
+        {/* Three of the eight in frame are named (hostsPeople). The pointer
+            names them; the photograph itself never moves — portraits hold
+            still and the world moves around them. */}
+        <HostNames people={hostsPeople}>
           <Slot slot={hostsSlot} sizes="(min-width: 1024px) 620px, 100vw" />
           <div aria-hidden className="absolute inset-0 bg-charcoal/10" />
-        </div>
+        </HostNames>
       </Container>
     </section>
   );
@@ -848,6 +1020,7 @@ export function WonderHosts() {
 export function WonderStories() {
   return (
     <section
+      data-wonder="stories"
       className={`relative bg-white pt-10 pb-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
     >
       {/* Wave Line at y=9096 in the 1440 frame — Your hosts' canvas dripping
@@ -871,16 +1044,24 @@ export function WonderStories() {
             return (
               <article
                 key={item.href}
+                data-card
                 className="group/card relative flex min-w-0 flex-col overflow-hidden rounded-3xl bg-charcoal text-canvas transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-1"
               >
                 {/* Marra Wonga is frame-grade: the image plane holds under
                     the pointer; the card lifts, the label answers. */}
-                <div className="relative h-[240px] w-full lg:h-[320px]">
+                <div
+                  data-frame-media
+                  data-motion="frame"
+                  className="relative h-[240px] w-full lg:h-[320px]"
+                >
                   <Slot slot={media} sizes="(min-width: 1024px) 400px, 78vw" />
                 </div>
                 {/* flex-1 + mt-auto: the link seats on the card's foot so
                     the three CTAs line up whatever the summary's length. */}
-                <div className="flex flex-1 flex-col items-start gap-4 p-6 lg:px-9 lg:py-10">
+                <div
+                  data-card-copy
+                  className="flex flex-1 flex-col items-start gap-4 p-6 lg:px-9 lg:py-10"
+                >
                   <Chip>{item.tag.replace("#", "")}</Chip>
                   <div className="flex flex-1 flex-col gap-10">
                     <div className="flex flex-col gap-4">
@@ -922,33 +1103,51 @@ export function WonderStories() {
 
 export function WonderClose() {
   return (
-    <section className="relative flex flex-col items-center gap-12 bg-roasted px-5 pt-16 pb-28 text-canvas lg:gap-14 lg:px-[120px] lg:pt-20 lg:pb-[300px]">
+    <section
+      data-wonder="close"
+      className="relative flex flex-col items-center gap-12 bg-roasted px-5 pt-16 pb-28 text-canvas lg:gap-14 lg:px-[120px] lg:pt-20 lg:pb-[300px]"
+    >
       {/* Wave Line at y=9975, laid out at x=1440 — a flipped instance, so
           the thick end is on the LEFT like 2033:5432. */}
       <WaveDivider ground="var(--color-roasted)" mirror />
       <Container className="flex flex-col items-center">
-        <div className="flex w-full max-w-[768px] flex-col items-center gap-3 lg:gap-4">
-          <p className={`${H5} text-center text-gold`}>{wonderClose.eyebrow}</p>
+        {/* THE 768 CLAMP IS ON THE PROSE, NOT ON THE BLOCK (9 Sep 2026).
+            `Max Width/max-width-large` = 768 governs the measure of the
+            reading lines; the chip row is not a reading line. Measured off
+            the 1440 frame, the container runs the full 1200 (1440 − 2 × 120)
+            and the four chips sit on ONE row across 874 of it, while the
+            standfirst wraps inside 768. With the clamp on the wrapper the row
+            had only 768 to work with, so "Best May to September" dropped to a
+            second line on its own. The phone is unchanged either way — four
+            chips stack inside 335 whatever the ceiling above them. */}
+        <div className="flex w-full flex-col items-center gap-3 lg:gap-4">
+          <p data-eyebrow className={`${H5} text-center text-gold`}>
+            {wonderClose.eyebrow}
+          </p>
           <div className="flex w-full flex-col items-center gap-5 lg:gap-6">
-            <h2 className={`${H2} text-center`}>{wonderClose.title}</h2>
-            <p className="text-center text-base leading-normal lg:text-xl">
+            <h2 className={`${H2} max-w-[768px] text-center`}>
+              {wonderClose.title}
+            </h2>
+            <p className="max-w-[768px] text-center text-base leading-normal lg:text-xl">
               {wonderClose.body}
             </p>
             <div className="flex flex-wrap justify-center gap-4 lg:gap-6">
               {wonderClose.facts.map((fact) => (
-                <Chip key={fact}>{fact}</Chip>
+                <span key={fact} data-cell>
+                  <Chip>{fact}</Chip>
+                </span>
               ))}
             </div>
-            <p className="text-center text-lg leading-normal lg:text-xl">
+            <p className="max-w-[768px] text-center text-lg leading-normal lg:text-xl">
               {wonderClose.download}
             </p>
-            <p className="text-center text-lg leading-normal lg:text-xl">
+            <p className="max-w-[768px] text-center text-lg leading-normal lg:text-xl">
               {wonderClose.note}
             </p>
           </div>
         </div>
       </Container>
-      <div className="flex flex-col items-center gap-6 lg:flex-row">
+      <div data-cta className="flex flex-col items-center gap-6 lg:flex-row">
         <BlobButton
           href="/connect"
           tone="oxide"
