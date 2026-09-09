@@ -116,6 +116,9 @@ export function smoothScrollTo(
   /** Glide even while lenis is stopped (a lockScroll hold) — the hold's own
       settle-back needs to move a page that user input cannot. */
   force = false,
+  /** Called after the magnetic seat lands. Optional so existing callers keep
+      their current fire-and-forget behaviour. */
+  onComplete?: () => void,
 ): void {
   if (lenis) {
     lenis.scrollTo(target, {
@@ -123,6 +126,7 @@ export function smoothScrollTo(
       lock,
       force,
       easing: (t: number) => 1 - Math.pow(1 - t, 3),
+      onComplete,
     });
   } else {
     gsap.to(window, {
@@ -130,6 +134,7 @@ export function smoothScrollTo(
       duration,
       ease: "power2.out",
       overwrite: "auto",
+      onComplete,
     });
   }
 }

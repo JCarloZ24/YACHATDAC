@@ -17,11 +17,14 @@ import { loreMarker } from "@/content/truth";
  *     open by the motion module, scroll-derived, both directions). It goes
  *     under at the escarpment break and resumes at the 1840s.
  *
- * Every timeline mark anchors beside its actual section — AHEAD sits next
- * to "What is being built", the years next to their entries — measured from
- * the live DOM and re-measured on resize. Active state is computed here
- * (the marks are finer-grained than the six descent bands, so the descent
- * module's band states no longer fit them).
+ * One trail-point traveller is the current beat's progress marker. On the
+ * hero it begins below "Start from the beginning"; later beats reset to the
+ * top of the viewport. It samples the RECORD strand's actual SVG geometry,
+ * holds at the foot while the seam charges, then travels with the cover to
+ * the next beat's head. Its read ScrollTriggers fade it over the final fifth
+ * of the 1950s, hold it absent through the escarpment and count, and restore
+ * it over the opening fifth of the 1840s. It leaves for good at the end of
+ * Before people. It carries no numeric label or separate progress gauge.
  *
  * The fill is scroll position, both directions: jumping to "Start from the
  * beginning" smooth-scrolls down and the ink flows down with it; scrolling
@@ -31,28 +34,6 @@ import { loreMarker } from "@/content/truth";
  *
  * Decorative wayfinding: aria-hidden, pointer-events-none, lg and up only.
  */
-
-/** Subs are the entries' own whens — the timeline description each mark
- *  carries now that the sections no longer repeat them. */
-const MARKS: Array<{ anchor: string; label: string; sub?: string }> = [
-  { anchor: "research", label: "Ahead", sub: "Within five years" },
-  // Today carries no mark — its ENTRY plate (04) sets TODAY · NOW on the
-  // frame itself, and the pointer doubled it right beside the headline.
-  // 2026 carries no mark — like Today, its ENTRY plate (09) sets
-  // 2026 · BOUGHT BACK on the frame itself. Ground records keep theirs:
-  // pointers render textless now, aligned beside each record's era block.
-  { anchor: "study-2022", label: "2022" },
-  { anchor: "renamed", label: "2020", sub: "1 October 2020" },
-  { anchor: "just-us", label: "2019", sub: "2:30pm, 30 April 2019" },
-  { anchor: "father", label: "2003" },
-  { anchor: "art-gallery", label: "1950s" },
-  // 1902 carries no mark: the footsteps strand goes under from the
-  // escarpment break and does not resume until the 1840s (the count band's
-  // own note), so there is no strand for a pointer to sit on.
-  { anchor: "mitchell", label: "1840s" },
-  { anchor: "engraving", label: "Older than the record" },
-  { anchor: "beginning", label: "100 million years ago" },
-];
 
 /** Strand geometry — dot size/spacing from the designed asset (~4.5px dots
  *  every ~10px); two strands share the wander, offset like the asset's pair. */
@@ -98,10 +79,9 @@ function aheadFade(from: number, to: number) {
   return { maskImage: image, WebkitMaskImage: image };
 }
 
-/** An element's layout top relative to the descent root, ignoring transforms:
- *  entries arrive translated 24px down ([data-descent-arrive], L4) and the
- *  rail measures them before they arrive — a bounding rect would put every
- *  pointer 24px below its year line. offsetTop is layout, not transform. */
+/** An element's layout top relative to the descent root, ignoring transforms.
+ * The traveller samples document geometry, so layout coordinates remain the
+ * stable source while other scroll-scrubbed transforms are active. */
 function layoutTop(el: HTMLElement, root: HTMLElement): number {
   let top = 0;
   let node: HTMLElement | null = el;
@@ -132,10 +112,6 @@ function strandPath(
 export function TruthTrailRail() {
   const [height, setHeight] = useState(0);
   const [left, setLeft] = useState(0);
-  const [marks, setMarks] = useState<
-    Array<{ anchor: string; top: number }>
-  >([]);
-  const [active, setActive] = useState(0);
   /** Where the footsteps strand goes under: from the top of the escarpment
    *  break, through the count, back at the 1840s mark. [start, end] in rail
    *  coordinates; null until measured (or if either anchor is absent). */
@@ -151,8 +127,6 @@ export function TruthTrailRail() {
   useEffect(() => {
     const root = document.querySelector<HTMLElement>("[data-descent-root]");
     if (!root) return;
-
-    let tops: Array<{ anchor: string; top: number }> = [];
 
     const measure = () => {
       setHeight(root.offsetHeight);
@@ -175,24 +149,6 @@ export function TruthTrailRail() {
           section ? Math.max(section.getBoundingClientRect().left, 0) : 0,
         );
       }
-      tops = MARKS.flatMap(({ anchor }) => {
-        const el = document.getElementById(anchor);
-        if (!el) return [];
-        // Align the mark with the record's gutter era block (era + sub, the
-        // 06 frame) where one renders; otherwise the section's own heading —
-        // never the section box, whose top includes its padding.
-        const heading =
-          el.querySelector<HTMLElement>("[data-era-label]") ??
-          el.querySelector<HTMLElement>("h1, h2, h3") ??
-          el;
-        return [
-          {
-            anchor,
-            top: layoutTop(heading, root) + heading.offsetHeight / 2,
-          },
-        ];
-      });
-      setMarks(tops);
       // The strand goes under from the top of the escarpment break and
       // surfaces again UNDER THE COUNT — at the navy wave that closes the
       // count band — running through the wave and down to the 1840s
@@ -229,29 +185,11 @@ export function TruthTrailRail() {
       });
     };
 
-    // The reading line: a mark lights when its section crosses mid-viewport.
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const line = window.scrollY + window.innerHeight * 0.6;
-        let index = 0;
-        tops.forEach((mark, i) => {
-          if (mark.top <= line) index = i;
-        });
-        setActive(index);
-      });
-    };
-
     measure();
-    onScroll();
     const ro = new ResizeObserver(measure);
     ro.observe(root);
-    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       ro.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
     };
   }, []);
 
@@ -285,6 +223,23 @@ export function TruthTrailRail() {
         className="absolute left-4 top-36 w-7"
         loading="lazy"
       />
+
+      {/* Geometry-only twin of the RECORD strand. It is always mounted so
+          the controller can retain the node before the first measurement;
+          React updates its d attribute when the full rail height is known. */}
+      <svg
+        width={RAIL_W}
+        height={Math.max(height, 1)}
+        viewBox={`0 0 ${RAIL_W} ${Math.max(height, 1)}`}
+        fill="none"
+        className="absolute left-0 top-0 overflow-visible opacity-0"
+      >
+        <path
+          data-truth-trail-guide
+          d={strandPath(height, STEP_X, 0.9)}
+          stroke="transparent"
+        />
+      </svg>
 
       {/* Left strand — LORE · continuous. The full record at #CB7722, edge
           to edge of the page; it never breaks, not even at the count. */}
@@ -374,32 +329,26 @@ export function TruthTrailRail() {
           : null}
       </div>
 
-      {/* Timeline marks — each aligned with its record's gutter era block.
-          The pointer carries NO text (2026-09-02): the record's own era and
-          sub sit right beside it, and the labels read twice. Its trailing
-          dots lead the eye to the record's gutter instead. */}
-      {marks.map((mark, i) => {
-        const state = i < active ? "passed" : i === active ? "active" : "ahead";
-        return (
-          <div
-            key={mark.anchor}
-            data-state={state}
-            className="group absolute flex -translate-y-1/2 items-center"
-            style={{ top: mark.top, left: strandX(mark.top, STEP_X, 0.9) - 22 }}
-          >
-            {/* The pointer artwork — static (2026-09-02): no burst-in, no
-                state fade; it simply sits on the footsteps strand beside
-                its record's era block. */}
-            {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-            <img
-              src="/artwork/trail-point.svg"
-              alt=""
-              className="w-24 max-w-none"
-              loading="lazy"
-            />
-          </div>
-        );
-      })}
+      {/* G1 / "the guide leading the eye": the sticky viewport is stable;
+          the gated-deck controller writes only transforms and opacity to the
+          traveller. The full-height guide remains the source of its lateral
+          position and tangent. */}
+      <div className="sticky top-0 h-svh w-full overflow-visible">
+        <div
+          data-truth-trail-traveller
+          data-trail-end={ends?.steps}
+          className="absolute left-0 top-0 h-0 w-0 opacity-0"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+          <img
+            data-truth-trail-pointer
+            src="/artwork/trail-point.svg"
+            alt=""
+            className="absolute left-[-22px] top-0 w-24 max-w-none -translate-y-1/2"
+            loading="eager"
+          />
+        </div>
+      </div>
     </div>
   );
 }
