@@ -23,13 +23,41 @@ import { homeTruthScenes } from "@/content/home-truth-scenes";
 const LANDSCAPE_INVITATION_ZOOM = 1.32;
 
 /**
+ * The four scene states this page reads, measured from the Figma frames on
+ * user direction, 10 September 2026. Every one of them is the same
+ * composition — the sky sequence behind the photograph, the frame's own black
+ * over both, the light sequence soft-lit through the land's alpha — so the
+ * time of day is nothing but WHERE the frame sits in the two sequences and
+ * how much black it carries.
+ *
+ *   night   3371:41344  the page opens here, before a word is on screen
+ *   welcome 3371:41275  where the intro lightens to, under the welcome
+ *   wonder  3371:41413  the first thing the scroll moves to
+ *   truth   3371:44759  then the seven dated frames in home-truth-scenes.ts
+ *
+ * `sky` and `light` are pixels down each layer (Figma places both against the
+ * 1500-row scene, one image row to one layer row). `lightHeight` is the
+ * height that layer is placed AT, which is not the same in every frame, so it
+ * travels with the offset. `shade` is the frame's full-scene black.
+ *
+ * These are measurements, not taste: change one only by re-reading its node.
+ * Taste lives in the timing below.
+ */
+export const HOME_SCENE = {
+  night: { sky: 0, light: 0, lightHeight: 8028, shade: 0.4 },
+  welcome: { sky: 316, light: 263, lightHeight: 8028, shade: 0.4 },
+  wonder: { sky: 600, light: 510, lightHeight: 7619, shade: 0.2 },
+  truth: { sky: 1422, light: 464, lightHeight: 7619, shade: 0.25 },
+} as const;
+
+/**
  * How far the land scene travels up the screen across The Invitation beat, in
  * screen heights. Land across the top, charcoal below it for the cards to be
  * read against (latest reference, 9 September 2026). Raised 0.55 → 0.62 on
  * user direction the same day — the band the land finished on was reading as
  * too much of the canvas. Nothing bounds this but taste: the travel is in
  * screen space, so a larger number simply takes more of the land off the top,
- * and the soft edge (liftEdge in home-painting.ts) follows it up.
+ * and the soft edge (liftEdge in home-land.ts) follows it up.
  *
  * ⚠ Reversed twice on user direction the same day. It began as a drift DOWN
  * of the sampling window — parallax, ground further away than the cards —
@@ -38,7 +66,7 @@ const LANDSCAPE_INVITATION_ZOOM = 1.32;
  * same window, which a bottom-anchored crop has almost no room for. This
  * moves the whole scene in SCREEN space instead, so the travel is not bounded
  * by the texture at all and the edge that rises into view is the
- * photograph's own dissolve. The uniform is `lift`; see home-painting.ts.
+ * photograph's own dissolve. The uniform is `lift`; see home-land.ts.
  */
 const LANDSCAPE_INVITATION_LIFT = 0.62;
 
@@ -53,8 +81,14 @@ const LANDSCAPE_INVITATION_LIFT = 0.62;
  */
 const LANDSCAPE_EXIT_SHADE = 0.55;
 
-/** Grammar: "the world opening", Home photo collage, 8 September 2026.
- * Gallery first, type second (F7). Semantic word wrappers remain CMS-safe.
+/** Grammar: "the page opens on Country", Home hero, 10 September 2026.
+ * Scene first, type second (F7). Semantic word wrappers remain CMS-safe.
+ *
+ * ⚠ These effects are the homepage's, and the homepage alone. /homepagev2 is
+ * an independent fork with its own registry (homeV2*): nothing here reaches
+ * it, which is why the opening it still runs -- the photo collage, the
+ * painting reveal, the portal zoom -- could be taken out of these three
+ * timelines without touching that route.
  */
 export function registerHome(): void {
   // AMB-05: one seamless phase; the canvas owner controls visibility/cleanup.
@@ -65,38 +99,58 @@ export function registerHome(): void {
       gsap.timeline({ paused: true, repeat: -1 }).fromTo(config.phase,
         { value: 0 }, { value: Math.PI * 2, duration: 24, ease: "none", onUpdate: config.render }),
   });
-  // Grammar: a change of ground / Home hero dissolve, 9 September 2026.
+  // Grammar: a change of ground / Home hero dissolve, 9 September 2026,
+  // rewritten at the front 10 September 2026: the ground no longer changes at
+  // the opening, it is simply uncovered.
   gsap.registerEffect({
     name: "homeHeroDissolve",
     defaults: {},
-    effect: (targets: HTMLElement[], config: { state: { progress: number; portal: number; wonder: number; truth: number; truthSky: number; truthLight: number; belonging: number; landscapeLift: number; landscapeZoom: number }; render: () => void }) => {
+    effect: (targets: HTMLElement[], config: { state: { sky: number; light: number; lightHeight: number; shade: number; belonging: number; landscapeLift: number; landscapeZoom: number }; render: () => void }) => {
       const root = targets[0];
       const timeline = gsap.timeline({ paused: true });
-      timeline.fromTo(config.state, { progress: 0 },
-        { progress: 1, duration: 1, ease: "none", onUpdate: config.render }, 0);
+      // The hero holds on the land (10 September 2026, user direction). What
+      // used to happen across the first three units -- the photo collage
+      // dissolving, the ground warming from charcoal to oxide, the supplied
+      // painting drawing itself outward from its rosette, speaking its three
+      // lines, and finally opening on the road -- is gone. The scene is
+      // already up, so the first thing the scroll does is take the welcome
+      // off it. The whole of that opening is kept, running, at /homepagev2.
       timeline.fromTo(root.querySelectorAll("[data-hero-copy]"),
-        { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.3, ease: "none" }, 0);
-      timeline.fromTo(root.querySelectorAll("[data-hero-scrim]"),
-        { opacity: 1 }, { opacity: 0, duration: 0.4, ease: "none" }, 0);
-      timeline.to(root.querySelectorAll(".home-painting-copy"),
-        { autoAlpha: 0, duration: 0.15, ease: "sine.inOut" }, 1.03);
-      timeline.fromTo(config.state, { portal: 0 },
-        { portal: 1, duration: 1, ease: "sine.inOut", onUpdate: config.render }, 1.18);
-      timeline.to({}, { duration: 0.12 }, 2.18);
-      timeline.fromTo(config.state, { wonder: 0 },
-        { wonder: 1, duration: 0.8, ease: "none", onUpdate: config.render }, 2.3);
+        { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.5, ease: "sine.in" }, 0);
+      // Nothing darkens the land here any more. The frame's own black is in
+      // the canvas (HOME_SCENE.shade), so the DOM scrims would be a second
+      // one laid over it; they are gated to the no-canvas fallback in
+      // home-hero.css and this timeline no longer touches them.
+      // Everything below is timed from this one constant, so the beat can be
+      // moved without retiming the sequence after it.
+      const wonderAt = 0.8;
+      // The scene goes on through the day with the beat. Wonder's frame sits
+      // 600 rows further into the sky than the welcome's and carries half its
+      // black, so the light lifts as the copy rises rather than after it.
+      timeline.fromTo(config.state,
+        { sky: HOME_SCENE.welcome.sky, light: HOME_SCENE.welcome.light,
+          lightHeight: HOME_SCENE.welcome.lightHeight, shade: HOME_SCENE.welcome.shade },
+        { sky: HOME_SCENE.wonder.sky, light: HOME_SCENE.wonder.light,
+          lightHeight: HOME_SCENE.wonder.lightHeight, shade: HOME_SCENE.wonder.shade,
+          duration: 0.8, ease: "none", onUpdate: config.render }, wonderAt);
       timeline.fromTo(root.querySelector("[data-home-wonder]"),
         { y: () => root.clientHeight, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.8, ease: "none" }, 2.3);
-      timeline.to({}, { duration: 0.3 }, 3.1);
+        { y: 0, autoAlpha: 1, duration: 0.8, ease: "none" }, wonderAt);
+      // SCR-09: where the scroll cue jumps to. home-hero.ts reads the label,
+      // so the cue and the beat cannot drift apart.
+      timeline.addLabel("wonderReady", wonderAt + 0.8);
+      timeline.to({}, { duration: 0.3 }, wonderAt + 0.8);
       timeline.to(root.querySelector("[data-home-wonder]"),
-        { y: () => -root.clientHeight, autoAlpha: 0, duration: 0.65, ease: "none" }, 3.4);
-      timeline.fromTo(config.state, { truth: 0 },
-        { truth: 1, duration: 0.8, ease: "none", onUpdate: config.render }, 3.4);
+        { y: () => -root.clientHeight, autoAlpha: 0, duration: 0.65, ease: "none" }, wonderAt + 1.1);
+      // Truth is not a different picture, it is a later hour: the same two
+      // layers travel on to 3371:44759 and the black closes a little.
+      timeline.to(config.state,
+        { sky: HOME_SCENE.truth.sky, light: HOME_SCENE.truth.light, shade: HOME_SCENE.truth.shade,
+          duration: 0.8, ease: "none", onUpdate: config.render }, wonderAt + 1.1);
       timeline.fromTo(root.querySelector("[data-home-truth]"),
         { y: () => root.clientHeight * 0.35, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.6, ease: "none" }, 3.6);
-      timeline.to({}, { duration: 0.4 }, 4.2);
+        { y: 0, autoAlpha: 1, duration: 0.6, ease: "none" }, wonderAt + 1.3);
+      timeline.to({}, { duration: 0.4 }, wonderAt + 1.9);
       // SCR-10: measured Figma layer offsets; still prose between transitions.
       const marker = root.querySelector("[data-truth-marker]");
       const markerY = (y: number) => root.clientWidth < 1024
@@ -104,10 +158,10 @@ export function registerHome(): void {
         : y / 9.01;
       timeline.set(marker, { xPercent: homeTruthScenes[0].x / 14.4, yPercent: () => markerY(homeTruthScenes[0].y) }, 0);
       timeline.fromTo(root.querySelector("[data-truth-timeline]"),
-        { autoAlpha: 0, xPercent: 100 }, { autoAlpha: 1, xPercent: 0, duration: 0.4, ease: "sine.inOut" }, 4.6);
+        { autoAlpha: 0, xPercent: 100 }, { autoAlpha: 1, xPercent: 0, duration: 0.4, ease: "sine.inOut" }, wonderAt + 2.3);
       homeTruthScenes.forEach((scene, index) => {
-        const at = 4.6 + index;
-        timeline.to(config.state, { truthSky: scene.sky, truthLight: scene.light,
+        const at = wonderAt + 2.3 + index;
+        timeline.to(config.state, { sky: scene.sky, light: scene.light,
           duration: 1, ease: "none", onUpdate: config.render }, at);
         if (index) {
           timeline.to(marker, { xPercent: scene.x / 14.4, yPercent: () => markerY(scene.y),
@@ -128,7 +182,7 @@ export function registerHome(): void {
       const belongingAt = timeline.duration();
       timeline.to(root.querySelectorAll("[data-home-truth], [data-truth-timeline]"),
         { autoAlpha: 0, duration: 0.45, ease: "sine.inOut" }, belongingAt);
-      timeline.to(config.state, { truthSky: 5822, truthLight: 5822, belonging: 1,
+      timeline.to(config.state, { sky: 5822, light: 5822, belonging: 1,
         duration: 1.2, ease: "sine.inOut", onUpdate: config.render }, belongingAt);
       timeline.fromTo(root.querySelector("[data-home-belonging]"),
         { y: () => root.clientHeight * 0.3, autoAlpha: 0 },
@@ -266,44 +320,50 @@ export function registerHome(): void {
       }, pathAt + 1.9);
       // The last held screen of the page before the pin releases to the footer.
       timeline.to({}, { duration: 1.2 }, pathAt + 3.7);
-      // SCR-09, 9 September: reveal completes at 0.95; give the copy its own
-      // quiet reading span. Shift the continuation without changing its pace.
-      timeline.addLabel("wonderReady", 3.1);
-      timeline.shiftChildren(2, true, 1.03);
-      timeline.fromTo(root.querySelector("[data-painting-entrance]"),
-        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: "sine.inOut" }, 1.08);
-      timeline.fromTo(root.querySelector("[data-painting-place]"),
-        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: "sine.inOut" }, 1.62);
-      timeline.fromTo(root.querySelector("[data-painting-story]"),
-        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.55, ease: "sine.inOut" }, 2.18);
       return timeline;
     },
   });
+  // Grammar: the page opens on Country, 10 September 2026 (supersedes the
+  // photo-collage row). Nothing arrives and nothing travels. home-hero.ts has
+  // waited for the photograph to decode, so the black beat lifts off a
+  // finished scene -- and that scene is night (3371:41344). It is held for a
+  // beat on its own, then the light comes up into the welcome frame
+  // (3371:41275) as the words arrive. The two sequence layers travel
+  // together, so the sky lightens and the land lights with it: this is the
+  // one place on the page where the scene changes without the reader asking.
+  // The gallery glide it replaces runs unchanged at /homepagev2.
   gsap.registerEffect({
     name: "homeHeroOpen",
     defaults: {},
-    effect: (targets: HTMLElement[], config: {
-      gallery: { x: number; y: number; z: number; yaw: number };
-      render: () => void;
-    }) => {
+    effect: (targets: HTMLElement[], config: { state: { sky: number; light: number }; render: () => void }) => {
       const root = targets[0];
       const timeline = gsap.timeline({ paused: true });
-      // 9 September: move the photos to the viewer in one uninterrupted glide.
       timeline.fromTo(root.querySelector("[data-hero-black]"),
-        { opacity: 1 }, { opacity: 0, duration: 0.12, ease: "none" }, 0.14,
+        { opacity: 1 }, { opacity: 0, duration: 1.1, ease: "sine.inOut" }, 0.14,
       );
-      timeline.call(() => { root.dataset.heroPhase = "gallery"; }, [], 0.14);
-      timeline.fromTo(config.gallery, { x: 24, y: -1, z: -16, yaw: -0.3 }, {
-        x: 0, y: 0, z: 0, yaw: 0,
-        duration: 3, ease: "power2.out", onUpdate: config.render,
-      }, 0.14);
-      timeline.call(() => { root.dataset.heroPhase = "type"; }, [], 3.14);
+      // Anything but "black" restores the header and the thread line.
+      timeline.call(() => { root.dataset.heroPhase = "scene"; }, [], 0.14);
+      // Night is SET at the top of the intro rather than being a fromTo's
+      // start value: the scrubbed timeline owns the same state object and
+      // parks it on the welcome frame the moment it is built, so a start
+      // value that is only applied when its own tween begins would leave the
+      // first second and a half of the page sitting on the wrong hour and
+      // then snap back. A set renders when the playhead reaches it, which is
+      // what the black beat is covering.
+      timeline.set(config.state,
+        { sky: HOME_SCENE.night.sky, light: HOME_SCENE.night.light, onComplete: config.render }, 0);
+      timeline.to(config.state,
+        { sky: HOME_SCENE.welcome.sky, light: HOME_SCENE.welcome.light,
+          duration: 2.4, ease: "sine.inOut", onUpdate: config.render }, 1.3,
+      );
+      // Type second (F7), and quiet: one fade for the whole headline, no
+      // stagger and no movement. The photograph is the loud channel.
       timeline.fromTo(root.querySelectorAll("[data-hero-word]"),
         { opacity: 0 },
-        { opacity: 1, duration: 0.8, ease: "sine.out" }, 3.14,
+        { opacity: 1, duration: 0.9, ease: "sine.out" }, 1.7,
       );
       timeline.fromTo(root.querySelectorAll("[data-hero-quiet]"),
-        { opacity: 0 }, { opacity: 1, duration: 0.45, stagger: 0.12, ease: "power1.out" }, 3.5,
+        { opacity: 0 }, { opacity: 1, duration: 0.45, stagger: 0.12, ease: "power1.out" }, 2.15,
       );
       return timeline;
     },

@@ -5,34 +5,41 @@ import { Invitation } from "@/components/sections/Invitation";
 import { WayForwardStatement } from "@/components/sections/WayForwardStatement";
 import { WayForwardOffer } from "@/components/sections/WayForwardOffer";
 import { Pathways } from "@/components/sections/Pathways";
-import { homeHeroFrames } from "@/content/homepage-media";
-import { homeHero, homePaintingCopy, type Beat } from "@/content/homepage";
+import { HOME_PORTAL } from "@/content/kit";
+import { homeHero, type Beat } from "@/content/homepage";
 import "./home-hero.css";
 
 /**
- * Home opens — black beat / three-second gallery entrance, 9 September 2026.
- * D5: verbatim draft words. F7: media moves, then holds for the heading.
- * R11: small WebP derivatives serve both DOM fallback and canvas textures.
- * The linked Figma node differs; latest screenshot governs (scenes.md).
+ * Home opens on Country — black beat, then the road, held (10 September 2026,
+ * user direction). D5: verbatim draft words. F7: the photograph is the loud
+ * channel and the welcome is quiet over it.
+ *
+ * ⚠ The three-second photo-collage entrance and the painting that followed it
+ * are gone, along with their copy ("You are entering" / "Turraburra" / "Story
+ * held in stone and starlight", still in `homePaintingCopy`). The whole of
+ * that opening runs at /homepagev2, which is an independent fork; nothing
+ * here reaches it. See home-hero.ts and effects/home.ts.
+ *
+ * R11: one photograph above the fold instead of twenty-six, and the DOM still
+ * below shares its request with the canvas texture.
  */
 export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonder: Beat; truth: Beat; belonging: Beat }) {
   const words = beat.headline?.split(/\s+/).filter(Boolean) ?? [];
   const truthParagraphs = [[truth.sequence?.subjectDetail[0] ?? ""], ...(truth.sequence?.steps.map(step => [step.text]) ?? []), [truth.body[0] ?? ""], truth.body.slice(1)];
   return (
     <section id={beat.id} data-home-hero className="relative isolate h-svh min-h-[680px] overflow-hidden bg-charcoal lg:min-h-[760px]">
-      <div aria-hidden="true" data-hero-fallback className="home-hero-stage pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2">
-        {homeHeroFrames.map((frame) => (
-          <div key={frame.id} className="absolute overflow-hidden bg-evergreen" style={{
-            left: `${frame.x}%`, top: `${frame.y}%`, width: `${frame.w}%`, aspectRatio: frame.aspect,
-            transform: `translate(-50%, -50%) rotate(${frame.angle}deg)`, opacity: frame.opacity,
-          }}>
-            {/* Sized WebPs: share exact decoded bytes with the GPU. */}
-            <Image data-hero-image={frame.id} src={frame.src} alt="" width={frame.width} height={frame.height}
-              unoptimized loading="eager" className="h-full w-full object-cover" />
-          </div>
-        ))}
+      {/* The scene itself, as markup. The canvas draws this same photograph,
+          so a machine with no WebGL — and a reader who asked for less motion —
+          gets the hero it was meant to have rather than a black screen.
+          `unoptimized` deliberately: the canvas fetches this exact URL, so
+          the two share one request and one decode. `object-bottom` matches
+          the plate's LANDSCAPE_BOTTOM_BIAS, or the fallback would be a
+          differently cropped photograph. */}
+      <div aria-hidden="true" data-hero-fallback className="pointer-events-none absolute inset-0">
+        <Image src={HOME_PORTAL.src} alt="" width={HOME_PORTAL.width} height={HOME_PORTAL.height}
+          unoptimized loading="eager" className="h-full w-full object-cover object-bottom" />
       </div>
-      <HomeHeroCanvas frames={homeHeroFrames} />
+      <HomeHeroCanvas />
       <div data-landscape-exit-shade aria-hidden="true" className="home-landscape-exit-shade pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[30svh]" />
       {/* SCR-09: screenshot's opening Truth frame, sourced from the v3 sequence. */}
       <div data-home-truth className="home-truth-copy absolute inset-x-6 top-[13.75%] z-[3] mx-auto max-w-[720px] text-center text-canvas">
@@ -84,14 +91,6 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
           <span aria-hidden="true" className="relative text-2xl">›</span>
         </a>}
       </div>
-      {/* 9 September screenshot: quiet opacity reveals over the same canvas. */}
-      <div className="pointer-events-none absolute inset-0 z-[2] text-canvas">
-        <h2 className="headline absolute left-6 right-6 top-[14%] text-h1 leading-[1.1] tracking-[-0.015em] lg:left-[3.3%] lg:right-[3.3%]">
-          <span data-painting-entrance className="home-painting-copy painting-introduction block w-fit">{homePaintingCopy.entrance}</span>
-          <span data-painting-place className="home-painting-copy painting-place block w-fit">{homePaintingCopy.place}</span>
-        </h2>
-        <p data-painting-story className="home-painting-copy painting-story headline absolute bottom-[7.5%] right-6 max-w-[260px] text-h3 leading-[1.15] tracking-normal text-right lg:right-[2.5%] lg:max-w-[440px]">{homePaintingCopy.story}</p>
-      </div>
       {/* Beat 6 rides the same pinned canvas as Wonder, Truth and Belonging
           (9 September 2026, user direction). It arrives last, travelling up
           one viewport over the drifting land — see homeHeroDissolve. */}
@@ -103,10 +102,15 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
       <WayForwardOffer />
       {/* And the last screen of the page, still on this canvas: deck 24. */}
       <Pathways />
-      {/* Media scrim is the palette's explicit gradient exception (X5). */}
+      {/* Media scrim is the palette's explicit gradient exception (X5). These
+          two are the whole of the darkening the welcome is read against, and
+          the scroll takes them off to leave the photograph clean — turn the
+          first one's opacity if the land wants to be lighter or heavier under
+          the copy. The feathered blur vignette that used to sit here went
+          with the collage: it was made to soften the gaps between scattered
+          plates, and over a single photograph it read as a smeared edge. */}
       <div data-hero-scrim aria-hidden="true" className="pointer-events-none absolute inset-0 bg-charcoal/35" />
       <div data-hero-scrim aria-hidden="true" className="pointer-events-none absolute inset-0 bg-linear-to-t from-charcoal/70 via-transparent to-charcoal/20" />
-      <div data-hero-scrim aria-hidden="true" className="home-hero-edge-treatment pointer-events-none absolute inset-0" />
       <div data-hero-black aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 bg-night-black" />
       <div data-hero-copy className="absolute inset-x-0 top-[30%] px-6 text-center lg:px-16">
         <p data-hero-quiet className="eyebrow text-sm leading-[1.4] tracking-[0.1em] text-ochre lg:text-base">{beat.eyebrow}</p>
