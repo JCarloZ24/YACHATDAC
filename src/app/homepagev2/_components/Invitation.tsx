@@ -1,8 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
-import { invitation } from "@/content/homepage";
-import { homeInvitationMedia } from "@/content/homepage-media";
+import { invitation } from "../_content/homepage";
+import { homeInvitationMedia } from "../_content/homepage-media";
 import "./invitation.css";
+
+/**
+ * /homepagev2 copy, 10 September 2026, user direction.
+ *
+ * A duplicate of the live homepage component of the same name, so the two
+ * can be worked on apart. What is COPIED is the markup; what is SHARED is
+ * everything the markup reaches for -- the content modules, the stylesheets,
+ * the motion library and the effects registry. A change to a hook name, an
+ * effect, a CSS class or a content string still lands on both pages, and an
+ * edit here that renames a data attribute breaks the live page silently
+ * unless the effect is forked too. Diverge deliberately, and say so here
+ * when you do.
+ */
 
 /**
  * Beat 6 — The Invitation.
@@ -30,7 +43,7 @@ export function Invitation() {
     <div
       id="invitation"
       data-home-invitation
-      className="home-invitation absolute inset-0 z-[3] flex flex-col justify-center text-canvas"
+      className="v2-home-invitation absolute inset-0 z-[3] flex flex-col justify-center text-canvas"
     >
       {/* Viewport margins stay the frame's 1440 content box: px-6 / lg:px-20. */}
       <div className="mx-auto w-full max-w-[1440px] px-6 lg:px-20">
@@ -40,12 +53,12 @@ export function Invitation() {
           {invitation.body ? <p className="mt-6 text-base leading-[1.5]">{invitation.body}</p> : null}
         </header>
         {/* Column gap stays at the frame's 48px on desktop. */}
-        <div className="home-invitation-cards mt-8 lg:mt-16 lg:grid lg:grid-cols-3 lg:gap-12">
+        <div className="v2-home-invitation-cards mt-8 lg:mt-16 lg:grid lg:grid-cols-3 lg:gap-12">
           {invitation.cards.map((card, index) => {
             const media = homeInvitationMedia[index];
             return (
               <Link key={card.href} href={card.href} data-invitation-card
-                className="home-invitation-card relative flex flex-col justify-between gap-8 overflow-hidden rounded-[20px] bg-charcoal p-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas lg:p-10">
+                className="v2-home-invitation-card relative flex flex-col justify-between gap-8 overflow-hidden rounded-[20px] bg-charcoal p-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas lg:p-10">
                 <Image src={media.src} alt="" fill sizes="(min-width: 1024px) 30vw, 80vw" className="object-cover" style={{ objectPosition: media.position }} />
                 <span aria-hidden="true" className="absolute inset-0 bg-black/25" />
                 {/* Three children, not two (9 September 2026, user direction).

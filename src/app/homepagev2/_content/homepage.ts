@@ -1,16 +1,23 @@
+/**
+ * /homepagev2 fork, 10 September 2026, user direction.
+ *
+ * A copy of src/content/homepage.ts, owned by /homepagev2 alone. The two
+ * pages share NOTHING but the framework and the site chrome: edit this
+ * freely and the live homepage is untouched, and vice versa.
+ *
+ * The cost of that is the usual one -- a fix made on one page does not
+ * reach the other. Whichever page wins, delete the loser rather than
+ * leaving both; `src/components/lofi` and `src/components/v2` are the
+ * standing record of what two divergent copies turn into.
+ */
+
 /** Interface copy for the timed prototype requested 8 September 2026 (X1). */
 export const homeLoader = { label: "Loading homepage" };
 
 /** Figma/screenshot interface label, 8 September 2026; not narrative copy. */
 export const homeHero = { scrollLabel: "Scroll" };
 
-/** Screenshot text sequence, user direction 9 September 2026 (D5 hi-fi amendment).
- *
- * ⚠ NOT RENDERED on `/` since 10 September 2026, when the painting it was
- * spoken over left the homepage opening (user direction). It is still on
- * screen at /homepagev2, from that route's own content module. Kept here for
- * the same reason the pathways and the tagline were kept through v2: content
- * is not deleted to match a layout. */
+/** Screenshot text sequence, user direction 9 September 2026 (D5 hi-fi amendment). */
 export const homePaintingCopy = {
   entrance: "You are entering",
   place: "Turraburra",

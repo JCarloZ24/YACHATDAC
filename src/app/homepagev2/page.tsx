@@ -1,10 +1,27 @@
 import { FooterGround } from "@/components/layout/FooterGround";
-import { BeatSection } from "@/components/sections/BeatSection";
+import { BeatSection } from "./_components/BeatSection";
 import { HomeHero } from "./_components/HomeHero";
 import { ThreadLine } from "@/components/ui/ThreadLine";
-import { beats } from "@/content/homepage";
+import { beats } from "./_content/homepage";
 import { HomeLoader } from "./_components/HomeLoader";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+
+/**
+ * /homepagev2 -- a duplicate of the homepage, 10 September 2026, user
+ * direction. Same route content, its own component copies under
+ * `_components/`, so the two can be worked on apart.
+ *
+ * ⚠ NOT an IA change. This route is a working surface, like `/v2` and
+ * `/lab/*`: it is not in `site.ts`, nothing links to it, and adding it to
+ * the navigation is a D-number. Whichever of the two pages wins, the other
+ * gets deleted rather than left to rot -- two homepages drifting apart is
+ * exactly the state `src/components/lofi` and `src/components/v2` document
+ * the cost of.
+ *
+ * ⚠ Only the MARKUP is duplicated. Content modules, stylesheets and the
+ * whole motion library are shared with `/`, so a change to copy, a CSS
+ * class, a data hook or an effect lands on both pages at once.
+ */
 
 /**
  * Homepage — one continuous scroll.
@@ -43,7 +60,7 @@ import { SmoothScroll } from "@/components/motion/SmoothScroll";
  */
 const [hero, ...rest] = beats;
 
-export default function HomePage() {
+export default function HomePageV2() {
   return (
     <>
       {/* SCR-09, 9 September 2026: match the other immersive pages' wheel inertia. */}
