@@ -15,6 +15,38 @@ import { HOME_PAINTING, HOME_PORTAL } from "@/content/kit";
 gsap.registerPlugin(ScrollTrigger);
 
 /**
+ * Where the landscape plate's cover crop rests, 9 September 2026 user
+ * direction. A viewport wider than the 1440×1500 source crops the plate
+ * vertically; 0 keeps the old centred crop (trim off both ends, near ground
+ * lost), 1 pins the photograph's bottom edge to the bottom of the canvas.
+ * This is the number to turn if the land sits too high or too low at rest.
+ *
+ * ⚠ Held at 1 deliberately. It briefly went to 0.75 to make room for an
+ * Invitation drift that moved the sampling window; that approach is gone
+ * (`LANDSCAPE_INVITATION_LIFT` in effects/home.ts now travels the whole scene
+ * up the screen instead), and the bottom pin is what puts the photograph's
+ * own speckled dissolve at the plate's bottom edge — which is the edge that
+ * rises into view. Lower this and the lift uncovers a hard cut through the
+ * middle of the land instead.
+ */
+const LANDSCAPE_BOTTOM_BIAS = 1;
+
+/**
+ * How much scroll each unit of the dissolve timeline costs, in viewport
+ * heights. SCR-10 set it at 1.2. Lowered to 0.8 on user direction, 10
+ * September 2026: the canvas has taken on The Invitation, the closing line,
+ * the offer and the pathways since that number was chosen, and at 120vh a
+ * unit the whole page had become a long haul on the wheel.
+ *
+ * This is THE sensitivity dial for the pinned hero — smaller advances the
+ * timeline further per wheel tick, larger slows it down. Nothing else should
+ * be retimed to make the page feel faster: the beats' relative pacing is in
+ * the timeline, and this scales all of it at once. The scroll-cue jump reads
+ * the same constant, so the two cannot drift apart.
+ */
+const SCROLL_PER_UNIT = 0.8;
+
+/**
  * F7/F8, Home opens / homeHeroOpen, user direction 8 September 2026.
  * 9 September POV correction: fixed plates, a stationary eye and head rotation.
  * Only the entrance moves the gallery. AMB-05 adds local vegetation wind to
@@ -114,7 +146,7 @@ export function createHomeHero(
         camera.lookAt(0, 0, 0);
         camera.updateMatrixWorld();
         const entrance = { x: 24, y: -1, z: -16, yaw: -0.3 };
-        const exit = { progress: 0, portal: 0, wonder: 0, truth: 0, truthSky: 1422, truthLight: 464, belonging: 0 };
+        const exit = { progress: 0, portal: 0, wonder: 0, truth: 0, truthSky: 1422, truthLight: 464, belonging: 0, landscapeLift: 0, landscapeZoom: 1 };
         let landscapeReady = false;
         syncBreeze = () => {
           breeze?.paused(disposed || offscreen || document.hidden || !landscapeReady || exit.portal <= 0.65);
@@ -130,6 +162,9 @@ export function createHomeHero(
         paintingTexture.colorSpace = SRGBColorSpace;
         textures.push(paintingTexture);
         const paintingMaterial = createPaintingMaterial(paintingTexture, HOME_PAINTING.width, HOME_PAINTING.height);
+        // What sits behind the land once the lift takes it up: charcoal, not
+        // the renderer's clear colour, which has warmed to oxide by then.
+        (paintingMaterial.uniforms.beyond.value as Color).copy(dark);
         materials.push(paintingMaterial);
         const landscapeImage = new Image();
         const landscapeTexture = new Texture(landscapeImage);
@@ -213,6 +248,42 @@ export function createHomeHero(
           paintingMaterial.uniforms.belonging.value = exit.belonging;
           paintingMaterial.uniforms.truthSkyOffset.value = exit.truthSky;
           paintingMaterial.uniforms.truthLightOffset.value = exit.truthLight;
+          // Where the cover crop's window sits in the photograph. Recomputed
+          // per frame rather than on resize because the drift moves it: the
+          // crop half-height comes from the current viewport, so this stays
+          // right across a resize without a second code path.
+          //
+          // ⚠ Landscape texture v runs TOP to bottom — v=0 is the top of the
+          // photograph, not its bottom. Verified against the screen, 9
+          // September 2026, after both signs here were first written the
+          // other way: it put the treeline where the near ground belonged and
+          // drifted the land up instead of down. Hence anchor RISES to bring
+          // the bottom edge into frame, and FALLS to move the land down the
+          // screen. Both constants read in their own plain sense; this line
+          // owns the axis. Don't invert one without the other.
+          const crop = paintingMaterial.uniforms.landscapeCrop.value as Vector2;
+          // Half the visible window's height in image space, after the push-in
+          // narrows it. Bottom-anchoring means holding the window's lower edge
+          // against the photograph's, so it has to follow the zoom — otherwise
+          // pushing in would drag the near ground back out of frame.
+          const halfY = crop.y / exit.landscapeZoom * 0.5;
+          paintingMaterial.uniforms.landscapeZoom.value = exit.landscapeZoom;
+          // Clamped to the texture. The landscape map wraps ClampToEdge, so a
+          // window that runs off either end smears the first or last row of
+          // the photograph across the band instead of erroring — silent, and
+          // easy to ship. A narrow viewport has no vertical crop at all and
+          // so no room to move: there the rise is held here, and only the
+          // push-in's narrowing window frees any travel.
+          paintingMaterial.uniforms.landscapeAnchor.value = gsap.utils.clamp(
+            halfY, 1 - halfY, 0.5 + LANDSCAPE_BOTTOM_BIAS * (0.5 - halfY));
+          // The Invitation carries the scene off the top of the canvas; the
+          // window on the photograph does not move with it. See the lift note
+          // in home-painting.ts.
+          paintingMaterial.uniforms.lift.value = exit.landscapeLift;
+          // Maps this plate into the old top-900 crop the shader thresholds
+          // were calibrated against. See the HOME_PORTAL note in kit.ts.
+          paintingMaterial.uniforms.legacyScale.value =
+            HOME_PORTAL.height / HOME_PORTAL.legacyHeight;
           renderer?.setClearColor(ground, 1);
           renderer?.render(scene, camera);
         };
@@ -279,7 +350,7 @@ export function createHomeHero(
           const trigger = ScrollTrigger.getById("home-hero-dissolve");
           const wonderTime = (trigger?.animation as gsap.core.Timeline | undefined)?.labels.wonderReady;
           if (trigger && typeof wonderTime === "number") {
-            window.scrollTo({ top: trigger.start + window.innerHeight * wonderTime * 1.2, behavior: "instant" });
+            window.scrollTo({ top: trigger.start + window.innerHeight * wonderTime * SCROLL_PER_UNIT, behavior: "instant" });
           }
         };
         scrollCue?.addEventListener("click", goToWonder);
@@ -352,7 +423,7 @@ export function createHomeHero(
             id: "home-hero-dissolve",
             trigger: root,
             start: "top top",
-            end: () => `+=${window.innerHeight * dissolve.duration() * 1.2}`, // SCR-10: 120vh per unit, through the final dated scene.
+            end: () => `+=${window.innerHeight * dissolve.duration() * SCROLL_PER_UNIT}`, // SCR-10, retimed 10 September: see SCROLL_PER_UNIT.
             pin: true,
             scrub: 0.8,
             animation: dissolve,

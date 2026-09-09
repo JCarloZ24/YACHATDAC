@@ -16,9 +16,67 @@ export type HomeHeroFrame = {
 /** Figma 3371:41740, 9 September 2026. Exact supplied fills; credits and
  * identities unconfirmed. F8 user-authorised; held frame grade. See media README. */
 export const homeInvitationMedia = [
-  { src: "/media/home/derivatives/sandstone-overhang-visitors.webp", icon: "/media/home/derivatives/invitation-ring.svg", position: "center bottom", grade: "frame", node: "3371:41802" },
+  { src: "/media/home/derivatives/sandstone-overhang-group.webp", icon: "/media/home/derivatives/invitation-ring.svg", position: "center top", grade: "frame", node: "3371:41802" },
   { src: "/media/home/derivatives/verandah-table-people.webp", icon: "/media/home/derivatives/invitation-spiral.svg", position: "center", grade: "frame", node: "3371:41842" },
   { src: "/media/home/derivatives/person-beside-smoking-fire.webp", icon: "/media/home/derivatives/invitation-boomerang.svg", position: "24% center", grade: "frame", node: "3371:41865" },
+];
+
+/**
+ * The closing offer's four photographs — prototype deck slide 23, user
+ * direction 9 September 2026. Read as a set around the body copy, two above
+ * and two below, none of them touching it.
+ *
+ * `left` / `top` / `w` are percentages of the panel and `aspect` its ratio,
+ * measured off the deck rather than a Figma node — the slide has none. They
+ * are composition, not geography. Every plate is `frame` grade: the panel
+ * moves them into place and they never scrub, warp or crop under motion, and
+ * the portrait is `frame` for the additional reason that portraits always
+ * are. Credits and identities unconfirmed; F8 permits the use, and no
+ * identity or role is implied by placing a face here.
+ */
+export type HomeOfferSlot = {
+  src: string; origin: string; grade: "frame";
+  width: number; height: number;
+  left: number; top: number; w: number; aspect: number;
+};
+
+export const homeOfferMedia: HomeOfferSlot[] = [
+  { src: "/media/home/derivatives/scrub-through-trees.webp", origin: "/media/library/partnerships/pt-breath.webp",
+    grade: "frame", width: 480, height: 270, left: 21, top: 5, w: 31.5, aspect: 1.8 },
+  { src: "/media/home/derivatives/woodland-track.webp", origin: "/media/library/about/about-road.webp",
+    grade: "frame", width: 480, height: 270, left: 68.2, top: 14.3, w: 24, aspect: 1.68 },
+  { src: "/media/home/derivatives/sunset-outcrop.webp", origin: "/media/library/record/therecord-hero.webp",
+    grade: "frame", width: 480, height: 253, left: 6.5, top: 57, w: 22.5, aspect: 1.48 },
+  { src: "/media/home/derivatives/elder-portrait.webp", origin: "/media/library/elder-portrait.webp",
+    grade: "frame", width: 520, height: 274, left: 68, top: 59, w: 13.75, aspect: 0.79 },
+];
+
+/**
+ * The four pathway cards — prototype deck slide 24, user direction 9
+ * September 2026. One photograph and one artwork mark per pathway, in the
+ * order `wayForward.paths` declares them, so the card and its route cannot
+ * drift apart.
+ *
+ * The marks are the same four the Invitation uses; the deck repeats the
+ * boomerang on the last two and so does this. Photographs are `frame` grade
+ * and are chosen not to repeat the Invitation's three — the two sets sit on
+ * one page and reading the same picture twice makes them look like the same
+ * navigation. Credits and identities unconfirmed; F8 permits the use.
+ *
+ * ⚠ The deck's first card is a night fire in grass and there is no such
+ * derivative — `escarpment-walk` stands in, which changes what the card shows
+ * (people arriving on Country rather than fire at night) while keeping what
+ * it says. Flag at review if the fire is the point.
+ */
+export const homePathwayMedia = [
+  { src: "/media/home/derivatives/escarpment-walk.webp", origin: "/media/library/escarpment-approach.webp",
+    icon: "/media/home/derivatives/invitation-ring.svg", grade: "frame", position: "center" },
+  { src: "/media/home/derivatives/emu-woodland.webp", origin: "/media/library/living-work/livingwork-spring.webp",
+    icon: "/media/home/derivatives/invitation-spiral.svg", grade: "frame", position: "center" },
+  { src: "/media/home/derivatives/mortar-at-ute.webp", origin: "/media/library/living-work/livingwork-work7.webp",
+    icon: "/media/home/derivatives/invitation-boomerang.svg", grade: "frame", position: "center" },
+  { src: "/media/home/derivatives/hand-at-rock.webp", origin: "/media/library/engravings-hand.webp",
+    icon: "/media/home/derivatives/invitation-boomerang.svg", grade: "frame", position: "center" },
 ];
 
 // Positions and widths are percentages of the collage stage, not geographic data.
