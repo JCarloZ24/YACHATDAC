@@ -1,0 +1,10 @@
+/* The pathway row, deck slide 24, 9 September 2026.
+
+   The row was briefly a native snap scroller; it is now a track inside a mask
+   that the dissolve timeline carries right (see homeHeroDissolve). What is
+   left here is the mask's own guard: it must never scroll itself, or the
+   transform and the scroll position would both be moving the same cards. */
+.home-pathways-mask {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}

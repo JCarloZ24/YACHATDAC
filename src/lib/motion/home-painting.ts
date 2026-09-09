@@ -1,4 +1,4 @@
-import { ShaderMaterial, Texture, Vector2 } from "three";
+import { Color, ShaderMaterial, Texture, Vector2 } from "three";
 
 /** Home hero dissolve / 9 September 2026, F8.
  * Reveals original pixels from the supplied painting. The mask travels outward
@@ -24,6 +24,14 @@ export function createPaintingMaterial(texture: Texture, width: number, height: 
       truthSkyMap: { value: texture },
       truthLightMap: { value: texture },
       landscapeCrop: { value: new Vector2(1, 1) },
+      landscapeAnchor: { value: 0.5 },
+      legacyScale: { value: 1 },
+      landscapeZoom: { value: 1 },
+      // How far up the screen the whole land scene has travelled, in screen
+      // heights, and what is behind it when it goes. See the lift note in the
+      // fragment shader. `beyond` is charcoal, handed in from the token.
+      lift: { value: 0 },
+      beyond: { value: new Color(0, 0, 0) },
       cropScale: { value: new Vector2(1, 1) },
       imageAspect: { value: width / height },
     },
@@ -53,6 +61,15 @@ export function createPaintingMaterial(texture: Texture, width: number, height: 
       uniform sampler2D truthSkyMap;
       uniform sampler2D truthLightMap;
       uniform vec2 landscapeCrop;
+      uniform float landscapeAnchor;
+      uniform float legacyScale;
+      uniform float landscapeZoom;
+      uniform float lift;
+      // How much of the canvas height the land takes to go out of focus and
+      // into charcoal at the lift's trailing edge. Turn this, not the fade
+      // inside main -- the blur width and the fade span are both read off it.
+      const float liftEdge = 0.11;
+      uniform vec3 beyond;
       uniform float imageAspect;
       varying vec2 imageUv;
       varying vec2 screenUv;
@@ -133,11 +150,59 @@ export function createPaintingMaterial(texture: Texture, width: number, height: 
         float alpha = mix(ground, reveal, marks) * smoothstep(0.0, 0.035, progress);
         // 9 September: the centre is already open while the first rings draw.
         float hole = (1.0 - smoothstep(0.035, 0.038, radius)) * smoothstep(0.0, 0.035, progress) * landscapeReady;
-        vec2 landscapeUv = (screenUv - 0.5) * landscapeCrop + 0.5;
+        // 9 September 2026, user direction. Wider viewports crop this plate
+        // vertically, and the crop used to be centred -- taking the trim off
+        // both ends and losing the near ground, which is what the last beat
+        // hands to The Invitation. landscapeAnchor is where the window sits
+        // in the photograph: 0.5 is the old centred crop, higher pulls the
+        // image's bottom edge into frame, and the Invitation beat lowers it
+        // again to drift the land down the screen. Texture v runs top to
+        // bottom here -- home-hero.ts owns that axis and both signs; see the
+        // warning there before changing either. Horizontal stays centred.
+        // Every threshold below reads landscapeUv as image space
+        // (treeline at .52, canopy .40-.57, the sky bands), so they keep
+        // pointing at the same pixels; only the window onto them moves.
+        // landscapeZoom narrows the window to push into the land (grammar:
+        // "being drawn in" / pushIn, scrubbed). It divides the crop on both
+        // axes, so the anchor stays the point the window is held to and the
+        // land magnifies about it rather than sliding. home-hero.ts computes
+        // the anchor from the ZOOMED half-height for the same reason.
+        // 9 September 2026, user direction: The Invitation lifts the whole
+        // land scene up the screen and leaves charcoal behind it, the way a
+        // scrolled page carries its background off the top. This is a screen
+        // shift, not a sampling drift -- the window on the photograph is
+        // unchanged, so the plate keeps its bottom-anchored crop and the edge
+        // that rises into view is the photograph's own speckled dissolve
+        // rather than a cut. Below it there is no photograph at all, and the
+        // fragment ends as beyond (see the end of main).
+        //
+        // screenUv.y is 0 at the bottom of the canvas, so a pixel now shows
+        // what used to sit lift below it -- hence the subtraction, and hence
+        // a negative sUv.y meaning "off the bottom of the plate".
+        vec2 sUv = vec2(screenUv.x, screenUv.y - lift);
+        // The lift used to end on a ruled line across the canvas. The land now
+        // goes soft into the dark over the last liftEdge of screen height:
+        // out of focus first, then out of light. Gated on lift itself, or the
+        // same band would blur the bottom of every beat before this one.
+        float soften = liftEdge * smoothstep(0.0, 0.03, lift);
+        float edgeBand = 1.0 - smoothstep(0.0, max(soften, 0.0001), max(sUv.y, 0.0));
+        vec2 landscapeUv = vec2(
+          (sUv.x - 0.5) * landscapeCrop.x / landscapeZoom + 0.5,
+          (sUv.y - 0.5) * landscapeCrop.y / landscapeZoom + landscapeAnchor);
+        // The photograph is now its full 1440x1500. Every threshold below was
+        // calibrated against the old top-900 crop, so map into that space
+        // rather than re-tuning each beat: legacyY is where this pixel sat in
+        // the 900-row crop. Past its bottom edge legacyY exceeds 1 -- the new
+        // near ground -- where the smoothsteps simply saturate, which is the
+        // right reading of "nearer than anything the old crop contained".
+        // Sampling of the taller texture still uses landscapeUv itself.
+        float legacyY = landscapeUv.y * legacyScale;
+        // Texture lookups keyed to the old crop must stay inside it.
+        float legacyBand = clamp(legacyY, 0.0, 1.0);
         vec4 terrain = texture2D(landscape, landscapeUv);
         // AMB-05: the road widens from the vanishing point toward the viewer.
         // Keep its whole corridor still; colour/luminance suppress bark and soil.
-        float foreground = 1.0 - smoothstep(0.0, 0.52, landscapeUv.y);
+        float foreground = 1.0 - smoothstep(0.0, 0.52, legacyY);
         float roadWidth = mix(0.012, 0.14, foreground);
         float roadside = smoothstep(roadWidth, roadWidth + 0.035, abs(landscapeUv.x - 0.5));
         float vegetation = smoothstep(0.45, 0.85, terrain.g / max(terrain.r, 0.001));
@@ -146,7 +211,7 @@ export function createPaintingMaterial(texture: Texture, width: number, height: 
         // AMB-05, latest user direction: gentle motion across all vegetation.
         // The spatial road mask and dark-trunk suppression remain in place.
         float windMask = roadside * mix(0.4, 1.0, vegetation) * foliageLight * edgeHold;
-        float canopy = smoothstep(0.40, 0.57, landscapeUv.y);
+        float canopy = smoothstep(0.40, 0.57, legacyY);
         float sway = sin(breezePhase * 3.0 + landscapeUv.x * 13.0)
           * 0.7 + sin(breezePhase * 5.0 + landscapeUv.y * 19.0) * 0.3;
         float ripple = sin(breezePhase * 6.0 + landscapeUv.x * 55.0 + landscapeUv.y * 30.0);
@@ -154,13 +219,24 @@ export function createPaintingMaterial(texture: Texture, width: number, height: 
         vec2 wind = vec2(mix(ripple * 0.0009, sway * 0.00065, canopy),
           ripple * 0.00012 * (1.0 - canopy)) * windMask * arrival;
         terrain = texture2D(landscape, clamp(landscapeUv + wind, 0.001, 0.999));
+        // Five-tap cross, widening as the departing edge approaches. Cheap,
+        // and it only has to read as depth of field over a tenth of a screen.
+        // Applied to the terrain sample rather than to the composed frame, so
+        // the sky, the Truth layers and the road corridor stay sharp and only
+        // the ground the lift is carrying away loses its edges.
+        vec2 blurStep = vec2(0.0, 0.005) * edgeBand;
+        vec4 blurred = (texture2D(landscape, clamp(landscapeUv + wind + blurStep, 0.001, 0.999))
+          + texture2D(landscape, clamp(landscapeUv + wind - blurStep, 0.001, 0.999))
+          + texture2D(landscape, clamp(landscapeUv + wind + blurStep.yx, 0.001, 0.999))
+          + texture2D(landscape, clamp(landscapeUv + wind - blurStep.yx, 0.001, 0.999))) * 0.25;
+        terrain = mix(terrain, blurred, edgeBand);
         // User reference, 9 September: sample the supplied sky's pale daylight
         // band behind the original transparent treeline, rather than deep blue.
-        float skyY = mix(0.855, 0.94, clamp((landscapeUv.y - 0.52) / 0.48, 0.0, 1.0));
+        float skyY = mix(0.855, 0.94, clamp((legacyBand - 0.52) / 0.48, 0.0, 1.0));
         vec3 daylight = texture2D(sky, vec2(landscapeUv.x, skyY)).rgb;
         float luminance = dot(daylight, vec3(0.2126, 0.7152, 0.0722));
         daylight = mix(vec3(luminance), daylight, 0.65) * 0.8;
-        vec3 blueSky = texture2D(sky, vec2(landscapeUv.x, mix(0.94, 0.99, landscapeUv.y))).rgb * 0.8;
+        vec3 blueSky = texture2D(sky, vec2(landscapeUv.x, mix(0.94, 0.99, legacyBand))).rgb * 0.8;
         // 9 September: one daylight value drives sky and land together. Grade
         // in linear colour so night dims light rather than painting a flat veil.
         float daylightAmount = clamp(wonder, 0.0, 1.0);
@@ -170,16 +246,24 @@ export function createPaintingMaterial(texture: Texture, width: number, height: 
         vec3 litTerrain = mix(nightTerrain, terrain.rgb, daylightAmount);
         // Exact 3371:44774 stack: sky, transparent land, full-scene 25% black,
         // then the supplied soft-light layer masked to the foreground alpha.
-        vec3 truthSky = texture2D(truthSkyMap, vec2(landscapeUv.x, 1.0 - (truthSkyOffset + (1.0 - landscapeUv.y) * 900.0) / 6996.0)).rgb;
+        vec3 truthSky = texture2D(truthSkyMap, vec2(landscapeUv.x, 1.0 - (truthSkyOffset + (1.0 - legacyBand) * 900.0) / 6996.0)).rgb;
         // Terrain compositing below keeps every star behind the treeline.
-        truthSky = mix(truthSky, nightStars(landscapeUv), belonging);
-        truthSky += vec3(0.72, 0.86, 1.0) * shootingStar(screenUv) * smoothstep(0.9, 1.0, belonging);
+        truthSky = mix(truthSky, nightStars(vec2(landscapeUv.x, legacyBand)), belonging);
+        truthSky += vec3(0.72, 0.86, 1.0) * shootingStar(sUv) * smoothstep(0.9, 1.0, belonging);
         vec3 truthBase = sRGBTransferOETF(vec4(mix(truthSky, terrain.rgb, terrain.a), 1.0)).rgb * 0.75;
-        vec3 light = sRGBTransferOETF(texture2D(truthLightMap, vec2(landscapeUv.x, 1.0 - (truthLightOffset + (1.0 - landscapeUv.y) * 900.0) / 7619.0))).rgb;
+        vec3 light = sRGBTransferOETF(texture2D(truthLightMap, vec2(landscapeUv.x, 1.0 - (truthLightOffset + (1.0 - legacyBand) * 900.0) / 7619.0))).rgb;
         vec3 truthView = sRGBTransferEOTF(vec4(mix(truthBase,
           softLight(truthBase, light), terrain.a), 1.0)).rgb;
         vec3 view = mix(mix(mix(blueSky, daylight, daylightAmount), litTerrain, terrain.a), truthView, truth);
         gl_FragColor = vec4(mix(source.rgb, view, hole), max(alpha, hole));
+        // What the lift uncovers. Opaque, so it covers the renderer's own
+        // clear colour -- by this beat that has already warmed to oxide, and
+        // the ground below the land has to read as charcoal, not as red.
+        // The hand-off is a fade across the lower part of the blurred band,
+        // never a step: below the edge there is only charcoal, above it the
+        // land arrives already soft, and the two meet without a line.
+        float edge = smoothstep(-soften * 0.35, max(soften * 0.55, 0.0001), sUv.y);
+        gl_FragColor = vec4(mix(beyond, gl_FragColor.rgb, edge), max(alpha, hole));
         #include <colorspace_fragment>
       }
     `,

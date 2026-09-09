@@ -120,6 +120,7 @@ export type EffectName =
   | "recordLoader"
   | "homeHeroOpen"
   | "homeInvitation"
+  | "homeWayForward"
   | "homeHeroDissolve"
   // core — arrival, type, the rest
   | "settle"

@@ -1,6 +1,10 @@
 import Image from "next/image";
 import { homeTruthScenes, homeTruthArtwork } from "@/content/home-truth-scenes";
 import { HomeHeroCanvas } from "./HomeHeroCanvas";
+import { Invitation } from "@/components/sections/Invitation";
+import { WayForwardStatement } from "@/components/sections/WayForwardStatement";
+import { WayForwardOffer } from "@/components/sections/WayForwardOffer";
+import { Pathways } from "@/components/sections/Pathways";
 import { homeHeroFrames } from "@/content/homepage-media";
 import { homeHero, homePaintingCopy, type Beat } from "@/content/homepage";
 import "./home-hero.css";
@@ -88,6 +92,17 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
         </h2>
         <p data-painting-story className="home-painting-copy painting-story headline absolute bottom-[7.5%] right-6 max-w-[260px] text-h3 leading-[1.15] tracking-normal text-right lg:right-[2.5%] lg:max-w-[440px]">{homePaintingCopy.story}</p>
       </div>
+      {/* Beat 6 rides the same pinned canvas as Wonder, Truth and Belonging
+          (9 September 2026, user direction). It arrives last, travelling up
+          one viewport over the drifting land — see homeHeroDissolve. */}
+      <Invitation />
+      {/* The page ends on this line, still on the same canvas: it comes up as
+          The Invitation leaves and the lift finishes carrying the land off. */}
+      <WayForwardStatement />
+      {/* The line clears and the offer takes the same canvas: deck 22 and 23. */}
+      <WayForwardOffer />
+      {/* And the last screen of the page, still on this canvas: deck 24. */}
+      <Pathways />
       {/* Media scrim is the palette's explicit gradient exception (X5). */}
       <div data-hero-scrim aria-hidden="true" className="pointer-events-none absolute inset-0 bg-charcoal/35" />
       <div data-hero-scrim aria-hidden="true" className="pointer-events-none absolute inset-0 bg-linear-to-t from-charcoal/70 via-transparent to-charcoal/20" />
