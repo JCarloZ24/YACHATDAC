@@ -918,11 +918,11 @@ page deepens. There is no WebGL on this route.
 | 02 | The facts — the Queensland map | 320 | canvas, sticky span | **media** | `routeDraw` → `brushFill` → `inkFlare`; copy arrives in three tiers |
 | 03 | Highlights | 100 | white | **media** | `emanate` across the rail, each card's clip opening from its left edge |
 | 04 | Getting here — the route map | 300 | charcoal, sticky span | **media** | the same draw and flare; the copy arrives in stop order |
-| 05 | Turraburra | 140 | full bleed | **media** | `bleed` past the plate's own edge, the photograph held inside it |
+| 05 | Turraburra | 180 | full bleed | **media** | landscape behind Getting here's outgoing wave; `landscapeApproach` on entry, `landscapeGyroscope` on mouse hover; image and copy hold for 80vh before exit (user direction 9 September 2026) |
 | 06 | What a stay looks like | ~720 | canvas, sticky reading screen | **transition** | six automatic stops at one viewport position; line, copy and picture entrances from the effects lab |
 | 07 | Before you come | 100 | evergreen | **none** | `hold`, cells arrive, one beat on the call to action |
 | 08 | Where you sleep | 120 | canvas | **media** | two frames open around held photographs; no overscale or parallax |
-| 09 | What it is like out here | 140 | full bleed | **media** | the plate bleeds past its edge; no sweep — see below |
+| 09 | What it is like out here | 180 | full bleed | **media** | same landscape entry, mouse drift and 80vh reading hold as §05; no sweep |
 | 10 | Your hosts | 100 | canvas | **none** | the copy arrives; the pointer names three of the eight, and the faces hold |
 | 11 | From Country | 100 | white | **media** | the card rail again, quieter |
 | 12 | Come and see it | 100 | roasted | **none** | the quietest screen, and the second conversion point |
@@ -958,10 +958,17 @@ one.
 
 ### The two things the pointer must never do here
 
-§05, §09 and §11 hold documentary photographs of Country and of a cultural site, and §10 is a
+§11 holds documentary photographs of Country and of a cultural site, and §10 is a
 group portrait. Every one carries `data-motion="frame"`, so `bleed` counter-scales the picture,
 `plateParallax` refuses to touch it, and the hosts' interaction moves a label and a dim and
 nothing else. Portraits hold still; the world moves around them.
+
+Exception, latest user direction 9 September 2026: §05 Turraburra and §09 Out here
+share full-motion landscapes through `wonder-landscape.ts`: a sticky viewport
+with shallow entry approach and mouse tilt/drift. Copy holds with the photograph
+for 80vh of scroll after seating. Touch disables the pointer effect; reduced motion
+and no JavaScript render static full-height sections. Content too tall for the
+viewport uses ordinary reading flow.
 
 ### Both maps were cropped by their own layout, and both are fixed
 

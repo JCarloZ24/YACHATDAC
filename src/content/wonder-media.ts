@@ -88,7 +88,11 @@ export const wonderHighlightMedia: MediaSlot[] = [
   },
 ];
 
-/** TURRABURRA — the escarpment across open country, full-bleed. */
+/** TURRABURRA — the escarpment across open country, full-bleed.
+ * F7, user direction 9 September 2026: full motion for this landscape;
+ * sticky viewport, shallow scroll approach and pointer tilt/drift. Supersedes
+ * Wonder's former page-wide frame-only treatment for this slot alone.
+ */
 export const turraburraSlot: MediaSlot = {
   id: "wonder-turraburra",
   bucket: "country",
@@ -183,7 +187,10 @@ export const whereYouSleepMedia: MediaSlot[] = [
   },
 ];
 
-/** WHAT IT IS LIKE OUT HERE — full-bleed, copy on the right. */
+/** WHAT IT IS LIKE OUT HERE — full-bleed, copy on the right.
+ * F7, user direction 9 September 2026: full motion, sharing Turraburra's
+ * sticky landscape, 80vh reading hold, scroll approach and mouse tilt/drift.
+ */
 export const whatItIsLikeSlot: MediaSlot = {
   id: "wonder-out-here",
   bucket: "country",

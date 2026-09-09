@@ -25,7 +25,8 @@
  * image element, which is what `movable()` filters on. So `pushIn` and
  * `plateParallax` move the plate and leave the picture alone, and `bleed`
  * counter-scales the media by construction. No effect below deforms an image
- * plane.
+ * plane. Exception, user direction 9 September 2026: Turraburra and Out here
+ * now share the full-motion landscape in wonder-landscape.ts.
  */
 
 import { clearAll, composition } from "@/lib/motion/compose";
@@ -137,43 +138,7 @@ export function cardRail(root: HTMLElement, span: number): MotionModule {
 }
 
 /**
- * §05 — Turraburra, and §09 — What it is like out here. The two landscapes.
- *
- * "Immersive" here means the FRAME moves and the photograph does not. The
- * plate grows past its own edge under `bleed` while the copy holds still
- * against it, and the scrim ramps with it so the heading survives the picture
- * brightening. The image plane never scales, drifts or ken-burns: this is
- * Country, `frame` grade, and `bleed` counter-scales the media for exactly
- * that reason.
- *
- * Scrubbed, so the reader sets the pace of the approach.
- *
- * Hooks: `[data-plate]` the frame, `[data-frame-media]` the picture inside it,
- * `[data-wonder-scrim]` the overlay, `[data-plate-copy]` the copy block.
- */
-export function landscapePlate(root: HTMLElement, span: number): MotionModule {
-  return composition("wonder/landscape", root, {
-    channel: "media",
-    span,
-    uses: ["bleed", "scrimRamp", "settle", "arrive"],
-    build: (tl) => {
-      const plate = q(root, "[data-plate]");
-      const scrim = q(root, "[data-wonder-scrim]");
-      if (plate) tl.bleed(plate, { amount: 1.08, ease: EASE.machine }, 0);
-      if (scrim) tl.scrimRamp(scrim, { from: 0.6, to: 1 }, 0);
-    },
-    enter: (tl) => {
-      const heading = q(root, "[data-plate-copy] h2");
-      const rest = qa(root, "[data-plate-copy] p, [data-plate-copy] li");
-      if (heading) tl.settle(heading);
-      if (rest.length) tl.arrive(rest, { stagger: 0.05 }, 0.2);
-    },
-    cut: clearAll,
-  });
-}
-
-/**
- * §09 — What it is like out here.
+ * Former §09 composition, superseded by wonder-landscape.ts on 9 Sep 2026.
  *
  * WAS the page's one change of ground, and is not any more (9 Sep 2026, user
  * report). The `ground` sweep was drawn as a translucent evergreen band
@@ -183,8 +148,8 @@ export function landscapePlate(root: HTMLElement, span: number): MotionModule {
  * no join here for it to happen at.
  *
  * What is left is the landscape treatment — the plate bleeds past its edge,
- * the scrim ramps, the copy arrives — which is `landscapePlate` with the list
- * items instead of paragraphs.
+ * the scrim ramps, the copy arrives. Turraburra's newer sticky landscape is
+ * shared with this section in wonder-landscape.ts (9 September 2026).
  */
 export function groundChange(root: HTMLElement, span: number): MotionModule {
   return composition("wonder/out-here", root, {

@@ -1,0 +1,80 @@
+/* F7 / SCR-01, 9 September 2026: shared landscape and reading hold for
+   Turraburra and Out here. The static cut retains natural content sizing. */
+.scene {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.scene > [data-wonder="getting-here"] {
+  grid-area: 1 / 1;
+  z-index: 1;
+}
+
+.section {
+  position: relative;
+  grid-area: 2 / 1;
+  z-index: 1;
+}
+
+.screen {
+  display: flex;
+  min-height: 100svh;
+  align-items: flex-end;
+  padding: 160px 20px 64px;
+}
+
+@media (min-width: 64rem) {
+  .screen {
+    padding-right: 64px;
+    padding-bottom: 80px;
+    padding-left: 64px;
+  }
+}
+
+.backdrop {
+  position: relative;
+  grid-area: 2 / 1;
+  min-height: 0;
+  pointer-events: none;
+}
+
+.viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-burnt);
+}
+
+.approach,
+.image {
+  position: absolute;
+  inset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scene[data-landscape-motion] .backdrop {
+    grid-row: 1 / 3;
+  }
+
+  .scene[data-landscape-motion] .viewport {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+
+  .scene[data-landscape-hold] .section {
+    min-height: 180svh;
+  }
+
+  .scene[data-landscape-hold] .screen {
+    position: sticky;
+    top: 0;
+  }
+
+  /* Overscan hides the edges at the largest pointer tilt and translation. */
+  .scene[data-landscape-motion] .image {
+    inset: -5%;
+  }
+}
