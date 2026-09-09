@@ -1,6 +1,6 @@
 # The motion grammar
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
 
 *Decided 30 August 2026. The second artefact, and the one the code answers to.*
 
@@ -14,9 +14,9 @@ This table is not a description of the code. It is the code's source: each row n
 registered effect in `src/lib/motion/effects/`, and each effect's doc comment names its row
 back. Adding a behaviour means adding it to a row here first.
 
-**Ten rows, thirty effects.** The row count is what the brief caps and it should stay near
-ten — a twentieth *role* is what this document exists to refuse. The effect count is free to
-grow, because several effects can serve one role at different volumes. See Variants below.
+The row count should stay near ten — a twentieth *role* is what this document exists to refuse.
+The effect count is free to grow, because several effects can serve one role at different
+volumes. See Variants below.
 
 ---
 
@@ -24,20 +24,25 @@ grow, because several effects can serve one role at different volumes. See Varia
 |---|---|---|---|---|---|
 | **what endures** | A line rises from behind an edge and never exits. Masked at the line. | `country` · 0.82s · 0.09 stagger | B5 | — | `settle` |
 | **what endures**, display cut | A short heading resolves character by character. Six words at most. | `country` · 0.82s · 0.028 stagger | B6 | — | `display` |
+| **what endures**, wave clamp | A chapter heading travels with its incoming Wave / Divider until its crown reaches the viewport crown; it holds there while the divider covers it. | `machine`, scrubbed | Truth · Today | — | `waveClamp` |
+| **emerging from the ground** | An element brightens from a visible dim state without moving. Truth scrubs it in both directions; the descent supplies all travel. | `machine`, scrubbed · dim 0.4 | M1 · Truth | — | `brighten` |
 | **arriving quietly** | 16px and a fade, once, no re-trigger. The baseline for a quiet screen. | `country` · 0.55s · 0.06 stagger | X4 | P5 | `arrive` |
 | **what radiates from a source** | Elements arrive in order of distance from a chosen origin, not DOM order, with seeded hand jitter. | `country` · 0.55s · 0.045/unit | L1 + L3 | P4 | `emanate` |
 | **what radiates**, layout cut | Three arrival tiers — anchor, mid, detail — each with its own micro-stagger. | `country` · 0.55s · at 0 / .25 / .45 | L2 | P4 | `triad` |
 | **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. | `machine`, scrubbed; Record: 360vh | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal` |
 | **being drawn in** | A slow scrubbed push toward the subject. Transform-origin points at what matters. | `machine`, scrubbed | M1 | P2 | `pushIn` |
 | **a change of ground** | The new ground sweeps over the old as a scaleY wipe. | `machine`, scrubbed | X7 lineage | P7 | `ground` |
+| **the page holding its ground** | Scroll reaches a section's end and stops visibly until the reader commits through a short buffer; the next section then covers it and seats whole. | held, then `country` · 0.9s | About deck · Truth rail | — | `coverSeams`, `createGatedDeck` |
 | **time handing over** | Two stacked plates cross-dissolve. One whole frame hands to another. | `country` · 0.82s | A5 | **P9** | `dissolve` |
 | **the guide leading the eye** | The traveller flies a leg; its trail draws behind by mask reveal. | `country` · 2.0s | G1 + G3 | — | `guide` ¹ |
 | **a person speaking** | Words undim as they are spoken. No movement at all. Dim state 0.28. | `quiet` · 0.55s · 0.045 stagger | Y2 | P6 | `dim` |
 | **accumulating** | Things add up: a count advances, a mark fills, an index lights. | `country` / `machine` | X3 | — | `stepCounter` `splitFlap` `vesselFill` `flattenReveal` |
 | **the rest** | Nothing moves, for a stated duration. | — | brief §3 | **P1, P8** | `hold` |
 
-¹ `guide` was specified and permitted but **not built**. Dropped on Ivy's call, 2026-08-30: the
-traveller was a fix for flatness, and flatness was being fixed by density instead.
+¹ `guide` was dropped from the first build on Ivy's call, 2026-08-30: the traveller was a fix
+for flatness, and flatness was being fixed by density instead. It is now built only on Truth's
+chronology rail by user direction, 8 September 2026: one sticky `trail-point` samples the real
+SVG strand at the reading line, rather than multiplying static pointers at every era.
 
 **Back in build, 31 Aug 2026 — About.** Density is the right fix for a page whose argument is
 accumulation, and the wrong one for a page whose argument is a single question. On `05 · About`
@@ -46,26 +51,26 @@ settles at each thing it measures, so the Guide is carrying meaning rather than 
 flatness. `G1` travel + trail draw-on, `G3` waypoint settle, `G4` hand-off at the seams;
 traveller is the trail lead rosette. Every placement ▲ flagged for Leonard Mickelo.
 
-**One row is proposed and not yet in the table above — `the page holding its ground`, 8 Sep
-2026.** `/about` was built as a deck: a section is read to its end, the page stops, and the
-reader charges the seam until the hand-off plays. That behaviour cites nothing here, which by
-the hard rule makes it decoration until somebody decides otherwise. It is written up in full,
-with the four deviations it carries and the questions only Ivy can answer, in
-[`deck.md`](deck.md). The row lands in this table when it is signed off, or the behaviour comes
-out.
+**`The page holding its ground` entered the grammar on 9 September 2026 by direct user
+direction for Truth.** About established the deck mechanism; Truth makes the chronology rail's
+traveller its visible read-and-buffer instrument. Marc's Wave / Divider root remains structural,
+while its reusable inner ink pulls on ScrollTrigger before the buffer. The shared law,
+route-specific instruments and accessibility cuts are recorded in [`deck.md`](deck.md).
 
 ## Variants — more effects, same rows
 
-Ten rows, thirty effects. That is deliberate: a row is a **meaning**, and several effects
-can serve one meaning at different volumes. This is how the vocabulary grows without the grammar
-diluting — the brief caps the table at six to eight roles and it is right to.
+A row is a **meaning**, and several effects can serve one meaning at different volumes. This is
+how the vocabulary grows without the grammar diluting — the brief caps the table at six to eight
+roles and it is right to.
 
 | Row | Quiet | Loud |
 |---|---|---|
 | the world opening | `frameOpen` (in its frame) | `breakOut` (frame gone), `aperture` (through a letterform), `escape` (a grid cell becomes the screen, and comes back), `surface` (The Record's pre-rendered screen opens from its cell), `reflow` (a filtered collection rearranges) |
+| emerging from the ground | `brighten` | — |
+| the page holding its ground | `createGatedDeck` (Truth rail + scroll-pulled wave ink) | `coverSeams` (About buffer-pulled wave ink) |
 | being drawn in | `pushIn` (one plane); shared wheel inertia (`SCR-09`, `createSmoothScroll`) | `plateParallax` (layers inside one frame), `bleed` (past the edge) |
 | a change of ground | `ground` (one sweep) | `groundRamp` (across four screens), `waveHandoff`, `overlap`, `stickyIndex` |
-| what endures | `settle` (lines) | `display` (chars), `ghostType` (behind everything), `knockout` (as a window) |
+| what endures | `settle` (lines) | `display` (chars), `waveClamp` (travels then holds), `ghostType` (behind everything), `knockout` (as a window) |
 | what radiates | `arrive` | `emanate`, `triad`, `scatterResolve`, `mosaic`, `handoff` |
 | the guide leading the eye | `routeDraw` (a drawn map surfaces out of short segments that start at seeded-random points and join until the outline stands — the D4 contour-map read — scrubbed across a sticky span; the line is the guide, there is no traveller. On §02 the property is then painted in by one up-and-down brush stroke and the pin arrives and floats — the float is the one time-based movement, a slow bob on transform — Wonder §02 and §04, `src/lib/motion/route-map.ts`, 8 Sep 2026) | `guide` |
 

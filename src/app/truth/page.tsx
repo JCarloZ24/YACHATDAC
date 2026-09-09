@@ -22,9 +22,8 @@ export const metadata: Metadata = {
  * /truth — verb: DESCENDS. The hi-fi build, promoted from /v2/truth
  * (2026-09-02) to be the real page.
  *
- * The committed descent module owns the grounds: each band below names one of
- * the six era grounds and the fixed layer stack beneath cross-fades as the
- * reader travels back. Content is src/content/truth.ts verbatim — held by
+ * Each band owns its solid ground and Marc's supplied dividers carry the
+ * incoming colour as the reader travels back. Content is src/content/truth.ts verbatim — held by
  * community, draft warnings rendered, quotations untouched (R17/D15).
  *
  * From the hi-fi wireframes:
@@ -55,16 +54,14 @@ export default function TruthPage() {
       <V2TruthMotion />
       <div
         data-descent-root
-        className="relative -mb-[13.9vw] text-canvas"
+        className="relative -mb-[13.9vw] bg-evergreen text-canvas"
       >
-        {/* The ground — the module builds one opaque layer per era into it. */}
-        <div data-descent-ground aria-hidden className="fixed inset-0 -z-10" />
         {/* The winding record trail — the wireframe's scroll indicator: the
             path of the descent with a mark at each era, gold up to where the
             reader stands. */}
         <TruthTrailRail />
 
-        <section data-descent-band="present">
+        <section data-descent-band="present" className="bg-evergreen">
           <TruthHeroV2 />
           <EraSection era={ahead} />
           <EraSection era={today} />
@@ -73,21 +70,19 @@ export default function TruthPage() {
           <FullBleedBreak which="countryNow" waveTo="roasted" />
         </section>
 
-        <section data-descent-band="return">
+        <section data-descent-band="return" className="bg-roasted">
           <EraSection era={boughtBack} prependEntries={todayRecords} />
         </section>
 
-        {/* No trail divider here (2026-09-03): the 13 frame runs the 2003
-            ground straight into the 1950s brown — the band between them
-            showed the descent's cross-fade as a green strip. */}
-        <section data-descent-band="named-wrong">
+        {/* Bought Back and the 1950s share one roasted-brown ground. The
+            1950s frame deepens it locally; no unapproved sixth divider or
+            independent viewport cross-fade is introduced at this join. */}
+        <section data-descent-band="named-wrong" className="bg-roasted">
           <EraSection era={namedWrong} />
-          {/* 14 — the escarpment dissolve pair, charcoal wave into the count. */}
-          <DissolveBreak />
-        </section>
-
-        <section data-descent-band="count">
-          <SuzanneBand />
+          {/* 14 → 15 is one composed deck: the charcoal count ground and
+              its divider rise over the held escarpment image, matching the
+              TODAY image-to-record treatment. */}
+          <DissolveBreak deckContent={<SuzanneBand withinDeck />} />
         </section>
 
         <section data-descent-band="before-record" className="bg-midnight">
@@ -95,7 +90,7 @@ export default function TruthPage() {
           <EraSection era={olderThanRecord} />
         </section>
 
-        <section data-descent-band="deep-time">
+        <section data-descent-band="deep-time" className="bg-charcoal">
           {/* 19 runs straight into 20 (16341 + 1447 = 17788): no trail between. */}
           <EraSection era={beginning} />
           <WattanuriBand />

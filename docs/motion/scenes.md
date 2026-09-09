@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
 
 *Decided 30 August 2026. The third artefact — pacing, on paper, before it is pacing at 60fps.*
 
@@ -119,19 +119,31 @@ the build target.
 | 17 | IV | Older than the record — the engraving wall | 2 | 69 | **none** | — | ✓ |
 | 18 | IV | Still to be found — open research | 2 | 72 | **type** | evidence strip B | — |
 | 19 | IV | About 100 million years ago — the Eromanga Sea | 3 | 161 | **transition** | strata stack | — |
-| 20 | IV | Underneath all of it — the descent ends, looking up | 5 | 129 | **type** | dissolve pair | ✓✓ |
+| 20 | IV | Underneath all of it — the descent ends, looking up | 1 | 129 | **none** | one held closing shot | ✓✓ |
 | 21 | — | Footer — the wave overlaps the last shot by 96px | 1 | 135 | — | — | — |
 
 **Reads as:** no channel runs three deep. §10 carries the brown wave hand-off and is therefore
-`transition`, which is what breaks the 09/10/11 run. The four 5s — 04, 12, 14, 20 — are never
-consecutive, and §15 at ⚡1 is the rest after §14.
+`transition`, which is what breaks the 09/10/11 run. §20 joins §06, §15 and §17 as intentional
+stillness; the closing shot does not dissolve back to the hero.
 
-**The rail carries the chronology.** One frame (`2051:5368`) runs the full 2229vh, starting below
-the header and **breaking at the count**. Both strands are instanced from Leonard Mickelo's
-supplied meander — never redrawn, never chopped, never tiled. The only moving part is a **gold
-mask whose height is the scroll position**, travelling over artwork that is itself static.
+**The rail carries the chronology and the local reading state.** One frame (`2051:5368`) runs
+the full 2229vh, starting below the header and **breaking at the count**. Both strands are
+instanced from Leonard Mickelo's supplied meander — never redrawn, never chopped, never tiled.
+A **gold mask whose height is document scroll** travels over artwork that is itself static. One
+`trail-point` traveller separately reports the current beat. The hero starts below its "Start
+from the beginning" cue; subsequent beats run from the viewport top to its foot. The marker is
+held at the foot while the 20vh buffer charges. During the cover it transfers from the outgoing
+foot to the incoming head while continuing to sample the rendered guide's lateral wander and
+tangent; it never teleports between endpoints. It has no numeric or attached progress UI. The
+visible strand goes under at the escarpment and the traveller shares that silence: the 1950s read
+ScrollTrigger fades it over its final fifth, it remains absent through the escarpment and count,
+and the 1840s read ScrollTrigger restores it over its opening fifth. It fades permanently over the
+final fifth of Before people, before the closing Wattanuri floor. Under reduced motion the
+traveller is absent. This is G1,
+**the guide leading the eye**, and `the page holding its ground`, not a timeline mark per era.
 
-**The ground falls.** Colour is not repainted per section; it ramps down the ladder — evergreen
+**The ground falls.** Each section owns its solid colour and the supplied divider carries it down
+the ladder — evergreen
 *living present* → roasted brown *the return* → charcoal → navy *before the record* → charcoal
 *deep time* — with Marc's `Wave / Divider` as the visible seam at **five** hand-offs: evergreen
 after §01, brown after §09, charcoal after §14, navy after §15, charcoal after §18. Each is seated
@@ -139,14 +151,44 @@ at `sectionHeight − 105` so the 151px wave overhangs the join by 46px, and eac
 of the section it *introduces*. **Rust Red is spent once**, on the count, and nowhere else on the
 site.
 
+The hero→Ahead divider is seated on the incoming Ahead deck, never on the hero runway. Its root
+remains structural while the reusable About ink pulls from 0.6 to full height and rolls home over
+the final 20vh of the hero ScrollTrigger. It is already complete when the buffer begins, so buffer
+charge cannot detach or distort the crest.
+
+**Every active entrance is scroll-scrubbed and reversible.** B5 headings retain their line masks;
+Truth-local M1 entries use `brighten` from 0.4 to 1 with no translation. Ordinary movable image
+planes push from 1 to 1.06. The hero, scene 06, the 1950s photograph, scene 17 and scene 20 are
+held at their rendered state.
+
+**The twenty story beats resolve into sixteen gated decks on desktop/fine-pointer input** (user
+direction, 9 September 2026). "What is being built" and "Work with us" share the Ahead deck;
+TODAY's full image and its Iningai Rangers record share a composed deck; "The site is studied with
+its owners" and "Research & discovery" share another; and the escarpment image and 1902 count
+share a fourth. Each pair is one viewport surface with one internal content track and one gate,
+rather than two stacked slides. TODAY repeats About's
+Breath → WhatWeDo cover: the original evergreen record and its attached divider rise from below
+over the image, scrim and heading as one underlay. The heading's foot begins against the wave and
+follows it one-for-one until the heading crown reaches the viewport crown; the heading clamps
+there without resize or reflow while the higher-z wave covers it. The record receives no
+second translation. The escarpment/count deck repeats the same cover without moving the
+frame-graded image plane: its charcoal ground and divider rise on the internal track and close
+the image window. Every short deck remains one visible viewport
+high. The hero's wrapper adds a
+short 20vh ScrollTrigger-owned pin span: its image and copy remain still while the independent
+site navbar clears. Every later deck uses a normalized 125vh pin span before its magnetic 100%
+mark, so short and tall records share one heavy scroll pace without padding the authored records.
+The fifteen content joins play as whole 0.9s covers only after the
+buffer commits. The footer join is ordinary flow. Touch, missing Lenis and reduced motion create
+no holds or pins. The complete hero is visible on first paint.
+
 **Scene 06 is deliberately intensity 1.** The Figma note on that beat says it in as many words —
 *"the page stops moving here, on purpose."* Story-wall material is withheld under F3.
 
-**Scene 15 is the turn** (`spine.md` §5) and gets the longest hold on the site. Suzanne's
-testimony, words not reproduced, no photograph, no motion, under **R5**. The lo-fi specifies a
-genuine scroll lock with a keyboard escape; under `prefers-reduced-motion` the lock is **not
-created** and degrades to a full-viewport band the reader scrolls through normally, rail broken
-either side.
+**Scene 15 is the turn** (`spine.md` §5). Suzanne's testimony, words not reproduced, no
+photograph, no interior motion, under **R5**. It participates in the same legible gated hold as
+the other beats without gaining content animation. Under `prefers-reduced-motion` the lock is
+**not created** and it degrades to a full-viewport band the reader scrolls through normally.
 
 **Scene 17 carries no photograph as built.** That was originally a hard constraint — every
 engraving frame in its pool was ⛔R10 quarantined — and it is **no longer.** Ivy released
