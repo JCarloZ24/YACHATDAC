@@ -159,23 +159,47 @@ const BLOB_BOX =
 
 /**
  * The chevron the Wonder hi-fi (2033:7104) sets after its two closing labels:
- * a plain stroke, right for a link and down for a download. Drawn inline
- * because /wonder/chevron-up.svg is the artist's hand-drawn mark, which
- * cannot be rotated into a UI glyph.
+ * right for a link, down for a download.
+ *
+ * THE ARTIST'S MARKS, supplied 9 Sep 2026 (August) as the two full blob
+ * exports — "Register your interest" 264 × 56 and "Download the brochure"
+ * 276 × 56 — with the chevron as the last path of each. This replaced an
+ * inline 2.5-weight stroke that stood in for them: a UI glyph where the
+ * frame draws a brush stroke that tapers and hooks.
+ *
+ * THEY ARE NOT ONE MARK ROTATED. Measured off the exports, right is 9 × 16
+ * and down is 16 × 9, and the two are drawn separately — the down stroke
+ * hooks the other way, so rotating either one gives the wrong hand. Both
+ * paths are carried here at their own bounding box, as a `viewBox` window on
+ * the export's coordinates rather than re-originated, so what ships is the
+ * supplied curve to the last decimal.
+ *
+ * `fill`, not `stroke`: these are filled shapes with a varying width, and
+ * they take `currentColor` so a chevron always matches its label.
  */
+const BLOB_CHEVRON = {
+  right: {
+    box: "234.5 20 9 16",
+    size: "h-4 w-[9px]",
+    d: "M234.763 20.3714C234.886 20.2493 235.033 20.1688 235.164 20.1163C235.684 19.9057 236.171 20.0187 236.625 20.1522C237.554 20.4262 238.62 21.2668 240.426 23.1512C241.048 23.8006 241.494 24.3456 241.849 24.7936C242.275 25.3323 242.648 25.8128 242.904 26.2431C243.17 26.69 243.478 27.2863 243.499 27.9306C243.504 28.0927 243.492 28.2519 243.462 28.4043C243.414 28.6542 243.325 28.915 243.181 29.2244C243.119 29.359 243.046 29.5 242.966 29.6427C242.728 30.0678 242.379 30.5289 241.857 31.1818C240.782 32.5257 239.583 33.7664 238.292 34.8684C238.251 34.9032 238.22 34.9295 238.202 34.9466C238.012 35.1149 237.538 35.4528 237.011 35.6953C236.488 35.9356 235.74 36.157 235.144 35.8482C234.697 35.616 234.475 35.249 234.502 34.7856C234.519 34.4929 234.634 34.2509 234.662 34.1956C234.811 33.8315 235.475 32.9926 236.396 31.8489C236.88 31.2474 237.337 30.6796 237.477 30.4502C237.53 30.3634 237.599 30.2619 237.679 30.1443C238.053 29.5942 238.68 28.6731 238.581 27.7788C238.546 27.4638 238.42 27.078 238.235 26.7208C237.658 25.604 236.53 24.2303 235.925 23.493L235.906 23.4702C235.505 22.9805 235.053 22.4167 234.787 21.9259C234.346 21.1116 234.494 20.6396 234.765 20.3702L234.763 20.3714Z",
+  },
+  down: {
+    box: "241.5 23.878 16 9",
+    size: "h-[9px] w-4",
+    d: "M257.128 24.1417C257.25 24.2644 257.331 24.4118 257.383 24.5419C257.594 25.0626 257.481 25.5496 257.347 26.0037C257.073 26.9328 256.233 27.9989 254.348 29.804C253.699 30.4265 253.154 30.8723 252.706 31.2269C252.167 31.6533 251.687 32.0266 251.256 32.2825C250.81 32.5481 250.213 32.8563 249.569 32.8772C249.407 32.8825 249.248 32.8705 249.095 32.8406C248.845 32.7919 248.584 32.7029 248.275 32.5593C248.14 32.4972 248 32.4246 247.857 32.3446C247.432 32.1059 246.971 31.7573 246.318 31.2352C244.974 30.1601 243.733 28.9609 242.631 27.6705C242.596 27.6293 242.57 27.5987 242.553 27.5799C242.385 27.3899 242.047 26.9164 241.804 26.389C241.564 25.8661 241.343 25.118 241.651 24.5225C241.884 24.0751 242.25 23.8537 242.714 23.8806C243.007 23.8978 243.249 24.0123 243.304 24.0407C243.668 24.1896 244.507 24.8539 245.651 25.774C246.252 26.2581 246.82 26.7151 247.049 26.855C247.136 26.9082 247.238 26.977 247.355 27.057C247.905 27.4318 248.826 28.0587 249.721 27.9592C250.036 27.9241 250.421 27.7984 250.779 27.6136C251.896 27.0361 253.269 25.9087 254.007 25.3035L254.029 25.2848C254.519 24.8831 255.083 24.4312 255.574 24.1656C256.388 23.7243 256.86 23.8724 257.129 24.1432L257.128 24.1417Z",
+  },
+} as const;
+
 function BlobChevron({ dir }: { dir: "right" | "down" }) {
+  const mark = BLOB_CHEVRON[dir];
   return (
     <svg
       aria-hidden
-      viewBox="0 0 16 16"
-      className={`relative size-4 shrink-0 ${dir === "down" ? "rotate-90" : ""}`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      viewBox={mark.box}
+      className={`relative shrink-0 ${mark.size}`}
+      fill="currentColor"
     >
-      <path d="M6 3l5 5-5 5" />
+      <path d={mark.d} />
     </svg>
   );
 }

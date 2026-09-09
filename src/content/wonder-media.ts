@@ -14,7 +14,7 @@
  * Still to come from the batch:
  *   · the hero is the batch's 1-minute edit, transcoded 8 Sep 2026 from the
  *     ProRes master (see `wonderHeroVideo`); its frame 0 is the hero still
- *   · stages 2–6, both sleep cards, and the story plates for foods/spring
+ *   · stages 2–6 and the story plates for foods/spring
  *   · the "Stories" placeholder supplied is the same frame as Highlights 1
  */
 
@@ -147,20 +147,38 @@ export const stayStageMedia: Record<string, MediaSlot> = {
   },
 };
 
-/** WHERE YOU SLEEP — two 400px cards. */
+/**
+ * WHERE YOU SLEEP — two 400px cards. Both landed 9 Sep 2026.
+ * Origin: Downloads/Wonder-WhereYouSleep1.jfif (900 × 599, 113,892 bytes)
+ * and Wonder-WhereYouSleep2.jfif (1000 × 666, 159,296 bytes), user supplied.
+ * Credit: photographer not supplied. Permission: supplied for Wonder;
+ * review remains at presentation under F8.
+ *
+ * 9 Sep 2026, user requested better viewing and quality. The JPEGs are
+ * byte-for-byte copies of those originals, replacing lossy WebP
+ * inputs. Next Image makes responsive AVIF/WebP derivatives at quality 85;
+ * no intermediate lossy encode, retouching or upscaling. Their original
+ * exposure is shown without a dark overlay, and frame-grade motion keeps
+ * both photographs still. The largest cards are 616 CSS px wide, so these
+ * sources cannot fully resolve a 2× display; full-size exports would be
+ * needed for additional photographic detail.
+ */
 export const whereYouSleepMedia: MediaSlot[] = [
   {
     id: "sleep-tent",
     bucket: "work",
-    expects: "A tent going up at camp",
-    src: `${WONDER}/wonder-sleep-1.webp`,
+    expects: "Pegging out a tent at camp, mallet in hand, in open woodland",
+    src: `${WONDER}/wonder-sleep-tent.jpg`,
     tone: "roasted",
   },
   {
     id: "sleep-dusk",
+    // The people in both sleep cards require frame-grade motion, explicitly
+    // applied in Sections and sleepCards regardless of the scene bucket.
     bucket: "country",
-    expects: "Camp at dusk",
-    src: `${WONDER}/wonder-sleep-2.webp`,
+    expects:
+      "Camp at dusk — three tents, a group around the fire as the light goes",
+    src: `${WONDER}/wonder-sleep-campfire.jpg`,
     tone: "midnight",
   },
 ];
@@ -182,6 +200,35 @@ export const hostsSlot: MediaSlot = {
   src: `${WONDER}/wonder-hosts.webp`,
   tone: "burnt",
 };
+
+/**
+ * The three people in the hosts photograph the user identified on 9 Sep 2026,
+ * left to right as they stand. The other five in frame are NOT named: they were
+ * not identified, and guessing at a person in a photograph is not something a
+ * build gets to do. So this is a partial index on purpose, and §10's pointer
+ * interaction must read as "these three are named" rather than "five labels are
+ * missing" — hovering a named figure lifts that one name; nothing appears over
+ * anybody else.
+ *
+ * `left` / `top` are percentages of the photograph. `left` is the person's
+ * own column; `top` is their CHEST, not their face — a label over somebody's
+ * face is worse than no label at all, and that is what the first cut did
+ * (corrected 9 Sep 2026 on user report). They are layout positions inside one
+ * image, nothing more: the photograph is a `work`-bucket group portrait and
+ * carries no place information.
+ *
+ * Portraits hold still (motion-grammar.md, the corollary on faces): the name is
+ * brought up and the rest of the frame dims. The image plane never moves.
+ *
+ * Spellings and the form of address ("Uncle Vincent") are the user's own and
+ * are not to be normalised to house style. Whether these three are content to
+ * be named on the page at all is Steve's question at presentation, not ours.
+ */
+export const hostsPeople = [
+  { name: "Uncle Vincent", left: 66, top: 62 },
+  { name: "Graham", left: 74, top: 62 },
+  { name: "Suzanne", left: 86, top: 66 },
+] as const;
 
 /** STORIES — one 320px plate per card, in `wonderStories.items` order. */
 export const wonderStoryMedia: MediaSlot[] = [

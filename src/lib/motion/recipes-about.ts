@@ -62,7 +62,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WAVE_ROLL } from "@/components/ui/Furniture";
 import { clearAll, composition } from "@/lib/motion/compose";
 import { registerYachatdacEffects } from "@/lib/motion/effects";
-import { scene } from "@/lib/motion/scene";
+import { pointerScene } from "@/lib/motion/scene";
 import {
   clampScrollTo,
   lockScroll,
@@ -113,8 +113,20 @@ const qa = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
  * quietly, and not ST's `scrollEnd` event, which live testing showed
  * unreliable under lenis's interpolation tail.
  *
- * Under prefers-reduced-motion no pins exist (X6: "no pins created") and the
- * page reads as plain sequential sections.
+ * ⚠ POINTER-AND-WHEEL ONLY — `pointerScene`, not `scene` (user direction,
+ * 9 September 2026). The deck is built on lenis: the hold is a lenis stop,
+ * and only lenis can make a scroll stop total. Lenis is constructed for
+ * `(pointer: fine)` and no-reduced-motion and for nothing else, so gating the
+ * deck on anything wider than that builds pins and auto-play glides on a
+ * surface with no lenis under them. On a phone that is exactly what happened:
+ * a flick's momentum crossed a gate, the glide fired against the thrown
+ * scroll, and the two fought — the jumpy, buggy read reported from a
+ * touchscreen. Touch now gets the page in flow: no pins, no holds, no
+ * charge, no magnet, waves seated statically where the markup puts them, and
+ * the sections' own scrubs and arrivals still running. Under
+ * prefers-reduced-motion the same is true (X6: "no pins created"), which is
+ * why one condition covers both and needs no cut branch — nothing is ever
+ * built to undo.
  */
 /**
  * The hold's charge requirement, as a fraction of the viewport. When a slide
@@ -137,7 +149,7 @@ export function coverSeams(
   let revert: (() => void) | null = null;
   return {
     init: () => {
-      revert = scene(
+      revert = pointerScene(
         () => {
           registerYachatdacEffects();
 
@@ -681,9 +693,6 @@ export function coverSeams(
             window.removeEventListener("wheel", onWheel, { capture: true });
             window.removeEventListener("scroll", onScroll);
           };
-        },
-        () => {
-          /* The cut: no pins, no gate — the flow layout is the rest state. */
         },
       );
     },

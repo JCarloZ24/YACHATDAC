@@ -22,14 +22,18 @@ volumes. See Variants below.
 
 | Narrative role | What it does on screen | Easing / duration | Sketch | Plate | Effect |
 |---|---|---|---|---|---|
+| **the world opening**, Home photo collage | A black beat precedes 36 held photo cards gliding from offscreen right into a more strongly curved cylindrical gallery with wider gaps and moderate depth around a stationary viewer. The space extends beyond the viewport; plates keep their fixed cylinder-tangent orientation; the camera turns like a human head, so perspective changes naturally without billboarding. One continuous gallery movement has no intermediate stop. The heading reveals afterwards; mouse movement turns and gently rolls the camera from a stationary eye position; pointer exit restores the forward gaze. | black 0.14s; gallery moves for 3s with power2.out, settled at 3.14s; headline fades in together over 0.8s, no movement or stagger; pointer damping 0.16s | SCR-11 / B5, user refinement 9 September 2026 | P3 | `homeHeroOpen`, module gallery transforms |
+| **a change of ground**, Home hero dissolve | The existing hero holds while its photos, copy and dark edge scrims fade and its canvas ground gradually shifts from charcoal to oxide. After the media clears, reveal the supplied red painting outward from its central rosette, using original pixels in the same canvas. Reverse scroll restores the gallery. | 276vh pinned (first 120vh retains existing dissolve); scrub 0.8s; copy fades over first 30%, media and scrims over 40%; colour changes from 45–80%; original painting reveals from 45–95%, then holds | user direction 9 September 2026 / SCR-09 | P3 | `homeHeroDissolve` |
+| **the world opening**, homepage loading cut | Start black for 0.14s, then reveal the supplied gold dot wave left to right with a timed 0–100 percentage; the black cover fades to Home. Temporary one-second prototype requested 8 September, refined 9 September 2026; not asset-download progress. | `machine` reveal 0.78s, art fades in at 0.14s over 0.10s, hold 0.10s, fade 0.12s | SYS-02 / user reference | — | `homeLoader` |
 | **what endures** | A line rises from behind an edge and never exits. Masked at the line. | `country` · 0.82s · 0.09 stagger | B5 | — | `settle` |
 | **what endures**, display cut | A short heading resolves character by character. Six words at most. | `country` · 0.82s · 0.028 stagger | B6 | — | `display` |
 | **what endures**, wave clamp | A chapter heading travels with its incoming Wave / Divider until its crown reaches the viewport crown; it holds there while the divider covers it. | `machine`, scrubbed | Truth · Today | — | `waveClamp` |
 | **emerging from the ground** | An element brightens from a visible dim state without moving. Truth scrubs it in both directions; the descent supplies all travel. | `machine`, scrubbed · dim 0.4 | M1 · Truth | — | `brighten` |
+| **the world opening**, Record loading cut | Homepage gold wave and ring cover the page until portal textures, the first catalogue photos and the first canvas frame are ready. Progress reports settled resources; failure reveals a static fallback. | readiness, then 0.4s exit | SYS-02 / user direction 9 September 2026 | — | `recordLoader` |
 | **arriving quietly** | 16px and a fade, once, no re-trigger. The baseline for a quiet screen. | `country` · 0.55s · 0.06 stagger | X4 | P5 | `arrive` |
 | **what radiates from a source** | Elements arrive in order of distance from a chosen origin, not DOM order, with seeded hand jitter. | `country` · 0.55s · 0.045/unit | L1 + L3 | P4 | `emanate` |
 | **what radiates**, layout cut | Three arrival tiers — anchor, mid, detail — each with its own micro-stagger. | `country` · 0.55s · at 0 / .25 / .45 | L2 | P4 | `triad` |
-| **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. | `machine`, scrubbed; Record: 360vh | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal` |
+| **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. Wonder's itinerary opens a native disclosure: its clip reveals held media, the chevron turns, and following rows settle into their measured positions. | `machine`, scrubbed; Record: 200vh; `disclose`: `country` · 0.55s, chevron `quiet` · 0.32s | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal`, `disclose` |
 | **being drawn in** | A slow scrubbed push toward the subject. Transform-origin points at what matters. | `machine`, scrubbed | M1 | P2 | `pushIn` |
 | **a change of ground** | The new ground sweeps over the old as a scaleY wipe. | `machine`, scrubbed | X7 lineage | P7 | `ground` |
 | **the page holding its ground** | Scroll reaches a section's end and stops visibly until the reader commits through a short buffer; the next section then covers it and seats whole. | held, then `country` · 0.9s | About deck · Truth rail | — | `coverSeams`, `createGatedDeck` |
@@ -38,6 +42,7 @@ volumes. See Variants below.
 | **a person speaking** | Words undim as they are spoken. No movement at all. Dim state 0.28. | `quiet` · 0.55s · 0.045 stagger | Y2 | P6 | `dim` |
 | **accumulating** | Things add up: a count advances, a mark fills, an index lights. | `country` / `machine` | X3 | — | `stepCounter` `splitFlap` `vesselFill` `flattenReveal` |
 | **the rest** | Nothing moves, for a stated duration. | — | brief §3 | **P1, P8** | `hold` |
+| **what radiates**, Record question ground | The two supplied dotted rings follow cursor position with opposing drift and slight tilt behind stationary questions. Return to centre on pointer leave; touch and reduced motion remain still. | power3.out, 0.8s horizontal / 1.05s vertical smoothing, 30px / 46px travel and 3.5° / 5° tilt | AMB-04 / user direction 9 September 2026 | — | `recordPatternDrift` |
 
 ¹ `guide` was dropped from the first build on Ivy's call, 2026-08-30: the traveller was a fix
 for flatness, and flatness was being fixed by density instead. It is now built only on Truth's
@@ -72,10 +77,34 @@ roles and it is right to.
 | a change of ground | `ground` (one sweep) | `groundRamp` (across four screens), `waveHandoff`, `overlap`, `stickyIndex` |
 | what endures | `settle` (lines) | `display` (chars), `waveClamp` (travels then holds), `ghostType` (behind everything), `knockout` (as a window) |
 | what radiates | `arrive` | `emanate`, `triad`, `scatterResolve`, `mosaic`, `handoff` |
-| the guide leading the eye | `routeDraw` (a drawn map surfaces out of short segments that start at seeded-random points and join until the outline stands — the D4 contour-map read — scrubbed across a sticky span; the line is the guide, there is no traveller. On §02 the property is then painted in by one up-and-down brush stroke and the pin arrives and floats — the float is the one time-based movement, a slow bob on transform — Wonder §02 and §04, `src/lib/motion/route-map.ts`, 8 Sep 2026) | `guide` |
+| the guide leading the eye | `routeDraw` (a drawn map surfaces out of short segments that start at seeded-random points and join until the whole shape stands — the D4 contour-map read — scrubbed across a sticky span; the line is the guide, there is no traveller. **Nothing synthetic is drawn:** these maps are filled ribbons, not stroked lines, so the segments are white strokes inside a MASK and what appears is the artist's own shape at the artist's own weight. Stroking a copy over the top was the first cut and it drew a doubled, bloated line that then had to fade out and hand over — the thickening-and-thinning the user reported on 9 Sep 2026. Wonder §02 and §04, `src/lib/motion/route-map.ts`), `brushFill` (a shape is coloured in: ONE continuous stroke entering at the top left and working down and up across it, never lifting, with the gap to the next stripe, the ends and the middle of every stripe all seeded-jittered so nothing in it is straight or evenly spaced — "imperfect, like a child colouring the area", 9 Sep 2026. Wonder §02) | `guide` |
 
 `scrimRamp` belongs to no row on its own: X5 is a legibility requirement that travels with
 whatever media effect it accompanies, and it is non-negotiable wherever copy sits on a picture.
+
+**Wonder itinerary restoration — 9 September 2026, latest user direction.**
+Figma `2033:5889` replaces the six-screen film with the canvas accordion, first
+stop open. `arrive` introduces the heading and row furniture once. `disclose`
+reveals or closes the panel by clip, fades its copy, turns the supplied chevron,
+and translates following rows from their old positions after one layout change.
+The photograph never scales or drifts. No pin, snap, timed opening or colour
+ramp remains in this section. Reduced motion and no JavaScript use the same
+native disclosures with immediate state changes. Desktop reference: 1440 × 900.
+
+**Later scroll direction — 9 September 2026, supersedes the manual-only cut.**
+The restored accordion now holds in a viewport at desktop sizes that can fit
+its longest stop. Six 100vh reading spans advance the open stop automatically,
+forward or backward. `itineraryStep` is a `disclose` variant in **the world
+opening** row: one native layout change, then measured row translations so the
+active heading always lands at the same viewport position. `stageArrival`
+composes **what endures** (`settle`, whole lines), **arriving quietly** (`arrive`,
+copy blocks) and **the world opening** (`frameOpen`, held photo clip). These are
+the treatments reviewed in the live effects lab. No photograph scales or warps.
+The heading enters on scroll, and each stop's text and picture enter when that
+stop is reached. No wheel lock or velocity snap. Short viewports, mobile,
+reduced motion and no JavaScript keep the ordinary document; motion-capable
+mobile disclosures still reveal text and pictures. The held layout measures
+CMS copy before enabling so no long stop is clipped.
 
 `escape` is `handoff` made reversible. `handoff` reparents the element, which is right for a
 one-way continuity cut and wrong for anything a reader can scroll back out of; `escape` flies a
@@ -85,16 +114,27 @@ at trigger time, so a scrubbed Flip computed at one viewport width lands wrong a
 for a screen, run on enter, reverse on leave-back.
 
 **The Record opening — 8 September 2026, latest user direction.**
+9 September photo-lens refinement: `handprintPortal` / SCR-11 also applies the
+Home painting zoom's sine-squared radial envelope to photo-plane projection.
+Peripheral frames bow and tilt during approach, with fixed image UVs; reverse
+scroll retraces the effect and the lens is neutral at both endpoints.
+
 `handprintPortal` supersedes the static hero with one Three.js aperture scene
-(360vh of scroll, transition channel). **Latest correction:** the user rejects
-the repeated handprints and smooth silhouette. One supplied ink impression
+(200vh of scroll, transition channel). One supplied ink impression
 defines the openings: black is empty, white remains sandstone, including the
-palm's white centre and gaps between finger pads. The plain wall has a generated
-photographic sandstone material and extruded cut edges in Three.js. Cards are
+palm's white centre and gaps between finger pads. The latest user direction adds
+surrounding red-ochre hand stencils as pigment on solid stone; only the central
+hand is cut through. The wall has a generated photographic sandstone material
+and extruded cut edges in Three.js. Cards are
 textured planes at different depths well behind the wall. The camera passes
-through the hand, then approaches the cards. Whole card frames grow through
+through the hand while the cards approach immediately at different speeds.
+They continue beyond the screen edges and fade near the camera, without an
+arrived gallery or picture captions. Latest user direction: accelerate picture
+approach from the first scroll, let side frames extend outside the viewport,
+and fade the remaining upper pictures as the catalogue rises over the final
+viewport of the 200vh hero. Whole card frames grow through
 perspective; their image UVs remain fixed (no independent photo warp or drift).
-Only camera transforms, projected link transforms and copy opacity change. The
+Only camera/card transforms, card material opacity and intro copy opacity change. The
 opening reverses on scroll back. The user explicitly permits generated artwork
 for this direction, replacing the earlier iconography restriction. The supplied
 ink mask and generated stone are interface assets, not records of rock art.
@@ -186,3 +226,53 @@ than quietly inheriting whatever the component does.
 - **No layout properties, ever.** Transform, opacity and `clip-path` only. Animating
   `width`/`height`/`top`/`left` is what makes an "immersive" site stutter, and one janky frame
   costs more reverence than any effect buys.
+
+
+Home central aperture correction, 9 September 2026: the woodland road appears inside the inner ring as soon as the painting begins revealing (painting progress 0?3.5%), before the zoom. It remains opaque while the red ground draws around it. If the landscape fails to load, the centre retains the painting.
+
+
+| **the landscape opens to Wonder** | After the portal, the supplied sky shifts from blue to pale daylight and terrain exposure, saturation and colour temperature follow the same progress while the Wonder copy rises from below the viewport; reversing scroll lowers it and restores blue. | same homeHeroDissolve timeline, 408vh total; Wonder rises 2.3?3.1, holds to 3.4; scrub 0.8s | user screenshot 9 September 2026 / SCR-09 | P3 | `homeHeroDissolve` |
+
+
+| **the painting bends open** | During the portal approach, a radial lens curve stretches the supplied painting toward the viewport edges. The centre and landscape stay stable; curvature settles to zero on arrival and reverses with scroll. | existing portal span 1.18?2.18; smooth envelope, zero distortion at both ends | user reference 9 September 2026 / SCR-09 | P3 | `homeHeroDissolve` |
+
+
+| **the woodland breathes** | AMB-05: a gentle local wind displaces grass and canopy pixels in the Home road layer; a widening exclusion holds the road still and dark trunks receive minimal motion. | 24s seamless ambient phase, starts near portal arrival; paused offscreen/hidden, absent with reduced motion | user direction 9 September 2026 | media only | `homeLandscapeBreeze` |
+
+
+AMB-05 correction, 9 September 2026: user found the distortion too obvious. Restrict wind to three feathered grass patches in source-image UV space, remove canopy sway, reduce grass displacement by 80%, and slow the ripple from nine to four cycles per 24-second phase. Unselected pixels remain still. This supersedes the broad vegetation mask above.
+
+
+AMB-05 visibility tuning, 9 September 2026: the reduced pass was too faint. Keep the same three grass selections and stationary trees/road, but increase horizontal displacement from 0.00015 to 0.0006 UV and vertical displacement to 0.00012 UV. Six cycles per 24-second phase give a visible four-second ripple; no broader vegetation warp is restored.
+
+
+AMB-05 stronger breeze, 9 September 2026: user still could not see the ripple. Increase horizontal displacement fourfold to 0.0024 UV, vertical to 0.00045 UV, broaden the three foreground selections, and use three-second cycles. Reduce colour-mask suppression of dry yellow grass. The road exclusion and stationary horizon remain. This supersedes the previous amplitude tuning.
+
+
+AMB-05 viewport correction, 9 September 2026: checking the 2048-by-758 landscape confirmed the cover crop removes most of the low grass selections. Add three mid-ground grass selections higher in the source image, retaining the original foreground selections for taller viewports. No amplitude increase; the road exclusion and horizon remain fixed.
+
+
+AMB-05 final scope correction, 9 September 2026: user requests all vegetation to ripple gently. Remove the six patch selections. Apply a broad vegetation mask with road exclusion and dark-trunk suppression, with 0.0009 UV grass ripple and 0.00065 UV canopy sway. This supersedes the patch-selection approach and its viewport workaround. Sky, road, pause behaviour and reduced-motion fallback remain unchanged.
+
+
+| **the landscape introduces Truth** | SCR-09: after Wonder holds, its copy rises away; the existing road canvas shifts from pale daylight to the supplied saturated blue sky. Truth, Iningai Nation and the first existing subject-detail paragraph rise into a centred upper block. | homeHeroDissolve 3.4-4.2; hold to 4.6; total pin 552vh; reversible scrub 0.8s | user screenshot 9 September 2026 | quiet type over held landscape with AMB-05 breeze | `homeHeroDissolve` |
+
+
+| **Country carries the years** | SCR-10: Home Truth continues on the same canvas. Figma sky/light layers travel through their measured offsets; the supplied dotted path enters, year marker follows its seven anchors, prose crossfades in stillness. Reverse scroll restores every state. | 120vh per timeline unit; 0.4-unit transitions, 0.6-unit reading holds; final 0.9-unit hold; reduced motion uses static Truth | user screenshots and Figma 3371:45208-46472, 9 September 2026 | transition leads; quiet type, existing AMB-05 breeze | `homeHeroDissolve` |
+
+
+| **the painting speaks after opening** | SCR-09 refinement: finish the painting reveal at 0.95 before introducing its three text blocks, in order, with slow opacity fades. Hold the complete copy before fading it out and entering the portal. | text at 1.08/1.62/2.18, durations 0.50/0.50/0.55; clear at 3.03; portal at 3.18; 120vh per unit, reversible scrub | user direction 9 September 2026; supersedes overlapping painting/text reveals | media first, quiet type second | `homeHeroDissolve` |
+
+
+SCR-10 smooth-scroll refinement, 9 September 2026: year-to-year marker travel and sky/light interpolation now fill each entire 120vh leg with linear scroll progress, removing the previous 0.6-unit stop after every 0.4-unit move. Prose and year labels use slower 0.3-unit fades, with a short separation to keep text legible. The final scene retains its 0.9-unit reading hold. Shared Lenis and the existing 0.8s scrub provide input smoothing; reverse scroll follows the same path.
+
+
+| **the night welcomes Belonging** | SCR-10 continuation: after the final year holds, fade out all Truth copy and timeline; move the supplied sky/light layers to Figma offset 5822 and fade/rise the Belonging block into place. AMB-05 phase gently varies existing star brightness only, masked out by terrain. | exit 0.45 units; sky 1.2; copy rise 1 unit after 0.45; hold 1.2; reversible, 120vh/unit; ambient pauses offscreen/hidden, absent in reduced motion | user screenshot and Figma 3371:41578, 9 September 2026 | quiet type arrival, subtle supplied-star twinkle | `homeHeroDissolve`, `homeLandscapeBreeze` |
+
+
+Belonging stars amendment, 9 September 2026: user requests our own Three.js implementation. The supplied star-image sky is replaced during Belonging by a procedural GLSL star field within the existing canvas. Seeded sparse stars vary in radius, brightness and twinkle phase; no constellations are traced. Terrain alpha occludes stars. The registered AMB-05 phase drives subtle twinkling, paused offscreen/hidden and absent in reduced motion.
+
+
+| **a star crosses the night** | AMB-05 Belonging refinement: one procedural shooting star roughly every eight seconds, travelling diagonally with a tapered trail and soft head. Fade in/out over its 1.4-second flight; no overlapping meteors. Screen-relative paths remain visible on mobile, terrain alpha hides the trail behind trees. | existing 24-second registered ambient phase, three varied paths; visible only in settled Belonging; pause offscreen/hidden and disable with reduced motion | user direction 9 September 2026 | subtle ambient sky | `homeLandscapeBreeze` |
+
+| **the road opens into an invitation** | SCR-09 / ENT-05: Belonging fades after its reading hold; a bottom media scrim joins the road to charcoal. The Invitation overlaps the departing landscape; its heading and three held photo cards rise into view with scroll. | 0.6-unit exit; 24svh overlap; 65vh reversible card entrance; static layout for reduced motion | Figma 3371:41740, user direction 9 September 2026 | transition; photographs stay still within their cards | homeHeroDissolve, homeInvitation |

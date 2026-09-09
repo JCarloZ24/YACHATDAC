@@ -44,6 +44,9 @@ import { registerGrid } from "./grid";
 import { registerMedia } from "./media";
 import { registerType } from "./type";
 import { registerPortal } from "./portal";
+import { registerDisclosure } from "./disclosure";
+import { registerLoading } from "./loading";
+import { registerHome } from "./home";
 
 gsap.registerPlugin(CustomEase);
 
@@ -68,6 +71,9 @@ export function registerYachatdacEffects(): void {
   registerContinuity();
   registerAccumulate();
   registerPortal();
+  registerDisclosure();
+  registerLoading();
+  registerHome();
 }
 
 /**
@@ -99,6 +105,13 @@ function bezierOf(css: string): string {
  * is what gives the vocabulary autocomplete and makes it discoverable.
  */
 export type EffectName =
+  | "homeLandscapeBreeze"
+  | "recordPatternDrift"
+  | "homeLoader"
+  | "recordLoader"
+  | "homeHeroOpen"
+  | "homeInvitation"
+  | "homeHeroDissolve"
   // core — arrival, type, the rest
   | "settle"
   | "display"
@@ -128,6 +141,9 @@ export type EffectName =
   | "escape"
   | "surface"
   | "reflow"
+  | "disclose"
+  | "stageArrival"
+  | "itineraryStep"
   | "mosaic"
   | "scatterResolve"
   // section-to-section continuity

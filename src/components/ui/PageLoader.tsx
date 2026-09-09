@@ -42,6 +42,8 @@ let shownThisPageLoad = false;
 
 /** Minimum time the count takes to read as a count, ms. */
 const RAMP_MS = 1600;
+/** How long the dot sweep takes to cross the wave, ms. */
+const SWEEP_MS = 1500;
 /** Past this the panel completes regardless of readiness state. */
 const DEFAULT_HARD_CAP_MS = 2800;
 /** How long the "You're viewing" line stands before the panel lifts. */
@@ -51,18 +53,33 @@ export function PageLoader({
   name,
   ready,
   hardCapMs = DEFAULT_HARD_CAP_MS,
+  rampMs = RAMP_MS,
+  sweepMs = SWEEP_MS,
+  dwellMs = NAME_DWELL_MS,
 }: {
   /** What the panel announces at 100% — "You're viewing {name}". */
   name: string;
   /** Polled each frame; the count cannot pass 80% until it returns true. */
   ready?: () => boolean;
   hardCapMs?: number;
+  /** How long the count takes to reach 100 at the earliest. */
+  rampMs?: number;
+  /** How long the dot sweep takes to cross the wave. */
+  sweepMs?: number;
+  /** How long "You're viewing …" stands before the panel lifts. */
+  dwellMs?: number;
 }) {
+  // Shadowed so every use below reads the caller's timing. Together these
+  // set the panel's FLOOR: it cannot lift before ramp + dwell, however fast
+  // the page is. Living Work keeps the original 1600/1500/1400; a page that
+  // wants to feel instant passes shorter ones.
   const HARD_CAP_MS = hardCapMs;
+  const RAMP_MS = rampMs;
+  const SWEEP_MS = sweepMs;
+  const NAME_DWELL_MS = dwellMs;
   const [display, setDisplay] = useState(0);
-  const [sweepDone, setSweepDone] = useState(false);
   const [phase, setPhase] = useState<"loading" | "named" | "lifted">("loading");
-  const instant = useRef(false);
+  const panelRef = useRef<HTMLDivElement>(null);
   // Per-INSTANCE claim on the module flag. StrictMode runs the effect twice
   // for one mount; deciding inside the effect body would make the second run
   // read the flag its own first run had set, and skip. The ref survives the
@@ -72,7 +89,8 @@ export function PageLoader({
   const waveRef = useRef<HTMLDivElement>(null);
   const dotsRef = useRef<SVGGraphicsElement[]>([]);
   const displayRef = useRef(0);
-  displayRef.current = display;
+  // Synchronise the animation reader after React commits (9 September 2026).
+  useEffect(() => { displayRef.current = display; }, [display]);
 
   useEffect(() => {
     if (shouldShow.current === null) {
@@ -80,9 +98,9 @@ export function PageLoader({
       shownThisPageLoad = true;
     }
     if (!shouldShow.current) {
-      instant.current = true;
-      setPhase("lifted");
-      return;
+      panelRef.current?.setAttribute("data-instant", "");
+      const frame = window.requestAnimationFrame(() => setPhase("lifted"));
+      return () => window.cancelAnimationFrame(frame);
     }
 
     // The settling window ends at the top of the page by design: presenting
@@ -258,11 +276,11 @@ export function PageLoader({
       const dots = dotsRef.current;
       if (dots.length) {
         // Full sweep takes at least ~1.5s (90 frames) whatever the cache.
-        const maxStep = Math.max(1, Math.ceil(dots.length / 90));
+        const maxStep = Math.max(1, Math.ceil(dots.length / (SWEEP_MS / 16.7)));
         // Spacing between consecutive dots so the whole run of dots still
         // paces to the same ~1.5s sweep — the flow moves dot per dot, never
         // a frame's batch switching on together.
-        const perDotMs = 1500 / dots.length;
+        const perDotMs = SWEEP_MS / dots.length;
         const target = Math.floor(displayRef.current * dots.length);
         if (lit < target) {
           const now = performance.now();
@@ -276,26 +294,23 @@ export function PageLoader({
           lit = next;
         }
         if (lit >= dots.length && displayRef.current >= 1) {
-          setSweepDone(true);
+          setPhase((current) => current === "loading" ? "named" : current);
           return;
         }
       } else if (
         displayRef.current >= 1 &&
         performance.now() - started > HARD_CAP_MS + 1500
       ) {
-        setSweepDone(true);
+        setPhase((current) => current === "loading" ? "named" : current);
         return;
       }
       frame = window.requestAnimationFrame(step);
     };
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-  }, [HARD_CAP_MS]);
+  }, [HARD_CAP_MS, SWEEP_MS]);
 
-  // 100% and the sweep has reached the last dot → the page announces itself…
-  useEffect(() => {
-    if (phase === "loading" && sweepDone) setPhase("named");
-  }, [sweepDone, phase]);
+  // The animation callback announces completion; Escape remains terminal.
 
   // …dwells, and the panel lifts. Two effects on purpose: a single effect
   // that both sets the phase and starts the timer re-runs on its own phase
@@ -305,7 +320,7 @@ export function PageLoader({
     if (phase !== "named") return;
     const timer = window.setTimeout(() => setPhase("lifted"), NAME_DWELL_MS);
     return () => window.clearTimeout(timer);
-  }, [phase]);
+  }, [phase, NAME_DWELL_MS]);
 
   // Scroll is held while the panel is up; Escape always releases — a loading
   // screen must never be a dead end.
@@ -330,12 +345,11 @@ export function PageLoader({
 
   return (
     <div
+      ref={panelRef}
       data-page-loader
       data-lifted={phase === "lifted" || undefined}
       role="status"
-      className={`fixed inset-0 z-[100] flex items-center justify-center bg-charcoal ease-country data-[lifted]:pointer-events-none data-[lifted]:-translate-y-full motion-reduce:hidden ${
-        instant.current ? "" : "transition-transform duration-(--dur-large)"
-      }`}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal ease-country data-[lifted]:pointer-events-none data-[lifted]:-translate-y-full motion-reduce:hidden transition-transform duration-(--dur-large) data-[instant]:transition-none"
     >
       <noscript>
         <style>{`[data-page-loader]{display:none}`}</style>
