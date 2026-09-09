@@ -93,5 +93,9 @@ export function revertSplits(root: ParentNode): void {
 export function movable(targets: object): HTMLElement[] {
   return gsap.utils
     .toArray<HTMLElement>(targets)
-    .filter((el) => el.dataset.motion !== "frame");
+    .filter(
+      (el) =>
+        el.dataset.motion !== "frame" &&
+        !el.closest<HTMLElement>("[data-motion='frame']"),
+    );
 }

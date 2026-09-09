@@ -30,6 +30,7 @@ export function MediaOrField({
     return (
       <div
         aria-hidden
+        data-media-plane
         data-placeholder="media-field"
         className={`absolute inset-0 ${fieldClass}`}
       />
@@ -37,6 +38,7 @@ export function MediaOrField({
   }
   return (
     <Image
+      data-media-plane
       src={src}
       alt={alt}
       fill

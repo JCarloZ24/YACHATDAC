@@ -14,9 +14,9 @@ This table is not a description of the code. It is the code's source: each row n
 registered effect in `src/lib/motion/effects/`, and each effect's doc comment names its row
 back. Adding a behaviour means adding it to a row here first.
 
-**Ten rows, thirty effects.** The row count is what the brief caps and it should stay near
-ten — a twentieth *role* is what this document exists to refuse. The effect count is free to
-grow, because several effects can serve one role at different volumes. See Variants below.
+The row count should stay near ten — a twentieth *role* is what this document exists to refuse.
+The effect count is free to grow, because several effects can serve one role at different
+volumes. See Variants below.
 
 ---
 
@@ -27,6 +27,8 @@ grow, because several effects can serve one role at different volumes. See Varia
 | **the world opening**, homepage loading cut | Start black for 0.14s, then reveal the supplied gold dot wave left to right with a timed 0–100 percentage; the black cover fades to Home. Temporary one-second prototype requested 8 September, refined 9 September 2026; not asset-download progress. | `machine` reveal 0.78s, art fades in at 0.14s over 0.10s, hold 0.10s, fade 0.12s | SYS-02 / user reference | — | `homeLoader` |
 | **what endures** | A line rises from behind an edge and never exits. Masked at the line. | `country` · 0.82s · 0.09 stagger | B5 | — | `settle` |
 | **what endures**, display cut | A short heading resolves character by character. Six words at most. | `country` · 0.82s · 0.028 stagger | B6 | — | `display` |
+| **what endures**, wave clamp | A chapter heading travels with its incoming Wave / Divider until its crown reaches the viewport crown; it holds there while the divider covers it. | `machine`, scrubbed | Truth · Today | — | `waveClamp` |
+| **emerging from the ground** | An element brightens from a visible dim state without moving. Truth scrubs it in both directions; the descent supplies all travel. | `machine`, scrubbed · dim 0.4 | M1 · Truth | — | `brighten` |
 | **the world opening**, Record loading cut | Homepage gold wave and ring cover the page until portal textures, the first catalogue photos and the first canvas frame are ready. Progress reports settled resources; failure reveals a static fallback. | readiness, then 0.4s exit | SYS-02 / user direction 9 September 2026 | — | `recordLoader` |
 | **arriving quietly** | 16px and a fade, once, no re-trigger. The baseline for a quiet screen. | `country` · 0.55s · 0.06 stagger | X4 | P5 | `arrive` |
 | **what radiates from a source** | Elements arrive in order of distance from a chosen origin, not DOM order, with seeded hand jitter. | `country` · 0.55s · 0.045/unit | L1 + L3 | P4 | `emanate` |
@@ -34,6 +36,7 @@ grow, because several effects can serve one role at different volumes. See Varia
 | **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. Wonder's itinerary opens a native disclosure: its clip reveals held media, the chevron turns, and following rows settle into their measured positions. | `machine`, scrubbed; Record: 200vh; `disclose`: `country` · 0.55s, chevron `quiet` · 0.32s | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal`, `disclose` |
 | **being drawn in** | A slow scrubbed push toward the subject. Transform-origin points at what matters. | `machine`, scrubbed | M1 | P2 | `pushIn` |
 | **a change of ground** | The new ground sweeps over the old as a scaleY wipe. | `machine`, scrubbed | X7 lineage | P7 | `ground` |
+| **the page holding its ground** | Scroll reaches a section's end and stops visibly until the reader commits through a short buffer; the next section then covers it and seats whole. | held, then `country` · 0.9s | About deck · Truth rail | — | `coverSeams`, `createGatedDeck` |
 | **time handing over** | Two stacked plates cross-dissolve. One whole frame hands to another. | `country` · 0.82s | A5 | **P9** | `dissolve` |
 | **the guide leading the eye** | The traveller flies a leg; its trail draws behind by mask reveal. | `country` · 2.0s | G1 + G3 | — | `guide` ¹ |
 | **a person speaking** | Words undim as they are spoken. No movement at all. Dim state 0.28. | `quiet` · 0.55s · 0.045 stagger | Y2 | P6 | `dim` |
@@ -41,8 +44,10 @@ grow, because several effects can serve one role at different volumes. See Varia
 | **the rest** | Nothing moves, for a stated duration. | — | brief §3 | **P1, P8** | `hold` |
 | **what radiates**, Record question ground | The two supplied dotted rings follow cursor position with opposing drift and slight tilt behind stationary questions. Return to centre on pointer leave; touch and reduced motion remain still. | power3.out, 0.8s horizontal / 1.05s vertical smoothing, 30px / 46px travel and 3.5° / 5° tilt | AMB-04 / user direction 9 September 2026 | — | `recordPatternDrift` |
 
-¹ `guide` was specified and permitted but **not built**. Dropped on Ivy's call, 2026-08-30: the
-traveller was a fix for flatness, and flatness was being fixed by density instead.
+¹ `guide` was dropped from the first build on Ivy's call, 2026-08-30: the traveller was a fix
+for flatness, and flatness was being fixed by density instead. It is now built only on Truth's
+chronology rail by user direction, 8 September 2026: one sticky `trail-point` samples the real
+SVG strand at the reading line, rather than multiplying static pointers at every era.
 
 **Back in build, 31 Aug 2026 — About.** Density is the right fix for a page whose argument is
 accumulation, and the wrong one for a page whose argument is a single question. On `05 · About`
@@ -51,26 +56,26 @@ settles at each thing it measures, so the Guide is carrying meaning rather than 
 flatness. `G1` travel + trail draw-on, `G3` waypoint settle, `G4` hand-off at the seams;
 traveller is the trail lead rosette. Every placement ▲ flagged for Leonard Mickelo.
 
-**One row is proposed and not yet in the table above — `the page holding its ground`, 8 Sep
-2026.** `/about` was built as a deck: a section is read to its end, the page stops, and the
-reader charges the seam until the hand-off plays. That behaviour cites nothing here, which by
-the hard rule makes it decoration until somebody decides otherwise. It is written up in full,
-with the four deviations it carries and the questions only Ivy can answer, in
-[`deck.md`](deck.md). The row lands in this table when it is signed off, or the behaviour comes
-out.
+**`The page holding its ground` entered the grammar on 9 September 2026 by direct user
+direction for Truth.** About established the deck mechanism; Truth makes the chronology rail's
+traveller its visible read-and-buffer instrument. Marc's Wave / Divider root remains structural,
+while its reusable inner ink pulls on ScrollTrigger before the buffer. The shared law,
+route-specific instruments and accessibility cuts are recorded in [`deck.md`](deck.md).
 
 ## Variants — more effects, same rows
 
-Ten rows, thirty effects. That is deliberate: a row is a **meaning**, and several effects
-can serve one meaning at different volumes. This is how the vocabulary grows without the grammar
-diluting — the brief caps the table at six to eight roles and it is right to.
+A row is a **meaning**, and several effects can serve one meaning at different volumes. This is
+how the vocabulary grows without the grammar diluting — the brief caps the table at six to eight
+roles and it is right to.
 
 | Row | Quiet | Loud |
 |---|---|---|
 | the world opening | `frameOpen` (in its frame) | `breakOut` (frame gone), `aperture` (through a letterform), `escape` (a grid cell becomes the screen, and comes back), `surface` (The Record's pre-rendered screen opens from its cell), `reflow` (a filtered collection rearranges) |
+| emerging from the ground | `brighten` | — |
+| the page holding its ground | `createGatedDeck` (Truth rail + scroll-pulled wave ink) | `coverSeams` (About buffer-pulled wave ink) |
 | being drawn in | `pushIn` (one plane); shared wheel inertia (`SCR-09`, `createSmoothScroll`) | `plateParallax` (layers inside one frame), `bleed` (past the edge) |
-| a change of ground | `ground` (one sweep) | `groundRamp` (across four screens on Living Work §03), `waveHandoff`, `overlap`, `stickyIndex` |
-| what endures | `settle` (lines) | `display` (chars), `ghostType` (behind everything), `knockout` (as a window) |
+| a change of ground | `ground` (one sweep) | `groundRamp` (across four screens), `waveHandoff`, `overlap`, `stickyIndex` |
+| what endures | `settle` (lines) | `display` (chars), `waveClamp` (travels then holds), `ghostType` (behind everything), `knockout` (as a window) |
 | what radiates | `arrive` | `emanate`, `triad`, `scatterResolve`, `mosaic`, `handoff` |
 | the guide leading the eye | `routeDraw` (a drawn map surfaces out of short segments that start at seeded-random points and join until the whole shape stands — the D4 contour-map read — scrubbed across a sticky span; the line is the guide, there is no traveller. **Nothing synthetic is drawn:** these maps are filled ribbons, not stroked lines, so the segments are white strokes inside a MASK and what appears is the artist's own shape at the artist's own weight. Stroking a copy over the top was the first cut and it drew a doubled, bloated line that then had to fade out and hand over — the thickening-and-thinning the user reported on 9 Sep 2026. Wonder §02 and §04, `src/lib/motion/route-map.ts`), `brushFill` (a shape is coloured in: ONE continuous stroke entering at the top left and working down and up across it, never lifting, with the gap to the next stripe, the ends and the middle of every stripe all seeded-jittered so nothing in it is straight or evenly spaced — "imperfect, like a child colouring the area", 9 Sep 2026. Wonder §02) | `guide` |
 
