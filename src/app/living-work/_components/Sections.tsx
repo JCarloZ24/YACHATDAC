@@ -85,10 +85,11 @@ const FILLS = [78, 58, 42, 26, 0];
 /**
  * §08's vessel size — one continuous ramp, and it has to be.
  *
- * A name that does not fit is now a wrap, not a silent truncation — the
- * `whitespace-nowrap` and the `overflow-hidden` box went with the stroked
- * layer on 8 Sep. The ramp still exists so the names do not wrap in practice,
- * because a two-line name under a one-line rule reads badly.
+ * The names are `whitespace-nowrap` inside an `overflow-hidden` box, so a size
+ * the column cannot hold is not a reflow — it is a word silently cut in half,
+ * and the fill layer, the track and the gold tick all inherit the same box, so
+ * the proportion reads wrong with it. That hazard is live again now the two
+ * drawing layers are back (restored 8 Sep), which is what this ramp is for.
  *
  * The original fault was a `clamp(…,6.4vw,2.25rem) sm:text-6xl` that stepped
  * from 36px straight to 60px at exactly 640. The longest name, "Biological
@@ -1389,23 +1390,41 @@ export function LivingWorkOutputs() {
                   {outputsRestsOn[output.title] ?? ""}
                 </p>
 
-                {/* THE NAME — one solid text node, wiped in left to right.
-                    It used to be three: an aria-hidden stroked outline, a
-                    clipped solid copy, and an sr-only name. The stroke was
-                    Ivy's way of DRAWING the animation on the artboard, never a
-                    thing to ship, and the partial fills left names half-read.
-                    All five now arrive whole and readable; the proportion
-                    moved to the rule below, which is the better place for it —
-                    text is for reading, a rule is for measuring. */}
-                <div className="mt-3 inline-block max-w-full align-top">
-                  <h3 data-vessel className={`headline block ${VESSEL_SIZE} text-canvas`}>
-                    {output.title}
-                  </h3>
+                {/* THE VESSEL — solid to where the work has got, outline for
+                    what is still to come. Rest state IS the final fill; the
+                    motion pass sweeps toward it, never past it.
 
-                  {/* The track: the whole word is the whole job. Gold to where
-                      the work has got, grey after it, and the tick on the
-                      boundary. Rainbow Credits has not started, so it gets an
-                      empty track and no tick — that IS its status. */}
+                    RESTORED 8 Sep on Ivy's call, after a pass that collapsed
+                    this to one solid name wiped in left to right. The partial
+                    fill is the design: a name half-drawn is the section's
+                    whole argument, and Rainbow Credits standing entirely
+                    hollow is how "not started" reads without a word for it. */}
+                <div className="mt-3 inline-block max-w-full align-top">
+                  <div
+                    data-vessel
+                    data-fill={fill}
+                    className="relative overflow-hidden whitespace-nowrap"
+                  >
+                    <span
+                      aria-hidden
+                      className={`headline block ${VESSEL_SIZE} text-transparent [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]`}
+                    >
+                      {output.title}
+                    </span>
+                    <span
+                      data-vessel-fill
+                      className="absolute inset-0 overflow-hidden"
+                      style={{ width: `${fill}%` }}
+                    >
+                      <span className={`headline block ${VESSEL_SIZE} whitespace-nowrap text-canvas`}>
+                        {output.title}
+                      </span>
+                    </span>
+                    {/* Accessible name, once — the two layers above are drawing. */}
+                    <span className="sr-only">{output.title}</span>
+                  </div>
+
+                  {/* The track: the whole word is the whole job. */}
                   <div className="relative mt-3 h-px w-full bg-canvas/20">
                     {empty ? null : (
                       <>

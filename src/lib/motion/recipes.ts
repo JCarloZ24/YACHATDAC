@@ -987,32 +987,43 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
   return composition("vessels", root, {
     channel: "none",
     span,
-    // Hand-rolled, not `vesselFill`: that effect sweeps a mark to its
-    // proportional stop and cannot rewind, and this screen now fills whole
-    // and plays both ways.
+    // Plain width tweens, hand-rolled: `vesselFill` sweeps a mark to its
+    // proportional stop and cannot rewind — this screen plays both ways.
     uses: [],
     build: () => {
       const marks = qa(root, "[data-vessel]");
       if (!marks.length) return;
 
-      // THE NAME ARRIVES WHOLE. Until 8 Sep each name was clipped to its own
-      // percentage, so four of the five sat permanently half-read and the
-      // fifth was invisible. The stroked outline behind them was a drawing of
-      // the animation on the artboard, not a thing to ship. Every name now
-      // wipes in left to right and ends solid; the proportion is the rule
-      // underneath, which is what a rule is for.
-      const WIPE_FROM = "inset(0% 100% 0% 0%)";
-      const WIPE_TO = "inset(0% 0% 0% 0%)";
-
+      // THE PARTIAL FILL IS THE DESIGN. Restored 8 Sep on Ivy's call after a
+      // pass that made every name arrive whole: a name half-drawn is the
+      // section's argument, and Rainbow Credits standing entirely hollow is
+      // how "not started" reads without a word for it.
+      //
+      // Every word starts hollow. Each row owns one paused sweep: 700ms left
+      // to right, eased out, played when the row passes 65% of the viewport —
+      // and REWOUND, at its own speed, when the row scrolls back out. A rewind
+      // rather than a scrub: the fill keeps its tempo in both directions
+      // instead of dragging with the wheel.
       const sweeps: { mark: HTMLElement; sweep: gsap.core.Timeline }[] = [];
       marks.forEach((mark) => {
-        gsap.set(mark, { clipPath: WIPE_FROM });
-        // The track is a sibling of the name, inside their shared box.
-        const track = mark.parentElement?.querySelector<HTMLElement>("[data-vessel-track]");
+        const inner = q(mark, "[data-vessel-fill]");
+        if (!inner) return;
+        gsap.set(inner, { width: "0%" });
+        const track = mark.parentElement?.querySelector<HTMLElement>(
+          "[data-vessel-track]",
+        );
         if (track) gsap.set(track, { scaleX: 0, transformOrigin: "left center" });
 
+        // The sweep stops ON the line marker — the gold tick at data-fill% is
+        // the boundary, and the fill runs exactly to it, never past.
+        const fill = Number(mark.dataset.fill ?? 0);
         const sweep = gsap.timeline({ paused: true });
-        sweep.fromTo(mark, { clipPath: WIPE_FROM }, { clipPath: WIPE_TO, duration: 0.7, ease: EASE.country }, 0);
+        sweep.fromTo(
+          inner,
+          { width: "0%" },
+          { width: `${fill}%`, duration: 0.7, ease: EASE.country },
+          0,
+        );
         if (track) {
           sweep.fromTo(
             track,
@@ -1024,13 +1035,16 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
         sweeps.push({ mark, sweep });
       });
 
-      // 150ms between rows, per the spec's +0.0 / +0.15 / +0.30. Rewinds skip
-      // the queue: a row scrolled back past should reverse now, not wait.
+      // The 150ms cascade: rows crossing the line together play in reading
+      // order, one queue. Rewinds skip it — an undo answers the scroll now.
       const queue: gsap.core.Timeline[] = [];
       let draining = false;
       const drain = () => {
         const next = queue.shift();
-        if (!next) { draining = false; return; }
+        if (!next) {
+          draining = false;
+          return;
+        }
         draining = true;
         next.play();
         window.setTimeout(drain, 150);
@@ -1038,10 +1052,11 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
       sweeps.forEach(({ mark, sweep }) => {
         ScrollTrigger.create({
           trigger: mark,
-          // Fires at 65% of the viewport and runs for 0.7s, so the name is
-          // whole and readable well before the row reaches the middle.
           start: "top 65%",
-          onEnter: () => { queue.push(sweep); if (!draining) drain(); },
+          onEnter: () => {
+            queue.push(sweep);
+            if (!draining) drain();
+          },
           onLeaveBack: () => {
             const waiting = queue.indexOf(sweep);
             if (waiting !== -1) queue.splice(waiting, 1);
