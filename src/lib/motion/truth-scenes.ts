@@ -620,6 +620,25 @@ const strata: Recipe = (timeline, slide) => {
  * A slide that matches nothing gets the ordinary treatment: headings, M1
  * arrivals, and a 6% push on movable media.
  */
+/**
+ * §15C her testimony. Her words undim at speaking pace and nothing else on the
+ * screen moves — the same treatment the 2003 portrait beat gets, because it is
+ * the same act: a person is being read.
+ *
+ * There is deliberately no recipe for the count itself. That screen carries
+ * `data-v2-static`, so every helper here filters it out and the numerals are
+ * simply there when it lands.
+ */
+const herTestimony: Recipe = (timeline, slide) => {
+  const quotes = query<HTMLElement>(slide, "blockquote p").filter(
+    (el) => !isHeld(el),
+  );
+  quotes.forEach((quote, index) => {
+    const at = 0.06 + index * 0.22;
+    brightenAt(timeline, [quote], at, at + 0.2);
+  });
+};
+
 const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "[data-v2-hero-media]", recipe: heroBreath },
   { match: "[data-truth-card]", recipe: aheadCards },
@@ -630,6 +649,7 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "#art-gallery", recipe: nineteenFifties },
   { match: "#break-escarpment", recipe: breakPullBack },
   { match: "#opportunities", recipe: openResearch },
+  { match: "#the-count-testimony", recipe: herTestimony },
   { match: "#seabed", recipe: strata },
 ];
 
@@ -645,9 +665,12 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
  * directions at once.
  *
  *   §06 #study-2022   "the page stops moving here, on purpose" (Figma)
- *   §15 #the-count    the hard stop. The rail has drained, the ground is
- *                     charcoal, and the number is the only red on the page —
- *                     no animation, no count-up, no glow
+ *   §15 #the-count-figures  the hard stop's own screen. The rail has
+ *                     drained, the ground is charcoal, and the number is the
+ *                     only red on the page — no animation, no count-up, no
+ *                     glow. The two screens either side of it DO arrive, and
+ *                     that is the point: stillness only reads as stillness
+ *                     next to something that moved.
  *   §17 #engraving    older than the record. The stillness is the argument
  *   §20 #underneath-all-of-it   the closing shot. The descent has ended; it
  *                     does not dissolve back to where it started

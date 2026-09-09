@@ -256,7 +256,7 @@ the build target.
 | 12 | II | **2003 — Suzanne's father. The portrait is held** | **5** | 116 | **media** | portrait 460×613 | ✓✓ hold |
 | 13 | II | 1950s — the light goes out | 3 | 123 | **transition** | ⟡ held doc slot | — |
 | 14 | II | BREAK · The escarpment — the film goes cold | 5 | 100 | **media** | dissolve pair | ✓ hold |
-| 15 | **III** | **THE HARD STOP — the count. No photograph, no motion** | **1** | **104** | **none** | — | ✓✓ the longest hold on the site |
+| 15 | **III** | **THE HARD STOP — three held screens: who is speaking · the count · her testimony** | **1** | **3 × 125** | **none** | — | ✓✓ the longest hold on the site |
 | 16 | IV | 1840s — what Mitchell recorded | 3 | 135 | **type** | ⟡ held journal scan | — |
 | 17 | IV | Older than the record — the engraving wall | 2 | 69 | **none** | — | ✓ |
 | 18 | IV | Still to be found — open research | 2 | 72 | **type** | evidence strip B | — |
@@ -382,8 +382,24 @@ no holds or pins. The complete hero is visible on first paint.
 **Scene 06 is deliberately intensity 1.** The Figma note on that beat says it in as many words —
 *"the page stops moving here, on purpose."* Story-wall material is withheld under F3.
 
-**Scene 15 is the turn** (`spine.md` §5). Suzanne's testimony, words not reproduced, no
-photograph, no interior motion, under **R5**. It participates in the same legible gated hold as
+**Scene 15 is the turn** (`spine.md` §5). Suzanne's testimony, under **R5**, no photograph.
+
+⚠ **Rewritten 10 September 2026.** Two things this row used to say are no longer true. Her words
+ARE now reproduced — the band was unheld on 9 Sep (August) as a build gate only; the publish gate
+is still R5 and `held by community`. And it is no longer one beat: it is **three gated screens** —
+who is speaking, the count, her testimony — split at the joins the copy already had, because as a
+single 2,989px panel the count was something the reader scrolled past on the way somewhere else.
+
+**The count screen itself still does not move.** No arrival, no count-up, no glow: the numerals
+are simply there, at the top of the type scale and no further (`text-h1`, 56 desktop — they were
+built at 128px, which is off the scale entirely). The screens either side of it take the page's
+ordinary M1, and that is exactly why this one must not: stillness only reads as stillness next to
+something that moved. Her quotations undim at speaking pace on the third screen and nothing else
+there moves.
+
+Her testimony is set in the READING face, not the display one — `PullQuote`'s new `voice`
+variant. Setting a transcript in the same face as the section titles is a large part of why a bare
+quote "reads as our copy — it isn't" (Steve, 7 September 2026). It participates in the same legible gated hold as
 the other beats without gaining content animation. Under `prefers-reduced-motion` the lock is
 **not created** and it degrades to a full-viewport band the reader scrolls through normally.
 

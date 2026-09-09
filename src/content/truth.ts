@@ -312,12 +312,20 @@ export const erasBefore: readonly TruthEra[] = [
  * for reading. Nothing here is published until she has seen it and signed it
  * off."
  *
- * That warning renders on the page. It is the single most important editorial
- * marker on this site and it does not get quietly dropped because the section
- * looks finished.
+ * ⚠ CORRECTED 10 September 2026 — this comment said the warning "renders on
+ * the page" and that `checkNote` "is also rendered". NEITHER DOES, since
+ * 9 September: both were pulled from the band on August's instruction so that
+ * the build presents as the page rather than as a marked-up draft, because
+ * this build is itself the approval ask. See the comments in
+ * src/app/truth/_components/Sections.tsx.
  *
- * Her two open questions are in `checkNote` and are also rendered. Neither has
- * been answered.
+ * The strings stay here and in the v3 draft, and both fields are still live —
+ * restore them if this section is ever shown anywhere other than that review.
+ *
+ * Her two open questions — the order of the count against the blankets, and
+ * thirty-five against thirty-seven — are in `checkNote`. Neither has been
+ * answered, and the page no longer asks them, so they must be PUT TO HER IN
+ * THE PRESENTATION.
  */
 export const suzanne = {
   marker: "1902, and then further back",

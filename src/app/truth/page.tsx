@@ -7,6 +7,8 @@ import {
   EraSection,
   FullBleedBreak,
   SuzanneBand,
+  SuzanneCount,
+  SuzanneTestimony,
   TruthHeroV2,
   WattanuriBand,
 } from "./_components/Sections";
@@ -83,6 +85,19 @@ export default function TruthPage() {
               its divider rise over the held escarpment image, matching the
               TODAY image-to-record treatment. */}
           <DissolveBreak deckContent={<SuzanneBand withinDeck />} />
+        </section>
+
+        {/* 15 · THE HARD STOP, in three held screens (10 Sep 2026).
+            Who is speaking arrives on the escarpment cover above; the count
+            and her testimony are screens of their own, so the numerals take a
+            viewport alone as the draft's build note asks and her words are not
+            something the reader scrolls past on the way somewhere else.
+            They carry data-truth-ground="count", which is also what finally
+            makes the deck's own railHiddenSlides selector do its job — the
+            rail is silent across all three. */}
+        <section data-descent-band="count" className="bg-charcoal">
+          <SuzanneCount />
+          <SuzanneTestimony />
         </section>
 
         <section data-descent-band="before-record" className="bg-canvas">
