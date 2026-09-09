@@ -1,6 +1,16 @@
 # 01 · Wonder — the motion plan
 
 *Last updated: 9 September 2026*
+
+**Latest responsive correction, 9 September 2026:** desktop itinerary selection
+depends on available width and reading space, not pointer type. DevTools touch
+emulation must retain the automatic sequence at desktop dimensions. Narrow
+screens retain native disclosures with reversible scroll entrances. Highlights
+and the other section entrances now scrub from their entry threshold to top 20%
+of the viewport, retracing on reverse scroll. This supersedes the single-play
+entrances described below. Out here's text reserves 144px beneath it so the
+104px incoming hosts wave has at least 40px clearance, including the static cut.
+
 *Status: **built**, 9 September 2026. The motion is `src/lib/motion/wonder.ts`,
 mounted by `app/wonder/_components/Motion.tsx`; the maps are
 `src/lib/motion/route-map.ts`; the hosts' pointer is
@@ -194,6 +204,18 @@ retain immediate native disclosures. Mobile and short windows retain the
 original document layout, with text/picture entrances when motion is enabled.
 Widths are measured again after resize; content that cannot fit uses the normal
 layout instead of clipping. The module is `src/lib/motion/wonder-itinerary.ts`.
+
+**Production / viewport correction, 9 September 2026.** Live and production
+builds could fall back on a fresh 1440 × 900 load, then recover after resize:
+the first measurement did not wait for fonts used only in closed panels.
+The module now requests those existing font faces before measuring. The
+880px height gate is removed. On desktop, a stop taller than its reading
+window adds that overflow to its 100vh leg: 20vh seated, scroll through the
+excess content, then 80vh held at the foot. Text sizes and photo dimensions
+stay unchanged. Forward/reverse scroll and keyboard destinations use the
+measured leg boundaries. Mobile, reduced motion, no JavaScript and windows
+too short for a heading plus a readable strip retain native disclosures.
+This supersedes the short-window and all-stops-must-fit fallback above.
 
 ### 07 · Before you come — convert, do not decorate
 

@@ -33,6 +33,12 @@
   }
 }
 
+/* User spacing correction, 9 September 2026: the hosts wave reaches 104px
+   into Out here. Reserve its full height plus 40px, in animated/static cuts. */
+.scene[data-wonder="out-here"] .screen {
+  padding-bottom: 144px;
+}
+
 .backdrop {
   position: relative;
   grid-area: 2 / 1;

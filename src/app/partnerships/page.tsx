@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
+import { PartnershipsMotion } from "./_components/Motion";
 import {
   AlreadyWorkingWith,
   Breath,
@@ -32,11 +33,17 @@ export const metadata: Metadata = {
  * styling and not rebuilt here; the page just declares the ground it hands
  * over on.
  *
- * ⚠ THIS PAGE IS STATIC BY DECISION, not by omission. No motion module, no
- * scroll animation, no hover. It renders the same with JavaScript on or off.
- * The frame describes a motion build — a 190vh pin on §04 and a shutter over
- * each disclosure — and none of it is built; see docs/motion/scenes.md and the
- * header of ./_components/Sections.tsx before changing anything.
+ * ⚠ §01 NOW MOVES; §02 DOWN ARE STILL STATIC BY DECISION, not by omission.
+ * The hero takes an arrival overture — X4 on the eyebrow, B5 on the headline
+ * by line, X4 on the standfirst and the action row a beat later, and the
+ * divider handing the photograph off (user direction, 9 September 2026). The
+ * photograph itself holds still: no pushIn and no plateParallax, because
+ * there are people in that frame. Everything below §01 has no motion module,
+ * no scroll animation and no hover, and renders the same with JavaScript on
+ * or off. The frame describes more — a 190vh pin on §04 and a shutter over
+ * each disclosure — and none of that is built; see docs/motion/scenes.md,
+ * src/lib/motion/partnerships.ts and the header of ./_components/Sections.tsx
+ * before changing anything.
  *
  * ⚠⚠ THIS PAGE HAS NO DRAFT. It exists under D22 because four live links
  * already pointed at it, and every word on it is borrowed from a page that
@@ -55,6 +62,8 @@ export const metadata: Metadata = {
 export default function PartnershipsPage() {
   return (
     <PageTransition ground="#22372b">
+      {/* §01's overture only. Renders nothing; see ./_components/Motion.tsx. */}
+      <PartnershipsMotion />
       <PartnershipsHero />
       <TheObligation />
       <OpenResearch />

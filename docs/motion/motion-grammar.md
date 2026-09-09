@@ -30,7 +30,7 @@ volumes. See Variants below.
 | **what endures**, wave clamp | A chapter heading travels with its incoming Wave / Divider until its crown reaches the viewport crown; it holds there while the divider covers it. | `machine`, scrubbed | Truth · Today | — | `waveClamp` |
 | **emerging from the ground** | An element brightens from a visible dim state without moving. Truth scrubs it in both directions; the descent supplies all travel. | `machine`, scrubbed · dim 0.4 | M1 · Truth | — | `brighten` |
 | **the world opening**, Record loading cut | Homepage gold wave and ring cover the page until portal textures, the first catalogue photos and the first canvas frame are ready. Progress reports settled resources; failure reveals a static fallback. | readiness, then 0.4s exit | SYS-02 / user direction 9 September 2026 | — | `recordLoader` |
-| **arriving quietly** | 16px and a fade, once, no re-trigger. The baseline for a quiet screen. | `country` · 0.55s · 0.06 stagger | X4 | P5 | `arrive` |
+| **arriving quietly** | 16px and a fade. The baseline is a single entrance; Wonder's entrances follow scroll progress and reverse on return, per user direction 9 September 2026. | `country` · 0.55s · 0.06 stagger; Wonder: viewport entry to top 20%, reversible scrub | X4 | P5 | `arrive` |
 | **what radiates from a source** | Elements arrive in order of distance from a chosen origin, not DOM order, with seeded hand jitter. | `country` · 0.55s · 0.045/unit | L1 + L3 | P4 | `emanate` |
 | **what radiates**, layout cut | Three arrival tiers — anchor, mid, detail — each with its own micro-stagger. | `country` · 0.55s · at 0 / .25 / .45 | L2 | P4 | `triad` |
 | **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. Wonder's itinerary opens a native disclosure: its clip reveals held media, the chevron turns, and following rows settle into their measured positions. | `machine`, scrubbed; Record: 200vh; `disclose`: `country` · 0.55s, chevron `quiet` · 0.32s | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal`, `disclose` |
@@ -104,8 +104,14 @@ the treatments reviewed in the live effects lab. No photograph scales or warps.
 The heading enters on scroll, and each stop's text and picture enter when that
 stop is reached. No wheel lock or velocity snap. Short viewports, mobile,
 reduced motion and no JavaScript keep the ordinary document; motion-capable
-mobile disclosures still reveal text and pictures. The held layout measures
-CMS copy before enabling so no long stop is clipped.
+mobile disclosures still reveal text and pictures. Viewport correction,
+9 September 2026: load the closed panels' fonts before measuring. Desktop
+stops taller than their reading window add their overflow to the existing
+100vh leg; after a 20vh seat, the track translates through the excess text,
+then holds for the remaining 80vh. This is the same `itineraryStep` reading
+track, in both directions, with no nested scroller or photo deformation.
+Only mobile, reduced motion and windows too short to show a heading plus a
+readable strip use native disclosures; the former 880px height gate is removed.
 
 `escape` is `handoff` made reversible. `handoff` reparents the element, which is right for a
 one-way continuity cut and wrong for anything a reader can scroll back out of; `escape` flies a

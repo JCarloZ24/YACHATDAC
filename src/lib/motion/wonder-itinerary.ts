@@ -11,13 +11,16 @@ import { clampScrollTo, smoothScrollTo } from "./smooth-scroll";
  * Later direction adds automatic opening, aligned to one viewport. Grammar:
  * "the world opening" / itineraryStep, disclose, frameOpen; "what endures" /
  * settle; "arriving quietly" / arrive. Transition is the active channel.
- * Six 100vh reading spans; smaller screens keep native disclosure layout.
+ * Six 100vh reading spans, plus measured overflow for taller stops. Mobile
+ * keeps native disclosures. Closed-panel fonts load before measuring (cold
+ * production loads previously rejected the layout until a resize).
  * The controller owns this module and matchMedia owns every GSAP callback.
  */
 export function itinerary(root: HTMLElement): MotionModule {
   let media: gsap.MatchMedia | undefined;
   let refreshTimer = 0;
   let resizeTimer = 0;
+  let generation = 0;
 
   const refreshSoon = () => {
     if (root.dataset.itineraryMode === "scroll") return;
@@ -28,7 +31,9 @@ export function itinerary(root: HTMLElement): MotionModule {
   const mount = () => {
     media = gsap.matchMedia();
     media.add("(prefers-reduced-motion: no-preference)", (context) => {
-      if (window.matchMedia("(min-width: 64rem) and (min-height: 55rem) and (pointer: fine)").matches) {
+      // DevTools can emulate a touch pointer at any width. Pointer type is
+      // irrelevant to this scroll sequence; only the layout needs to fit.
+      if (window.matchMedia("(min-width: 64rem)").matches) {
         const cleanup = heldItinerary(root, context);
         if (cleanup) return cleanup;
       }
@@ -45,13 +50,10 @@ export function itinerary(root: HTMLElement): MotionModule {
         if (openStage) tl.stageArrival(openStage, {}, 0.1);
         ScrollTrigger.create({
           trigger,
+          animation: tl,
           start: "top 88%",
-          onEnter: () => tl.play(),
-          onEnterBack: () => tl.play(),
-          // Hash links and scroll restoration must not leave content hidden.
-          onRefresh: (self) => {
-            if (self.scroll() >= self.start) tl.progress(1);
-          },
+          end: "top 20%",
+          scrub: 0.8,
         });
       };
       const heading = root.querySelector<HTMLElement>("h2");
@@ -136,14 +138,30 @@ export function itinerary(root: HTMLElement): MotionModule {
     }, root);
   };
 
+  // document.fonts.ready only covers faces already used in visible content.
+  // Closed stages use GoodDog too: measuring its fallback on a cold Vercel
+  // load rejected the whole sequence, although a later resize worked.
+  const mountWhenFontsReady = async () => {
+    const version = ++generation;
+    const fonts = new Set(Array.from(root.querySelectorAll<HTMLElement>(
+      "h2, [data-stage-title], [data-stage-copy] p, [data-stage-copy] li",
+    )).map((el) => {
+      const style = getComputedStyle(el);
+      return `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    }));
+    await Promise.allSettled(Array.from(fonts, (font) => document.fonts.load(font)));
+    if (version !== generation || !root.isConnected) return;
+    mount();
+    ScrollTrigger.refresh();
+  };
+
   // A width change can turn a short paragraph into a tall one even when it
   // stays inside the desktop breakpoint. Re-check fit, not just the query.
   const onResize = () => {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
       media?.revert();
-      mount();
-      ScrollTrigger.refresh();
+      void mountWhenFontsReady();
     }, 240);
   };
 
@@ -152,9 +170,10 @@ export function itinerary(root: HTMLElement): MotionModule {
       registerYachatdacEffects();
       root.addEventListener("toggle", refreshSoon, true);
       window.addEventListener("resize", onResize);
-      mount();
+      void mountWhenFontsReady();
     },
     destroy() {
+      generation++;
       media?.revert();
       media = undefined;
       root.removeEventListener("toggle", refreshSoon, true);
@@ -180,9 +199,12 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
   root.dataset.itineraryMode = "scroll";
   root.style.setProperty("--itinerary-span", `${stages.length * 100}vh`);
   stages.forEach((el) => { el.open = true; });
-  const tallest = Math.max(...rows.map((el) => el.offsetHeight));
+  const heights = rows.map((el) => el.offsetHeight);
   const closingRule = root.querySelector<HTMLElement>("[data-stage-end]")?.offsetHeight ?? 0;
-  const fits = tallest + closingRule <= viewport.clientHeight - 8;
+  // Keep the type and photo sizes. A long stop gets more document scroll,
+  // rather than switching every stop to a manual accordion at laptop sizes.
+  const fits = Math.max(...headings.map((el) => el.offsetHeight)) + 64 <= viewport.clientHeight;
+  const overflow = heights.map((height) => Math.max(0, height + closingRule + 8 - viewport.clientHeight));
   stages.forEach((el, i) => { el.open = initialOpen[i]; });
   if (!fits) {
     delete root.dataset.itineraryMode;
@@ -190,14 +212,21 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
     return null;
   }
 
+  const viewHeight = screen.clientHeight;
+  const spans = overflow.map((extra) => 1 + extra / viewHeight);
+  const starts = spans.map((_, index) => spans.slice(0, index).reduce((sum, value) => sum + value, 0));
+  const totalSpan = spans.reduce((sum, value) => sum + value, 0);
+  root.style.setProperty("--itinerary-span", `${totalSpan * 100}vh`);
+
   let selected = -1;
   let active: gsap.core.Timeline | undefined;
+  let rowOffset = 0;
   const finish = () => { active?.progress(1); active = undefined; };
-  const align = (index: number) => {
+  const align = (index: number, read = 0) => {
     // offsetTop rounds the 9.59848px SVG rules and drifts almost a pixel
     // between stops. Rectangle differences retain the subpixel geometry.
-    const offset = rows[index].getBoundingClientRect().top - track.getBoundingClientRect().top;
-    gsap.set(track, { y: -offset });
+    rowOffset = rows[index].getBoundingClientRect().top - track.getBoundingClientRect().top;
+    gsap.set(track, { y: -rowOffset - read });
   };
   const select = (index: number) => {
     selected = index;
@@ -230,18 +259,24 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
   intro.stageArrival(stages[0], {}, 0.2);
   ScrollTrigger.create({
     trigger: root,
+    animation: intro,
     start: "top 65%",
-    onEnter: () => intro.play(),
-    onEnterBack: () => intro.play(),
-    onRefresh: (self) => { if (self.scroll() >= self.start) intro.progress(1); },
+    end: "top 20%",
+    scrub: 0.8,
   });
 
-  const at = (progress: number) => Math.min(stages.length - 1, Math.floor(progress * stages.length));
+  const at = (progress: number) => {
+    const position = progress * totalSpan;
+    const next = starts.findIndex((start) => start > position);
+    return next === -1 ? stages.length - 1 : Math.max(0, next - 1);
+  };
+  const readAt = (progress: number, index: number) =>
+    gsap.utils.clamp(0, overflow[index], (progress * totalSpan - starts[index] - 0.2) * viewHeight);
   const controller = ScrollTrigger.create({
     id: "wonder-itinerary",
     trigger: root,
     start: "top top",
-    end: `+=${stages.length * 100}%`,
+    end: `+=${totalSpan * 100}%`,
     invalidateOnRefresh: true,
     onUpdate: (self) => {
       const index = at(self.progress);
@@ -249,11 +284,14 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
         intro.progress(1);
         context.showStage(index, self.isActive);
       }
+      // Only transform work on scroll. Geometry is measured at selection or
+      // refresh; oversized copy travels through the same clipped track.
+      gsap.set(track, { y: -rowOffset - readAt(self.progress, index) });
     },
     onRefresh: (self) => {
       finish();
       context.showStage(at(self.progress), false);
-      align(selected);
+      align(selected, readAt(self.progress, selected));
     },
   });
 
@@ -261,7 +299,7 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
     const bounded = Math.max(0, Math.min(stages.length - 1, index));
     // The shared scroller keeps its own target in sync; writing window scroll
     // beside Lenis would pull the reader back toward its old target.
-    smoothScrollTo(controller.start + (bounded + 0.08) * (controller.end - controller.start) / stages.length, 0.55);
+    smoothScrollTo(controller.start + (starts[bounded] + 0.08) * (controller.end - controller.start) / totalSpan, 0.55);
   };
   context.add("chooseStage", (event: MouseEvent) => {
     const target = (event.target as Element).closest<HTMLElement>("[data-stage-head]");
@@ -280,7 +318,7 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
     if (next === null) return;
     event.preventDefault();
     const bounded = Math.max(0, Math.min(stages.length - 1, next));
-    clampScrollTo(controller.start + (bounded + 0.08) * (controller.end - controller.start) / stages.length);
+    clampScrollTo(controller.start + (starts[bounded] + 0.08) * (controller.end - controller.start) / totalSpan);
     context.showStage(bounded, true);
     headings[bounded].focus({ preventScroll: true });
   });

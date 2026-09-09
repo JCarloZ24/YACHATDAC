@@ -690,7 +690,7 @@ where the same fact appears in both, the hub frames it differently.
 
 | § | Section | ⚡ | vh | Ground | Loud | Source |
 |---|---|---|---|---|---|---|
-| 01 | Hero — FULL BLEED · *a guest on Country* | 4 | 150 | photo → evergreen | **media** | `truth.ts:118` |
+| 01 | Hero — the aerial, then *a guest on Country* on evergreen | 2 | 120 | photo → evergreen | **none** | `truth.ts:118` |
 | 02 | **The obligation** — alone on a screen | 4 | 100 | evergreen | **type** | `about.ts:117` · `R22` |
 | 03 | Open research — three disciplines resolve | 3 | 120 | canvas | **type** | `truth.ts:393` |
 | 04 | **What we do not know** — ⚑ the gaps as an OFFER | 5 | 190 | canvas | **media** | `resources.ts:274-300` |
@@ -701,8 +701,60 @@ where the same fact appears in both, the hub frames it differently.
 | 08 | Get in touch — cloned from Our People §06 | 3 | 150 | canvas → dark | **transition** | `contact.ts` |
 | 09 | Footer | 1 | 135 | charcoal | **none** | shared |
 
-**Reads as:** media · type · type · media · none · type · transition · none · transition · none.
+**Reads as:** none · type · type · media · none · type · transition · none · transition · none.
 No channel three deep; both ⚡4–5 runs are broken by a rest.
+
+### §01 — the copy went back onto the ground, 9 September 2026
+
+Ivy moved the hero copy **onto** the photograph on 5 September, because the frame's stacked
+arrangement left a whole screen of picture carrying no words. The user reversed that on
+9 September, reading the wireframe: the aerial is alone at the top, the wave hands it off, and
+the eyebrow, headline, standfirst and action row sit on the page's own evergreen beneath it.
+**The obligation never moved through either change** — §02 still states it alone on evergreen.
+
+Two consequences worth naming. **The two X5 scrims are gone**: they bought legibility for type
+set on open scrub and no type sits on the picture any more, so the aerial is now bright and
+unmuted as the wireframe draws it. **The section is taller than one screen** — roughly 120vh at
+1440 × 900, which is the compressed version of the frame's own 1350px stack (the photograph is
+held to `58svh` rather than 792px so the eyebrow and headline stay above the fold). That height
+is the exact objection the 5 September change was answering; it is accepted here on direction.
+
+**The ⟡ STAND-IN badge was removed from the hero** on the same direction. What it flagged is
+unchanged and still held: there is no photograph of research, a survey or a scientist anywhere
+in the collection, and `aerial-crew-burnedge` stands in because nobody is identifiable from
+height. A reviewer looking at the page will no longer be told — the claim now lives only in
+`kit.ts`, in the section's own comment, and here. The badges on §03 and §06 are untouched.
+
+### §01 is the page's only built scene — 9 September 2026
+
+The rest of this ledger describes a page that is **still static**. §01 is now the exception:
+the hero takes an **arrival overture**, built at 1440 × 900 first, and nothing below it moves.
+
+| beat | grammar row | effect | at |
+|---|---|---|---|
+| the eyebrow, *Work with us* | arriving quietly · **X4** | `arrive` | 0 |
+| the headline, split **by LINE** | what endures · **B5** | `settle` | 0.20 |
+| the standfirst *and* the action row, one beat later | arriving quietly · **X4** | `arrive` | 0.75 |
+| the divider at the photograph's foot, into the page's own evergreen | a change of ground | `waveHandoff` | 0.75 |
+
+**The photograph holds still, and that is the direction.** No `pushIn`, no `plateParallax` —
+**there are people in this frame**. `aerial-crew-burnedge` is publishable because nobody is
+identifiable from height, and `pt-hero` is graded `frame`: the world arrives around the record,
+the record does not move. That is also why the row above now reads **none** rather than
+**media** — `settle`, `arrive` and `waveHandoff` are all quiet, the wave is furniture, and
+nothing on this screen takes it. The ⚡ and the vh follow the same correction: the section is one
+screen of held photograph, not one and a half of hypothetical media moment.
+
+**It is an overture, not a scroll scene.** The hero opens at the top of the document, so there
+is no span to hang it off — `composition()`'s entry trigger resolves to `progress(1)` at scroll
+0 and the arrival would never play. It is gated on `awaitEntry` instead, after the X1 loader on
+a first visit and after the X7 wipe on a navigation, exactly as The Record's hero is.
+
+Code: `src/lib/motion/partnerships.ts`, hosted by
+`src/app/partnerships/_components/Motion.tsx`. Hooks: `data-pt="hero"`, `data-pt-eyebrow`,
+`data-pt-heading`, `data-pt-arrive`, `data-pt-wave`. ⚠ `data-pt-wave` is the divider's **wrapper
+box**, never the SVG — the SVG seats itself on a Tailwind translate that an inline GSAP
+transform clobbers, which was About's disappearing-wave defect.
 
 ### The inversion — §04 is the page's argument
 
@@ -936,6 +988,12 @@ The alternative is to make §03 or §05 quiet, and both were judged worse.
 
 ### The itinerary opens each stop at one viewport position
 
+9 September 2026 responsive correction: desktop touch pointers (including
+DevTools emulation) use the same automatic itinerary as mouse input. Wonder's
+section entrances, including Highlights, now scrub and reverse with scroll
+instead of completing once. Out here reserves 144px below its text to clear
+the incoming 104px hosts wave by 40px.
+
 Latest direction, 9 September 2026, extends the restored Figma `2033:5889`
 accordion with automatic opening. At 1440 x 900, the same native document
 holds on canvas while six 100vh reading spans select the active stop. The
@@ -944,10 +1002,13 @@ heading position stays constant; reverse scrolling returns through the stops.
 `arrive` and `frameOpen` after reviewing the live effects lab. Photos hold
 inside their frames. There is no full-screen image duplicate or colour ramp.
 
-The module measures the longest stop before enabling the held layout. Mobile,
-short windows and content that cannot fit use the normal accordion. Reduced
-motion and no JavaScript use native instant toggles. See `wonder-plan.md` for
-the viewport-fit spacing amendment and keyboard behaviour.
+The module waits for closed-panel fonts before measuring each stop. Desktop
+stops taller than the reading window extend their 100vh leg by the overflow:
+20vh seated, scroll through the excess, then 80vh held. This restores automatic
+steps on shorter desktops and cold production loads (9 September 2026).
+Mobile and windows too short to show a heading plus a readable strip retain
+the normal accordion. Reduced motion and no JavaScript use native instant
+toggles. See `wonder-plan.md` for measured spans and keyboard behaviour.
 
 ### The `ground` row is not used on this page
 

@@ -1,7 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
-import { org, primaryAction, primaryNav } from "@/content/site";
-import { ConnectButton } from "@/components/layout/ConnectButton";
+import { DesktopNav } from "@/components/layout/DesktopNav";
 import { MobileNav } from "@/components/layout/MobileNav";
 
 /**
@@ -29,52 +26,19 @@ import { MobileNav } from "@/components/layout/MobileNav";
  */
 
 /**
- * Geometry is Marc's `Navbar / 1 /` (127:5287): a 130px band, 64px side
- * padding at desktop, links gap 32, actions gap 16, and the CTA as a light
- * pill with dark text so it reads over photography. Items stay content-driven
- * (D2). The 31 Aug wireframe settled the pill wording on CONNECT (now in
- * `primaryAction`), links in canvas cream, and the pill's text in midnight.
+ * ⚑ 9 Sep 2026, user direction. The desktop band is no longer markup here: it
+ * moved to DesktopNav so it can carry the mobile bar's scroll-linked
+ * hide/show and white fade, plus a hover-at-the-top reveal of its own. This
+ * component is now just the pairing of the two bars — both are fixed, so the
+ * header itself holds no geometry.
  */
 export function SiteHeader() {
   return (
     <header data-site-header className="absolute inset-x-0 top-0 z-30">
-      {/* Navbar / Mobile — the solid white bar with the black wordmark and
-          the hamburger panel. Below md only; the band below is desktop's. */}
+      {/* Below md: the solid white bar with the hamburger panel. From md: the
+          130px band. Each owns its own breakpoint. */}
       <MobileNav />
-      <nav
-        aria-label="Primary"
-        className="mx-auto hidden h-[130px] max-w-[1440px] items-center justify-between gap-8 px-6 md:flex lg:px-16"
-      >
-        <Link href="/" aria-label={`${org.name} — home`} className="shrink-0">
-          <Image
-            src="/brand/logo-wordmark.svg"
-            alt={org.name}
-            width={216}
-            height={64}
-            priority
-            className="h-9 w-auto sm:h-11"
-          />
-        </Link>
-
-        <div className="flex items-center gap-4">
-          <ul className="hidden items-center gap-8 md:flex">
-            {primaryNav.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="eyebrow text-xs whitespace-nowrap text-canvas transition-colors duration-(--dur-small) ease-quiet hover:text-gold"
-                >
-                  {item.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          {/* The CTA is the supplied blob asset with the water-fill hover —
-              see ConnectButton. Label is baked into the asset. */}
-          <ConnectButton href={primaryAction.href} label={primaryAction.title} />
-        </div>
-      </nav>
+      <DesktopNav />
     </header>
   );
 }

@@ -99,13 +99,8 @@ export type CompositionSpec = {
    */
   build: (tl: gsap.core.Timeline, root: HTMLElement) => void;
   /**
-   * Entry motion — plays once when the screen arrives, and never again.
-   *
-   * Kept off the scrubbed timeline deliberately. X4 says `once: true`, and
-   * scrubbing an entry stagger makes it run backwards when the reader scrolls
-   * up — which patterns.md calls "the single most irritating thing a site can
-   * do", and it is right. A screen almost always wants both: its ground scrubs
-   * while its cards arrive.
+   * Entry motion. Defaults to a single arrival; enterScrub opts into a
+   * reversible scroll entrance (Wonder, user direction 9 September 2026).
    */
   enter?: (tl: gsap.core.Timeline, root: HTMLElement) => void;
   /**
@@ -115,6 +110,10 @@ export type CompositionSpec = {
    * rather than a beat of blank ground.
    */
   enterStart?: string;
+  /** Tie entry progress to scroll and retrace it on return. Grammar: X4. */
+  enterScrub?: boolean;
+  /** End of a scrubbed entry. Default "top 20%". */
+  enterEnd?: string;
   /** The cut. Final state, instantly. No tweens with a duration, no pins. */
   cut: (root: HTMLElement) => void;
 };
@@ -237,35 +236,23 @@ export function composition(
 
       spec.build(tl, root);
 
-      // Entry motion gets its own trigger: starts a little before the screen
-      // is centred, plays once, never reverses.
+      // Entry motion has its own range, before the section's reading span.
       let entryTl: gsap.core.Timeline | null = null;
       let entryTrigger: ScrollTrigger | null = null;
       if (spec.enter) {
-        /**
-         * A PAUSED TIMELINE PLAYED BY ITS OWN TRIGGER (9 Sep 2026).
-         *
-         * This used to be `gsap.timeline({ scrollTrigger: {...} })`. Built
-         * inside a `matchMedia` context on a long page it silently never
-         * played: every entry screen on /wonder sat at its `from` state —
-         * headings invisible, cards frozen at 0.7 scale — while the scrubbed
-         * work on the same page ran perfectly. An explicit trigger with an
-         * explicit `play()` does not depend on how the attached-trigger path
-         * resolves inside a context, and it is easier to read besides.
-         *
-         * CONTENT MUST NEVER BE LEFT INVISIBLE. Entry effects are `from`
-         * tweens, so building one immediately writes opacity 0 and the copy
-         * is hidden until the timeline plays. That is right while the screen
-         * is below the fold and wrong the moment it is already above it: a
-         * reader landing on `/wonder#experience`, following a nav link into
-         * the middle of the page, or restoring a scroll position on reload
-         * jumps clean past the trigger. So on every refresh, if the page is
-         * already past the start, the entry is completed rather than waited
-         * for — the arrival has been missed, the content has not.
-         */
+        // Build before attaching the trigger so it sees the full duration.
+        // Scrubbed entries derive their state from scroll, including restored
+        // positions. Single-play entries explicitly complete missed arrivals
+        // on refresh so hash links cannot leave the content hidden.
         entryTl = gsap.timeline({ paused: true });
         spec.enter(entryTl, root);
-        entryTrigger = ScrollTrigger.create({
+        entryTrigger = spec.enterScrub ? ScrollTrigger.create({
+          trigger: root,
+          animation: entryTl,
+          start: spec.enterStart ?? "top 82%",
+          end: spec.enterEnd ?? "top 20%",
+          scrub: SCRUB.normal,
+        }) : ScrollTrigger.create({
           trigger: root,
           start: spec.enterStart ?? "top 82%",
           // NOT `once`. A one-shot trigger that misses its crossing — a fast
