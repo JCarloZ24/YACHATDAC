@@ -87,6 +87,19 @@ export function createHomeHero(
     let resumePointer = () => {};
     let offscreen = false;
     let timeline: gsap.core.Timeline | undefined;
+    /**
+     * Last resort for an intro that never finishes — a decode that hangs, a
+     * timeline that never completes — so the reader is not held on a black
+     * screen. It is stood down while the tab is hidden and re-armed on
+     * return, because it measures wall clock and the intro it guards is
+     * paused: otherwise the guard becomes the failure.
+     */
+    let safety: number | undefined;
+    const disarmSafety = () => { window.clearTimeout(safety); safety = undefined; };
+    const armSafety = () => {
+      disarmSafety();
+      if (!prefersReduced()) safety = window.setTimeout(release, 10000);
+    };
     let breeze: gsap.core.Timeline | undefined;
     let syncBreeze = () => {};
     let geometry: PlaneGeometry | undefined;
@@ -101,7 +114,7 @@ export function createHomeHero(
     const release = () => {
       if (disposed) return;
       disposed = true;
-      window.clearTimeout(safety);
+      disarmSafety();
       loaderObserver?.disconnect();
       resizeObserver?.disconnect();
       intersection?.disconnect();
@@ -120,25 +133,42 @@ export function createHomeHero(
       restore();
     };
     const onLost = (event: Event) => {
+      // A backgrounded tab is one of the ordinary ways a browser drops a GL
+      // context, so this is not only a crash path. Take the rebuild rather
+      // than tearing the canvas down for the rest of the visit: release()
+      // lifts the [data-hero-canvas="ready"] gate, and with every beat now a
+      // panel on this canvas, that shows all of them stacked at once.
       event.preventDefault();
+      canvas.addEventListener("webglcontextrestored", () => init(), { once: true });
       release();
     };
     const onVisibility = () => {
       syncBreeze();
-      if (document.hidden) { timeline?.pause(); stopPointer(); }
-      else {
-        if (root.dataset.heroMotion === "entering") timeline?.resume();
+      if (document.hidden) {
+        timeline?.pause();
+        stopPointer();
+        // The timer below is wall-clock and keeps running in a background
+        // tab, while the intro it guards is paused and cannot finish. Left
+        // armed, ten seconds on another tab destroyed the canvas.
+        disarmSafety();
+      } else {
+        if (root.dataset.heroMotion === "entering") { timeline?.resume(); armSafety(); }
         resumePointer();
       }
     };
     const onKey = (event: KeyboardEvent) => {
       // Tab must never land on an invisible scroll link; Escape skips the intro.
+      // ⚠ With a modifier held this is not someone moving through the page —
+      // Alt+Tab and Ctrl+Tab are window and tab switching, and they arrive
+      // here as a Tab keydown. Releasing on those meant coming back from
+      // another tab to a page whose canvas had been torn down.
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.key === "Tab" || event.key === "Escape") release();
     };
     cleanup = release;
     preference.addEventListener("change", init);
-    const safety = prefersReduced() ? undefined : window.setTimeout(release, 10000);
     if (prefersReduced()) return;
+    armSafety();
     root.dataset.heroMotion = "preparing";
     window.addEventListener("keydown", onKey);
 
@@ -426,7 +456,7 @@ export function createHomeHero(
           timeline = gsap.effects.homeV2HeroOpen(root, { gallery: entrance, render });
           timeline?.eventCallback("onComplete", () => {
             root.dataset.heroMotion = "settled";
-            window.clearTimeout(safety);
+            disarmSafety();
             window.removeEventListener("keydown", onKey);
           });
           const dissolve = gsap.effects.homeV2HeroDissolve(root, { state: exit, render });
