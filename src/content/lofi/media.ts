@@ -97,6 +97,29 @@ export const MAY_SHOW: Record<MediaBucket, boolean> = {
   "story-wall": true,
 };
 
+/**
+ * A photograph that could stand in this slot instead of the one currently in
+ * it — same dimensions, same motion behaviour, different editorial tone.
+ *
+ * This exists because "treat every slot as swap-in-ready" (STATUS.md note on
+ * placeholder imagery) has, until now, been a discipline nobody could check.
+ * An alternate recorded in a comment is invisible to the person doing the
+ * swap; recorded here it travels with the slot, and its bucket is stated so a
+ * swap cannot quietly change what the slot is allowed to do.
+ *
+ * `bucket` is required rather than inherited precisely because that is the
+ * failure mode: an alternate of a `country` frame that happens to show a
+ * cultural site is not a drop-in, and the grade has to be re-derived, not
+ * assumed.
+ */
+export type MediaAlternate = {
+  /** Real asset path. An alternate with no file is a note, not an alternate. */
+  src: string;
+  /** What this cut says differently from the one in the slot. */
+  expects: string;
+  bucket: MediaBucket;
+};
+
 export type MediaSlot = {
   id: string;
   bucket: MediaBucket;
@@ -106,6 +129,13 @@ export type MediaSlot = {
   src: string | null;
   /** Palette anchor for the placeholder square while src is null. */
   tone: "evergreen" | "midnight" | "roasted" | "oxide" | "burnt" | "eucalyptus" | "charcoal";
+  /**
+   * Documented swap-ins for this slot. Empty is a real answer — it means the
+   * options have not been recorded, not that none exist. Nothing renders from
+   * this today; it is the manifest catching up with a decision that was being
+   * kept in people's heads.
+   */
+  alternates?: readonly MediaAlternate[];
 };
 
 /**

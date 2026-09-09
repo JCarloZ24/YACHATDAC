@@ -11,6 +11,11 @@
  * is held. A partial wheel gesture drains; a committed hand-off always lands
  * at an endpoint. No snap tween writes against Lenis and no wave root receives
  * a transform.
+ *
+ * The deck owns geometry, not content. What a section does with the span it is
+ * given is authored elsewhere — `onSlideSpans` hands every read clock out so
+ * interior choreography can ride it (SCR-02), and `[data-deck-active]` on the
+ * root tells the flow-path modules to stand down for whatever it takes over.
  */
 
 import gsap from "gsap";
@@ -46,8 +51,48 @@ export type GatedDeckOptions = {
   bufferVh?: number;
   openingReadVh?: number;
   readVh?: number;
+  /**
+   * How far the outgoing slide travels up while the next one arrives, as a
+   * percentage of the viewport.
+   *
+   * 100 is lockstep: the outgoing's foot stays against the incoming's head and
+   * the hand-off plays as ordinary scrolling. Below that it becomes a
+   * parallax, and at 0 the outgoing sits still and is simply covered — which
+   * is what a deck used to do when every section arrived in a different
+   * colour to announce itself. Above 100 the two separate and show bare page.
+   */
+  exitVh?: number;
   transitionDuration?: number;
   eventPrefix?: string;
+  /**
+   * Hands each slide's own reading clock to whoever authors its interior
+   * motion. SCR-02 — "section locks to viewport while an internal timeline
+   * scrubs" (MOTION-SYSTEM §SCR-02).
+   *
+   * Interior motion cannot use viewport-relative triggers on a deck. A slide
+   * pinned at `top top` with `pinSpacing: false` consumes a `top 88%` span
+   * while it is still travelling up BEHIND the slide covering it, so the
+   * animation finishes before the reader ever sees the section — and then
+   * nothing moves at all across the 125vh they spend reading it. Binding to
+   * `read.start`/`read.end` instead puts the choreography where the reading is.
+   *
+   * Called once, inside the deck's own matchMedia branch, after every read
+   * clock exists. Any teardown returned is run on revert, so interior motion
+   * inherits both the deck's lifecycle and its gating: no callback fires on
+   * touch, under 1024px, without Lenis, or under reduced motion.
+   */
+  onSlideSpans?: (spans: readonly DeckSlideSpan[]) => (() => void) | void;
+};
+
+/** One slide's geometry, as the deck measured it. */
+export type DeckSlideSpan = {
+  index: number;
+  slide: HTMLElement;
+  runway: HTMLElement;
+  /** The 0–100% reading clock. Read `.start`/`.end` lazily — both move on refresh. */
+  read: ScrollTrigger;
+  /** The cover travel into the next slide. Null on the last slide. */
+  cover: ScrollTrigger | null;
 };
 
 type Phase = "reading" | "holding" | "playing";
@@ -109,8 +154,10 @@ export function createGatedDeck({
   bufferVh = 20,
   openingReadVh = 20,
   readVh = 125,
+  exitVh = 100,
   transitionDuration = 0.9,
   eventPrefix = "deck",
+  onSlideSpans,
 }: GatedDeckOptions): MotionModule {
   let ctx: gsap.Context | null = null;
   let revertScene: (() => void) | null = null;
@@ -626,6 +673,75 @@ export function createGatedDeck({
                     refreshPriority: refreshPriority + 3,
                   });
                 }
+                // THE HAND-OFF SCROLLS. It does not overlay.
+                //
+                // A deck's cover was legible on colour alone: a section was
+                // replaced by one arriving in a DIFFERENT colour, so "covered"
+                // announced itself. Since the page went to one egg-white
+                // ground it does not — an identically-coloured slide sliding
+                // over a stationary one reads as text swapping on a static
+                // page, with the old section's half-covered lines still
+                // sitting behind the new heading.
+                //
+                // So the outgoing travels the full viewport too, and the pair
+                // move together: the outgoing's foot stays against the
+                // incoming's head for the whole hand-off, which is exactly
+                // what ordinary scrolling looks like. The deck keeps its hold
+                // and its gate — the page still stops at the end of a section
+                // and waits to be committed — but the transition itself is a
+                // scroll, not a presentation overlay (user direction,
+                // 9 September 2026).
+                if (over) {
+                  const departing = over;
+                  gsap.fromTo(
+                    slide,
+                    { y: 0 },
+                    {
+                      y: () => -window.innerHeight * (exitVh / 100),
+                      ease: "none",
+                      immediateRender: false,
+                      // CAPPED AT THE INCOMING'S OWN PENETRATION, every frame.
+                      //
+                      // The tween says how far this section would like to
+                      // drift; the modifier refuses to let it rise faster than
+                      // the next one is actually arriving. Without the cap the
+                      // two spans disagree — the cover span is whatever the
+                      // layout between two runways happens to be, while the
+                      // incoming always arrives over exactly one viewport of
+                      // scroll — and wherever the layout adds padding between
+                      // sections the exit outran the arrival and opened a
+                      // strip of bare page along the foot. Measured, that was
+                      // 46px at the seabed seam and a 7px hairline at three
+                      // others, including one dark-to-light join where it
+                      // would have shown.
+                      //
+                      // Reading the incoming's rect per frame is the honest
+                      // fix: it is the real geometry rather than an assumption
+                      // about it, so no seam can regress by gaining padding.
+                      modifiers: {
+                        y: (value: string) => {
+                          const wanted = Math.abs(parseFloat(value) || 0);
+                          const arrived = Math.max(
+                            0,
+                            window.innerHeight -
+                              departing.getBoundingClientRect().top,
+                          );
+                          return `${-Math.min(wanted, arrived)}px`;
+                        },
+                      },
+                      scrollTrigger: {
+                        id: `${eventPrefix}-exit-${index}`,
+                        trigger: runways[index],
+                        start: () => read.end,
+                        endTrigger: runways[index + 1],
+                        end: "top top",
+                        scrub: SCRUB.light,
+                        invalidateOnRefresh: true,
+                        refreshPriority: refreshPriority + 5,
+                      },
+                    },
+                  );
+                }
                 const cover = over
                   ? ScrollTrigger.create({
                       id: `${eventPrefix}-cover-${index}`,
@@ -744,6 +860,23 @@ export function createGatedDeck({
               ScrollTrigger.addEventListener("refreshInit", prepareRunways);
               ScrollTrigger.addEventListener("refresh", refreshRail);
 
+              // SCR-02. Every read clock now exists, so interior choreography
+              // can bind to the span the reader actually spends in a section
+              // rather than to a viewport the pinned slide never crosses. The
+              // flag lets the flow-path modules stand down for the elements
+              // this hands over; it is set before they init, because modules
+              // run in registration order and matchMedia.add is synchronous.
+              root.dataset.deckActive = "true";
+              const releaseSpans = onSlideSpans?.(
+                gates.map((gate) => ({
+                  index: gate.index,
+                  slide: gate.slide,
+                  runway: runways[gate.index],
+                  read: gate.read,
+                  cover: gate.cover,
+                })),
+              );
+
               // Resolve restored positions only after every pin has measured.
               const boot = window.setTimeout(() => {
                 const y = window.scrollY;
@@ -769,6 +902,8 @@ export function createGatedDeck({
 
               return () => {
                 disposed = true;
+                releaseSpans?.();
+                delete root.dataset.deckActive;
                 window.clearTimeout(boot);
                 drain?.kill();
                 removeWheel();

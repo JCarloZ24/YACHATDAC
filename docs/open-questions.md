@@ -1,6 +1,6 @@
 # Open questions & blockers
 
-*Last updated: 26 August 2026*
+*Last updated: 9 September 2026*
 
 Live list. Resolve upward — anything marked **blocking** stops real work.
 Cross-referenced to section 17 of the build documentation.
@@ -219,6 +219,104 @@ each — not a re-argument, just a check that the change was intended.
   for the Elder Advisory Group's decisions — not an independent judgment call.
 - **Commissioned artwork is not blocking.** Placeholder-first, swap-in-ready.
 - **No separate Events page.** Event is a content type inside Resources.
+
+---
+
+## Truth interior motion — raised 9 September 2026
+
+Three things the interior-scrub pass could not settle from the repo. None is
+blocking; all three are places where a later pass could quietly invent an
+answer, which is why they are written down.
+
+- **The six sections with four image alternates each have no source.** The
+  Truth motion brief states it plainly, but nothing in `docs/` mentions
+  alternates and all 34 files in `public/media/library/truth/` are already
+  referenced by `src/content/truth-media.ts` — there are no spare frames on
+  disk. `MediaSlot` now carries an `alternates` field and the six slots that
+  fit the description ("the same slot dimensions and motion behaviors") carry
+  an explicit empty array. ⚠ Those six are **inferred** — the page's six
+  full-bleed frames. If the real six are different sections, move the arrays;
+  do not fill these in to match. **Needs: the documented swap-in list, or a
+  pointer to the pool board it lives on.**
+
+- **Partnerships is drawn as three cards and written as two.** The frame
+  staggers L, M, R at ~100ms; `YACHATDAC-Truth-Copy-v3.md` carries "The
+  Cultural Knowledge Precinct" and "Partnerships" and nothing else. The build
+  staggers the two that exist rather than inventing a third card's copy (D5 —
+  drafts govern copy). **Needs: either the third card's copy, or confirmation
+  that the frame is ahead of the draft.**
+
+- **The hero is now in motion, and the ledger said it was held.**
+  `scenes.md` read "the hero … held at its rendered state"; the brief asks for
+  a photograph that "breathes rather than sits still". Built as a 1.04 → 1.00
+  settle on user direction and recorded as superseding that line — the copy is
+  still held and the 20vh runway still exists to clear the navbar. **Needs:
+  nothing, unless a reviewer wants the stillness back.**
+
+Also fixed in the same pass, recorded because it was invisible rather than
+broken: the 1950s dim overlay sat on the era `<section>`, so once the deck
+pinned the article the overlay stayed behind in flow and stopped covering the
+thing it darkens. It is now painted by the slide's own `::after` and deepens
+0.10 → 0.45 as the band is read.
+
+---
+
+## Truth on one ground — raised 9 September 2026 (D26)
+
+`/truth` now renders on a single egg-white ground. The decision and what it
+supersedes are written up as **D26**; these are the loose ends it leaves.
+
+- **The count's red measures 2.84:1 on charcoal** — below even the 3:1
+  large-text floor, at Display scale. This is **pre-existing** and was not
+  touched, but the change makes the count the page's only dark moment and so
+  the most looked-at thing on it. It is not ours to fix unilaterally: "Rust Red
+  is spent once" is doctrine, the count is under **R5**, and raising the red or
+  lightening the ground is a palette call. **Needs: Steve / the Elder Advisory
+  Group, alongside D26 itself.**
+
+- **Three artwork cuts have no light-ground version, so they were withdrawn
+  rather than shipped invisible.** `ring-spiral-a.svg` (the 06 frame and *Older
+  than the record*) and `dots-rule-gold.svg` (under every display title) are
+  off-white and gold respectively — 1.0:1 and 1.72:1 on `#f6f6ec`. The house
+  fix is a roasted repath at 0.30 (`ART-DIRECTION` §299-305), which `ring-a`
+  and `ring-b` have and these do not. **Needs: a roasted cut of each, then
+  restore the markup — the call sites carry a comment saying so.**
+  `cluster.svg` was checked and left alone: all three of its uses sit over
+  photographs, not on the ground.
+
+- **The rail's traveller and legend are baked gold** (`trail-point.svg`,
+  `lore-legend.svg`) at 1.72:1 on the new ground. Kept, because they are marks
+  rather than text and the strand they ride was repointed to charcoal, but they
+  are the weakest thing on the page now. **Needs: a light-ground cut.**
+
+- **/about carries the same eyebrow defect this pass avoided.** Truth's warm
+  accents moved to `--color-burnt-deep` (6.31:1); /about still uses
+  `text-burnt` (2.91:1) for its canvas eyebrows, against the deepening rule
+  recorded in `living-work-qa-2026-09-08.md:238-241` that `/living-work`
+  follows. Not changed here — it is a different page and a separate pass.
+
+
+---
+
+## The count seam — raised 9 September 2026
+
+- **`railHiddenSlides` carries a dead selector.** `gated-deck.ts` hides the rail
+  over `'#break-escarpment, [data-truth-ground="count"]'`. The second half never
+  matches: `SuzanneBand` only emits `data-truth-ground="count"` when
+  `withinDeck` is false, and `page.tsx` always passes `withinDeck`. The rail's
+  silence over the count is carried entirely by `#break-escarpment`, which is
+  correct — but the selector reads as though the count were doing half the work
+  and it is not. Harmless, misleading. **Needs: deletion, or the count promoted
+  back to its own slide, which is a bigger decision.**
+
+- **The count's panel height is now load-bearing and nothing enforces it.** The
+  ground and its crest cover the escarpment because panel + wave ≈ one
+  viewport. That is a `min-h-[calc(100svh-7rem)]` floor plus content that
+  happens to land at 798px on a 900px screen. Add a paragraph, unhold the
+  portrait, or restore Suzanne's withheld block, and the crest goes off the top
+  of the screen with no warning and the beat stops closing on the wave.
+  **Needs: either a real cap, or a note in whatever unholds this section.**
+
 
 ---
 

@@ -284,13 +284,42 @@ final fifth of Before people, before the closing Wattanuri floor. Under reduced 
 traveller is absent. This is G1,
 **the guide leading the eye**, and `the page holding its ground`, not a timeline mark per era.
 
-**The ground falls.** Each section owns its solid colour and the supplied divider carries it down
-the ladder — evergreen
-*living present* → roasted brown *the return* → charcoal → navy *before the record* → charcoal
-*deep time* — with Marc's `Wave / Divider` as the visible seam at **five** hand-offs: evergreen
-after §01, brown after §09, charcoal after §14, navy after §15, charcoal after §18. Each is seated
-at `sectionHeight − 105` so the 151px wave overhangs the join by 46px, and each carries the colour
-of the section it *introduces*. **Rust Red is spent once**, on the count, and nowhere else on the
+**THE GROUND NO LONGER FALLS — one egg white, 9 September 2026 (client direction, D26).**
+`/truth` renders on a single ground, Off-White `#f6f6ec`, the same one /about uses. Two
+exceptions carry what is left of the descent: **the hard stop keeps its charcoal**, and **the
+1950s band travels** from the egg white down to that charcoal as it is read, so the reader
+arrives at the count already in the dark. The 1950s is now the only ground on the site that
+moves.
+
+What that costs is worth keeping written down. Truth has no dated photographs, so chronology had
+exactly two carriers — type and ground colour — and it now has one. **Rust Red is still spent
+once**, on the count, but it now reads as the only red *because* it lands on the only dark
+ground; the count's charcoal is load-bearing in a way it was not before.
+
+The five wave hand-offs become **four**. A divider is filled with the colour of the section it
+introduces, so between two sections of the same colour it has nothing to carry — the seam at the
+foot of "Older than the record" is dropped, exactly as /about drops its charcoal-to-charcoal
+seam ("nothing carries; that is the point"). The four that survive each still cross a real
+change: over the hero photograph, over the TODAY plate, off the foot of the Country-now break,
+and into and back out of the count. Each is still seated at `sectionHeight − 105` so the 151px
+wave overhangs the join by 46px.
+
+**Each is seated on the section it INTRODUCES.** The hand-off out of the count was the one
+exception and it was a bug, corrected 9 September 2026: it sat in flow at the count's own foot,
+riding the escarpment slide's track, so it stopped when that track stopped and the 1840s covered
+it instead of carrying it. It now leads the 1840s article — the element the deck actually moves —
+and breaks the reading column's width with the same `calc(50% - 50vw)` escape the pinned slide's
+ground uses. The trail rail's restart anchor (`data-count-wave`) moved with it, and is now
+measured through `offsetTop` rather than a viewport rect, so a mid-scroll re-measure can no longer
+read it off a pinned, translated surface.
+
+*Superseded, kept for the record:* each section used to own its own solid colour and the
+supplied divider carried it down the ladder — evergreen *living present* → roasted brown *the
+return* → charcoal → navy *before the record* → charcoal *deep time* — with Marc's
+`Wave / Divider` as the visible seam at five hand-offs: evergreen after §01, brown after §09,
+charcoal after §14, navy after §15, charcoal after §18. `DESCENT_LADDER` in `kit.ts` still holds
+that order and still governs every other page.
+
 site.
 
 The hero→Ahead divider is seated on the incoming Ahead deck, never on the hero runway. Its root
@@ -298,10 +327,36 @@ remains structural while the reusable About ink pulls from 0.6 to full height an
 the final 20vh of the hero ScrollTrigger. It is already complete when the buffer begins, so buffer
 charge cannot detach or distort the crest.
 
-**Every active entrance is scroll-scrubbed and reversible.** B5 headings retain their line masks;
-Truth-local M1 entries use `brighten` from 0.4 to 1 with no translation. Ordinary movable image
-planes push from 1 to 1.06. The hero, scene 06, the 1950s photograph, scene 17 and scene 20 are
-held at their rendered state.
+**Every active entrance is scroll-scrubbed and reversible, AGAINST ITS OWN SECTION'S READING
+SPAN** (9 September 2026). B5 headings retain their line masks; Truth-local M1 entries use
+`brighten` from 0.4 to 1 with no translation. Ordinary movable image planes push from 1 to 1.06.
+
+The span is the correction. While the deck pins every slide, a viewport-relative trigger inside
+one measures a journey that does not happen: the slide is fixed, so a `top 88%` span is spent
+while the section is still climbing BEHIND the slide covering it. Every entrance was completing
+off-screen, and then nothing moved for the 125vh the section was actually read — which is why the
+page read as though its choreography were missing when all of it was firing. Interior beats are
+now authored as fractions of `read.start`→`read.end`, handed out by the deck through
+`onSlideSpans` (`SCR-02`, `src/lib/motion/truth-scenes.ts`). The unpinned path — touch, under
+1024px, no Lenis — keeps the viewport triggers, which are correct exactly there.
+
+What each beat does with its span:
+
+| Scene | Interior beat |
+|---|---|
+| 01 | The hero photograph **breathes**: 1.04 → 1.00 across its read AND its cover. ⚠ This SUPERSEDES "the hero … held at its rendered state" — user direction, 9 September 2026, "breathes rather than sits still". Its copy is still held; only the photograph moves, and the 20vh runway still exists to clear the navbar rather than to be read. |
+| 02–03 | The two Ahead records arrive as a set, 0.30 of the span apart, **brightness only** — M1 is explicit that an entrance here does not travel, and the descent supplies the movement. The **lift is the hover**: the card rises 4px and the picture scales 1.03 inside a frame that does not move. Their photographs take no scroll push — §02/§03 are type-channel scenes, and a plane cannot carry both a GSAP push and a CSS hover, because the inline transform wins and the hover silently never appears. ⚠ The frame draws three cards, L/M/R; the draft carries two. Raised, not invented. |
+| 05, 18 | Montages laid down by hand — uneven fixed offsets, never a single stagger. |
+| 07 | The strip pulls across L→R (~.012 apart), then drifts 40px left over the remainder. |
+| 08, 14 | The breaks **pull back**, 1.06 → 1.00, where ordinary media pushes in. The page has already stopped; advancing the camera into a held image while the scroll is locked reads as impatience. |
+| 12 | Words undim at speaking pace; the attribution is held to .78 of the span, so the speaker is named only after the last word lands. The portrait is **held**, per this ledger's own "the portrait is held" — it previously took the default push, which is the ordinary-media treatment and this is not ordinary media. |
+| 13 | The ground **deteriorates** — and since D26 it does so by changing colour, not by dimming: the band walks Off-White → Charcoal across its read span, through the slide's own `::before` painter. Straight, with no intermediate stop (user direction). A version routed via Roasted Brown was built and rejected — it measured better, 5.89:1 worst against 3.47:1, but the brown read as a third ground appearing halfway down. An alpha wash was right over roasted brown and reads as grey over egg white, a bruise rather than a dusk. The ink steps with it at the crossover (charcoal → off-white), and the warm accent is dropped in this band because no warm in the palette clears the middle — the colour drains out of the labels as the light goes out. The ramp is LINEAR — an eased version was built and rejected: it held the ground still for the first third of the section and then lurched, which reads as broken rather than eased, and `machine` is the token rule for scrubbed media anyway. Measured 17.83:1 at both ends and 4.67:1 at its worst, so the band clears AA the whole way down. The photograph still takes no push. |
+| 19 | The seabed **builds downward**, top → middle → bottom: the one section that accumulates in the same direction as the scroll. |
+| 21 | Footer links fade up once, together, no stagger. |
+
+Scenes 06, 15, 17 and 20 and Suzanne's portrait are held at their rendered state. They carry
+`data-v2-static` in the markup rather than being listed in a motion module: 06 and 15 both ride
+inside slides that DO move, so a slide-level exclusion would be wrong in both directions at once.
 
 **The twenty story beats resolve into sixteen gated decks on desktop/fine-pointer input** (user
 direction, 9 September 2026). "What is being built" and "Work with us" share the Ahead deck;
