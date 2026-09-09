@@ -118,6 +118,21 @@ Two things, and neither is a gap in this spine:
 
 - **Suzanne Thompson's testimony (R5)** — withheld pending her sign-off. The hard stop carries
   it. Its absence is a governance state, not an unanswered design question.
+
+  **Amended 9 September 2026, August's direction.** The 1902 band is now *built* from the
+  drafted copy — the count, the citation, her quotations, the closing paragraphs — under F8
+  (build first, review at presentation). The hold has moved from the build to publication:
+  Truth stays `held by community` and does not go live without her approval, and her portrait
+  slot is still empty.
+
+  The band's two editorial blocks — the standing draft warning at the head, and the check note
+  carrying her two open questions at the foot — were removed the same day, because this build
+  is what goes in front of her and the Elder Advisory Group to be approved. **The page
+  therefore no longer asks the questions, so the presentation must.** Three things travel with
+  it, off the page: the order of the count against the blankets, thirty-five against
+  thirty-seven, and the unratified CR4 word inside her recorded quotation, which still needs
+  putting to her through Steve. All three texts are kept in `src/content/truth.ts` and in the
+  Truth v3 draft.
 - **The Welcome to Country wording (R1)** — the v3 text is marked "[DRAFT for Suzanne to
   correct or replace]" and says on its face that it is a statement of custodianship, *not* an
   Acknowledgement. Her words are outstanding.

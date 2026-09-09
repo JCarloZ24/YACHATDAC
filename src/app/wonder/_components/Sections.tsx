@@ -1011,11 +1011,18 @@ export function WonderStories() {
   return (
     <section
       data-wonder="stories"
-      className={`relative bg-white pt-10 pb-16 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
+      className={`relative bg-white pt-16 pb-20 text-charcoal lg:pt-[120px] lg:pb-[160px] ${GUTTER}`}
     >
-      {/* Wave Line at y=9096 in the 1440 frame — Your hosts' canvas dripping
-          into this white ground. The frame seats it ~100 below the join. */}
-      <WaveDrip ground="var(--color-canvas)" seat="-top-px" />
+      {/* THE WAVE IS BACK, BUT ON THE WIDE FRAMES ONLY (August, 9 Sep 2026).
+          The frame's y=9096 Wave Line was pulled from this join earlier the
+          same day because of what it did on the PHONE: Hosts' canvas and this
+          white ground are a shade apart, so at 40px tall the crest read as a
+          stray white band above the eyebrow rather than as a join. That is a
+          375 problem and only a 375 problem — at 104px over a 1440 column the
+          same crest reads as the frame draws it. So it returns from `sm` up
+          and the phone keeps the straight canvas-into-white join it has now.
+          The bottom join is unchanged either way — it is Close's roasted. */}
+      <WaveDivider ground="white" className="hidden sm:block" />
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex flex-col gap-5 lg:gap-4">
           {/* 16 on both frames — the one eyebrow that does not step up. */}
@@ -1024,10 +1031,15 @@ export function WonderStories() {
           </p>
           <h2 className={H2}>{wonderStories.title}.</h2>
         </div>
+        {/* One card at a time with the frame's dots under it, as Highlights
+            (§03) and Where you sleep — August, 9 Sep 2026. The peek was
+            leaving a sliced second plate under the phone's 375 gutter. */}
         <CardRail
           bleed={RAIL_BLEED}
           columns="sm:grid-cols-2 lg:grid-cols-3"
           gap="sm:gap-6 lg:gap-12"
+          label="Stories from out here"
+          dots
         >
           {wonderStories.items.map((item, i) => {
             const media = wonderStoryMedia[i];

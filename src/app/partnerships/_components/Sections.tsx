@@ -19,7 +19,7 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * Figma 2944:25988 (07 · Partnerships — HI-FI · Desktop · the page hosts),
  * 1440 x 10,710px = 1,190vh across ten frames. The verb is HOSTS.
  *
- *   01  Hero — FULL BLEED · a researcher on Country is a guest on Country
+ *   01  Hero — the aerial, the wave, then the copy on evergreen
  *   02  THE OBLIGATION — the page's thesis, alone on a screen
  *   03  Open research — the three disciplines
  *   04  FOUR OPEN QUESTIONS — the inversion: the gaps as an offer
@@ -30,9 +30,13 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  *   08  The ending — one action
  *   09  Footer — already built to Marc's styling; the page declares its ground
  *
- * ⚠ THIS PAGE IS STATIC BY DECISION, like /our-people and /about. No motion
- * module, no scroll animation, no hover, no data-* motion hooks. It renders
- * the same with JavaScript off.
+ * ⚠ §01 MOVES; §02 DOWN ARE STATIC BY DECISION, like /our-people and /about.
+ * The hero carries an arrival overture and the only `data-pt-*` hooks in this
+ * file (user direction, 9 September 2026) — its score, and the reason the
+ * photograph holds still under it, are at src/lib/motion/partnerships.ts.
+ * Every other section has no motion module, no scroll animation, no hover and
+ * no data-* motion hooks, and the whole page still renders the same with
+ * JavaScript off: the overture only ever animates *to* the server markup.
  *
  * ⚠⚠ THIS PAGE HAS NO DRAFT, and that is its defining constraint. /about and
  * /our-people were built from client drafts; this route exists because four
@@ -153,28 +157,40 @@ const RESEARCH = photoById("pt-research");
 const BREATH = photoById("pt-breath");
 
 /* -------------------------------------------------------------------------
-   01 · Hero — a researcher on Country is a guest on Country · 100vh
+   01 · Hero — a researcher on Country is a guest on Country · ~120vh
    ------------------------------------------------------------------------- */
 
 /**
- * One screen: the aerial full bleed, the page's first sentence over it, and
- * the page's first action in the same breath.
+ * The aerial across the top, the wave, then the page's first sentence and its
+ * first action on the page's own evergreen beneath.
  *
- * ⚠ THIS DIVERGES FROM THE FRAME, DELIBERATELY. Figma draws the photograph
+ * ⚠ THE COPY IS BACK ON THE GROUND, WHICH REVERSES THE 5 SEPTEMBER CALL
+ * (user direction, 9 September 2026, against the wireframe). The history is
+ * worth keeping because it has now gone both ways: Figma draws the photograph
  * across the top two-thirds with the copy on evergreen beneath it, 1350px in
- * all. That left a whole screen of picture carrying no words, and Ivy asked
- * for the copy on the photograph instead (2026-09-05) — so the section is now
- * one screen, not one and a half, and the ground below the wave belongs to
- * §02. THE OBLIGATION IS NOT WHAT MOVED: §02 still states it alone on
- * evergreen, which is the page's argument and stays where the frame puts it.
+ * all; Ivy moved the copy ONTO the picture on 2026-09-05 because that left a
+ * whole screen of image carrying no words; and the frame's arrangement is now
+ * restored on the user's own reading of the wireframe. THE OBLIGATION NEVER
+ * MOVED through any of it: §02 still states it alone on evergreen, which is
+ * the page's argument.
  *
- * SETTING TYPE ON THIS PARTICULAR PICTURE IS SAFE, but not for the reason the
- * previous build gave. The altitude is what makes the aerial publishable —
- * nobody is identifiable from height (kit.ts, `pt-hero`) — and that is a
- * consent question, not a legibility one. Legibility is bought here the way
- * About's hero buys it: a left-weighted X5 so the copy side is the dark side,
- * plus a soft band behind the copy block so the standfirst never sits on open
- * scrub. Same two-scrim recipe, same reason.
+ * ⚠ THE TWO X5 SCRIMS WENT WITH THE COPY, and that is the point rather than
+ * a tidy-up. They existed for exactly one reason — buying legibility for type
+ * set on open scrub, the way About's hero does. No type sits on this
+ * photograph any more, so a gradient over it is just a darkened picture, and
+ * the wireframe draws the aerial bright and unmuted. If copy ever returns to
+ * the image, they return with it; they are not decoration to re-add for mood.
+ * ONE SHORT TOP SCRIM REPLACES THEM and serves something else entirely: the
+ * site header is transparent over this picture, so the band behind the
+ * wordmark and nav is darkened and nothing below it is.
+ *
+ * ⚠ IT IS TALLER THAN ONE SCREEN AT 1440 x 900, and the frame is why. Stacked
+ * as drawn, the picture and the copy block come to roughly 1,350px against a
+ * 900px viewport — which is the exact objection that moved the copy onto the
+ * image in the first place. The photograph is held to `58svh` rather than the
+ * frame's 792px so the eyebrow and the headline are both above the fold at
+ * 1440 x 900 and only the action row sits at it; that is a deliberate
+ * compression of the frame, not a match to it.
  *
  * ⚠ THE WAVE IS INSIDE THIS SECTION, not at the top of the next one. §02 is
  * evergreen too, so there is no seam between them — the only handover is from
@@ -187,82 +203,131 @@ const BREATH = photoById("pt-breath");
  * offering nothing to press until roughly 8,900px down, when someone arriving
  * at /partnerships has already decided to partner. The blob goes to the ways
  * in; the quiet link goes to the open questions.
+ *
+ * THE ONE SECTION ON THIS PAGE THAT MOVES (user direction, 9 September 2026),
+ * built at 1440 x 900 first. The score is at src/lib/motion/partnerships.ts;
+ * this file owns only the hooks — `data-pt-eyebrow`, `data-pt-heading`,
+ * `data-pt-arrive` on the standfirst and the action row, `data-pt-wave` on
+ * the divider's wrapper box. ⚠ THE PHOTOGRAPH HAS NO HOOK AND MUST NOT GET
+ * ONE: the crew on the burn edge is publishable because nobody is
+ * identifiable from height, and `pt-hero` is graded `frame` — the world
+ * arrives around this picture, the picture never moves.
  */
 export function PartnershipsHero() {
   const [claim, obligation] = sentences(PRINCIPLE);
 
   return (
-    <section className="relative bg-evergreen text-canvas">
-      {/* Flex-centred with `min-h`, not a fixed `h` with absolute copy: the
-          copy is a flow child, so a short viewport grows the block instead of
-          clipping the obligation off the bottom of the picture. */}
-      <div className="relative flex min-h-[100svh] w-full flex-col justify-end overflow-hidden lg:justify-center">
+    <section data-pt="hero" className="relative bg-evergreen text-canvas">
+      {/* THE PHOTOGRAPH, alone. No copy, no scrim, no badge — the wireframe
+          draws the aerial bright and full width, and the wave below it is the
+          only thing that happens on it.
+
+          58svh, not the frame's 792px: see the header. The picture is graded
+          `frame` (kit.ts, `pt-hero`) and carries no motion hook, so this box
+          holds still under everything the overture does around it.
+
+          ⚠ THE VISIBLE ⟡ STAND-IN BADGE WAS REMOVED on user request,
+          9 September 2026. What it said is still true and still held:
+          `aerial-crew-burnedge` is a placeholder — THERE IS NO PHOTOGRAPH OF
+          RESEARCH, A SURVEY OR A SCIENTIST ANYWHERE IN THE COLLECTION, and
+          this frame stands in because nobody is identifiable from height,
+          which is the safe way to show a crew. It must be replaced with a
+          cleared frame of research being done on Country before launch. The
+          claim now lives only here, in `kit.ts` and in
+          docs/motion/scenes.md — a reviewer looking at the page will no
+          longer be told. */}
+      <div className="relative h-[58svh] w-full overflow-hidden">
         <div data-motion={HERO?.grade ?? "frame"} className="absolute inset-0">
           <MediaOrField
             src={HERO?.src ?? null}
             alt="A drone view along an escarpment burn edge, a crew walking it on foot"
-            sizes="(min-width: 1024px) 100vw, 260vw"
+            sizes="100vw"
             priority
             fieldClass="bg-evergreen"
           />
         </div>
 
-        {/* X5 · left-weighted, so the copy side is the dark side. */}
+        {/* ⚠ THE ONE SCRIM THAT SURVIVED THE COPY MOVING, and it is here for
+            the CHROME, not for the hero's words. `SiteHeader` is transparent
+            and absolutely positioned over whatever the page opens on
+            (SiteHeader.tsx:37), so the white wordmark and nav land on pale sky
+            and lit canopy at the top of this aerial. Short, top-only and much
+            lighter than the two X5 scrims it replaces: it darkens the header
+            band and nothing else, and it must not be grown back down over the
+            picture — the wireframe wants the aerial bright. */}
         <div
           aria-hidden
-          className="absolute inset-0"
+          className="absolute inset-x-0 top-0 h-40 lg:h-52"
           style={{
             backgroundImage:
-              "linear-gradient(90deg, rgba(9,14,18,0.88) 0%, rgba(9,14,18,0.62) 42%, rgba(9,14,18,0.12) 78%, rgba(9,14,18,0) 100%)",
+              "linear-gradient(180deg, rgba(9,14,18,0.62) 0%, rgba(9,14,18,0.28) 55%, rgba(9,14,18,0) 100%)",
           }}
         />
-        {/* X5 band · under the copy block only. */}
-        <div
-          aria-hidden
-          className="absolute inset-0 lg:top-[34%] lg:bottom-auto lg:h-[42%]"
-          style={{
-            backgroundImage:
-              "linear-gradient(180deg, rgba(9,14,18,0) 0%, rgba(9,14,18,0.34) 35%, rgba(9,14,18,0.34) 70%, rgba(9,14,18,0) 100%)",
-          }}
-        />
-        {/* ⟡ STAND-IN, on the photograph. The chip keeps it legible on sky. */}
-        <p
-          data-placeholder="stand-in"
-          className="eyebrow absolute top-6 left-6 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-gold"
-        >
-          ⟡ Stand-in
-        </p>
-
-        {/* pb clears the wave. The divider is 104px tall at sm and up and it
-            is seated ON this picture, so a symmetric block would put the CTA
-            row under it. */}
-        <div className={`${COLUMN} relative pt-16 pb-28 lg:pt-24 lg:pb-32`}>
-          <p className={EYEBROW_DARK}>Work with us</p>
-          <h1 className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:text-[4.5rem]">
-            {claim}
-          </h1>
-          <p className="mt-10 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl">
-            {obligation}
-          </p>
-
-          <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-5">
-            <BlobButton href="#ways-in" tone="burnt" still>
-              See the ways in →
-            </BlobButton>
-            <a
-              href="#open-questions"
-              className="eyebrow text-sm tracking-[0.28em] text-gold"
-            >
-              → Four open questions
-            </a>
-          </div>
-        </div>
       </div>
 
       {/* The wave hands the photograph off into the evergreen below — §02's
-          ground, since this section now ends with the picture. */}
+          ground, since this section now ends with the picture.
+
+          ⚠ THE INNER BOX IS A MOTION HOOK WITH A JOB, not a wrapper for its
+          own sake. `waveHandoff` translates its target by `yPercent`, and the
+          wave SVG itself is untouchable — it seats on a Tailwind
+          `-translate-y-[calc(100%-1px)]` that any inline GSAP transform
+          clobbers (About's disappearing-wave defect). So the effect moves this
+          box instead, and the box is given the divider's own height (h-10 /
+          sm:h-26) so `yPercent: 100` is exactly one wave-height of travel:
+          parked, the wave sits in the evergreen below the seam, invisible
+          against it; played, it rises onto the photograph.
+
+          The box is absolute inside a zero-height `relative` parent, at the
+          same top-0 origin the divider had as a direct child, so the seated
+          position is unchanged and the section still contributes no height
+          here. It stays a SIBLING of the photo box, never a child: a parent
+          `overflow-hidden` would delete a divider that lives entirely above
+          its own box. */}
       <div className="relative">
-        <WaveDivider ground="var(--color-evergreen)" />
+        <div
+          data-pt-wave
+          className="pointer-events-none absolute inset-x-0 top-0 h-10 sm:h-26"
+        >
+          <WaveDivider ground="var(--color-evergreen)" />
+        </div>
+      </div>
+
+      {/* THE COPY, on the page's own evergreen — the wireframe's arrangement.
+          The wave is pulled entirely ABOVE this block (onto the picture), so
+          it costs no height here and `pt` is ordinary breathing space under
+          the seam rather than divider clearance. */}
+      <div className={`${COLUMN} relative pt-14 pb-20 lg:pt-16 lg:pb-24`}>
+        <p data-pt-eyebrow className={EYEBROW_DARK}>
+          Work with us
+        </p>
+        <h1
+          data-pt-heading
+          className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:text-[4.5rem]"
+        >
+          {claim}
+        </h1>
+        <p
+          data-pt-arrive
+          className="mt-10 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl"
+        >
+          {obligation}
+        </p>
+
+        <div
+          data-pt-arrive
+          className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-5"
+        >
+          <BlobButton href="#ways-in" tone="burnt" still>
+            See the ways in →
+          </BlobButton>
+          <a
+            href="#open-questions"
+            className="eyebrow text-sm tracking-[0.28em] text-gold"
+          >
+            → Four open questions
+          </a>
+        </div>
       </div>
     </section>
   );

@@ -1486,14 +1486,30 @@ export function EraSection({
  * depth, no split — the stated exception.
  */
 /**
- * Held (2026-09-03): Suzanne's testimony — the count, her recorded words —
- * is not published until she has seen and signed it off. While this is
- * true the band renders the 15 frame's WITHHELD state only: the placeholder
- * title, the testimony line, the held portrait slot and the build note.
- * Flip to false once her approval is recorded and the draft copy in
- * src/content/truth.ts (title, figures, quotes, check note) renders again.
+ * Wired (2026-09-09, August's direction): the band renders the drafted copy
+ * from `suzanne` in src/content/truth.ts — marker, title, figures, citation,
+ * her quotations, the closing paragraphs — in the draft's own order.
+ *
+ * The 2026-09-03 hold on this band is lifted as a BUILD gate only, under F8
+ * (build-first, 31 Aug): the section is built so that it can be reviewed.
+ * What the hold was protecting is unchanged and enforced elsewhere:
+ *
+ *  · Truth is `held by community` in docs/content/STATUS.md and does not
+ *    PUBLISH without Suzanne's approval (R5). That gate, not this file, is
+ *    what keeps this off the public site.
+ *  · Both editorial blocks were removed from the band on 9 Sep (August): the
+ *    draft's standing "awaiting her approval" warning at the head, and the
+ *    check note carrying her two open questions at the foot. This build IS
+ *    the approval ask, so it presents as the page rather than as a marked-up
+ *    draft. THE QUESTIONS ARE STILL OPEN — the order of the count against
+ *    the blankets, and thirty-five against thirty-seven — and the page no
+ *    longer asks them, so they have to be put to her in the presentation.
+ *    Both texts are kept in src/content/truth.ts and in the v3 draft.
+ *  · CR4 ("settlers" → "colonists") is still unratified inside her recorded
+ *    words — see the ⚠⚠ comment on `quotes` in src/content/truth.ts.
+ *  · Her portrait slot stays HELD: a photograph is a separate permission and
+ *    no file has been delivered.
  */
-const SUZANNE_WITHHELD = true;
 
 export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
   const content = (
@@ -1526,101 +1542,122 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
         {/* The 15 frame's head: era at Eyebrow/Section-24 in off-white on
             the gutter line, the title at Display/96 in Rust Red — the only
             red on the page — then the testimony block: portrait slot HELD
-            (R5) left, attribution and build note right. Nothing here moves. */}
-        <div className="grid gap-6 pb-40 pt-36 md:grid-cols-[180px_1fr] md:gap-12">
+            (R5) left, attribution and her opening words right. Nothing here
+            moves. Order follows the draft (D5): marker, title, who is
+            speaking, her opening line, the lede. */}
+        <div className="grid gap-6 pb-24 pt-36 md:grid-cols-[180px_1fr] md:gap-12">
           <p className="eyebrow self-start pt-3 text-xl text-canvas">
-            {SUZANNE_WITHHELD ? <>1902 &rarr; 1886</> : suzanne.marker}
+            {suzanne.marker}
           </p>
           <div>
+            {/* The draft's standing warning — "Draft, awaiting her approval"
+                (`suzanne.draftWarning`) — is NOT rendered here. Removed
+                9 September 2026 on August's instruction: this build is what
+                goes in front of Suzanne and the Elder Advisory Group to be
+                approved, so the band shows the page as it would read rather
+                than announcing its own draft state. The check note at the
+                foot came off in the same pass. Neither text is deleted —
+                both stay in src/content/truth.ts and in the v3 draft — but
+                nothing on this page now says the copy is unapproved, so
+                restore both if the section is ever shown anywhere other
+                than that review. */}
             <h2 className="headline max-w-4xl text-h2 leading-[1.2] text-oxide">
-              {SUZANNE_WITHHELD ? "[ THE COUNT ]" : suzanne.title}
+              {suzanne.title}
             </h2>
-            <p className="mt-10 text-sm uppercase tracking-wide text-canvas">
-              {suzanne.attribution} &mdash; Testimony
-              {SUZANNE_WITHHELD ? <> &middot; Words not reproduced</> : null}
+            <p className="mt-10 text-sm uppercase tracking-wide text-canvas/70">
+              Told by
             </p>
             <div className="mt-6 grid gap-8 sm:grid-cols-[320px_1fr] sm:gap-8">
-              {/* ⟡ PORTRAIT SLOT — Suzanne. HELD: her image is not placed
-                  until she has seen this (R5). */}
+              {/* ⟡ PORTRAIT SLOT — Suzanne. STILL HELD (R5): her words are
+                  wired from the draft, her photograph is a separate
+                  permission and no file has been delivered. The slot stays
+                  dashed until it is. */}
               <div
                 data-placeholder="portrait-held"
                 aria-hidden
                 className="aspect-4/5 w-full max-w-80 rounded-xs border border-dashed border-oxide/50"
               />
               <div>
-                <p className="text-sm leading-relaxed text-canvas">{suzanne.role}</p>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-burnt">
-                  &#9888; Content withheld pending Suzanne&apos;s approval.
-                  &#9940; No photograph. No motion. The rail breaks here and
-                  does not resume until the 1840s.
+                <p className="eyebrow text-base text-oxide">{suzanne.attribution}</p>
+                <p className="mt-2 text-sm leading-relaxed text-canvas">
+                  {suzanne.role}
                 </p>
+                {/* Her opening line is testimony: it is read in stillness,
+                    never in the callout face. */}
+                <PullQuote tone="charcoal" className="mt-8">
+                  {suzanne.openingQuote}
+                </PullQuote>
               </div>
             </div>
+            <p className="mt-10 max-w-2xl leading-relaxed text-canvas/80">
+              {suzanne.lede}
+            </p>
           </div>
         </div>
 
-        {SUZANNE_WITHHELD ? null : (
-          <>
-            <div className="flex min-h-[100svh] flex-col justify-center py-24 md:pl-[calc(180px+3rem)]">
-              <dl className="space-y-16">
-                {suzanne.figures.map((figure) => (
-                  <div key={figure.year} className="max-w-3xl">
-                    <dt className="headline text-7xl text-canvas sm:text-9xl">
-                      {figure.year}
-                    </dt>
-                    <dd className="mt-4 text-lg leading-relaxed text-canvas/80">
-                      {figure.detail}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50">
-                <a
-                  href={suzanne.citation.href}
-                  className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
-                >
-                  {suzanne.citation.text}
-                </a>
-              </p>
-            </div>
-
-            {/* Testimony. Still, by rule — these are her words being read. */}
-            <div className="max-w-3xl pb-24 md:pl-[calc(180px+3rem)]">
-              <EditorialNote>{suzanne.draftWarning}</EditorialNote>
-
-              <PullQuote
-                tone="charcoal"
-                attribution={suzanne.attribution}
-                role={suzanne.role}
-                className="mt-14"
-              >
-                {suzanne.openingQuote}
-              </PullQuote>
-              <p className="mt-10 leading-relaxed text-canvas/80">{suzanne.lede}</p>
-              {suzanne.quotes.map((quote) => (
-                <PullQuote key={quote.slice(0, 32)} tone="charcoal" className="mt-10">
-                  {quote}
-                </PullQuote>
-              ))}
-              <p className="mt-10 leading-relaxed text-canvas/80">
-                {suzanne.afterQuotes}
-              </p>
-              <p className="headline mt-14 text-4xl text-canvas sm:text-5xl">
-                {suzanne.standingQuote}
-              </p>
-              {suzanne.closing.map((paragraph) => (
-                <p key={paragraph.slice(0, 32)} className="mt-8 leading-relaxed text-canvas/80">
-                  {paragraph}
-                </p>
-              ))}
-              <div className="mt-14">
-                <EditorialNote label="For Suzanne to check — not for publication">
-                  {suzanne.checkNote}
-                </EditorialNote>
+        {/* The count takes the viewport alone — the draft's build note:
+            "nothing else on screen". */}
+        <div className="flex min-h-[100svh] flex-col justify-center py-24 md:pl-[calc(180px+3rem)]">
+          <dl className="space-y-16">
+            {suzanne.figures.map((figure) => (
+              <div key={figure.year} className="max-w-3xl">
+                <dt className="headline text-7xl text-canvas sm:text-9xl">
+                  {figure.year}
+                </dt>
+                <dd className="mt-4 text-lg leading-relaxed text-canvas/80">
+                  {figure.detail}
+                </dd>
               </div>
-            </div>
-          </>
-        )}
+            ))}
+          </dl>
+          <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50">
+            <a
+              href={suzanne.citation.href}
+              className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
+            >
+              {suzanne.citation.text}
+            </a>
+          </p>
+        </div>
+
+        {/* Testimony. Still, by rule — these are her words being read. */}
+        <div className="max-w-3xl pb-24 md:pl-[calc(180px+3rem)]">
+          {/* The first of these carries the unratified CR4 word. Steve's
+              note of 7 Sep is explicit that as a bare pull quote it "reads
+              as our copy — it isn't", so this one is attributed on the spot
+              rather than relying on the "Told by" line a screen above. */}
+          {suzanne.quotes.map((quote, index) => (
+            <PullQuote
+              key={quote.slice(0, 32)}
+              tone="charcoal"
+              className="mt-10 first:mt-0"
+              {...(index === 0
+                ? { attribution: suzanne.attribution, role: suzanne.role }
+                : {})}
+            >
+              {quote}
+            </PullQuote>
+          ))}
+          <p className="mt-10 leading-relaxed text-canvas/80">{suzanne.afterQuotes}</p>
+          {/* The line the page stands on. Set large, but still marked up as
+              the quotation it is — these are her words, not the site's. */}
+          <blockquote className="headline mt-14 text-4xl text-canvas sm:text-5xl">
+            {suzanne.standingQuote}
+          </blockquote>
+          {suzanne.closing.map((paragraph) => (
+            <p key={paragraph.slice(0, 32)} className="mt-8 leading-relaxed text-canvas/80">
+              {paragraph}
+            </p>
+          ))}
+          {/* `suzanne.checkNote` — her two open questions, the order of the
+              count against the blankets and thirty-five against thirty-seven
+              — is NOT rendered here. Removed 9 September 2026 on August's
+              instruction, with the head warning, so the band presents as the
+              page rather than as a marked-up draft. Both questions are still
+              open and still unanswered; they now have to be PUT TO HER IN THE
+              PRESENTATION, because the page no longer asks them. The text is
+              kept in src/content/truth.ts and in the Truth v3 draft. */}
+        </div>
       </div>
       {/* Wave / Divider · NAVY — Marc's hand-off, filled with the ground it
           INTRODUCES: what came before the record. The record strand on the

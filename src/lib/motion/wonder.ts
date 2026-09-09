@@ -29,7 +29,7 @@
  * now share the full-motion landscape in wonder-landscape.ts.
  */
 
-import { clearAll, composition } from "@/lib/motion/compose";
+import { clearAll, composition as createComposition, type CompositionSpec } from "@/lib/motion/compose";
 import { DUR, EASE } from "@/lib/motion/tokens";
 import type { MotionModule } from "@/lib/motion-controller";
 
@@ -38,9 +38,14 @@ const q = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
 const qa = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
   Array.from(root.querySelectorAll<T>(sel));
 
+// User direction, 9 September 2026: X4 entrances follow scroll in both
+// directions throughout Wonder. The shared composition keeps its opt-in API.
+const composition = (name: string, root: HTMLElement, spec: CompositionSpec) =>
+  createComposition(name, root, { ...spec, enterScrub: true });
+
 /**
  * §01 — the hero. The film is the loud channel and it is already playing, so
- * this adds exactly two things: the H1 rises once behind its own line, and the
+ * this adds exactly two things: the H1 rises behind its own line, and the
  * scrim ramps as the hero is scrolled past so the title stays legible over
  * whatever frame the edit happens to be on.
  *
@@ -75,8 +80,7 @@ export function heroArrival(root: HTMLElement, span: number): MotionModule {
  *
  * Hooks: `[data-tier]` on each arriving element.
  *
- * Entry rather than scrub: X4 is `once: true`, and a scrubbed stagger runs
- * backwards when the reader scrolls up. The map is the scrubbed thing here.
+ * X4's Wonder cut follows scroll, alongside the map, in both directions.
  */
 export function factsCopy(root: HTMLElement, span: number): MotionModule {
   return composition("wonder/facts", root, {
@@ -123,15 +127,24 @@ export function cardRail(root: HTMLElement, span: number): MotionModule {
     enter: (tl) => {
       const cards = qa(root, "[data-card]");
       if (!cards.length) return;
-      tl.arrive(cards, { y: 24, stagger: 0.07 });
+      // ⚠ NO STAGGER ON THE CARD BOXES (August, 9 Sep 2026). The row arrived
+      // 0.07 apart, so for the length of the entrance card one sat 24px above
+      // cards two and three — and a row of plates out of line for half a
+      // second reads as broken layout, not as a stagger. The cards travel
+      // together; the stagger stays where it costs nothing, on the clip
+      // below, which reveals rather than moves.
+      tl.arrive(cards, { y: 24, stagger: 0 });
       cards.forEach((card, i) => {
         // `edge: "left"` and scale 1 together: the clip unrolls from the side
         // the reader is already reading toward, and the picture inside does
         // not move at all. These are hands, a ranger, an engraved wall.
         tl.frameOpen(card, { edge: "left", scale: 1 }, i * 0.06);
       });
+      // Same reading one level down: the three copy blocks are side by side,
+      // so staggering them puts the chips and headings out of line with each
+      // other. They arrive together, after the boxes.
       const copy = qa(root, "[data-card-copy]");
-      if (copy.length) tl.arrive(copy, { stagger: 0.06 }, 0.15);
+      if (copy.length) tl.arrive(copy, { stagger: 0 }, 0.15);
     },
     cut: clearAll,
   });
