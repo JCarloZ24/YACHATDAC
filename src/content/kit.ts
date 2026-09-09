@@ -53,6 +53,10 @@ export const HOME_LOADER_ARTWORK = {
  * do not attribute this replacement to the artist of the earlier photograph.
  * User requested the SVG source: it embeds the PNG rather than vector paths.
  * No cropping, sharpening or resizing of the source. */
+/* ⚠ NOT USED on `/` since 10 September 2026 (user direction): the homepage
+ * opening no longer draws the painting, so nothing on that route requests
+ * this file. /homepagev2 still does, from its own kit module. Left here
+ * because it is a supplied asset with provenance, not a layout decision. */
 export const HOME_PAINTING = {
   src: "/artwork/paintings/red-radial-painting.svg",
   origin: "User-supplied public/media/home/painting.svg (embedded painting.png); renamed without changes",
@@ -79,13 +83,17 @@ export const HOME_PAINTING = {
  * be generated or colour-matched to a join that no longer occurs.
  * public/media/home/derivatives/red-earth-track.webp is now unreferenced.
  *
- * `legacyHeight` is that old 900px crop. Every threshold in home-painting.ts
+ * `legacyHeight` is that old 900px crop. Every threshold in home-land.ts
  * — treeline, canopy, the sky bands, and the Truth sequence offsets that
  * multiply by a literal 900 — was calibrated against it, so the shader remaps
  * into that space rather than being re-tuned beat by beat. Do not change
  * either number without reading the legacyY note in that file. */
 export const HOME_PORTAL = {
   src: "/media/home/derivatives/woodland-road-full.webp",
+  // ⚠ `sky` is unreferenced since 10 September 2026 (user direction). It was
+  // the approximated daylight band the land wore before Truth; every beat now
+  // reads the sequence layers below at its frame's own offset, so there is no
+  // beat left that samples it. /homepagev2 still does, from its own kit.
   sky: "/media/home/derivatives/road-sky.webp",
   truthSky: "/media/home/derivatives/truth-sky-sequence.webp",
   truthLight: "/media/home/derivatives/truth-light-sequence.webp",

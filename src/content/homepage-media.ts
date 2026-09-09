@@ -117,7 +117,14 @@ const primaryFrames: HomeHeroFrame[] = slots.map(
   }),
 );
 
-/** 9 September: wing and distant gallery instances, no additional downloads.
+/** ⚠ NOT RENDERED on `/` since 10 September 2026 (user direction): the hero
+ * opens on the road and holds there, so the perspective gallery these frames
+ * describe is gone from the homepage — with it, twenty-six above-the-fold
+ * WebP requests. The collage still runs at /homepagev2, from that route's own
+ * copy of this module. Kept because these are photo slots with sources and
+ * grades recorded, not layout.
+ *
+ * 9 September: wing and distant gallery instances, no additional downloads.
  * Each instance retains its source and grade; the larger nearby photos frame
  * these smaller plates like the user's perspective-gallery reference. */
 export const homeHeroFrames: HomeHeroFrame[] = [

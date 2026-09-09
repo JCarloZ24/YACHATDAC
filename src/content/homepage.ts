@@ -4,7 +4,13 @@ export const homeLoader = { label: "Loading homepage" };
 /** Figma/screenshot interface label, 8 September 2026; not narrative copy. */
 export const homeHero = { scrollLabel: "Scroll" };
 
-/** Screenshot text sequence, user direction 9 September 2026 (D5 hi-fi amendment). */
+/** Screenshot text sequence, user direction 9 September 2026 (D5 hi-fi amendment).
+ *
+ * ⚠ NOT RENDERED on `/` since 10 September 2026, when the painting it was
+ * spoken over left the homepage opening (user direction). It is still on
+ * screen at /homepagev2, from that route's own content module. Kept here for
+ * the same reason the pathways and the tagline were kept through v2: content
+ * is not deleted to match a layout. */
 export const homePaintingCopy = {
   entrance: "You are entering",
   place: "Turraburra",

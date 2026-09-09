@@ -8,7 +8,7 @@ Canvas scroll sensitivity, 10 September 2026: the pin's span per timeline unit i
 Canvas survives a tab switch, 10 September 2026: leaving the homepage for a moment and coming back showed every panel at once -- the collage, the hero copy, The Invitation, the closing line, the offer and the pathways, stacked. That is what `release()` leaves behind: it reverts the GSAP context and removes `data-hero-canvas`, which lifts the `[data-hero-canvas="ready"]` gate holding the panels hidden. Harmless when the panels were sections below the hero; not harmless now that every beat is a panel on it. Three separate paths were calling it on an ordinary tab switch, and all three are fixed in home-hero.ts. (1) The ten-second safety timer that guards an intro which never finishes measures wall clock and keeps running in a background tab, while the intro it guards is paused by `visibilitychange` and so can never complete or clear it -- the guard was the failure. It is now stood down when the tab hides and re-armed on return. (2) Alt+Tab and Ctrl+Tab arrive as a Tab keydown, and the keydown handler releases on Tab so focus can never land on an invisible scroll link; it now ignores any key with alt, ctrl or meta held. (3) Browsers routinely drop a WebGL context for a backgrounded tab, and `webglcontextlost` released for the rest of the visit; it now waits for `webglcontextrestored` and rebuilds. ⚠ The stacked-panel state is still what a genuine failure looks like -- a machine with no WebGL, or reduced motion -- and it is not a readable fallback. That is a real open problem, not a regression from these fixes.
  The scene ledger
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 **Record asset reuse, 9 September 2026.** Decoded portal images are cached by
 full URL for the browser session (LRU, at most 24 entries / 48 MiB decoded pixel
@@ -86,6 +86,85 @@ in a row is a noisy one. Neither is a matter of opinion once it is written down.
 ---
 
 ## Home — verb *opens* — 1775vh, 8 sections
+
+**⚠ THE OPENING WAS REMOVED, 10 September 2026, user direction.** Read this
+before anything below it in this section. The homepage no longer opens on the
+photo collage, and it no longer draws the supplied painting or zooms through
+its rosette to reach the road. It opens ON the road: `home-hero.ts` waits for
+the photograph to decode, the black beat lifts off a finished scene, and the
+welcome — eyebrow, headline, body, scroll cue — fades on over it. Nothing
+travels and the mouse moves nothing. The first thing the scroll does is take
+the welcome and its two scrims off the photograph; Wonder rises a viewport
+after that, onto a land that is already in daylight.
+
+What went with it: the perspective gallery and its 36 plates, the pointer head
+turn, the charcoal-to-oxide ground warm, the painting reveal and its three
+lines ("You are entering" / "Turraburra" / "Story held in stone and
+starlight"), the portal zoom and its radial lens, the night grade the land wore
+before Wonder, and the feathered blur vignette — that one was made to soften
+the gaps between scattered plates and read as a smeared edge over a single
+photograph. Roughly three timeline units and twenty-six above-the-fold WebP
+requests (R11) went with them.
+
+**All of it still runs, unchanged, at /homepagev2** — an independent fork with
+its own components, content, effects and shader. Every paragraph below that
+describes the collage, the painting or the portal now describes that route, not
+`/`. `homePaintingCopy` and `homeHeroFrames` stay in the homepage's content
+modules, unrendered and annotated, on the same principle that kept the pathways
+and the tagline through v2: content is not deleted to match a layout.
+
+**The page opens at night, 10 September 2026, user direction.** It holds there
+for a beat, then the light comes up into the welcome. That is not a grade
+applied over the photograph: every beat of this page is the SAME Figma
+composition read at a different point in one day — the sky sequence behind the
+transparent land, the frame's own full-scene black over both, then the light
+sequence soft-lit through the land's alpha. So the time of day is nothing but
+where a frame sits in the two sequences and how much black it carries:
+
+| beat | node | sky | light | light layer height | black |
+| --- | --- | --- | --- | --- | --- |
+| night, on load | 3371:41344 | 0 | 0 | 8028 | 0.40 |
+| the welcome | 3371:41275 | 316 | 263 | 8028 | 0.40 |
+| Wonder | 3371:41413 | 600 | 510 | 7619 | 0.20 |
+| Truth | 3371:44759 | 1422 | 464 | 7619 | 0.25 |
+
+`sky` and `light` are pixels down each layer; both are placed against the
+1500-row scene at one image row to one layer row, so a pixel's row in the
+photograph plus the offset is its row in the sequence. The light layer is
+placed at a different height in different frames, so its denominator travels
+with its offset. These live in `HOME_SCENE` (effects/home.ts) and the seven
+dated Truth frames continue them from `home-truth-scenes.ts`.
+
+Two consequences worth knowing. **The separate daylight path is gone**: there
+is no `truth` mix and no `road-sky.webp` sample any more, because Truth is
+simply a later hour of the same day. **And the sky is a gradient again**: the
+row used to come from `legacyBand`, which saturates at 1 over everything above
+the treeline, so the whole sky was one flat colour and only the offset moved
+it. Every reference frame is a gradient from the top of the sky down to the
+horizon, so the row is now read from the photograph directly. `legacyBand`
+still owns the thresholds calibrated against the old 900-row crop — the road
+corridor, the canopy — it just no longer owns this. That changes Truth and
+Belonging as well as the hero, and it is the one change here that was not
+simply a measurement.
+
+Verified without a browser: the composite was rebuilt in numpy against the
+actual derivatives and compared with Figma's renders of 3371:41344 and
+3371:41275. The sky matches to about 1/255 in both states, which fixes the
+offsets and the black; the land bands sit within about 4/255 of a downscaled
+render of the same photograph. Nothing here has been seen on screen.
+
+The hero's DOM scrims went with that: the frame's black is in the canvas now,
+so `[data-hero-scrim]` would be a second one over the first. They are gated to
+the no-canvas fallback in home-hero.css and the dissolve no longer touches
+them.
+
+The DOM fallback changed with it. `[data-hero-fallback]` is now the same
+photograph as a single `object-bottom` still, sharing one request with the
+canvas texture, so no-WebGL and reduced motion get the hero they were meant to
+have. That does not fix the stacked-panel problem — with every beat an
+`absolute inset-0` panel inside a `h-svh` hero, a page with no canvas still
+shows all of them at once. It only makes the ground under that stack the right
+photograph.
 
 9 September hero exit prototype: add 120vh of pinned scroll to the existing
 canvas. `homeHeroDissolve` fades copy over the first 30% and photos/scrims over
