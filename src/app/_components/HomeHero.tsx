@@ -15,7 +15,7 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
   const words = beat.headline?.split(/\s+/).filter(Boolean) ?? [];
   const truthParagraphs = [[truth.sequence?.subjectDetail[0] ?? ""], ...(truth.sequence?.steps.map(step => [step.text]) ?? []), [truth.body[0] ?? ""], truth.body.slice(1)];
   return (
-    <section id={beat.id} data-home-hero className="relative isolate h-svh min-h-[680px] overflow-hidden bg-charcoal lg:min-h-[760px]">
+    <section id={beat.id} data-home-hero data-nav-hero className="relative isolate h-svh min-h-[680px] overflow-hidden bg-charcoal lg:min-h-[760px]">
       <div aria-hidden="true" data-hero-fallback className="home-hero-stage pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2">
         {homeHeroFrames.map((frame) => (
           <div key={frame.id} className="absolute overflow-hidden bg-evergreen" style={{

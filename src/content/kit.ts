@@ -11,9 +11,19 @@
  *
  * NOTHING HERE IS NEWLY AUTHORED. Every vector is an export of Leonard
  * Mickelo's supplied artwork or of Marc's drawn furniture. The zone 02 label in
- * Figma says it outright — "extracted from the artist's work". Redrawing any of
- * it in code, or generating something that resembles it, is the one thing the
- * cultural rules never permit.
+ * Figma says it outright — "extracted from the artist's work".
+ *
+ * ⚑ THE SECOND HALF OF THAT RULE IS SUPERSEDED. It used to end "Redrawing any
+ * of it in code, or generating something that resembles it, is the one thing
+ * the cultural rules never permit." The artwork amendment of 8 September 2026
+ * (user direction, recorded in CLAUDE.md) lifts the iconography restriction:
+ * generated artwork IS permitted, The Record's handprint aperture included.
+ * What survives is the attribution rule, and it is the important half —
+ * generated assets are recorded AS generated. They are not attributed to
+ * Leonard Mickelo, and they are not treated as cultural records.
+ *
+ * The first half still stands for everything listed below: these are exports,
+ * and they stay exports.
  */
 
 /* -------------------------------------------------------------------------
@@ -98,6 +108,32 @@ export type ArtworkPiece = {
  * Leonard Mickelo's own artist sign-off is still to be confirmed at the
  * milestone and is noted there.
  */
+/**
+ * Cursor copies — the site-wide custom pointer, user direction 10 September
+ * 2026. See the pointer block in globals.css for the hot-point and the
+ * fallback reasoning.
+ *
+ * ORIGIN: `chevron-right.svg`, supplied by August on 10 September 2026 as the
+ * mark the CTAs carry. The path is used WHOLE and byte-identical — the cursor
+ * files wrap it in a rotate (tip to north-west) and a drop shadow, and change
+ * nothing else. No tail has been drawn onto it; see the pointer block in
+ * globals.css for why that is a decision rather than an omission.
+ *
+ * The copies exist because `cursor: url()` renders an image at its intrinsic
+ * size and CSS cannot scale it, so the cursor needs its own sized files.
+ *
+ * ⚑ IF THE EMU REPLACES THIS: record its origin here, say whether it is the
+ * artist's or generated — the two are recorded differently, see the header —
+ * and name its hot-point explicitly. An emu form is asymmetric, so the centre
+ * is NOT its point; the click has to land where the shape says it does.
+ */
+export const CURSOR = {
+  source: "/artwork/chevron-right.svg",
+  origin: "Supplied by August, 10 September 2026 — the CTA chevron. Used whole; rotated and shadowed only.",
+  default: { src: "/artwork/cursor/point.svg", size: 24, hotspot: [3, 3] },
+  interactive: { src: "/artwork/cursor/point-lg.svg", size: 30, hotspot: [3, 3] },
+} as const;
+
 export const ARTWORK: ArtworkPiece[] = [
   {
     id: "dots-trail",
@@ -486,26 +522,62 @@ export const PHOTOS: Photo[] = [
      `about-fire`. Gap 1 has NO photograph and is not missing one — no cleared
      frame of Marra Wonga exists, and the card stays typographic and says so.
 
-     Every one of these is ⟡ STAND-IN on the canvas. This page has no draft and
-     no shot list; the frames are the closest honest match in the collection,
-     not art direction anyone signed off. */
-  /* `frame`, and the layer name says why: "nobody is identifiable from height,
+     ⟡ STAND-IN LIFTED, 10 September 2026, user direction. August supplied a
+     six-file set named for this page's slots, and four of them re-export the
+     masters these rows already pointed at, at 2000px from the delivered
+     originals. The frames are therefore no longer "closest honest match" —
+     they are the selects for this page. The page still has no draft and no
+     shot list; what changed is the status of the photographs, not the copy.
+
+     ⚠ THE OTHER TWO SUPPLIED FILES ARE NOT NEW ROWS. "Whatliveshere" and
+     "What does fire-stick" are `378A7604_1.65.1` and `fire-line-daylight`
+     frame-for-frame — the masters behind `work-seed` and `about-fire`, which
+     are already rows above and already 2000px. Giving them partnerships-local
+     ids would have put one master under two ids and broken the reverse
+     look-up this field exists for. §04's gaps 2 and 4 keep borrowing them.
+
+     ⚠ THE CONSENT CAVEATS BELOW SURVIVE THE UPGRADE. Higher resolution makes
+     an identifiable subject more identifiable, not less; neither R24 on
+     `pt-research` nor the tattoo note on `pt-soil` is answered by a better
+     export. Both were re-checked against the supplied files on 10 September
+     and both still apply. */
+  /* ⚠ 2880 AND NOT 2000, and it is the one row here that breaks the batch
+     convention. Every other photograph on the site is a 2000px export because
+     every other photograph sits in a box narrower than the viewport. This one
+     went full-bleed at 1440 x 900 on 10 September, and at 2x — which is what
+     the reviewer is actually looking at — a 1440 CSS-px box wants 2880 real
+     pixels. next/image asks for 3840, gets capped at the source, and upscales
+     whatever it is given: at 2000 the hero was visibly soft, which is the
+     defect this row fixes. ASSETS.md's note that 2000px frames "do not have
+     headroom for full-bleed at 1440" is exactly this, and the reason it can be
+     answered here is that the batch-3 master is 4267px wide.
+
+     546KB, against the 2.5MB above-the-fold budget (R11) and as the only
+     above-fold media on the route. Do not raise it further without re-reading
+     that budget — quality 82 was chosen against 78 and 86 on size, not taste.
+
+     ⚠ ANY OTHER ROW GOING FULL-BLEED NEEDS THE SAME TREATMENT, and most of the
+     collection cannot have it: a 2000px derivative whose master is also 2000px
+     has nowhere to go. Check the master before promoting a photograph to a
+     full-width hero.
+
+     `frame`, and the layer name says why: "nobody is identifiable from height,
      the safe way to show a crew". Fifteen adults from directly above, no face
      legible at any resolution — the permission rests on the altitude, so the
      image plane does not move. */
-  { id: "pt-hero", src: "/media/library/partnerships/pt-hero.webp", width: 2000, height: 1492, grade: "frame", batch: 3, master: "aerial-crew-burnedge", subject: "Drone view along an escarpment burn edge, a crew walking it on foot — no faces identifiable · ⟡ STAND-IN" },
+  { id: "pt-hero", src: "/media/library/partnerships/pt-hero.webp", width: 2880, height: 2148, grade: "frame", batch: 3, master: "aerial-crew-burnedge", subject: "Drone view along an escarpment burn edge, a crew walking it on foot — no faces identifiable" },
   /* ⚠ CONSENT UNRESOLVED. The one research frame in the collection, and its
      subject's face is visible and identifiable (batch-1.md). R24 applies here
      exactly as it does on Our People and About §07: use was cleared,
      identification was never asked. Badged in the markup. */
-  { id: "pt-research", src: "/media/library/partnerships/pt-research.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.45.2", subject: "An older man working a pestle in a stone mortar on a ute tray — ⚠ CONSENT UNRESOLVED · ⟡ STAND-IN" },
+  { id: "pt-research", src: "/media/library/partnerships/pt-research.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.45.2", subject: "An older man working a pestle in a stone mortar on a ute tray — ⚠ CONSENT UNRESOLVED" },
   /* ⚠ NO FACE, BUT A STAR TATTOO ON THE INNER FOREARM, and the notes are
      explicit that a distinctive tattoo is an identifier and should be treated
      as one. batch-3.md records that cropping the left edge removes it. Not
      cropped here — a crop is a design decision and this is the manifest — but
      `frame` grade and the caveat travels with the row. */
-  { id: "pt-soil", src: "/media/library/partnerships/pt-soil.webp", width: 2000, height: 1500, grade: "frame", batch: 3, master: "hands-soil", subject: "A hand holding a fistful of dark soil over half-burnt ground — identifying tattoo in frame · ⟡ STAND-IN" },
-  { id: "pt-breath", src: "/media/library/partnerships/pt-breath.webp", width: 2000, height: 1125, grade: "full", batch: 1, master: "378A7604_1.27.1", subject: "A wide plain of low green scrub through a screen of slender trees — no people" },
+  { id: "pt-soil", src: "/media/library/partnerships/pt-soil.webp", width: 2000, height: 1500, grade: "frame", batch: 3, master: "hands-soil", subject: "A hand holding a fistful of dark soil over half-burnt ground — identifying tattoo in frame" },
+  { id: "pt-breath", src: "/media/library/partnerships/pt-breath.webp", width: 2000, height: 1126, grade: "full", batch: 1, master: "378A7604_1.27.1", subject: "A wide plain of low green scrub through a screen of slender trees — no people" },
 ];
 
 /** Look-ups used by the gallery and by section modules. */

@@ -53,12 +53,23 @@ import { useState, type ReactNode } from "react";
 /** The hotspot box, as percentages of the plate. See the note above. */
 const HOTSPOT_W = "w-[11%] min-w-[44px]";
 const HOTSPOT_H = "h-[58%]";
-/** The lit ellipse held out of the dim: one figure wide, head-to-knee tall,
-    fading to fully dim by `SPOT_FEATHER` of its own radius. Wider and the
-    neighbour is lit too; tighter and it reads as a torch beam. */
-const SPOT_W = "9%";
-const SPOT_H = "34%";
-const SPOT_FEATHER = "82%";
+/** The lit ellipse held out of the dim. Radii, as percentages of the plate.
+ *
+ * ⚠ THE HEAD HAS TO BE IN IT (August, 10 Sep 2026). The first cut was a
+ * 9% × 34% ellipse that went from clear at the exact centre to fully dim by
+ * 82% of its radius — so the only truly lit point was the anchor itself, the
+ * chest, and the face above it sat in the wash. Pointing at somebody and
+ * dimming their head is the one thing this control must not do.
+ *
+ * So the shape now carries a PLATEAU: clear out to `SPOT_CORE` of the radius,
+ * then falling to fully dim at the edge. The core covers head to knee at the
+ * width of one figure, and the fade beyond it still lifts the rest of them.
+ * Taller and the ground lights with the person; wider and the neighbour does.
+ */
+const SPOT_W = "10%";
+const SPOT_H = "46%";
+/** Where the clear core ends and the fade to dim begins. */
+const SPOT_CORE = "58%";
 export function HostNames({
   people,
   children,
@@ -90,8 +101,8 @@ export function HostNames({
         style={
           lit
             ? {
-                maskImage: `radial-gradient(ellipse ${SPOT_W} ${SPOT_H} at ${lit.left}% ${lit.top}%, transparent 0%, black ${SPOT_FEATHER})`,
-                WebkitMaskImage: `radial-gradient(ellipse ${SPOT_W} ${SPOT_H} at ${lit.left}% ${lit.top}%, transparent 0%, black ${SPOT_FEATHER})`,
+                maskImage: `radial-gradient(ellipse ${SPOT_W} ${SPOT_H} at ${lit.left}% ${lit.top}%, transparent 0%, transparent ${SPOT_CORE}, black 100%)`,
+                WebkitMaskImage: `radial-gradient(ellipse ${SPOT_W} ${SPOT_H} at ${lit.left}% ${lit.top}%, transparent 0%, transparent ${SPOT_CORE}, black 100%)`,
               }
             : undefined
         }
@@ -115,7 +126,14 @@ export function HostNames({
             style={{ left: `${person.left}%`, top: `${person.top}%` }}
           >
             <span
-              className={`pointer-events-none absolute bottom-full left-1/2 mb-4 block -translate-x-1/2 font-eyebrow text-sm leading-none font-bold whitespace-nowrap text-canvas transition-opacity duration-(--dur-small) ease-quiet lg:mb-7 lg:text-base ${
+              /* THE CALLOUT FACE, on user direction 10 Sep 2026. Good Dog is
+                 "callouts only", and a hand-lettered name pointing at a
+                 person in a photograph is exactly that — an annotation on an
+                 image, not body, not a heading, and not testimony (the rule
+                 that keeps the face away from a person's recorded words is
+                 about speech, and these are names). It runs a step larger
+                 than the eyebrow it replaces because the face draws small. */
+              className={`callout pointer-events-none absolute bottom-full left-1/2 mb-4 block -translate-x-1/2 text-lg leading-none whitespace-nowrap text-canvas transition-opacity duration-(--dur-small) ease-quiet lg:mb-7 lg:text-2xl ${
                 on ? "opacity-100" : "opacity-0"
               }`}
               style={{ textShadow: "0 1px 8px var(--color-charcoal)" }}

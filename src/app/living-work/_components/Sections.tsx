@@ -133,6 +133,7 @@ export function LivingWorkHero() {
     <section
       id="hero"
       data-lw="hero"
+      data-nav-hero
       className="relative -mb-0.5 flex min-h-svh items-end overflow-hidden bg-charcoal"
     >
       {/* 1.40.2 — the subject sits right of centre and the headline never

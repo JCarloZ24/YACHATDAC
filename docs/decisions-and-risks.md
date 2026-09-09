@@ -1,6 +1,6 @@
 # Decisions, Risks & Issues — paste-ready
 
-*Last updated: 25 August 2026*
+*Last updated: 9 September 2026*
 
 Everything here is written to be **copied straight into Proyekto**:
 
@@ -768,6 +768,79 @@ included. That reverses the 26 Aug answer: option 2 (persistent navbar from
 `y=0`) now stands, and the code — which had never implemented the hold-back —
 now matches the direction. The pill wording also settles on **Connect**,
 replacing D2's "Get in touch".
+
+---
+
+## D24 — second supersede note (9 September 2026): the navbar has two grounds
+
+Directed by August from two supplied drawings — a 2880×260 desktop bar and a
+375×80 phone bar, both **solid white with the black cut of the wordmark**. The
+band is no longer one transparent chrome element over every ground:
+
+- **over the hero** — transparent, white wordmark, cream links, the supplied
+  cream CONNECT blob. Unchanged from 31 Aug.
+- **past the hero** — solid white, black wordmark, night-black links, and the
+  blob inverted to black with a cream label. On the phone bar, the hamburger
+  in black; there is no CONNECT pill in that drawing and none was added.
+
+Each page marks its opening screen with `data-nav-hero` and both bars read that
+one line through `src/lib/nav-hero.ts`, so they cross together. A page with no
+hero (the legal documents) marks a zero-height line at the top and gets the
+white bar from the first pixel — those three pages previously rendered cream
+links on cream and had no visible navigation at all.
+
+Two consequences worth knowing:
+
+- **The band hides on scroll and is called back by hover** (same date, same
+  source). Past 96px it slides up by its own height; moving the pointer into
+  the top 88px of the viewport brings it down. Scrolling back up is
+  deliberately NOT a trigger — the direction named hover, and an upward-flick
+  reveal would have the band appearing constantly and make the hover
+  pointless. Focus anywhere inside the band reveals it too, so its six
+  controls are never off-screen and in the tab order at once. On a phone there
+  is no pointer: `MobileNav` keeps the swipe it has had since 2 September,
+  which answers the same problem with the thumb.
+- **The band is back at `Navbar / 1 /` size**, from the frame CSS August
+  supplied the same day: band 130px, wordmark 56px at x=64, the 642 × 44
+  cluster (links 494 on 32px gaps, then 32px, then the 116 × 44 blob), links
+  Bantayog 16/150%/#000 at zero tracking, CONNECT label #FFFFFF. That reverses
+  the "small corner mark" half of the earlier direction (88px band, 10px links,
+  32px blob); the full-viewport span it also asked for stands.
+- **Those numbers are the 1440 column and are built as such.** The band is
+  drawn from `lg` (1024) up and `MobileNav` covers everything below it, tablet
+  widths included — there is no frame for a middle step and CLAUDE.md forbids
+  inventing one. Its contents sit on a centred `max-w-[1440px]` row; only the
+  white ground is full-bleed. That last part corrects the earlier
+  "full viewport" reading, which put the wordmark and the cluster 64px from the
+  edges of a 1920 monitor and left a quarter of the band empty in the middle.
+- **Link hover is the CONNECT blob's waterline, not a colour swap** (10 Sep):
+  the gold spreads from wherever the cursor entered the word and drains back
+  toward where it left, on the blob's own durations and eases. Painted by the
+  `water-fill` utility in `globals.css` and driven by
+  `src/components/layout/WaterNavLink.tsx`. The blob's roughened edge does NOT
+  carry across — that is an SVG displacement filter on its fill layer, and a
+  CSS filter applies to the whole element before its background is clipped to
+  the text, so the same trick would ripple the letterforms instead of the
+  waterline. ⚠ Gold is 2.83:1 on white, under AA for text. It is a hover state
+  on a five-item nav whose rest colour is #000 and it was the direction; it must
+  not be copied into page copy (see the `--color-ochre` warning in
+  `globals.css`). Forced-colours mode drops the effect and hands the glyph fill
+  back, or the links would render empty.
+- **The condense behaviour is GONE.** It existed to answer "remove the logo if
+  we start scrolling down" while the band still sat on the picture the whole
+  time. The band now leaves entirely on scroll, which answers that more
+  completely — and a shrunken band would contradict the frame the hover reveal
+  brings back. It is in the git history at this date if it is ever wanted back,
+  but it cannot coexist with the supplied frame.
+- **Superseded — the condense behaviour was briefly transparent-only.** The 9 Sep direction
+  "remove the logo on the top left if we start scrolling down" still runs over
+  the hero; the white drawing carries the wordmark, so crossing into white
+  restores the full band. The two directions describe different states.
+- **Truth and About still slide the whole header off-screen** and keep it there
+  for the length of the page (`src/lib/motion/gated-deck.ts`, the opening-gate
+  scrub). That predates this change and is untouched by it, so neither page
+  shows the white bar. If it should now come back after the descent's opening,
+  that is a separate call — raise it as a change request.
 
 ---
 

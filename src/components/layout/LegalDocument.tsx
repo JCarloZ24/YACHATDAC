@@ -48,6 +48,14 @@ const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
 export function LegalDocument({ doc }: { doc: LegalDoc }) {
   return (
     <div className="relative bg-canvas text-charcoal">
+      {/* A legal page has no hero — it opens straight onto cream. The nav's
+          hero marker is therefore a zero-height line at the very top, which
+          makes its foot the top of the document and puts the white band in
+          from the first pixel. Without it the header falls back to one
+          viewport of transparency and its cream links spend that viewport
+          invisible on this ground. See SiteHeader. */}
+      <div aria-hidden data-nav-hero className="h-0" />
+
       {/* The spiral is roasted at 10% — the canvas convention, and the reason
           it can sit behind body copy at all. Clipped, because it is wider than
           the frame by design and nothing in this repo clamps overflow-x. */}

@@ -81,8 +81,10 @@ export const wonderHighlightMedia: MediaSlot[] = [
   {
     id: "highlight-dark",
     bucket: "country",
-    // 802 × 691 — the only small frame in the batch; fine for a 400px card.
-    expects: "A ranger standing over the campfire's smoke by the waterhole",
+    // Replaced 10 September 2026, user direction: the supplied 802 × 691
+    // placeholder gave way to a photograph off Country. 2000 × 1333, derived
+    // from the master at brand/photography/wonder/003A5805.JPG.
+    expects: "Last light behind the treeline, the sun breaking through a gum",
     src: `${WONDER}/wonder-afterdark.webp`,
     tone: "midnight",
   },
@@ -107,47 +109,143 @@ export const turraburraSlot: MediaSlot = {
  * of them can be the open one.
  */
 export const stayStageMedia: Record<string, MediaSlot> = {
+  /**
+   * Replaced 10 September 2026, user supplied, with the revised "Arriving"
+   * copy: the stage is now the drive in, so the frame is the drive in.
+   * Origin: user upload, 10 September 2026, already WebP at the library's
+   * 2000 wide, written through unmodified rather than re-encoded, so no
+   * second lossy pass. Credit: photographer not supplied. Permission:
+   * supplied for Wonder; review remains at presentation under F8. Bucket is
+   * `country` — landscape, not a cultural site, nobody identifiable in it.
+   *
+   * `-drive` rather than reusing the old name: next/image caches its
+   * derivatives by URL, so overwriting a path in place keeps serving the old
+   * picture until the cache is cleared. A new filename is the fix that works
+   * in dev, on Vercel and in any CDN in front of it. The 8 Sep
+   * overhang-at-sunset frame it replaces was deleted in the same pass.
+   */
   Arriving: {
     id: "stay-arriving",
-    bucket: "work",
-    expects: "Looking out from under the overhang at sunset, hat on",
-    src: `${WONDER}/wonder-arriving.webp`,
-    tone: "roasted",
+    bucket: "country",
+    expects:
+      "Aerial: a single vehicle on the two-wheel track, woodland running to the horizon",
+    src: `${WONDER}/wonder-arriving-drive.webp`,
+    tone: "evergreen",
   },
+  /**
+   * Set 10 September 2026 with the revised "The first night" copy, which is
+   * now the quiet end of the day rather than the fire.
+   *
+   * It shares `wonder-afterdark.webp` with the "After dark" highlight card:
+   * the frame supplied for this stop is the same photograph that card already
+   * carries, so this points at the one file rather than adding a second
+   * encode of it. ⚠ That does mean the Wonder page shows one picture twice.
+   * Raised with August 10 Sep 2026; supply a different dusk frame for either
+   * slot and only this `src` needs to change.
+   */
   "The first night": {
     id: "stay-first-night",
     bucket: "country",
-    expects: "Guests around the fire at dusk",
-    src: `${WONDER}/wonder-firstnight.webp`,
+    expects: "Trees in silhouette against the last of the light, dusk",
+    src: `${WONDER}/wonder-afterdark.webp`,
     tone: "midnight",
   },
-  "Walking out to the wall": {
+  /**
+   * Key follows the stop's title, retitled 10 September 2026 (see
+   * `stayStages`). The photograph stays at `${LIB}/escarpment-approach.webp`
+   * and is deliberately NOT copied into the wonder folder: it is a batch-1
+   * library asset registered in kit.ts and used by Home and the effects lab
+   * as well, so a copy under `wonder/` would be the fourth reference to one
+   * picture and a duplicate of exactly the kind cleaned up in this pass.
+   */
+  "Walking out to Marra Wonga": {
     id: "stay-wall",
     bucket: "cultural-site",
     expects: "Walking through woodland toward the escarpment",
     src: `${LIB}/escarpment-approach.webp`,
     tone: "evergreen",
   },
+  /**
+   * Landed 10 September 2026 with the revised "Older than the wall" copy.
+   * Origin: user upload, 10 September 2026, WebP at the library's 2000 wide.
+   * Credit: photographer not supplied. Permission: supplied for Wonder;
+   * review remains at presentation under F8.
+   *
+   * Graded 10 September 2026 on August's direction to match the rest of the
+   * Wonder set, which the ungraded frame sat flat and pale against. Measured
+   * against the other nine, not eyeballed: brightness ×0.93, contrast ×1.10,
+   * saturation ×1.45, no channel shift. That moves it from mean luminance
+   * 100 / saturation 0.28 to 92 / 0.42, inside the set's band. Re-encoded
+   * once at quality 86; re-run those three numbers on a fresh original if the
+   * photograph is ever resupplied.
+   *
+   * Bucket stays `cultural-site`, so the grade stays `frame`. The subject is
+   * palaeontological rather than cultural, which would argue for `country` —
+   * but a host and four guests are identifiable in it and the ground is a
+   * place people are taken to. The tiebreaker in lofi/media.ts sends anything
+   * genuinely ambiguous to the more restrictive bucket.
+   */
   "Older than the wall": {
     id: "stay-older",
     bucket: "cultural-site",
-    expects: "Fossil footprints preserved in rock",
+    expects: "A host showing guests the water-filled hollows in the rock",
     src: `${WONDER}/wonder-footprints.webp`,
     tone: "roasted",
   },
-  "Out for food": {
+  /**
+   * Key follows the stop's title, retitled 10 September 2026 (see
+   * `stayStages`). Photograph landed the same day, user supplied, replacing
+   * the never-delivered `wonder-food.webp`; the filename follows what is
+   * visibly in frame. Origin: user upload, 10 September 2026, 2000 × 1333
+   * JPEG (the client had resized it from a 6720 × 4480 original), encoded
+   * once to WebP at quality 86. Credit: photographer not supplied.
+   * Permission: supplied for Wonder; review remains at presentation under F8.
+   *
+   * Bucket `work`: three people collecting seed into a tub, no cultural
+   * material in frame.
+   *
+   * Graded to sit with the set, same method as the other two frames added
+   * today: brightness ×0.93, contrast ×1.08, saturation ×1.25, from
+   * luminance 105 / saturation 0.34 to 96 / 0.44 — inside the set's band and
+   * deliberately just under `wonder-turraburra.webp`, its top.
+   *
+   * ⚠ The frame is seed collecting, which is restoration work; the stop it
+   * sits under is about food on Country. Close, not the same thing. Raised
+   * with August 10 Sep 2026 — it may belong under "Hands in the work".
+   */
+  "Finding food on Country": {
     id: "stay-food",
     bucket: "work",
-    expects: "Suzanne showing a plant to guests",
-    src: `${WONDER}/wonder-food.webp`,
+    expects: "Collecting seed into a tub, three people working through scrub",
+    src: `${WONDER}/wonder-seed-collecting.webp`,
     tone: "eucalyptus",
   },
+  /**
+   * Landed 10 September 2026, user supplied, replacing the never-delivered
+   * `wonder-spring.webp`. The frame is fire-stick farming watched from the
+   * ridge above it, which is what the revised stop is about, so the filename
+   * follows what is visibly in frame rather than the old slot's name.
+   * Origin: user upload, 10 September 2026, WebP, 2000 × 1500. Credit:
+   * photographer not supplied. Permission: supplied for Wonder; review
+   * remains at presentation under F8.
+   *
+   * Bucket `work`: two people watching ground they have burnt, no cultural
+   * material in frame — documentary photography of a job, and the tiebreaker
+   * in lofi/media.ts puts the ranger burning grass away from a shelter here.
+   *
+   * Graded to sit with the set, same method as the stop-4 frame: brightness
+   * ×0.88, contrast ×1.10, saturation ×1.30, from luminance 115 /
+   * saturation 0.24 to 100 / 0.35. Deliberately short of the set's 0.42 —
+   * the scene is smoke and overcast, and pushing it further would invent
+   * colour the day did not have. `charcoal` replaces `evergreen` as the
+   * tonal field: burnt ground and grey sky, not green.
+   */
   "Hands in the work": {
     id: "stay-work",
     bucket: "work",
-    expects: "Standing at a spring in open country",
-    src: `${WONDER}/wonder-spring.webp`,
-    tone: "evergreen",
+    expects: "Watching the burn from the ridge above it, smoke over the range",
+    src: `${WONDER}/wonder-fire-ridge.webp`,
+    tone: "charcoal",
   },
 };
 
@@ -167,7 +265,67 @@ export const stayStageMedia: Record<string, MediaSlot> = {
  * sources cannot fully resolve a 2× display; full-size exports would be
  * needed for additional photographic detail.
  */
-export const whereYouSleepMedia: MediaSlot[] = [
+/**
+ * WHERE YOU STAY — the carousel, ten frames (10 September 2026, August's
+ * direction: "make it a carousel, let's show other guests, mix the images").
+ *
+ * ORDER IS THE MIX, and it is deliberate rather than the order they arrived
+ * in: camp, then people, then camp again, so a reader swiping never gets two
+ * empty landscapes or two group shots in a row, and guests appear early
+ * enough to be the point rather than a footnote. Eight frames landed with
+ * this revision; the two that were already here (`sleep-tent`, `sleep-dusk`)
+ * keep their ids and are shuffled into the run.
+ *
+ * The eight new ones: user upload, 10 September 2026, all at the library's
+ * 2000 wide. Credit: photographer not supplied. Permission: supplied for
+ * Wonder; review remains at presentation under F8. Every one was graded
+ * toward the Wonder set's measured band on August's note that "some image
+ * lighting/colouring need to be improved" — gentle contrast, then a solved
+ * brightness and saturation per frame; the per-frame numbers are on each
+ * slot. Nothing was pushed past what the light in it can carry.
+ *
+ * PEOPLE ARE IDENTIFIABLE in six of the ten. The image plane is held for the
+ * whole rail (`data-motion="frame"` in Sections), as it was for the two
+ * cards this replaces, whatever each slot's bucket.
+ */
+export const whereYouStayMedia: MediaSlot[] = [
+  {
+    // Gamma 0.74, then c×1.04 s×1.18 — 85/0.29 → 103/0.28. A linear lift
+    // met the set's mean and still left the ground under the trees a black
+    // mass in the 400px crop; the gamma opens it. Cool by nature: it is a
+    // backlit dawn, and warming it would be inventing a different morning.
+    id: "stay-dawn-camp",
+    bucket: "country",
+    expects: "Camp among the trees at first light, sun coming through",
+    src: `${WONDER}/wonder-stay-dawn-camp.webp`,
+    tone: "midnight",
+  },
+  {
+    // Gamma 0.72 rather than a linear lift, then c×1.06 s×1.28 — 57/0.26
+    // → 80/0.28. The frame is shadow-heavy under the shelter; a brightness
+    // push flattened the highlights, opening the shadows did not.
+    id: "stay-table",
+    bucket: "country",
+    expects: "Breakfast around the long table under the camp shelter",
+    src: `${WONDER}/wonder-stay-table.webp`,
+    tone: "evergreen",
+  },
+  {
+    // b×0.78 c×1.08 s×1.47 — 125/0.24 → 97/0.35.
+    id: "stay-tents-clearing",
+    bucket: "country",
+    expects: "Five tents pitched through open woodland",
+    src: `${WONDER}/wonder-stay-tents-clearing.webp`,
+    tone: "eucalyptus",
+  },
+  {
+    // b×1.25 c×1.08 s×1.29 — 73/0.28 → 89/0.37.
+    id: "stay-buggy",
+    bucket: "country",
+    expects: "Guests in the buggy beside the deck, heading out",
+    src: `${WONDER}/wonder-stay-buggy.webp`,
+    tone: "roasted",
+  },
   {
     id: "sleep-tent",
     bucket: "work",
@@ -176,14 +334,48 @@ export const whereYouSleepMedia: MediaSlot[] = [
     tone: "roasted",
   },
   {
+    // b×0.82 c×1.08 s×1.43 — 120/0.23 → 97/0.33.
+    id: "stay-fire-circle",
+    bucket: "country",
+    expects: "The circle of chairs around the fire between the tents",
+    src: `${WONDER}/wonder-stay-fire-circle.webp`,
+    tone: "burnt",
+  },
+  {
+    // b×0.98 c×1.08 s×1.33 — 97/0.26 → 94/0.35.
+    id: "stay-tents-morning",
+    bucket: "country",
+    expects: "Tents in the trees with the morning sun through them",
+    src: `${WONDER}/wonder-stay-tents-morning.webp`,
+    tone: "eucalyptus",
+  },
+  {
+    // b×0.81 c×1.08 s×1.75 — 121/0.15 → 97/0.26. The saturation stops
+    // short of the set: it is a galvanised-iron kitchen under a grey roof,
+    // and the colour simply is not in the frame to recover.
+    id: "stay-kitchen",
+    bucket: "work",
+    expects: "Cooking breakfast in the camp kitchen under the shelter",
+    src: `${WONDER}/wonder-stay-kitchen.webp`,
+    tone: "charcoal",
+  },
+  {
     id: "sleep-dusk",
-    // The people in both sleep cards require frame-grade motion, explicitly
-    // applied in Sections and sleepCards regardless of the scene bucket.
     bucket: "country",
     expects:
       "Camp at dusk — three tents, a group around the fire as the light goes",
     src: `${WONDER}/wonder-sleep-campfire.jpg`,
     tone: "midnight",
+  },
+  {
+    // b×0.78 c×1.08 s×1.15 — 145/0.26 → 111/0.33. Left brighter than
+    // the rest on purpose: it is a pastel dusk sky and the set's band would
+    // have turned it muddy. Last in the run, which is where it earns it.
+    id: "stay-lake",
+    bucket: "country",
+    expects: "The Yumba lake at dusk, pink cloud reflected in still water",
+    src: `${WONDER}/wonder-stay-lake.webp`,
+    tone: "burnt",
   },
 ];
 
@@ -191,11 +383,30 @@ export const whereYouSleepMedia: MediaSlot[] = [
  * F7, user direction 9 September 2026: full motion, sharing Turraburra's
  * sticky landscape, 80vh reading hold, scroll approach and mouse tilt/drift.
  */
+/**
+ * Replaced 10 September 2026, user supplied with the revised copy. Origin:
+ * user upload, WebP at the library's 2000 wide. Credit: photographer not
+ * supplied. Permission: supplied for Wonder; review remains at presentation
+ * under F8. Graded to the set: contrast ×1.10, brightness ×0.92,
+ * saturation ×1.28 — 107/0.34 → 97/0.46.
+ *
+ * A NEW FILENAME, not an overwrite of `wonder-outhere.webp`: next/image keys
+ * its derivatives by URL, so replacing a path in place keeps serving the old
+ * frame until every cache expires. Same reason as `wonder-arriving-drive`.
+ *
+ * ⚠ PEOPLE ARE NOW IN THIS FRAME — a family, a child and their host on the
+ * ridge — and this slot is `country`, so it grades `full`: the shared
+ * landscape scene scrubs and tilts the image plane under the copy (F7, 9 Sep
+ * 2026). That was decided for an empty sunset. It is still permitted, but if
+ * the plane should hold now that there are guests in it, the change is
+ * `bucket: "cultural-site"` here and nothing else — MediaTile enforces the
+ * grade. Raised with August 10 Sep 2026.
+ */
 export const whatItIsLikeSlot: MediaSlot = {
   id: "wonder-out-here",
   bucket: "country",
-  expects: "Sunset over the woodland from the top of the escarpment",
-  src: `${WONDER}/wonder-outhere.webp`,
+  expects: "A family and their host on the ridge, woodland to the horizon",
+  src: `${WONDER}/wonder-outhere-lookout.webp`,
   tone: "evergreen",
 };
 
@@ -256,9 +467,13 @@ export const wonderStoryMedia: MediaSlot[] = [
   {
     id: "story-spring",
     bucket: "country",
-    // Placeholder from the batch — the same wall frame as Highlights 1.
-    expects: "The spring holding water (placeholder: the engraved wall)",
-    src: `${WONDER}/wonder-spring-story.webp`,
+    /* 10 September 2026: `wonder-spring-story.webp` was a byte-for-byte copy
+       of the Highlights wall frame standing in for a spring that has not been
+       photographed. Two names for one file, and the wrong subject under a
+       spring's heading. The file is deleted and the slot renders its tonal
+       field, which is the honest state until the real frame lands. */
+    expects: "The spring holding water",
+    src: null,
     tone: "evergreen",
   },
 ];

@@ -99,7 +99,7 @@ export function RecordHeroV2() {
   return (
     <>
     <RecordLoadingCover />
-    <header data-record-portal data-portal-state="loading" data-portal-progress="0" className="record-portal">
+    <header data-record-portal data-nav-hero data-portal-state="loading" data-portal-progress="0" className="record-portal">
       <div data-portal-stage className="record-portal-stage">
         {/* F8, 2026-09-08: hidden image sources and sizing guides for canvas-only
             fly-through pictures. Article links remain in the static catalogue. */}

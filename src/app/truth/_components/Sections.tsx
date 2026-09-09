@@ -130,7 +130,7 @@ export function TruthHeroV2() {
     /* The hero owns no divider. Its incoming Ahead deck carries that wave,
        keeping the crest attached to the cover rather than to this pinned
        runway. */
-    <div data-truth-slide-runway className="relative bg-evergreen">
+    <div data-truth-slide-runway data-nav-hero className="relative bg-evergreen">
       <header
         data-truth-slide
         data-truth-slide-label="Truth"

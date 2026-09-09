@@ -1,6 +1,6 @@
 # The motion grammar
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 | Record interaction | Behaviour | Timing | Reference | Effect |
 | --- | --- | --- | --- | --- |
@@ -61,6 +61,7 @@ volumes. See Variants below.
 | **the page holding its ground** | Scroll reaches a section's end and stops visibly until the reader commits through a short buffer; the next section then covers it and seats whole. | held, then `country` · 0.9s | About deck · Truth rail | — | `coverSeams`, `createGatedDeck` |
 | **time handing over** | Two stacked plates cross-dissolve. One whole frame hands to another. | `country` · 0.82s | A5 | **P9** | `dissolve` |
 | **the guide leading the eye** | The traveller flies a leg; its trail draws behind by mask reveal. | `country` · 2.0s | G1 + G3 | — | `guide` ¹ |
+| **the waterline**, click cut | A click lands like a drop: one gold ring blooms from the exact point of contact and fades, and does not follow the pointer afterwards. Site-wide, primary button only, fine pointers only. The pointer itself cannot answer a click — browsers latch the cursor image while the button is held, so `:active` never repaints it (verified 10 September 2026) — so the page answers instead. | `power2.out` · 0.5s | user direction 10 September 2026 | — | `clickBloom` |
 | **a person speaking** | Words undim as they are spoken. No movement at all. Dim state 0.28. | `quiet` · 0.55s · 0.045 stagger | Y2 | P6 | `dim` |
 | **accumulating** | Things add up: a count advances, a mark fills, an index lights. | `country` / `machine` | X3 | — | `stepCounter` `splitFlap` `vesselFill` `flattenReveal` |
 | **the rest** | Nothing moves, for a stated duration. | — | brief §3 | **P1, P8** | `hold` |
@@ -123,9 +124,17 @@ its longest stop. Six 100vh reading spans advance the open stop automatically,
 forward or backward. `itineraryStep` is a `disclose` variant in **the world
 opening** row: one native layout change, then measured row translations so the
 active heading always lands at the same viewport position. `stageArrival`
-composes **what endures** (`settle`, whole lines), **arriving quietly** (`arrive`,
-copy blocks) and **the world opening** (`frameOpen`, held photo clip). These are
+composes **what endures** (`settle`, whole lines) and **arriving quietly**
+(`arrive`) for both the copy blocks and the photograph. These are
 the treatments reviewed in the live effects lab. No photograph scales or warps.
+
+**Stage picture entrance — 10 September 2026, user direction.** The stop's
+photograph leaves **the world opening** and joins the copy in **arriving
+quietly**: the same 16px rise and fade on the same `country` ease, started at
+the same offset, so text and picture land together instead of the picture
+opening its own clip 0.08 ahead. `frameOpen` is no longer part of
+`stageArrival`. The photo is still held — `arrive` moves the frame, not the
+image plane, so the slot's `frame` grade is unchanged.
 The heading enters on scroll, and each stop's text and picture enter when that
 stop is reached. No wheel lock or velocity snap. Short viewports, mobile,
 reduced motion and no JavaScript keep the ordinary document; motion-capable

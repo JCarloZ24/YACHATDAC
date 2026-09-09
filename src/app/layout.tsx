@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { ClickBloom } from "@/components/motion/ClickBloom";
 import { org } from "@/content/site";
 import "./globals.css";
 
@@ -45,6 +46,10 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-svh flex-col">
+        {/* The click answer, site-wide — grammar `the waterline, click cut`.
+            Renders nothing; see ClickBloom for why the page answers a click
+            rather than the cursor. */}
+        <ClickBloom />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

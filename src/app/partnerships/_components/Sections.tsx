@@ -114,6 +114,53 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
 const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
 
 /**
+ * THE SCREEN BUDGET — restored 10 September 2026, measured against the 1440
+ * frame. The vh figures are the ones already written at the head of each
+ * section below, and they were documentation only: nothing in the markup
+ * enforced them. Built at 1440 x 900 the page came out 8,752px against the
+ * frame's 10,710, and the per-section shortfalls summed to that 1,958px gap
+ * almost exactly — every section was reaching its content height and then
+ * stopping, because `pt-24 pb-24` is all that ever set a section's height.
+ *
+ * ⚠ MIN-HEIGHT AND NOT MORE PADDING, deliberately. Padding tuned to close the
+ * gap at 900px would have wanted 27vh on §08 and 13vh on §05 — numbers with no
+ * source, matching the frame on total length while still disagreeing with it
+ * about where anything sits. A min-height reproduces what the budget actually
+ * describes, which is the share of the scroll each section owns, and it holds
+ * at viewport heights the frame never drew. It also keeps the house rule that
+ * spans are specified in vh rather than px.
+ *
+ * `justify-center` sets the column in the middle of the budget rather than
+ * letting the surplus fall out of the bottom. Below `lg` none of this applies:
+ * the one mobile frame in the file is a different ramp and does not carry
+ * these budgets.
+ *
+ * ⚠ LITERAL STRINGS, NOT A TEMPLATE. Tailwind scans source text, so a
+ * `min-h-[${n}vh]` helper would compile to nothing. Same reason the tone maps
+ * elsewhere in this repo are literal `Record`s.
+ *
+ * §01 (120vh) and §04b (55vh) are absent because both already measure their
+ * budget — the hero from its own overture, the breath band from `h-[55svh]`.
+ * The footer is short of its ~165vh too and is NOT touched here: it is shared
+ * furniture at Marc's styling and every route would move with it.
+ */
+const SCREEN = {
+  obligation: "lg:flex lg:min-h-[100vh] lg:flex-col lg:justify-center",
+  openResearch: "lg:flex lg:min-h-[120vh] lg:flex-col lg:justify-center",
+  openQuestions: "lg:flex lg:min-h-[190vh] lg:flex-col lg:justify-center",
+  partners: "lg:flex lg:min-h-[130vh] lg:flex-col lg:justify-center",
+  waysIn: "lg:flex lg:min-h-[140vh] lg:flex-col lg:justify-center",
+  /* ⚠ NO CENTRING ON THE HERO. Every other budget here centres its column in
+     the surplus; this one stacks a full-screen photograph on a copy block
+     that measures the remaining 450 exactly, so there is no surplus to
+     centre and `justify-center` would only fight the media. A floor, not a
+     frame. */
+  hero: "lg:min-h-[150vh]",
+  protocol: "lg:flex lg:min-h-[100vh] lg:flex-col lg:justify-center",
+  ending: "lg:flex lg:min-h-[70vh] lg:flex-col lg:justify-center",
+} as const;
+
+/**
  * The eyebrow tracking on THIS page is the frame's own, and it is not the
  * value About uses. Every gold eyebrow on a dark ground here is drawn at 8px
  * on 24px type — 0.333em, much wider than About's 0.08em — and §08's burnt
@@ -157,7 +204,7 @@ const RESEARCH = photoById("pt-research");
 const BREATH = photoById("pt-breath");
 
 /* -------------------------------------------------------------------------
-   01 · Hero — a researcher on Country is a guest on Country · ~120vh
+   01 · Hero — a researcher on Country is a guest on Country · 150vh
    ------------------------------------------------------------------------- */
 
 /**
@@ -174,23 +221,44 @@ const BREATH = photoById("pt-breath");
  * MOVED through any of it: §02 still states it alone on evergreen, which is
  * the page's argument.
  *
- * ⚠ THE TWO X5 SCRIMS WENT WITH THE COPY, and that is the point rather than
- * a tidy-up. They existed for exactly one reason — buying legibility for type
- * set on open scrub, the way About's hero does. No type sits on this
- * photograph any more, so a gradient over it is just a darkened picture, and
- * the wireframe draws the aerial bright and unmuted. If copy ever returns to
- * the image, they return with it; they are not decoration to re-add for mood.
- * ONE SHORT TOP SCRIM REPLACES THEM and serves something else entirely: the
- * site header is transparent over this picture, so the band behind the
- * wordmark and nav is darkened and nothing below it is.
+ * ⚠ THE X5 SCRIM IS BACK, AND THE COMPRESSION IS GONE — user direction with
+ * the frame's own readout, 10 September 2026. Both of the notes that stood
+ * here are superseded and are summarised rather than kept, because each had
+ * been argued at length and a reader should know they were overturned on
+ * evidence and not by oversight:
  *
- * ⚠ IT IS TALLER THAN ONE SCREEN AT 1440 x 900, and the frame is why. Stacked
- * as drawn, the picture and the copy block come to roughly 1,350px against a
- * 900px viewport — which is the exact objection that moved the copy onto the
- * image in the first place. The photograph is held to `58svh` rather than the
- * frame's 792px so the eyebrow and the headline are both above the fold at
- * 1440 x 900 and only the action row sits at it; that is a deliberate
- * compression of the frame, not a match to it.
+ *   — The two X5 scrims had been removed on the reading that "no type sits on
+ *     this photograph any more, so a gradient over it is just a darkened
+ *     picture, and the wireframe draws the aerial bright". The frame readout
+ *     says otherwise: it carries a single full-height X5 over the media,
+ *     bottom-weighted, labelled non-negotiable. It is restored to the
+ *     gradient the frame states, exactly.
+ *
+ *   — The photograph had been held to `58svh` against the frame's 900 so that
+ *     the eyebrow and headline cleared the fold at 1440 x 900, described in
+ *     its own note as "a deliberate compression of the frame, not a match to
+ *     it". The frame is now the instruction, so the compression is dropped:
+ *     the picture is a full screen and the section is 150vh.
+ *
+ * ⚠ THE HEADER BAND LOSES ITS OWN SCRIM WITH THIS CHANGE, and it is worth
+ * knowing rather than discovering. `SiteHeader` is transparent and absolutely
+ * positioned over whatever the page opens on (SiteHeader.tsx:37), and a short
+ * top-only gradient used to darken the strip behind the white wordmark and
+ * nav. The frame has no such scrim — its X5 is transparent at 0% precisely
+ * where the header sits — so following the frame means the chrome now lands
+ * on open sky and lit canopy unaided. It reads at 1440 on this photograph.
+ * A different hero frame, or a paler sky, and it will not.
+ *
+ * ⚠ THE FRAME'S ⟡ STAND-IN CHIP IS NOT BUILT. The readout draws a badge and a
+ * dark chip over the top-left of the picture; user direction on 10 September
+ * was to disregard it, and the four partnerships photographs are no longer
+ * stand-ins in `kit.ts`. The chip would be captioning a condition that has
+ * been lifted.
+ *
+ * THE MEASURE, straight off the readout and section-relative: media 0-900 ·
+ * wave ink 795-900 · eyebrow 912 · headline 962 (1240 wide, two lines at 84 /
+ * 108%) · standfirst 1170 · action row 1246-1302 · section foot 1350. The
+ * margins below are those gaps and nothing rounder.
  *
  * ⚠ THE WAVE IS INSIDE THIS SECTION, not at the top of the next one. §02 is
  * evergreen too, so there is no seam between them — the only handover is from
@@ -217,7 +285,11 @@ export function PartnershipsHero() {
   const [claim, obligation] = sentences(PRINCIPLE);
 
   return (
-    <section data-pt="hero" className="relative bg-evergreen text-canvas">
+    <section
+      data-pt="hero"
+      data-nav-hero
+      className={`relative bg-evergreen text-canvas ${SCREEN.hero}`}
+    >
       {/* THE PHOTOGRAPH, alone. No copy, no scrim, no badge — the wireframe
           draws the aerial bright and full width, and the wave below it is the
           only thing that happens on it.
@@ -236,7 +308,7 @@ export function PartnershipsHero() {
           claim now lives only here, in `kit.ts` and in
           docs/motion/scenes.md — a reviewer looking at the page will no
           longer be told. */}
-      <div className="relative h-[58svh] w-full overflow-hidden">
+      <div className="relative h-[58svh] w-full overflow-hidden lg:h-screen">
         <div data-motion={HERO?.grade ?? "frame"} className="absolute inset-0">
           <MediaOrField
             src={HERO?.src ?? null}
@@ -247,20 +319,21 @@ export function PartnershipsHero() {
           />
         </div>
 
-        {/* ⚠ THE ONE SCRIM THAT SURVIVED THE COPY MOVING, and it is here for
-            the CHROME, not for the hero's words. `SiteHeader` is transparent
-            and absolutely positioned over whatever the page opens on
-            (SiteHeader.tsx:37), so the white wordmark and nav land on pale sky
-            and lit canopy at the top of this aerial. Short, top-only and much
-            lighter than the two X5 scrims it replaces: it darkens the header
-            band and nothing else, and it must not be grown back down over the
-            picture — the wireframe wants the aerial bright. */}
+        {/* SCRIM · X5 — the frame's own stops, transcribed and not tuned.
+            Full height of the media, transparent at the top and gathering to
+            rgba(9,14,18,0.72) at the foot, which is the ground the wave hands
+            off into. It carries no type — the copy sits below the picture —
+            so what it buys here is the seam: the aerial's lower third is lit
+            scrub, and against evergreen an unscrimmed edge reads as a photo
+            stopping rather than a page continuing. Stated in the frame as
+            non-negotiable where copy sits on media; kept verbatim so a later
+            reader compares stops with the readout instead of guessing. */}
         <div
           aria-hidden
-          className="absolute inset-x-0 top-0 h-40 lg:h-52"
+          className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(180deg, rgba(9,14,18,0.62) 0%, rgba(9,14,18,0.28) 55%, rgba(9,14,18,0) 100%)",
+              "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 62%, rgba(9,14,18,0.72) 100%)",
           }}
         />
       </div>
@@ -297,26 +370,34 @@ export function PartnershipsHero() {
           The wave is pulled entirely ABOVE this block (onto the picture), so
           it costs no height here and `pt` is ordinary breathing space under
           the seam rather than divider clearance. */}
-      <div className={`${COLUMN} relative pt-14 pb-20 lg:pt-16 lg:pb-24`}>
+      <div className={`${COLUMN} relative pt-14 pb-20 lg:pt-3 lg:pb-12`}>
         <p data-pt-eyebrow className={EYEBROW_DARK}>
           Work with us
         </p>
+        {/* 84 / 108% / -2px, and the tracking is written as the em the frame's
+            px works out to at THIS size — -2 on 84 is -0.0238em, and it would
+            be a different em at any other step, which is why it is set at
+            `lg:` beside the size rather than once on the element. */}
         <h1
           data-pt-heading
-          className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:text-[4.5rem]"
+          className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:mt-[19px] lg:text-[5.25rem] lg:tracking-[-0.0238em]"
         >
           {claim}
         </h1>
         <p
           data-pt-arrive
-          className="mt-10 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl"
+          className="mt-10 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl lg:mt-[26px]"
         >
           {obligation}
         </p>
 
+        {/* 21px between the blob and the quiet link, not the 32 this row used
+            to run: the frame sets the blob 100-376 and starts the secondary at
+            397, and at 32 the two read as an equal pair rather than an action
+            with a footnote beside it. */}
         <div
           data-pt-arrive
-          className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-5"
+          className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-5 lg:mt-10 lg:gap-x-[21px]"
         >
           <BlobButton href="#ways-in" tone="burnt" still>
             See the ways in →
@@ -355,7 +436,7 @@ export function TheObligation() {
   const [claim, consequence] = sentences(RECIPROCITY_BODY);
 
   return (
-    <section className="relative overflow-hidden bg-evergreen text-canvas">
+    <section className={`relative overflow-hidden bg-evergreen text-canvas ${SCREEN.obligation}`}>
       <RingArtwork
         piece="b"
         className="-top-32 left-[44%] w-[62.5rem] opacity-8"
@@ -400,7 +481,7 @@ export function OpenResearch() {
   return (
     <section
       id="research-opportunities"
-      className="relative scroll-mt-28 bg-canvas text-charcoal"
+      className={`relative scroll-mt-28 bg-canvas text-charcoal ${SCREEN.openResearch}`}
     >
       <WaveDivider ground="var(--color-canvas)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -503,7 +584,7 @@ export function OpenQuestions() {
   return (
     <section
       id="open-questions"
-      className="relative scroll-mt-28 bg-canvas text-charcoal"
+      className={`relative scroll-mt-28 bg-canvas text-charcoal ${SCREEN.openQuestions}`}
     >
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="b" className="top-[4%] left-[64%] w-[56.25rem] opacity-30" />
@@ -662,9 +743,25 @@ export function Breath() {
  * same, one of them is redundant — the difference is the treatment, and it is
  * load-bearing.
  */
+/**
+ * FILLED, NOT OUTLINED — corrected 10 September 2026 against the 1440 frame.
+ *
+ * These three were `border border-canvas/12` on charcoal, which reads as an
+ * outline on a dark ground and all but vanishes at 1440. The frame draws them
+ * as solid cards in the same rotation §04 and §06 already use, and the reason
+ * is structural rather than decorative: this section groups partners by what
+ * each group is FOR, and a reader scanning for which group they'd be joining
+ * needs the three to separate at a glance. An outline does not do that.
+ *
+ * Charcoal is skipped deliberately — it is the section's own ground, and a
+ * charcoal card on charcoal is the outline problem again. Three groups, three
+ * distinct fills.
+ */
+const PARTNER_GROUNDS = ["bg-evergreen", "bg-roasted", "bg-midnight"] as const;
+
 export function AlreadyWorkingWith() {
   return (
-    <section className="relative overflow-hidden bg-charcoal text-canvas">
+    <section className={`relative overflow-hidden bg-charcoal text-canvas ${SCREEN.partners}`}>
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="b" className="top-[8%] left-[62%] w-[62.5rem] opacity-8" />
         <RingArtwork piece="a" className="-left-52 bottom-[6%] w-[45rem] opacity-7" />
@@ -683,7 +780,7 @@ export function AlreadyWorkingWith() {
           {partners.groups.map((group, i) => (
             <div
               key={group.title}
-              className="relative rounded-3xl border border-canvas/12 p-6 lg:min-h-[25rem] lg:p-8"
+              className={`relative rounded-3xl ${PARTNER_GROUNDS[i]} p-6 lg:min-h-[25rem] lg:p-8`}
             >
               <SeamGlyph
                 motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
@@ -775,7 +872,7 @@ export function WaysIn() {
   return (
     <section
       id="ways-in"
-      className="relative scroll-mt-28 bg-evergreen text-canvas"
+      className={`relative scroll-mt-28 bg-evergreen text-canvas ${SCREEN.waysIn}`}
     >
       <WaveDivider ground="var(--color-evergreen)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -843,7 +940,7 @@ export function HowWorkIsAgreed() {
   const protocol = documents.find((d) => d.title.includes("research protocol"));
 
   return (
-    <section className="relative bg-roasted text-canvas">
+    <section className={`relative bg-roasted text-canvas ${SCREEN.protocol}`}>
       <WaveDivider ground="var(--color-roasted)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="a" className="-left-52 top-[30%] w-[47.5rem] opacity-7" />
@@ -898,7 +995,7 @@ export function TheEnding() {
   const office = contactDetails.find((d) => !d.pending);
 
   return (
-    <section className="relative bg-canvas text-charcoal">
+    <section className={`relative bg-canvas text-charcoal ${SCREEN.ending}`}>
       <WaveDivider ground="var(--color-canvas)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="b" className="top-[7%] left-[78%] w-[35rem] opacity-30" />
