@@ -46,7 +46,9 @@ const RECORD = "/media/library/record";
 /**
  * F7/F8 amendment, latest user correction 2026-09-08: the opening wall and
  * stone are Three.js stage furniture. One supplied ink print defines separate
- * holes: black opens through the wall; white remains stone. No repeated prints.
+ * holes: black opens through the wall; white remains stone. Surrounding prints
+ * are faded red-ochre stencils on solid stone, using eight distinct impressions
+ * from the user's 4-by-2 reference sheet, supplied on 2026-09-08.
  * Origin: user-supplied Image #5, 2026-09-08, copied unchanged. The sandstone
  * texture is generated with the built-in image-generation tool on that date.
  * Full source and prompt: public/artwork/record-portal-provenance.md.
@@ -54,24 +56,32 @@ const RECORD = "/media/library/record";
  * The ink mask is an interface asset, explicitly requested by the user. Its
  * creator was not supplied; it is not attributed to Leonard Mickelo or treated
  * as a record of the photographed rock art. The cards use the existing supplied
- * photographs and source credits below. Camera movement brings their whole
- * planes forward; no image animates independently inside its frame.
+ * photographs and source credits below. Latest user direction, 2026-09-08:
+ * whole canvas planes approach immediately at different speeds/depths, pass
+ * beyond the screen and fade; the catalogue rises as the final pictures fade.
+ * No image animates independently inside its frame; no preview captions.
  */
 export const recordPortalMedia = {
   wall: {
     kind: "generated-geometry",
     src: "/artwork/record-sandstone.webp",
     expects:
-      "Sandstone with separate openings in the shape of one ink handprint",
+      "Sandstone with faded red-ochre handprints and one central handprint cut through the wall",
     motionGrade: "full",
   },
   mask: "/artwork/handprint-impression.png",
+  stencilSheet: "/artwork/handprint-variations.png",
   previewSlugs: [
     "bringing-a-spring-back",
     "a-season-of-bush-foods",
-    "it-nearly-didnt-happen",
+    null, // User removed the central grass photo, 2026-09-09; preserve the other slots.
     "right-way-fire-and-the-carbon-in-the-soil",
     "you-are-standing-on-a-seabed",
+    "wattanuri-and-the-ones-he-followed",
+    "when-they-called-it-the-art-gallery",
+    "gracevale-becomes-turraburra",
+    "fifteen-thousand-markings-read-in-order",
+    "what-the-recorders-hear-at-night",
   ],
 } as const;
 

@@ -15,7 +15,16 @@
 }
 
 .record-portal[data-portal-enhanced] {
-  height: 460svh;
+  /* User direction, 2026-09-09: two viewport scrolls reach the catalogue. */
+  height: 300svh;
+}
+
+/* SCR-11, latest user direction: the grid enters when the final canvas
+   pictures start fading (halfway through the 200vh scroll journey). */
+.record-portal[data-portal-enhanced] + #research-and-discovery {
+  position: relative;
+  z-index: 5;
+  margin-top: -100svh;
 }
 
 .record-portal[data-portal-enhanced] .record-portal-stage {
@@ -48,12 +57,6 @@
 .record-portal-gallery {
   visibility: hidden;
   z-index: 3;
-}
-.record-portal[data-portal-enhanced] .record-portal-card-media {
-  opacity: 0;
-}
-.record-portal[data-portal-enhanced] .record-portal-gallery {
-  visibility: visible;
 }
 .record-portal[data-portal-enhanced] .record-portal-wall {
   visibility: hidden;
@@ -112,8 +115,7 @@
   text-decoration: underline;
   text-underline-offset: 6px;
 }
-.record-portal-skip:focus-visible,
-.record-portal-card:focus-visible {
+.record-portal-skip:focus-visible {
   outline: 2px solid var(--color-gold);
   outline-offset: 6px;
 }
@@ -132,43 +134,31 @@
   overflow: hidden;
   background: var(--color-roasted);
 }
-.record-portal-card-caption {
-  display: none;
-  margin-top: 12px;
-  max-width: 280px;
-}
-.record-portal-card:nth-child(3) .record-portal-card-caption {
-  display: block;
-}
-.record-portal-card-caption span {
-  display: block;
-  margin-top: 5px;
-}
-.record-portal-card:nth-child(1) {
+.record-portal-card[data-portal-position="1"] {
   left: 4%;
   top: 72%;
   width: 42%;
   height: 15%;
 }
-.record-portal-card:nth-child(2) {
+.record-portal-card[data-portal-position="2"] {
   left: 4%;
   top: 13%;
   width: 42%;
   height: 18%;
 }
-.record-portal-card:nth-child(3) {
+.record-portal-card[data-portal-position="3"] {
   left: 20%;
   top: 37%;
   width: 60%;
   height: 25%;
 }
-.record-portal-card:nth-child(4) {
+.record-portal-card[data-portal-position="4"] {
   left: 54%;
   top: 72%;
   width: 42%;
   height: 15%;
 }
-.record-portal-card:nth-child(5) {
+.record-portal-card[data-portal-position="5"] {
   left: 54%;
   top: 13%;
   width: 42%;
@@ -176,9 +166,6 @@
 }
 
 @media (min-width: 64rem) {
-  .record-portal-card-caption {
-    display: block;
-  }
   .record-portal-copy {
     left: 7%;
     right: 7%;
@@ -189,31 +176,31 @@
     right: 7%;
     bottom: 36px;
   }
-  .record-portal-card:nth-child(1) {
+  .record-portal-card[data-portal-position="1"] {
     left: 2%;
     top: 46%;
     width: 19%;
     height: 34%;
   }
-  .record-portal-card:nth-child(2) {
+  .record-portal-card[data-portal-position="2"] {
     left: 22%;
     top: 18%;
     width: 17%;
     height: 27%;
   }
-  .record-portal-card:nth-child(3) {
+  .record-portal-card[data-portal-position="3"] {
     left: 40%;
     top: 34%;
     width: 25%;
     height: 36%;
   }
-  .record-portal-card:nth-child(4) {
+  .record-portal-card[data-portal-position="4"] {
     left: 68%;
     top: 57%;
     width: 22%;
     height: 27%;
   }
-  .record-portal-card:nth-child(5) {
+  .record-portal-card[data-portal-position="5"] {
     left: 77%;
     top: 17%;
     width: 19%;
@@ -222,6 +209,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .record-portal[data-portal-enhanced] + #research-and-discovery {
+    margin-top: 0;
+  }
   .record-portal[data-portal-enhanced] {
     height: auto;
   }

@@ -1,6 +1,6 @@
 # Resources — "The Record" — draft copy v1
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
 
 > **Page:** Resources — "The Record" · **Version:** v1 · **State:** draft ·
 > **Governance circle:** open
@@ -35,6 +35,10 @@ Stories, historical accounts, research and recordings from Turraburra. Some of i
 > **Interface amendment, 8 September 2026 — user's handprint opening (F7/F8).**
 > Scroll cue: “Scroll into the record”. Bypass link: “Skip to the record”.
 > The supplied headline and standfirst above stay verbatim.
+
+> **Interface amendment, 9 September 2026 — readiness loader (F7/F8).**
+> Accessible progress label: “Loading the record”. Reuses the homepage's
+> loading artwork while the canvas and initial photographs become ready.
 
 ### Everything in the record
 
