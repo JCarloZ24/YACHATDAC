@@ -1608,61 +1608,149 @@ export function EraSection({
 }
 
 /**
- * 1902 — the count, then Suzanne's words.
+ * THE COUNT IS THREE SCREENS, not one scroll.
  *
- * The numerals take the viewport alone (the draft's build note: "nothing else
- * on screen"). Everything from the testimony down is still: no arrive, no
- * depth, no split — the stated exception.
- */
-/**
- * Wired (2026-09-09, August's direction): the band renders the drafted copy
- * from `suzanne` in src/content/truth.ts — marker, title, figures, citation,
- * her quotations, the closing paragraphs — in the draft's own order.
+ * It arrived as a single 2,989px panel — head, then the figures, then her
+ * testimony — inside the escarpment slide's deck track. At three and a third
+ * viewports it read as a long scroll through a dark passage, and the count
+ * itself, which is the thing the whole descent has been walking toward, was
+ * just something you went past on the way.
  *
- * The 2026-09-03 hold on this band is lifted as a BUILD gate only, under F8
- * (build-first, 31 Aug): the section is built so that it can be reviewed.
- * What the hold was protecting is unchanged and enforced elsewhere:
+ * Split at the joins the copy already has, each one a gated screen the deck
+ * holds: WHO IS SPEAKING, THE COUNT, HER TESTIMONY. The draft's order is
+ * unchanged (D5) and not one word moved — this is where the page breathes, not
+ * what it says.
  *
- *  · Truth is `held by community` in docs/content/STATUS.md and does not
- *    PUBLISH without Suzanne's approval (R5). That gate, not this file, is
- *    what keeps this off the public site.
- *  · Both editorial blocks were removed from the band on 9 Sep (August): the
- *    draft's standing "awaiting her approval" warning at the head, and the
- *    check note carrying her two open questions at the foot. This build IS
- *    the approval ask, so it presents as the page rather than as a marked-up
- *    draft. THE QUESTIONS ARE STILL OPEN — the order of the count against
- *    the blankets, and thirty-five against thirty-seven — and the page no
- *    longer asks them, so they have to be put to her in the presentation.
- *    Both texts are kept in src/content/truth.ts and in the v3 draft.
- *  · CR4 ("settlers" → "colonists") is still unratified inside her recorded
- *    words — see the ⚠⚠ comment on `quotes` in src/content/truth.ts.
- *  · Her portrait slot stays HELD: a photograph is a separate permission and
- *    no file has been delivered.
+ * ⛔ The count screen does not move. No arrival, no count-up, no glow: the
+ * number is simply there. That is the hard stop's own rule, and the other two
+ * screens taking the page's ordinary M1 brightening is precisely why this one
+ * must not — stillness only reads as stillness next to something that moved.
  */
 
-export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
-  /* HELD, and this one cannot be walked back by a later motion pass. The count
-     rides inside the escarpment slide, which does move, so the stillness has to
-     be declared on the subtree rather than inferred from the slide. No
-     animation, no count-up, no glow: the number is the only red on the page and
-     it simply is there. */
-  const content = (
-      <div
-        id="the-count"
-        data-v2-static
-        data-descent-band={withinDeck ? "count" : undefined}
-        {...(withinDeck
-          ? {}
-          : {
-              "data-truth-slide": true,
-              "data-truth-slide-label": "The count",
-              "data-truth-ground": "count",
-            })}
-        className="relative overflow-hidden bg-charcoal"
+/** The charcoal ground, the ring, and the reading column every beat shares. */
+function CountScreen({
+  id,
+  label,
+  still = false,
+  children,
+}: {
+  id: string;
+  label: string;
+  /** ⛔ The count. Declared on the subtree so no later pass can animate it. */
+  still?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div data-truth-slide-runway className="relative">
+      <section
+        id={id}
+        data-truth-slide
+        data-truth-slide-label={label}
+        data-truth-ground="count"
+        {...(still ? { "data-v2-static": true } : { "data-descent-arrive": true })}
+        className="relative min-h-svh overflow-hidden bg-charcoal"
       >
-      {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B, static, behind
-          the copy. Spec: x900 y90 of the 1440 frame, 465 wide, 0.1 — the
-          delivered cut is off-white; the opacity is applied here. */}
+        {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B, static, behind
+            the copy. Spec: x900 y90 of the 1440 frame, 465 wide, 0.1 — the
+            delivered cut is off-white; the opacity is applied here. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/artwork/ring-b.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
+          loading="lazy"
+        />
+        {/* The deck pins a slide at exactly 100svh and clips it, so a screen
+            whose content is taller than the viewport loses the overflow —
+            measured, her testimony ran 1,053px into a 900px box and the first
+            quotation was cut off at the top. The deck track is the mechanism
+            for that: it carries the content up across the section's own
+            reading span, which is how TODAY and the escarpment already work.
+
+            The inner wrapper keeps `min-h-svh` + centring, so a screen that
+            FITS (the count) sits centred and its track has nothing to travel,
+            while one that does not (her testimony) grows and is carried. */}
+        <div data-truth-deck-viewport className="relative">
+          <div data-truth-deck-track>
+            <div className="relative mx-auto flex min-h-svh w-full max-w-6xl flex-col justify-center px-6 py-24 lg:px-24">
+              {children}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/**
+ * A · WHO IS SPEAKING. Rides the escarpment cover, so it is the screen the
+ * charcoal ground arrives on.
+ *
+ * Order follows the draft (D5): marker, title, who is speaking, her opening
+ * line, the lede.
+ *
+ * The draft's standing warning — "Draft, awaiting her approval"
+ * (`suzanne.draftWarning`) — is NOT rendered. Removed 9 September 2026 on
+ * August's instruction: this build is what goes in front of Suzanne and the
+ * Elder Advisory Group to be approved, so the band shows the page as it would
+ * read rather than announcing its own draft state. The check note at the foot
+ * came off in the same pass. Neither text is deleted — both stay in
+ * src/content/truth.ts and in the v3 draft — but nothing on this page now says
+ * the copy is unapproved, so restore both if the section is ever shown
+ * anywhere other than that review.
+ */
+export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
+  const head = (
+    <div className="grid gap-6 md:grid-cols-[180px_1fr] md:gap-12">
+      <p className="eyebrow self-start pt-3 text-h6 text-canvas">
+        {suzanne.marker}
+      </p>
+      <div>
+        <h2 className="headline max-w-4xl text-h2 leading-[1.2] text-oxide">
+          {suzanne.title}
+        </h2>
+        {/* `.eyebrow`, not a hand-rolled one. This label used to be Work Sans
+            set uppercase with letter-spacing, two lines above a real eyebrow —
+            two micro-labels in two different faces, touching. */}
+        <p className="eyebrow mt-10 text-canvas/70">Told by</p>
+        <div className="mt-6 grid gap-8 sm:grid-cols-[320px_1fr] sm:gap-8">
+          {/* ⟡ PORTRAIT SLOT — Suzanne. STILL HELD (R5): her words are wired
+              from the draft, her photograph is a separate permission and no
+              file has been delivered. The slot stays dashed until it is. */}
+          <div
+            data-placeholder="portrait-held"
+            aria-hidden
+            className="aspect-4/5 w-full max-w-80 rounded-xs border border-dashed border-oxide/50"
+          />
+          <div>
+            <p className="eyebrow text-base text-oxide">{suzanne.attribution}</p>
+            <p className="mt-2 text-sm leading-relaxed text-canvas">
+              {suzanne.role}
+            </p>
+            {/* Her opening line is testimony: it is read in stillness, never in
+                the callout face — and, since 10 Sep, never in the display face
+                either. `voice` sets it in the reading face. */}
+            <PullQuote tone="charcoal" voice className="mt-8">
+              {suzanne.openingQuote}
+            </PullQuote>
+          </div>
+        </div>
+        <p className="mt-10 max-w-2xl leading-relaxed text-canvas/80">
+          {suzanne.lede}
+        </p>
+      </div>
+    </div>
+  );
+
+  /* Inside the escarpment deck the wrappers belong to that slide, so this beat
+     is cargo. Standalone it is a screen of its own like the other two. */
+  return withinDeck ? (
+    <div
+      id="the-count"
+      data-descent-band="count"
+      className="relative overflow-hidden bg-charcoal"
+    >
       {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
       <img
         src="/artwork/ring-b.svg"
@@ -1671,152 +1759,107 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
         className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
         loading="lazy"
       />
-      <div {...(withinDeck ? {} : { "data-truth-deck-viewport": true })}>
-        <div {...(withinDeck ? {} : { "data-truth-deck-track": true })}>
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-24">
-        {/* The 15 frame's head: era at Eyebrow/Section-24 in off-white on
-            the gutter line, the title at Display/96 in Rust Red — the only
-            red on the page — then the testimony block: portrait slot HELD
-            (R5) left, attribution and her opening words right. Nothing here
-            moves. Order follows the draft (D5): marker, title, who is
-            speaking, her opening line, the lede. */}
-        <div className="grid gap-6 pb-24 pt-36 md:grid-cols-[180px_1fr] md:gap-12">
-          <p className="eyebrow self-start pt-3 text-xl text-canvas">
-            {suzanne.marker}
-          </p>
-          <div>
-            {/* The draft's standing warning — "Draft, awaiting her approval"
-                (`suzanne.draftWarning`) — is NOT rendered here. Removed
-                9 September 2026 on August's instruction: this build is what
-                goes in front of Suzanne and the Elder Advisory Group to be
-                approved, so the band shows the page as it would read rather
-                than announcing its own draft state. The check note at the
-                foot came off in the same pass. Neither text is deleted —
-                both stay in src/content/truth.ts and in the v3 draft — but
-                nothing on this page now says the copy is unapproved, so
-                restore both if the section is ever shown anywhere other
-                than that review. */}
-            <h2 className="headline max-w-4xl text-h2 leading-[1.2] text-oxide">
-              {suzanne.title}
-            </h2>
-            <p className="mt-10 text-sm uppercase tracking-wide text-canvas/70">
-              Told by
-            </p>
-            <div className="mt-6 grid gap-8 sm:grid-cols-[320px_1fr] sm:gap-8">
-              {/* ⟡ PORTRAIT SLOT — Suzanne. STILL HELD (R5): her words are
-                  wired from the draft, her photograph is a separate
-                  permission and no file has been delivered. The slot stays
-                  dashed until it is. */}
-              <div
-                data-placeholder="portrait-held"
-                aria-hidden
-                className="aspect-4/5 w-full max-w-80 rounded-xs border border-dashed border-oxide/50"
-              />
-              <div>
-                <p className="eyebrow text-base text-oxide">{suzanne.attribution}</p>
-                <p className="mt-2 text-sm leading-relaxed text-canvas">
-                  {suzanne.role}
-                </p>
-                {/* Her opening line is testimony: it is read in stillness,
-                    never in the callout face. */}
-                <PullQuote tone="charcoal" className="mt-8">
-                  {suzanne.openingQuote}
-                </PullQuote>
-              </div>
-            </div>
-            <p className="mt-10 max-w-2xl leading-relaxed text-canvas/80">
-              {suzanne.lede}
-            </p>
-          </div>
-        </div>
-
-        {/* The count takes the viewport alone — the draft's build note:
-            "nothing else on screen". */}
-        <div className="flex min-h-[100svh] flex-col justify-center py-24 md:pl-[calc(180px+3rem)]">
-          <dl className="space-y-16">
-            {suzanne.figures.map((figure) => (
-              <div key={figure.year} className="max-w-3xl">
-                <dt className="headline text-7xl text-canvas sm:text-9xl">
-                  {figure.year}
-                </dt>
-                <dd className="mt-4 text-lg leading-relaxed text-canvas/80">
-                  {figure.detail}
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50">
-            <a
-              href={suzanne.citation.href}
-              className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
-            >
-              {suzanne.citation.text}
-            </a>
-          </p>
-        </div>
-
-        {/* Testimony. Still, by rule — these are her words being read. */}
-        <div className="max-w-3xl pb-24 md:pl-[calc(180px+3rem)]">
-          {/* The first of these carries the unratified CR4 word. Steve's
-              note of 7 Sep is explicit that as a bare pull quote it "reads
-              as our copy — it isn't", so this one is attributed on the spot
-              rather than relying on the "Told by" line a screen above. */}
-          {suzanne.quotes.map((quote, index) => (
-            <PullQuote
-              key={quote.slice(0, 32)}
-              tone="charcoal"
-              className="mt-10 first:mt-0"
-              {...(index === 0
-                ? { attribution: suzanne.attribution, role: suzanne.role }
-                : {})}
-            >
-              {quote}
-            </PullQuote>
-          ))}
-          <p className="mt-10 leading-relaxed text-canvas/80">{suzanne.afterQuotes}</p>
-          {/* The line the page stands on. Set large, but still marked up as
-              the quotation it is — these are her words, not the site's. */}
-          <blockquote className="headline mt-14 text-4xl text-canvas sm:text-5xl">
-            {suzanne.standingQuote}
-          </blockquote>
-          {suzanne.closing.map((paragraph) => (
-            <p key={paragraph.slice(0, 32)} className="mt-8 leading-relaxed text-canvas/80">
-              {paragraph}
-            </p>
-          ))}
-          {/* `suzanne.checkNote` — her two open questions, the order of the
-              count against the blankets and thirty-five against thirty-seven
-              — is NOT rendered here. Removed 9 September 2026 on August's
-              instruction, with the head warning, so the band presents as the
-              page rather than as a marked-up draft. Both questions are still
-              open and still unanswered; they now have to be PUT TO HER IN THE
-              PRESENTATION, because the page no longer asks them. The text is
-              kept in src/content/truth.ts and in the Truth v3 draft. */}
-        </div>
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-36 lg:px-24">
+        {head}
       </div>
-      {/* The hand-off into the 1840s USED TO LIVE HERE, in flow, at the foot
-          of the count. It has moved onto the section it introduces
-          (EntryBlock, `isMitchell`), for two reasons that are really one.
-
-          It was the only wave on the page that was neither absolute nor on the
-          incoming surface, so it travelled exactly as far as this deck track
-          did and then parked at the pinned slide's bottom edge while the 1840s
-          covered it — the "doesn't move with the section" report. And a wave
-          inside a deck track can never overhang its join anyway: the deck
-          clips [data-truth-deck-viewport] to the slide box.
-
-          It also cost 112px of this panel's height, which is the budget that
-          decides how much of the escarpment stays visible. See below. */}
-        </div>
-      </div>
-      </div>
-  );
-  return withinDeck ? (
-    content
-  ) : (
-    <div data-truth-slide-runway className="relative">
-      {content}
     </div>
+  ) : (
+    <CountScreen id="the-count" label="Who is speaking">
+      {head}
+    </CountScreen>
+  );
+}
+
+/**
+ * B · THE COUNT. The numerals take the viewport alone — the draft's build
+ * note: "nothing else on screen".
+ *
+ * ⛔ STILL. `still` puts `data-v2-static` on the section, which every motion
+ * module honours. The years are at the top of the type scale (`text-h1`, 56 on
+ * desktop) and no further: they arrived at 128px, which is off the scale
+ * entirely — nothing in `YACHATDAC Type` exceeds 56 — and at that size they
+ * out-shouted the section title by nearly three times and read as a poster
+ * dropped into the middle of her account. They are still the largest type on
+ * Truth, which is right, because the number is the point.
+ */
+export function SuzanneCount() {
+  return (
+    <CountScreen id="the-count-figures" label="The count" still>
+      <dl className="space-y-16 md:pl-[calc(180px+3rem)]">
+        {suzanne.figures.map((figure) => (
+          <div key={figure.year} className="max-w-3xl">
+            <dt className="headline text-h1 text-canvas">{figure.year}</dt>
+            <dd className="mt-4 text-lg leading-relaxed text-canvas/80">
+              {figure.detail}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50 md:pl-[calc(180px+3rem)]">
+        <a
+          href={suzanne.citation.href}
+          className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
+        >
+          {suzanne.citation.text}
+        </a>
+      </p>
+    </CountScreen>
+  );
+}
+
+/**
+ * C · HER TESTIMONY. Her words, read in stillness — the words undim at
+ * speaking pace and nothing else moves.
+ *
+ * `suzanne.checkNote` — her two open questions, the order of the count against
+ * the blankets and thirty-five against thirty-seven — is NOT rendered here.
+ * Removed 9 September 2026 on August's instruction, with the head warning, so
+ * the band presents as the page rather than as a marked-up draft. Both
+ * questions are still open and still unanswered; they now have to be PUT TO
+ * HER IN THE PRESENTATION, because the page no longer asks them. The text is
+ * kept in src/content/truth.ts and in the Truth v3 draft.
+ */
+export function SuzanneTestimony() {
+  return (
+    <CountScreen id="the-count-testimony" label="Her testimony">
+      <div className="max-w-3xl md:pl-[calc(180px+3rem)]">
+        {/* The first of these carries the unratified CR4 word. Steve's note of
+            7 Sep is explicit that as a bare pull quote it "reads as our copy —
+            it isn't", so this one is attributed on the spot rather than relying
+            on the "Told by" line two screens above. */}
+        {suzanne.quotes.map((quote, index) => (
+          <PullQuote
+            key={quote.slice(0, 32)}
+            tone="charcoal"
+            voice
+            className="mt-10 first:mt-0"
+            {...(index === 0
+              ? { attribution: suzanne.attribution, role: suzanne.role }
+              : {})}
+          >
+            {quote}
+          </PullQuote>
+        ))}
+        <p className="mt-10 leading-relaxed text-canvas/80">
+          {suzanne.afterQuotes}
+        </p>
+        {/* The line the page stands on. Set large, but a step BELOW the section
+            title and in the reading face — it is her sentence, not a heading of
+            ours. It was set in the display face at the title's own size, which
+            made the page appear to say it. */}
+        <blockquote className="mt-14 text-h3 leading-[1.2] text-canvas">
+          {suzanne.standingQuote}
+        </blockquote>
+        {suzanne.closing.map((paragraph) => (
+          <p
+            key={paragraph.slice(0, 32)}
+            className="mt-8 leading-relaxed text-canvas/80"
+          >
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </CountScreen>
   );
 }
 

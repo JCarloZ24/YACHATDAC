@@ -300,14 +300,11 @@ supersedes are written up as **D26**; these are the loose ends it leaves.
 
 ## The count seam — raised 9 September 2026
 
-- **`railHiddenSlides` carries a dead selector.** `gated-deck.ts` hides the rail
-  over `'#break-escarpment, [data-truth-ground="count"]'`. The second half never
-  matches: `SuzanneBand` only emits `data-truth-ground="count"` when
-  `withinDeck` is false, and `page.tsx` always passes `withinDeck`. The rail's
-  silence over the count is carried entirely by `#break-escarpment`, which is
-  correct — but the selector reads as though the count were doing half the work
-  and it is not. Harmless, misleading. **Needs: deletion, or the count promoted
-  back to its own slide, which is a bigger decision.**
+- ~~**`railHiddenSlides` carries a dead selector.**~~ **CLOSED 10 September
+  2026.** `[data-truth-ground="count"]` matched nothing while the band only
+  ever rendered `withinDeck`. Splitting the hard stop into three screens gave
+  two of them that attribute for real, so the selector now does the job it
+  was written for and the rail is silent across all three.
 
 - **The count's panel height is now load-bearing and nothing enforces it.** The
   ground and its crest cover the escarpment because panel + wave ≈ one
@@ -316,6 +313,38 @@ supersedes are written up as **D26**; these are the loose ends it leaves.
   portrait, or restore Suzanne's withheld block, and the crest goes off the top
   of the screen with no warning and the beat stops closing on the wave.
   **Needs: either a real cap, or a note in whatever unholds this section.**
+
+
+---
+
+## The type lint cannot see the type — raised 10 September 2026
+
+`scripts/check-type.mjs` reported **0 errors on /truth** while the page carried
+a 128px heading, three quotations set in the display face, and a hand-rolled
+eyebrow in the wrong family. It is not broken; it is narrower than its name
+suggests, and it was read as a pass.
+
+Two reasons, both in the script:
+
+- **It skips anything already carrying a font utility** —
+  `if (/\bheadline\b|\beyebrow\b|\bcallout\b/.test(c)) continue;`. So
+  `headline text-7xl sm:text-9xl` is never size-checked. The check is "does
+  this look like a heading with no family?", not "is this size on the scale?".
+- **It knows nothing about the `text-h1`…`text-h6` tokens**, so it cannot tell
+  a token from a hand-built ladder, and its heading threshold (1.875rem) sits
+  above most of the page's body-scale ladders anyway.
+
+Net: **a clean `check:type` run is not evidence that a page's typography is
+right.** What caught this pass was measuring computed `fontSize`/`fontFamily`
+in a real browser, which is what the verification for this work used.
+
+Only 2 of ~41 sized elements in `src/app/truth/_components/Sections.tsx` use a
+scale token; the rest are hand-built ladders that break at `sm` where the
+tokens break at `lg`. This pass fixed the 1902 band, which is the new content.
+**The rest of the page is unconverted and was left alone deliberately** — it is
+the co-worker's shipped work and a page-wide migration is its own decision.
+**Needs: a call on whether Truth migrates wholesale, and either a check-type
+that understands the scale or an honest note in its output that it does not.**
 
 
 ---
