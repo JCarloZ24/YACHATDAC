@@ -204,7 +204,7 @@ export function SiteHeader() {
   const shown = !gone || called;
 
   return (
-    <header data-site-header className="fixed inset-x-0 top-0 z-30">
+    <header className="fixed inset-x-0 top-0 z-30">
       {/* Navbar / Mobile — the solid white bar with the black wordmark and
           the hamburger panel. Below `lg` only; the band below is desktop's. */}
       <MobileNav />

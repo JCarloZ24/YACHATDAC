@@ -108,7 +108,14 @@ For anyone still finding their way home, this Country is patient.
 
 **The invitation**
 
-### Every journey begins differently — we welcome you to walk alongside us.
+### Every journey begins differently.
+
+<!-- Amended 9 September 2026, user direction: the clause "— we welcome you to
+     walk alongside us." is removed from The Invitation heading. The Figma frame
+     and the prototype screenshot both carried only the first sentence; this
+     settles the difference in the frame's favour. "Walk alongside us" remains
+     in the Wonder card description below. -->
+
 
 **Be our guest**
 

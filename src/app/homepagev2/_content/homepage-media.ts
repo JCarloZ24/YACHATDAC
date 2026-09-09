@@ -1,4 +1,17 @@
 /**
+ * /homepagev2 fork, 10 September 2026, user direction.
+ *
+ * A copy of src/content/homepage-media.ts, owned by /homepagev2 alone. The two
+ * pages share NOTHING but the framework and the site chrome: edit this
+ * freely and the live homepage is untouched, and vice versa.
+ *
+ * The cost of that is the usual one -- a fix made on one page does not
+ * reach the other. Whichever page wins, delete the loser rather than
+ * leaving both; `src/components/lofi` and `src/components/v2` are the
+ * standing record of what two divergent copies turn into.
+ */
+
+/**
  * Home collage, user screenshot 8 September 2026 (F7/F8, R11, D5).
  * Mid-fidelity selection of supplied photos; origin names the exact library
  * source. WebP derivatives leave masters intact. Credits remain in kit.ts /
@@ -117,14 +130,7 @@ const primaryFrames: HomeHeroFrame[] = slots.map(
   }),
 );
 
-/** ⚠ NOT RENDERED on `/` since 10 September 2026 (user direction): the hero
- * opens on the road and holds there, so the perspective gallery these frames
- * describe is gone from the homepage — with it, twenty-six above-the-fold
- * WebP requests. The collage still runs at /homepagev2, from that route's own
- * copy of this module. Kept because these are photo slots with sources and
- * grades recorded, not layout.
- *
- * 9 September: wing and distant gallery instances, no additional downloads.
+/** 9 September: wing and distant gallery instances, no additional downloads.
  * Each instance retains its source and grade; the larger nearby photos frame
  * these smaller plates like the user's perspective-gallery reference. */
 export const homeHeroFrames: HomeHeroFrame[] = [

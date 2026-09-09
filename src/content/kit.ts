@@ -63,6 +63,10 @@ export const HOME_LOADER_ARTWORK = {
  * do not attribute this replacement to the artist of the earlier photograph.
  * User requested the SVG source: it embeds the PNG rather than vector paths.
  * No cropping, sharpening or resizing of the source. */
+/* ⚠ NOT USED on `/` since 10 September 2026 (user direction): the homepage
+ * opening no longer draws the painting, so nothing on that route requests
+ * this file. /homepagev2 still does, from its own kit module. Left here
+ * because it is a supplied asset with provenance, not a layout decision. */
 export const HOME_PAINTING = {
   src: "/artwork/paintings/red-radial-painting.svg",
   origin: "User-supplied public/media/home/painting.svg (embedded painting.png); renamed without changes",
@@ -72,16 +76,41 @@ export const HOME_PAINTING = {
 
 /** 9 September 2026: exact Figma woodland road throughout the portal.
  * Original layers retained; credit/production method unconfirmed.
- * AMB-05: user permits local vegetation wind on this landscape only. */
+ * AMB-05: user permits local vegetation wind on this landscape only.
+ *
+ * ⚑ FULL-HEIGHT FOREGROUND, 9 September 2026, user direction. The Figma
+ * source at 3371:41347 is 1440×1500. The previous derivative kept only its
+ * top 1440×900, which is why every attempt to reach the near road landed on
+ * treeline instead: the ground was not in the file. The whole photograph is
+ * now carried — 600 more rows of real near road, ending in the speckled
+ * charcoal dissolve the homepage frame shows above The Invitation. 350 KB
+ * against the old crop's 328 KB, so R11's above-fold budget is unaffected.
+ *
+ * This SUPERSEDES the `extend` outpaint strip that stood here (a screen
+ * capture, cropped and colour-corrected by a measured per-channel gain to
+ * meet the photograph's bottom edge). None of it was wired into the canvas
+ * yet, and it is no longer needed: the real pixels exist, so nothing has to
+ * be generated or colour-matched to a join that no longer occurs.
+ * public/media/home/derivatives/red-earth-track.webp is now unreferenced.
+ *
+ * `legacyHeight` is that old 900px crop. Every threshold in home-land.ts
+ * — treeline, canopy, the sky bands, and the Truth sequence offsets that
+ * multiply by a literal 900 — was calibrated against it, so the shader remaps
+ * into that space rather than being re-tuned beat by beat. Do not change
+ * either number without reading the legacyY note in that file. */
 export const HOME_PORTAL = {
-  src: "/media/home/derivatives/woodland-road-foreground.webp",
+  src: "/media/home/derivatives/woodland-road-full.webp",
+  // ⚠ `sky` is unreferenced since 10 September 2026 (user direction). It was
+  // the approximated daylight band the land wore before Truth; every beat now
+  // reads the sequence layers below at its frame's own offset, so there is no
+  // beat left that samples it. /homepagev2 still does, from its own kit.
   sky: "/media/home/derivatives/road-sky.webp",
   truthSky: "/media/home/derivatives/truth-sky-sequence.webp",
   truthLight: "/media/home/derivatives/truth-light-sequence.webp",
-  width: 1440, height: 900,
+  width: 1440, height: 1500, legacyHeight: 900,
   grade: "full",
   credit: "Unconfirmed",
-  origin: "Figma 7XBvi0Mdbtmym10nkF9IGp, background 3371:41346 and foreground 3371:41347",
+  origin: "Figma 7XBvi0Mdbtmym10nkF9IGp, background 3371:41346 and foreground 3371:41347; foreground re-extracted at its full 1440×1500 on 9 September 2026",
 };
 
 /* -------------------------------------------------------------------------
