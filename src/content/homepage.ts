@@ -1,3 +1,16 @@
+/** Interface copy for the timed prototype requested 8 September 2026 (X1). */
+export const homeLoader = { label: "Loading homepage" };
+
+/** Figma/screenshot interface label, 8 September 2026; not narrative copy. */
+export const homeHero = { scrollLabel: "Scroll" };
+
+/** Screenshot text sequence, user direction 9 September 2026 (D5 hi-fi amendment). */
+export const homePaintingCopy = {
+  entrance: "You are entering",
+  place: "Turraburra",
+  story: "Story held in stone and starlight",
+};
+
 /**
  * Homepage copy.
  *
@@ -116,7 +129,8 @@ export const beats: Beat[] = [
     ],
     cta: { label: "Guesting On-Country", href: "/wonder" },
     mediaNote: "Deep time, sensory — night sky, sunrise, the escarpment.",
-    tone: "midnight",
+    // 9 September 2026 user direction: continue the hero's dark ground for now.
+    tone: "charcoal",
   },
   {
     id: "truth",

@@ -2,6 +2,9 @@
 
 *Last updated: 9 September 2026*
 
+**Home painting text - 9 September 2026 (latest direction):** the painting finishes revealing at timeline 0.95. Then You are entering fades in at 1.08 over 0.50 units, Turraburra at 1.62 over 0.50, and the story line at 2.18 over 0.55. The complete copy holds until 3.03, clears, and the portal begins at 3.18. All later scenes move two units later without changing their pace. Reverse scroll retraces the sequence; reduced motion retains the static fallback. This supersedes the earlier overlapping text/reveal timing.
+
+
 *Decided 30 August 2026. The third artefact — pacing, on paper, before it is pacing at 60fps.*
 
 A film is not continuously intense, and heaviness only reads as heavy next to stillness. If
@@ -35,6 +38,105 @@ in a row is a noisy one. Neither is a matter of opinion once it is written down.
 ---
 
 ## Home — verb *opens* — 1775vh, 8 sections
+
+9 September hero exit prototype: add 120vh of pinned scroll to the existing
+canvas. `homeHeroDissolve` fades copy over the first 30% and photos/scrims over
+40%. After everything disappears, the canvas ground changes from charcoal to
+the existing oxide token over 45–80%, referencing the painting's red-orange
+ground. The final 20% holds the colour before release
+to Wonder. Reverse scroll restores the gallery. Reduced motion has no pin or
+dissolve. Latest 9 September request adds the original red painting in the same
+canvas: its white/gold marks reveal outward from the central rosette over 45–95%
+of the scroll, starting with the red ground. The original painted ground follows.
+The crop removes binding/surroundings only; no tracing, recolouring or upscaling.
+Provenance: `public/artwork/painting-03-red-provenance.md`.
+Latest asset replacement, 9 September: the user supplied
+`public/media/home/painting.png` (1656 × 950). The existing canvas now uses a
+lossless WebP derivative of this image with no sharpening. Reveal origin and
+aspect ratio follow the replacement. This supersedes the earlier cropped photo;
+see `public/media/home/README.md` for provenance.
+Subsequent 9 September direction uses `public/artwork/paintings/red-radial-painting.svg` as the
+active texture source. This is an SVG wrapper containing the raster image;
+the same canvas and reveal remain, without a vector reconstruction.
+
+9 September 2026: Home opts into shared SCR-09 wheel inertia (`lerp: 0.12`),
+matching Living Work and The Record at the user's request for heavier scrolling.
+Touch and reduced motion remain native; the loading cover prevents wheel input.
+
+**Hero prototype — user direction, 8 September 2026.**
+
+**Latest refinement — 9 September 2026:** 36 cards from 24 distinct supplied
+photos now occupy a more strongly curved cylindrical gallery extending beyond
+the viewport, following the latest reference. A tighter radius and wider angular
+spread turn visible side plates further inward; slightly smaller plates and
+greater vertical spacing open the gaps without moving the viewer backwards.
+The centre faces forward; side plates turn along the cylinder without bending
+the photo surfaces. Depth stays moderate and wider mouse travel reveals wing
+cards. The stationary camera and uninterrupted three-second entrance remain.
+Mouse exploration adds a restrained head-lean cue to the gallery: up to 2.9°
+of roll, 2.6° of vertical tilt and 12.9° of horizontal turn, damped over 0.16s.
+These transforms return to neutral at pointer exit; DOM text remains steady.
+Latest 9 September POV correction supersedes gallery hover transforms and the
+temporary gaze-facing plate rotation. The cylinder is centred on the stationary
+eye at z=12. Each plate keeps its tangent orientation; mouse input turns the
+camera up to 31.5° horizontally, 7.7° vertically, with up to 2.3° of head roll.
+Only the entrance moves the gallery. Flatness when viewed directly and oblique
+views when looking away now come from perspective, with no billboarding.
+9 September header refinement: pointer tracking uses the hero's screen bounds,
+including the fixed navigation overlay, so entering the header does not reset
+the gaze. Exiting the hero bounds or browser viewport still restores it.
+Photo plates were enlarged by approximately 14% over the previous POV pass,
+then another 10% in the subsequent 9 September size refinement.
+The previous distribution used the same 24 supplied
+photos, including 12 small background instances sharing the same image bytes.
+Large angled edge cards and small deep cards form the denser reference gallery.
+The loader begins on black for 0.14s; its artwork then appears. After the loader,
+another black beat precedes photos entering from outside the right edge. The
+camera now stays fixed while the gallery moves into place around the viewer
+over three continuous seconds with power2.out easing. This replaces the two-leg
+camera journey whose intermediate stop felt awkward. Mouse exploration also
+moves the gallery around the fixed viewpoint. The heading follows at 3.14s with a simultaneous 0.8s opacity fade, with no vertical movement or word stagger (latest 9 September direction). This replaces the initially requested fast 1.05s entrance and
+the 3.2-second entrance below. Navigation is hidden only during the black beat;
+mouse exploration and readable static fallbacks remain.
+The 9 September edge-treatment reference adds a static, feathered dark blur
+around the media perimeter (X5 media scrim). The centre stays clear and copy
+renders above the blur; the three-second gallery motion is unchanged.
+**Later interaction refinement, same date:** the five new reference images
+supersede the 0.5-second straight approach below. Start far to the left, travel
+through an oblique view for 1.1s and settle centrally over another 2.1s. The
+heading appears after this 3.2-second journey. A fine mouse pointer then moves
+the camera across and above/below the held photo planes, with 0.16s damping;
+pointer exit eases home. There is no wheel capture, touch-scroll interception
+or idle animation. Rendering sleeps when settled, offscreen or the tab is hidden.
+Reduced motion remains a static collage. The camera safety timeout is 10s,
+including preparation, the loader and the longer entrance.
+
+Original composition reference:
+(`Screenshot 2026-09-08 233541.png`) supersedes the road/sky composition currently
+returned by Figma node `3371:41344`. Build a canvas photo collage on charcoal:
+the one-second loader releases a distant view, the camera approaches for 0.5s,
+then the draft's Reconnection headline reveals by word, with supporting copy
+and Scroll following quietly. The loud channel is media during the approach;
+the photographs rest while the type enters. There is no ambient loop or pin.
+The screenshot's display size is a local `text-h1` override (40–80px); it does
+not alter the site's shared heading scale or licensed font mapping.
+Use existing supplied photography as a mid-fidelity selection; the screenshot's
+fire images are represented by Country/work images until the final selection.
+All photo UVs hold fixed, including portraits and cultural-site material.
+Reduced motion, unavailable WebGL and JavaScript-off show the static collage
+and readable copy. This hero is 100svh with a content-safe minimum height, no
+added scroll span. `homepage-media.ts` records the source and grade per slot.
+
+**Loading intro — user direction, 8 September 2026.** Before the homepage,
+`homeLoader` reveals the supplied gold dot wave over charcoal with a quiet
+0–100 percentage and a static, cropped dot ring at the left. Transition is the
+loud channel. Total duration is one second from client initialisation, including
+the fade out; this is deliberately timed prototype progress until real homepage
+assets are wired. It runs on each homepage mount and adds no scroll span.
+Reduced motion and JavaScript-off skip it; Escape or Tab dismiss it immediately.
+A separate 1.5-second safety timer releases the cover if animation stalls.
+This explicit request supersedes the old X1 real-progress-only loader note for
+this prototype. Existing homepage sections are unchanged.
 
 Built to `00 · Home — HI-FI · Desktop · the opening` (Figma `2381:7027`, 15974px = 1775vh),
 which supersedes the lo-fi's 903vh / 7 sections. The lo-fi spans remain the copy and structure
@@ -206,6 +308,23 @@ enforced by the compiler rather than by discipline.
 
 ## The Record — handprint opening, 8 September 2026
 
+**Photo lens amendment, 9 September 2026.** User direction applies the Home
+painting zoom's radial lens envelope to the Record photo journey. Subdivided
+photo planes bow toward the viewport edges during the approach and receive a
+small perspective tilt; central images remain comparatively flat. The lens
+returns to neutral at the endpoints and reverses with scroll. This is a viewer
+projection effect: the original photo UVs, crops and staggered depths stay fixed.
+
+**Question artwork amendment, 9 September 2026.** The user requests movement
+in the two background ring patterns behind “What we do not know”.
+The latest correction makes `recordPatternDrift` (AMB-04) follow cursor position:
+opposing 30px / 46px drift and 3.5° / 5° tilt, with power3.out smoothing over
+0.8s horizontally and 1.05s vertically for a softer trailing response. Leaving the
+section returns both rings to centre. Touch and reduced motion retain still artwork.
+Questions, numbering and
+the CTA remain in ordinary flow. This supersedes the static-artwork direction
+below for these two instances only; their original opacity is preserved.
+
 **Latest user direction, 8 September 2026.** Build the wall and handprints in
 Three.js on a single canvas, with a real hand-shaped hole in the wall geometry.
 The user rejects the earlier photographic wall and fixed screen-space cards.
@@ -216,20 +335,53 @@ their existing behaviour.
 
 | # | What it says | Intensity | Scroll span | Loud channel | Effect | Rest after? |
 |---|---|---|---|---|---|---|
-| 01 | Through the wall, then towards the record | 4 | 360vh | transition | `handprintPortal` · SCR-11 | yes, arrived cards |
+| 01 | Through the wall and past the pictures into the record | 4 | 200vh | transition | `handprintPortal` · SCR-11 | at the catalogue |
 | 02 | Everything in the record | 1 | natural flow | none | `hold` | yes |
 
 One lazy-loaded Three.js renderer, rendered only when scroll or size changes.
+A server-rendered loading cover uses the homepage's supplied gold wave and
+ring (SYS-02 / `recordLoader`, user direction 9 September 2026). Its percentage
+tracks settled portal resources and the first three catalogue photographs;
+completion waits for texture upload, shader compilation and the first submitted
+canvas frame. Scrolling and underlying page focus are locked until the cover
+exits. Missing canvas photos are omitted, and failed catalogue photographs
+retain their tonal ground. WebGL/chunk failure or a 20-second startup timeout
+reveals the static fallback and cancels pending scene activation. Escape/Tab
+also bypass to the fallback. Reduced motion and no JavaScript skip the cover;
+navigation restores scroll/focus and disposes only this loader's resources.
 The camera crosses one of the separate palm openings in the supplied ink print.
-Every black region is an opening with extruded edges; white remains wall. There
-are no repeated or painted handprints. The wall uses a generated photographic
+Every black region is an opening; white remains wall. The user's latest
+8 September 2026 refinement uses 0.65-unit stone depth for the connected palm
+opening the camera enters and a 0.36-unit rim on the finger pads, thumb and
+other openings (twice their original 0.18 depth). Pictures approach immediately
+as the camera moves through the palm. A procedural red-ochre halo surrounds the central handprint. The latest
+8 September 2026 user direction adds surrounding pigment-only hand stencils,
+using eight distinct finger/palm shapes from the user's reference sheet,
+upright and almost the same size as the central hand after the latest user
+correction on 8 September 2026. Heights vary by roughly 4%, with no added
+rotation; handedness, shape and weathering still differ. All impressions have broad,
+mottled pigment deposits spreading into the surrounding rock, following the
+user's refinement beyond narrow outlines. Their interiors remain solid
+stone; only the central hand has apertures. The wall uses a generated photographic
 sandstone material, recorded in `public/artwork/record-portal-provenance.md`.
-Card planes sit at staggered depths and retain fixed
-image UVs as the camera approaches. Semantic links follow their projections.
+Nine photo planes start at staggered depths and advance at different speeds from the
+first scroll input, retaining fixed image UVs. The 9 September 2026 refinement
+adds five supplied catalogue photos, then removes the central grass-and-sunset
+preview while preserving the other slots. It places the leftmost original farther
+back and closer to the centre for a longer, more noticeable approach. They continue outward beyond the
+screen edges and fade near the camera rather than stopping at a common gallery.
+The pictures render only in the canvas, without captions or moving hit areas;
+article links remain in the catalogue. Latest user correction on 8 September
+2026 front-loads picture travel for a much faster response to the first scroll.
+Side frames extend beyond the screen; upper frames remain visible for the
+closing fade. At 50% progress the remaining pictures start fading, while the
+catalogue rises over the final viewport of the 200vh hero through a native-flow
+overlap. Scrolling backwards restores the pictures and wall. Reduced motion
+removes both the extended hero scroll span and the catalogue overlap.
 The user explicitly permits generated artwork on this date. No supplied
 photograph, painting or logo is re-authored. Native skip link,
 mobile composition, live reduced-motion teardown, missing-asset fallback and
-WebGL failure/context-loss fallback are part of this scene. The 360vh span is
+WebGL failure/context-loss fallback are part of this scene. The 200vh span is
 absent when enhancement is unavailable. SCR-09 wheel inertia stays enabled.
 Layout follows the user's wall and zoom-through direction for this
 intro rather than the earlier Figma intro frame; D5 still governs its words.
@@ -990,3 +1142,81 @@ this ledger makes. Frames are described by what they show, never by who the pers
 section captions a person into a role.
 
 That is the deliberate design, not a limitation working around one.
+
+
+Home portal continuation, 9 September 2026: the same canvas now opens the central rosette after the text clears, magnifies the original painting around the opening and holds a stationary sunset road behind it. The final approach blends into the exact woodland road/blue-sky layers from Figma 3371:41346 and 3371:41347. Total pin is 276vh, preserving the first 120vh timing; reverse scroll retraces the opening. Reduced motion retains the static hero.
+
+
+Latest user correction, 9 September 2026: the woodland road from Figma is used throughout the central opening and arrival. The sunset road and image crossfade are no longer used or loaded.
+
+
+Home central aperture correction, 9 September 2026: the woodland road appears inside the inner ring as soon as the painting begins revealing (painting progress 0?3.5%), before the zoom. It remains opaque while the red ground draws around it. If the landscape fails to load, the centre retains the painting.
+
+
+Daylight correction, 9 September 2026: the same canvas now composites the transparent Figma treeline over its supplied sky texture, sampling the pale grey-blue/daylight band with restrained saturation and a warm horizon. woodland-road-foreground.webp preserves the top 1440?900 foreground with alpha; road-sky.webp is the full original sky transcoded to WebP. Origin remains Figma nodes 3371:41346/41347. No change to portal timing or terrain colours.
+
+
+Home ground overlap, 9 September 2026: charcoal now gradually turns oxide over dissolve progress 0?65%, overlapping the text fade (0?30%) and image/scrim fade (0?40%). Painting reveal still starts at 45%; the portal sequence retains its timing. This supersedes the earlier empty dark-field pause.
+
+
+Wonder continuation, 9 September 2026: the portal arrives on a darker blue sky. The existing Wonder copy rises as one accessible DOM block over the same canvas while the shader warms the sky to daylight. Timeline 2.3?3.1 controls both; 3.1?3.4 holds. Total pin 408vh preserves earlier scroll timing. Reverse scroll lowers the block and cools the sky. Existing static Wonder is shown only without canvas enhancement. Draft wording and CTA destination are retained.
+
+
+Terrain lighting, 9 September 2026: the same daylight progress now controls sky and land. At night, terrain uses 22% linear exposure, reduced saturation and a cool ambient tint; these blend back to original daylight colours as the sky warms and Wonder rises. Reverse scrolling restores night. This is a shader grade of the supplied image, not new lighting geometry or a modified source asset.
+
+
+Painting copy styling, 9 September 2026: latest reference uses cream text, a smaller entrance line, larger Turraburra title and smaller right-aligned story. Soft local media scrims and text shadows improve contrast over the artwork and share each fragment?s existing opacity timeline. Licensed heading face retained.
+
+
+Painting scrim coverage, 9 September 2026: each text fragment now has a full rectangular dark backing extending beyond its complete text bounds, with a blurred outer perimeter. This replaces the centre-weighted ellipse that left the first and last words unshaded. Opacity still follows the text.
+
+
+Portal lens motion, 9 September 2026: the approach now applies a radial shader curve to the painting alone, stretching peripheral marks around the opening like the supplied motion reference. A sine-squared envelope builds and releases the bend during the existing portal span. Centre, landscape UVs, reveal timing and reduced-motion fallback remain stable. The source artwork is unchanged. Reverse scroll retraces the curve.
+
+
+Home woodland breeze (AMB-05), 9 September 2026: user authorises subtle vegetation UV motion on the supplied road photograph, superseding frame grade for this layer only. Spatial and colour masks protect the road and suppress dark trunks; grass ripples faster than canopies. This is an approximation from a still photograph, not segmented 3D trees. The existing canvas and controller own the 24-second loop, paused offscreen and in hidden tabs, absent with reduced motion. Painting, sky, other photos and scroll timing remain unchanged.
+
+
+AMB-05 correction, 9 September 2026: user found the distortion too obvious. Restrict wind to three feathered grass patches in source-image UV space, remove canopy sway, reduce grass displacement by 80%, and slow the ripple from nine to four cycles per 24-second phase. Unselected pixels remain still. This supersedes the broad vegetation mask above.
+
+
+AMB-05 visibility tuning, 9 September 2026: the reduced pass was too faint. Keep the same three grass selections and stationary trees/road, but increase horizontal displacement from 0.00015 to 0.0006 UV and vertical displacement to 0.00012 UV. Six cycles per 24-second phase give a visible four-second ripple; no broader vegetation warp is restored.
+
+
+AMB-05 stronger breeze, 9 September 2026: user still could not see the ripple. Increase horizontal displacement fourfold to 0.0024 UV, vertical to 0.00045 UV, broaden the three foreground selections, and use three-second cycles. Reduce colour-mask suppression of dry yellow grass. The road exclusion and stationary horizon remain. This supersedes the previous amplitude tuning.
+
+
+AMB-05 viewport correction, 9 September 2026: checking the 2048-by-758 landscape confirmed the cover crop removes most of the low grass selections. Add three mid-ground grass selections higher in the source image, retaining the original foreground selections for taller viewports. No amplitude increase; the road exclusion and horizon remain fixed.
+
+
+AMB-05 final scope correction, 9 September 2026: user requests all vegetation to ripple gently. Remove the six patch selections. Apply a broad vegetation mask with road exclusion and dark-trunk suppression, with 0.0009 UV grass ripple and 0.00065 UV canopy sway. This supersedes the patch-selection approach and its viewport workaround. Sky, road, pause behaviour and reduced-motion fallback remain unchanged.
+
+
+| **the landscape introduces Truth** | SCR-09: after Wonder holds, its copy rises away; the existing road canvas shifts from pale daylight to the supplied saturated blue sky. Truth, Iningai Nation and the first existing subject-detail paragraph rise into a centred upper block. | homeHeroDissolve 3.4-4.2; hold to 4.6; total pin 552vh; reversible scrub 0.8s | user screenshot 9 September 2026 | quiet type over held landscape with AMB-05 breeze | `homeHeroDissolve` |
+
+
+Truth frame verified in Figma 3371:44774 (Homepage Prototype), 9 September 2026: content 3371:44831 is 720px wide, top 124px in a 901px frame; eyebrow 20/28, heading 64/64, body Work Sans Medium 20/30, 24px gaps. Existing road and full sky assets are reused; bright sky samples follow the frame background offset -1422px in a 6996px layer. Foreground uses the frame's 25% black scrim. No draft words change; later Truth sequence remains available in normal flow and in the static fallback.
+
+
+Truth colour correction, 9 September 2026: user requests the exact Figma appearance. Replace the approximate blue-band sampling and land-only dimming with frame 3371:44774's exact visible sky and soft-light crops. A 25% black overlay covers sky and terrain before the foreground-masked soft-light blend, computed in display RGB. Existing Truth scroll progress blends into this corrected composition; timing and copy remain unchanged.
+
+
+### Home Truth years - 9 September 2026
+
+SCR-10 extends the existing canvas after the Truth introduction through the seven dated Figma frames 3371:45208-46472. Original sky and soft-light image layers use measured per-frame offsets, including the existing 25% black scrim. Exported dotted path and combined arrow/rosette marker sit over the landscape. Prose and year labels crossfade without counting or moving testimony. Every state scrubs backwards; the final Full account link goes to /truth. Static Truth remains the reduced-motion/WebGL fallback. No motion keyframes were present in Figma; timings are the scroll adaptation of its supplied states.
+
+
+Home Truth smooth scrolling - 9 September 2026: SCR-10 now interpolates the year marker and canvas lighting throughout each one-unit leg, rather than moving quickly then holding for most of the scroll distance. Text fades take 0.3 units each; the final account remains held for 0.9 units. Existing wheel inertia and reversible scrub remain active. This supersedes the earlier 0.4/0.6 transition/hold split.
+
+
+### Belonging under the stars - 9 September 2026
+
+After the final Truth reading hold, SCR-10 removes its entire copy and dotted year sequence. Belonging rises/fades over the same canvas while sky and soft-light layers move to Figma 3371:41578 offsets 5822. Existing stars twinkle through a luminance mask using the registered AMB-05 phase; no new stars or constellations are drawn. Terrain masks the effect, and shared visibility/reduced-motion cleanup applies. The draft supplies all text and the full CTA label. The static Belonging section remains the fallback.
+
+
+Belonging procedural stars - 9 September 2026: latest user direction supersedes animating the image stars. A seeded GLSL star field replaces the sky only, with antialiased points, varied luminosity and spatially independent twinkle driven by the existing registered ambient phase. This is generated decorative sky, not astronomical or cultural-record data. No extra renderer, texture or animation loop is added.
+
+
+Belonging shooting stars - 9 September 2026: occasional procedural meteors extend the existing shader star field. Three varied, screen-relative diagonal paths run in the registered 24-second AMB-05 phase, each visible for 1.4 seconds approximately eight seconds apart. A bright soft head leads a tapered fading trail; the foreground alpha occludes it. The effect appears only once Belonging has settled and inherits existing pause, teardown and reduced-motion behaviour. No textures, extra canvas or independent ticker are added.
+
+Invitation continuation, 9 September 2026: Figma 3371:41740 supplies three 400px-high photo cards, 48px gaps, 40px padding, 20px corners, and a centred 64px heading. After Belonging, the road exits into a charcoal media scrim; the Invitation overlaps its final 24svh. A 65vh reversible homeInvitation entrance lifts whole cards without image warping. D5 retains the longer draft headline, pillar titles, descriptions and destinations; screenshot copy differs. Mobile stacks cards; reduced motion uses the same content in normal flow.

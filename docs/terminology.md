@@ -1,10 +1,19 @@
 # Terminology sheet
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
+
+**Home painting display ? 9 September 2026:** screenshot excerpts read ?You are entering?, ?Turraburra?, and ?Story held in stone and starlight?. Turraburra names the property; the full hero sentence remains unchanged.
+
+
+Homepage loading interface, 8 September 2026: “Loading homepage” is the accessible
+label for the user-requested one-second percentage intro; it adds no narrative copy.
 
 The Record's handprint opening adds two interface labels on 8 September 2026:
 “Scroll into the record” and “Skip to the record”. These appear in the content
 module and the Resources v1 draft's interface amendment; no recorded words change.
+
+The Record loading interface, 9 September 2026: “Loading the record” is the
+accessible label for resource progress, recorded in the Resources v1 amendment.
 
 *Drafted 7 September 2026. Owner: August. Cultural authority: Suzanne Thompson.*
 
@@ -160,3 +169,6 @@ Against the deliverable's acceptance criteria:
 | "Indigenous" / "First Nations" usage ruled | ⚠ open — no rule given |
 | Fire-stick farming entry present | ✅ present; four missed strings swept 7 Sep |
 | Suzanne's approval relayed and attributed | ⚠ open |
+
+
+**Home Truth timeline, 9 September 2026 (user direction):** Figma Homepage Prototype frames 3371:45208, 45418, 45628, 45839, 46050, 46261 and 46472 supply display years 1861, 1871, 1881, 1891, 1896, 1902 and 2026 respectively. These are prototype labels, not newly researched dates. Draft wording remains authoritative: the Landsborough sentence retains "Iningai Country" where Figma says "our Country".

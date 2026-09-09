@@ -11,6 +11,8 @@
    --------------------------------------------------------------------------- */
 
 @theme {
+  /* Black opening beat, user direction 9 September 2026. */
+  --color-night-black: #000000;
   /* Palette — name (meaning) */
   --color-ochre: #d69828; /* Yellow Ochre   — Morning Light */
   --color-burnt: #d97804; /* Burnt Ochre    — Country (KIT · Truth ladder) */
