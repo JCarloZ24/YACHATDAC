@@ -44,6 +44,7 @@ import { registerGrid } from "./grid";
 import { registerMedia } from "./media";
 import { registerType } from "./type";
 import { registerPortal } from "./portal";
+import { registerDisclosure } from "./disclosure";
 
 gsap.registerPlugin(CustomEase);
 
@@ -68,6 +69,7 @@ export function registerYachatdacEffects(): void {
   registerContinuity();
   registerAccumulate();
   registerPortal();
+  registerDisclosure();
 }
 
 /**
@@ -126,6 +128,9 @@ export type EffectName =
   | "escape"
   | "surface"
   | "reflow"
+  | "disclose"
+  | "stageArrival"
+  | "itineraryStep"
   | "mosaic"
   | "scatterResolve"
   // section-to-section continuity

@@ -16,6 +16,7 @@ import {
   WonderWhereYouSleep,
 } from "./_components/Sections";
 import { WonderLoader } from "./_components/Loader";
+import { WonderMotion } from "./_components/Motion";
 import { wonderHero } from "@/content/wonder";
 
 export const metadata: Metadata = {
@@ -43,6 +44,9 @@ export default function WonderPage() {
       {/* Hard loads and refreshes only: holds scroll and covers the hero film's
           first buffer — see _components/Loader. */}
       <WonderLoader />
+      {/* The page's motion script — docs/motion/wonder-plan.md. Renders
+          nothing; every screen is a composition with a declared channel. */}
+      <WonderMotion />
       <div className="relative">
         <WonderHero />
         <WonderFacts />
