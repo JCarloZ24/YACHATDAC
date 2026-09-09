@@ -41,6 +41,7 @@ import { HostNames } from "./HostNames";
 import { FactsMap, RouteMap } from "./RouteMap";
 import { factsMapMarkup, routeMapMarkup } from "./route-map-markup";
 import itineraryStyles from "./Itinerary.module.css";
+import landscapeStyles from "./Landscape.module.css";
 
 /**
  * /wonder — the markup, built to `01 · Wonder · HI-FI · Desktop`
@@ -527,7 +528,7 @@ export function WonderGettingHere() {
       <WaveDivider ground="var(--color-charcoal)" mirror />
       {/* Wave Line 2033:5434 / 2576:22821 — charcoal dripping down over the
           Turraburra photo. Hung off this section's foot (1px overlapped so
-          the seam never shows) because Turraburra clips its own box. On the
+          the seam never shows) above the shared landscape backdrop. On the
           section, not the sticky screen, for the same reason as above. */}
       <WaveDrip
         ground="var(--color-charcoal)"
@@ -610,49 +611,64 @@ export function WonderGettingHere() {
         right at 1440 and bottom-left on the phone
    ------------------------------------------------------------------------- */
 
-export function WonderTurraburra() {
+/** F7 / SCR-01, user direction 9 September 2026: the black section scrolls
+ * off one viewport landscape. A shared grid bounds its sticky background;
+ * the static cut places the same image only behind Turraburra. */
+export function WonderCountry() {
+  return (
+    <div data-wonder="country" className={landscapeStyles.scene}>
+      <LandscapeBackdrop slot={turraburraSlot} />
+      <WonderGettingHere />
+      <WonderTurraburra />
+    </div>
+  );
+}
+
+/** Shared photographic layers and legibility scrim, F7 / X5, 9 Sep 2026. */
+function LandscapeBackdrop({ slot }: { slot: MediaSlot }) {
+  return (
+    <div className={landscapeStyles.backdrop}>
+      <div data-landscape-viewport className={landscapeStyles.viewport}>
+        <div data-landscape-approach className={landscapeStyles.approach}>
+          <div data-landscape-image data-motion="full" className={landscapeStyles.image}>
+            <Slot slot={slot} sizes="(min-width: 1024px) 110vw, 300vw" />
+          </div>
+        </div>
+        <div aria-hidden className="absolute inset-0 bg-linear-to-t from-charcoal/80 via-charcoal/30 to-charcoal/10" />
+      </div>
+    </div>
+  );
+}
+
+/** Same reading position and 80vh hold for both landscapes. D5: words remain
+ * supplied by the content module; only their container sticks (9 Sep 2026). */
+function LandscapeScreen({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div data-landscape-screen className={landscapeStyles.screen}>
+      <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
+        <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
+        <div data-plate-copy className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
+          <h2 className={H2}>{title}</h2>
+          {children}
+        </div>
+      </Container>
+    </div>
+  );
+}
+
+function WonderTurraburra() {
   return (
     <section
       id="turraburra"
       data-wonder="turraburra"
-      className={`relative flex min-h-svh items-end overflow-hidden bg-burnt pb-16 text-canvas lg:min-h-[720px] lg:pb-20 ${GUTTER}`}
+      data-landscape-section
+      className={`${landscapeStyles.section} text-canvas`}
     >
-      {/* The plate grows past its own edge as the section is scrolled
-          (`bleed`); the photograph inside is counter-scaled and never moves.
-          Country is frame grade — the corollary on held material in
-          docs/motion/motion-grammar.md. */}
-      <div data-plate className="absolute inset-0">
-        <div data-frame-media data-motion="frame" className="absolute inset-0">
-          <Slot slot={turraburraSlot} sizes={COVER_FULL_BLEED} />
-        </div>
-      </div>
-      {/* X5 — copy sits on media. At 1440 the copy is a right-hand column
-          over the sky and the frame's flat 10% is enough; on the phone it
-          drops to the foot, over the sunlit rock, and 10% left the body
-          copy thin against the brightest third of the plate. So the phone
-          gets the hero's foot-weighted ramp — the same scrim, same direction
-          — and the desktop keeps the frame's flat wash exactly. */}
-      <div
-        aria-hidden
-        data-wonder-scrim
-        className="absolute inset-0 bg-linear-to-t from-charcoal/70 via-charcoal/20 to-charcoal/10 lg:bg-none lg:bg-charcoal/10"
-      />
-      {/* Wave Line 2033:5434 / 2576:22821 is seated at the FOOT of Getting
-          here, not here: this section clips (overflow-hidden), and a drip
-          seated inside the clip left a hairline of photo between the
-          charcoal and the crest. */}
-      <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
-        <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
-        <div
-          data-plate-copy
-          className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6"
-        >
-          <h2 className={H2}>{turraburra.title}</h2>
-          <p className="text-base leading-normal font-medium lg:text-xl">
-            {turraburra.body}
-          </p>
-        </div>
-      </Container>
+      <LandscapeScreen title={turraburra.title}>
+        <p className="text-base leading-normal font-medium lg:text-xl">
+          {turraburra.body}
+        </p>
+      </LandscapeScreen>
     </section>
   );
 }
@@ -931,47 +947,21 @@ export function WonderWhereYouSleep() {
 
 export function WonderOutHere() {
   return (
-    <section
-      data-wonder="out-here"
-      className={`relative flex min-h-svh items-end overflow-hidden bg-evergreen pb-16 text-canvas lg:min-h-[720px] lg:pb-28 ${GUTTER}`}
-    >
-      <div data-plate className="absolute inset-0">
-        <div data-frame-media data-motion="frame" className="absolute inset-0">
-          <Slot slot={whatItIsLikeSlot} sizes={COVER_FULL_BLEED} />
-        </div>
-      </div>
-      {/* NO GROUND BAND HERE (removed 9 Sep 2026 on user report). The change
-          of ground was drawn as a translucent evergreen band sweeping up the
-          foot of this plate, and what it actually read as was a green film
-          over the sunset. A wipe belongs between two grounds, not on top of a
-          photograph. §09 keeps the plate's bleed and the scrim; the page has
-          no `ground` sweep. */}
-      {/* The same phone-only ramp as Turraburra, and for the same reason:
-          this plate is a sunset, so the foot the copy lands on is the
-          brightest part of it. Desktop keeps the frame's flat 10%. */}
-      <div
-        aria-hidden
-        data-wonder-scrim
-        className="absolute inset-0 bg-linear-to-t from-charcoal/70 via-charcoal/20 to-charcoal/10 lg:bg-none lg:bg-charcoal/10"
-      />
+    <div data-wonder="out-here" className={landscapeStyles.scene}>
+      <LandscapeBackdrop slot={whatItIsLikeSlot} />
       {/* No wave at this join — the frame runs Where you sleep straight
           into the photo (the next Wave Line is 2033's at y=8265, which is
           Your hosts rising). */}
-      <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
-        <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
-        <div
-          data-plate-copy
-          className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6"
-        >
-          <h2 className={H2}>{whatItIsLike.title}</h2>
+      <section data-landscape-section className={`${landscapeStyles.section} text-canvas`}>
+        <LandscapeScreen title={whatItIsLike.title}>
           <ul className="text-base leading-normal font-medium lg:text-xl">
             {whatItIsLike.points.map((point) => (
               <li key={point}>· {point}</li>
             ))}
           </ul>
-        </div>
-      </Container>
-    </section>
+        </LandscapeScreen>
+      </section>
+    </div>
   );
 }
 

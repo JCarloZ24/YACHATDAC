@@ -13,13 +13,12 @@ import {
   conversion,
   factsCopy,
   gettingHereCopy,
-  groundChange,
   heroArrival,
   hostsCopy,
   itinerary,
-  landscapePlate,
   sleepCards,
 } from "@/lib/motion/wonder";
+import { wonderLandscape } from "@/lib/motion/wonder-landscape";
 
 /**
  * /wonder — the page's motion script. Verb: ARRIVES.
@@ -34,11 +33,11 @@ import {
  *   §02 facts         media       320vh   the Queensland map draws · copy in tiers
  *   §03 highlights    media       100vh   the card rail opens
  *   §04 getting here  media       300vh   the route map draws in stages
- *   §05 turraburra    media       140vh   the plate bleeds past its edge
+ *   §05 turraburra    media       180vh   landscape + copy hold, mouse tilt and drift
  *   §06 itinerary     transition  ~720vh  six viewport-aligned automatic stops
  *   §07 before        none        100vh   the hold, and one beat on the CTA
  *   §08 sleep         media       120vh   two frames open, shallow parallax
- *   §09 out here      media       140vh   the one change of ground
+ *   §09 out here      media       180vh   same landscape + copy hold and mouse drift
  *   §10 hosts         none        100vh   the copy arrives, the faces hold
  *   §11 stories       media       100vh   the card rail again, quieter
  *   §12 close         none        100vh   the second CTA, quietest of all
@@ -78,11 +77,11 @@ export function WonderMotion() {
       wire("facts", (el) => factsCopy(el, 320));
       wire("highlights", (el) => cardRail(el, 100));
       wire("getting-here", (el) => gettingHereCopy(el, 300));
-      wire("turraburra", (el) => landscapePlate(el, 140));
+      wire("country", wonderLandscape);
       wire("itinerary", (el) => itinerary(el));
       wire("before", (el) => conversion(el, 100));
       wire("sleep", (el) => sleepCards(el, 120));
-      wire("out-here", (el) => groundChange(el, 140));
+      wire("out-here", wonderLandscape);
       wire("hosts", (el) => hostsCopy(el, 100));
       wire("stories", (el) => cardRail(el, 100));
       wire("close", (el) => conversion(el, 100));

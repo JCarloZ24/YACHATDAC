@@ -5,14 +5,13 @@ import {
   WonderBeforeYouCome,
   WonderClose,
   WonderFacts,
-  WonderGettingHere,
+  WonderCountry,
   WonderHero,
   WonderHighlights,
   WonderHosts,
   WonderOutHere,
   WonderStay,
   WonderStories,
-  WonderTurraburra,
   WonderWhereYouSleep,
 } from "./_components/Sections";
 import { WonderLoader } from "./_components/Loader";
@@ -51,8 +50,7 @@ export default function WonderPage() {
         <WonderHero />
         <WonderFacts />
         <WonderHighlights />
-        <WonderGettingHere />
-        <WonderTurraburra />
+        <WonderCountry />
         <WonderStay />
         <WonderBeforeYouCome />
         <WonderWhereYouSleep />

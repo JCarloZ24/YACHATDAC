@@ -146,14 +146,23 @@ Then take three things from the lab that the route map does not have yet:
 
 Span 220vh to 300vh, and the crop is fixed — see above.
 
-### 05 · Turraburra — immersive means the frame moves, not the photograph
+### 05 · Turraburra — landscape behind the outgoing black section
 
-`bleed`: the plate pushes past its own edge while the section's copy holds
-still against it, scrubbed across a 140vh span with the section sticky. A
-`scrimRamp` travels with it so the H2 stays legible as the picture brightens.
-The image plane itself does not scale, drift or ken-burns. This is Country,
-`frame` grade. The immersion comes from the frame growing past the viewport,
-which is the variant `bleed` exists for.
+Latest user direction, 9 September 2026: the photograph fills a sticky viewport
+behind Getting here's charcoal wave. The title and description seat together
+in a 100vh screen, then hold for another 80vh of scroll effort before releasing.
+The existing photograph has full motion for this section: `landscapeApproach`
+eases scale from 1.035 to 1 on entry, finishing before the hold; `landscapeGyroscope` follows
+the mouse with ±1.2% translation and ±1° tilt, smoothing over 0.8s and returning
+to centre on exit. Separate layers prevent pointer and scroll transforms from
+competing. The copy and its legibility scrim stay still. CSS grid bounds the
+background to these two sections; the itinerary follows in ordinary flow.
+Touch gets scroll only. Reduced motion and no JavaScript keep a full-height
+static photograph behind the same copy. Short viewports and longer CMS copy
+disable the reading hold when the content cannot fit, keeping every word reachable.
+This supersedes the former frame-only `bleed` treatment for this slot.
+Shared module: `src/lib/motion/wonder-landscape.ts`; shared markup helpers:
+`LandscapeBackdrop` and `LandscapeScreen`; styling: `Landscape.module.css`.
 
 ### 06 - Itinerary: automatic stops in the restored accordion
 
@@ -210,9 +219,12 @@ on user report**: drawn as a translucent evergreen band rising up the foot of
 the plate, what it actually read as was a green film over the sunset. A wipe
 belongs between two grounds, and there is no join here for it to happen at.
 
-What is left is the landscape treatment — the plate bleeds past its edge, the
-scrim ramps, the copy arrives. **The page therefore has no `ground` sweep at
-all.** That is the honest state: the row is not used on Wonder.
+Latest user direction, 9 September 2026: reuse §05's exact landscape module,
+markup helpers and animation. The sunset fills the viewport, the heading and
+list hold in the same reading position for 80vh of additional scroll, and mouse
+movement adds the same tilt and drift. The following Hosts wave enters only
+after that hold releases. Reduced motion, touch and tall-content fallbacks
+match §05. **The page has no `ground` sweep.**
 
 ### 10 · Your hosts — the pointer answers
 
