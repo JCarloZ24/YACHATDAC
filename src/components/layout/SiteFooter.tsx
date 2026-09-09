@@ -188,7 +188,15 @@ export function SiteFooter() {
             className="mx-auto mt-12 w-full max-w-3xl sm:mt-20"
           />
 
-          <div className="mt-14 grid gap-10 sm:mt-24 sm:gap-12 md:grid-cols-3 lg:grid-cols-[1.3fr_1fr_1fr_1fr_0.8fr]">
+          {/* data-footer-links is a motion hook and nothing else — no page
+              animates it by default. Truth uses it to fade the whole block up
+              ONCE, together, with no stagger: the descent has finished
+              talking, and staggering the links there would restart a rhythm
+              the page has just put down. Inert everywhere else. */}
+          <div
+            data-footer-links
+            className="mt-14 grid gap-10 sm:mt-24 sm:gap-12 md:grid-cols-3 lg:grid-cols-[1.3fr_1fr_1fr_1fr_0.8fr]"
+          >
             {/* The stacked lockup — the artist's full mark (motifs, wordmark
                 and legal name in one image), exported whole from the hi-fi
                 (node 2146:3766) per build documentation §5. White type on

@@ -14,9 +14,32 @@
  * it does (Ivy, 2026-08-30).
  */
 
-import type { MediaSlot } from "@/content/lofi/media";
+import type { MediaAlternate, MediaSlot } from "@/content/lofi/media";
 
 const TRUTH = "/media/library/truth";
+
+/**
+ * ⚠ SWAP-IN OPTIONS — RECORDED AS MISSING, NOT AS NONE.
+ *
+ * The Truth motion brief states that six sections carry four documented image
+ * alternates each, "all designed for the same slot dimensions and motion
+ * behaviors, just different editorial tone". That list is not in this repo:
+ * nothing in `docs/` mentions alternates, and every one of the 34 files in
+ * `public/media/library/truth/` is already referenced below, so there are no
+ * spare frames on disk either.
+ *
+ * Rather than invent filenames, the six slots that fit the description carry
+ * an explicit empty `alternates` array. They are the page's six FULL-BLEED
+ * frames — the hero, the two entry plates, the Country now break, the
+ * escarpment and the closing shot — which are the only slots that share one
+ * set of dimensions and one motion behaviour, which is what the brief says
+ * the alternates were designed against.
+ *
+ * ⚠ That identification is INFERRED. If the real six turn out to be different
+ * sections, move the arrays; do not quietly fill these in to match. Raised in
+ * docs/open-questions.md.
+ */
+const AWAITING_ALTERNATES: readonly MediaAlternate[] = [];
 
 /**
  * The hero — Country at dusk, trees against the last light. Batch delivered
@@ -29,6 +52,7 @@ export const truthHeroSlot: MediaSlot = {
   expects: "Country at dusk — the hi-fi hero frame",
   src: `${TRUTH}/truth-hero.webp`,
   tone: "charcoal",
+  alternates: AWAITING_ALTERNATES,
 };
 
 /**
@@ -45,6 +69,7 @@ export const truthTodayPlateSlot: MediaSlot = {
     "A flame line working through timber, light shafts in the smoke — fire-stick farming",
   src: `${TRUTH}/truth-theworkgoingon.webp`,
   tone: "burnt",
+  alternates: AWAITING_ALTERNATES,
 };
 
 /**
@@ -59,6 +84,7 @@ export const truthDeedPlateSlot: MediaSlot = {
   expects: "Standing before the escarpment at golden hour — the deed of grant",
   src: `${TRUTH}/truth-boughtback.webp`,
   tone: "roasted",
+  alternates: AWAITING_ALTERNATES,
 };
 
 /** Media strips keyed by TruthEntry id. Order within a strip is layout order. */
@@ -322,6 +348,7 @@ export const truthBreakMedia: Record<"countryNow" | "duskCountry", MediaSlot> = 
     expects: "Sunset over the plains from the outcrop — the 08 break's shot B. No caption.",
     src: `${TRUTH}/truth-break1.webp`,
     tone: "roasted",
+    alternates: AWAITING_ALTERNATES,
   },
   duskCountry: {
     id: "break-dusk",
@@ -348,6 +375,7 @@ export const truthDissolveMedia: { outgoing: MediaSlot; incoming: MediaSlot } = 
     expects: "Bare tree against a grey dusk sky — shot A, outgoing",
     src: `${TRUTH}/truth-thecount.webp`,
     tone: "charcoal",
+    alternates: AWAITING_ALTERNATES,
   },
   incoming: {
     id: "dissolve-white-sand",
@@ -372,6 +400,7 @@ export const truthWattanuriMedia: { outgoing: MediaSlot; incoming: MediaSlot } =
     expects: "Dusk plains under a clouded sky — shot A, outgoing",
     src: `${TRUTH}/truth-wattanurisisters.webp`,
     tone: "charcoal",
+    alternates: AWAITING_ALTERNATES,
   },
   incoming: {
     id: "wattanuri-opening-shot",

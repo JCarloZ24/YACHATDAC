@@ -168,8 +168,17 @@ export function createTruthDescent(
       });
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        wireHeadings(root);
-        wireArrivals(root);
+        // Headings and arrivals belong to whoever owns the scroll clock. On a
+        // deck the sections are pinned, so a `top 88%` span is consumed while
+        // the section is still hidden behind the slide covering it — the
+        // reveal finishes before anyone sees it. truth-scenes.ts re-authors
+        // both against each slide's reading span instead (SCR-02). Bands and
+        // the chronology rail are document-scroll facts either way, so they
+        // stay here.
+        if (!root.dataset.deckActive) {
+          wireHeadings(root);
+          wireArrivals(root);
+        }
         wireBands(root);
         wireRail(root, false);
       });

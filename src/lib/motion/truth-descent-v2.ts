@@ -104,16 +104,21 @@ export function createTruthDescentV2(): MotionModule {
 
         }
 
-        // The hero is the deck's establishing still. Its photograph, copy
-        // and wave do not move during the read runway; only a committed gate
-        // lets the next opaque beat cover it. The site navbar is independent
-        // chrome and may still clear during that runway.
+        // THE FLOW PATH ONLY — everything from here to the Y2 words below is
+        // authored against the viewport, which is correct exactly when nothing
+        // is pinned: touch, under 1024px, or no Lenis. On a deck the same
+        // spans are consumed behind the covering slide, so truth-scenes.ts
+        // rebuilds them against each slide's reading clock instead. The two
+        // must not both run, or every plane gets two competing scrubs.
+        const onDeck = Boolean(root?.dataset.deckActive);
 
         // M1 / being drawn in. Every ordinary movable image plane pushes
         // 1.00→1.06 over its frame's viewport travel. The marker sits on the
         // frame or group; `pushIn` filters any plane beneath frame-grade media.
         gsap.utils
-          .toArray<HTMLElement>("[data-v2-plate], [data-v2-camera]")
+          .toArray<HTMLElement>(
+            onDeck ? [] : "[data-v2-plate], [data-v2-camera]",
+          )
           .forEach((frame) => {
             if (frame.closest("[data-v2-static]")) return;
             const planes = frame.querySelectorAll<HTMLElement>("[data-media-plane]");
@@ -138,7 +143,9 @@ export function createTruthDescentV2(): MotionModule {
         // break's own travel, revealing shot B (which carries the default
         // push-in). Opacity only. The attribute is absent while B is
         // undelivered, so A simply holds.
-        gsap.utils.toArray<HTMLElement>("[data-v2-dissolve]").forEach((el) => {
+        gsap.utils
+          .toArray<HTMLElement>(onDeck ? [] : "[data-v2-dissolve]")
+          .forEach((el) => {
           gsap.fromTo(
             el,
             { opacity: 1 },
@@ -159,7 +166,9 @@ export function createTruthDescentV2(): MotionModule {
         // Y2 — testimony beside the portrait. Per-word opacity ramp from the
         // 0.28 dim state, no movement. The dim state is applied here, not in
         // markup, so reduced motion and no-JS read the words at full.
-        gsap.utils.toArray<HTMLElement>("[data-y2]").forEach((block) => {
+        gsap.utils
+          .toArray<HTMLElement>(onDeck ? [] : "[data-y2]")
+          .forEach((block) => {
           const words = block.querySelectorAll<HTMLElement>("[data-y2-word]");
           if (!words.length) return;
           gsap.fromTo(

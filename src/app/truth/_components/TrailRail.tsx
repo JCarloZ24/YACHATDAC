@@ -12,7 +12,9 @@ import { loreMarker } from "@/content/truth";
  *   · the LEFT dotted strand — LORE · continuous: the record itself, static
  *     ochre (#CB7722) the whole page, never breaks, not even at the count;
  *   · the RIGHT dotted strand — RECORD: the scroll indicator. Faint dots
- *     ahead (off-white, 0.45), the lore ochre (#CB7722) filling through them to the
+ *     ahead (charcoal, 0.25 — they were off-white at 0.45 until the page went
+ *     to one egg-white ground, where off-white on off-white drew nothing),
+ *     the lore ochre (#CB7722) filling through them to the
  *     reading line as the reader travels ([data-v2-steps-fill], clipped
  *     open by the motion module, scroll-derived, both directions). It goes
  *     under at the escarpment break and resumes at the 1840s.
@@ -154,14 +156,24 @@ export function TruthTrailRail() {
       // count band — running through the wave and down to the 1840s
       // pointer, so the line connects the count to the 1840s.
       const breakEl = document.getElementById("break-escarpment");
-      // The wave is an <svg>: no offset geometry, so measure it by rect. Its
-      // box is charcoal above the crest, and at the rail's x the crest sits
-      // near the box's foot — so the run starts at the foot, where the navy
-      // is solid, and nothing strays onto the charcoal above.
+      // The restart is the FOOT of the count's hand-off wave — the strand
+      // surfaces where the ground turns back to the page's own colour, and
+      // runs from there down to the 1840s pointer.
+      //
+      // Measured through layoutTop (offsetTop), not getBoundingClientRect.
+      // The wave lives on a slide the deck pins and a track the deck
+      // translates, so a viewport rect reports wherever the section happens
+      // to be sitting at the instant the observer fires — and this measure
+      // re-runs on a ResizeObserver, which can fire mid-scroll. offsetTop is
+      // immune to both, so the gap stops depending on when it was taken.
+      //
+      // The wave is an <svg> with no offsetParent chain of its own, so the
+      // anchor is its parent section plus the wave's own height: the wave is
+      // seated leading, overhanging the join by all but a pixel of itself.
       const wave = document.querySelector<SVGElement>("[data-count-wave]");
-      const rootRectTop = root.getBoundingClientRect().top;
-      const resumeTop = wave
-        ? wave.getBoundingClientRect().bottom - rootRectTop
+      const waveHost = wave?.parentElement ?? null;
+      const resumeTop = waveHost
+        ? layoutTop(waveHost, root) + (wave?.getBoundingClientRect().height ?? 0)
         : (() => {
             const band = document.querySelector<HTMLElement>(
               '[data-descent-band="before-record"]',
@@ -276,7 +288,7 @@ export function TruthTrailRail() {
               height={height}
               viewBox={`0 0 ${RAIL_W} ${height}`}
               fill="none"
-              className="absolute left-0 top-0 text-canvas opacity-45"
+              className="absolute left-0 top-0 text-charcoal opacity-25"
               style={aheadFade(from, to)}
             >
               <path
