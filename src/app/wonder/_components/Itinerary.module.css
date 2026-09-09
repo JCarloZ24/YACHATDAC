@@ -1,0 +1,37 @@
+/* D5/F7, 9 September 2026: the restored accordion becomes a held reading
+   screen on request. The tighter vertical spacing lets the longest current
+   stop fit at 1440 x 900 while retaining the 1040px grid, type and 500 x 400
+   picture. The unenhanced Figma spacing remains in Sections.tsx. */
+.itinerary[data-itinerary-mode="scroll"] {
+  height: calc(var(--itinerary-span) + 100svh + 164px);
+  padding-top: 0;
+  padding-bottom: 164px;
+  overflow-anchor: none;
+}
+
+.itinerary[data-itinerary-mode="scroll"] [data-itinerary-screen] {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  flex-shrink: 0;
+  padding-top: clamp(32px, calc(100svh - 868px), 112px);
+  /* Keep SplitText's transformed line layers on the sticky screen's layer;
+     Chrome otherwise culls their paint after their original scroll position. */
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
+.itinerary[data-itinerary-mode="scroll"] [data-itinerary-screen] > div {
+  height: 100%;
+  gap: 24px;
+}
+
+.itinerary[data-itinerary-mode="scroll"] [data-stage-viewport] {
+  min-height: 0;
+  flex: 1;
+  overflow: clip;
+}
+
+.itinerary[data-itinerary-mode="scroll"] [data-stage] {
+  padding-block: 24px;
+}

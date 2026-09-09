@@ -1,6 +1,6 @@
 # The motion grammar
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
 
 *Decided 30 August 2026. The second artefact, and the one the code answers to.*
 
@@ -27,7 +27,7 @@ grow, because several effects can serve one role at different volumes. See Varia
 | **arriving quietly** | 16px and a fade, once, no re-trigger. The baseline for a quiet screen. | `country` · 0.55s · 0.06 stagger | X4 | P5 | `arrive` |
 | **what radiates from a source** | Elements arrive in order of distance from a chosen origin, not DOM order, with seeded hand jitter. | `country` · 0.55s · 0.045/unit | L1 + L3 | P4 | `emanate` |
 | **what radiates**, layout cut | Three arrival tiers — anchor, mid, detail — each with its own micro-stagger. | `country` · 0.55s · at 0 / .25 / .45 | L2 | P4 | `triad` |
-| **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. | `machine`, scrubbed; Record: 360vh | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal` |
+| **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. Wonder's itinerary opens a native disclosure: its clip reveals held media, the chevron turns, and following rows settle into their measured positions. | `machine`, scrubbed; Record: 360vh; `disclose`: `country` · 0.55s, chevron `quiet` · 0.32s | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal`, `disclose` |
 | **being drawn in** | A slow scrubbed push toward the subject. Transform-origin points at what matters. | `machine`, scrubbed | M1 | P2 | `pushIn` |
 | **a change of ground** | The new ground sweeps over the old as a scaleY wipe. | `machine`, scrubbed | X7 lineage | P7 | `ground` |
 | **time handing over** | Two stacked plates cross-dissolve. One whole frame hands to another. | `country` · 0.82s | A5 | **P9** | `dissolve` |
@@ -64,13 +64,37 @@ diluting — the brief caps the table at six to eight roles and it is right to.
 |---|---|---|
 | the world opening | `frameOpen` (in its frame) | `breakOut` (frame gone), `aperture` (through a letterform), `escape` (a grid cell becomes the screen, and comes back), `surface` (The Record's pre-rendered screen opens from its cell), `reflow` (a filtered collection rearranges) |
 | being drawn in | `pushIn` (one plane); shared wheel inertia (`SCR-09`, `createSmoothScroll`) | `plateParallax` (layers inside one frame), `bleed` (past the edge) |
-| a change of ground | `ground` (one sweep) | `groundRamp` (across four screens), `waveHandoff`, `overlap`, `stickyIndex` |
+| a change of ground | `ground` (one sweep) | `groundRamp` (across four screens on Living Work §03), `waveHandoff`, `overlap`, `stickyIndex` |
 | what endures | `settle` (lines) | `display` (chars), `ghostType` (behind everything), `knockout` (as a window) |
 | what radiates | `arrive` | `emanate`, `triad`, `scatterResolve`, `mosaic`, `handoff` |
-| the guide leading the eye | `routeDraw` (a drawn map surfaces out of short segments that start at seeded-random points and join until the outline stands — the D4 contour-map read — scrubbed across a sticky span; the line is the guide, there is no traveller. On §02 the property is then painted in by one up-and-down brush stroke and the pin arrives and floats — the float is the one time-based movement, a slow bob on transform — Wonder §02 and §04, `src/lib/motion/route-map.ts`, 8 Sep 2026) | `guide` |
+| the guide leading the eye | `routeDraw` (a drawn map surfaces out of short segments that start at seeded-random points and join until the whole shape stands — the D4 contour-map read — scrubbed across a sticky span; the line is the guide, there is no traveller. **Nothing synthetic is drawn:** these maps are filled ribbons, not stroked lines, so the segments are white strokes inside a MASK and what appears is the artist's own shape at the artist's own weight. Stroking a copy over the top was the first cut and it drew a doubled, bloated line that then had to fade out and hand over — the thickening-and-thinning the user reported on 9 Sep 2026. Wonder §02 and §04, `src/lib/motion/route-map.ts`), `brushFill` (a shape is coloured in: ONE continuous stroke entering at the top left and working down and up across it, never lifting, with the gap to the next stripe, the ends and the middle of every stripe all seeded-jittered so nothing in it is straight or evenly spaced — "imperfect, like a child colouring the area", 9 Sep 2026. Wonder §02) | `guide` |
 
 `scrimRamp` belongs to no row on its own: X5 is a legibility requirement that travels with
 whatever media effect it accompanies, and it is non-negotiable wherever copy sits on a picture.
+
+**Wonder itinerary restoration — 9 September 2026, latest user direction.**
+Figma `2033:5889` replaces the six-screen film with the canvas accordion, first
+stop open. `arrive` introduces the heading and row furniture once. `disclose`
+reveals or closes the panel by clip, fades its copy, turns the supplied chevron,
+and translates following rows from their old positions after one layout change.
+The photograph never scales or drifts. No pin, snap, timed opening or colour
+ramp remains in this section. Reduced motion and no JavaScript use the same
+native disclosures with immediate state changes. Desktop reference: 1440 × 900.
+
+**Later scroll direction — 9 September 2026, supersedes the manual-only cut.**
+The restored accordion now holds in a viewport at desktop sizes that can fit
+its longest stop. Six 100vh reading spans advance the open stop automatically,
+forward or backward. `itineraryStep` is a `disclose` variant in **the world
+opening** row: one native layout change, then measured row translations so the
+active heading always lands at the same viewport position. `stageArrival`
+composes **what endures** (`settle`, whole lines), **arriving quietly** (`arrive`,
+copy blocks) and **the world opening** (`frameOpen`, held photo clip). These are
+the treatments reviewed in the live effects lab. No photograph scales or warps.
+The heading enters on scroll, and each stop's text and picture enter when that
+stop is reached. No wheel lock or velocity snap. Short viewports, mobile,
+reduced motion and no JavaScript keep the ordinary document; motion-capable
+mobile disclosures still reveal text and pictures. The held layout measures
+CMS copy before enabling so no long stop is clipped.
 
 `escape` is `handoff` made reversible. `handoff` reparents the element, which is right for a
 one-way continuity cut and wrong for anything a reader can scroll back out of; `escape` flies a

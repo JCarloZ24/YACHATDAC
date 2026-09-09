@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+// Aliased: the play effect below has its own local `start`.
+import { register, start as startMotion } from "@/lib/motion-controller";
 
 /**
  * The hero's video fill (Header / 5, 2033:5352) with the one control the
@@ -28,7 +30,31 @@ const FADE_MS = 600;
 
 export type HeroTiers = { small: string; medium: string; large: string };
 
+type Connection = {
+  saveData?: boolean;
+  effectiveType?: string;
+  downlink?: number;
+};
+
 /**
+ * Is this a link we should not spend 6 MB of somebody's data plan on
+ * uninvited? Data saver on, or a 2g/3g effective type, or a measured
+ * downlink under 1.5 Mb/s (Network Information API — Chromium and Android
+ * only; Safari and Firefox always answer no and are judged on screen alone).
+ */
+function slowLink(): boolean {
+  const connection = (navigator as Navigator & { connection?: Connection })
+    .connection;
+  return (
+    connection?.saveData === true ||
+    /(^|-)(2g|3g)$/.test(connection?.effectiveType ?? "") ||
+    (connection?.downlink !== undefined && connection.downlink < 1.5)
+  );
+}
+
+/**
+ * Also the choice made on demand when a held film is finally asked for.
+ *
  * Which encode to fetch, decided once before the element has a source, so
  * the browser never starts one download and abandons it for another.
  *
@@ -41,26 +67,42 @@ export type HeroTiers = { small: string; medium: string; large: string };
  * Browsers without the API (Safari, Firefox) are judged on screen alone.
  * The choice is not revisited mid-play: a tier switch would restart the
  * film, which is worse than a soft frame.
+ *
+ * ⚠ WHETHER to fetch at all is decided by the caller, not here — this only
+ * answers WHICH. A slow link still gets `small` because by the time this is
+ * reached on such a link, the visitor has asked for the film.
  */
 function pickTier(tiers: HeroTiers): string {
-  type Connection = {
-    saveData?: boolean;
-    effectiveType?: string;
-    downlink?: number;
-  };
   const connection = (navigator as Navigator & { connection?: Connection })
     .connection;
-  const slow =
-    connection?.saveData === true ||
-    /(^|-)(2g|3g)$/.test(connection?.effectiveType ?? "") ||
-    (connection?.downlink !== undefined && connection.downlink < 1.5);
-  if (slow) return tiers.small;
+  if (slowLink()) return tiers.small;
   const px = window.innerWidth * Math.min(window.devicePixelRatio || 1, 2);
   if (px < 1000) return tiers.small;
   const fast = connection?.downlink === undefined || connection.downlink >= 5;
   if (px >= 1800 && fast) return tiers.large;
   return tiers.medium;
 }
+
+/**
+ * NOTHING IS FETCHED WHERE NOTHING WILL PLAY (9 Sep 2026, mobile pass). A
+ * source is attached only where the film is actually going to autoplay. On
+ * a data-saver or 2g/3g link, and under reduced motion, the element is
+ * marked held and left sourceless: with `preload="auto"` an attached source
+ * is a committed download, and even the phone tier is 6.3 MB against R11's
+ * 2.5 MB above-the-fold budget. Under reduced motion that was 6.3 MB for a
+ * film that never plays at all. Held, the poster stands as the hero still
+ * and the corner button fetches and plays on request, which is the state
+ * reduced motion was always meant to be in.
+ *
+ * THERE IS NO PARSE-TIME SCRIPT ANY MORE. There was one, briefly: an inline
+ * `<script>` that attached the source during HTML parse, because the effect
+ * below could not run until hydration and hydration was stuck behind the
+ * route map's 6.5s (desktop) / 12.5s (phone) of blocked main thread. With
+ * that block fixed the script bought nothing measurable — the request goes
+ * out at ~400ms either way — and it cost a console error on every
+ * client-side navigation back to this page, since React renders a `<script>`
+ * in the component tree rather than executing it.
+ */
 
 export function HeroVideo({
   tiers,
@@ -78,10 +120,17 @@ export function HeroVideo({
   const ref = useRef<HTMLVideoElement>(null);
   const [sound, setSound] = useState(false);
   const [reduced, setReduced] = useState(false);
+  /** Held = no source attached, poster standing, button will fetch on click. */
+  const [held, setHeld] = useState(false);
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduced(motion.matches);
+    // Both flags are read in one place so the button's label and the DOM's
+    // own `data-held` record can never disagree.
+    const sync = () => {
+      setReduced(motion.matches);
+      setHeld(motion.matches || slowLink());
+    };
     sync();
     motion.addEventListener("change", sync);
     return () => motion.removeEventListener("change", sync);
@@ -91,11 +140,21 @@ export function HeroVideo({
   // (screen and connection), and an element with no src fetches nothing —
   // so the poster stands in until the chosen encode is attached, and the
   // browser never starts one download only to abandon it for another.
+  //
+  // It is attached ONLY where the film will autoplay. Held — reduced motion,
+  // or a link too slow to spend 6.3 MB uninvited — the element stays
+  // sourceless and the poster is the hero; `toggle` fetches on request.
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
+    // `held` state drives the button's label; the attribute is the DOM's
+    // own record of the same call.
+    if (reduced || slowLink()) {
+      video.setAttribute("data-held", "");
+      return;
+    }
+    video.removeAttribute("data-held");
     if (!video.getAttribute("src")) video.src = pickTier(tiers);
-    if (reduced) return;
     const start = () => {
       if (video.currentTime < silentFrom) video.currentTime = silentFrom;
       void video.play().catch(() => {
@@ -107,6 +166,85 @@ export function HeroVideo({
     return () => video.removeEventListener("loadedmetadata", start);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- tiers are static per page
   }, [reduced, silentFrom]);
+
+  /**
+   * THE FILM STOPS ONCE IT IS COVERED (9 Sep 2026, mobile pass).
+   *
+   * The hero is `position: sticky` inside a wrapper that spans every section
+   * (page.tsx), so it never scrolls away — it is only painted over. Left
+   * alone the browser therefore decodes a looping film behind the whole
+   * ~12,000px page: measured at 375 the hero was still pinned at 0–812 with
+   * the video running at scrollY 6000, five thousand pixels after the last
+   * frame of it was visible. On a phone that is battery and heat spent on a
+   * picture nobody can see.
+   *
+   * Playback economy, not narrative motion, so it cites no grammar row and
+   * writes nothing per frame — a passive scroll listener comparing one
+   * number against a cached threshold. It registers as a module so a route
+   * change tears it down with everything else.
+   *
+   * THE GRACE. The facts section opens with a transparent band — its own top
+   * padding plus the wave crest — through which the film is still visible
+   * after the hero's foot has passed the top of the screen. It is measured
+   * off that section rather than guessed, so the two breakpoints' different
+   * padding (40 / 104) and wave heights need no second constant here.
+   *
+   * SOUND IS THE EXCEPTION. A visitor who turned the film on is listening to
+   * it; it keeps playing wherever they scroll.
+   */
+  useEffect(() => {
+    const video = ref.current;
+    // Held: nothing is playing to pause. Sound on: they are listening to it.
+    if (!video || reduced || sound || held) return;
+    const hero = video.closest("header");
+    if (!hero) return;
+
+    let threshold = 0;
+    // Kept off the scroll path: reading layout on every scroll event is the
+    // one thing that would make this cost more than it saves.
+    const measure = () => {
+      const facts = hero.nextElementSibling;
+      const band =
+        facts instanceof HTMLElement
+          ? parseFloat(getComputedStyle(facts).paddingTop) +
+            (facts.querySelector("svg")?.getBoundingClientRect().height ?? 0)
+          : 240;
+      threshold = hero.offsetHeight + band;
+    };
+
+    let covered = false;
+    const sync = () => {
+      const next = window.scrollY > threshold;
+      if (next === covered) return;
+      covered = next;
+      if (covered) video.pause();
+      else void video.play().catch(() => {});
+    };
+
+    // A resize can move the threshold past where the page already sits — an
+    // orientation flip is the common one — so it re-reads and re-decides.
+    const onResize = () => {
+      measure();
+      sync();
+    };
+
+    // Named `guard`, not `module`: Next forbids assigning to `module` even
+    // as a local (@next/next/no-assign-module-variable).
+    const guard = {
+      init() {
+        onResize();
+        window.addEventListener("scroll", sync, { passive: true });
+        window.addEventListener("resize", onResize);
+      },
+      destroy() {
+        window.removeEventListener("scroll", sync);
+        window.removeEventListener("resize", onResize);
+      },
+    };
+    const unregister = register(guard);
+    startMotion();
+    return unregister;
+  }, [reduced, sound, held]);
 
   // Both directions ramp the level over ~600ms: sound on rises from silence
   // so the opening does not peak under the visitor's finger, sound off falls
@@ -146,6 +284,14 @@ export function HeroVideo({
         video.volume = 1;
       });
       return;
+    }
+    // Held until now — reduced motion, or a link we would not spend the
+    // film's weight on uninvited. The click IS the invitation, so this is
+    // where the encode is finally fetched.
+    if (!video.getAttribute("src")) {
+      video.src = pickTier(tiers);
+      video.removeAttribute("data-held");
+      setHeld(false);
     }
     video.volume = 0;
     video.muted = false;
@@ -190,9 +336,13 @@ export function HeroVideo({
         muted
         playsInline
         loop
-        preload="metadata"
+        /* `auto`, not `metadata`: the gate that matters is "can it play", and
+           `metadata` asks the browser to stop at the header. Weight is
+           already controlled by the tier, not by holding the fetch back. */
+        preload="auto"
         aria-label={label}
         onTimeUpdate={onTimeUpdate}
+        data-tiers={JSON.stringify(tiers)}
       />
       <button
         type="button"
@@ -206,7 +356,7 @@ export function HeroVideo({
       >
         {/* The label names the CURRENT state, not the action. */}
         <SpeakerIcon on={sound} />
-        {sound ? "Sound on" : reduced ? "Play the film" : "Sound off"}
+        {sound ? "Sound on" : held ? "Play the film" : "Sound off"}
       </button>
     </>
   );

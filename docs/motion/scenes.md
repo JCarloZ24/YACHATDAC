@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 8 September 2026*
+*Last updated: 9 September 2026*
 
 *Decided 30 August 2026. The third artefact — pacing, on paper, before it is pacing at 60fps.*
 
@@ -700,6 +700,102 @@ cookies actually set and GA4 is not configured · `R1` the Acknowledgement wordi
 ⚠ **D4 is Final on the label, and the label still promises the wrong artefact.** *Cookie
 Settings* implies a consent preferences dialog with toggles; what is drawn is a policy page.
 Those are two different things and both may be wanted. Flagged, not resolved.
+
+---
+
+## Wonder — verb *arrives* — ~2340vh, 12 sections
+
+Built 9 September 2026 to the plan in [`wonder-plan.md`](wonder-plan.md), on user direction.
+The page's markup is `01 · Wonder · HI-FI · Desktop` (Figma `2033:4367`) and the motion is
+`src/lib/motion/wonder.ts`, mounted by `app/wonder/_components/Motion.tsx`.
+
+**The verb.** The page closes a distance. A film shot from the air, then where it sits on a
+map, then the road in, then the ground at Turraburra, then the days themselves. Each screen is
+one step nearer. Free of *opens · descends · accumulates · surfaces · answers · gathers ·
+hosts*.
+
+**No 3D.** An earlier draft of the plan put the terrain dolly behind §04. Withdrawn by the user
+on 9 September 2026: Wonder is a GSAP page, and the two drawn maps it already has are what the
+page deepens. There is no WebGL on this route.
+
+| § | Section | vh | Ground | Loud | What happens |
+|---|---|---|---|---|---|
+| 01 | Hero — the film | 100 | full bleed, sticky | **media** | the H1 settles; the scrim ramps as the wave rides up over the film |
+| 02 | The facts — the Queensland map | 320 | canvas, sticky span | **media** | `routeDraw` → `brushFill` → `inkFlare`; copy arrives in three tiers |
+| 03 | Highlights | 100 | white | **media** | `emanate` across the rail, each card's clip opening from its left edge |
+| 04 | Getting here — the route map | 300 | charcoal, sticky span | **media** | the same draw and flare; the copy arrives in stop order |
+| 05 | Turraburra | 140 | full bleed | **media** | `bleed` past the plate's own edge, the photograph held inside it |
+| 06 | What a stay looks like | ~720 | canvas, sticky reading screen | **transition** | six automatic stops at one viewport position; line, copy and picture entrances from the effects lab |
+| 07 | Before you come | 100 | evergreen | **none** | `hold`, cells arrive, one beat on the call to action |
+| 08 | Where you sleep | 120 | canvas | **media** | two frames open around held photographs; no overscale or parallax |
+| 09 | What it is like out here | 140 | full bleed | **media** | the plate bleeds past its edge; no sweep — see below |
+| 10 | Your hosts | 100 | canvas | **none** | the copy arrives; the pointer names three of the eight, and the faces hold |
+| 11 | From Country | 100 | white | **media** | the card rail again, quieter |
+| 12 | Come and see it | 100 | roasted | **none** | the quietest screen, and the second conversion point |
+
+**Reads as:** media · media · media · media · media · transition · none · media · none · media
+· none. Five consecutive `media` screens at §01–§05 break the ledger's own rule that no channel
+runs three deep, and it is a deliberate exception rather than an oversight: Wonder's argument is
+photographic from the film to the landing, and the intensities under it are not flat — the two
+maps are the loud pair and §03 sits between them at a much lower volume. **Flagged for Ivy.**
+The alternative is to make §03 or §05 quiet, and both were judged worse.
+
+### The itinerary opens each stop at one viewport position
+
+Latest direction, 9 September 2026, extends the restored Figma `2033:5889`
+accordion with automatic opening. At 1440 x 900, the same native document
+holds on canvas while six 100vh reading spans select the active stop. The
+heading position stays constant; reverse scrolling returns through the stops.
+`itineraryStep` translates measured rows, and `stageArrival` combines `settle`,
+`arrive` and `frameOpen` after reviewing the live effects lab. Photos hold
+inside their frames. There is no full-screen image duplicate or colour ramp.
+
+The module measures the longest stop before enabling the held layout. Mobile,
+short windows and content that cannot fit use the normal accordion. Reduced
+motion and no JavaScript use native instant toggles. See `wonder-plan.md` for
+the viewport-fit spacing amendment and keyboard behaviour.
+
+### The `ground` row is not used on this page
+
+§09 was built with the sweep and it came out the same day: a translucent
+evergreen band rising up a sunset read as a green film over the picture rather
+than as one ground handing to another. A wipe belongs at a join, and §09 is not
+one.
+
+### The two things the pointer must never do here
+
+§05, §09 and §11 hold documentary photographs of Country and of a cultural site, and §10 is a
+group portrait. Every one carries `data-motion="frame"`, so `bleed` counter-scales the picture,
+`plateParallax` refuses to touch it, and the hosts' interaction moves a label and a dim and
+nothing else. Portraits hold still; the world moves around them.
+
+### Both maps were cropped by their own layout, and both are fixed
+
+§02's artwork is 1128.88 × 783 — Queensland right, a pale Australia reaching
+away to its left — and the hi-fi places that whole group at (205.33, 83),
+running behind the copy. It was being rendered into the right-hand column's
+600 × 640 image slot on top of the phone crop the supplied file carries in its
+viewBox, which left the state standing alone. The desktop now draws the whole
+artwork at the frame's proportions and the phone's window is applied in CSS, so
+one SVG serves both breakpoints and the file is untouched.
+
+### The 1920 crop, fixed
+
+§04's map was placed at the frame's own 1440 pixel offsets inside a 1973-wide window. At exactly
+1440 that window's edge fell on the viewport edge; at any wider width it cut the map off
+mid-road. The window is gone, the artwork sits at its own 2278 × 1580, and the viewport does the
+cropping. Stop icons moved from frame pixels to percentages of the artwork in the same pass.
+
+### What the plan asked for and this does not do
+
+- **§04 does not draw in stages.** The plan wanted the state outline, then the roads, then the
+  property, then the pins. Each cut of that map is tagged as ONE `data-route` path, so staging
+  it means re-tagging Marc's export rather than changing motion code. Not attempted here.
+- **The stop icons are not buttons.** The lab's waypoints are focusable because they open
+  panels. These four duplicate the list of stops sitting beside them, so making them tab stops
+  would add four focus stops that announce nothing new. Left as decoration, deliberately.
+- **The itinerary's dotted rules do not draw themselves.** They are `<img>` SVGs, not inline
+  paths. The exported rules arrive with the row furniture; panels animate on request.
 
 ---
 

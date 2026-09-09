@@ -16,7 +16,17 @@
   --color-burnt: #d97804; /* Burnt Ochre    — Country (KIT · Truth ladder) */
   --color-turquoise: #32b0ae; /* Turquoise Blue — Water & Sky */
   --color-eucalyptus: #3f6b1f; /* Olive Grove    — Vegetation (KIT · Truth ladder) */
-  --color-oxide: #c23d31; /* Rust Red       — The Land (KIT · Truth ladder) */
+  /* Rust Red — The Land (KIT · Truth ladder).
+     Repointed 9 Sep 2026 (August, on the Wonder CTA) from the brand kit's
+     #c23d31 to the V2 variable `Colour/Oxide Red`. Same move already made
+     for --color-gold: where the V2 variable collection and the brand kit
+     disagree, the file the pages are drawn in wins. Colours live once, so
+     this is site-wide, not a Wonder-local hex — the "Register your interest"
+     blob is simply where the difference was noticed.
+     ⚠ --color-burnt, --color-eucalyptus and --color-canvas still carry the
+     brand kit's values against V2's #CB7722 / #5E7930 / #FCF7F0. Raised,
+     not reconciled: they are a palette decision, not a CTA fix. */
+  --color-oxide: #af231c;
   --color-roasted: #4e3524; /* Roasted Brown  — Earth */
 
   /* Burnt Ochre, deepened, FOR LIGHT GROUNDS ONLY.
