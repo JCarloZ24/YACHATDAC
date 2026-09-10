@@ -91,6 +91,17 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
      * paused: otherwise the guard becomes the failure.
      */
     let safety: number | undefined;
+    /**
+     * Is the opening film still covering the page? Checked both here and in
+     * begin(), so the two cannot drift apart. `hidden` is the loader's own
+     * completion signal; the computed-display test catches the session gate,
+     * which hides the cover in CSS before any of this runs.
+     */
+    const loaderCovering = () => {
+      const loader = document.querySelector<HTMLElement>("[data-home-loader]");
+      return Boolean(loader) && !loader!.hidden
+        && getComputedStyle(loader!).display !== "none";
+    };
     const disarmSafety = () => { window.clearTimeout(safety); safety = undefined; };
     const armSafety = () => {
       disarmSafety();
@@ -157,12 +168,34 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
       // here as a Tab keydown. Releasing on those meant coming back from
       // another tab to a page whose canvas had been torn down.
       if (event.altKey || event.ctrlKey || event.metaKey) return;
+      // ⚠ And not while the opening film is up (10 September 2026). Tab now
+      // MOVES FOCUS inside the loader — it reaches Skip, then "Walk with us" —
+      // and Escape is the loader's own way out. Both used to arrive here and
+      // tear the canvas down before the hero had drawn a frame, leaving the
+      // reader on every panel of the page at once. The loader owns both keys
+      // for as long as it is covering; this only skips the hero's own intro.
+      if (loaderCovering()) return;
       if (event.key === "Tab" || event.key === "Escape") release();
     };
     cleanup = release;
     preference.addEventListener("change", init);
     if (prefersReduced()) return;
-    armSafety();
+    // ⚠ NOT armed while the opening film is still up (10 September 2026). This
+    // guard destroys the canvas after ten seconds and `restore()` strips
+    // data-hero-canvas — the attribute invitation.css uses to hide The
+    // Invitation, the statement, the offer and the pathways. With the loader
+    // now holding for 39 seconds and then waiting for a press, the guard fired
+    // long before the intro it guards had started, and the reader pressed
+    // "Walk with us" onto every panel of the page stacked on top of each other.
+    //
+    // The file already knew this shape of failure — see onVisibility below,
+    // where ten seconds on another tab destroyed the canvas for the same
+    // reason. It measures wall clock; what it guards had not begun.
+    //
+    // No longer timeout-able, either: the cover waits indefinitely for a
+    // press, so no fixed number would be right. It is armed in begin(),
+    // the moment the intro actually starts.
+    if (!loaderCovering()) armSafety();
     root.dataset.heroMotion = "preparing";
     window.addEventListener("keydown", onKey);
 
@@ -336,11 +369,14 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
 
         const begin = () => {
           if (disposed || document.hidden) return;
-          const loader = document.querySelector<HTMLElement>("[data-home-loader]");
-          if (loader && !loader.hidden && getComputedStyle(loader).display !== "none") return;
+          if (loaderCovering()) return;
           loaderObserver?.disconnect();
           root.dataset.heroMotion = "entering";
           root.dataset.heroPhase = "black";
+          // Armed HERE, not at init: this is the first moment the intro is
+          // actually running, so it is the first moment a wall-clock guard on
+          // it means anything.
+          armSafety();
           timeline?.play(0);
         };
         const loader = document.querySelector("[data-home-loader]");
