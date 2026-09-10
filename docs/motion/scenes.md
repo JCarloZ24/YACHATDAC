@@ -255,16 +255,44 @@ Reduced motion, unavailable WebGL and JavaScript-off show the static collage
 and readable copy. This hero is 100svh with a content-safe minimum height, no
 added scroll span. `homepage-media.ts` records the source and grade per slot.
 
-**Loading intro — user direction, 8 September 2026.** Before the homepage,
-`homeLoader` reveals the supplied gold dot wave over charcoal with a quiet
-0–100 percentage and a static, cropped dot ring at the left. Transition is the
-loud channel. Total duration is one second from client initialisation, including
-the fade out; this is deliberately timed prototype progress until real homepage
-assets are wired. It runs on each homepage mount and adds no scroll span.
-Reduced motion and JavaScript-off skip it; Escape or Tab dismiss it immediately.
-A separate 1.5-second safety timer releases the cover if animation stalls.
-This explicit request supersedes the old X1 real-progress-only loader note for
-this prototype. Existing homepage sections are unchanged.
+**Loading intro — user direction, 10 September 2026.** Before the homepage,
+`homeLoaderFilm` **loops** a 39-second film of Country full-bleed under a graded
+charcoal scrim (20% through the middle, 86% at the foot), and reveals the supplied gold dot wave over it with a quiet
+0–100 percentage and a static, cropped dot ring at the left. **Media is the
+loud channel** — it was transition, and a reveal stretched from 0.78s to 39s is
+by definition quiet, so the one-loud-channel rule still holds (F7).
+
+The percentage is scrubbed from the film's own `currentTime`, never from a wall
+clock, so the last frame IS 100% by construction rather than by two numbers
+being kept in step — and across the FIRST pass only. The film loops because the
+cover waits for a press and a reader can sit here indefinitely; without it the
+40th second is a black screen behind a button. On every later loop the count
+stays at 100 and the button stays put. **The cover then holds.** It no longer dismisses itself: a
+blob button, "Walk with us", enters the homepage, and a quiet `Skip` fills the
+count to 100 without entering — that separation was explicit, and it is why
+there are two controls. **It runs ONCE PER BROWSER SESSION**, not on each mount (10 September 2026, user
+direction). Until then it replayed on a refresh and on a client-side navigation
+back to `/` — 39 seconds, every time. A `sessionStorage` key
+(`yachatdac:seen-intro`, following lofi/Preloader.tsx) is written when the
+reader presses the blob or Escape, and a parse-time inline script inside the
+cover reads it before first paint so a gated visit never flashes. Being anywhere
+else on the site also spends it: IntroGate marks it from the root layout, so a
+reader who arrives deep and clicks home is not met by a front door mid-visit.
+Only a press marks it — an abandoned or stalled opening replays, which is the
+same conditionality record-loader.ts:57 applies. `?intro=1` forces it back for
+review. Adds no scroll span.
+
+Reduced motion and JavaScript-off skip it entirely, fetching no film at all; so
+does a data-saver or 2g/3g link, where the count travels on its own in 1.2s and
+the door opens at the old prototype's pace. **Escape dismisses; Tab no longer
+does** — it used to, because there was nothing here to focus, and there are now
+two buttons it must reach. A hard cap at film duration + 15s opens the door if
+the film stalls; it does not enter for the reader.
+
+⚠ SUPERSEDES the timed one-second prototype of 8–9 September 2026, which counted
+`timeline.time() / 0.78`, exited on its own `onComplete`, and carried a 1.5-second
+`setTimeout` safety release — both exits would now cut the film off at a second
+and a half. Existing homepage sections are unchanged.
 
 Built to `00 · Home — HI-FI · Desktop · the opening` (Figma `2381:7027`, 15974px = 1775vh),
 which supersedes the lo-fi's 903vh / 7 sections. The lo-fi spans remain the copy and structure
