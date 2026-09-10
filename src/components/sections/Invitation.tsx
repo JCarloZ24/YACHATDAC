@@ -45,26 +45,55 @@ export function Invitation() {
             const media = homeInvitationMedia[index];
             return (
               <Link key={card.href} href={card.href} data-invitation-card
-                className="home-invitation-card relative flex flex-col justify-between gap-8 overflow-hidden rounded-[20px] bg-charcoal p-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas lg:p-10">
+                className="home-invitation-card relative flex flex-col overflow-hidden rounded-[20px] bg-charcoal p-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas lg:p-10">
                 <Image src={media.src} alt="" fill sizes="(min-width: 1024px) 30vw, 80vw" className="object-cover" style={{ objectPosition: media.position }} />
-                <span aria-hidden="true" className="absolute inset-0 bg-black/25" />
-                {/* Three children, not two (9 September 2026, user direction).
-                    The mark was bundled with the words, so the whole block
-                    pinned to the top and left the card's middle empty. It now
-                    holds the top corner alone, and mt-auto on the words takes
-                    the free space above them — auto margin beats
-                    justify-between for it — so they sit low over the picture,
-                    reading against the CTA. */}
-                <Image src={media.icon} alt="" width={45} height={42} className="relative h-[42px] w-[45px] shrink-0 object-contain object-left" />
-                <div className="relative mt-auto flex flex-col items-start gap-4">
-                  <div>
-                    <p className="eyebrow mb-2 text-sm leading-[1.4]">{card.eyebrow}</p>
-                    <h3 className="headline text-h3 leading-none tracking-normal">{card.title}</h3>
-                  </div>
-                  <p className="text-base font-medium leading-[1.5]">{card.description}</p>
+                {/* X5 media scrim — the palette's one sanctioned gradient, and
+                    it has to be a gradient here because the copy moved up.
+
+                    All three photographs are bright at the top and dark at the
+                    bottom (sandstone, a lit window, sky), which is why the copy
+                    used to sit low: measured on the real 395x400 cover crops,
+                    the flat black/25 this replaces left the TOP of the card at
+                    2.53 : 1 on Wonder, 1.69 on Truth and 1.41 on Living Work.
+                    Canvas text there would have been unreadable.
+
+                    Stops are solved against those crops rather than picked:
+                    0.84 down to 0.60 puts the worst band on the worst card at
+                    4.36 : 1, so every tier clears AA — Wonder 6.11 / 4.36,
+                    Truth 5.09 / 6.51, Living Work 4.66 / 12.81 (copy / CTA).
+                    It is heavy, and deliberately so: the top of each frame is
+                    rock, ceiling and sky, and the subjects sit low where the
+                    scrim has eased off. Lighten it and the eyebrows go first. */}
+                <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(9,14,18,0.84)_0%,rgba(9,14,18,0.60)_100%)]" />
+                {/* Two children now, not three (10 September 2026, user
+                    direction: "put the other texts above. with only cta link
+                    below"). The mark, eyebrow, title and description are one
+                    block at the top; the CTA is alone at the floor on mt-auto.
+
+                    That split is the point. The eyebrow and the CTA were both
+                    `.eyebrow` in canvas — same family, weight, case and colour,
+                    14px against 16px, stacked four lines apart — so the card
+                    had four tiers and no way to tell a label from an action.
+                    They are now opposed on position (ceiling against floor),
+                    size (13 against 16) and tracking, and only one of them
+                    carries the chevron.
+
+                    Both stay canvas, which was tried the other way first: gold
+                    on the eyebrow measures 4.20 / 2.76 / 3.38 : 1 over these
+                    three crops and canvas measures 7.19 / 4.73 / 5.79, because
+                    gold is a mid-tone and a scrimmed photograph is a mid-tone
+                    ground. Gold clears AA on a SOLID dark ground and does not
+                    clear it over a picture — it would need the scrim near 90%.
+                    So the colour axis is unavailable here; position carries the
+                    distinction instead, which is the frame's own answer too. */}
+                <div className="relative flex flex-col items-start">
+                  <Image src={media.icon} alt="" width={45} height={42} className="h-[42px] w-[45px] shrink-0 object-contain object-left" />
+                  <p className="eyebrow mt-8 leading-[1.4]">{card.eyebrow}</p>
+                  <h3 className="headline mt-2 text-h3 leading-none tracking-normal">{card.title}</h3>
+                  <p className="mt-4 text-base font-medium leading-[1.5] text-canvas/90">{card.description}</p>
                 </div>
-                <span className="relative flex items-center gap-2">
-                  <span className="eyebrow text-base leading-[1.5]">{card.cta}</span>
+                <span className="relative mt-auto flex items-center gap-2 pt-8">
+                  <span className="eyebrow text-base leading-[1.5] tracking-[0.2em]">{card.cta}</span>
                   <Image src="/media/home/derivatives/invitation-chevron.svg" alt="" width={24} height={24} className="shrink-0" />
                 </span>
               </Link>
