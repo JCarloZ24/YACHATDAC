@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { IntroGate } from "@/components/layout/IntroGate";
 import { ClickBloom } from "@/components/motion/ClickBloom";
 import { org } from "@/content/site";
 import "./globals.css";
@@ -50,6 +51,9 @@ export default function RootLayout({
             Renders nothing; see ClickBloom for why the page answers a click
             rather than the cursor. */}
         <ClickBloom />
+        {/* Spends the homepage's opening film once the reader is demonstrably
+            inside the site — see IntroGate. Renders nothing. */}
+        <IntroGate />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
