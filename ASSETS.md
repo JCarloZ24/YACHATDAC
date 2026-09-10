@@ -189,9 +189,40 @@ Block Berthold, Bantayog Sans and Good Dog are gitignored, mirroring the existin
 
 ## 7 · Video
 
-One file — `Sample Video - Yachatdac.mp4`, **162 MB**, in Downloads, not copied into the repo.
-It is the only video the project holds. Unusable as-is: it needs transcoding to MP4 (H.264)
-plus WebM with a poster frame, targeting ~1.2 MB for a background loop.
+**The homepage loading film — transcoded 10 September 2026.** `Main_V2_16.mp4`, supplied as a
+1920×1080 / 23.976fps / **21.9 Mbps** mezzanine, 39.29s, **104.2 MiB**. The master is
+**gitignored and never served**, for two independent and separately fatal reasons: R11 says
+never ship masters, and GitHub refuses any file over 100 MiB, so committing it would make the
+repo unpushable for everyone.
+
+Served copies, in `public/media/home/derivatives/`:
+
+| file | scale | size | bitrate | who gets it |
+| --- | --- | --- | --- | --- |
+| `home-loader-960.mp4` | 960×540 | **1.78 MB** | 380 kbps | phones, data saver, 2g/3g, and every screen under 1800 device px |
+| `home-loader-1440.mp4` | 1440×810 | **3.55 MB** | 760 kbps | 1800+ device px on a fast link |
+| `home-loader-poster.webp` | 1280 wide | 0.11 MB | — | first paint, and the whole of it under reduced motion |
+
+**These are R11's first real numbers.** Its "next step" was *"set targets before the homepage
+video is graded"* — here they are, measured rather than guessed. Two facts worth carrying:
+
+- **CRF cannot hit a budget on footage this busy.** CRF 30 at 1280 produced 6.77 MB and CRF 32
+  at 1920 produced 10.21 MB, against a 2.5 MB above-the-fold budget. Both encodes shipped here
+  are **two-pass at a target bitrate**, which is the only way to guarantee a number.
+- **R11's "roughly 1.2 MB" was written for a background LOOP.** A 39-second film cannot reach
+  it at watchable quality. 1.78 MB is the honest floor, and it is survivable because
+  `+faststart` streams: playback begins after a few hundred KB, so the film never blocks paint.
+
+Encoded `-an` — no speech in the material, so the audio track was pure weight, and a silent
+file removes any question about what muting is doing to it.
+
+⚠ **Content is uncleared.** Ambient Country, and **people appear** (user, 10 September 2026).
+Nobody has reviewed it for cultural sensitivity, and identifiable people here carry the same
+consent question as the photography. Flag to Steve / the Elder Advisory Group under F8 before
+launch. This does not block the build; it blocks nobody knowing.
+
+The older `Sample Video - Yachatdac.mp4` (**162 MB**, Downloads, never copied in) is a separate
+file and remains untranscoded — see [`brand/video/README.md`](brand/video/README.md).
 
 ---
 

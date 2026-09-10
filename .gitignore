@@ -68,6 +68,15 @@ next-env.d.ts
 # placeholder direction, not an asset manifest, so it stays out of git.
 /docs/content/drafts/.drive-export-raw/
 
+# The homepage loading film's MASTER — 104.2 MiB, 1920x1080 at 22 Mbps.
+# Ignored for two independent reasons, either of which is fatal:
+#   · R11 — "never ship masters"; the above-the-fold budget is under 2.5 MB.
+#   · GitHub refuses any file over 100 MiB, so committing it makes the repo
+#     UNPUSHABLE for everyone, not just heavy.
+# The served copies are the transcodes beside it in derivatives/ (~1-3 MB).
+# See src/content/homepage-media.ts and brand/video/README.md.
+/public/media/home/Main_V2_16.mp4
+
 # local dev server log
 /dev.log
 
