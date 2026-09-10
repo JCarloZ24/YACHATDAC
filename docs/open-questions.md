@@ -1,6 +1,6 @@
 # Open questions & blockers
 
-*Last updated: 26 August 2026*
+*Last updated: 10 September 2026*
 
 Live list. Resolve upward — anything marked **blocking** stops real work.
 Cross-referenced to section 17 of the build documentation.
@@ -219,6 +219,171 @@ each — not a re-argument, just a check that the change was intended.
   for the Elder Advisory Group's decisions — not an independent judgment call.
 - **Commissioned artwork is not blocking.** Placeholder-first, swap-in-ready.
 - **No separate Events page.** Event is a content type inside Resources.
+
+---
+
+## Truth interior motion — raised 9 September 2026
+
+Three things the interior-scrub pass could not settle from the repo. None is
+blocking; all three are places where a later pass could quietly invent an
+answer, which is why they are written down.
+
+- **The six sections with four image alternates each have no source.** The
+  Truth motion brief states it plainly, but nothing in `docs/` mentions
+  alternates and all 34 files in `public/media/library/truth/` are already
+  referenced by `src/content/truth-media.ts` — there are no spare frames on
+  disk. `MediaSlot` now carries an `alternates` field and the six slots that
+  fit the description ("the same slot dimensions and motion behaviors") carry
+  an explicit empty array. ⚠ Those six are **inferred** — the page's six
+  full-bleed frames. If the real six are different sections, move the arrays;
+  do not fill these in to match. **Needs: the documented swap-in list, or a
+  pointer to the pool board it lives on.**
+
+- **Partnerships is drawn as three cards and written as two.** The frame
+  staggers L, M, R at ~100ms; `YACHATDAC-Truth-Copy-v3.md` carries "The
+  Cultural Knowledge Precinct" and "Partnerships" and nothing else. The build
+  staggers the two that exist rather than inventing a third card's copy (D5 —
+  drafts govern copy). **Needs: either the third card's copy, or confirmation
+  that the frame is ahead of the draft.**
+
+- **The hero is now in motion, and the ledger said it was held.**
+  `scenes.md` read "the hero … held at its rendered state"; the brief asks for
+  a photograph that "breathes rather than sits still". Built as a 1.04 → 1.00
+  settle on user direction and recorded as superseding that line — the copy is
+  still held and the 20vh runway still exists to clear the navbar. **Needs:
+  nothing, unless a reviewer wants the stillness back.**
+
+Also fixed in the same pass, recorded because it was invisible rather than
+broken: the 1950s dim overlay sat on the era `<section>`, so once the deck
+pinned the article the overlay stayed behind in flow and stopped covering the
+thing it darkens. It is now painted by the slide's own `::after` and deepens
+0.10 → 0.45 as the band is read.
+
+---
+
+## Truth on one ground — raised 9 September 2026 (D26)
+
+`/truth` now renders on a single egg-white ground. The decision and what it
+supersedes are written up as **D26**; these are the loose ends it leaves.
+
+- **The count's red measures 2.84:1 on charcoal** — below even the 3:1
+  large-text floor, at Display scale. This is **pre-existing** and was not
+  touched, but the change makes the count the page's only dark moment and so
+  the most looked-at thing on it. It is not ours to fix unilaterally: "Rust Red
+  is spent once" is doctrine, the count is under **R5**, and raising the red or
+  lightening the ground is a palette call. **Needs: Steve / the Elder Advisory
+  Group, alongside D26 itself.**
+
+  ⚠ **Corrected 10 September 2026 — this failure is on the wrong screen.** The
+  2.84:1 oxide is §15A's title and attribution (`#the-count`, "By 1902 there
+  were thirty-seven."), not the count's numerals. `#the-count-figures` renders
+  no red at all: charcoal ground, off-white numerals and detail, 17.83:1. The
+  same mis-attribution is written into `globals.css`, `kit.ts`,
+  `decisions-and-risks.md` D26 and `scenes.md` — all of which say the count's
+  numerals are "the only red on the page". The claim survives at the level of
+  the *band*, because §15A does carry the page's one oxide on the one dark
+  ground; it is false of the screen every one of them names. The code comment
+  in `truth-scenes.ts` was corrected in the same pass. **The five doc echoes
+  are left as they are** — reworded governance entries in a motion commit is
+  how a record stops being trustworthy. **Needs: a documentation pass, and the
+  contrast question re-aimed at §15A.**
+
+- **The 1902 count is now a display statistic, which `ART-DIRECTION.md` §337
+  says it should not be until Suzanne settles it.** Raised 10 September 2026,
+  when the count screen's display slot moved from the year to the figure on
+  user direction: **37** and **7,500** are now `text-h1`, the years demoted to
+  the rail-marker eyebrow. The argument for it is that prominence is
+  *transferred* rather than added — the screen spends the same one display slot
+  per row, so it is no louder — and the Hoch/Taçon citation still sits directly
+  beneath, which is what keeps it a sourced figure rather than a headline. The
+  argument against it is simply R5: **her recording says thirty-five and the
+  published figure is thirty-seven, and nobody has asked her yet.** The number
+  is set larger than it has ever been on a screen that goes to her for
+  approval. `ART-DIRECTION.md:337` was deliberately **not** amended — that line
+  is a cultural-safety guardrail and reversing it is not a build decision.
+  **Needs: Suzanne Thompson, via the R5 presentation; then either the guardrail
+  lifts or the display slot goes back to the year.**
+
+- **Three artwork cuts have no light-ground version, so they were withdrawn
+  rather than shipped invisible.** `ring-spiral-a.svg` (the 06 frame and *Older
+  than the record*) and `dots-rule-gold.svg` (under every display title) are
+  off-white and gold respectively — 1.0:1 and 1.72:1 on `#f6f6ec`. The house
+  fix is a roasted repath at 0.30 (`ART-DIRECTION` §299-305), which `ring-a`
+  and `ring-b` have and these do not. **Needs: a roasted cut of each, then
+  restore the markup — the call sites carry a comment saying so.**
+  `cluster.svg` was checked and left alone: all three of its uses sit over
+  photographs, not on the ground.
+
+- **The rail's traveller and legend are baked gold** (`trail-point.svg`,
+  `lore-legend.svg`) at 1.72:1 on the new ground. Kept, because they are marks
+  rather than text and the strand they ride was repointed to charcoal, but they
+  are the weakest thing on the page now. **Needs: a light-ground cut.**
+
+  ⚠ **Sharpened 10 September 2026.** The traveller now carries the era label at
+  its tip, which makes the weakest mark on the page also the most looked-at one
+  — it is what the reader's eye goes to for "where am I". The TYPE beside it
+  did not inherit the problem: the label is `text-burnt-deep` (6.31:1) and the
+  sub is charcoal, never gold. But an arrow at 1.72:1 introducing a label at
+  6.31:1 is a visible mismatch, and the light-ground cut is now worth more than
+  it was. **Needs: unchanged — a light-ground cut of `trail-point.svg`.**
+
+- **/about carries the same eyebrow defect this pass avoided.** Truth's warm
+  accents moved to `--color-burnt-deep` (6.31:1); /about still uses
+  `text-burnt` (2.91:1) for its canvas eyebrows, against the deepening rule
+  recorded in `living-work-qa-2026-09-08.md:238-241` that `/living-work`
+  follows. Not changed here — it is a different page and a separate pass.
+
+
+---
+
+## The count seam — raised 9 September 2026
+
+- ~~**`railHiddenSlides` carries a dead selector.**~~ **CLOSED 10 September
+  2026.** `[data-truth-ground="count"]` matched nothing while the band only
+  ever rendered `withinDeck`. Splitting the hard stop into three screens gave
+  two of them that attribute for real, so the selector now does the job it
+  was written for and the rail is silent across all three.
+
+- **The count's panel height is now load-bearing and nothing enforces it.** The
+  ground and its crest cover the escarpment because panel + wave ≈ one
+  viewport. That is a `min-h-[calc(100svh-7rem)]` floor plus content that
+  happens to land at 798px on a 900px screen. Add a paragraph, unhold the
+  portrait, or restore Suzanne's withheld block, and the crest goes off the top
+  of the screen with no warning and the beat stops closing on the wave.
+  **Needs: either a real cap, or a note in whatever unholds this section.**
+
+
+---
+
+## The type lint cannot see the type — raised 10 September 2026
+
+`scripts/check-type.mjs` reported **0 errors on /truth** while the page carried
+a 128px heading, three quotations set in the display face, and a hand-rolled
+eyebrow in the wrong family. It is not broken; it is narrower than its name
+suggests, and it was read as a pass.
+
+Two reasons, both in the script:
+
+- **It skips anything already carrying a font utility** —
+  `if (/\bheadline\b|\beyebrow\b|\bcallout\b/.test(c)) continue;`. So
+  `headline text-7xl sm:text-9xl` is never size-checked. The check is "does
+  this look like a heading with no family?", not "is this size on the scale?".
+- **It knows nothing about the `text-h1`…`text-h6` tokens**, so it cannot tell
+  a token from a hand-built ladder, and its heading threshold (1.875rem) sits
+  above most of the page's body-scale ladders anyway.
+
+Net: **a clean `check:type` run is not evidence that a page's typography is
+right.** What caught this pass was measuring computed `fontSize`/`fontFamily`
+in a real browser, which is what the verification for this work used.
+
+Only 2 of ~41 sized elements in `src/app/truth/_components/Sections.tsx` use a
+scale token; the rest are hand-built ladders that break at `sm` where the
+tokens break at `lg`. This pass fixed the 1902 band, which is the new content.
+**The rest of the page is unconverted and was left alone deliberately** — it is
+the co-worker's shipped work and a page-wide migration is its own decision.
+**Needs: a call on whether Truth migrates wholesale, and either a check-type
+that understands the scale or an honest note in its output that it does not.**
+
 
 ---
 

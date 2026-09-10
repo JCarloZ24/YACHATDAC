@@ -241,22 +241,105 @@ body {
   background: var(--truth-slide-ground);
 }
 
-[data-truth-ground="present"] {
-  --truth-slide-ground: var(--color-evergreen);
-}
+/* ONE GROUND — client direction, 9 September 2026.
 
+   Truth used to walk the descent ladder: evergreen → roasted → charcoal →
+   navy → charcoal, one colour per era, with Marc's divider carrying each
+   hand-off. The client asked for a single egg-white ground instead. Recorded
+   in decisions-and-risks.md rather than left as an undocumented repaint,
+   because ART-DIRECTION §4 and kit.ts still describe the ladder as
+   load-bearing and a later reader would otherwise take this for a regression.
+
+   What that costs, stated plainly: Truth carries no dated photographs, so
+   chronology had exactly two carriers — type and ground colour. It now has
+   one. The count keeps its charcoal because the hard stop is the one place
+   the ground is the argument. */
+[data-truth-ground="present"],
 [data-truth-ground="return"],
-[data-truth-ground="named-wrong"] {
-  --truth-slide-ground: var(--color-roasted);
+[data-truth-ground="named-wrong"],
+[data-truth-ground="before-record"],
+[data-truth-ground="deep-time"] {
+  --truth-slide-ground: var(--color-canvas);
 }
 
-[data-truth-ground="count"],
-[data-truth-ground="deep-time"] {
+/* The hard stop keeps the dark. "Rust Red is spent once", and it is spent
+   here — the count's red only reads as the only red on the page because it
+   lands on the only dark ground. */
+[data-truth-ground="count"] {
   --truth-slide-ground: var(--color-charcoal);
 }
 
-[data-truth-ground="before-record"] {
-  --truth-slide-ground: var(--color-midnight);
+/* The 1950s band — "the light is going out of this band".
+
+   THE ONE GROUND THAT MOVES. It opens on the page's egg white and walks all
+   the way down to the count's charcoal as it is read, so the reader arrives
+   at the hard stop already in the dark.
+
+   This replaces an alpha wash. The old dim was rgba(9,14,18,α) over roasted
+   brown, which read as a light going out. Laid over egg white the identical
+   wash renders GREY — a bruise, not a dusk — so the band ramps the ground
+   COLOUR itself instead of dimming it. It reuses the ::before painter above;
+   there is no second layer.
+
+   The ink has to travel with it, and this is not a nicety: the palette has no
+   middle tier (see tone.ts). Charcoal type is 17.83:1 on the egg white and
+   1.0 on charcoal; off-white type is the exact inverse. So the ink crosses
+   over with the ground or the band spends half its span unreadable.
+
+   The warm accent does not travel, because it cannot: measured, burnt-deep
+   needs a ground lighter than about L 0.56 and gold one darker than about
+   L 0.08, and this band spends its middle between the two. In here the
+   accent is simply the ink — the colour drains out of the labels as the light
+   goes out of the band, which is the argument this section is making anyway.
+
+   The ramp is linear and scroll-scrubbed, one-for-one. The rest state below
+   is its END; the motion module puts the band back to egg white on the deck
+   path before the scrub takes over.
+
+   THE REST STATE IS THE END STATE. No-JS, reduced motion and the unpinned
+   flow path all render the band already dark, because a designed reduced cut
+   is the instant final state (scene.ts), and because a band that rests at
+   egg white would hand into the charcoal count as a hard jump. */
+[data-truth-slide][data-truth-deteriorates] {
+  --truth-slide-ground: var(--color-charcoal);
+  --truth-ink: var(--color-canvas);
+  color: var(--truth-ink);
+}
+
+
+/* ---------------------------------------------------------------------------
+   The Ahead deck's two records, on hover.
+
+   The card lifts and the photograph inside it grows; the FRAME does not move.
+   That distinction is the whole gesture — the picture presses against a window
+   that stays exactly where it was, rather than the whole tile inflating. The
+   frames already carry `overflow-hidden`, so the plane has something to press
+   against.
+
+   CSS rather than GSAP because it is pointer state, not scroll state: it has
+   to survive the scrubbed brightness the deck writes to the same subtree
+   without the two fighting over one property. The lift is a transform and the
+   scale is on the plane, so neither touches opacity, which is what the M1
+   entrance owns. Tokens, not literals: EASE_CSS.quiet and DUR.small.
+
+   Withheld under reduced motion — a hover that jumps is worse than none.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
+  [data-truth-card] {
+    transition: transform 0.32s var(--ease-quiet);
+  }
+
+  [data-truth-card]:hover {
+    transform: translateY(-4px);
+  }
+
+  [data-truth-card] [data-media-plane] {
+    transition: transform 0.32s var(--ease-quiet);
+  }
+
+  [data-truth-card]:hover [data-media-plane] {
+    transform: scale(1.03);
+  }
 }
 
 /* ---------------------------------------------------------------------------

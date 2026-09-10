@@ -159,6 +159,47 @@ export function registerMedia(): void {
     },
   });
 
+  /* --- being drawn in, pull-back cut -------------------------------------
+     Grammar: "being drawn in", pull-back cut · sketch M1 · plate P2.
+
+     The camera withdraws instead of approaching: the plane starts oversized
+     and settles to its resting size. `pushIn` cannot express this — it is
+     written `fromTo({scale: 1}, {scale})` and always departs from rest — and
+     inverting the numbers on a tween named "push in" is the kind of thing that
+     reads as a typo in six months.
+
+     Two beats ask for it. Truth's hero "breathes rather than sits still": it
+     opens 4% over and settles, so the first thing the page does is relax
+     rather than advance. Its two dissolve breaks pull back while one full-bleed
+     image crosses into another, so the reader is being let go of at the join
+     instead of pushed through it (user direction, 9 September 2026).
+
+     GRADE: filters to movable targets, exactly as `pushIn` does. */
+  gsap.registerEffect({
+    name: "pullBack",
+    extendTimeline: true,
+    defaults: {
+      from: 1.06,
+      scale: 1,
+      origin: "50% 50%",
+      duration: DUR.large,
+      ease: EASE.machine,
+    },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      assertEase("pullBack", config.ease);
+      return gsap.fromTo(
+        movable(targets),
+        { scale: config.from as number, y: "0%" },
+        {
+          scale: config.scale as number,
+          transformOrigin: config.origin as string,
+          duration: config.duration as number,
+          ease: config.ease as string,
+        },
+      );
+    },
+  });
+
   /* --- depth inside one frame --------------------------------------------
      Grammar: "being drawn in", depth cut · sketch A3 / D1 lineage.
 

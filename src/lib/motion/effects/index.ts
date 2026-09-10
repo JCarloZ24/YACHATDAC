@@ -139,6 +139,7 @@ export type EffectName =
   | "frameOpen"
   | "breakOut"
   | "pushIn"
+  | "pullBack"
   | "plateParallax"
   | "scrimRamp"
   | "bleed"

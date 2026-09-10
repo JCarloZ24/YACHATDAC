@@ -5,12 +5,25 @@ import { register, start, stop, watchVisibility } from "@/lib/motion-controller"
 import { createTruthDescent } from "@/lib/motion/truth-descent";
 import { createTruthDescentV2 } from "@/lib/motion/truth-descent-v2";
 import { createGatedDeck } from "@/lib/motion/gated-deck";
+import { bindTruthScenes } from "@/lib/motion/truth-scenes";
 import { markEntered } from "@/lib/site-entry";
 
 /**
  * Mounts Truth's scroll clock: section hand-offs, rail, reversible headings
  * and M1 arrivals in the base module; image-plane and scene treatments in the
  * V2 module. Renders nothing.
+ *
+ * TWO PATHS, one of which runs at a time.
+ *
+ * Where the deck engages — fine pointer, 1024px and up, Lenis present — every
+ * section is pinned, and interior motion is authored against each slide's own
+ * reading clock by `bindTruthScenes` (SCR-02). The descent modules stand down
+ * for whatever it takes over; they check `[data-deck-active]`, which the deck
+ * sets before either of them initialises.
+ *
+ * Everywhere else — touch, narrow, no Lenis — nothing is pinned, sections
+ * cross the viewport normally, and the descent modules' own viewport-relative
+ * triggers are exactly right. That path is unchanged.
  *
  * markEntered() runs here because this page has no Preloader: on a direct
  * load nothing else would ever open the entry gate and every gate="entry"
@@ -39,6 +52,7 @@ export function V2TruthMotion() {
               root: "[data-descent-root]",
               slides: "[data-truth-slide]",
               eventPrefix: "truth",
+              onSlideSpans: bindTruthScenes,
             }),
           ),
           register(createTruthDescent()),
