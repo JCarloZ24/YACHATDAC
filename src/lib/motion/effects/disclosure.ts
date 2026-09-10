@@ -22,10 +22,17 @@ export function registerDisclosure(): void {
   gsap.registerEffect({
     name: "stageArrival",
     extendTimeline: true,
-    defaults: {},
-    effect: (targets: object) => {
+    defaults: { title: true },
+    effect: (targets: object, config: Record<string, unknown>) => {
       const stage = gsap.utils.toArray<HTMLElement>(targets)[0];
-      const title = stage.querySelector<HTMLElement>("[data-stage-title]");
+      // 10 September 2026, August's direction: a stop opened by hand does not
+      // re-reveal its own heading. The heading was already on screen and read
+      // before the tap, so `settle`ing it again reads as a glitch rather than
+      // an arrival. `title: false` is the accordion cut; the held reading
+      // screen still introduces a heading that is genuinely new to the view.
+      const title = config.title
+        ? stage.querySelector<HTMLElement>("[data-stage-title]")
+        : null;
       const copy = stage.querySelector<HTMLElement>("[data-stage-copy]");
       const picture = stage.querySelector<HTMLElement>("[data-stage-picture]");
       const tl = gsap.timeline();
@@ -56,6 +63,23 @@ export function registerDisclosure(): void {
     },
   });
 
+  /** Grammar: "the world opening", itinerary rule (10 September 2026,
+      August's direction). The dotted rule under a stop fills with burnt ochre
+      across that stop's reading span and is full when the list advances. Only
+      a CSS custom property changes per frame; the held screen writes the same
+      property directly from its scroll controller. */
+  gsap.registerEffect({
+    name: "stageRule",
+    extendTimeline: true,
+    defaults: { duration: DUR.medium, ease: "none" },
+    effect: (targets: object, config: Record<string, unknown>) =>
+      gsap.fromTo(targets, { "--stage-fill": "0%" }, {
+        "--stage-fill": "100%",
+        duration: config.duration as number,
+        ease: config.ease as string,
+      }),
+  });
+
   gsap.registerEffect({
     name: "disclose",
     extendTimeline: true,
@@ -63,7 +87,9 @@ export function registerDisclosure(): void {
     effect: (targets: object, config: Record<string, unknown>) => {
       const details = gsap.utils.toArray<HTMLElement>(targets)[0];
       const panel = details.querySelector<HTMLElement>("[data-stage-panel]");
-      const chevron = details.querySelector<HTMLElement>("[data-stage-chevron]");
+      // The chevron's turn is a CSS transition on the `rotate` property
+      // (Sections.tsx): the held reading screen changes `open` without this
+      // effect, and both cuts should turn at the same `quiet` 0.32s.
       const copy = details.querySelector<HTMLElement>("[data-stage-copy]");
       const following = config.following as HTMLElement[];
       const offsets = config.offsets as number[];
@@ -88,13 +114,6 @@ export function registerDisclosure(): void {
         tl.fromTo(copy, { opacity: open ? 0 : 1 }, {
           opacity: open ? 1 : 0, duration: DUR.small, ease: EASE.quiet,
         }, open ? 0.12 : 0);
-      }
-      if (chevron) {
-        // Tailwind uses the independent rotate property. Counter-rotate the
-        // native open glyph with GSAP's transform, then clear at completion.
-        tl.fromTo(chevron, { rotation: open ? 180 : 0 }, {
-          rotation: open ? 0 : 180, duration: DUR.small, ease: EASE.quiet,
-        }, 0);
       }
       return tl;
     },

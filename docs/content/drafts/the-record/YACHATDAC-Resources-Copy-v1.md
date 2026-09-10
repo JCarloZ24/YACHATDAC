@@ -1,6 +1,6 @@
 # Resources — "The Record" — draft copy v1
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 > **Page:** Resources — "The Record" · **Version:** v1 · **State:** draft ·
 > **Governance circle:** open
@@ -20,6 +20,14 @@
 > were **not** imported. `[ Image — … ]` markers record what each slot is
 > meant to carry. Per STATUS note 12 the photography is placeholder direction,
 > not an asset manifest.
+>
+> **Change request applied, 10 September 2026 — CR3 / D17.** The article
+> *"Right-way fire and the carbon in the soil"* is renamed **"Fire-stick
+> farming and the carbon in the soil"**, and its path renamed with it, closing
+> the last CR3 carve-out (Steve, FNAN, 15:15: replace "right-way fire" across
+> the site). **D17 is Final** — Record slugs track their titles and a rename
+> ships with a permanent redirect. Paths in this file keep the supplied
+> `/resources` prefix; the built route is `/the-record`.
 >
 > **Form controls.** `[ Field: … ]` and `[ Button: … ]` mark inputs in the
 > prototype, kept because their labels are copy.
@@ -182,13 +190,13 @@ Research
 
 Iningai knowledge
 
-#### Right-way fire and the carbon in the soil
+#### Fire-stick farming and the carbon in the soil
 
 Two flux towers, one on Country managed our way and one on grazed land, read against each other for more than a year.
 
 Fire · Carbon & climate
 
-→ /resources/right-way-fire-and-the-carbon-in-the-soil
+→ /resources/fire-stick-farming-and-the-carbon-in-the-soil
 
 [ Image ]
 

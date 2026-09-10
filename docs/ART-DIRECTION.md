@@ -1,6 +1,6 @@
 # Art Direction
 
-*Last updated: 8 September 2026*
+*Last updated: 10 September 2026*
 
 What this site is, how its content is staged, and how to design a page that hasn't been designed yet.
 
@@ -528,8 +528,10 @@ real contradiction found in the material.
    corporation and the community speaking, sometimes inside one paragraph.
 10. **"The Record" vs "Resources".** Every v3 page calls the hub *The Record*; the repo and
     build documentation call it *Resources*, and the route is `/resources`.
-11. **"Right-way fire" vs "fire-stick farming".** CR3 renamed it on Living Work; Truth and The
-    Record still say right-way fire. D17 holds one exception.
+11. **"Right-way fire" vs "fire-stick farming".** ~~CR3 renamed it on Living Work; Truth and The
+    Record still say right-way fire. D17 holds one exception.~~ **Closed 10 Sep 2026** — D17
+    resolved, the article title and slug were renamed with everything else, and no live copy
+    says right-way fire now. See docs/terminology.md.
 12. **The 1902 count** — thirty-five or thirty-seven. Unresolved in the Truth draft itself.
 
 ### Palette and code

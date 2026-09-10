@@ -2,7 +2,7 @@
  * The Record.
  *
  * Source of truth:
- * docs/content/drafts/resources/YACHATDAC-Resources-Copy-v1.md (D5).
+ * docs/content/drafts/the-record/YACHATDAC-Resources-Copy-v1.md (D5).
  *
  * ⚠ NAMING — SETTLED 2026-09-04. This hub was `Resources` everywhere in the
  * repo and `The Record` in every v3 draft that linked to it. That split is
@@ -12,9 +12,10 @@
  * amendment is recorded in docs/decisions-and-risks.md and still wants their
  * confirmation, so do not treat this note as their sign-off.
  *
- * The old path 301s to the new one (next.config.ts). The client draft's own
- * filename keeps the word Resources and is not renamed — it is a supplied
- * document, not ours to edit.
+ * The old path 301s to the new one (next.config.ts). The draft now sits in
+ * `docs/content/drafts/the-record/` — one folder per page, August's direction
+ * 10 Sep 2026 — but the client draft's own filename keeps the word Resources
+ * and is not renamed: it is a supplied document, not ours to edit.
  *
  * ⚠ NONE OF THESE ARTICLES EXIST. The thirteen items below are the record's
  * index; their bodies have not been written. src/app/the-record/[slug] renders
@@ -181,17 +182,21 @@ export const recordItems: readonly RecordItem[] = [
     image: "Research thumbnail — the shelter wall.",
   },
   {
-    slug: "right-way-fire-and-the-carbon-in-the-soil",
+    slug: "fire-stick-farming-and-the-carbon-in-the-soil",
     type: "Research",
     source: "Iningai knowledge",
     /**
-     * ⚠ CR3 — applied everywhere else. This title (and the slug below) are
-     * deliberately still "right-way fire" — renaming it would rename the
-     * article and, with it, the route. That is an IA change rather than a
-     * copy change and it is raised as **D17**, still open. Two pages link to
-     * this exact route. Change the title and the slug together or not at all.
+     * ⚠ CR3 — now applied HERE TOO. D17 resolved 10 Sep 2026, August's
+     * direction, option 1: the title and the slug were renamed together.
+     * Steve's instruction (15:15) was to replace "right-way fire" *across the
+     * site*, and an article title is copy under D5; the slug tracks its title
+     * and the old route 301s in next.config.ts. This also settles the wider
+     * question D17 asked — Record slugs follow their titles, and a rename
+     * carries a redirect, the same pattern /resources → /the-record set.
+     * Nothing is published, so the change cost redirects and nothing else.
+     * Two pages link this route; both were rewritten in the same pass.
      */
-    title: "Right-way fire and the carbon in the soil",
+    title: "Fire-stick farming and the carbon in the soil",
     summary:
       "Two flux towers, one on Country managed our way and one on grazed land, read against each other for more than a year.",
     subjects: ["Fire", "Carbon & climate"],

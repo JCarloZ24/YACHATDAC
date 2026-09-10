@@ -1,6 +1,6 @@
 # Terminology sheet
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 **Home painting display ? 9 September 2026:** screenshot excerpts read ?You are entering?, ?Turraburra?, and ?Story held in stone and starlight?. Turraburra names the property; the full hero sentence remains unchanged.
 
@@ -49,7 +49,7 @@ These are in use across the site and are not open questions.
 | Term | Use | Not | Where it came from |
 | --- | --- | --- | --- |
 | **cultural heritage sites** | always | "cultural sites" | CR1, applied 28 Aug |
-| **fire-stick farming** | the name of the practice | "cool burns", "cool burning" | CR3, applied 28 Aug |
+| **fire-stick farming** | the name of the practice | "cool burns", "cool burning", "right-way fire" | CR3, applied 28 Aug; the last exception closed with D17, 10 Sep |
 | **Biological Sequestration** | the Living Work card title | "Carbon" | CR2, applied 28 Aug |
 | **Country** (capitalised) | always, when it means Country | "country" | House style throughout; 367 uses |
 | **Traditional Custodian** | the families who formed YACHATDAC | — | Used 12×, consistent |
@@ -142,15 +142,28 @@ published words). Found and swept the same day:
   lo-fi build said. Same reasoning CR3 used to leave `docs/content/STATUS.md`
   alone: historical, not live copy.
 
-No live use of "cool burn" or "right-way fire" now remains outside the
-D17-held titles below.
+No live use of "cool burn" or "right-way fire" now remains anywhere in the
+built site. The last exception closed on 10 September 2026 — see below.
 
-### Held on D17 — the article slug
+### D17 — resolved, 10 September 2026
 
-`/resources/right-way-fire-and-the-carbon-in-the-soil` and its matching titles
-keep **"right-way fire"** deliberately. Renaming the term renames the article,
-which renames a live route. **D17** decides whether the rename extends that
-far; a redirect would be needed either way.
+The carve-out is gone. The article formerly at
+`right-way-fire-and-the-carbon-in-the-soil` is now
+**`fire-stick-farming-and-the-carbon-in-the-soil`**, titled *"Fire-stick
+farming and the carbon in the soil"*, and Truth's link to it moved with it.
+August's direction, taking option 1 of the three D17 listed: rename the title
+and the slug together.
+
+The reasoning: Steve's instruction (15:15) was to replace the term **across the
+site**, an article title is copy and therefore covered by **D5**, and nothing
+is published, so the rename costs a redirect and nothing else. It also answers
+the wider question D17 was really asking — **Record article slugs track their
+titles, and a rename ships with a permanent redirect**, the pattern
+`/resources` → `/the-record` already set. The old route 301s in
+`next.config.ts`.
+
+The supplied v1 draft keeps `/resources/…` on all thirteen items, as it was
+received; the code routes `/the-record/…`.
 
 ---
 

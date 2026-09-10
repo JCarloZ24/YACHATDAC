@@ -41,9 +41,22 @@ export const wonderHeroSlot: MediaSlot = {
  * the device and the connection (HeroVideo picks one before the first byte
  * loads — see its `pickTier`):
  *
- *   small   960 × 540   ~0.8 Mb/s   phones, data saver, 2g/3g
+ *   small   960 × 540   ~0.8 Mb/s   data saver, 2g/3g, and phones for now
  *   medium  1440 × 810  ~2.5 Mb/s   laptops and tablets
  *   large   1920 × 1080 ~3.5 Mb/s   wide screens on a fast link
+ *
+ * ⚠ A FOURTH TIER IS MISSING, and phones are soft until it exists (August,
+ * 10 September 2026). Full-bleed in a portrait phone, `object-cover`
+ * magnifies this 16:9 frame 3.7× and shows the middle 27% of it, so 73% of
+ * every byte is thrown away and no landscape encode fixes it — 1440 costs
+ * 14.9 MB at CRF 30 and is still soft. What is needed is a cut FRAMED for
+ * portrait, which is the editor's call and not ours: a blind centre crop
+ * cuts Suzanne's head in half at 0:20 and slices the guests at 0:45. The
+ * brief, with the measurements, is in brand/video/README.md; drop the file
+ * in as `tiers.portrait` and HeroVideo will serve it to phones.
+ *
+ * Audio: all three are normalised to −23 LUFS. A replacement MUST be too —
+ * the delivered mix was −17 LUFS and clipped once transcoded.
  *
  * MP4 only: H.264 plays everywhere, and a VP9 set on top would double the
  * repo's video weight for a marginal size win. It replaced the "WITH SUPERS"
@@ -56,6 +69,7 @@ export const wonderHeroVideo = {
     small: "/media/wonder/wonder-hero-960.mp4",
     medium: "/media/wonder/wonder-hero-1440.mp4",
     large: "/media/wonder/wonder-hero-1920.mp4",
+    // portrait: "/media/wonder/wonder-hero-portrait.mp4",  ← awaiting the re-cut
   },
   supersEnd: 0,
   label:

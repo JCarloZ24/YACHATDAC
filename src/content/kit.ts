@@ -590,9 +590,39 @@ export const PHOTOS: Photo[] = [
      headroom for full-bleed at 1440" is exactly this, and the reason it can be
      answered here is that the batch-3 master is 4267px wide.
 
-     546KB, against the 2.5MB above-the-fold budget (R11) and as the only
+     644KB, against the 2.5MB above-the-fold budget (R11) and as the only
      above-fold media on the route. Do not raise it further without re-reading
      that budget — quality 82 was chosen against 78 and 86 on size, not taste.
+
+     ⚠⚠ THE MASTER IS AN UPSCALED VIDEO FRAME, AND 2880 DOES NOT MAKE IT SHARP.
+     Measured 10 September, because the picture still read soft after the
+     resolution fix and a second guess was not good enough. Round-tripping the
+     4267px master down and back up costs 42.5dB at 1440 and 38.8dB at 1000 —
+     against 37.4dB at 1440 for `hands-soil`, a genuine stills capture from the
+     same batch. In plain terms: discarding everything above ~1200px in this
+     frame is very nearly lossless, so the master carries roughly 1080p of real
+     detail upscaled about four times. It is a drone VIDEO frame, which the
+     Figma readout's source name (`…_1_105_c.png`) already implied and a 1:1
+     crop confirms — no leaf detail, smeared branches, blocked-up burn scar.
+
+     NO EXPORT SETTING FIXES THIS. The pixels are not in the file. 2880 is kept
+     anyway because the browser needs 2880 device pixels at 2x regardless, and
+     a lanczos upscale here beats the browser's on the same source.
+
+     ⚠ AN UNSHARP PASS IS APPLIED TO THIS DERIVATIVE — `unsharp=5:5:0.8:5:5:0`
+     — and it is the only photograph on the site carrying one. It restores edge
+     acutance on the track, the burn boundary and the branches; it does NOT add
+     detail and it is not an AI upscale, which the artwork rules forbid. The
+     master in `brand/photography/` is untouched, per the never-overwrite-a-
+     master rule. Recorded here so nobody mistakes this file for the delivered
+     frame or re-derives it without the pass.
+
+     ⚑ THE REAL FIX IS A BETTER SOURCE, and it is outstanding. Ask the
+     videographer for either a stills capture of this moment or the original
+     4K clip it was pulled from. The one 4K master on the machine
+     (`1MIN EDIT NO SUPERS.mov`, 3840x2160 ProRes) was checked frame by frame
+     and does NOT contain this shot — it is the guesting edit, no fire and no
+     crew aerial in it.
 
      ⚠ ANY OTHER ROW GOING FULL-BLEED NEEDS THE SAME TREATMENT, and most of the
      collection cannot have it: a 2000px derivative whose master is also 2000px

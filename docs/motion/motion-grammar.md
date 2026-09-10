@@ -58,6 +58,7 @@ volumes. See Variants below.
 | **what radiates from a source** | Elements arrive in order of distance from a chosen origin, not DOM order, with seeded hand jitter. | `country` · 0.55s · 0.045/unit | L1 + L3 | P4 | `emanate` |
 | **what radiates**, layout cut | Three arrival tiers — anchor, mid, detail — each with its own micro-stagger. | `country` · 0.55s · at 0 / .25 / .45 | L2 | P4 | `triad` |
 | **the world opening** | A frame's clip opens while the image counter-scales. The Record uses a sandstone wall with separate openings for every inked area of one supplied handprint; the camera passes through a palm opening to approach distant image-card planes. Wonder's itinerary opens a native disclosure: its clip reveals held media, the chevron turns, and following rows settle into their measured positions. | `machine`, scrubbed; Record: 200vh; `disclose`: `country` · 0.55s, chevron `quiet` · 0.32s | M2 / SCR-11 | P3 | `frameOpen`, `handprintPortal`, `disclose` |
+| **the world opening**, itinerary rule | The dotted rule under the open stop is Wonder's scroll indicator: its dots fill left to right in burnt ochre across that stop's reading span, stand full at the handover, and empty again on reverse scroll. The same supplied artwork is the mask, so nothing new is drawn. The chevron's turn moves with it, as a CSS transition so the held screen and the manual accordion turn identically. | scrubbed, linear; chevron `quiet` · 0.32s | user direction 10 September 2026 | — | `stageRule` |
 | **being drawn in** | A slow scrubbed push toward the subject. Transform-origin points at what matters. | `machine`, scrubbed | M1 | P2 | `pushIn` |
 | **being drawn in**, Wonder landscapes | Turraburra and What it is like out here share a viewport landscape, shallow scroll approach and mouse-driven tilt/drift. Turraburra also sits behind Getting here's outgoing charcoal wave. Once seated, the photograph and text hold for another 80vh of scrolling before releasing; the approach finishes before the hold. Pointer exit recentres. Touch has scroll only; reduced motion and no JavaScript use a static full-bleed section. Content too tall for the viewport uses ordinary reading flow. | 100vh screen + 80vh reading hold; reversible scrub 0.8s; scale 1.035→1; pointer ±1.2% travel, ±1° tilt, power3.out 0.8s | SCR-01 / AMB-04 / the rest, user direction 9 September 2026 | P2 | `landscapeApproach`, `landscapeGyroscope` |
 | **being drawn in**, pull-back cut | The camera withdraws instead of approaching: the plane opens oversized and settles to rest. Truth's hero "breathes rather than sits still"; its two dissolve breaks pull back while the page is held, so the reader is let go of at the join rather than driven through it. | `machine`, scrubbed · hero 1.04→1.00 over read + cover, breaks 1.06→1.00 | M1 · Truth §01, §08, §14 | P2 | `pullBack` |
@@ -138,6 +139,36 @@ active heading always lands at the same viewport position. `stageArrival`
 composes **what endures** (`settle`, whole lines) and **arriving quietly**
 (`arrive`) for both the copy blocks and the photograph. These are
 the treatments reviewed in the live effects lab. No photograph scales or warps.
+
+**The phone is the frame's accordion — 10 September 2026, user direction.**
+The held reading screen stays desktop only. The 375 frame (`2576:23040`) draws
+the itinerary as one list: six stops, the first open, a 335 x 200 picture at 24
+radius, 40px section padding, 20px viewport margins and 48px between the
+heading block and the list. The build follows those measurements but not the
+frame's fixed 1047px height — the section's height follows whichever stop is
+open, so opening and closing is the ordinary `disclose`. The rule fill and the
+chevron's CSS turn apply in this cut as well, and the fill is what advances the
+list: `stageRule` scrubs the rule under a stop as it rises through the
+viewport, and at a full fill the next day opens by itself. Nothing closes on
+the way down — a stop opening below the reader adds height below them, so the
+page never jumps under the thumb — and scrolling back up past the same rule
+closes that day again. The closing rule is skipped; the last day has no next
+one. A stop opened in this cut does not re-reveal its own
+heading: the heading was on screen and read before the tap, so `stageArrival`
+takes `title: false` and only the copy and the picture arrive. The held
+reading screen keeps its heading `settle`, where the heading really is new to
+the view. The 375 frame's own 335 x 7 rule artwork is used below `lg` (supplied
+10 September 2026); the 1040 cut is unchanged above it.
+
+**Itinerary rule as scroll indicator — 10 September 2026, user direction.**
+The dotted rule below the open stop fills with burnt ochre (`--color-burnt`)
+in step with that stop's span and is full when the list advances to the next
+stop; earlier rules stay full, later ones stay empty, and reverse scroll
+retraces the fill. In the held reading screen the controller writes
+`--stage-fill` per frame; in the manual accordion `stageRule` scrubs it as the
+stop passes the viewport. The chevron no longer turns through GSAP: it is a
+CSS `rotate` transition on the glyph, so an automatic advance turns as smoothly
+as a click. Reduced motion and no JavaScript keep the plain black rules.
 
 **Stage picture entrance — 10 September 2026, user direction.** The stop's
 photograph leaves **the world opening** and joins the copy in **arriving

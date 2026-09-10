@@ -2,9 +2,9 @@ import { photoById } from "@/content/kit";
 import { howWeWork, partners } from "@/content/about";
 import { contactDetails } from "@/content/contact";
 import { getInvolved } from "@/content/living-work";
-import { documents, knowledgeGaps, onRequest } from "@/content/the-record";
+import { documents, knowledgeGaps } from "@/content/the-record";
+import { partnershipsHiFi } from "@/content/partnerships";
 import { CardRail } from "@/components/ui/CardRail";
-import { EditorialNote } from "@/components/ui/EditorialNote";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
   BlobButton,
@@ -382,7 +382,15 @@ export function PartnershipsHero() {
           data-pt-heading
           className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:mt-[19px] lg:text-[5.25rem] lg:tracking-[-0.0238em]"
         >
-          {claim}
+          {/* ⚠ THE FULL STOP IS DROPPED HERE AND NOWHERE ELSE. The frame sets
+              this headline without one; `PRINCIPLE` keeps it, because that
+              string is the Truth v3 draft's sentence quoted verbatim and the
+              draft punctuates it. Stripping at render rather than editing the
+              constant keeps the quotation intact for anyone diffing it against
+              the draft, and leaves the standfirst — the sentence's second half
+              — untouched. A headline's terminal stop is a typographic call the
+              frame is entitled to make; the words are unchanged. */}
+          {claim.replace(/\.$/, "")}
         </h1>
         <p
           data-pt-arrive
@@ -399,7 +407,12 @@ export function PartnershipsHero() {
           data-pt-arrive
           className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-5 lg:mt-10 lg:gap-x-[21px]"
         >
-          <BlobButton href="#ways-in" tone="burnt" still>
+          {/* size + align are the frame's own: `Nav & CTA/16` at 0.08em, and
+              the label seated 26 from the left of the shape rather than
+              centred. Measured off the readout, not guessed — the button was
+              rendering a 12px label centred at 73/73, which is why it read as
+              floating in the blob. */}
+          <BlobButton href="#ways-in" tone="burnt" still size="cta" align="frame">
             See the ways in →
           </BlobButton>
           <a
@@ -439,7 +452,7 @@ export function TheObligation() {
     <section className={`relative overflow-hidden bg-evergreen text-canvas ${SCREEN.obligation}`}>
       <RingArtwork
         piece="b"
-        className="-top-32 left-[44%] w-[62.5rem] opacity-8"
+        className="-top-32 left-[44%] w-[62.5rem]"
       />
       <div className={`${COLUMN} relative py-16 lg:py-28`}>
         <p className={EYEBROW_DARK}>The obligation</p>
@@ -471,11 +484,9 @@ export function TheObligation() {
  * cleared; identification was not asked. Badged in the markup, as on Our
  * People and About §07.
  */
-const DISCIPLINES = [
-  "Palaeontology and archaeology",
-  "Ecology and biodiversity",
-  "Medicinal botany",
-] as const;
+/* Lowercase, and sourced — see partnershipsHiFi.disciplines for why the
+   frame and the Truth draft both set them that way. */
+const DISCIPLINES = partnershipsHiFi.disciplines.items;
 
 export function OpenResearch() {
   return (
@@ -485,16 +496,51 @@ export function OpenResearch() {
     >
       <WaveDivider ground="var(--color-canvas)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" className="top-[6%] left-[62%] w-[56.25rem] opacity-30" />
+        {/* ⚑ ROASTED, AND AT ITS OWN OPACITY — corrected 10 September 2026
+            against the frame's `rings` node (3003:27158: 900.01 x 909.984,
+            fill #4E3524, opacity 0.08).
+
+            This was `piece="b"` with no tone, which resolves to ring-b.svg —
+            filled #F6F6EC. On a canvas ground that is off-white on off-white,
+            so the artwork was rendering and could not be seen. Its own sibling
+            below already carried `tone="roasted"` for exactly this reason; the
+            b ring was simply missed.
+
+            `opacity-30` is dropped rather than retuned. Every ring export
+            bakes `opacity="0.08"` into its own `<g>`, which is already the
+            figure the frame states, so the utility was multiplying it down to
+            0.024 — a quarter of the intended weight on top of the wrong
+            colour. The width is untouched: `w-[56.25rem]` is 900px, and the
+            node is 900.01.
+
+            ⚑ EVERY RING ON THIS PAGE NOW CARRIES NO OPACITY UTILITY, for the
+            same reason. All nine sites had one — `opacity-30` on the canvas
+            grounds and `opacity-8` / `opacity-7` on the dark ones — and the
+            dark-ground pair was the worst of it at 0.08 x 0.08 = 0.0064,
+            twelve times fainter than drawn. The baked 0.08 is the artist's
+            own value and the only one the frame quotes; nothing should
+            multiply it. If a ring ever needs to be quieter than 0.08, change
+            it in the export so the number stays in one place.
+
+            ⚠ TONE STILL FOLLOWS THE GROUND, and that is not the same question
+            as opacity. #4E3524 is the canvas-ground fill — §03, §04 and §08.
+            On evergreen, charcoal and roasted the rings stay the off-white
+            cut, because roasted-on-roasted is the identical invisibility
+            fault in a different colour. */}
+        <RingArtwork
+          piece="b"
+          tone="roasted"
+          className="top-[6%] left-[62%] w-[56.25rem]"
+        />
         <RingArtwork
           piece="a"
           tone="roasted"
-          className="-left-48 bottom-[8%] w-[40rem] opacity-30"
+          className="-left-48 bottom-[8%] w-[40rem]"
         />
       </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
           Still to be found
         </p>
         <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]">
@@ -532,16 +578,28 @@ export function OpenResearch() {
               </div>
               <span aria-hidden className="absolute inset-0 bg-black/35" />
               <SeamGlyph motif="b" className="right-4 bottom-4 w-11" />
-              <p
-                data-placeholder="consent-unresolved"
-                className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
-              >
-                ⟡ Stand-in · ⚠ consent unresolved
-              </p>
+
+              {/* ⚠ THE VISIBLE ⟡ STAND-IN BADGE WAS REMOVED on user request,
+                  10 September 2026 — the same call made for the hero badge on
+                  9 September, and for the same reason: a visitor should not be
+                  reading our asset log.
+
+                  WHAT IT SAID IS STILL TRUE AND STILL HELD. `pt-research`
+                  (378A7604_1.45.2) is the only research frame in the
+                  collection and its CONSENT IS UNRESOLVED — an older man,
+                  identifiable, working a pestle. It must be cleared or
+                  replaced before launch. The claim now lives only in
+                  `src/content/kit.ts`, which carries it both as a ⚠ comment
+                  and inside the entry's own `subject` string. Nothing on the
+                  page will tell a reviewer any more. */}
             </div>
+            {/* Frame copy, 10 September 2026. The caption used to editorialise
+                about the collection ("the only research frame in the
+                collection") — an asset-log fact, not something a visitor needs,
+                and the same class of thing the stand-in badges were removed
+                for. The frame describes the picture instead. */}
             <figcaption className="mt-5 text-base leading-[1.5] text-roasted">
-              Working a pestle in a stone mortar — the only research frame in the
-              collection.
+              {partnershipsHiFi.researchCaption.text}
             </figcaption>
           </figure>
         </div>
@@ -572,7 +630,7 @@ export function OpenResearch() {
  * Wonga exists, so the card stays typographic and says so on its face. The
  * row does not restyle around the gap.
  */
-const GAP_PHOTOS = [null, "work-seed", "pt-soil", "about-fire"] as const;
+const GAP_PHOTOS = ["engravings-hand", "work-seed", "pt-soil", "about-fire"] as const;
 const GAP_GROUNDS = [
   "bg-evergreen",
   "bg-roasted",
@@ -587,24 +645,72 @@ export function OpenQuestions() {
       className={`relative scroll-mt-28 bg-canvas text-charcoal ${SCREEN.openQuestions}`}
     >
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" className="top-[4%] left-[64%] w-[56.25rem] opacity-30" />
+        {/* Same correction as §03 above, and for the same reason: canvas
+            ground, 900px b ring, so it needs the roasted cut and its own
+            baked 0.08. No separate readout for this one — it is the same
+            component at the same size on the same ground, and off-white on
+            off-white is not a thing a frame asks for. */}
+        <RingArtwork
+          piece="b"
+          tone="roasted"
+          className="top-[4%] left-[64%] w-[56.25rem]"
+        />
         <RingArtwork
           piece="a"
           tone="roasted"
-          className="-left-48 bottom-[16%] w-[40rem] opacity-30"
+          className="-left-48 bottom-[16%] w-[40rem]"
         />
       </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
-        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
-          The offer
+        <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
+          {partnershipsHiFi.openQuestions.eyebrow}
         </p>
+        {/* ⚠ THE FRAME'S TITLE, NOT `knowledgeGaps.title`. The Record keeps
+            "What we do not know" because Resources v1 governs it; this page
+            has no draft, so the frame governs here. See the header note in
+            src/content/partnerships.ts — the override is local and the shared
+            module is deliberately untouched. */}
         <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]">
-          {knowledgeGaps.title}
+          {partnershipsHiFi.openQuestions.title}
         </h2>
+        {/* The frame's shorter lede, not `knowledgeGaps.lede`. The Record's
+            version explains why IT keeps a record; this page is making an
+            offer, so the frame drops that clause. Local override — the shared
+            module is untouched. */}
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
-          {knowledgeGaps.lede}
+          {partnershipsHiFi.openQuestions.lede}
         </p>
+
+        {/* ⚑ MOVED ABOVE THE CARDS, 10 September 2026, to the frame's own
+            placement (2977:27165 — "intent capture → §06 · placed at the
+            top"). It used to sit at the foot of the section on the reasoning
+            that the action belongs under the questions. The frame disagrees
+            and its layer name says why: this is INTENT CAPTURE. A reader who
+            already knows they want in should not have to scroll four cards to
+            act, and one who does not will read the cards regardless.
+
+            ⚑ YELLOW OCHRE, BY DIRECTION — August, 10 September 2026, and it
+            settles a colour I had changed twice. The frame draws this link
+            #D69828, which is `--color-ochre`; I first mis-named that as "the
+            dark-ground gold", then substituted `text-burnt`, then
+            `text-burnt-deep`, on contrast grounds. The instruction is the
+            frame's own colour, so it is used.
+
+            ⚠ THE CONTRAST FIGURE IS RECORDED, NOT RE-ARGUED. On the off-white
+            ground #D69828 measures 2.31:1. This link is 14px ExtraBold, under
+            WCAG's large-text threshold (18.66px bold), so 4.5:1 would be the
+            AA target and it does not reach it. `--color-burnt-deep` (6.31:1)
+            is the token that exists for that case and is what this was. The
+            call has been made with the number known; it is a live risk for the
+            accessibility pass, not an oversight to quietly re-fix. The four
+            canvas eyebrows on this page moved with it for the same reason. */}
+        <a
+          href="#ways-in"
+          className="eyebrow mt-8 block text-sm tracking-[0.28em] text-ochre"
+        >
+          → See the ways in
+        </a>
 
         {/* `label` is set HERE and nowhere else: these cards are `article`s
             with nothing focusable inside them, so without a tab stop on the
@@ -638,12 +744,6 @@ export function OpenQuestions() {
                       motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
                       className="right-5 bottom-4 w-10"
                     />
-                    <p
-                      data-placeholder="stand-in"
-                      className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-2.5 py-1 text-[9px] text-gold"
-                    >
-                      ⟡ Stand-in
-                    </p>
                   </div>
                 ) : null}
 
@@ -662,17 +762,6 @@ export function OpenQuestions() {
                     {gap.detail}
                   </p>
 
-                  {/* No cleared frame, and the card says so rather than
-                      restyling around the gap. */}
-                  {!photo ? (
-                    <p
-                      data-placeholder="no-cleared-frame"
-                      className="mt-6 text-xs leading-[1.45] text-gold"
-                    >
-                      ⚠ No cleared frame — stays typographic
-                    </p>
-                  ) : null}
-
                   {/* The disclosure, at rest: already open. */}
                   <div className="mt-auto pt-10">
                     <p className="eyebrow text-[10px] leading-[1.3] tracking-[0.5em] text-gold">
@@ -688,15 +777,6 @@ export function OpenQuestions() {
           })}
         </CardRail>
 
-        {/* The peak of interest — four projects a reader could take on, and
-            the action sits right under them. Quiet on purpose: the questions
-            are the loud thing here. */}
-        <a
-          href="#ways-in"
-          className="eyebrow mt-14 block text-sm tracking-[0.28em] text-burnt"
-        >
-          → See the ways in
-        </a>
       </div>
     </section>
   );
@@ -763,12 +843,12 @@ export function AlreadyWorkingWith() {
   return (
     <section className={`relative overflow-hidden bg-charcoal text-canvas ${SCREEN.partners}`}>
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" className="top-[8%] left-[62%] w-[62.5rem] opacity-8" />
-        <RingArtwork piece="a" className="-left-52 bottom-[6%] w-[45rem] opacity-7" />
+        <RingArtwork piece="b" className="top-[8%] left-[62%] w-[62.5rem]" />
+        <RingArtwork piece="a" className="-left-52 bottom-[6%] w-[45rem]" />
       </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
-        <p className={EYEBROW_DARK}>Already here</p>
+        <p className={EYEBROW_DARK}>{partnershipsHiFi.partners.eyebrow}</p>
         <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]">
           Who we already work with
         </h2>
@@ -776,24 +856,51 @@ export function AlreadyWorkingWith() {
           {partners.body}
         </p>
 
-        <div className="mt-12 grid gap-8 lg:mt-16 lg:grid-cols-3">
+        {/* 400 x 440 per the frame (user, 10 September 2026), and the gutter
+            falls out of it rather than being chosen: three 400s in the 1240
+            column leave 40px across two gaps, so `lg:gap-5` is 20 and the row
+            lands on 1240 exactly. The build ran `gap-8`, which forced the
+            cards to 392. Height is `lg:min-h-`, not a fixed `h-`: the three
+            groups hold four, three and two names, and a hard height would
+            clip the longest rather than let the shortest run tall. */}
+        <div className="mt-12 grid gap-8 lg:mt-16 lg:grid-cols-3 lg:gap-5">
           {partners.groups.map((group, i) => (
             <div
               key={group.title}
-              className={`relative rounded-3xl ${PARTNER_GROUNDS[i]} p-6 lg:min-h-[25rem] lg:p-8`}
+              className={`relative rounded-3xl ${PARTNER_GROUNDS[i]} p-6 lg:min-h-[27.5rem] lg:p-8`}
             >
-              <SeamGlyph
-                motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
-                className="relative top-0 left-0 mb-7 w-11"
-              />
-              <p className="eyebrow text-xs tracking-[0.28em] text-gold">
-                {group.title}
-              </p>
-              <ul className="mt-6">
+              {/* ⚑ THE FRAME'S CARD, 10 September 2026 (node 0-1).
+                  Three things changed and each was wrong on its own terms:
+
+                  GLYPH TOP-RIGHT, NOT STACKED ABOVE THE LABEL. It sat on its
+                  own line at the left with the eyebrow pushed beneath it,
+                  which spent a whole row of card height on decoration. The
+                  frame sets label and glyph on one line, opposite ends, so
+                  the names start higher and all three cards align.
+
+                  RULES BELOW EACH NAME, NOT ABOVE. `border-t` with
+                  `first:border-t-0` drew the divider between names and left
+                  the last one bare; the frame closes the list — a rule under
+                  every name including the last, which is what makes the three
+                  cards read as the same object at different lengths.
+
+                  NAMES BOLD AND UP A STEP. `font-medium` at `text-lg` was
+                  quieter than the frame draws them; these are the content of
+                  the section, not a caption under the eyebrow. */}
+              <div className="flex items-start justify-between gap-4">
+                <p className="eyebrow max-w-[16ch] text-xs leading-[1.5] tracking-[0.28em] text-gold">
+                  {group.title}
+                </p>
+                <SeamGlyph
+                  motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
+                  className="relative top-0 right-0 w-11 shrink-0"
+                />
+              </div>
+              <ul className="mt-7">
                 {group.names.map((name) => (
                   <li
                     key={name}
-                    className="border-t border-canvas/12 py-5 text-lg leading-[1.25] font-medium first:border-t-0 first:pt-0 lg:py-4 lg:leading-[1.35]"
+                    className="border-b border-canvas/12 py-4 text-xl leading-[1.3] font-bold lg:leading-[1.35]"
                   >
                     {name}
                   </li>
@@ -801,12 +908,6 @@ export function AlreadyWorkingWith() {
               </ul>
             </div>
           ))}
-        </div>
-
-        <div className="mt-14 max-w-[900px]">
-          <EditorialNote tone="canvas">
-            <p>{partners.pending}</p>
-          </EditorialNote>
         </div>
       </div>
     </section>
@@ -876,43 +977,109 @@ export function WaysIn() {
     >
       <WaveDivider ground="var(--color-evergreen)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" className="top-[10%] left-[64%] w-[56.25rem] opacity-8" />
-        <RingArtwork piece="a" className="-left-48 bottom-[14%] w-[40rem] opacity-7" />
+        <RingArtwork piece="b" className="top-[10%] left-[64%] w-[56.25rem]" />
+        <RingArtwork piece="a" className="-left-48 bottom-[14%] w-[40rem]" />
       </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
         <p className={EYEBROW_DARK}>Get involved</p>
-        <h2 className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.023em] sm:text-5xl lg:text-[3.5rem]">
+        {/* H64, per the frame's own layer name ("H64 → Ways in — settle B5").
+            The page's other section headings are 56; this one is drawn a step
+            larger and only this one has a readout, so only this one moves.
+            ⚑ If the rest of the page is meant to be 64 too, that is a single
+            change across five headings — ask before assuming it. */}
+        <h2 className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.023em] sm:text-5xl lg:text-[4rem]">
           Ways in
         </h2>
 
-        <CardRail className="mt-12" columns="sm:grid-cols-2 lg:grid-cols-4">
+        {/* 141 from the heading's box to the rail, measured off the frame at
+            100% zoom (the card height checked at 361 against a stated 360, so
+            the scale is 1:1). The build ran 48. */}
+        <CardRail className="mt-12 lg:mt-[141px]" columns="sm:grid-cols-2 lg:grid-cols-4">
           {WAYS.map((way, i) => (
             <a
               key={way.title}
               href={way.href}
-              className={`relative flex flex-col rounded-3xl ${way.ground} p-6 text-canvas lg:min-h-[22.5rem]`}
+              /* THE FRAME'S CARD, read off node 2958:26269 (way 1).
+                 298 x 360, radius 24, padding 24 — all three already fell out
+                 of the grid: `lg:grid-cols-4` inside the 1240 column at the
+                 rail's own `gap-4` gives (1240 - 3x16) / 4 = 298 exactly, and
+                 `rounded-3xl` / `p-6` / `lg:min-h-[22.5rem]` are 24 / 24 / 360.
+                 Nothing about the box needed changing.
+
+                 ⚑ WHAT DID: the title sits at y=112 from the card top in the
+                 frame, and the build let it float on whatever height the glyph
+                 happened to be. The three motifs are NOT the same height —
+                 glyph-c (the boomerang) is 44.67 x 37.23, a and b are ~43 x 42
+                 — so a margin under an in-flow glyph put the four titles on
+                 three different baselines. The glyph is absolute at the
+                 padding corner now and the title's y is set by `pt-[112px]`,
+                 so every card agrees whatever motif it draws.
+
+                 The glyph is w-11 (44) and not w-14 (56): the frame's asset
+                 panel gives the boomerang 44.67 wide. */
+              className={`relative flex flex-col rounded-3xl ${way.ground} px-6 pb-[42px] pt-[112px] text-canvas lg:min-h-[22.5rem]`}
             >
               <SeamGlyph
                 motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
-                className="relative top-1 left-0 w-14 shrink-0"
+                className="top-6 left-6 w-11"
               />
-              <h3 className="headline mt-8 text-2xl leading-[1.2] tracking-[-0.02em] sm:text-[1.625rem]">
+              <h3 className="headline text-2xl leading-[1.2] tracking-[-0.02em] sm:text-[1.625rem]">
                 {way.title}
               </h3>
               <p className="mt-4 text-sm leading-[1.5] text-canvas/78">
                 {way.body}
               </p>
-              {/* A label says what happens, never where the file is. */}
-              <p className="eyebrow mt-auto pt-6 text-xs tracking-[0.28em] text-gold">
+              {/* A label says what happens, never where the file is.
+
+                  CTA16 as the frame actually sets it (2958:26317): 12px / 800
+                  / 150% / 4px, #FBAE3D — which is `--color-gold`, so `text-gold`
+                  was already right. Two things were not: tracking ran 0.28em
+                  where 4px on 12px is 0.333em, and there was no explicit
+                  leading, so the box measured 40 instead of the frame's 18.
+
+                  ⚠ THE 42 IS THE CARD'S BOTTOM PADDING, NOT A MARGIN HERE.
+                  The frame seats this label 42 from the card's foot and 24
+                  from each side — the sides are the card's own padding, the
+                  foot is not. With `pb-[42px]` on the card and an 18px line
+                  box, the label's top lands at 360 - 42 - 18 = 300, which is
+                  the y the frame gives it. Setting it as a margin on this
+                  element instead would have put the number in the wrong place
+                  and left the 24/42 asymmetry looking like a mistake. */}
+              <p className="eyebrow mt-auto pt-6 text-xs leading-[1.5] tracking-[0.333em] text-gold">
                 → {way.label}
               </p>
             </a>
           ))}
         </CardRail>
 
-        <div className="mt-16">
-          <BlobButton href="/connect" tone="burnt" still>
+        {/* 107 from the rail's foot to the button, same measurement pass.
+
+            ⚠ TONE IS BURNT OCHRE — user direction, 10 September 2026, and it
+            OVERRIDES THE COMPONENT PROPERTY. The Figma component at 3117:27286
+            reports its `tone` as `ochre`, which I took literally and set to
+            `--color-ochre` (#d69828, "Yellow Ochre — Morning Light"). August
+            corrected it to Burnt Ochre, which is `--color-burnt` (#d97804,
+            "Burnt Ochre — Country") — a different colour, not a synonym.
+
+            The likely cause of the disagreement is that the component's
+            variant is named for the family rather than the palette entry, so
+            "ochre" there means Burnt Ochre. Do not re-derive this tone from
+            the component property; it has been answered by the person whose
+            palette it is.
+
+            ⚑ AND #CB7722 IS A SEPARATE, STILL-OPEN QUESTION. V2's own
+            `Colour/Burnt Ochre` is #CB7722 — the hero blob's readout says so —
+            while `--color-burnt` carries the brand kit's #d97804. globals.css
+            records that gap as raised and not reconciled, alongside eucalyptus
+            and canvas. This button uses the token, so it moves when that
+            decision does rather than hard-coding one side of it.
+
+            size + align are the hero's, and the frame's numbers agree: label
+            inset 26 from the left and 16 from the top, 24 tall, which is
+            `Nav & CTA/16` at 150%. */}
+        <div className="mt-16 lg:mt-[107px]">
+          <BlobButton href="/connect" tone="burnt" still size="cta" align="frame">
             Get in touch →
           </BlobButton>
         </div>
@@ -943,32 +1110,109 @@ export function HowWorkIsAgreed() {
     <section className={`relative bg-roasted text-canvas ${SCREEN.protocol}`}>
       <WaveDivider ground="var(--color-roasted)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="a" className="-left-52 top-[30%] w-[47.5rem] opacity-7" />
-        <RingArtwork piece="b" className="top-[8%] left-[66%] w-[56.25rem] opacity-8" />
+        <RingArtwork piece="a" className="-left-52 top-[30%] w-[47.5rem]" />
+        <RingArtwork piece="b" className="top-[8%] left-[66%] w-[56.25rem]" />
       </div>
 
+      {/* THE FRAME'S MEASURE (2944:25996 — 1440 x 900 on #4E3524, which is
+          `bg-roasted` and the 100vh the budget already gave it). The stack
+          reads, section-relative: eyebrow 150 · heading 202 · body 320 ·
+          container 430-730. The `lg:` margins below are those gaps — 21, 41,
+          38 — rather than the 24 / 32 / 64 the build was running. */}
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
-        <p className={EYEBROW_DARK}>How work is agreed</p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]">
+        <p className={EYEBROW_DARK}>{partnershipsHiFi.protocol.eyebrow}</p>
+        <h2 className="headline mt-6 max-w-[1100px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:mt-[21px] lg:text-[4rem]">
           {protocol?.title ?? "Working with us — research protocol"}
         </h2>
-        <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
+        <p className="mt-8 max-w-[1000px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl lg:mt-[41px]">
           {protocol?.summary}
         </p>
 
-        {/* Drawn, not filled. */}
+        {/* ⚑ THE CONTAINER IS THE FULL COLUMN, not a 900 box. The frame runs it
+            x=100 to x=1340 — the same 1240 the rest of the page sits in — and
+            300 tall with 40 of padding. It was `max-w-[900px]` with `lg:p-9`,
+            which made the one element on the page whose whole job is to look
+            like an empty space read as a narrow aside instead.
+
+            Still drawn, never filled: the protocol does not exist, so this
+            container must not either. */}
         <div
           data-placeholder="protocol-in-preparation"
-          className="relative mt-12 max-w-[900px] rounded-3xl border-[1.5px] border-dashed border-gold/55 p-6 lg:mt-16 lg:p-9"
+          className="relative mt-12 rounded-3xl p-6 lg:mt-[38px] lg:min-h-[300px] lg:p-10"
         >
+          {/* ⚑ THE STROKE IS AN SVG, NOT A CSS BORDER, and it had to become one.
+              The frame gives it weight 1.5, inside, #FBAE3D at 55%, radius 24.
+              `border-[1.5px]` cannot deliver that: Chrome floors border-width
+              to 1px and reports 1px even at devicePixelRatio 2, so the drawn
+              stroke was two device pixels where the frame asks for three — a
+              third of the weight missing on the one element that is nothing
+              BUT its outline. CSS also gives no control over dash length at
+              all, and the frame's dashes are visibly longer than the browser
+              default for a hairline.
+
+              An SVG stroke fixes both: 1.5 renders as 1.5, and the dash is a
+              number rather than a guess by the engine.
+
+              GEOMETRY. The svg box is inset 0.75 — half the stroke — and the
+              rect fills it, so a centred stroke spans 0 to 1.5 from the
+              container's own edge. That is what Figma means by "Inside".
+              `overflow-visible` is required or the root clips the outer half.
+              `rx` is 24 minus the same 0.75.
+
+              ⚠ REMOVING THE CSS BORDER MOVED THE CONTENT 1.5px, and in the
+              right direction: the border no longer occupies layout, so `p-10`
+              now puts the pill at x=140 rather than 141.5. That is the frame's
+              number exactly.
+
+              ⚠ THE DASH IS THE ONE VALUE I DO NOT HAVE. Figma's dash/gap sits
+              in the advanced stroke panel, which the readout does not show, so
+              10/7 is read off the export rather than quoted. Everything else
+              here is a stated value. */}
+          <svg
+            aria-hidden
+            /* ⚠ THE WIDTH AND HEIGHT ARE NOT REDUNDANT WITH THE INSET. An
+               <svg> is a REPLACED element: with `width: auto` it falls back to
+               its 300x150 intrinsic size no matter how many insets are set, so
+               `inset-[0.75px]` alone drew a 300x150 rect in the corner rather
+               than a 1240x300 one. The inset positions it; the calc sizes it. */
+            className="pointer-events-none absolute inset-[0.75px] h-[calc(100%-1.5px)] w-[calc(100%-1.5px)] overflow-visible"
+          >
+            <rect
+              width="100%"
+              height="100%"
+              rx="23.25"
+              fill="none"
+              stroke="var(--color-gold)"
+              strokeOpacity="0.55"
+              strokeWidth="1.5"
+              strokeDasharray="10 7"
+            />
+          </svg>
           <SeamGlyph motif="a" className="right-6 bottom-6 hidden w-11 lg:block" />
-          <p className="eyebrow inline-block rounded-xs border border-gold/55 px-3 py-1.5 text-[10px] tracking-[0.28em] text-gold">
+          {/* ⚠ THE PILL IS FILLED IN THE FRAME, and the build had it outlined.
+              An outlined pill inside an already-dashed container gave two
+              weights of the same dashed idea and neither read as a status.
+
+              Every value here is off the supplied export (243 x 34, rx 17):
+                fill  #FBAE3D — `--color-gold`
+                ink   #090E12 — `--color-charcoal`, and NOT the roasted ground
+                      it sits on. I had used `text-roasted` from the section's
+                      own colour, which was a guess; the export is explicit.
+                rx    17 on a 34 box, so it is a true pill — `rounded-full`.
+                type  12px, from the glyph paths' 8.5 cap height. 10 above and
+                      11 below in the layer readout, so `py-2.5` with a 14px
+                      line box lands the pill on 34.
+
+              ⚑ RENDERED AS TEXT, NOT AS THE SVG. The export is the reference,
+              not the asset — dropping it in as an image would make the one
+              status label on the page uneditable at launch (D12) and unreadable
+              to a screen reader. The rect and the type are reproducible from
+              tokens, so they are. */}
+          <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2.5 text-xs leading-[14px] tracking-[0.28em] text-charcoal">
             In preparation
           </p>
-          <p className="mt-6 max-w-[640px] text-base leading-[1.6] text-canvas/85">
-            No page anywhere explains how research here is agreed. The protocol
-            is the document that would, and it is being written. Until it
-            exists, requests are answered case by case — {onRequest.pending}
+          <p className="mt-6 max-w-[1120px] text-base leading-[1.5] text-canvas/85 lg:mt-9 lg:text-[22px]">
+            {partnershipsHiFi.protocol.note}
           </p>
         </div>
       </div>
@@ -998,7 +1242,13 @@ export function TheEnding() {
     <section className={`relative bg-canvas text-charcoal ${SCREEN.ending}`}>
       <WaveDivider ground="var(--color-canvas)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" className="top-[7%] left-[78%] w-[35rem] opacity-30" />
+        {/* Canvas ground, so roasted — the same off-white-on-off-white fault
+            §03 carried, and the second of the two on this page. */}
+        <RingArtwork
+          piece="b"
+          tone="roasted"
+          className="top-[7%] left-[78%] w-[35rem]"
+        />
       </div>
 
       {/* Two columns, and the split is the argument: the address is a fact
@@ -1009,12 +1259,12 @@ export function TheEnding() {
           button would sit a screen-width from the words it answers. */}
       <div className={`${COLUMN} relative grid gap-x-12 gap-y-12 pt-16 pb-16 lg:grid-cols-2 lg:items-end lg:pt-24 lg:pb-28`}>
         <div>
-          <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
+          <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
             Where we are
           </p>
 
           <div className="mt-10">
-            <p className="eyebrow text-xs tracking-[0.08em] text-burnt">
+            <p className="eyebrow text-xs tracking-[0.08em] text-ochre">
               {office?.label}
             </p>
             <p className="mt-2 max-w-[360px] text-base leading-[1.5] text-charcoal">
@@ -1024,7 +1274,43 @@ export function TheEnding() {
         </div>
 
         <div className="lg:justify-self-end">
-          <BlobButton href="/connect" tone="burnt" still>
+          {/* OXIDE RED, matching the frame — user direction, 10 September 2026.
+
+              ⚑ THIS REVERSES A CALL MADE MINUTES EARLIER in the same session,
+              and the history is kept because the earlier note said the
+              opposite in strong terms. August first ruled that the built
+              page's Burnt Ochre read better than the frame's `rust` and should
+              stand; the call was then reversed to follow the frame. Oxide is
+              the current instruction — the previous "do not correct this back
+              to oxide" is void, not advice to weigh.
+
+              `--color-oxide` is #af231c, which is exactly the fill the supplied
+              264 export carries, so shape and tone now agree on one hex.
+
+              ⚠ IT IS THE ONLY NON-BURNT BLOB ON THE PAGE. The hero and Ways in
+              buttons stay Burnt Ochre per their own readouts, so a reviewer
+              seeing three blobs in two colours is looking at the frames, not
+              at a drift.
+
+              The label follows the same readout — inset 26 from the left and
+              16 from the top, the 24-tall `Nav & CTA/16` the other two carry.
+              That was the last button still running a 12px centred label.
+
+              ⚑ AND THE WIDTH IS THE FRAME'S 264. This was raised as
+              unreconciled an hour earlier — the code had only the 276 export,
+              so a narrow instance would have meant stretching that mask down
+              12px and squashing Marc's wobble. August then supplied the 264
+              cut, so it is a real second shape now: `shape="narrow"` picks both
+              the width and its own mask. See BLOB_SHAPE in Furniture.tsx for
+              why the two are not one scaled. */}
+          <BlobButton
+            href="/connect"
+            tone="oxide"
+            still
+            size="cta"
+            align="frame"
+            shape="narrow"
+          >
             Get in touch →
           </BlobButton>
         </div>

@@ -75,7 +75,7 @@ export const recordPortalMedia = {
     "bringing-a-spring-back",
     "a-season-of-bush-foods",
     null, // User removed the central grass photo, 2026-09-09; preserve the other slots.
-    "right-way-fire-and-the-carbon-in-the-soil",
+    "fire-stick-farming-and-the-carbon-in-the-soil",
     "you-are-standing-on-a-seabed",
     "wattanuri-and-the-ones-he-followed",
     "when-they-called-it-the-art-gallery",
@@ -220,7 +220,7 @@ export const recordCardMedia: Record<string, RecordMediaSlot> = {
     tone: "midnight",
   },
   /* 10 · the entry's own subject, exactly — the carbon in the soil. */
-  "right-way-fire-and-the-carbon-in-the-soil": {
+  "fire-stick-farming-and-the-carbon-in-the-soil": {
     id: "card-fire",
     motionGrade: "full",
     bucket: "work",

@@ -1,6 +1,6 @@
 # Decisions, Risks & Issues — paste-ready
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 Everything here is written to be **copied straight into Proyekto**:
 
@@ -942,7 +942,7 @@ Record as **Final**, except F1 which is **Superseded**.
   (next.config.ts), because the drafts and anything already sent out still
   carry the old URL.
 - **What did NOT move** — the client draft
-  `docs/content/drafts/resources/YACHATDAC-Resources-Copy-v1.md`. Supplied
+  `docs/content/drafts/the-record/YACHATDAC-Resources-Copy-v1.md`. Supplied
   documents are not ours to rename (D5). Its in-text `/resources` links are
   covered by the redirect.
 - **Still open** — Marc and Ivy own D1. This records what was built and why;
@@ -1834,7 +1834,7 @@ permission is recorded, not when a design is drawn.
   (`378A7604_1.40.2`), which is possible precisely because she is the one person
   whose identification is not in question.
 - **Next step** — Ask. The list of who to ask is the six team roles and three
-  board seats in `docs/content/drafts/connect/YACHATDAC-OurPeople-Copy-v1.md`.
+  board seats in `docs/content/drafts/our-people/YACHATDAC-OurPeople-Copy-v1.md`.
   Record each answer with who gave it and when, per D14's attribution
   requirement.
 

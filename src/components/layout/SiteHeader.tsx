@@ -127,10 +127,16 @@ import { navHeroFoot } from "@/lib/nav-hero";
  *     six controls that are off-screen.
  *
  * A threshold, not a ramp: React renders on a crossing, not once a frame.
- * Mobile is untouched — `MobileNav` has been fixed and scroll-linked since
- * 2 September, slides away with the thumb and is dragged back by any upward
- * swipe. A phone has no pointer to hover with, so the reveal above is desktop's
- * and the swipe is the phone's answer to the same problem.
+ *
+ * ⚑ AND MOBILE NOW AGREES ON WHEN TO GO — 10 September 2026, "hide the nav bar
+ * when scrolling down mobile/tablet/laptop/desktop". `MobileNav` used to stay
+ * pinned for the whole hero while this band left at 130px, so the two bars
+ * disagreed for the length of an opening screen. Both now leave once the
+ * reader is past the bar's own height.
+ *
+ * They still differ on how they COME BACK, and that is the input, not a drift:
+ * a phone has no pointer to hover with, so `MobileNav` is dragged back by any
+ * upward swipe while this band waits for the pointer at the top of the screen.
  */
 
 /** Height of the band, in px — `Navbar / 1 /`, restored 9 September 2026 from

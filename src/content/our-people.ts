@@ -1,7 +1,7 @@
 /**
  * Our People.
  *
- * Source of truth: docs/content/drafts/connect/YACHATDAC-OurPeople-Copy-v1.md
+ * Source of truth: docs/content/drafts/our-people/YACHATDAC-OurPeople-Copy-v1.md
  * (D5). First draft of this page; the old page-specs file had no entry for it.
  *
  * ⚠ Governance circle: **shared with care**. Blocked on names, roles,

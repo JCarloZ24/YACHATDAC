@@ -31,6 +31,12 @@
 > meant to carry. Per STATUS note 12 the photography is placeholder direction,
 > not an asset manifest.
 >
+> **Change request applied, 10 September 2026 — CR3 / D17.** The card linking
+> the flux-tower article now reads **"Fire-stick farming, springs, and two flux
+> towers"**, and both links to it carry the renamed path, closing the last CR3
+> carve-out (Steve, FNAN, 15:15). **D17 is Final.** Paths in this file keep the
+> supplied `/resources` prefix; the built route is `/the-record`.
+>
 > **Form controls.** `[ Field: … ]` and `[ Button: … ]` mark inputs in the
 > prototype, kept because their labels are copy.
 
@@ -82,7 +88,7 @@ Today
 
 Now
 
-#### [Right-way fire, springs, and two flux towers](/resources/right-way-fire-and-the-carbon-in-the-soil)
+#### [Fire-stick farming, springs, and two flux towers](/resources/fire-stick-farming-and-the-carbon-in-the-soil)
 
 The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on Country managed this way, one on grazed land, checked against each other.
 
@@ -92,7 +98,7 @@ They can do this work because, seven years ago, this stopped being someone else'
 
 Living memory
 
-[What the towers are showing →](/resources/right-way-fire-and-the-carbon-in-the-soil)
+[What the towers are showing →](/resources/fire-stick-farming-and-the-carbon-in-the-soil)
 
 2022
 
