@@ -273,12 +273,34 @@ export function registerHome(): void {
         { autoAlpha: 0, duration: 0.7, ease: "sine.inOut" }, offerAt);
       timeline.fromTo(root.querySelector("[data-offer-body]"),
         { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.9, ease: "sine.inOut" }, offerAt + 0.6);
-      // Frame grade: the plates arrive and then hold absolutely still. The
-      // rise is a fraction of the canvas rather than a pixel count, and the
-      // stagger reads corner to corner rather than as one block landing.
-      timeline.fromTo(root.querySelectorAll("[data-offer-plate]"),
-        { y: () => root.clientHeight * 0.07, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.9, stagger: 0.18, ease: "sine.out" }, offerAt + 1.4);
+      // Frame grade: the plates are REVEALED, not moved (10 September 2026,
+      // user direction — the same opening Living Work uses on its §02 spring
+      // photograph). M2 `frameOpen` with edge "left" unrolls the clip from
+      // the left edge, and `scale: 1` is the frame-grade pin recipes.ts sets
+      // for the same reason: the window travels, the picture inside it never
+      // does. This replaces a rise-and-fade, which moved the plane.
+      //
+      // Ordered by where each plate actually SITS rather than by DOM order.
+      // homeOfferMedia lists them at 21%, 68.2%, 6.5% and 68%, so a plain
+      // stagger crossed the panel left, right, left, right. Read off the
+      // inline style, not layout: the plates are `display:none` below lg and
+      // would every one of them measure offsetLeft 0.
+      const offerPlates = Array.from(root.querySelectorAll<HTMLElement>("[data-offer-plate]"))
+        .sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left));
+      // Closed at the TOP of the timeline, not left to the effect's own
+      // from-state. `frameOpen` builds a NESTED timeline, and a nested fromTo
+      // positioned forty-odd units into a `paused: true` parent cannot be
+      // relied on to have rendered its from-state before the playhead gets
+      // there. Without this set the plates sit fully open through the
+      // statement beat and the wipe has nothing left to reveal — which is
+      // exactly how it looked. The old rise-and-fade never showed this up
+      // because it was a direct child of the parent and its autoAlpha: 0
+      // immediate-rendered. Zero duration, so it reverses on scrub.
+      timeline.set(offerPlates, { clipPath: "inset(0% 100% 0% 0%)" }, 0);
+      offerPlates.forEach((plate, index) => {
+        timeline.frameOpen(plate, { edge: "left", scale: 1, duration: 0.9 },
+          offerAt + 1.4 + index * 0.18);
+      });
       // A held screen before the last one arrives.
       timeline.to({}, { duration: 1.3 }, offerAt + 2.9);
       // The pathways, and the end of the page (deck 24, 9 September 2026,
