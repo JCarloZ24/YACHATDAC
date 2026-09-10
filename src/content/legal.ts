@@ -172,12 +172,19 @@ export const legalDocs: readonly LegalDoc[] = [
       {
         number: "01",
         title: "What a cookie is",
-        body: "A cookie is a small file a site stores in your browser. It lets the site remember things between pages and between visits — that you have dismissed a notice, for instance, or what is in your cart.",
+        /* Widened beyond "cookie" on 10 September 2026: the site began storing
+           something that is NOT a cookie — a sessionStorage key recording that
+           the homepage's opening film has been seen. The old definition, "a
+           small file a site stores in your browser", did not describe it, so
+           the page's only true sentence would have sat outside its own scope.
+           Specimen prose still, but counsel should be handed the real fact
+           rather than left to infer it. */
+        body: "A cookie is a small file a site stores in your browser. Sites also use similar browser storage that is not a file but works the same way. Both let the site remember things between pages and between visits — that you have dismissed a notice, for instance, or what is in your cart.",
       },
       {
         number: "02",
         title: "Essential cookies",
-        body: "These keep the site working: they hold your session, remember the cookie choices you have made, and protect forms against misuse. They cannot be switched off, because the site does not function without them.",
+        body: "These keep the site working: they hold your session, remember the cookie choices you have made, and protect forms against misuse. One remembers that you have already watched the film the homepage opens with, so it does not play again for the rest of your visit; it is forgotten when you close the tab. They cannot be switched off, because the site does not function without them.",
       },
       {
         number: "03",
