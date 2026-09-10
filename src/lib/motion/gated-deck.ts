@@ -192,12 +192,15 @@ export function createGatedDeck({
                 ),
               );
 
-              const readDistance = (index: number) =>
-                Math.max(
-                  1,
-                  window.innerHeight *
-                    ((index === 0 ? openingReadVh : readVh) / 100),
-                );
+              // How far the reader scrolls to read a slide. A slide may set
+              // its own `data-truth-read-vh` when it holds more than the
+              // normalised span comfortably carries.
+              const readDistance = (index: number) => {
+                const own = Number(slides[index].dataset.truthReadVh);
+                const vh =
+                  own > 0 ? own : index === 0 ? openingReadVh : readVh;
+                return Math.max(1, window.innerHeight * (vh / 100));
+              };
 
               // The runway is a clock, not content spacing. Its extra block
               // size sits behind a continuously pinned viewport surface, so
