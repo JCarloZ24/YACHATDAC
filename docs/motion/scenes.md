@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 **Record asset reuse, 9 September 2026.** Decoded portal images are cached by
 full URL for the browser session (LRU, at most 24 entries / 48 MiB decoded pixel
@@ -256,7 +256,7 @@ the build target.
 | 12 | II | **2003 — Suzanne's father. The portrait is held** | **5** | 116 | **media** | portrait 460×613 | ✓✓ hold |
 | 13 | II | 1950s — the light goes out | 3 | 123 | **transition** | ⟡ held doc slot | — |
 | 14 | II | BREAK · The escarpment — the film goes cold | 5 | 100 | **media** | dissolve pair | ✓ hold |
-| 15 | **III** | **THE HARD STOP — three held screens: who is speaking · the count · her testimony** | **1** | **3 × 125** | **none** | — | ✓✓ the longest hold on the site |
+| 15 | **III** | **THE HARD STOP — three held screens: who is speaking · the count · her testimony** | **1** | **125 / 125 / 560** | **none** | — | ✓✓ the longest hold on the site |
 | 16 | IV | 1840s — what Mitchell recorded | 3 | 135 | **type** | ⟡ held journal scan | — |
 | 17 | IV | Older than the record — the engraving wall | 2 | 69 | **none** | — | ✓ |
 | 18 | IV | Still to be found — open research | 2 | 72 | **type** | evidence strip B | — |
@@ -283,6 +283,16 @@ and the 1840s read ScrollTrigger restores it over its opening fifth. It fades pe
 final fifth of Before people, before the closing Wattanuri floor. Under reduced motion the
 traveller is absent. This is G1,
 **the guide leading the eye**, and `the page holding its ground`, not a timeline mark per era.
+
+**§15C IS PACED BY THE LINE, 10 September 2026 (user direction).** Her testimony is the
+longest screen on the page and the only one whose read span is derived rather than chosen. The
+words undim in reading order (`WordEmphasis`, the same treatment §12 gets), and the scroll they
+are given is `rendered lines × LINE_VH`, not a fraction of the section — so the section costs
+what there is to read, and roughly one line arrives per meaningful scroll. After the last word
+the screen is **held for a further 1.2 viewports** before the 1840s covers it; without that tail
+the next section arrived over a quotation that was still being read. `readVh={560}` on the screen
+in `Sections.tsx` is the budget those two numbers spend, and `truth-scenes.ts` prints the figure
+to use if the copy grows past it.
 
 **THE GROUND NO LONGER FALLS — one egg white, 9 September 2026 (client direction, D26).**
 `/truth` renders on a single ground, Off-White `#f6f6ec`, the same one /about uses. Two

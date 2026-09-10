@@ -3,31 +3,17 @@
 /**
  * Truth — what each section does while it is being read.
  *
- * WHY THIS FILE EXISTS
- * --------------------
- * The gated deck pins every slide (`gated-deck.ts`, extended to /truth by user
- * direction 9 September 2026). Once a slide is pinned at `top top` with
- * `pinSpacing: false`, its contents never cross the viewport, so a
- * viewport-relative trigger on anything inside it is measuring a journey that
- * does not happen. `top 88% → top 38%` on a heading in slide N is consumed
- * while slide N is still travelling up BEHIND the slide covering it: the
- * animation runs to completion off-screen, and then nothing at all moves
- * across the 125vh the reader actually spends in that section.
+ * The deck pins every slide, so nothing inside one ever crosses the viewport
+ * and a viewport-relative trigger measures a journey that does not happen:
+ * `top 88% → top 38%` on a pinned heading is spent while the slide is still
+ * behind the one covering it, and the reader sees nothing move. So interior
+ * motion binds to the slide's own reading clock instead (SCR-02), handed out
+ * by the deck through `onSlideSpans`. Every beat below is a FRACTION of its
+ * section's read span, which is why the windows read like a storyboard.
  *
- * That is the whole defect. The page was not missing its choreography; it was
- * playing it where nobody could see it.
- *
- * So interior motion binds to the slide's own reading clock instead — SCR-02,
- * "section locks to viewport while an internal timeline scrubs". The deck
- * hands every clock out through `onSlideSpans`, and every beat below is
- * written as a FRACTION of the section's own read span, which is why the
- * windows read like a storyboard rather than like pixel offsets.
- *
- * THE ONE-LOUD-CHANNEL RULE STILL APPLIES (F7). Each scene's declared channel
- * is in `docs/motion/scenes.md`; interior motion here stays inside it and
- * stays quiet. Screens whose channel is `none` — 2022, the count, Older than
- * the record, the closing shot — get NOTHING, and that is enforced below by
- * refusing to build a recipe for them rather than by remembering not to.
+ * One loud channel per screen (F7); `docs/motion/scenes.md` says which.
+ * Screens whose channel is `none` get no recipe at all — enforced by the
+ * table not listing them, rather than by anyone remembering.
  *
  * MARKUP CONTRACT
  * ---------------
@@ -65,14 +51,9 @@ const CAMERA_PULL = 1.06;
 const HERO_BREATH = 1.04;
 
 /**
- * Montage delays, as fractions of a read span. DELIBERATELY UNEVEN — "like a
- * hand laid them down". Evenly spaced arrivals read as a slideshow, which is
- * the one thing a montage of Country must not read as.
- *
- * Fixed, never generated: a random offset per load makes every screenshot
- * comparison flap and turns a reviewer's "it felt different that time" into
- * something nobody can reproduce. This is the JITTER doctrine in tokens.ts —
- * seeded, not random.
+ * Montage delays, as fractions of a read span. Uneven on purpose — evenly
+ * spaced arrivals read as a slideshow. Written out rather than generated so
+ * two screenshots of the same scroll position match (JITTER, tokens.ts).
  */
 const MONTAGE_STARTS = [0.1, 0.17, 0.21, 0.3] as const;
 const MONTAGE_STARTS_SIX = [0.08, 0.15, 0.19, 0.26, 0.3, 0.39] as const;
@@ -87,12 +68,9 @@ const STRIP_LENGTH = 0.1;
 const STRIP_DRIFT = -40;
 
 /**
- * The 1950s crossing, in hex.
- *
- * Written out rather than read from the tokens because GSAP interpolates
- * colour values, not `var()` references — a tween from "var(--color-canvas)"
- * to "var(--color-charcoal)" has nothing to interpolate and snaps. These are
- * the same four values globals.css declares; if the palette moves, they move.
+ * The 1950s crossing, in hex. GSAP interpolates colour values, not `var()`
+ * references, so a tween between two custom properties snaps. Same values
+ * globals.css declares — if the palette moves, move these with it.
  */
 const CANVAS = "#f6f6ec";
 const CHARCOAL = "#090e12";
@@ -114,11 +92,9 @@ const query = <T extends HTMLElement>(root: ParentNode, selector: string) =>
   Array.from(root.querySelectorAll<T>(selector));
 
 /**
- * Elements matching a selector inside this slide, INCLUDING the slide itself.
- *
- * The two breaks carry their marker on the `<section>` that is the slide, so a
- * plain `querySelectorAll` from the slide finds nothing and the break silently
- * loses its camera. Worth the extra line.
+ * Matches inside this slide, including the slide itself — the two breaks carry
+ * their marker on the `<section>` that IS the slide, and a plain
+ * `querySelectorAll` from it finds nothing.
  */
 const within = (slide: HTMLElement, selector: string) => {
   const found = query<HTMLElement>(slide, selector);
@@ -126,15 +102,11 @@ const within = (slide: HTMLElement, selector: string) => {
 };
 
 /**
- * Held subtrees never receive motion, whatever else a recipe asks for.
+ * Held subtrees never receive motion, whatever a recipe asks for.
  *
- * `data-v2-static` is the page's single "this does not move" hook, and the
- * still beats are marked with it in the markup: §06 the 2022 study, §15 the
- * count, §17 the engraving, §20 the closing shot, and Suzanne's portrait.
- * Checking the ancestor chain rather than keeping a list of ids here is what
- * makes the stillness survive: §06 and §15 both ride inside slides that DO
- * move, so a slide-level exclusion would either kill a section that should
- * animate or miss one that should not.
+ * Checking the ancestor chain rather than listing ids here is what makes the
+ * stillness survive: two held beats ride inside slides that DO move, so a
+ * slide-level exclusion would be wrong in both directions at once.
  */
 const isHeld = (el: HTMLElement) => Boolean(el.closest("[data-v2-static]"));
 
@@ -152,9 +124,8 @@ const planesOf = (frame: HTMLElement) =>
    ------------------------------------------------------------------------- */
 
 /**
- * M1 / emerging from the ground. Brightness only, never travel — on Truth the
- * descent supplies all the movement there is, and an element that also slides
- * is competing with the page.
+ * M1 / emerging from the ground. Brightness only, never travel — the descent
+ * supplies all the movement, and an element that also slides competes with it.
  */
 function brightenAt(
   timeline: gsap.core.Timeline,
@@ -203,11 +174,7 @@ function pullMedia(
   });
 }
 
-/**
- * B5 / what endures. Line masks, scrubbed and reversible, but now measured
- * against the reading clock rather than against a viewport the pinned heading
- * never crosses.
- */
+/** B5 / what endures. Line masks, scrubbed against the reading clock. */
 function revealHeadings(
   timeline: gsap.core.Timeline,
   slide: HTMLElement,
@@ -215,38 +182,32 @@ function revealHeadings(
 ) {
   query<HTMLElement>(slide, "[data-descent-heading]")
     .filter((heading) => !isHeld(heading))
-    // THE SECTION'S OWN HEADLINE IS NOT REVEALED — it is already there.
-    // On a deck a section arrives whole and then holds, so a masked heading
-    // means the reader looks at an empty slide and has to scroll to find out
-    // what it says. That reads as a page still loading, not as a page being
-    // read to. Any LATER heading in the same slide still rises, because by
-    // then the reader has arrived and the reveal is a reward rather than a
-    // toll (user direction, 9 September 2026).
+    // Skip the section's own headline: on a deck the slide arrives whole and
+    // holds, so masking its title means the reader waits on an empty screen to
+    // find out what it says. Later headings still rise (user, 9 Sep 2026).
     .slice(1)
     .forEach((heading) => {
-    const split = SplitText.create(heading, {
-      type: "lines",
-      mask: "lines",
-      aria: "auto",
+      const split = SplitText.create(heading, {
+        type: "lines",
+        mask: "lines",
+        aria: "auto",
+      });
+      splits.push(split);
+      timeline.fromTo(
+        split.lines,
+        { yPercent: 110 },
+        { yPercent: 0, stagger: 0.09, ease: "none", duration: 0.3 },
+        0.02,
+      );
     });
-    splits.push(split);
-    timeline.fromTo(
-      split.lines,
-      { yPercent: 110 },
-      { yPercent: 0, stagger: 0.09, ease: "none", duration: 0.3 },
-      0.02,
-    );
-  });
 }
 
 /**
  * Everything the section marked as an M1 arrival, unless a recipe took it.
  *
- * This lands EARLY and finishes early — 0.02 to 0.16 — because the record it
- * brightens is the parent of any montage tiles below it, and opacity
- * multiplies down the tree. The block resolves first, then the photographs are
- * laid into it; overlapping the two would leave the tiles muddy for the first
- * part of their own window for no reason anyone could name.
+ * Early and short (0.02–0.16) because opacity multiplies down the tree: this
+ * block is the parent of any montage tiles, so it has to resolve before they
+ * are laid into it or they spend their own window muddy.
  */
 function arriveRest(
   timeline: gsap.core.Timeline,
@@ -256,11 +217,9 @@ function arriveRest(
   const rest = query<HTMLElement>(slide, "[data-descent-arrive]").filter(
     (el) => !claimed.has(el) && !isHeld(el),
   );
-  // The LEAD block of every section is at full strength from the first frame:
-  // its year, its kicker, its headline, its opening paragraph. M1 is "emerging
-  // from the ground", not "withheld until paid for", and on a pinned deck a
-  // dimmed opening line means the reader has to scroll before the section will
-  // tell them anything. Everything BELOW the lead still emerges.
+  // The lead block is at full strength from the first frame — on a pinned
+  // deck a dimmed opening line means the reader must scroll before the section
+  // will tell them anything. Everything below it still emerges.
   brightenAt(timeline, rest.slice(1), 0.02, 0.16);
 }
 
@@ -269,18 +228,12 @@ function arriveRest(
    ------------------------------------------------------------------------- */
 
 /**
- * §01 Intro. The photograph breathes rather than sitting still: it opens 4%
- * over and settles to its resting size.
+ * §01 Intro. The photograph opens 4% over and settles.
  *
- * It runs on its OWN trigger, across read + cover, not on the slide timeline.
- * The hero's read runway is a deliberately short 20vh — it exists to let the
- * navbar clear, not to be a reading span — and a 4% settle compressed into a
- * fifth of a viewport is a twitch, not a breath. Spending the cover as well
- * gives it a little over a full viewport to relax across, and the hero is on
- * screen for all of it.
- *
- * This supersedes the ledger's "the hero … held at its rendered state"; the
- * copy is still held, only the photograph moves.
+ * Its own trigger, across read + cover, because the hero's 20vh read exists to
+ * let the navbar clear — a 4% settle inside a fifth of a viewport is a twitch,
+ * not a breath. Supersedes the ledger's "held at its rendered state": the copy
+ * is still held, only the photograph moves.
  */
 const heroBreath: Recipe = (_timeline, slide, span) => {
   const planes = query<HTMLElement>(
@@ -330,17 +283,10 @@ const aheadCards: Recipe = (timeline, slide) => {
         return;
       }
       const at = index * 0.3;
-      // BRIGHTNESS ONLY, no travel. Two reasons that happen to agree.
-      //
-      // M1 says so — "an element brightens from a visible dim state without
-      // moving ... the descent supplies all travel" — and a card that also
-      // slides is competing with the page it is sliding down.
-      //
-      // And the card's transform is spoken for: the hover lift is a CSS rule,
-      // and GSAP writes transforms inline, which beats a stylesheet. An
-      // entrance that animates `y` silently kills the hover — it does not
-      // error, the card simply never lifts. The brief's "lifting" is the
-      // pointer gesture; the entrance is the brightening.
+      // Brightness only, no travel. M1 says so, and the card's transform is
+      // spoken for: the hover lift is a CSS rule and GSAP writes transforms
+      // inline, which beats a stylesheet. Animating `y` here does not error —
+      // the card just silently never lifts again.
       timeline.fromTo(
         card,
         { opacity: M1_DIM },
@@ -383,9 +329,8 @@ function layTiles(
 
 /**
  * §07 Research & discovery. Six frames arrive left to right fast enough to
- * read as ONE strip being pulled across rather than six things appearing,
- * then the whole strip drifts left as the reading continues — the evidence
- * carrying on past the edge of what is being said about it.
+ * read as one strip pulled across, then the whole strip drifts left — the
+ * evidence carrying on past the edge of what is said about it.
  */
 const researchStrip: Recipe = (timeline, slide) => {
   const strip = slide.querySelector<HTMLElement>("[data-truth-strip]");
@@ -404,49 +349,24 @@ const researchStrip: Recipe = (timeline, slide) => {
 };
 
 /**
- * §12 2003. Suzanne's father, in his own words.
+ * A scrub span for a screen's own words.
  *
- * The words undim one at a time at speaking pace — not a typing effect, not a
- * block fade. The attribution is held back until the last word has landed:
- * someone finishes speaking, and only then are they named.
- *
- * The portrait itself is held (`data-v2-static` in the markup), so nothing
- * here touches it.
+ * `leadVh` starts it early, while the previous slide is still clearing, so the
+ * first words are already moving as the screen settles rather than sitting
+ * dim until it stops. `endFraction` is the share of the read the words take;
+ * the remainder is the screen held, fully lit, before the next one covers.
  */
-/**
- * A person speaking — words undim at speaking pace, no movement at all.
- *
- * THE ONE IMPLEMENTATION. Every quotation on Truth runs through this: the 2003
- * portrait beat and both of Suzanne's screens on the hard stop. They are the
- * same act — a person being read — so they are the same code rather than two
- * things tuned to look alike (user direction, 10 September 2026).
- *
- * A reading-line variant was built and rejected: it lit each word as it crossed
- * 62% of the viewport, which put the boundary in a tidier place but did not
- * read like this one.
- */
-/**
- * A scrub span that STARTS WHILE THE SECTION IS STILL ARRIVING.
- *
- * The undim itself is unchanged — same staggered tween, same feel. What moves
- * is when it runs. Bound to the reading span alone, the words light while they
- * sit near the top of the screen: the section is already pinned, its block has
- * already climbed, and measured on her testimony the read/unread boundary sat
- * between 35px and 190px down a 900px viewport for the whole beat.
- *
- * Words light where they are when their turn comes, so the fix is to give them
- * their turn earlier — during the viewport of scroll in which the section is
- * rising into view, when the copy is still low on the screen and near the rail
- * pointer, which sits at about 96% of the viewport. The reveal then runs from
- * the foot of the screen upward with the reader, instead of at the ceiling
- * ahead of them.
- */
-function arrivalTimeline(span: DeckSlideSpan) {
+function arrivalTimeline(
+  span: DeckSlideSpan,
+  endFraction: () => number,
+  leadVh: number,
+) {
   return gsap.timeline({
     scrollTrigger: {
       trigger: span.runway,
-      start: () => span.read.start - window.innerHeight,
-      end: () => span.read.start + (span.read.end - span.read.start) * 0.45,
+      start: () => span.read.start - window.innerHeight * leadVh,
+      end: () =>
+        span.read.start + (span.read.end - span.read.start) * endFraction(),
       scrub: SCRUB.normal,
       invalidateOnRefresh: true,
       refreshPriority: span.index * 10 + 6,
@@ -454,39 +374,48 @@ function arrivalTimeline(span: DeckSlideSpan) {
   });
 }
 
+/** How many rendered lines these words occupy. Words on a line share a top. */
+const lineCount = (words: HTMLElement[]) =>
+  new Set(words.map((w) => Math.round(w.getBoundingClientRect().top / 4))).size;
+
+/**
+ * A person speaking — words undim in reading order, nothing moves.
+ *
+ * `at` and `amount` are timeline fractions: the block starts at `at` and its
+ * last word lights at `at + amount`. Callers tile them so the blocks do not
+ * overlap.
+ *
+ * Two non-obvious mechanics, both of which were bugs here: `gsap.set` first,
+ * because a staggered fromTo in a scrubbed timeline applies its from-value to
+ * the first target only; and `amount`, not `each`, because `each` adds the
+ * tween duration on top of every offset and the block overruns its share.
+ */
 function speakWords(
   timeline: gsap.core.Timeline,
   words: HTMLElement[],
-  at = 0.1,
-  amount = 0.55,
+  at: number,
+  amount: number,
 ) {
   if (!words.length) return;
-  // State the dim explicitly instead of trusting the fromTo to do it.
-  //
-  // A STAGGERED fromTo inside a scrubbed timeline only renders its from-value
-  // for the FIRST target: the quotation loaded with its opening word dim and
-  // every other word already at full strength, and only snapped into its
-  // proper dim state once ScrollTrigger first rendered the timeline — which
-  // reads as the words FADING as you scroll into them, exactly backwards. The
-  // unstaggered tweens on this page (tiles, strata) never showed it, which is
-  // what gave the stagger away.
   gsap.set(words, { opacity: Y2_DIM });
-  // `amount`, not `each`. With `each` every word ALSO gets the full duration
-  // on top of its own offset, so the quotation overruns the span it was given
-  // and whatever follows arrives while half the words are still unread.
   timeline.fromTo(
     words,
     { opacity: Y2_DIM },
-    { opacity: 1, ease: "none", duration: 0.12, stagger: { amount } },
+    { opacity: 1, ease: "none", duration: WORD_FADE, stagger: { amount } },
     at,
   );
 }
+
+/**
+ * §12 2003. Suzanne's father, in his own words. The attribution is held until
+ * the last word has landed — someone finishes speaking, then they are named.
+ */
 
 const testimony: Recipe = (timeline, slide) => {
   const block = slide.querySelector<HTMLElement>("[data-y2]");
   const words = block ? query<HTMLElement>(block, "[data-y2-word]") : [];
   if (words.length) {
-    speakWords(timeline, words);
+    speakWords(timeline, words, 0.1, 0.55);
   }
   const attribution = slide.querySelector<HTMLElement>(
     "[data-truth-attribution]",
@@ -504,66 +433,42 @@ const testimony: Recipe = (timeline, slide) => {
 /**
  * §13 1950s — "the light is going out of this band".
  *
- * The one ground on the page that MOVES. It opens on the page's egg white and
+ * The one ground on the page that MOVES: it opens on the page's egg white and
  * walks down to the count's charcoal as the band is read, so the reader
  * arrives at the hard stop already in the dark.
  *
- * This replaced an alpha dim. Over the old roasted-brown ground a charcoal
- * wash read as a light going out; over egg white the identical wash renders
- * grey — a bruise, not a dusk. So the band ramps the ground COLOUR rather
- * than dimming it, through the same `::before` painter every other slide uses.
+ * It ramps the ground COLOUR rather than dimming it. Over the old roasted-brown
+ * ground a charcoal wash read as a light going out; over egg white the same
+ * wash renders grey — a bruise, not a dusk.
  *
- * Three properties, not one, and the other two are not decoration. This
- * palette has no middle tier (tone.ts): charcoal type is 17.83:1 on the egg
- * white and invisible on charcoal, off-white type is the exact inverse, and
- * the warm accent has the same problem in reverse — burnt-deep is the only
- * compliant warm on cream and is illegal on charcoal, where gold is the accent
- * and gold is illegal on cream. Ground, ink and accent cross over together or
- * the band spends half its span unreadable.
+ * Ground, ink and accent all cross, because this palette has no middle tier
+ * (tone.ts): charcoal type is 17.83:1 on egg white and invisible on charcoal,
+ * off-white is the exact inverse, and the warm accents fail in opposite
+ * directions — burnt-deep needs a ground lighter than ~L 0.56, gold needs one
+ * darker than ~L 0.08, and the ramp spends most of its length between them.
+ * Move one without the others and the band is unreadable for half its span.
  *
- * The photograph still takes no push: giving it camera movement would flatter
- * it. The document slot stays a held frame.
- *
- * Grammar: "a change of ground", scrubbed cut — the row `groundRamp` carries.
- * Written as plain `fromTo`s rather than through that effect, deliberately:
- * `groundRamp` builds its own root timeline internally, and nested inside a
- * scrubbed parent it renders at its end stop for the whole span — the band
- * sat charcoal from the first frame and never travelled. Every other beat in
- * this file states its own start and end on the master timeline, which is
- * also the only form that reverses correctly on scroll-back.
+ * Grammar: "a change of ground", the row `groundRamp` carries — but written as
+ * plain `fromTo`s, because `groundRamp` builds its own root timeline and
+ * nested inside a scrubbed parent it renders at its end stop for the whole
+ * span: the band sat charcoal from the first frame and never travelled.
  */
 const nineteenFifties: Recipe = (timeline, slide) => {
   const [band] = within(slide, "[data-truth-deteriorates]");
   if (!band) return;
-  // The CSS rest state is the END of this journey (charcoal), so that no-JS,
-  // reduced motion and the unpinned flow path all read "the light has gone
-  // out" as a statement. On the deck the band has to be put back to its
-  // opening before the scrub takes over, or it shows dark while the cover
-  // reveals it and then jumps back to light to start.
+
+  // The CSS rest state is the END of this journey, so no-JS, reduced motion
+  // and the unpinned flow path all read "the light has gone out" as a
+  // statement. On the deck it has to be put back to its opening first, or the
+  // band shows dark while the cover reveals it and then jumps back to light.
   gsap.set(band, { "--truth-slide-ground": CANVAS, "--truth-ink": CHARCOAL });
 
-  // LINEAR, so the ground tracks the scroll one-for-one.
-  //
-  // This was `power3.inOut` for one pass, to hurry the ground through the
-  // mid-greys where contrast is weakest. It measured better and read wrong:
-  // the first third of the section scrolled with the ground visibly still,
-  // then the colour lurched through its whole change between 40% and 70% and
-  // was finished before the reader reached the foot. Scrubbed motion that
-  // sits still while you scroll does not read as eased, it reads as broken —
-  // and `machine` is the token rule here anyway ("only ever correct for
-  // scrubbed media... the visitor sets the pace"). The visitor sets the pace.
-  //
-  // The cost is taken knowingly: a linear walk spends longer in the middle,
-  // where no ink in this palette clears 4.5:1 against the ground. See the
-  // step below, which is what keeps that window survivable.
-  // Egg white straight down to the count's charcoal. No intermediate stop:
-  // user direction, 9 September 2026, after seeing a version routed through
-  // Roasted Brown. That version measured better — it kept every intermediate
-  // on the palette's warm axis and its worst contrast was 5.89:1 against this
-  // one's 3.47:1 — but a straight fade is what the band is for, and the brown
-  // read as a third ground appearing halfway down.
-  //
-  // The ease still matters, and carries the whole legibility argument below.
+  // Egg white straight down to charcoal, linear, no intermediate stop (user,
+  // 9 Sep 2026). A version routed through Roasted Brown measured better —
+  // worst contrast 5.89:1 against this one's 3.47:1 — but read as a third
+  // ground appearing halfway down. `power3.inOut` was tried for the same
+  // reason and rejected: it left the ground visibly still for the first third
+  // and scrubbed motion that sits still while you scroll reads as broken.
   timeline.fromTo(
     band,
     { "--truth-slide-ground": CANVAS },
@@ -571,43 +476,21 @@ const nineteenFifties: Recipe = (timeline, slide) => {
     0,
   );
 
-  // The ink does NOT walk with it. Crossing type linearly against its own
-  // ground is how you get invisible copy: measured at the midpoint, ground
-  // and ink both arrive at grey — rgb(133,135,132) against rgb(122,125,122),
-  // which is 1.05:1. The whole middle of the band was unreadable.
+  // The ink STEPS rather than travelling with it. Crossed linearly, ink and
+  // ground both arrive at grey at the midpoint — measured rgb(133,135,132) on
+  // rgb(122,125,122), 1.05:1, the whole middle of the band invisible. Stepping
+  // where the ground's luminance passes ~0.16 keeps both states above ~4.3:1.
+  // A hard swap of type colour would be crude anywhere else; here the ground
+  // is already moving under it, so the reader reads a change of light.
   //
-  // So the ink SWITCHES rather than travels, and it switches inside the
-  // ground's own fast middle.
+  // The accent steps with it rather than staying warm, because no warm in this
+  // palette clears 4.5:1 across the middle of the ramp — carrying gold through
+  // put the eyebrow at 2.08:1 on its own ground. The colour draining out of
+  // the labels is the argument, not a compromise.
   //
-  // It has to be a step, not a short tween. A tween walks the ink through the
-  // greys at the same moment the ground is walking through them, so the two
-  // meet: measured, the heading hit 1.05:1 against its own ground at the
-  // crossing — briefly invisible, which is worse than a visible cut. Stepping
-  // at the point the ground's luminance passes ~0.16 means neither state is
-  // ever worse than about 4.3:1, and both improve immediately either side.
-  //
-  // A hard swap of type colour would be crude anywhere else on this site. It
-  // is right here because the ground is already moving under it: the reader
-  // reads a change of light, not a change of typeface.
-  // Written as a near-zero fromTo rather than two `set`s: a GSAP `set` is a
-  // zero-duration tween with immediateRender on, so BOTH would fire at build
-  // time and the later one would simply win — the band rendered off-white ink
-  // on its off-white opening ground, which is the invisible state this whole
-  // comment exists to avoid. A fromTo states both ends, applies the "from"
-  // immediately, and reverses correctly on scroll-back.
-  //
-  // THE WARM ACCENT DOES NOT SURVIVE THIS BAND, so it is not asked to.
-  // Measured: burnt-deep needs a ground lighter than about L 0.56 and gold
-  // needs one darker than about L 0.08 — between those the band has no warm
-  // that clears 4.5:1, and that gap is most of the ramp. Carrying gold through
-  // it put the eyebrow at 2.08:1 against its own ground. So in this band the
-  // accent steps with the ink instead of staying warm: 17.83:1 at both ends,
-  // and the eyebrow stays legible the whole way down.
-  //
-  // It also happens to be the right reading. This is the band where the light
-  // goes out; the colour draining out of its labels with it is the argument,
-  // not a compromise. The eyebrow is still ExtraBold and uppercased, so it
-  // remains an eyebrow without needing to be a different hue.
+  // A near-zero `fromTo`, not two `set`s: a `set` is a zero-duration tween
+  // with immediateRender on, so both would fire at build time and the later
+  // would win — off-white ink on the off-white opening ground.
   const CROSS_AT = 0.53;
   timeline.fromTo(
     band,
@@ -635,9 +518,8 @@ const breakPullBack: Recipe = (timeline, slide) => {
 };
 
 /**
- * §19 100 million years. The only section that builds DOWNWARD, in the same
- * direction as the scroll — three layers arriving top, middle, then bottom,
- * the way the strata themselves were laid.
+ * §19 100 million years. The only section that builds downward, with the
+ * scroll — top, middle, bottom, the way the strata were laid.
  */
 const strata: Recipe = (timeline, slide) => {
   pushMedia(timeline, slide);
@@ -663,42 +545,134 @@ const strata: Recipe = (timeline, slide) => {
  * A slide that matches nothing gets the ordinary treatment: headings, M1
  * arrivals, and a 6% push on movable media.
  */
+/* -------------------------------------------------------------------------
+   §15 Suzanne's screens — the only ones tuned by hand
+
+   PACE IS SCROLL DISTANCE, NOT DURATION. Every `duration:` in this file is a
+   fraction of the span ScrollTrigger hands the timeline, so changing one
+   re-orders the beats and never changes how fast the section feels. Only
+   these do:
+
+     LINE_VH, *_TAIL_VH, LEAD_VH   below
+     readVh                        on the screen, in Sections.tsx
+
+   The first three are wishes; `readVh` is the scroll the deck actually gives
+   the screen, and it wins. If it is too short to honour LINE_VH and still
+   leave the tail, the words are compressed to fit and dev builds say so in
+   the console — raise `readVh` there rather than fighting it here.
+   ------------------------------------------------------------------------- */
+
+/** Scroll one rendered line of her speech costs. */
+const LINE_VH = 0.4;
+
+/**
+ * How long a screen is held, fully lit, after she stops speaking and before
+ * the next one covers it. Her testimony needs a real one — it is the longest
+ * screen on the page and the 1840s used to arrive on top of it half-read.
+ */
+const TESTIMONY_TAIL_VH = 1.2;
+const OPENING_TAIL_VH = 0.3;
+
+/** Pre-roll while the screen is still settling. */
+const LEAD_VH = 0.25;
+
+/** One word's own fade, as a fraction of the timeline. */
+const WORD_FADE = 0.06;
+
+/**
+ * The share of a read span these words should take, and the timeline that
+ * scrubs across it.
+ *
+ * Asking for `lines × LINE_VH` is what makes the section feel heavy: it is
+ * indifferent to how many words there are and tracks what the reader actually
+ * has to get through.
+ */
+function speakingSpan(
+  span: DeckSlideSpan,
+  words: HTMLElement[],
+  label: string,
+  tailVh: number,
+) {
+  // Re-measured rather than captured: a resize or a late font changes how
+  // many lines the same words wrap to, and ScrollTrigger calls this again on
+  // every refresh.
+  const share = () => {
+    const vh = window.innerHeight;
+    const read = span.read.end - span.read.start;
+    const wanted = lineCount(words) * LINE_VH * vh;
+    return Math.min(wanted / read, Math.max(0.1, (read - tailVh * vh) / read));
+  };
+
+  if (process.env.NODE_ENV !== "production") {
+    const vh = window.innerHeight;
+    const read = span.read.end - span.read.start;
+    const lines = lineCount(words);
+    const wanted = lines * LINE_VH * vh;
+    if (wanted + tailVh * vh > read) {
+      console.warn(
+        `[truth] ${label}: ${lines} lines want ${Math.round(wanted)}px of scroll ` +
+          `plus a ${Math.round(tailVh * vh)}px tail, but readVh gives only ` +
+          `${Math.round(read)}px — the words are compressed to fit. ` +
+          `Set readVh={${Math.ceil(((wanted + tailVh * vh) / vh) * 100)}} ` +
+          `on this screen in Sections.tsx.`,
+      );
+    }
+  }
+  return arrivalTimeline(span, share, LEAD_VH);
+}
+
+/**
+ * Blocks laid end to end across the timeline, each taking a share of it in
+ * proportion to its own length — a six-word line does not take as long to
+ * arrive as a paragraph.
+ */
+function speakBlocks(timeline: gsap.core.Timeline, blocks: HTMLElement[][]) {
+  const total = blocks.reduce((sum, w) => sum + w.length, 0) || 1;
+  let at = 0;
+  blocks.forEach((w) => {
+    const portion = w.length / total;
+    speakWords(timeline, w, at, Math.max(0.02, portion - WORD_FADE));
+    at += portion;
+  });
+}
+
+const wordsIn = (slide: HTMLElement) =>
+  query<HTMLElement>(slide, "[data-y2]")
+    .filter((el) => !isHeld(el))
+    .map((block) => query<HTMLElement>(block, "[data-y2-word]"))
+    .filter((w) => w.length > 0);
+
+/**
+ * §15A who is speaking. Her opening line is testimony too, so it is read the
+ * same way; the marker, title and lede around it take the ordinary M1.
+ */
+const herOpening: Recipe = (_timeline, slide, span) => {
+  const blocks = wordsIn(slide);
+  if (!blocks.length) return;
+  speakBlocks(
+    speakingSpan(span, blocks.flat(), "#the-count", OPENING_TAIL_VH),
+    blocks,
+  );
+};
+
 /**
  * §15C her testimony. Her words undim at speaking pace and nothing else on the
- * screen moves — the same treatment the 2003 portrait beat gets, because it is
- * the same act: a person is being read.
+ * screen moves — the same act as the 2003 beat, so the same treatment.
  *
- * There is deliberately no recipe for the count itself. That screen carries
+ * The count itself has no recipe on purpose: that screen carries
  * `data-v2-static`, so every helper here filters it out and the numerals are
  * simply there when it lands.
  */
 const herTestimony: Recipe = (timeline, slide, span) => {
-  // Her quotations are read, not revealed: each one undims word by word, in
-  // turn, at the pace someone would say it. A long quote gets a longer span
-  // than a short one — "So they decided we needed blankets." should not take
-  // as long to arrive as the paragraph before it.
-  // Each quotation in turn, and each gets a share of the reading span in
-  // proportion to its own length: "So they decided we needed blankets." should
-  // not take as long to arrive as the paragraph before it.
-  const blocks = query<HTMLElement>(slide, "[data-y2]").filter(
-    (el) => !isHeld(el),
+  const blocks = wordsIn(slide);
+  if (!blocks.length) return;
+  speakBlocks(
+    speakingSpan(span, blocks.flat(), "#the-count-testimony", TESTIMONY_TAIL_VH),
+    blocks,
   );
-  const perBlock = blocks.map((b) => query<HTMLElement>(b, "[data-y2-word]"));
-  const total = perBlock.reduce((sum, w) => sum + w.length, 0) || 1;
-  const speaking = arrivalTimeline(span);
-  const READING = 0.82;
-  let at = 0.02;
-  perBlock.forEach((w) => {
-    const share = (w.length / total) * READING;
-    speakWords(speaking, w, at, Math.max(0.05, share - 0.1));
-    at += share;
-  });
 
-  // After she has finished speaking: her standing line, then the closing
-  // paragraphs. M1 brightness, no travel — the words above did the work.
-  // Plain selectors and a filter, not `:has()`. An unsupported selector makes
-  // querySelectorAll throw a SyntaxError, and that would take the whole
-  // module down rather than degrading — too much to risk on a nicety.
+  // Her standing line and the closing paragraphs, once she has stopped. These
+  // ride the slide's own read clock, so they land inside the tail.
   const rest = query<HTMLElement>(slide, "blockquote, p").filter(
     (el) =>
       !isHeld(el) &&
@@ -713,17 +687,11 @@ const herTestimony: Recipe = (timeline, slide, span) => {
 };
 
 /**
- * §15A who is speaking. Her opening line is testimony too, so it is read the
- * same way; the marker, title and lede around it take the ordinary M1.
+ * Selected by the anchors already in the markup, never by index: re-ordering
+ * the slides would silently re-point an index-keyed table and a section would
+ * quietly perform another section's choreography. A slide matching nothing
+ * gets headings, M1 arrivals and a 6% push on movable media.
  */
-const herOpening: Recipe = (_timeline, slide, span) => {
-  const block = slide.querySelector<HTMLElement>("[data-y2]");
-  speakWords(
-    arrivalTimeline(span),
-    block ? query<HTMLElement>(block, "[data-y2-word]") : [],
-  );
-};
-
 const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "[data-v2-hero-media]", recipe: heroBreath },
   { match: "[data-truth-card]", recipe: aheadCards },
@@ -740,27 +708,18 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
 ];
 
 /**
- * THE STILLNESSES, and why each one is still.
+ * THE STILLNESSES. Marked `data-v2-static` in the markup, not listed here, so
+ * a still beat stays still without any module remembering it:
  *
- * There is no list of them in this file, deliberately. Each is marked
- * `data-v2-static` in the markup and every helper above filters on
- * `isHeld()`, so a still beat stays still without any module having to
- * remember it. Two of them ride inside slides that DO move — the 2022 study
- * shares a slide with Research & discovery, and the count rides inside the
- * escarpment break — so a slide-level exclusion would have been wrong in both
- * directions at once.
- *
- *   §06 #study-2022   "the page stops moving here, on purpose" (Figma)
- *   §15 #the-count-figures  the hard stop's own screen. The rail has
- *                     drained, the ground is charcoal, and the number is the
- *                     only red on the page — no animation, no count-up, no
- *                     glow. The two screens either side of it DO arrive, and
- *                     that is the point: stillness only reads as stillness
- *                     next to something that moved.
- *   §17 #engraving    older than the record. The stillness is the argument
- *   §20 #underneath-all-of-it   the closing shot. The descent has ended; it
- *                     does not dissolve back to where it started
- *   §12 the portrait  a person speaking is read in stillness
+ *   §06 #study-2022            "the page stops moving here, on purpose"
+ *   §15 #the-count-figures     the hard stop. The only red on the page — no
+ *                              animation, no count-up, no glow. The screens
+ *                              either side DO arrive, which is what makes
+ *                              this one read as stillness.
+ *   §17 #engraving             older than the record; the stillness is the
+ *                              argument
+ *   §20 #underneath-all-of-it  the descent has ended
+ *   §12 the portrait           a person speaking is read in stillness
  */
 
 export function bindTruthScenes(
