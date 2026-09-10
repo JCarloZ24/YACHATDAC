@@ -113,7 +113,15 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
       <div data-hero-scrim aria-hidden="true" className="pointer-events-none absolute inset-0 bg-linear-to-t from-charcoal/70 via-transparent to-charcoal/20" />
       <div data-hero-black aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 bg-night-black" />
       <div data-hero-copy className="absolute inset-x-0 top-[30%] px-6 text-center lg:px-16">
-        <p data-hero-quiet className="eyebrow text-sm leading-[1.4] tracking-[0.1em] text-ochre lg:text-base">{beat.eyebrow}</p>
+        {/* -0.1em of end margin cancels the TRAILING letter-space. Tracking is
+            applied after every character including the last, so the line box is
+            one letter-space wider than the glyphs and `text-center` centres the
+            box — parking the word left of true centre by half a space. It is
+            the only centred eyebrow on the page carrying tracking (the panel
+            and Invitation eyebrows all run tracking-normal), so it is the only
+            one that shows it. Small, and the kind of small that reads as
+            "slightly off" without being nameable. */}
+        <p data-hero-quiet className="eyebrow text-sm leading-[1.4] tracking-[0.1em] text-ochre me-[-0.1em] lg:text-base">{beat.eyebrow}</p>
         <h1 aria-label={beat.headline} className="headline mx-auto mt-14 max-w-[1120px] text-h1 leading-[1.15] tracking-[-0.015em] text-canvas lg:mt-24">
           {words.map((word, index) => (
             <span key={`${index}-${word}`} aria-hidden="true">
