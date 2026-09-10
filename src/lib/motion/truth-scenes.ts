@@ -414,39 +414,102 @@ const researchStrip: Recipe = (timeline, slide) => {
  * here touches it.
  */
 /**
- * One quotation, undimmed word by word at speaking pace.
+ * READING-LINE UNDIM — words light as they cross the line the reader is
+ * actually looking at, not as the section's scroll progress says they should.
  *
- * The "a person speaking" row: words undim as they are spoken, no movement at
- * all, dim state 0.28. Shared by the 2003 portrait beat and by Suzanne's own
- * account on the hard stop's third screen, because it is the same act in both
- * places — a person is being read, not a block of copy being revealed.
+ * The difference is not academic. Mapping the undim to span progress means the
+ * front races the text: measured on her testimony, the boundary between read
+ * and unread sat between 35px and 190px down a 900px viewport for the whole
+ * section — you would have been reading at the very top edge, chasing it. And
+ * it cannot be fixed by padding, because top padding lengthens the panel,
+ * which lengthens the track's travel, which pulls the front back up again;
+ * measured, 25vh of it moved the front by about ten pixels.
+ *
+ * So the front is not computed from progress at all. Each word undims over a
+ * short band as it passes ~62% of the viewport — the same reading line the
+ * rail already lights its pointer on. Immune to content height, to padding and
+ * to how far the track happens to travel.
+ *
+ * Cost is one rect read per frame while the section is on screen; the words'
+ * own offsets are measured once per refresh, not per frame.
  */
-function speakWords(
-  timeline: gsap.core.Timeline,
-  words: HTMLElement[],
-  at: number,
-  span: number,
-) {
-  if (!words.length) return;
-  // State the dim explicitly instead of trusting the fromTo to do it.
-  //
-  // A STAGGERED fromTo inside a scrubbed timeline only renders its from-value
-  // for the FIRST target: the quotation loaded with its opening word dim and
-  // every other word already at full strength, and only snapped into its
-  // proper dim state once ScrollTrigger first rendered the timeline — which
-  // reads as the words FADING as you scroll into them, exactly backwards.
-  gsap.set(words, { opacity: Y2_DIM });
-  // `amount`, not `each`. With `each` every word ALSO gets the full duration
-  // on top of its own offset, so a quotation overruns the span it was given
-  // and whatever follows it arrives while half the words are still unread.
-  // `amount` spreads one total offset across the words.
-  timeline.fromTo(
-    words,
-    { opacity: Y2_DIM },
-    { opacity: 1, ease: "none", duration: 0.12, stagger: { amount: span } },
-    at,
+const READING_LINE = 0.62;
+const READING_BAND = 160;
+
+function readAlong(span: DeckSlideSpan, slide: HTMLElement) {
+  const blocks = query<HTMLElement>(slide, "[data-y2]").filter(
+    (b) => !isHeld(b),
   );
+  const words = blocks.flatMap((b) =>
+    query<HTMLElement>(b, "[data-y2-word]"),
+  );
+  if (!words.length) return;
+
+  const anchor = blocks[0];
+  const setters = words.map((w) => gsap.quickSetter(w, "opacity"));
+  let offsets: number[] = [];
+
+  const measure = () => {
+    const base = anchor.getBoundingClientRect().top;
+    offsets = words.map((w) => w.getBoundingClientRect().top - base);
+  };
+  const paint = () => {
+    if (!offsets.length) return;
+    const base = anchor.getBoundingClientRect().top;
+    const line = window.innerHeight * READING_LINE;
+    for (let i = 0; i < words.length; i += 1) {
+      const t = gsap.utils.clamp(0, 1, (line - (base + offsets[i])) / READING_BAND);
+      setters[i](Y2_DIM + (1 - Y2_DIM) * t);
+    }
+  };
+
+  gsap.set(words, { opacity: Y2_DIM });
+  let running = false;
+  const tick = () => paint();
+  const stop = () => {
+    if (!running) return;
+    running = false;
+    gsap.ticker.remove(tick);
+  };
+
+  ScrollTrigger.create({
+    id: `truth-read-along-${span.index}`,
+    trigger: span.runway,
+    // A viewport of lead-in, so the words are already in their right state
+    // before the section is uncovered rather than settling once it lands.
+    start: () => span.read.start - window.innerHeight,
+    end: () => span.cover?.end ?? span.read.end,
+    invalidateOnRefresh: true,
+    refreshPriority: span.index * 10 + 6,
+    onRefresh: () => {
+      measure();
+      paint();
+    },
+    // Paint on every update as well as on the ticker. The ticker keeps the
+    // words true while the scrub settles after the reader stops; onUpdate is
+    // what covers arriving at a position rather than scrolling to it — a jump
+    // into the middle of the section (a hash link, a restored scroll position,
+    // or Lenis handing over) landed with the trigger active but nothing yet
+    // painted, and the whole quotation sat dim until the reader moved again.
+    onUpdate: paint,
+    onToggle: (self) => {
+      if (self.isActive && !running) {
+        running = true;
+        gsap.ticker.add(tick);
+      } else if (!self.isActive) {
+        stop();
+        paint();
+      }
+    },
+  });
+
+  measure();
+  paint();
+  readAlongCleanups.push(stop);
 }
+
+/** Ticker handles readAlong owns; gsap.context does not revert these. */
+const readAlongCleanups: Array<() => void> = [];
 
 const testimony: Recipe = (timeline, slide) => {
   const block = slide.querySelector<HTMLElement>("[data-y2]");
@@ -664,24 +727,12 @@ const strata: Recipe = (timeline, slide) => {
  * `data-v2-static`, so every helper here filters it out and the numerals are
  * simply there when it lands.
  */
-const herTestimony: Recipe = (timeline, slide) => {
+const herTestimony: Recipe = (timeline, slide, span) => {
   // Her quotations are read, not revealed: each one undims word by word, in
   // turn, at the pace someone would say it. A long quote gets a longer span
   // than a short one — "So they decided we needed blankets." should not take
   // as long to arrive as the paragraph before it.
-  const blocks = query<HTMLElement>(slide, "[data-y2]").filter(
-    (el) => !isHeld(el),
-  );
-  const words = blocks.map((b) => query<HTMLElement>(b, "[data-y2-word]"));
-  const total = words.reduce((sum, w) => sum + w.length, 0) || 1;
-  // Leave the last fifth for the line the page stands on and what follows it.
-  const READING = 0.72;
-  let at = 0.04;
-  words.forEach((w) => {
-    const span = (w.length / total) * READING;
-    speakWords(timeline, w, at, span);
-    at += span;
-  });
+  readAlong(span, slide);
 
   // After she has finished speaking: her standing line, then the closing
   // paragraphs. M1 brightness, no travel — the words above did the work.
@@ -705,14 +756,8 @@ const herTestimony: Recipe = (timeline, slide) => {
  * §15A who is speaking. Her opening line is testimony too, so it is read the
  * same way; the marker, title and lede around it take the ordinary M1.
  */
-const herOpening: Recipe = (timeline, slide) => {
-  const block = slide.querySelector<HTMLElement>("[data-y2]");
-  speakWords(
-    timeline,
-    block ? query<HTMLElement>(block, "[data-y2-word]") : [],
-    0.24,
-    0.4,
-  );
+const herOpening: Recipe = (_timeline, slide, span) => {
+  readAlong(span, slide);
 };
 
 const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
@@ -824,6 +869,8 @@ export function bindTruthScenes(
   });
 
   return () => {
+    readAlongCleanups.forEach((stop) => stop());
+    readAlongCleanups.length = 0;
     splits.forEach((split) => split.revert());
     splits.length = 0;
     ctx.revert();

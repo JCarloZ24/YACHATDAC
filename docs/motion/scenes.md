@@ -394,8 +394,17 @@ single 2,989px panel the count was something the reader scrolled past on the way
 are simply there, at the top of the type scale and no further (`text-h1`, 56 desktop — they were
 built at 128px, which is off the scale entirely). The screens either side of it take the page's
 ordinary M1, and that is exactly why this one must not: stillness only reads as stillness next to
-something that moved. Her quotations undim at speaking pace on the third screen and nothing else
-there moves.
+something that moved. Her quotations undim on the third screen and nothing else there moves — and
+they undim **against the reading line, not against scroll progress**. Mapping a
+word's undim to how far through a section the reader has scrolled means the
+front races the text: measured on this beat, the boundary between read and
+unread sat between 35px and 190px down a 900px viewport for the whole section,
+so the reader would have been reading at the very top edge, chasing it. Padding
+cannot fix it — top padding lengthens the panel, which lengthens the track's
+travel, which pulls the front back up; 25vh of it moved the boundary about ten
+pixels. Each word now undims over a short band as it passes ~62% of the
+viewport, the same reading line the rail lights its pointer on, which puts the
+boundary at 430–520px and is immune to content height.
 
 Her testimony is set in the READING face, not the display one — `PullQuote`'s new `voice`
 variant. Setting a transcript in the same face as the section titles is a large part of why a bare
