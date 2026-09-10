@@ -1,6 +1,6 @@
 # Content status board
 
-*Last updated: 24 August 2026*
+*Last updated: 10 September 2026*
 
 One row per document. Update it in the same commit that moves a file between
 folders.
@@ -231,6 +231,18 @@ re-ordering. v2 asks both:
 
 The draft currently runs with **thirty-seven**, sourced to Hoch (1986) as cited
 in Taçon et al. 2022. Anything written against "thirty-five" is out of date.
+
+**Two drifts between the draft and the build, noted 10 September 2026. Neither
+is fixed here — raise them, do not reconcile them silently.**
+
+1. The draft capitalises "**B**lankets" (`YACHATDAC-Truth-Copy-v3.md:217`);
+   `src/content/truth.ts` has lowercase. Pre-existing, and the terminology
+   sheet's own precedence rule says the site is what shipped.
+2. `truth.ts` now stores each figure's leading numeral separately from its
+   sentence, so the count screen can set the number in the display face and the
+   year as its marker. **No word changed and the draft is untouched** — rejoin
+   the two fields with a space and the draft's line is back exactly. D5 still
+   governs the wording; the split is presentational only.
 
 **Unchanged in v3 (24 Aug).** Both questions are still on the page, in the same
 words, and the seam still carries *"Draft — Suzanne's words, awaiting her

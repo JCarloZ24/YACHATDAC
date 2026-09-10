@@ -572,6 +572,7 @@ const LINE_VH = 0.4;
  */
 const TESTIMONY_TAIL_VH = 1.2;
 const OPENING_TAIL_VH = 0.3;
+const COUNT_TAIL_VH = 0.5;
 
 /** Pre-roll while the screen is still settling. */
 const LEAD_VH = 0.25;
@@ -656,12 +657,26 @@ const herOpening: Recipe = (_timeline, slide, span) => {
 };
 
 /**
+ * §15B the count. The sentence each figure belongs to is read a word at a
+ * time; the figures themselves never move.
+ *
+ * The stillness is not this recipe's doing and must not be — the numerals
+ * carry their own `data-v2-static`, so `wordsIn` and every other collector
+ * here filters them out however this function is edited later. What is being
+ * animated is the source line under the count, not the count.
+ */
+const theCount: Recipe = (_timeline, slide, span) => {
+  const blocks = wordsIn(slide);
+  if (!blocks.length) return;
+  speakBlocks(
+    speakingSpan(span, blocks.flat(), "#the-count-figures", COUNT_TAIL_VH),
+    blocks,
+  );
+};
+
+/**
  * §15C her testimony. Her words undim at speaking pace and nothing else on the
  * screen moves — the same act as the 2003 beat, so the same treatment.
- *
- * The count itself has no recipe on purpose: that screen carries
- * `data-v2-static`, so every helper here filters it out and the numerals are
- * simply there when it lands.
  */
 const herTestimony: Recipe = (timeline, slide, span) => {
   const blocks = wordsIn(slide);
@@ -703,6 +718,7 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "#break-escarpment", recipe: breakPullBack },
   { match: "#opportunities", recipe: openResearch },
   { match: "#the-count", recipe: herOpening },
+  { match: "#the-count-figures", recipe: theCount },
   { match: "#the-count-testimony", recipe: herTestimony },
   { match: "#seabed", recipe: strata },
 ];
@@ -712,10 +728,14 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
  * a still beat stays still without any module remembering it:
  *
  *   §06 #study-2022            "the page stops moving here, on purpose"
- *   §15 #the-count-figures     the hard stop. The only red on the page — no
- *                              animation, no count-up, no glow. The screens
- *                              either side DO arrive, which is what makes
- *                              this one read as stillness.
+ *   §15 the count's numerals   the hard stop. No animation, no count-up, no
+ *                              glow: the figure is stated and held, which is
+ *                              the grammar's figures-of-loss rule. Marked on
+ *                              the numerals rather than on the screen, so the
+ *                              source line beneath each one can still be
+ *                              read. (The "only red on the page" belongs to
+ *                              §15A's title, not here — this screen is
+ *                              off-white on charcoal throughout.)
  *   §17 #engraving             older than the record; the stillness is the
  *                              argument
  *   §20 #underneath-all-of-it  the descent has ended

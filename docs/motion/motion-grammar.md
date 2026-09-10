@@ -1,6 +1,6 @@
 # The motion grammar
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 | Record interaction | Behaviour | Timing | Reference | Effect |
 | --- | --- | --- | --- | --- |
@@ -109,6 +109,7 @@ roles and it is right to.
 | the page holding its ground | `createGatedDeck` (Truth rail + scroll-pulled wave ink), interior recipes bound to each slide's read span (`SCR-02`) | `coverSeams` (About buffer-pulled wave ink) |
 | being drawn in | `pushIn` (one plane), `pullBack` (the camera withdraws instead); shared wheel inertia (`SCR-09`, `createSmoothScroll`) | `plateParallax` (layers inside one frame), `bleed` (past the edge) |
 | a change of ground | `ground` (one sweep) | `groundRamp` (across four screens), `waveHandoff`, `overlap`, `stickyIndex` |
+| a person speaking | `dim` (testimony — Truth §12 and §15C, dim state 0.28) | the same word-by-word undim on the count's SOURCED lines, Truth §15B only. Not testimony: these are the published figures her account is about, so the page reads them at her pace rather than stating them at its own. The one non-testimony use of this row, added 10 September 2026 on user direction — if a reviewer disagrees, this is the line to take it out at. **The figures themselves never move** (see the figures-of-loss ban below). |
 | what endures | `settle` (lines) | `display` (chars), `waveClamp` (travels then holds), `ghostType` (behind everything), `knockout` (as a window) |
 | what radiates | `arrive` | `emanate`, `triad`, `scatterResolve`, `mosaic`, `handoff` |
 | the guide leading the eye | `routeDraw` (a drawn map surfaces out of short segments that start at seeded-random points and join until the whole shape stands — the D4 contour-map read — scrubbed across a sticky span; the line is the guide, there is no traveller. **Nothing synthetic is drawn:** these maps are filled ribbons, not stroked lines, so the segments are white strokes inside a MASK and what appears is the artist's own shape at the artist's own weight. Stroking a copy over the top was the first cut and it drew a doubled, bloated line that then had to fade out and hand over — the thickening-and-thinning the user reported on 9 Sep 2026. Wonder §02 and §04, `src/lib/motion/route-map.ts`), `brushFill` (a shape is coloured in: ONE continuous stroke entering at the top left and working down and up across it, never lifting, with the gap to the next stripe, the ends and the middle of every stripe all seeded-jittered so nothing in it is straight or evenly spaced — "imperfect, like a child colouring the area", 9 Sep 2026. Wonder §02) | `guide` |
