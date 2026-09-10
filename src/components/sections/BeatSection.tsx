@@ -110,7 +110,7 @@ function BeatSequence({ beat }: { beat: Beat }) {
       <Reveal index={1}>
         <div className={`border-t pt-6 ${ink.border}`}>
           <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
-            <h2 className={`headline text-3xl sm:text-4xl ${ink.heading}`}>
+            <h2 className={`headline text-h3 ${ink.heading}`}>
               {sequence.subject}
             </h2>
             <Eyebrow className={ink.accent}>{sequence.subjectLabel}</Eyebrow>

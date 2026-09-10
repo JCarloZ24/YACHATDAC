@@ -8,3 +8,34 @@
   overflow-x: hidden;
   overscroll-behavior-x: none;
 }
+/* Take back the heading scale from the hero (10 September 2026, user
+   direction: "i think its too big right now").
+
+   This panel renders INSIDE `<section data-home-hero>`, and home-hero.css
+   gives that section `--text-h1: clamp(2.5rem, 5.55vw, 5rem)` so the hero's
+   own H1 can run at 80px across a full viewport. Every panel riding the
+   canvas inherits it, so `text-h1` here was resolving to 80 rather than the
+   token's 56 — and against The Invitation, which caps itself at 4rem in
+   invitation.css, the same kind of heading above the same kind of card row
+   was 25% larger. This is the sibling of that rule, not a new idea.
+
+   4rem, matching The Invitation exactly, because the two are peers: a centred
+   line over a row of cards, seen one scroll apart. The wrap does not change —
+   `max-w-[24ch]` is in ch, so it scales with the font and the line stays
+   three deep — only the height it claims does, 264px down to 211px. */
+/* --text-h3 is the same story one level down: invitation.css pins it to 2rem
+   so its card titles hold 32 at every width, and without the twin here these
+   cards took the global desktop 2.5rem and ran 40. */
+.home-pathways-panel { --text-h1: 2.5rem; --text-h3: 2rem; }
+@media (min-width: 64rem) {
+  /* 3.5rem is the PLAIN --text-h1 desktop token. This was 4rem, matched to
+     The Invitation on the argument that the two are peers; the argument was
+     wrong, because the lines are not comparable. The Invitation sets 33
+     characters and this sets 61, so the same size that gives it two lines
+     gives this three — and three lines of 4rem overflow the panel, which is
+     `justify-center`, so the surplus came off the TOP and pushed the heading
+     under the nav. Measured off the hi-fi against the card width, which
+     scales with it, the frame sets this at about 56px. That is the token.
+     (10 September 2026, user direction.) */
+  .home-pathways-panel { --text-h1: 3.5rem; }
+}
