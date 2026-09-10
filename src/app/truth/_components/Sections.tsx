@@ -1995,7 +1995,23 @@ export function DissolveBreak({ deckContent }: { deckContent?: React.ReactNode }
   const incomingSrc = presentSrc(incoming.src);
   const hasDeckContent = Boolean(deckContent);
   return (
-    <div data-truth-slide-runway className="relative">
+    /* bg-charcoal ON THE RUNWAY, which is the document-space box behind this
+       slide while it is pinned.
+
+       The deck's hand-off glues the outgoing slide's foot to the incoming
+       slide's head by capping the exit at the incoming's measured position.
+       That cap is only ever as fresh as the exit tween's last render, and on a
+       fast flick the two stop agreeing: the incoming rides the raw scroll
+       while the outgoing rides a scrubbed tween, so for a frame or two they
+       differ by twenty or thirty pixels. Measured on an upward flick, a 28px
+       strip opened at this seam.
+
+       That desync is not fixable by tuning — it is two clocks, and a scrub has
+       lag by design. What IS fixable is what shows through: this break lives
+       in the page's egg-white band, so the strip read as a white line across
+       the darkest passage on the page. Charcoal behind it and the same
+       twenty pixels are invisible. */
+    <div data-truth-slide-runway className="relative bg-charcoal">
       <section
         id={truthBreaks.escarpment.id}
         data-truth-slide
