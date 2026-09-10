@@ -6,6 +6,53 @@
  * Gallery moves held frames around a fixed camera, with fixed UVs (9 September).
  * No fire used as atmosphere.
  */
+/**
+ * THE LOADING FILM — user direction 10 September 2026.
+ *
+ * Supplied as `Main_V2_16.mp4`, 39.32s, H.264/AAC, 22.2 Mbps, **104.2 MiB**.
+ * That master is gitignored and never served: it is 42x the whole 2.5 MB
+ * above-the-fold budget, and at 104.2 MiB it also exceeds GitHub's 100 MiB
+ * hard file limit, so committing it would make the repo unpushable. R11
+ * covers exactly this — "never ship masters".
+ *
+ * Two tiers, chosen before the first byte by HeroVideo's `pickTier` logic, so
+ * a phone on a data plan never pays for the wide encode:
+ *
+ *   small   960 wide   phones, data saver, 2g/3g
+ *   large  1440 wide   wide screens on a fast link
+ *
+ * Neither is the source's native 1920. Two reasons: this film sits under a
+ * 45% charcoal scrim with artwork over it, so detail it does not have cannot
+ * be missed; and CRF could not hit the budget on footage this busy — a CRF 30
+ * pass at 1280 came out at 6.77 MB and CRF 32 at 1920 at 10.21 MB, against a
+ * 2.5 MB above-the-fold budget. These are TWO-PASS at a target bitrate, which
+ * is the only way to guarantee a number rather than hope for one.
+ *
+ * MP4 only. `wonder-media.ts` already ruled that a VP9 set on top would
+ * double the repo's video weight for a marginal win; this follows it rather
+ * than reopening it. Encoded `-an` — the film carries no speech, so the audio
+ * track was pure weight, and a silent file removes any question about whether
+ * muted autoplay is doing something to the material. `+faststart` puts the
+ * moov atom first so playback begins after a few hundred KB rather than after
+ * the whole 39 seconds.
+ *
+ * ⚠ CONTENT: ambient Country, and PEOPLE APPEAR (user, 10 September 2026).
+ * Nobody has cleared it. Identifiable people here carry the same consent
+ * question as the photography — flag for Steve / the Elder Advisory Group
+ * under F8. Not a build blocker; a "nobody knows" blocker.
+ */
+export const homeLoaderFilm = {
+  tiers: {
+    small: "/media/home/derivatives/home-loader-960.mp4",
+    large: "/media/home/derivatives/home-loader-1440.mp4",
+  },
+  poster: "/media/home/derivatives/home-loader-poster.webp",
+  origin: "Main_V2_16.mp4 (supplied master, gitignored)",
+  grade: "frame" as const,
+  /** Seconds. The count is driven off the element, not this — see loading.ts. */
+  duration: 39.32,
+};
+
 export type HomeHeroFrame = {
   id: string; src: string; origin: string; grade: "full" | "frame";
   width: number; height: number;

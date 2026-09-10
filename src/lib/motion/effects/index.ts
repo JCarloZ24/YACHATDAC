@@ -119,7 +119,7 @@ export type EffectName =
   | "recordWaveRoll"
   | "homeLandscapeBreeze"
   | "recordPatternDrift"
-  | "homeLoader"
+  | "homeLoaderFilm"
   | "recordLoader"
   | "homeHeroOpen"
   | "homeInvitation"

@@ -1,5 +1,24 @@
-/** Interface copy for the timed prototype requested 8 September 2026 (X1). */
-export const homeLoader = { label: "Loading homepage" };
+/** Interface copy for the loading screen (X1).
+ *
+ * ⚠ The one-second timed prototype requested 8 September 2026 became a
+ * 39-second film on 10 September 2026 (user direction), and the cover now
+ * WAITS for a click instead of dismissing itself. `enter` is the blob the
+ * reader presses to open the homepage; `skip` fills the count to 100 without
+ * entering, for anyone who has not got 39 seconds.
+ *
+ * D5 — these are interface labels, not narrative copy, so no draft carries
+ * them. `enter` is deliberately "Walk with us": it answers the drafts' own
+ * "Walk alongside us on Country" and the house CTA voice ("See the work",
+ * "Follow it back", "Open research") without asserting anything on the
+ * reader's behalf, which "Step onto Country" would. Chosen from a shortlist
+ * by the user, 10 September 2026. Anything that reads as a protocol —
+ * entering, stepping onto, being welcomed — wants Steve/EAG before it ships.
+ */
+export const homeLoader = {
+  label: "Loading homepage",
+  enter: "Walk with us",
+  skip: "Skip",
+};
 
 /** Figma/screenshot interface label, 8 September 2026; not narrative copy. */
 export const homeHero = { scrollLabel: "Scroll" };
