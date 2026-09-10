@@ -9,7 +9,7 @@ import {
   type TruthEra,
 } from "@/content/truth";
 import { MOTION_GRADE, type MediaSlot } from "@/content/lofi/media";
-import { truthBreaks, wattanuri } from "@/content/truth";
+import { rewindCue, truthBreaks, wattanuri } from "@/content/truth";
 import {
   truthBreakMedia,
   truthDissolveMedia,
@@ -36,6 +36,16 @@ import { WaveDivider } from "@/components/ui/Furniture";
    values below are deliberately larger than the viewport. Measured 5 Sep
    2026 at 375x667 and 1440x900, both @2x. */
 const COVER_FULL_BLEED = "(min-width: 1024px) 100vw, 260vw";
+/**
+ * The two ENTRY plates (TODAY, the 2026 deed) hold a full 100svh on a phone,
+ * which is a taller box than the breaks: 390x844 needs 1.9 x 844 = 1,604 CSS
+ * px of cover crop, or 411vw. 260vw served 1,014 and the plate read soft at
+ * device-pixel-ratio 1 — sharp enough at the 2x a handset actually has, but
+ * this is also what a reviewer sees in a desktop browser's device emulation,
+ * which is where it was reported (user, 11 September 2026). Both plates are
+ * below the fold and lazy, so this spends no part of the R11 budget.
+ */
+const COVER_PLATE = "(min-width: 1024px) 100vw, 420vw";
 /** The closing plate runs ~3.2 screens tall on a phone; 3840 is the ceiling. */
 const COVER_TALL_BLEED = "(min-width: 1024px) 100vw, 400vw";
 
@@ -175,9 +185,14 @@ export function TruthHeroV2() {
           <p className="mt-10 max-w-2xl text-xl leading-relaxed text-canvas">
             {truthHero.standfirst}
           </p>
+          {/* The href IS the behaviour on the deck and with no JavaScript.
+              Below lg `truthRewind` takes the press instead and carries the
+              reader down the descent to the Wattanuri floor — the grammar's
+              "the guide leading the eye, Truth's rewind cue". */}
           <a
             href={truthHero.actions[0].href}
             data-hero-cue
+            data-truth-rewind
             className="callout scroll-cue-glow mt-14 block w-fit text-scroll text-gold"
           >
             {truthHero.actions[0].label} &darr;
@@ -1284,12 +1299,24 @@ function EntryPlate({
         <div
           data-v2-plate
           data-motion={MOTION_GRADE[slot.bucket]}
-          className="absolute inset-0 overflow-hidden"
+          /* THE PLATE IS ONE SCREEN OF PHOTOGRAPH, NOT THE WHOLE SECTION.
+             Where the deck runs it already is: the deck sets every slide to
+             100svh before anything scrubs, so `inset-0` and `top-0 h-svh`
+             describe the same box. Below lg the deck never initialises
+             (`(pointer: fine) and (min-width: 1024px)` in gated-deck), the
+             track's own `pt-[100svh]` stays in flow, and the section grows to
+             hold it — measured 2,256px on a 390×844 phone. `inset-0` then
+             asked one 1.9:1 photograph to cover a 0.17:1 box: a 4,286px-wide
+             crop the library cannot serve, which is what read as blur at the
+             TODAY join (user, 11 September 2026). Pinning the plane to the
+             first screen puts the cover crop back inside what `sizes` asks
+             for. */
+          className="absolute inset-x-0 top-0 h-svh overflow-hidden lg:inset-0 lg:h-auto"
         >
           <MediaOrField
             src={presentSrc(slot.src)}
             alt={slot.expects}
-            sizes={COVER_FULL_BLEED}
+            sizes={COVER_PLATE}
             quality={85}
             className="object-cover"
             fieldClass={FIELD_CLASS[slot.tone]}
@@ -1307,8 +1334,16 @@ function EntryPlate({
         <div
           data-descent-arrive
           data-truth-wave-heading={hasDeckContent ? true : undefined}
+          /* …and the plate's own words are seated on that first screen for the
+             same reason. `bottom-[16svh]` is measured from the SECTION foot,
+             which off-deck is the foot of the whole stack — the TODAY eyebrow,
+             kicker and headline were landing 1,900px down, underneath the
+             record deck's opaque canvas, so the mobile plate showed a
+             photograph with nothing on it. Below lg the block is hung from
+             84svh and pulled back by its own height, which is where
+             `bottom-[16svh]` puts it in a 100svh box. */
           className={`mx-auto w-full max-w-6xl px-6 lg:px-24 ${hasDeckContent
-            ? "absolute inset-x-0 bottom-[16svh] z-10"
+            ? "absolute inset-x-0 top-[84svh] z-10 -translate-y-full lg:bottom-[16svh] lg:top-auto lg:translate-y-0"
             : `relative z-30 ${deep ? "pb-[24svh]" : "pb-[16svh]"}`
             }`}
         >
@@ -1475,7 +1510,7 @@ export function EraSection({
               visible"). The house fix is a roasted repath at 0.30, and
               ring-a/ring-b have one; this spiral does not. Withdrawn rather
               than shipped invisible. Logged in docs/open-questions.md. */}
-          <div className="relative mx-auto max-w-6xl px-6 py-20 lg:px-24">
+          <div className="relative mx-auto max-w-6xl px-6 py-10 lg:px-24 lg:py-20">
             {orderedEntries.map((entry) => {
               if (entry.id === "research-discovery" && studyPair.length === 2) {
                 return null;
@@ -1509,8 +1544,29 @@ export function EraSection({
       </>
     );
   }
+  /* 1840s carries the hand-off out of the count on its own ARTICLE (see the
+     note on that wave in EntryBlock), and a leading divider is drawn one
+     wave-height ABOVE whatever it is seated on. On the deck that lands it on
+     the outgoing charcoal, which is the whole point of it. Off-deck the
+     section's own top padding stood between the two, so the crest was drawn in
+     canvas on canvas — invisible, and the seam the reader met was a hard edge
+     where every other seam on the page has a wave (user, 11 September 2026).
+     The padding goes below lg so the article starts flush and the crest has
+     the charcoal to cut into; the era's first entry brings its own top margin.  */
+  const startsFlush = era.entries[0]?.id === "mitchell";
+  /* And the 1950s ends flush for the mirror-image reason. Its ground is the one
+     that DETERIORATES as it is read, so the charcoal is painted by the SLIDE's
+     own ::after — the article — not by the section around it, which is
+     bg-canvas. Off-deck the section's bottom padding is therefore a strip of
+     egg white between the band going dark and the escarpment break it hands
+     into (user screenshot, 11 September 2026). On the deck the break covers
+     it, which is why it has never shown at 1440. */
+  const endsFlush = titleInGutter;
   const inner = (
-    <div className="relative mx-auto max-w-6xl px-6 py-20 lg:px-24">
+    <div
+      className={`relative mx-auto max-w-6xl px-6 py-10 lg:px-24 lg:py-20 ${startsFlush ? "pt-0 lg:pt-20" : ""
+        } ${endsFlush ? "pb-0 lg:pb-20" : ""}`}
+    >
       {/* The era marker, the lore line, and the entry whens all live on the
           trail rail now (2026-09-02) — repeating them here doubled the
           timeline and crowded the gutter the rail moved into. */}
@@ -1522,7 +1578,12 @@ export function EraSection({
           {era.title}
         </h2>
       )}
-      <div className="mt-12">
+      {/* Flush means flush: with the section's own top padding gone, this top
+          margin collapsed straight through it and pushed the whole band 32px
+          down the page, which put a canvas strip back under the charcoal and
+          took a third of the crest with it. The entry's own `py-10` is the
+          breathing room here. */}
+      <div className={startsFlush ? "mt-0 lg:mt-12" : "mt-8 lg:mt-12"}>
         {era.entries.map((entry, index) => (
           <EntryBlock
             key={entry.title}
@@ -1588,7 +1649,10 @@ export function EraSection({
   }
   if (isOlderThanRecord) {
     return (
-      <section id={era.id} className="relative overflow-clip pb-16 sm:pb-28">
+      <section id={era.id} /* pb-16 stacked on the next era's own top padding put 248px of nothing
+           between two eras on a phone (user, 11 September 2026). The frame's
+           foot is kept from sm up. */
+        className="relative overflow-clip pb-6 sm:pb-28">
         {/* ⚠ PENDING-MOTIF · Artwork Ring A — static, deliberately behind the
             copy. Spec: x900 y70 of the 1440 frame, 416px wide, 0.12 over the
             0.08 fill. The delivered cut bakes 0.14 × 0.08, so it is dimmed to
@@ -1700,7 +1764,7 @@ function CountScreen({
             while one that does not (her testimony) grows and is carried. */}
         <div data-truth-deck-viewport className="relative">
           <div data-truth-deck-track>
-            <div className="relative mx-auto flex min-h-svh w-full max-w-6xl flex-col justify-center px-6 py-24 lg:px-24">
+            <div className="relative mx-auto flex min-h-svh w-full max-w-6xl flex-col justify-center px-6 py-10 lg:px-24 lg:py-24">
               {children}
             </div>
           </div>
@@ -1878,7 +1942,7 @@ export function SuzanneTestimony() {
        finished, so the section is not already handing over to the 1840s while
        she is still being read. */
     <CountScreen id="the-count-testimony" label="Her testimony" readVh={560}>
-      <div className="py-28 max-w-3xl md:pl-[calc(180px+3rem)]">
+      <div className="max-w-3xl pb-10 md:pl-[calc(180px+3rem)] lg:py-28">
         {/* The first of these carries the unratified CR4 word. Steve's note of
             7 Sep is explicit that as a bare pull quote it "reads as our copy —
             it isn't", so this one is attributed on the spot rather than relying
@@ -2014,7 +2078,14 @@ export function FullBleedBreak({
         data-truth-slide-label={truthBreaks[which].id}
         data-v2-pullback
         data-motion={MOTION_GRADE[slot.bucket]}
-        className="relative min-h-[80svh] overflow-hidden"
+        /* 80svh on a phone is a 390x675 box, and a 1.9:1 photograph covering
+           it needs 1,283 CSS px of crop against the 1,014 that 260vw asks for
+           — the soft break the reader meets on the way out of TODAY (user, 11
+           September 2026). 58svh brings the requirement back under what is
+           served, and a breathing screen does not need to be four fifths of
+           the viewport to breathe. Unchanged from lg up, where the frame is
+           its own proportion. */
+        className="relative min-h-[58svh] overflow-hidden lg:min-h-[80svh]"
       >
         <MediaOrField
           src={slot.src}
@@ -2088,44 +2159,55 @@ export function DissolveBreak({ deckContent }: { deckContent?: React.ReactNode }
            through at all. A solid ground under the plates fixes it whatever
            the timing does, and it is the right colour anyway: this break hands
            into the count. */
-        className="relative h-[62.5vw] min-h-[24rem] overflow-hidden bg-charcoal"
+        /* Off-deck the section takes its height from what is inside it, and
+           the cover below carries the 62.5vw proportion instead. Fixed at
+           62.5vw everywhere, the whole count deck — WHO IS SPEAKING, the
+           attribution, the escarpment's charcoal hand-off wave — sat 844px
+           down a 384px box under `overflow-hidden` and was simply not on the
+           mobile page (measured 11 September 2026). */
+        className="relative overflow-hidden bg-charcoal lg:h-[62.5vw] lg:min-h-[24rem]"
       >
-        {/* Shot B pulls back as it is revealed, matching the Country now break.
-          The plate's own push would drive INTO the escarpment while the page
-          is held; withdrawing from it is the colder read the frame asks for. */}
-        <div
-          data-v2-pullback
-          data-motion={MOTION_GRADE[incoming.bucket]}
-          className="absolute inset-0"
-        >
-          <MediaOrField
-            src={incomingSrc}
-            alt=""
-            sizes={COVER_FULL_BLEED}
-            quality={85}
-            fieldClass={FIELD_CLASS[incoming.tone]}
+        {/* The two shots and their scrim, as one cover. In flow below lg so the
+            charcoal panel can follow it down the page; the absolute plate the
+            deck scrubs from lg up. */}
+        <div className="relative h-[62.5vw] min-h-[24rem] overflow-hidden lg:absolute lg:inset-0 lg:h-auto lg:min-h-0">
+          {/* Shot B pulls back as it is revealed, matching the Country now break.
+            The plate's own push would drive INTO the escarpment while the page
+            is held; withdrawing from it is the colder read the frame asks for. */}
+          <div
+            data-v2-pullback
+            data-motion={MOTION_GRADE[incoming.bucket]}
+            className="absolute inset-0"
+          >
+            <MediaOrField
+              src={incomingSrc}
+              alt=""
+              sizes={COVER_FULL_BLEED}
+              quality={85}
+              fieldClass={FIELD_CLASS[incoming.tone]}
+            />
+          </div>
+          <div
+            {...(incomingSrc ? { "data-v2-dissolve": true } : {})}
+            className="absolute inset-0"
+          >
+            <MediaOrField
+              src={presentSrc(outgoing.src)}
+              alt={truthBreaks.escarpment.alt}
+              sizes={COVER_FULL_BLEED}
+              quality={85}
+              fieldClass={FIELD_CLASS[outgoing.tone]}
+            />
+          </div>
+          {/* scrim · light — 0 → .18 → .40 */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-linear-to-b from-black/0 via-black/18 to-black/40"
           />
         </div>
-        <div
-          {...(incomingSrc ? { "data-v2-dissolve": true } : {})}
-          className="absolute inset-0"
-        >
-          <MediaOrField
-            src={presentSrc(outgoing.src)}
-            alt={truthBreaks.escarpment.alt}
-            sizes={COVER_FULL_BLEED}
-            quality={85}
-            fieldClass={FIELD_CLASS[outgoing.tone]}
-          />
-        </div>
-        {/* scrim · light — 0 → .18 → .40 */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-linear-to-b from-black/0 via-black/18 to-black/40"
-        />
         {hasDeckContent ? (
           <div data-truth-deck-viewport className="relative z-20">
-            <div data-truth-deck-track className="pt-[100svh]">
+            <div data-truth-deck-track className="lg:pt-[100svh]">
               {/* THE COUNT CLOSES THE IMAGE COMPLETELY.
 
                 The deck translates this cover by exactly its own height and
@@ -2184,6 +2266,53 @@ export function GoldTrail({ variant = "wave" }: { variant?: "wave" | "trail" }) 
 }
 
 /**
+ * The landing mark for the mobile rewind cue — grammar row "the guide leading
+ * the eye", Truth's rewind cue.
+ *
+ * A gold chevron at the head of the Wattanuri floor with a hairline running
+ * out of it to both edges, pointing back up the way the reader has just been
+ * carried: from the floor the page is read UPWARD, because everything above
+ * this band is later than it.
+ *
+ * THE MARK IS THE SUPPLIED ONE. `/artwork/chevron-down.svg` — August's brush
+ * chevron, the same family as the CTA mark the cursor is cut from — turned
+ * 180° (user direction, 11 September 2026, replacing a drawn full-width
+ * chevron that read "too big and thick, and out of style"). It is carried
+ * through a mask rather than an `<img>` so it can take the page's gold, which
+ * is the colour of the cue that sent the reader here; the path itself is
+ * untouched. Note that Furniture's blob chevrons are deliberately NOT one mark
+ * rotated — right and down are drawn separately there because the stroke hooks
+ * the other way. This is a rotation by direction, and it is on the record.
+ *
+ * It rests at opacity 0 and is only ever seated by `truthRewind`: a reader who
+ * arrives by scrolling has read the whole descent to get here and does not
+ * need to be told which way it runs.
+ *
+ * `aria-hidden`: the anchor that starts the journey already names it, and
+ * focus lands on the band itself, so this is confirmation for the eye only.
+ * Below lg only — the deck never presses this button.
+ */
+function RewindArrow() {
+  return (
+    <div
+      data-truth-rewind-hint
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 top-0 z-30 bg-linear-to-b from-charcoal/70 via-charcoal/25 to-transparent px-5 pb-10 pt-8 opacity-0 lg:hidden"
+    >
+      {/* The rule is what fills the width; the mark is just the mark. */}
+      <div className="flex items-center gap-4">
+        <span className="h-px flex-1 bg-gold/45" />
+        <span className="block h-[13px] w-[23px] shrink-0 rotate-180 bg-gold [mask-image:url(/artwork/chevron-down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
+        <span className="h-px flex-1 bg-gold/45" />
+      </div>
+      <p className="eyebrow mt-4 text-center text-[10px] text-gold">
+        {rewindCue.hint}
+      </p>
+    </div>
+  );
+}
+
+/**
  * The floor. Below the seabed, closing the descent — see the wattanuri note
  * in src/content/truth.ts. Still, like the testimony: one authored closing
  * shot, no return to the hero, dissolve, push, fade or entrance.
@@ -2205,8 +2334,14 @@ export function WattanuriBand() {
         data-truth-slide-label={wattanuri.title}
         data-truth-ground="deep-time"
         data-v2-static
-        className="relative flex min-h-svh items-end overflow-hidden"
+        /* The floor is where the mobile rewind cue lands, so it is also where
+           focus is put down — `tabIndex={-1}` makes that possible without
+           adding a tab stop (truth-rewind.ts). */
+        data-truth-rewind-target
+        tabIndex={-1}
+        className="relative flex min-h-svh items-end overflow-hidden outline-none"
       >
+        <RewindArrow />
         <div className="absolute inset-0">
           <MediaOrField
             src={presentSrc(outgoing.src)}
@@ -2224,7 +2359,11 @@ export function WattanuriBand() {
           this photograph — the page root is pulled up under it. */}
         <div data-truth-deck-viewport className="relative z-10">
           <div data-truth-deck-track>
-            <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-[calc(12svh+14vw)] pt-[36svh] lg:px-24">
+            <div /* 36svh of runway above the copy grew the closing plate to 1,234px on a
+                 phone, which is a 2,345px cover crop out of a photograph served at
+                 1,560 — and 240px of it was empty. The frame's proportion is kept
+                 from lg up, where the plate is its own screen. */
+              className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-[calc(12svh+14vw)] pt-[22svh] lg:px-24 lg:pt-[36svh]">
               <p className="eyebrow text-lg text-gold sm:text-2xl">{wattanuri.marker}</p>
               <h2 className="headline mt-4 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl">
                 {wattanuri.title}

@@ -616,6 +616,32 @@ story-wall and cultural-site imagery at `frame` grade on 30 Aug 2026 (`permissio
 screen *may* now carry a held frame with its story in words. Until that photo pass happens the
 screen stands as built: carried by type, coda at 40px, on bare navy.
 
+**The descent below `lg`, 11 September 2026 (user direction).** The deck is gated on
+`(pointer: fine) and (min-width: 1024px)`, but its markup shipped at every breakpoint, and
+off-deck that markup is not a hold — it is layout. Three things were wrong on a phone and
+all three are the same bug. TODAY's ENTRY plate grew to 100svh *plus* its record deck
+(2,256px measured at 390×844), so its `absolute inset-0` photograph was asked for a
+4,286px-wide cover crop and its own eyebrow, kicker and headline landed at the foot of the
+whole stack, underneath the deck's opaque canvas — the plate showed a soft photograph with
+nothing written on it. The escarpment break kept its `62.5vw` height with `overflow-hidden`
+while its deck track pushed WHO IS SPEAKING 844px down inside it, so the count's opening
+screen, Suzanne's attribution and the charcoal hand-off wave were simply not on the mobile
+page. And 1840s' leading divider, seated on its article for the deck's sake, was separated
+from the outgoing charcoal by that section's own top padding and drew canvas on canvas.
+
+Fixed by making the plate media and its copy belong to the FIRST screen below `lg`
+(`top-0 h-svh`, the copy hung from 84svh), by putting the break's cover in flow below `lg`
+so the section grows to hold what follows it, and by starting the 1840s article flush —
+which also meant killing the entry wrapper's top margin there, since with no padding to
+contain it, it collapsed through the section and took a third of the crest with it. Seam
+padding is halved below `lg` throughout (`py-20` → `py-10`, the count screens' `py-24` →
+`py-10`, `pb-16` → `pb-6` at the older-than-the-record foot): eight seams were stacking
+200–290px of nothing between two eras. The full-bleed breaks come down to `58svh` and the
+Wattanuri floor's runway to `22svh`, both so the cover crop they ask for is inside what
+`sizes` serves; the two plates get their own `COVER_PLATE` (420vw) because at 100svh they
+need 1,604 CSS px and 260vw was serving 1,014. **Nothing above `lg` changed** — measured
+after: plate 879 = slide 879, break 879, track `padding-top` 879, heading identity transform.
+
 ## Living Work — verb *accumulates* — ~1607vh, 9 sections
 
 Built to `03 · Living Work · HI-FI · the field notebook` (Figma 2137:2613, 18407px ≈ 2045vh).
