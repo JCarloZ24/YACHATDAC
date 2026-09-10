@@ -1,3 +1,4 @@
+import { WordEmphasis } from "@/components/lofi/ui/WordEmphasis";
 import { toneInk, type Tone } from "@/lib/tone";
 
 /**
@@ -50,6 +51,12 @@ export function PullQuote({
    * large part of why a bare quote "reads as our copy — it isn't" (Steve, 7
    * September 2026). Truth's testimony passes `voice`; the marketing pulls on
    * /about and Our People keep the default, so their look does not move.
+   *
+   * It also makes the quotation READABLE WORD BY WORD: the words are split
+   * into `[data-y2-word]` spans so a motion host can undim them at speaking
+   * pace, which is the "a person speaking" row of the grammar and the same
+   * treatment the 2003 portrait beat already gets. Without a host they simply
+   * render, so this is safe anywhere.
    */
   voice?: boolean;
   className?: string;
@@ -61,15 +68,21 @@ export function PullQuote({
       <blockquote>
         {/* Literal class strings, not assembled — Tailwind reads source text
             and cannot see a utility built at runtime. */}
-        <p
-          className={
-            voice
-              ? `text-lead leading-relaxed ${ink.heading}`
-              : `headline text-2xl leading-snug sm:text-3xl ${ink.heading}`
-          }
-        >
-          &ldquo;{children}&rdquo;
-        </p>
+        {voice ? (
+          /* WordEmphasis carries the accessible text once in an sr-only span
+             and marks every visible word aria-hidden, so splitting the
+             quotation costs a screen reader nothing. The curly quotes go
+             through the split with it. */
+          <WordEmphasis
+            as="p"
+            text={`\u201C${children}\u201D`}
+            className={`text-lead leading-relaxed ${ink.heading}`}
+          />
+        ) : (
+          <p className={`headline text-2xl leading-snug sm:text-3xl ${ink.heading}`}>
+            &ldquo;{children}&rdquo;
+          </p>
+        )}
       </blockquote>
 
       {attribution ? (

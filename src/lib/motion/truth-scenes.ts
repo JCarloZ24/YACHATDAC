@@ -413,6 +413,41 @@ const researchStrip: Recipe = (timeline, slide) => {
  * The portrait itself is held (`data-v2-static` in the markup), so nothing
  * here touches it.
  */
+/**
+ * One quotation, undimmed word by word at speaking pace.
+ *
+ * The "a person speaking" row: words undim as they are spoken, no movement at
+ * all, dim state 0.28. Shared by the 2003 portrait beat and by Suzanne's own
+ * account on the hard stop's third screen, because it is the same act in both
+ * places — a person is being read, not a block of copy being revealed.
+ */
+function speakWords(
+  timeline: gsap.core.Timeline,
+  words: HTMLElement[],
+  at: number,
+  span: number,
+) {
+  if (!words.length) return;
+  // State the dim explicitly instead of trusting the fromTo to do it.
+  //
+  // A STAGGERED fromTo inside a scrubbed timeline only renders its from-value
+  // for the FIRST target: the quotation loaded with its opening word dim and
+  // every other word already at full strength, and only snapped into its
+  // proper dim state once ScrollTrigger first rendered the timeline — which
+  // reads as the words FADING as you scroll into them, exactly backwards.
+  gsap.set(words, { opacity: Y2_DIM });
+  // `amount`, not `each`. With `each` every word ALSO gets the full duration
+  // on top of its own offset, so a quotation overruns the span it was given
+  // and whatever follows it arrives while half the words are still unread.
+  // `amount` spreads one total offset across the words.
+  timeline.fromTo(
+    words,
+    { opacity: Y2_DIM },
+    { opacity: 1, ease: "none", duration: 0.12, stagger: { amount: span } },
+    at,
+  );
+}
+
 const testimony: Recipe = (timeline, slide) => {
   const block = slide.querySelector<HTMLElement>("[data-y2]");
   const words = block ? query<HTMLElement>(block, "[data-y2-word]") : [];
@@ -630,13 +665,54 @@ const strata: Recipe = (timeline, slide) => {
  * simply there when it lands.
  */
 const herTestimony: Recipe = (timeline, slide) => {
-  const quotes = query<HTMLElement>(slide, "blockquote p").filter(
+  // Her quotations are read, not revealed: each one undims word by word, in
+  // turn, at the pace someone would say it. A long quote gets a longer span
+  // than a short one — "So they decided we needed blankets." should not take
+  // as long to arrive as the paragraph before it.
+  const blocks = query<HTMLElement>(slide, "[data-y2]").filter(
     (el) => !isHeld(el),
   );
-  quotes.forEach((quote, index) => {
-    const at = 0.06 + index * 0.22;
-    brightenAt(timeline, [quote], at, at + 0.2);
+  const words = blocks.map((b) => query<HTMLElement>(b, "[data-y2-word]"));
+  const total = words.reduce((sum, w) => sum + w.length, 0) || 1;
+  // Leave the last fifth for the line the page stands on and what follows it.
+  const READING = 0.72;
+  let at = 0.04;
+  words.forEach((w) => {
+    const span = (w.length / total) * READING;
+    speakWords(timeline, w, at, span);
+    at += span;
   });
+
+  // After she has finished speaking: her standing line, then the closing
+  // paragraphs. M1 brightness, no travel — the words above did the work.
+  // Plain selectors and a filter, not `:has()`. An unsupported selector makes
+  // querySelectorAll throw a SyntaxError, and that would take the whole
+  // module down rather than degrading — too much to risk on a nicety.
+  const rest = query<HTMLElement>(slide, "blockquote, p").filter(
+    (el) =>
+      !isHeld(el) &&
+      !el.closest("[data-y2]") &&
+      !el.querySelector("[data-y2-word]") &&
+      !el.closest("figcaption"),
+  );
+  rest.forEach((el, index) => {
+    const from = 0.78 + index * 0.05;
+    brightenAt(timeline, [el], from, from + 0.16);
+  });
+};
+
+/**
+ * §15A who is speaking. Her opening line is testimony too, so it is read the
+ * same way; the marker, title and lede around it take the ordinary M1.
+ */
+const herOpening: Recipe = (timeline, slide) => {
+  const block = slide.querySelector<HTMLElement>("[data-y2]");
+  speakWords(
+    timeline,
+    block ? query<HTMLElement>(block, "[data-y2-word]") : [],
+    0.24,
+    0.4,
+  );
 };
 
 const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
@@ -649,6 +725,7 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "#art-gallery", recipe: nineteenFifties },
   { match: "#break-escarpment", recipe: breakPullBack },
   { match: "#opportunities", recipe: openResearch },
+  { match: "#the-count", recipe: herOpening },
   { match: "#the-count-testimony", recipe: herTestimony },
   { match: "#seabed", recipe: strata },
 ];
