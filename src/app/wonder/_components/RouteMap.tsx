@@ -179,6 +179,19 @@ export function RouteMap({
           extra 305px of drawing falls outside the screen exactly where the
           old window cut it — and at 1920 the roads simply carry on. */}
       <div className="pointer-events-none absolute top-0 left-0 hidden h-full w-full overflow-hidden lg:block">
+        {/* THE FRAME'S OWN GEOMETRY, re-verified against the node on
+            10 Sep 2026 and restored after a 75% scale was tried and was
+            wrong (August: "the map's position is off compared to wireframe").
+            Read off 2033:5572, a 1440 × 900 frame: Frame 15406 (3238:34160)
+            sits at (−533, −283) and holds the 2277.93 × 1580 artwork at its
+            origin, so these two calc()s ARE those two numbers —
+            720 − 1252.5 = −532.5 and 450 − 790 + 57 = −283. Change either and
+            the roads leave the legend icons behind, because those are laid on
+            the frame (3238:34149 / 34151 / 34154 / 34158) and not on the map.
+
+            The scrolling complaint that prompted the scale is answered where
+            it actually lived: the span is 180vh, not 300, and the pins light
+            at 0.50–0.68 rather than 0.76–0.91. */}
         <div className="absolute top-[calc(50%+57px)] left-[calc(50%-1252.5px)] h-[1580px] w-[2278px] -translate-y-1/2">
           <div
             className="absolute inset-0"

@@ -15,7 +15,7 @@ import { toneBg, toneInk, type Tone } from "@/lib/tone";
  * interior hero therefore has to be a dark ground and carry `pt-36` or more,
  * or the nav lands on top of the headline and disappears. That coupling is
  * why this component exists rather than each page rolling its own. Past the
- * first 48px the header condenses to a small cluster at the right
+ * first 48px the header condenses to a small blurred cluster at the right
  * margin, so only the hero has to hold the full band's clearance.
  */
 export function PageHero({
@@ -39,7 +39,7 @@ export function PageHero({
   const ink = toneInk[tone];
 
   return (
-    <section className={`${toneBg[tone]} relative`}>
+    <section data-nav-hero className={`${toneBg[tone]} relative`}>
       <div className="mx-auto max-w-7xl px-6 pt-36 pb-20 lg:px-16 lg:pt-44">
         <Eyebrow className={ink.accent}>{eyebrow}</Eyebrow>
 

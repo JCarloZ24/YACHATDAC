@@ -164,7 +164,7 @@ const WAY_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b", "c"];
  */
 export function ConnectHero() {
   return (
-    <section className="relative bg-evergreen text-canvas">
+    <section data-nav-hero className="relative bg-evergreen text-canvas">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="a" className="-left-48 top-[53%] w-[40rem]" />
         <RingArtwork piece="b" className="top-[8%] left-[64.5%] w-[56.25rem]" />

@@ -23,8 +23,14 @@
 export const wonderHero = {
   eyebrow: "Wonder · Guesting On-Country",
   title: "Guesting On-Country",
+  /**
+   * Revised 10 September 2026, August's direction: the standfirst now speaks
+   * in the first person and issues the invitation ("come spend a few days
+   * with us") rather than describing the stay in the third person. D5 —
+   * mirrored into the v3 draft in the same pass.
+   */
   standfirst:
-    "A few days on Turraburra with the Traditional Custodians of this Country. You are welcome here, and you will be looked after.",
+    "Come spend a few days with us on Turraburra. We welcome you onto our Country, share our stories and knowledge, and look after you while you are here.",
   /**
    * The draft's summary line. Kept as separate items rather than one string so
    * it can be set as chips or as a run of text without re-splitting it.
@@ -107,32 +113,51 @@ export const wonderHighlights = [
   },
 ] as const;
 
+/**
+ * ⚠ REWRITTEN 10 September 2026, user direction, and the draft
+ * (YACHATDAC-Wonder-Copy-v3.md §"Getting here is part of it") was rewritten
+ * in the same pass — D5, drafts govern copy.
+ *
+ * What went: the Harry Redford cattle-duffing story, the per-stop details,
+ * and the Gray Rock / Wattanuri coda. The stops are now a bare list of
+ * places you may come across, introduced rather than annotated, and the
+ * section closes on the arrival rather than on a second story. Anything
+ * still wanted from the removed paragraphs has to come back through a draft,
+ * not through markup.
+ */
 export const gettingHere = {
   title: "Getting here is part of it",
   body: [
-    "From Barcaldine it is 120 kilometres north and the last stretch is dirt. Nobody arrives here by accident, and that is half the reason it is still what it is.",
-    "Aramac is the last town, 67 kilometres up the road, with a large white bull standing in the main street. In 1870 Harry Redford lifted a thousand head of cattle off Bowen Downs and walked them to South Australia. He sold a white bull along the way to buy supplies, which is how they caught him. The jury acquitted him anyway.",
+    "Turraburra is about 120 kilometres north of Barcaldine, with the final stretch taking you along dirt roads. The journey slows you down before you arrive and gives you a sense of just how remote this Country is.",
+    "Aramac is the last town before you head further north.",
   ],
+  /** The line that introduces the list; it is copy, so it lives here. */
+  stopsIntro: "Along the way and around the region, you may also come across:",
+  /**
+   * `detail` is optional now. Lake Dunn keeps its other names because they
+   * are the place's names and not a description of it; the other three are
+   * named and left alone.
+   */
   stops: [
-    {
-      name: "Lake Dunn",
-      detail:
-        "Pajingo Bola, Big Fella Waterhole. The only wetland in Central West Queensland.",
-    },
-    {
-      name: "Lake Dunn Sculpture Trail",
-      detail:
-        "A 200km loop out of Aramac, forty-plus sculptures built from scrap off local tips.",
-    },
-    { name: "Horsetailer's Gorge", detail: "And the Healing Circle." },
-    { name: "Gray Rock", detail: "Keep this one in mind." },
-  ],
-  coda: "There are figures carved at Gray Rock that were almost certainly cut by the same hand as the figures on our wall, and in the story, Wattanuri comes from Gray Rock. You will drive past one end of it to reach the other.",
+    { name: "Lake Dunn", detail: "Pajingo Bola, Big Fella Waterhole" },
+    { name: "Lake Dunn Sculpture Trail" },
+    { name: "Horsetailer's Gorge and the Healing Circle" },
+    { name: "Gray Rock" },
+  ] as readonly { name: string; detail?: string }[],
+  coda: "By the time you reach us, you will already feel the landscape beginning to change.",
 } as const;
 
 export const turraburra = {
   title: "Turraburra",
   /**
+   * Revised 10 September 2026, August's direction: the paragraph now opens on
+   * whose Country this is rather than on the lease name, and says plainly that
+   * "Terraburra" is the surveyor's spelling on the 1884 map — the house rule
+   * that Turraburra (the property) and Terraburra (the 1884 clan record) are
+   * each correct in their own sentence, made legible to a reader. CR10 below
+   * is kept as the record of why the previous sentence read as it did; its
+   * wording is superseded, its ruling is not.
+   *
    * ⚠ CR10 — applied 7 Sep on August's ruling. "bought back for our people"
    * now reads "bought back for the Iningai people". Two things this does NOT
    * do: it does not adopt Steve's "Innigai" — every draft and every file here
@@ -141,7 +166,7 @@ export const turraburra = {
    * rather than speaking of Iningai people in the first person.
    * D16 (the terminology sheet) still owes the standing ruling.
    */
-  body: "The property was called Gracevale for most of a century. It was bought back for the Iningai people in April 2019, and on 1 October 2020 we renamed it Turraburra, after the Terraburra clan recorded on this Country in an 1884 map. It runs to 8,870 hectares.",
+  body: "This Country is Iningai. For most of a century a pastoral lease called it Gracevale. We bought it back in April 2019, 8,870 hectares, and on 1 October 2020 we gave it its name again. Turraburra, after the Terraburra clan — that spelling is a surveyor's, written down on an 1884 map. We have been here considerably longer than the map.",
   image: "The escarpment across open country.",
   caption: "The escarpment runs along the edge of the Aramac Range.",
 } as const;
@@ -163,61 +188,118 @@ export type StayStage = {
  */
 export const stayStages: readonly StayStage[] = [
   {
+    /**
+     * Revised 10 September 2026, August's direction. The stage is now the
+     * drive in rather than the setting-up: short paragraphs whose rhythm
+     * ("Keep going.") is the point, so they stay separate and are not folded
+     * into one, and the closing line carried in `coda` for the callout face.
+     * The two old photo notes are replaced by the one aerial supplied with
+     * the revision — see `stayStageMedia`.
+     */
     title: "Arriving",
     body: [
-      "You get in, meet whoever is here, and set up camp. Swag or tent, and the fire going by dark.",
-    ],
-    images: ["Pitching a tent.", "Morning talk around the table by the water."],
-  },
-  {
-    title: "The first night",
-    body: [
-      "There is no town glow out this way. When the fire burns down, the sky comes all the way to the ground. That is when the stories get told, by the people they belong to.",
-      "The Seven Sisters are up there, and they are carved into the wall you will walk in the morning. Same story, told twice, tens of thousands of years apart.",
-    ],
-    images: ["Guests around the fire at dusk."],
-  },
-  {
-    title: "Walking out to the wall",
-    body: [
-      "Marra Wonga means place of many stories. We walk out through the woodland and come up under 160 metres of sandstone.",
-    ],
-    points: [
-      "Fifteen thousand markings — tracks, stars, grooves and drilled holes",
-      "A snake eleven metres long, and human feet with six toes",
-      "Ten clusters running south to north, telling one story in sequence",
-      "Never scientifically dated",
+      "The final stretch is a long one.",
+      "The roads get quieter, the bitumen turns to dirt, and there is still a lot of Country between you and the homestead.",
+      "Keep going.",
+      "When you finally arrive, we will be here to meet you. Unpack, choose your spot, set up camp and settle in.",
     ],
     images: [
-      "Walking through woodland toward the escarpment.",
-      "Walking along beneath the overhang.",
+      "Aerial: a single vehicle on the two-wheel track, woodland running to the horizon.",
     ],
-    coda: "We tell you what we are able to tell.",
+    /* 10 September 2026, August's direction: the closing line is set in the
+       callout face. `coda` is the field that carries it — the only route to
+       Good Dog in this section, and the same one the other five stops use. */
+    coda: "You have made it to Turraburra.",
   },
   {
+    /**
+     * Revised 10 September 2026, August's direction. The stop is now the
+     * quiet end of the day — the meal, the choice to stay out or turn in —
+     * rather than the fire and the telling. The Seven Sisters paragraph goes
+     * with it: that story belongs to the people who tell it, and this page no
+     * longer stages it as an evening's entertainment. Closing line carried in
+     * `coda` for the callout face, as August asked on stop 1.
+     */
+    title: "The first night",
+    body: [
+      "After the long journey, we settle in, eat together, talk and get to know each other.",
+      "If you still have energy, stay outside a little longer. Listen to the animals, look across Country and take in the sky. Or head to bed early. There is no rush.",
+    ],
+    images: ["Trees in silhouette against the last of the light, dusk."],
+    coda: "By morning, daylight reveals just how much is around you.",
+  },
+  {
+    /**
+     * Revised 10 September 2026, August's direction. Retitled from "Walking
+     * out to the wall" — `stayStageMedia` is keyed by this title, so the key
+     * moved with it. The four count-and-detail bullets are gone: the revision
+     * folds the markings into one sentence and stops publishing figures we
+     * have not confirmed (the snake's length, the six toes, "never
+     * scientifically dated"). "Thousands", not "fifteen thousand", for the
+     * same reason. The coda is now "share", not "tell", in both directions —
+     * what is given and what is withheld are both ours to decide.
+     */
+    title: "Walking out to Marra Wonga",
+    body: [
+      "Marra Wonga means place of many stories.",
+      "We walk with you through the woodland until the sandstone wall rises ahead.",
+      "Across it are thousands of markings: tracks, stars, grooves, circles and figures, with parts of the story moving along the wall from south to north.",
+    ],
+    images: ["Walking through woodland toward the escarpment."],
+    coda: "We share what we are able to share.",
+  },
+  {
+    /**
+     * Revised 10 September 2026, August's direction. Loses the visiting
+     * specialist's "may be dinosaur eggs" — a second-hand maybe that the page
+     * was carrying as fact-adjacent — and keeps the claims to what is in the
+     * stone. Closing line in `coda` for the callout face, as on stops 1–3.
+     */
     title: "Older than the wall",
     body: [
-      "This Country was the floor of an inland sea. Creatures stood in the mud at the edge of it and the prints set. They are still here, along with petrified trees and what one visiting specialist thinks may be dinosaur eggs.",
+      "Long before people walked this Country, an inland sea covered this place.",
+      "Its traces are still here in stone: ancient footprints, petrified trees and other signs of a landscape much older than us.",
     ],
-    images: ["Fossil footprints preserved in rock."],
-    coda: "Footprints set in what was once the mud of a shoreline.",
+    images: ["A host showing guests the water-filled hollows in the rock."],
+    coda: "We take you out to see them.",
   },
   {
-    title: "Out for food",
+    /**
+     * Revised 10 September 2026, August's direction. Retitled from "Out for
+     * food" — `stayStageMedia` is keyed by the title, so its key moved too.
+     * "Our people ... for thousands of generations" replaces "First Peoples
+     * ... tens of thousands of years": first person, and a measure counted in
+     * people rather than in a number nobody here has verified.
+     */
+    title: "Finding food on Country",
     body: [
-      "The country that looked empty on the drive in is full of food. Herbs, fruits, seeds, nuts. First Peoples have eaten off this Country for tens of thousands of years and it is all still here.",
+      "What can look empty from the road is full of food.",
+      "Seeds, fruits, herbs, nuts and plants have sustained our people on this Country for thousands of generations.",
     ],
-    images: ["Suzanne showing a plant to guests.", "Harvesting in the scrub."],
-    coda: "You learn what to look at, and then you keep seeing it.",
+    images: ["Collecting seed into a tub, three people working through scrub."],
+    coda:
+      "We show you what to look for. Once you start seeing it, the Country looks different.",
   },
   {
+    /**
+     * Revised 10 September 2026, August's direction. Two things left the
+     * page with this pass, both deliberate and both raised with August:
+     * the spring-and-koala paragraph (it survives as the Resources story
+     * "Bringing a spring back", linked further down this page), and the line
+     * "nothing you see was put on for you".
+     *
+     * ⚠ "fire work" is August's wording, kept verbatim. The house term is
+     * *fire-stick farming* (docs/terminology.md) and this is the one place on
+     * the site that now says it another way. Flagged, not silently corrected.
+     */
     title: "Hands in the work",
     body: [
-      "We do not run a set itinerary, because the work does not. Rain the night before and the morning goes to fire-stick farming while the ground is right. Seed on the grasses and we will be out collecting it. You join whatever is already happening, which is why no two groups get the same days and why nothing you see was put on for you.",
-      "One of our springs had been trampled flat by a hundred years of stock. We cleaned it out, planted grasses, and carted a thousand litres to it twice a day through drought. Eight days in it held a puddle. Next morning there was a koala standing at it.",
+      "We do not run a fixed itinerary. Country decides the day.",
+      "Rain might mean fire work. Seeding grasses might mean collecting. Other days take us to water, plants, animals or restoration.",
+      "You join us in whatever needs doing, so no two stays are the same.",
     ],
-    images: ["Standing at a spring in open country."],
-    coda: "If you want to put your hands in, you are welcome to. Most people end up wanting to.",
+    images: ["Watching the burn from the ridge above it, smoke over the range."],
+    coda: "If you want to put your hands in and help, you are welcome to.",
   },
 ];
 
@@ -266,20 +348,38 @@ export const inclusions = [
 export const inclusionsNote =
   "Every line above needs Suzanne or Steve to confirm before publishing.";
 
-export const whereYouSleep = {
-  title: "Where you sleep",
-  body: "Camping. Swag or tent, meals shared, fire at night. Cabins and a lodge are planned for later, but this is what it is now, and most people who come out here want it this way.",
-  images: ["A tent going up at camp.", "Camp at dusk."],
+/**
+ * Revised 10 September 2026, August's direction. Retitled "Where you sleep"
+ * → "Where you stay": the section is now the whole of camp life, not the
+ * bed. `body` became an array of paragraphs in the same pass — it was one
+ * string and the revision is four — and `WonderWhereYouStay` maps it.
+ * The two photo notes became ten with the carousel; see `whereYouStayMedia`.
+ */
+export const whereYouStay = {
+  title: "Where you stay",
+  body: [
+    "This is camp life.",
+    "Swags and tents, shared meals, time around the fire, simple bathrooms, a stocked pantry and space to sit, talk, swim and slow down.",
+    "The Yumba lake nearby, plenty of room to spread out, and everything you need for a comfortable stay on Country.",
+    "Cabins and a lodge may come later. For now, this is how we stay — simple, shared and close to the land.",
+  ],
 } as const;
 
+/**
+ * Revised 10 September 2026, August's direction. The substantive change is
+ * the connectivity line: the page used to say service "does not come back
+ * until you head home", which is now wrong — there are spots with signal, and
+ * there is Wi-Fi at camp and in the vehicles. A visitor planning around the
+ * old line would have made the wrong call about being reachable.
+ */
 export const whatItIsLike = {
   title: "What it is like out here",
   points: [
-    "Red dirt, spinifex, and kangaroos on the track at dusk.",
-    "Hot days. Winter nights get close to freezing.",
-    "May to September is the comfortable stretch.",
-    "Phone service drops out and does not come back until you head home.",
-    "Distances between anything are long. Fuel up in Aramac.",
+    "Red earth, spinifex and kangaroos along the track at dusk.",
+    "Hot days and winter nights that can get close to freezing.",
+    "May to September is usually the most comfortable time to visit.",
+    "Mobile service is mostly out of range, with only a few spots where signal comes through. Wi-Fi is available around camp and in our vehicles when needed.",
+    "Distances are long, so fuel up before leaving Aramac.",
   ],
   image: "Standing on top of the escarpment looking out over woodland.",
 } as const;

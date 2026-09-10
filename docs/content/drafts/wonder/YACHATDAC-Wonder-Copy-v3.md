@@ -46,7 +46,7 @@ Home › Wonder › Guesting On-Country
 
 ## Guesting On-Country
 
-A few days on Turraburra with the Traditional Custodians of this Country. You are welcome here, and you will be looked after.
+Come spend a few days with us on Turraburra. We welcome you onto our Country, share our stories and knowledge, and look after you while you are here.
 
 Marra Wonga · Native foods · Fire-stick farming · Camping · Central Western Queensland · Families & school groups
 
@@ -102,20 +102,27 @@ There's no town glow out this way — when the fire burns down, the sky comes al
 
 ### Getting here is part of it
 
-From Barcaldine it is 120 kilometres north and the last stretch is dirt. Nobody arrives here by accident, and that is half the reason it is still what it is.
+> [ REVISED 10 September 2026, user direction. The Harry Redford cattle-duffing
+> story, the per-stop details and the Gray Rock / Wattanuri coda were removed;
+> the stops are now an introduced list of places rather than annotated entries.
+> Applied to `src/content/wonder.ts` in the same pass. ]
 
-Aramac is the last town, 67 kilometres up the road, with a large white bull standing in the main street. In 1870 Harry Redford lifted a thousand head of cattle off Bowen Downs and walked them to South Australia. He sold a white bull along the way to buy supplies, which is how they caught him. The jury acquitted him anyway.
+Turraburra is about 120 kilometres north of Barcaldine, with the final stretch taking you along dirt roads. The journey slows you down before you arrive and gives you a sense of just how remote this Country is.
 
-- **Lake Dunn** — Pajingo Bola, Big Fella Waterhole. The only wetland in Central West Queensland.
-- **Lake Dunn Sculpture Trail** — a 200km loop out of Aramac, forty-plus sculptures built from scrap off local tips.
-- **Horsetailer’s Gorge** and the Healing Circle.
-- **Gray Rock** — keep this one in mind.
+Aramac is the last town before you head further north.
 
-There are figures carved at Gray Rock that were almost certainly cut by the same hand as the figures on our wall, and in the story, Wattanuri comes from Gray Rock. You will drive past one end of it to reach the other.
+Along the way and around the region, you may also come across:
+
+- **Lake Dunn** — Pajingo Bola, Big Fella Waterhole
+- **Lake Dunn Sculpture Trail**
+- **Horsetailer’s Gorge and the Healing Circle**
+- **Gray Rock**
+
+By the time you reach us, you will already feel the landscape beginning to change.
 
 ### Turraburra
 
-The property was called Gracevale for most of a century. It was bought back for the Iningai people in April 2019, and on 1 October 2020 we renamed it Turraburra, after the Terraburra clan recorded on this Country in an 1884 map. It runs to 8,870 hectares.
+This Country is Iningai. For most of a century a pastoral lease called it Gracevale. We bought it back in April 2019, 8,870 hectares, and on 1 October 2020 we gave it its name again. Turraburra, after the Terraburra clan — that spelling is a surveyor's, written down on an 1884 map. We have been here considerably longer than the map.
 
 [ Image — The escarpment across open country. ]
 
@@ -125,64 +132,71 @@ The escarpment runs along the edge of the Aramac Range.
 
 **Arriving**
 
-You get in, meet whoever is here, and set up camp. Swag or tent, and the fire going by dark.
+The final stretch is a long one.
 
-[ Image — Pitching a tent. ]
+The roads get quieter, the bitumen turns to dirt, and there is still a lot of Country between you and the homestead.
 
-[ Image — Morning talk around the table by the water. ]
+Keep going.
+
+When you finally arrive, we will be here to meet you. Unpack, choose your spot, set up camp and settle in.
+
+You have made it to Turraburra.
+
+[ Image — Aerial: a single vehicle on the two-wheel track, woodland running to the horizon. ]
 
 **The first night**
 
-There is no town glow out this way. When the fire burns down, the sky comes all the way to the ground. That is when the stories get told, by the people they belong to.
+After the long journey, we settle in, eat together, talk and get to know each other.
 
-The Seven Sisters are up there, and they are carved into the wall you will walk in the morning. Same story, told twice, tens of thousands of years apart.
+If you still have energy, stay outside a little longer. Listen to the animals, look across Country and take in the sky. Or head to bed early. There is no rush.
 
-[ Image — Guests around the fire at dusk. ]
+By morning, daylight reveals just how much is around you.
 
-**Walking out to the wall**
+[ Image — Trees in silhouette against the last of the light, dusk. ]
 
-Marra Wonga means place of many stories. We walk out through the woodland and come up under 160 metres of sandstone.
+**Walking out to Marra Wonga**
+
+Marra Wonga means place of many stories.
+
+We walk with you through the woodland until the sandstone wall rises ahead.
+
+Across it are thousands of markings: tracks, stars, grooves, circles and figures, with parts of the story moving along the wall from south to north.
 
 [ Image — Walking through woodland toward the escarpment. ]
 
-- Fifteen thousand markings — tracks, stars, grooves and drilled holes
-- A snake eleven metres long, and human feet with six toes
-- Ten clusters running south to north, telling one story in sequence
-- Never scientifically dated
-
-[ Image — Walking along beneath the overhang. ]
-
-[ Image — Standing under a rock feature. ]
-
-We tell you what we are able to tell.
+We share what we are able to share.
 
 **Older than the wall**
 
-This Country was the floor of an inland sea. Creatures stood in the mud at the edge of it and the prints set. They are still here, along with petrified trees and what one visiting specialist thinks may be dinosaur eggs.
+Long before people walked this Country, an inland sea covered this place.
 
-[ Image — Fossil footprints preserved in rock. ]
+Its traces are still here in stone: ancient footprints, petrified trees and other signs of a landscape much older than us.
 
-Footprints set in what was once the mud of a shoreline.
+[ Image — A host showing guests the water-filled hollows in the rock. ]
 
-**Out for food**
+We take you out to see them.
 
-The country that looked empty on the drive in is full of food. Herbs, fruits, seeds, nuts. First Peoples have eaten off this Country for tens of thousands of years and it is all still here.
+**Finding food on Country**
 
-[ Image — Suzanne showing a plant to guests. ]
+What can look empty from the road is full of food.
 
-[ Image — Harvesting in the scrub. ]
+Seeds, fruits, herbs, nuts and plants have sustained our people on this Country for thousands of generations.
 
-You learn what to look at, and then you keep seeing it.
+[ Image — Collecting seed into a tub, three people working through scrub. ]
+
+We show you what to look for. Once you start seeing it, the Country looks different.
 
 **Hands in the work**
 
-We do not run a set itinerary, because the work does not. Rain the night before and the morning goes to fire-stick farming while the ground is right. Seed on the grasses and we will be out collecting it. You join whatever is already happening, which is why no two groups get the same days and why nothing you see was put on for you.
+We do not run a fixed itinerary. Country decides the day.
 
-One of our springs had been trampled flat by a hundred years of stock. We cleaned it out, planted grasses, and carted a thousand litres to it twice a day through drought. Eight days in it held a puddle. Next morning there was a koala standing at it.
+Rain might mean fire work. Seeding grasses might mean collecting. Other days take us to water, plants, animals or restoration.
 
-[ Image — Standing at a spring in open country. ]
+You join us in whatever needs doing, so no two stays are the same.
 
-If you want to put your hands in, you are welcome to. Most people end up wanting to.
+[ Image — Watching the burn from the ridge above it, smoke over the range. ]
+
+If you want to put your hands in and help, you are welcome to.
 
 **What’s included**
 
@@ -208,23 +222,37 @@ If you want to put your hands in, you are welcome to. Most people end up wanting
 
 > [ NEEDS CONFIRMATION — every line above needs Suzanne or Steve to confirm before publishing. ]
 
-### Where you sleep
+### Where you stay
 
-Camping. Swag or tent, meals shared, fire at night. Cabins and a lodge are planned for later, but this is what it is now, and most people who come out here want it this way.
+This is camp life.
 
-[ Image — A tent going up at camp. ]
+Swags and tents, shared meals, time around the fire, simple bathrooms, a stocked pantry and space to sit, talk, swim and slow down.
 
-[ Image — Camp at dusk. ]
+The Yumba lake nearby, plenty of room to spread out, and everything you need for a comfortable stay on Country.
+
+Cabins and a lodge may come later. For now, this is how we stay — simple, shared and close to the land.
+
+[ Carousel — ten frames, camp and guests mixed:
+  1. Camp among the trees at first light, sun coming through.
+  2. Breakfast around the long table under the camp shelter.
+  3. Five tents pitched through open woodland.
+  4. Guests in the buggy beside the deck, heading out.
+  5. Pegging out a tent at camp, mallet in hand, in open woodland.
+  6. The circle of chairs around the fire between the tents.
+  7. Tents in the trees with the morning sun through them.
+  8. Cooking breakfast in the camp kitchen under the shelter.
+  9. Camp at dusk — three tents, a group around the fire as the light goes.
+  10. The Yumba lake at dusk, pink cloud reflected in still water. ]
 
 ### What it is like out here
 
-- Red dirt, spinifex, and kangaroos on the track at dusk.
-- Hot days. Winter nights get close to freezing.
-- May to September is the comfortable stretch.
-- Phone service drops out and does not come back until you head home.
-- Distances between anything are long. Fuel up in Aramac.
+- Red earth, spinifex and kangaroos along the track at dusk.
+- Hot days and winter nights that can get close to freezing.
+- May to September is usually the most comfortable time to visit.
+- Mobile service is mostly out of range, with only a few spots where signal comes through. Wi-Fi is available around camp and in our vehicles when needed.
+- Distances are long, so fuel up before leaving Aramac.
 
-[ Image — Standing on top of the escarpment looking out over woodland. ]
+[ Image — A family and their host on the ridge, woodland running to the horizon. ]
 
 ### Who you are with
 

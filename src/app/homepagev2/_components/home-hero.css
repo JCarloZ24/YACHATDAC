@@ -1,0 +1,110 @@
+/* /homepagev2 fork, 10 September 2026, user direction. Every class is
+   prefixed v2- so the two pages cannot style each other, whatever a
+   future bundler decides to put in one stylesheet. */
+
+/* Home, screenshot direction 8 September 2026. Only progressive enhancement
+   hides copy: no JS, failed WebGL and reduced motion remain readably still. */
+.v2-home-hero-stage { width: max(100%, 900px); }
+/* Screenshot-specific display scale, user 8 September 2026: keep text-h1 and
+   the licensed face, but locally enlarge this hero to the reference's two-line
+   headline. Shared heading tokens elsewhere remain the 7 September scale. */
+[data-home-hero] { --text-h1: clamp(2.5rem, 5.55vw, 5rem); }
+.v2-home-hero-canvas { visibility: hidden; }
+/* Only the enhanced painting scene exposes these repeated narrative fragments. */
+.v2-home-painting-copy { opacity: 0; visibility: hidden; }
+/* 9 September reference: cream display hierarchy with local media scrims.
+   Keep the licensed heading face; the scrim fades with each text fragment. */
+.v2-painting-introduction { position: relative; font-size: clamp(1.75rem, 3.8vw, 4rem); }
+.v2-painting-place { position: relative; font-size: clamp(2.75rem, 6.2vw, 6.5rem); margin-top: 0.08em; }
+.v2-painting-story { --text-h3: clamp(1.5rem, 2.85vw, 3rem); }
+.v2-painting-introduction, .v2-painting-place, .v2-painting-story {
+  isolation: isolate;
+  text-shadow: 0 3px 8px color-mix(in srgb, var(--color-charcoal) 55%, transparent);
+}
+.v2-painting-introduction::before, .v2-painting-place::before, .v2-painting-story::before {
+  content: "";
+  position: absolute;
+  inset: -18px -24px;
+  z-index: -1;
+  pointer-events: none;
+  /* Full text bounds stay shaded; only the outer perimeter feathers away. */
+  background: color-mix(in srgb, var(--color-charcoal) 68%, transparent);
+  border-radius: 18px;
+  filter: blur(18px);
+}
+/* Wonder's screenshot uses a smaller display than the opening collage headline. */
+.v2-home-wonder-copy { opacity: 0; visibility: hidden; --text-h1: clamp(2rem, 4vw, 3.75rem); }
+/* Latest screenshot: centred Truth introduction over the same road canvas. */
+.v2-home-truth-copy { opacity: 0; visibility: hidden; --text-h1: 2.5rem; }
+@media (min-width: 64rem) {
+  /* Figma 3371:44833: local 64px display scale for this prototype frame. */
+  .v2-home-truth-copy { --text-h1: 4rem; }
+}
+/* The existing Wonder section remains the no-WebGL/reduced-motion fallback. */
+body:has([data-hero-canvas="ready"]) #wonder { display: none; }
+/* 9 September screenshot: static media scrim (X5), feathered dark blur at
+   the perimeter. Copy sits above the backdrop so its letterforms stay sharp. */
+.v2-home-hero-edge-treatment {
+  background: color-mix(in srgb, var(--color-charcoal) 80%, transparent);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 48%, transparent 38%, black 100%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 48%, transparent 38%, black 100%);
+}
+[data-hero-copy] { z-index: 1; }
+@media (min-width: 64rem) {
+  .v2-home-hero-edge-treatment {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    -webkit-mask-image: radial-gradient(ellipse 56% 72% at 50% 48%, transparent 35%, black 100%);
+    mask-image: radial-gradient(ellipse 56% 72% at 50% 48%, transparent 35%, black 100%);
+  }
+}
+[data-hero-canvas="ready"] .v2-home-hero-canvas { visibility: visible; }
+[data-hero-canvas="ready"] [data-hero-fallback] { visibility: hidden; }
+[data-hero-motion="preparing"] [data-hero-copy] { visibility: hidden; }
+[data-home-hero] [data-hero-word] { display: inline-block; }
+/* The black beat covers imagery and temporarily clears overlaid furniture. */
+[data-home-hero]:not([data-hero-motion]) [data-hero-black] { display: none; }
+body:has([data-hero-motion="preparing"]) > header,
+body:has([data-hero-phase="black"]) > header,
+body:has([data-hero-motion="preparing"]) [data-home-thread],
+body:has([data-hero-phase="black"]) [data-home-thread] { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  [data-home-hero] [data-hero-copy] { visibility: visible; }
+  [data-home-hero] .v2-home-hero-canvas { visibility: hidden; }
+  [data-home-hero] [data-hero-fallback] { visibility: visible; }
+  [data-home-hero] [data-hero-black] { display: none; }
+}
+
+/* SCR-10: Figma 1440x901 positions, scaled as a single timeline composition. */
+.v2-home-truth-panels { display: grid; }
+.v2-home-truth-panel { grid-area: 1 / 1; }
+.v2-home-truth-panel:not(:first-child), .v2-home-truth-timeline { opacity: 0; visibility: hidden; }
+.v2-home-truth-timeline { --text-h1: clamp(2rem, 4.444vw, 4rem); }
+.v2-home-truth-path { position: absolute; left: .625%; top: 81.02%; width: 123.472%; height: 5%; max-width: none; }
+.v2-home-truth-marker { position: absolute; inset: 0; }
+.v2-home-truth-marker-art { position: absolute; width: 3.333%; height: 10.433%; left: -1.666%; bottom: 97.55%; }
+.v2-home-truth-years { position: absolute; bottom: 110.5%; left: -10%; width: 20%; display: grid; text-align: center; }
+.v2-home-truth-years > p { grid-area: 1 / 1; }
+.v2-home-truth-years > p:not(:first-child) { opacity: 0; visibility: hidden; }
+body:has([data-hero-canvas="ready"]) #truth { display: none; }
+@media (max-width: 63.999rem) {
+  .v2-home-truth-copy { top: 9%; }
+  .v2-home-truth-path { height: auto; }
+  .v2-home-truth-marker-art { width: 32px; height: 63px; left: -16px; bottom: calc(100% - 16px); }
+  .v2-home-truth-years { bottom: calc(100% + 62px); left: -45px; width: 90px; }
+  .v2-home-truth-panel { font-size: clamp(.875rem, 2.7vw, 1rem); }
+}
+
+/* Figma 3371:41578: 800px column centred below the 124px navigation band. */
+.v2-home-belonging-copy { opacity: 0; visibility: hidden; top: 18%; --text-h1: 2.5rem; }
+body:has([data-hero-canvas="ready"]) #belonging { display: none; }
+@media (min-width: 64rem) {
+  .v2-home-belonging-copy { top: 56.9%; translate: 0 -50%; max-width: calc(100% - 160px); --text-h1: 4rem; }
+}
+@media (max-width: 63.999rem) {
+  .v2-home-belonging-copy { top: 10%; }
+  .v2-home-belonging-copy h2 { --text-h1: clamp(1.8rem, 7vw, 2.5rem); }
+  .v2-home-belonging-copy > div { font-size: .875rem; }
+}

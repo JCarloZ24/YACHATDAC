@@ -170,7 +170,7 @@ const PEOPLE_B = photoById("about-people-02");
  */
 export function AboutHero() {
   return (
-    <section data-ab="hero" className="relative bg-charcoal text-canvas">
+    <section data-ab="hero" data-nav-hero className="relative bg-charcoal text-canvas">
       {/* Flex-centred, not absolutely centred. The copy is a flow child, so a
           short viewport makes this block taller instead of clipping the
           standfirst — `min-h` can only grow for content that is in the flow. */}

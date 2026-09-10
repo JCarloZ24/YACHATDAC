@@ -2,6 +2,15 @@
 
 *Last updated: 10 September 2026*
 
+The closing offer, 9 September 2026: deck slides 22 and 23 follow the line onto the same canvas, on user direction, and are the last thing the pinned hero does. From `offerAt` the headline alone fades (0.7 units) -- the spirals stay, which is what keeps the two panels reading as one screen -- `wayForward.body` takes the same middle band on opacity over 0.9 units from `offerAt + 0.6`, and four photographs arrive around it from `offerAt + 1.4`, rising 7% of canvas height over 0.9 units on a 0.18 stagger. A 1.3-unit hold ends the page before the pin releases into the footer ground. The plates are `frame` grade and hold still once placed; positions are percentages measured off the deck, which has no Figma node, so nothing there is a token being ignored. They are held for `lg` and above -- at 375 the four collide with the copy at any size worth showing, and the paragraph carries the beat alone. Rendering this paragraph surfaces the D16 flag rather than resolving it: it carries both "Indigenous traditions" and "First Nations" in three sentences, which FNAN asked to be checked on 24 August. The terminology sheet settles it, not an edit in the content module.
+
+The pathways on the canvas, 9 September 2026: deck slide 24, on user direction. Built first as an ordinary scrolling section below the pinned hero, then moved onto it the same day -- every screen of the homepage above the footer is now a panel on one surface. From `pathAt` the offer and the spirals clear together (0.7 units), the row comes up a viewport (`yPercent` 100 to 0, 1.2 units, sine.out) the way The Invitation did, so the page closes on the movement it opened the choices with, and the four cards settle on a 0.12 stagger from `pathAt + 0.9`, rising 6% of canvas height. A 1.4-unit hold ends the page before the pin releases into the footer ground. Photographs are `frame` grade and deliberately not the Invitation's three, since both navigations are now on the same canvas. The row is a track inside a mask, not a scroller (revised the same day, user direction): it starts at the viewport margin with the fourth card visibly cut, and from `pathAt + 1.9` the timeline carries it right over 1.8 units, linear -- the page's scroll shown sideways, so the last card is brought in by reading on rather than by finding a swipe, and easing it would make the wheel feel like it was slipping. The distance is a function value, read at refresh and never per frame, clamped to zero when the track already fits; it is measured against the mask's content width (`clientWidth` minus its left padding, which would otherwise be counted twice), and the margin the row rests against on the right is the track's own trailing padding, inside `scrollWidth` -- so the space at either end is stated once, in the markup, and the travel stays a single subtraction. ⚠ A card carried out of the mask stays focusable, and the browser will scroll an `overflow-hidden` mask to reach it, silently desynchronising the track from the timeline; if that shows up in keyboard testing the fix is a scroll handler resetting `scrollLeft`, not switching the mask off. Card images are sized in `svh`, not by aspect ratio: a panel gets one screen, and a short viewport should shorten the photographs rather than push the CTAs off the bottom. It restores the four `wayForward.paths` that had gone unrendered under the statement panel, `/partnerships` included -- that route had no homepage entry point at all in between. The newsletter signup did not come back with them; the homepage still has no email capture.
+
+Canvas scroll sensitivity, 10 September 2026: the pin's span per timeline unit is now the single constant `SCROLL_PER_UNIT` in home-hero.ts, lowered from SCR-10's 1.2 to 0.8 viewport heights on user direction. The hero had taken on four more beats -- The Invitation, the closing line, the offer, the pathways -- since 120vh a unit was chosen, and the page had become a long haul on the wheel. It is the only dial for how fast the canvas reads: the beats' relative pacing lives in the timeline, and this scales all of it at once, so nothing should be retimed beat by beat to make the page feel faster. The scroll cue's jump to Wonder reads the same constant, so the pin length and the jump cannot drift apart.
+
+Canvas survives a tab switch, 10 September 2026: leaving the homepage for a moment and coming back showed every panel at once -- the collage, the hero copy, The Invitation, the closing line, the offer and the pathways, stacked. That is what `release()` leaves behind: it reverts the GSAP context and removes `data-hero-canvas`, which lifts the `[data-hero-canvas="ready"]` gate holding the panels hidden. Harmless when the panels were sections below the hero; not harmless now that every beat is a panel on it. Three separate paths were calling it on an ordinary tab switch, and all three are fixed in home-hero.ts. (1) The ten-second safety timer that guards an intro which never finishes measures wall clock and keeps running in a background tab, while the intro it guards is paused by `visibilitychange` and so can never complete or clear it -- the guard was the failure. It is now stood down when the tab hides and re-armed on return. (2) Alt+Tab and Ctrl+Tab arrive as a Tab keydown, and the keydown handler releases on Tab so focus can never land on an invisible scroll link; it now ignores any key with alt, ctrl or meta held. (3) Browsers routinely drop a WebGL context for a backgrounded tab, and `webglcontextlost` released for the rest of the visit; it now waits for `webglcontextrestored` and rebuilds. ⚠ The stacked-panel state is still what a genuine failure looks like -- a machine with no WebGL, or reduced motion -- and it is not a readable fallback. That is a real open problem, not a regression from these fixes.
+
+
 **Record asset reuse, 9 September 2026.** Decoded portal images are cached by
 full URL for the browser session (LRU, at most 24 entries / 48 MiB decoded pixel
 estimate). Concurrent requests share a promise; failed requests are removed
@@ -78,6 +87,85 @@ in a row is a noisy one. Neither is a matter of opinion once it is written down.
 ---
 
 ## Home — verb *opens* — 1775vh, 8 sections
+
+**⚠ THE OPENING WAS REMOVED, 10 September 2026, user direction.** Read this
+before anything below it in this section. The homepage no longer opens on the
+photo collage, and it no longer draws the supplied painting or zooms through
+its rosette to reach the road. It opens ON the road: `home-hero.ts` waits for
+the photograph to decode, the black beat lifts off a finished scene, and the
+welcome — eyebrow, headline, body, scroll cue — fades on over it. Nothing
+travels and the mouse moves nothing. The first thing the scroll does is take
+the welcome and its two scrims off the photograph; Wonder rises a viewport
+after that, onto a land that is already in daylight.
+
+What went with it: the perspective gallery and its 36 plates, the pointer head
+turn, the charcoal-to-oxide ground warm, the painting reveal and its three
+lines ("You are entering" / "Turraburra" / "Story held in stone and
+starlight"), the portal zoom and its radial lens, the night grade the land wore
+before Wonder, and the feathered blur vignette — that one was made to soften
+the gaps between scattered plates and read as a smeared edge over a single
+photograph. Roughly three timeline units and twenty-six above-the-fold WebP
+requests (R11) went with them.
+
+**All of it still runs, unchanged, at /homepagev2** — an independent fork with
+its own components, content, effects and shader. Every paragraph below that
+describes the collage, the painting or the portal now describes that route, not
+`/`. `homePaintingCopy` and `homeHeroFrames` stay in the homepage's content
+modules, unrendered and annotated, on the same principle that kept the pathways
+and the tagline through v2: content is not deleted to match a layout.
+
+**The page opens at night, 10 September 2026, user direction.** It holds there
+for a beat, then the light comes up into the welcome. That is not a grade
+applied over the photograph: every beat of this page is the SAME Figma
+composition read at a different point in one day — the sky sequence behind the
+transparent land, the frame's own full-scene black over both, then the light
+sequence soft-lit through the land's alpha. So the time of day is nothing but
+where a frame sits in the two sequences and how much black it carries:
+
+| beat | node | sky | light | light layer height | black |
+| --- | --- | --- | --- | --- | --- |
+| night, on load | 3371:41344 | 0 | 0 | 8028 | 0.40 |
+| the welcome | 3371:41275 | 316 | 263 | 8028 | 0.40 |
+| Wonder | 3371:41413 | 600 | 510 | 7619 | 0.20 |
+| Truth | 3371:44759 | 1422 | 464 | 7619 | 0.25 |
+
+`sky` and `light` are pixels down each layer; both are placed against the
+1500-row scene at one image row to one layer row, so a pixel's row in the
+photograph plus the offset is its row in the sequence. The light layer is
+placed at a different height in different frames, so its denominator travels
+with its offset. These live in `HOME_SCENE` (effects/home.ts) and the seven
+dated Truth frames continue them from `home-truth-scenes.ts`.
+
+Two consequences worth knowing. **The separate daylight path is gone**: there
+is no `truth` mix and no `road-sky.webp` sample any more, because Truth is
+simply a later hour of the same day. **And the sky is a gradient again**: the
+row used to come from `legacyBand`, which saturates at 1 over everything above
+the treeline, so the whole sky was one flat colour and only the offset moved
+it. Every reference frame is a gradient from the top of the sky down to the
+horizon, so the row is now read from the photograph directly. `legacyBand`
+still owns the thresholds calibrated against the old 900-row crop — the road
+corridor, the canopy — it just no longer owns this. That changes Truth and
+Belonging as well as the hero, and it is the one change here that was not
+simply a measurement.
+
+Verified without a browser: the composite was rebuilt in numpy against the
+actual derivatives and compared with Figma's renders of 3371:41344 and
+3371:41275. The sky matches to about 1/255 in both states, which fixes the
+offsets and the black; the land bands sit within about 4/255 of a downscaled
+render of the same photograph. Nothing here has been seen on screen.
+
+The hero's DOM scrims went with that: the frame's black is in the canvas now,
+so `[data-hero-scrim]` would be a second one over the first. They are gated to
+the no-canvas fallback in home-hero.css and the dissolve no longer touches
+them.
+
+The DOM fallback changed with it. `[data-hero-fallback]` is now the same
+photograph as a single `object-bottom` still, sharing one request with the
+canvas texture, so no-WebGL and reduced motion get the hero they were meant to
+have. That does not fix the stacked-panel problem — with every beat an
+`absolute inset-0` panel inside a `h-svh` hero, a page with no canvas still
+shows all of them at once. It only makes the ground under that stack the right
+photograph.
 
 9 September hero exit prototype: add 120vh of pinned scroll to the existing
 canvas. `homeHeroDissolve` fades copy over the first 30% and photos/scrims over
@@ -261,7 +349,7 @@ the build target.
 | 17 | IV | Older than the record — the engraving wall | 2 | 69 | **none** | — | ✓ |
 | 18 | IV | Still to be found — open research | 2 | 72 | **type** | evidence strip B | — |
 | 19 | IV | About 100 million years ago — the Eromanga Sea | 3 | 161 | **transition** | strata stack | — |
-| 20 | IV | Underneath all of it — the descent ends, looking up | 1 | 129 | **none** | one held closing shot | ✓✓ |
+| 20 | IV | Underneath all of it — the descent ends, looking up | 5 | 129 | **type** | dissolve pair | ✓✓ |
 | 21 | — | Footer — the wave overlaps the last shot by 96px | 1 | 135 | — | — | — |
 
 **Reads as:** no channel runs three deep. §10 carries the brown wave hand-off and is therefore
@@ -913,7 +1001,7 @@ where the same fact appears in both, the hub frames it differently.
 
 | § | Section | ⚡ | vh | Ground | Loud | Source |
 |---|---|---|---|---|---|---|
-| 01 | Hero — the aerial, then *a guest on Country* on evergreen | 2 | 120 | photo → evergreen | **none** | `truth.ts:118` |
+| 01 | Hero — FULL BLEED · *a guest on Country* | 4 | 150 | photo → evergreen | **media** | `truth.ts:118` |
 | 02 | **The obligation** — alone on a screen | 4 | 100 | evergreen | **type** | `about.ts:117` · `R22` |
 | 03 | Open research — three disciplines resolve | 3 | 120 | canvas | **type** | `truth.ts:393` |
 | 04 | **What we do not know** — ⚑ the gaps as an OFFER | 5 | 190 | canvas | **media** | `resources.ts:274-300` |
@@ -924,60 +1012,8 @@ where the same fact appears in both, the hub frames it differently.
 | 08 | Get in touch — cloned from Our People §06 | 3 | 150 | canvas → dark | **transition** | `contact.ts` |
 | 09 | Footer | 1 | 135 | charcoal | **none** | shared |
 
-**Reads as:** none · type · type · media · none · type · transition · none · transition · none.
+**Reads as:** media · type · type · media · none · type · transition · none · transition · none.
 No channel three deep; both ⚡4–5 runs are broken by a rest.
-
-### §01 — the copy went back onto the ground, 9 September 2026
-
-Ivy moved the hero copy **onto** the photograph on 5 September, because the frame's stacked
-arrangement left a whole screen of picture carrying no words. The user reversed that on
-9 September, reading the wireframe: the aerial is alone at the top, the wave hands it off, and
-the eyebrow, headline, standfirst and action row sit on the page's own evergreen beneath it.
-**The obligation never moved through either change** — §02 still states it alone on evergreen.
-
-Two consequences worth naming. **The two X5 scrims are gone**: they bought legibility for type
-set on open scrub and no type sits on the picture any more, so the aerial is now bright and
-unmuted as the wireframe draws it. **The section is taller than one screen** — roughly 120vh at
-1440 × 900, which is the compressed version of the frame's own 1350px stack (the photograph is
-held to `58svh` rather than 792px so the eyebrow and headline stay above the fold). That height
-is the exact objection the 5 September change was answering; it is accepted here on direction.
-
-**The ⟡ STAND-IN badge was removed from the hero** on the same direction. What it flagged is
-unchanged and still held: there is no photograph of research, a survey or a scientist anywhere
-in the collection, and `aerial-crew-burnedge` stands in because nobody is identifiable from
-height. A reviewer looking at the page will no longer be told — the claim now lives only in
-`kit.ts`, in the section's own comment, and here. The badges on §03 and §06 are untouched.
-
-### §01 is the page's only built scene — 9 September 2026
-
-The rest of this ledger describes a page that is **still static**. §01 is now the exception:
-the hero takes an **arrival overture**, built at 1440 × 900 first, and nothing below it moves.
-
-| beat | grammar row | effect | at |
-|---|---|---|---|
-| the eyebrow, *Work with us* | arriving quietly · **X4** | `arrive` | 0 |
-| the headline, split **by LINE** | what endures · **B5** | `settle` | 0.20 |
-| the standfirst *and* the action row, one beat later | arriving quietly · **X4** | `arrive` | 0.75 |
-| the divider at the photograph's foot, into the page's own evergreen | a change of ground | `waveHandoff` | 0.75 |
-
-**The photograph holds still, and that is the direction.** No `pushIn`, no `plateParallax` —
-**there are people in this frame**. `aerial-crew-burnedge` is publishable because nobody is
-identifiable from height, and `pt-hero` is graded `frame`: the world arrives around the record,
-the record does not move. That is also why the row above now reads **none** rather than
-**media** — `settle`, `arrive` and `waveHandoff` are all quiet, the wave is furniture, and
-nothing on this screen takes it. The ⚡ and the vh follow the same correction: the section is one
-screen of held photograph, not one and a half of hypothetical media moment.
-
-**It is an overture, not a scroll scene.** The hero opens at the top of the document, so there
-is no span to hang it off — `composition()`'s entry trigger resolves to `progress(1)` at scroll
-0 and the arrival would never play. It is gated on `awaitEntry` instead, after the X1 loader on
-a first visit and after the X7 wipe on a navigation, exactly as The Record's hero is.
-
-Code: `src/lib/motion/partnerships.ts`, hosted by
-`src/app/partnerships/_components/Motion.tsx`. Hooks: `data-pt="hero"`, `data-pt-eyebrow`,
-`data-pt-heading`, `data-pt-arrive`, `data-pt-wave`. ⚠ `data-pt-wave` is the divider's **wrapper
-box**, never the SVG — the SVG seats itself on a Tailwind translate that an inline GSAP
-transform clobbers, which was About's disappearing-wave defect.
 
 ### The inversion — §04 is the page's argument
 
@@ -1196,7 +1232,7 @@ page deepens. There is no WebGL on this route.
 | 05 | Turraburra | 180 | full bleed | **media** | landscape behind Getting here's outgoing wave; `landscapeApproach` on entry, `landscapeGyroscope` on mouse hover; image and copy hold for 80vh before exit (user direction 9 September 2026) |
 | 06 | What a stay looks like | ~720 | canvas, sticky reading screen | **transition** | six automatic stops at one viewport position; line, copy and picture entrances from the effects lab |
 | 07 | Before you come | 100 | evergreen | **none** | `hold`, cells arrive, one beat on the call to action |
-| 08 | Where you sleep | 120 | canvas | **media** | two frames open around held photographs; no overscale or parallax |
+| 08 | Where you stay | 120 | canvas | **media** | heading and copy enter; the ten-frame carousel does not — no card entrance (10 Sep 2026) |
 | 09 | What it is like out here | 180 | full bleed | **media** | same landscape entry, mouse drift and 80vh reading hold as §05; no sweep |
 | 10 | Your hosts | 100 | canvas | **none** | the copy arrives; the pointer names three of the eight, and the faces hold |
 | 11 | From Country | 100 | white | **media** | the card rail again, quieter |
@@ -1524,6 +1560,14 @@ AMB-05 viewport correction, 9 September 2026: checking the 2048-by-758 landscape
 
 AMB-05 final scope correction, 9 September 2026: user requests all vegetation to ripple gently. Remove the six patch selections. Apply a broad vegetation mask with road exclusion and dark-trunk suppression, with 0.0009 UV grass ripple and 0.00065 UV canopy sway. This supersedes the patch-selection approach and its viewport workaround. Sky, road, pause behaviour and reduced-motion fallback remain unchanged.
 
+Full-height landscape, 9 September 2026: the plate now carries the whole 1440×1500 Figma foreground (`woodland-road-full.webp`) instead of its top 1440×900. The near road and the speckled charcoal dissolve above The Invitation were never reachable by cropping because they were not in the derivative. No outpainting is involved and none is needed; the prepared `red-earth-track.webp` extension strip is superseded and unreferenced. Because the source is taller, the shader remaps every calibrated threshold into the old 900-row crop through `legacyY` (`legacyScale` uniform = height / legacyHeight, from HOME_PORTAL) rather than re-tuning the treeline, canopy, sky bands and Truth sequence offsets beat by beat; past the old bottom edge legacyY exceeds 1 and the smoothsteps saturate, which reads correctly as nearer ground. Texture lookups keyed to the old crop use a clamped `legacyBand`.
+
+Invitation push-in, 9 September 2026: the land also scales gently across the beat — grammar **being drawn in** / `pushIn`, scrubbed, on a grade `full` plate. `LANDSCAPE_INVITATION_ZOOM` (1.32, raised from 1.06 to 1.14 and then again on user direction the same day — six percent was not reading, and once the lift reduced the land to a band at the top of the canvas fourteen read as a distant strip) narrows the sampling window on both axes over the same 1.6 units as the drift, so the land settles on one movement rather than two competing ones. The bottom anchor is computed from the *zoomed* half-height, so the push magnifies about the held bottom edge instead of dragging the near ground back out of frame. Reversible with the rest of the dissolve timeline.
+
+Landscape crop anchor and Invitation lift, 9 September 2026: a viewport wider than the landscape source crops the plate vertically, and the crop was centred — taking the trim off both ends and losing the near ground. The window's position is a `landscapeAnchor` uniform, resting bottom-anchored (`LANDSCAPE_BOTTOM_BIAS` 1 in home-hero.ts; 0 restores the centred crop) and clamped to `[halfY, 1 - halfY]`, because the landscape map wraps ClampToEdge and an over-run smears the photograph's last row across the band silently rather than erroring. ⚠ The Invitation beat's land movement went through three forms in one day, all on user direction, and only the third is live. It began as a sampling drift *down* (0.10 image heights) for parallax; once The Invitation became a panel on this canvas that fought the illusion, because a page's background does not travel against its own scroll. It briefly rose by moving the same window, which a bottom-anchored crop has almost no room for. It now travels in SCREEN space: `LANDSCAPE_INVITATION_LIFT` (0.62 screen heights, raised from 0.55 on user direction, sine.out over 1.6 units from `invitationAt`) drives a `lift` uniform that shifts the whole sampled scene — land, sky, Truth layers, shooting star — up the canvas, and below the plate's bottom edge the fragment ends as `beyond`, the charcoal token, opaque so it covers a clear colour that has warmed to oxide by then. The travel is not bounded by the texture, and because the crop stays bottom-pinned the edge that rises into view is the photograph's own speckled dissolve rather than a cut — lowering BOTTOM_BIAS would put a hard edge through the middle of the land instead. The land ends across the top of the canvas with charcoal beneath it for the cards, matching the reference. The trailing edge is soft, not ruled (user direction, 9 September 2026): over the last `liftEdge` of canvas height (0.11) the terrain sample goes to a five-tap cross blur that widens as the edge approaches, and the composed frame then fades into `beyond` across the lower part of that same band — out of focus first, then out of light. The blur is on the terrain sample rather than the composed frame, so sky, Truth layers and the road corridor stay sharp; the band is gated on `lift`, or it would soften the bottom of every beat before this one. It rises slower than the panel (0.62 screens in 1.6 units against the panel's 1 in 1.3), which is the parallax a scroll produces. ⚠ The landscape texture's v axis runs top to bottom, so anchor *rises* to bring the photograph's bottom edge into frame; home-hero.ts owns that axis. Horizontal stays centred. Every shader threshold reads landscape UVs in image space (treeline 0.52, canopy 0.40–0.57, sky and soft-light offsets), so all of them keep pointing at the same pixels. Supersedes the centred crop assumed by the AMB-05 viewport correction above.
+
+Invitation hand-off, 9 September 2026: the band above The Invitation read as a flat blur rather than as ground, because two charcoal washes landed on the same pixels — the exit shade closing to full opacity and the section's own gradient reaching charcoal at the 24svh overlap. The shade now closes to `LANDSCAPE_EXIT_SHADE` (0.55) so the photograph stays legible under it, and the overlap is a single `--invitation-overlap` variable (44svh) driving both the negative margin and the gradient stop, held fully transparent for its first third so the eyebrow and first headline line sit on the land. Charcoal still arrives before the cards. The margin and the gradient stop must stay in agreement or the section paints charcoal over hero the reader can still see.
+
 
 | **the landscape introduces Truth** | SCR-09: after Wonder holds, its copy rises away; the existing road canvas shifts from pale daylight to the supplied saturated blue sky. Truth, Iningai Nation and the first existing subject-detail paragraph rise into a centred upper block. | homeHeroDissolve 3.4-4.2; hold to 4.6; total pin 552vh; reversible scrub 0.8s | user screenshot 9 September 2026 | quiet type over held landscape with AMB-05 breeze | `homeHeroDissolve` |
 
@@ -1552,4 +1596,5 @@ Belonging procedural stars - 9 September 2026: latest user direction supersedes 
 
 Belonging shooting stars - 9 September 2026: occasional procedural meteors extend the existing shader star field. Three varied, screen-relative diagonal paths run in the registered 24-second AMB-05 phase, each visible for 1.4 seconds approximately eight seconds apart. A bright soft head leads a tapered fading trail; the foreground alpha occludes it. The effect appears only once Belonging has settled and inherits existing pause, teardown and reduced-motion behaviour. No textures, extra canvas or independent ticker are added.
 
-Invitation continuation, 9 September 2026: Figma 3371:41740 supplies three 400px-high photo cards, 48px gaps, 40px padding, 20px corners, and a centred 64px heading. After Belonging, the road exits into a charcoal media scrim; the Invitation overlaps its final 24svh. A 65vh reversible homeInvitation entrance lifts whole cards without image warping. D5 retains the longer draft headline, pillar titles, descriptions and destinations; screenshot copy differs. Mobile stacks cards; reduced motion uses the same content in normal flow.
+Invitation continuation, 9 September 2026: Figma 3371:41740 supplies three 400px-high photo cards, 48px gaps, 40px padding, 20px corners, and a centred 64px heading. ⚠ Revised the same day on user direction: The Invitation is no longer a document section under the hero. It is an overlay inside the pinned hero, a sibling of the Wonder, Truth and Belonging panels, and arrives by travelling up one viewport (`yPercent` 100 → 0 with autoAlpha, 1.3 units sine.out from `invitationAt + 0.2`) while the land drifts down and pushes in behind it — the pinned canvas reading as though the page kept scrolling. A 1.1-unit hold follows, and because the pin end is derived from the timeline duration it extends itself. The old `--invitation-overlap` negative margin, the section's charcoal gradient and the `homeInvitation` / `InvitationMotion` pair are all gone: the exit shade at 0.55 is now the whole of the darkening the cards are read against. Fitting one viewport costs the mobile stack — below `lg` the three cards are a horizontal snap scroller at 80% width, full copy intact, read across rather than down; the 400px card and three columns hold at 1440. D5 retains the longer draft headline, pillar titles, descriptions and destinations; screenshot copy differs. Reduced motion and a failed canvas leave the panel visible and static (the hidden state is gated on `[data-hero-canvas="ready"]`).
+The Way Forward on the canvas, 9 September 2026: the closing statement followed The Invitation onto the pinned hero the same day, on user direction, and is the last thing the canvas does. From `wayAt` the cards leave upward the way they arrived (`yPercent` -100, 1 unit, sine.in), the lift runs on to 1.15 screen heights so the land is carried clean off the top, and the line resolves in place over 1.2 units from `wayAt + 1.5` — opacity alone, no travel, and only after both of those have finished, so an empty canvas is held for a beat first (user direction the same day): every other panel here arrives by moving, and the page's last word is read still. Starting it earlier makes the line read as following the cards out rather than beginning something; a 1.2-unit hold follows before the pin releases into the footer ground. Because the canvas is empty charcoal by then, the panel needs no ground of its own — only the two `ring-b` / `ring-a` spirals it always had, raised from the site's 0.06 wash to 0.28 across two passes on user direction the same day (on near-black the wash read as screen dirt, not pattern) and set moving: from `wayAt + 0.9` they rise `yPercent` 100 to 0 over 1.9 units, sine.out — in from a whole panel height below, so genuinely off screen, and coming to rest at their Figma position, where they hold under the line for the rest of the beat rather than travelling on off the top. The travel is on a wrapper, never the images — GSAP writes `transform` and the images' centring and offsets are Tailwind classes. `Reveal` went with the move: a scroll-triggered reveal inside a pinned section fires against a viewport that is not moving. `WayForward.tsx`, and the pathways and signup it holds, are still parked exactly as the earlier note describes.

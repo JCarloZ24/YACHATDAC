@@ -9,7 +9,7 @@ import {
   stayStages,
   turraburra,
   whatItIsLike,
-  whereYouSleep,
+  whereYouStay,
   whoYouAreWith,
   wonderClose,
   wonderHero,
@@ -22,13 +22,14 @@ import {
   stayStageMedia,
   turraburraSlot,
   whatItIsLikeSlot,
-  whereYouSleepMedia,
+  whereYouStayMedia,
   wonderHeroSlot,
   wonderHeroVideo,
   wonderHighlightMedia,
   wonderStoryMedia,
 } from "@/content/wonder-media";
 import { CardRail } from "@/components/ui/CardRail";
+import { StayRail } from "./StayRail";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
   BlobButton,
@@ -376,12 +377,13 @@ export function WonderFacts() {
 /** Per-card overlay, in `wonderHighlights` order — see the note in the markup. */
 const HIGHLIGHT_OVERLAY = ["bg-black/10", "bg-black/25", "bg-black/25"];
 /** Per-card focal point, in the same order: the hand on the wall, the hand
-    over the tray, the ranger by the smoke. Literal — Tailwind cannot see a
-    computed class. */
+    over the tray, the sun breaking through the treeline. Literal — Tailwind
+    cannot see a computed class. */
 const HIGHLIGHT_FOCUS = [
   "object-[28%_60%]",
   "object-[35%_50%]",
-  "object-[23%_95%]",
+  // The break of light sits mid-frame, a little under the horizon line.
+  "object-[50%_60%]",
 ];
 
 export function WonderHighlights() {
@@ -485,12 +487,27 @@ const STOP_ICONS = [
     1440 pixel offsets: each icon's CENTRE in frame coordinates, measured
     against the 2278 × 1580 artwork at its frame position. They used to be
     raw frame pixels, which pinned the whole map layer to a 1440-wide box and
-    cut the artwork off on any wider screen. See RoutePin in RouteMap.tsx. */
+    cut the artwork off on any wider screen. See RoutePin in RouteMap.tsx.
+
+    RE-DERIVED 10 Sep 2026 from August's own measurements off the file, which
+    are offsets inside the ROADS bounding box (3238:34141, 879.68 × 1109.54,
+    sitting at (1388.09, 0.08) in the 2277.93 × 1580 artwork). Icon top-lefts
+    in that box: lake 340.91/607.92, sculpture 275.91/650.92, gorge
+    323.91/685.92, gray rock 387.91/637.92, at the frame's own 32×24, 31×30,
+    33×32 and 28×28. Centred and converted they land within 0.02% of the
+    9 Sep numbers — the placement was never the problem. What moved the icons
+    was a 75% scale on the map box (tried and reverted, see RouteMap.tsx):
+    the icon GRAPHICS keep their frame pixel size, so when the roads under
+    them shrank they read a third too large and too close together.
+
+    `at` PULLED FORWARD from 0.76–0.91. The legends were the last thing the
+    scrub reached, so the reader had to scroll nearly the whole section
+    before the four stops they had just read about appeared on the map. */
 const MAP_PINS = [
-  { icon: 0, left: 76.58, top: 39.24, at: 0.76 },
-  { icon: 1, left: 73.71, top: 42.15, at: 0.81 },
-  { icon: 2, left: 75.86, top: 44.43, at: 0.86 },
-  { icon: 3, left: 78.56, top: 41.27, at: 0.91 },
+  { icon: 0, left: 76.6, top: 39.24, at: 0.5 },
+  { icon: 1, left: 73.73, top: 42.15, at: 0.56 },
+  { icon: 2, left: 75.88, top: 44.43, at: 0.62 },
+  { icon: 3, left: 78.58, top: 41.27, at: 0.68 },
 ] as const;
 
 /**
@@ -506,20 +523,32 @@ const MAP_PINS = [
  * Layout positions inside one drawing. Never a geographic coordinate.
  */
 const MOBILE_MAP_PINS = [
-  { icon: 0, left: 61.52, top: 27.11, w: 3.5, at: 0.76 },
-  { icon: 1, left: 53.64, top: 32.65, w: 3.5, at: 0.81 },
-  { icon: 2, left: 59.48, top: 37.03, w: 4.08, at: 0.86 },
-  { icon: 3, left: 66.76, top: 30.76, w: 3.5, at: 0.91 },
+  { icon: 0, left: 61.52, top: 27.11, w: 3.5, at: 0.5 },
+  { icon: 1, left: 53.64, top: 32.65, w: 3.5, at: 0.56 },
+  { icon: 2, left: 59.48, top: 37.03, w: 4.08, at: 0.62 },
+  { icon: 3, left: 66.76, top: 30.76, w: 3.5, at: 0.68 },
 ] as const;
 
 export function WonderGettingHere() {
   return (
     /* Sticky span at 1440, as §02: the screen is held while the map forms. */
-    /* 300vh, up from 220 on 9 Sep 2026 — the map now draws in stages. */
+    /* 180vh — was 300 (August, 10 Sep 2026). Three viewports of scroll to
+       ink one map is longer than the drawing is interesting, and the legends
+       sat at the far end of it. It draws in stages across 180 and finishes
+       with the section still on screen. */
+    /* ⚠ `deck:` NOT `lg:` (August, 10 Sep 2026, reported from a 2560 × 1680
+       laptop). The held screen is `h-svh` + `overflow-hidden`, so a column
+       taller than the viewport is cut off with no scroll that can reach it —
+       exactly the trap `deck:` (1024 wide AND 820 tall, globals.css) exists
+       to withhold the hold for. Below it the section is ordinary flow, the
+       same trade the Truth deck makes. This briefly needed its own taller
+       threshold; the 10 Sep copy rewrite took the column from 873px to 647
+       and the house one fits again. If the copy grows past ~780px,
+       re-measure before trusting this. */
     <section
       data-sticky-span
       data-wonder="getting-here"
-      className="relative bg-charcoal text-canvas lg:h-[300vh]"
+      className="relative bg-charcoal text-canvas deck:h-[180vh]"
     >
       {/* Wave Line 2033:5432 / 2576:22626 — charcoal rising over the white
           highlights ground. Above the top edge, so it sits on the section
@@ -535,9 +564,14 @@ export function WonderGettingHere() {
         mirror
         seat="top-[calc(100%-1px)]"
       />
-      <div className="lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden">
+      <div className="deck:sticky deck:top-0 deck:h-svh deck:overflow-hidden">
         <div
-          className={`relative overflow-hidden pt-10 pb-20 lg:h-full lg:pb-0 ${GUTTER}`}
+          /* Padding is the FLOW case only — the held screen centres itself in
+             `h-full` and resets the foot. 120px there rather than 80: below
+             the hold threshold the coda is the last thing on a black ground
+             before the wave drips into Turraburra, and 80 read as the
+             paragraph running into the seam (August, 10 Sep 2026). */
+          className={`relative overflow-hidden pt-10 pb-20 lg:pt-20 lg:pb-[120px] deck:h-full deck:pt-10 deck:pb-0 ${GUTTER}`}
         >
           {/* The route map, both cuts, inlined so it inks itself in on scroll
           (route-map.ts · `the guide leading the eye` · routeDraw). Placement
@@ -551,7 +585,11 @@ export function WonderGettingHere() {
             }))}
           />
 
-          <Container className="flex flex-col gap-12 lg:gap-20">
+          {/* Centred in the held screen, top-aligned in flow — the column is
+              shorter than the viewport wherever the hold applies, and
+              top-aligning it left the coda floating above a third of a screen
+              of bare charcoal (August, 10 Sep 2026). */}
+          <Container className="flex flex-col gap-12 lg:gap-20 deck:h-full deck:justify-center">
             <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-6">
               <p data-eyebrow className={`${H5} text-burnt`}>
                 Getting here
@@ -562,6 +600,10 @@ export function WonderGettingHere() {
                   <p key={para}>{para}</p>
                 ))}
               </div>
+              {/* The list's lead-in — copy, from the draft, not markup. */}
+              <p className="text-base leading-normal lg:text-xl">
+                {gettingHere.stopsIntro}
+              </p>
               <ul className="flex flex-col gap-4 text-base leading-normal lg:gap-6 lg:text-xl">
                 {gettingHere.stops.map((stop, i) => {
                   const icon = STOP_ICONS[i];
@@ -585,9 +627,13 @@ export function WonderGettingHere() {
                         />
                       </span>
                       {/* The frame (2033:5572) sets the whole line regular;
-                          the name carries no weight of its own. */}
+                          the name carries no weight of its own. Since the
+                          10 Sep rewrite most stops are a name on its own, so
+                          the em dash belongs to the detail and not to the
+                          row — an empty one would leave a dangling dash. */}
                       <span>
-                        {stop.name} — {stop.detail}
+                        {stop.name}
+                        {stop.detail ? ` — ${stop.detail}` : ""}
                       </span>
                     </li>
                   );
@@ -881,11 +927,12 @@ export function WonderBeforeYouCome() {
 }
 
 /* -------------------------------------------------------------------------
-   08 — Where you sleep (Layout / 267, 2033:6782 · Team / 10, 2576:22530) —
-        two 400px cards, a 200px swipe rail on the phone
+   08 — Where you stay (Layout / 267, 2033:6782 · Team / 10, 2576:22530) —
+        the frame's two 400px cards, now the visible window on a ten-frame
+        carousel (August, 10 September 2026)
    ------------------------------------------------------------------------- */
 
-export function WonderWhereYouSleep() {
+export function WonderWhereYouStay() {
   return (
     <section
       data-wonder="sleep"
@@ -895,46 +942,49 @@ export function WonderWhereYouSleep() {
       <WaveDrip ground="var(--color-evergreen)" />
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-4">
-          <h2 className={H2}>{whereYouSleep.title}</h2>
-          <p data-card-copy className="text-base leading-normal font-medium">
-            {whereYouSleep.body}
-          </p>
+          <h2 className={H2}>{whereYouStay.title}</h2>
+          <div
+            data-card-copy
+            className="flex flex-col gap-4 text-base leading-normal font-medium"
+          >
+            {whereYouStay.body.map((para) => (
+              <p key={para}>{para}</p>
+            ))}
+          </div>
         </div>
-        {/* As Highlights: 2576:22570 is one 335 × 200 Column and 2576:22542
-            the dots 24 below it. */}
-        <CardRail
-          bleed={RAIL_BLEED}
-          columns="sm:grid-cols-2"
-          gap="sm:gap-6 lg:gap-12"
-          label="Where you sleep"
-          dots
-        >
-          {whereYouSleepMedia.map((slot) => (
+        {/* A rail at every width now, not a rail that becomes a grid — see
+            StayRail for why this is not CardRail. The dots sit 24 under the
+            row, as on Highlights (2576:22570 / 2576:22542). */}
+        <StayRail label="Where you stay">
+          {whereYouStayMedia.map((slot) => (
             <div
               key={slot.id}
-              data-card
               className="relative min-h-[200px] min-w-0 overflow-hidden rounded-3xl lg:min-h-[400px]"
             >
-              {/* 9 Sep 2026, image-quality pass: these supplied photographs
-                  include people. Hold the image plane still; the frame
-                  alone opens. No scrim is needed without overlaid text. */}
+              {/* Six of the ten frames have identifiable people in them.
+                  Hold the image plane still, as the two cards this replaces
+                  did. No scrim is needed without overlaid text.
+
+                  10 Sep 2026: `data-card` is gone from these on August's
+                  direction — it was the entrance hook, and a carousel does
+                  not stage arrivals for cards a reader will swipe past. */}
               <div
                 data-frame-media
                 data-motion="frame"
                 className="absolute inset-0"
               >
-                {/* Match the capped grid and the full-width mobile slider.
-                    At narrow desktop widths, a 400px-tall cover crop still
-                    needs 600 source pixels across the 3:2 photograph. */}
+                {/* One card on the phone, two from 1024. The 400px-tall
+                    cover crop still needs 600 source pixels across the 3:2
+                    photograph at the narrowest desktop. */}
                 <Slot
                   slot={slot}
-                  sizes="(min-width: 1408px) 616px, (min-width: 1024px) max(600px, calc(50vw - 88px)), (min-width: 640px) calc(50vw - 32px), calc(100vw - 40px)"
+                  sizes="(min-width: 1408px) 616px, (min-width: 1024px) max(600px, calc(50vw - 88px)), calc(100vw - 40px)"
                   quality={85}
                 />
               </div>
             </div>
           ))}
-        </CardRail>
+        </StayRail>
       </Container>
     </section>
   );
