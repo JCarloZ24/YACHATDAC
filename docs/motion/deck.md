@@ -122,7 +122,9 @@ the actual lateral wander and tangent of the full-height SVG guide. The hero mar
 its "Start from the beginning" cue; subsequent beats reset to the top and travel to the bottom.
 It remains at the bottom while the 20vh buffer charges, then transfers continuously along the
 SVG guide from the outgoing foot to the incoming head as the cover plays. There is no endpoint
-jump. It carries no number or attached progress bar. On rewind the inverse is true. The marker's
+jump. It carries the era label and its sub at the arrow's tip
+(10 September 2026), and appears only on sections that name one — no number, and still no progress
+bar. On rewind the inverse is true. The marker's
 read ScrollTrigger fades it over the final fifth of the 1950s, keeps it absent through the
 escarpment and count, and restores it over the opening fifth of the 1840s. It fades permanently
 over the final fifth of Before people. The visible RECORD strand follows the same silences.
@@ -287,4 +289,4 @@ came from the frame:
 
 ---
 
-*Last updated: 9 September 2026 · Reviewed by: —*
+*Last updated: 10 September 2026 · Reviewed by: —*

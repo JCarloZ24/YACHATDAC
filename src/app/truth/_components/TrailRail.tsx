@@ -26,7 +26,14 @@ import { loreMarker } from "@/content/truth";
  * the next beat's head. Its read ScrollTriggers fade it over the final fifth
  * of the 1950s, hold it absent through the escarpment and count, and restore
  * it over the opening fifth of the 1840s. It leaves for good at the end of
- * Before people. It carries no numeric label or separate progress gauge.
+ * Before people.
+ *
+ * IT CARRIES THE ERA (user, 10 September 2026) — the label and its sub ride
+ * at the arrow's tip, so the arrow points at something. Still no progress
+ * gauge and no count: what was banned was a readout of how far through you
+ * are, and the chronology is what the rail exists to carry. The pointer now
+ * appears only on sections that HAVE an era, popping in and out with it, so
+ * it is never an arrow indicating nothing.
  *
  * The fill is scroll position, both directions: jumping to "Start from the
  * beginning" smooth-scrolls down and the ink flows down with it; scrolling
@@ -45,6 +52,13 @@ const STEP_X = 72; // right strand centre
 const AMPLITUDE = 8;
 const WAVELENGTH = 214;
 const SAMPLE = 12;
+/** Where the artwork's chevron ends, from the traveller anchor. The image is
+ *  96px drawn at left-[-22px] and its arrowhead sits at x 87–93, so the tip
+ *  lands at +71; the label clears it by a space. */
+const LABEL_X = 86;
+const LABEL_W_MAX = 200;
+/** Narrower than this and the label is not worth the collision. */
+const LABEL_W_MIN = 120;
 
 /**
  * LORE · continuous — never breaks, not even at the count. The frame's own
@@ -125,6 +139,17 @@ export function TruthTrailRail() {
   const [ends, setEnds] = useState<{ steps: number; ink: number } | null>(
     null,
   );
+  /**
+   * How wide the pointer's era label may be before it runs into the reading
+   * column, in px — 0 when there is no room and the arrow rides alone.
+   *
+   * The rail's left edge is pinned to the wordmark and so barely moves, while
+   * the content container is centred and travels LEFT as the viewport narrows:
+   * measured, the gap between the arrow's tip and the reading column is 452px
+   * at 1794 and only 131px at 1024. A fixed width would be wrong at one end or
+   * the other, so it is measured.
+   */
+  const [labelWidth, setLabelWidth] = useState(LABEL_W_MAX);
 
   useEffect(() => {
     const root = document.querySelector<HTMLElement>("[data-descent-root]");
@@ -195,6 +220,39 @@ export function TruthTrailRail() {
         steps: floor ? layoutTop(floor, root) : crest,
         ink: crest,
       });
+      // The NARROWEST reading column on the page, not the first one.
+      //
+      // Entries do not all sit in the same wrapper — measured, the first copy
+      // column starts at 370px and another at 297px — so sizing the label
+      // against whichever happened to be first put it 57px inside the copy on
+      // every section that indents less. The label is one element for the
+      // whole descent, so it has to clear the worst case.
+      const columns = [
+        ...document.querySelectorAll<HTMLElement>("[data-truth-entry-copy]"),
+      ]
+        .map((el) => el.getBoundingClientRect().left)
+        .filter((x) => x > 0);
+      if (!columns.length) {
+        setLabelWidth(LABEL_W_MAX);
+        return;
+      }
+      const column = Math.min(...columns);
+      const railLeft = Math.max(
+        Math.round(
+          (logo
+            ? logo.getBoundingClientRect().left +
+              logo.getBoundingClientRect().width * (2.5 / 9)
+            : 0) - (INK_X + STEP_X) / 2,
+        ),
+        0,
+      );
+      // The traveller sits at the strand's own x inside the rail box, and the
+      // label hangs off THAT — so the budget starts at the strand's rightmost
+      // wander, not at the rail box's left edge. Omitting it overstated the
+      // room by ~80px and put the label inside the copy.
+      const room =
+        column - (railLeft + STEP_X + AMPLITUDE + LABEL_X) - 16;
+      setLabelWidth(room < LABEL_W_MIN ? 0 : Math.min(room, LABEL_W_MAX));
     };
 
     measure();
@@ -359,6 +417,28 @@ export function TruthTrailRail() {
             className="absolute left-[-22px] top-0 w-24 max-w-none -translate-y-1/2"
             loading="eager"
           />
+          {/* The era the arrow is pointing at, riding with it. Empty here and
+              filled by the deck on each slide change: the strings live in the
+              section's own gutter block, which goes sr-only at lg so the era
+              still reaches a screen reader that cannot see this rail.
+
+              NEVER GOLD. The artwork beside it is baked gold at 1.72:1 on this
+              ground (open-questions.md) and is already flagged for a
+              light-ground cut; type must not inherit that. burnt-deep is
+              6.31:1 and is the page's compliant warm. */}
+          {labelWidth > 0 ? (
+            <div
+              data-truth-trail-label-box
+              className="absolute top-0 -translate-y-1/2"
+              style={{ left: LABEL_X, width: labelWidth }}
+            >
+              <p data-truth-trail-label className="eyebrow text-xl text-burnt-deep" />
+              <p
+                data-truth-trail-sub
+                className="mt-1 text-sm font-normal uppercase leading-relaxed text-charcoal"
+              />
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

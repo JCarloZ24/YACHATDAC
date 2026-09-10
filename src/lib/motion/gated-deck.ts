@@ -31,7 +31,7 @@ import {
   smoothScrollTo,
   unlockScroll,
 } from "@/lib/motion/smooth-scroll";
-import { SCRUB } from "@/lib/motion/tokens";
+import { DUR, SCRUB } from "@/lib/motion/tokens";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -47,6 +47,13 @@ export type GatedDeckOptions = {
   railFadeOutSlide?: string;
   railFadeInSlide?: string;
   railTerminalSlide?: string;
+  /**
+   * Where a slide states the era the traveller is pointing at, and its sub.
+   * A slide with no match gets NO traveller: the pointer and the label are one
+   * object, and an arrow indicating nothing is what this replaced.
+   */
+  railLabel?: string;
+  railLabelSub?: string;
   siteHeader?: string;
   bufferVh?: number;
   openingReadVh?: number;
@@ -115,6 +122,22 @@ function readableLabel(slide: HTMLElement, index: number): string {
     .replace(/^./, (letter) => letter.toUpperCase());
 }
 
+/**
+ * How much of the strand's tangent the pointer actually shows.
+ *
+ * The guide is `72 + 8·sin(2πy/214)` sampled ±8 units either side, so its
+ * tangent spans about ±13.2° — and at 96px long the arrow turned that into a
+ * visible wobble rather than into tracking. Showing a seventh of it keeps the
+ * arrow following the strand at roughly ±2° (user, 10 September 2026).
+ *
+ * Scaled, not clamped: a sine spends most of its length near the peaks, so a
+ * clamp would flatten the movement into two constants and lose the tracking
+ * altogether.
+ */
+const POINTER_TILT_DEG = 2;
+const TANGENT_SPAN_DEG = 13.2;
+const TILT_RATIO = POINTER_TILT_DEG / TANGENT_SPAN_DEG;
+
 /** Binary-searches the full-height rail guide at a document-space y. */
 function pointAtY(path: SVGPathElement, targetY: number) {
   const length = path.getTotalLength();
@@ -150,6 +173,8 @@ export function createGatedDeck({
   railFadeOutSlide = "#art-gallery",
   railFadeInSlide = "#mitchell",
   railTerminalSlide = "#seabed",
+  railLabel = "[data-era-label]",
+  railLabelSub = "[data-era-sub]",
   siteHeader = "[data-site-header]",
   bufferVh = 20,
   openingReadVh = 20,
@@ -242,6 +267,12 @@ export function createGatedDeck({
               const pointer = traveller?.querySelector<HTMLElement>(
                 "[data-truth-trail-pointer]",
               );
+              const labelNode = traveller?.querySelector<HTMLElement>(
+                "[data-truth-trail-label]",
+              );
+              const subNode = traveller?.querySelector<HTMLElement>(
+                "[data-truth-trail-sub]",
+              );
               const firstAnchor = root.querySelector<HTMLElement>(firstRailAnchor);
 
               let phase: Phase = "reading";
@@ -260,6 +291,26 @@ export function createGatedDeck({
                   slide.matches(railHiddenSlides) ? [index] : [],
                 ),
               );
+              // Which slides name an era. The traveller shows on these and
+              // nowhere else — the hero included, which is how it stops
+              // appearing before the chronology has started.
+              const labelledIndexes = new Set(
+                slides.flatMap((slide, index) =>
+                  slide.querySelector(railLabel) ? [index] : [],
+                ),
+              );
+              /**
+               * The pop, as a multiplier rather than a tween on the traveller.
+               *
+               * `paintRail` re-sets autoAlpha and scale every frame, so a tween
+               * competing for those properties is simply overwritten on the
+               * next scroll event. Tweening a number and folding it into that
+               * same set is the only form that survives.
+               */
+              const pop = { value: 1 };
+              let popTween: gsap.core.Tween | null = null;
+              let labelledNow = false;
+              let labelIndex = -1;
               const fadeOutRailIndex = slides.findIndex((slide) =>
                 slide.matches(railFadeOutSlide),
               );
@@ -275,9 +326,19 @@ export function createGatedDeck({
                * escarpment/count, and reverses during the 1840s opening. */
               const railOpacityAt = (index: number, progress: number) => {
                 const p = clamp01(progress);
+                // No era, no traveller. Checked first: a slide that names
+                // nothing is silent whatever the fades below would say.
+                if (!labelledIndexes.has(index)) return 0;
                 if (hiddenRailIndexes.has(index)) return 0;
                 if (index === fadeOutRailIndex) {
-                  return clamp01((1 - p) / 0.2);
+                  // Over the final HALF, not the final fifth. This slide ramps
+                  // its ground from egg white down to charcoal as it is read,
+                  // and the rail floats above it: the label is burnt-deep,
+                  // 6.31:1 on the opening ground and unreadable on the closing
+                  // one. The ink crosses at 0.53, so the guide has to be gone
+                  // by then. The band is the light going out; the guide
+                  // leaving early reads as part of that.
+                  return clamp01((1 - p) / 0.5);
                 }
                 if (index === fadeInRailIndex) return clamp01(p / 0.2);
                 if (index === terminalRailIndex) {
@@ -316,6 +377,46 @@ export function createGatedDeck({
                 );
               };
 
+              /**
+               * Put the active slide's era on the pointer, and pop the pair in
+               * when one arrives.
+               *
+               * Called on slide change only — never per frame. The strings are
+               * read straight out of the section's own gutter block, so there
+               * is one source for what the era is and no second copy to drift.
+               */
+              const setRailLabel = (index: number) => {
+                const slide = slides[index];
+                const source = slide?.querySelector<HTMLElement>(railLabel);
+                const sub = slide?.querySelector<HTMLElement>(railLabelSub);
+                const text = source?.textContent?.trim() ?? "";
+                if (labelNode) {
+                  labelNode.textContent = text;
+                  // A decade reads "1950s", not "1950S" — the eyebrow
+                  // uppercases, so a label opening on a digit opts out.
+                  labelNode.classList.toggle("normal-case", /^\d/.test(text));
+                }
+                if (subNode) subNode.textContent = sub?.textContent?.trim() ?? "";
+
+                const labelled = labelledIndexes.has(index);
+                if (labelled && !labelledNow) {
+                  popTween?.kill();
+                  pop.value = 0;
+                  popTween = gsap.to(pop, {
+                    value: 1,
+                    duration: DUR.medium,
+                    ease: "country",
+                    // A reader who has stopped gets no scroll paint, so the
+                    // tween has to drive the repaint itself.
+                    onUpdate: () => syncRail(),
+                  });
+                } else if (!labelled) {
+                  popTween?.kill();
+                  pop.value = 1;
+                }
+                labelledNow = labelled;
+              };
+
               const paintRail = (
                 index: number,
                 progress: number,
@@ -332,6 +433,10 @@ export function createGatedDeck({
                 // Truth opens near the foot of the hero copy; later beats
                 // use the regular viewport-safe top. A cover can supply an
                 // explicit y so its destination is the INCOMING beat's top.
+                if (index !== labelIndex) {
+                  labelIndex = index;
+                  setRailLabel(index);
+                }
                 const { top, bottom } = railBounds(index);
                 const screenY =
                   screenYOverride ?? top + (bottom - top) * p;
@@ -347,11 +452,12 @@ export function createGatedDeck({
                 gsap.set(traveller, {
                   x: sampled.point.x,
                   y: screenY,
-                  autoAlpha: opacity,
+                  autoAlpha: opacity * pop.value,
                 });
                 gsap.set(pointer, {
-                  rotation: sampled.rotation,
-                  scale: mode === "buffer" ? 1 + buffer * 0.12 : 1,
+                  rotation: sampled.rotation * TILT_RATIO,
+                  scale:
+                    (mode === "buffer" ? 1 + buffer * 0.12 : 1) * pop.value,
                   transformOrigin: "22px 50%",
                 });
                 announce(mode === "buffer" ? "buffer" : "progress", {
