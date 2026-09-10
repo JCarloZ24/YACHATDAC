@@ -266,37 +266,36 @@ export function OurPeopleHero() {
         </p>
       </div>
 
-      <div className={`${COLUMN} pt-8 pb-16 lg:pb-24`}>
+      {/* User reference, 11 September 2026 (D5: reference governs layout):
+          a broad, centred display with breathing room before the canvas wave.
+          This section uses the current 20/64px viewport gutters. */}
+      <div className="mx-auto w-full max-w-[1920px] px-5 pt-8 pb-32 lg:px-16 lg:pb-60">
         {/* Captioned by what the frame SHOWS, never by who the people are —
             which is the rule this caption obeys, not a sentence for a reader. */}
         <p className="max-w-[760px] text-sm leading-[1.5] text-canvas/60">
           Rangers walking burnt Country.
         </p>
 
-        <div className="mt-12 text-center lg:mt-12">
+        <div className="mt-12 text-center lg:mt-16">
           <p
-            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl"
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre lg:text-2xl"
           >
             {ourPeopleHero.eyebrow}
           </p>
 
           {/* Y1 · the picture leaves the screen and survives inside the word. */}
           <h1
-            /* `text-h1` since 11 Sep 2026. This was the site's largest
-               heading by a distance — 160px at 1440, nearly 3× the scale —
-               and the photograph clipped into the letterforms was drawn for
-               that size. Worth a look: the fill has far less glyph to show at
-               56. */
-            className="headline mt-4 bg-center bg-no-repeat bg-clip-text text-h1 text-canvas lg:supports-[background-clip:text]:text-transparent"
+            /* User reference, 11 September 2026: scoped display-size exception
+               to the H1 token, matching the photograph-filled title's scale.
+               Keep the licensed face and allow CMS copy to wrap. Canvas is
+               also the clipped background fallback if the image fails. */
+            className="headline mx-auto mt-8 w-fit max-w-full bg-canvas bg-center bg-no-repeat bg-clip-text text-h1 leading-[1.05] tracking-[-0.015em] text-canvas [--text-h1:clamp(3.5rem,14vw,7rem)] [overflow-wrap:anywhere] supports-[background-clip:text]:text-transparent lg:mt-10 lg:[--text-h1:clamp(8rem,14vw,16rem)]"
             style={
               HERO
                 ? {
                     backgroundImage: `url(${HERO.src})`,
                     backgroundSize: "108.7% 408.16%",
-                    /* Longhands, not the shorthand: `knockout` reads
-                       backgroundPositionY back off the inline style to centre
-                       its travel on the frame's crop, and the shorthand does
-                       not reliably read back. */
+                    /* Keep the reference crop held inside the letterforms. */
                     backgroundPositionX: "50%",
                     backgroundPositionY: "17.88%",
                   }
@@ -307,7 +306,7 @@ export function OurPeopleHero() {
           </h1>
 
           <p
-            className="mx-auto mt-8 max-w-[900px] text-lg leading-[1.5] font-medium sm:text-2xl"
+            className="mx-auto mt-10 max-w-[900px] text-lg leading-[1.5] font-medium lg:mt-16 lg:text-2xl"
           >
             {ourPeopleHero.standfirst}
           </p>
