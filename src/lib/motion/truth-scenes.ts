@@ -425,6 +425,35 @@ const researchStrip: Recipe = (timeline, slide) => {
  * 62% of the viewport, which put the boundary in a tidier place but did not
  * read like this one.
  */
+/**
+ * A scrub span that STARTS WHILE THE SECTION IS STILL ARRIVING.
+ *
+ * The undim itself is unchanged — same staggered tween, same feel. What moves
+ * is when it runs. Bound to the reading span alone, the words light while they
+ * sit near the top of the screen: the section is already pinned, its block has
+ * already climbed, and measured on her testimony the read/unread boundary sat
+ * between 35px and 190px down a 900px viewport for the whole beat.
+ *
+ * Words light where they are when their turn comes, so the fix is to give them
+ * their turn earlier — during the viewport of scroll in which the section is
+ * rising into view, when the copy is still low on the screen and near the rail
+ * pointer, which sits at about 96% of the viewport. The reveal then runs from
+ * the foot of the screen upward with the reader, instead of at the ceiling
+ * ahead of them.
+ */
+function arrivalTimeline(span: DeckSlideSpan) {
+  return gsap.timeline({
+    scrollTrigger: {
+      trigger: span.runway,
+      start: () => span.read.start - window.innerHeight,
+      end: () => span.read.start + (span.read.end - span.read.start) * 0.45,
+      scrub: SCRUB.normal,
+      invalidateOnRefresh: true,
+      refreshPriority: span.index * 10 + 6,
+    },
+  });
+}
+
 function speakWords(
   timeline: gsap.core.Timeline,
   words: HTMLElement[],
@@ -643,7 +672,7 @@ const strata: Recipe = (timeline, slide) => {
  * `data-v2-static`, so every helper here filters it out and the numerals are
  * simply there when it lands.
  */
-const herTestimony: Recipe = (timeline, slide) => {
+const herTestimony: Recipe = (timeline, slide, span) => {
   // Her quotations are read, not revealed: each one undims word by word, in
   // turn, at the pace someone would say it. A long quote gets a longer span
   // than a short one — "So they decided we needed blankets." should not take
@@ -656,12 +685,12 @@ const herTestimony: Recipe = (timeline, slide) => {
   );
   const perBlock = blocks.map((b) => query<HTMLElement>(b, "[data-y2-word]"));
   const total = perBlock.reduce((sum, w) => sum + w.length, 0) || 1;
-  // Leave the last fifth for the line the page stands on and what follows it.
-  const READING = 0.72;
-  let at = 0.04;
+  const speaking = arrivalTimeline(span);
+  const READING = 0.82;
+  let at = 0.02;
   perBlock.forEach((w) => {
     const share = (w.length / total) * READING;
-    speakWords(timeline, w, at, Math.max(0.05, share - 0.12));
+    speakWords(speaking, w, at, Math.max(0.05, share - 0.1));
     at += share;
   });
 
@@ -687,9 +716,12 @@ const herTestimony: Recipe = (timeline, slide) => {
  * §15A who is speaking. Her opening line is testimony too, so it is read the
  * same way; the marker, title and lede around it take the ordinary M1.
  */
-const herOpening: Recipe = (timeline, slide) => {
+const herOpening: Recipe = (_timeline, slide, span) => {
   const block = slide.querySelector<HTMLElement>("[data-y2]");
-  speakWords(timeline, block ? query<HTMLElement>(block, "[data-y2-word]") : []);
+  speakWords(
+    arrivalTimeline(span),
+    block ? query<HTMLElement>(block, "[data-y2-word]") : [],
+  );
 };
 
 const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [

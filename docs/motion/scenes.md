@@ -401,12 +401,23 @@ read, and two things tuned to look alike drift. `speakWords` in
 `truth-scenes.ts`: words undim from 0.28 on a staggered scrub, `amount` and not
 `each`, no movement at all.
 
-A reading-line variant was built and rejected (user direction, 10 September
-2026). It lit each word as it crossed ~62% of the viewport, which put the
-read/unread boundary in a tidier place — 430–520px rather than the 35–190px the
-staggered version sits at on this beat — but it did not read like the 2003
-one, and matching that beat is the point. Recorded so the measurement is not
-mistaken for a reason to reopen it.
+**On Suzanne's two screens the same tween runs on the ARRIVAL span**, not on
+the reading span: it starts a viewport before the section is pinned and
+finishes partway into the read. Words light where they are when their turn
+comes, so bound to the reading span alone they lit while sitting near the
+ceiling — measured, the read/unread boundary sat between 35px and 190px down a
+900px viewport for the whole beat. Given their turn during the arrival instead,
+the boundary starts at about 856px, which is where the rail pointer sits (96%
+of the viewport), and sweeps up through 715 → 574 → 472 → 370 as the section
+rises. The reveal runs with the reader from the foot of the screen rather than
+ahead of them at the top. The 2003 beat needs none of this: its own copy barely
+moves, so its words are already in the reading band when they light.
+
+A reading-line variant — each word lighting as it crossed 62% of the viewport,
+computed per frame — was built and rejected (user direction, 10 September
+2026). It placed the boundary well, at 430–520px, but did not READ like the
+2003 beat, and matching that beat is the point. Recorded so the measurement is
+not later mistaken for a reason to reopen it.
 
 Her testimony is set in the READING face, not the display one — `PullQuote`'s new `voice`
 variant. Setting a transcript in the same face as the section titles is a large part of why a bare
