@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 10 September 2026*
+*Last updated: 11 September 2026*
 
 The closing offer, 9 September 2026: deck slides 22 and 23 follow the line onto the same canvas, on user direction, and are the last thing the pinned hero does. From `offerAt` the headline alone fades (0.7 units) -- the spirals stay, which is what keeps the two panels reading as one screen -- `wayForward.body` takes the same middle band on opacity over 0.9 units from `offerAt + 0.6`, and four photographs arrive around it from `offerAt + 1.4`, rising 7% of canvas height over 0.9 units on a 0.18 stagger. A 1.3-unit hold ends the page before the pin releases into the footer ground. The plates are `frame` grade and hold still once placed; positions are percentages measured off the deck, which has no Figma node, so nothing there is a token being ignored. They are held for `lg` and above -- at 375 the four collide with the copy at any size worth showing, and the paragraph carries the beat alone. Rendering this paragraph surfaces the D16 flag rather than resolving it: it carries both "Indigenous traditions" and "First Nations" in three sentences, which FNAN asked to be checked on 24 August. The terminology sheet settles it, not an edit in the content module.
 
@@ -257,7 +257,7 @@ added scroll span. `homepage-media.ts` records the source and grade per slot.
 
 **Loading intro — user direction, 10 September 2026.** Before the homepage,
 `homeLoaderFilm` **loops** a 39-second film of Country full-bleed under a graded
-charcoal scrim (20% through the middle, 86% at the foot), and reveals the supplied gold dot wave over it with a quiet
+charcoal scrim, and reveals the supplied gold dot wave over it with a quiet
 0–100 percentage and a static, cropped dot ring at the left. **Media is the
 loud channel** — it was transition, and a reveal stretched from 0.78s to 39s is
 by definition quiet, so the one-loud-channel rule still holds (F7).
@@ -279,8 +279,28 @@ cover reads it before first paint so a gated visit never flashes. Being anywhere
 else on the site also spends it: IntroGate marks it from the root layout, so a
 reader who arrives deep and clicks home is not met by a front door mid-visit.
 Only a press marks it — an abandoned or stalled opening replays, which is the
-same conditionality record-loader.ts:57 applies. `?intro=1` forces it back for
+same conditionality The Record's own loader applied before it was removed on
+11 September 2026 (record-loader.ts, deleted). `?intro=1` forces it back for
 review. Adds no scroll span.
+
+**The scrim and the sound, 11 September 2026, user direction.** The scrim was a
+20% clear window that jumped to 88% across a fifth of the frame; it now eases
+from 30% at the top through a 10% window to 80% at the foot, ramping over
+38–90% instead of 34–54%. The complaint was that the edge was visible and the
+film was hidden, and both were the ramp's SHAPE — a linear-gradient is smooth
+between two stops, but its derivative jumps at every stop, and a 0.68 alpha
+change over a fifth of the screen with a corner at each end reads as a band.
+The wordmark, count and Skip carry their own drop-shadows to pay for the light
+that was given back; the contrast cost is recorded in HomeLoader.tsx rather
+than argued away.
+
+The film now carries **audio, on by default**, with Wonder's sound control in
+the opposite corner from Skip. "On by default" is an attempt, not a promise —
+browsers refuse audible autoplay until they have seen an interaction — so
+`home-loader.ts` asks unmuted FIRST and falls back to a muted pass, correcting
+the button's label on the way. Doing it the safe way round, muted then unmute,
+is what produces the pop. Where there is no film there is no control: it is
+removed, not disabled.
 
 Reduced motion and JavaScript-off skip it entirely, fetching no film at all; so
 does a data-saver or 2g/3g link, where the count travels on its own in 1.2s and
@@ -720,16 +740,21 @@ their existing behaviour.
 | 02 | Everything in the record | 1 | natural flow | none | `hold` | yes |
 
 One lazy-loaded Three.js renderer, rendered only when scroll or size changes.
-A server-rendered loading cover uses the homepage's supplied gold wave and
-ring (SYS-02 / `recordLoader`, user direction 9 September 2026). Its percentage
-tracks settled portal resources and the first three catalogue photographs;
-completion waits for texture upload, shader compilation and the first submitted
-canvas frame. Scrolling and underlying page focus are locked until the cover
-exits. Missing canvas photos are omitted, and failed catalogue photographs
-retain their tonal ground. WebGL/chunk failure or a 20-second startup timeout
-reveals the static fallback and cancels pending scene activation. Escape/Tab
-also bypass to the fallback. Reduced motion and no JavaScript skip the cover;
-navigation restores scroll/focus and disposes only this loader's resources.
+**There is no loading cover of its own.** The site's shared panel covers this
+route on a hard load like any other (see "The site's loading panel" below);
+what is gone is The Record's bespoke, portal-aware cover. One existed from
+9 September 2026 — the
+homepage's gold wave and ring over a resource-driven percentage, with scroll
+and focus locked until it exited — and it was removed on 11 September 2026 by
+user direction: the homepage's opening film is the site's only loading screen.
+Nothing about the portal changed with it. The cover only ever read
+`data-portal-state`/`data-portal-progress` and never drove them, so the scene
+still activates on mount, still omits missing canvas photos, still leaves
+failed catalogue photographs on their tonal ground, and still reveals the
+static fallback on WebGL/chunk failure, on Escape, or after the 20-second
+startup timeout. What is gone with the cover is the scroll and focus lock: the
+catalogue beneath the portal is now scrollable while the scene is still
+building.
 The camera crosses one of the separate palm openings in the supplied ink print.
 Every black region is an opening; white remains wall. The user's latest
 8 September 2026 refinement uses 0.65-unit stone depth for the connected palm
@@ -1626,3 +1651,57 @@ Belonging shooting stars - 9 September 2026: occasional procedural meteors exten
 
 Invitation continuation, 9 September 2026: Figma 3371:41740 supplies three 400px-high photo cards, 48px gaps, 40px padding, 20px corners, and a centred 64px heading. ⚠ Revised the same day on user direction: The Invitation is no longer a document section under the hero. It is an overlay inside the pinned hero, a sibling of the Wonder, Truth and Belonging panels, and arrives by travelling up one viewport (`yPercent` 100 → 0 with autoAlpha, 1.3 units sine.out from `invitationAt + 0.2`) while the land drifts down and pushes in behind it — the pinned canvas reading as though the page kept scrolling. A 1.1-unit hold follows, and because the pin end is derived from the timeline duration it extends itself. The old `--invitation-overlap` negative margin, the section's charcoal gradient and the `homeInvitation` / `InvitationMotion` pair are all gone: the exit shade at 0.55 is now the whole of the darkening the cards are read against. Fitting one viewport costs the mobile stack — below `lg` the three cards are a horizontal snap scroller at 80% width, full copy intact, read across rather than down; the 400px card and three columns hold at 1440. D5 retains the longer draft headline, pillar titles, descriptions and destinations; screenshot copy differs. Reduced motion and a failed canvas leave the panel visible and static (the hidden state is gated on `[data-hero-canvas="ready"]`).
 The Way Forward on the canvas, 9 September 2026: the closing statement followed The Invitation onto the pinned hero the same day, on user direction, and is the last thing the canvas does. From `wayAt` the cards leave upward the way they arrived (`yPercent` -100, 1 unit, sine.in), the lift runs on to 1.15 screen heights so the land is carried clean off the top, and the line resolves in place over 1.2 units from `wayAt + 1.5` — opacity alone, no travel, and only after both of those have finished, so an empty canvas is held for a beat first (user direction the same day): every other panel here arrives by moving, and the page's last word is read still. Starting it earlier makes the line read as following the cards out rather than beginning something; a 1.2-unit hold follows before the pin releases into the footer ground. Because the canvas is empty charcoal by then, the panel needs no ground of its own — only the two `ring-b` / `ring-a` spirals it always had, raised from the site's 0.06 wash to 0.28 across two passes on user direction the same day (on near-black the wash read as screen dirt, not pattern) and set moving: from `wayAt + 0.9` they rise `yPercent` 100 to 0 over 1.9 units, sine.out — in from a whole panel height below, so genuinely off screen, and coming to rest at their Figma position, where they hold under the line for the rest of the beat rather than travelling on off the top. The travel is on a wrapper, never the images — GSAP writes `transform` and the images' centring and offsets are Tailwind classes. `Reveal` went with the move: a scroll-triggered reveal inside a pinned section fires against a viewport that is not moving. `WayForward.tsx`, and the pathways and signup it holds, are still parked exactly as the earlier note describes.
+
+---
+
+## The site's loading panel
+
+*Added 11 September 2026, user direction — one panel for every route,
+replacing the per-page loaders.*
+
+`components/layout/RouteLoader` renders `components/ui/PageLoader` once from the
+root layout. It announces whichever page it covers, taking the name from
+`site.ts` so the panel and the header can never disagree, and it runs on hard
+loads and refreshes only.
+
+**It is not a connection test, and the first framing of it was.** The proposal
+was to show a panel only to readers on a slow link. The measurements said
+otherwise. On the production build, refreshing `/`:
+
+| | Document height | Pin spacers |
+|---|---|---|
+| first paint → ~370ms | 5,139px | 0 |
+| ~890ms onward | 23,303px | 1 |
+
+A 4.5x change. Until it lands, every pinned screen is stacked at the same
+offset — the frame where the hero headline sits on top of the pathway cards.
+That happens on fibre, because it is GSAP building pins after paint rather than
+bytes arriving late, and `navigator.connection` cannot see it at all. So the
+gate is readiness — `motionSettled()` in the motion controller, true once
+ScrollTrigger has refreshed against resolved fonts — and connection only moves
+the ceiling.
+
+Measured on the production build, a fast refresh of `/living-work`: covered from
+first paint, pins in at 345ms, panel lifted at **965ms** without announcing
+itself. The announcement is reserved for a page that took longer than 1.4s.
+
+**The homepage keeps its film, and gains this.** The opening film owns a genuine
+first arrival. Once it is spent — a refresh later in the same session — the quiet
+panel takes over, which is the case that prompted this: the homepage has the
+worst settling window on the site and had nothing covering it on a second load.
+The two never stack; the panel stands down when the film is going to play, and
+takes no scroll lock when it does, because the film takes its own and restores
+what it found.
+
+**Two ceilings, because one was not enough.** A wall-clock timer lifts the panel
+at `hardCap + dwell + 1.5s`, since every other exit is judged inside a rAF loop
+that a saturated main thread stops servicing — measured under Slow 3G with 4x CPU
+throttling, the panel stood past twenty seconds with its cap long gone. Under
+that, a CSS keyframe lifts it at 8s with no JavaScript at all: the panel is
+server-rendered, so it exists before any script does, and on a slow link the
+reader would otherwise be held behind it until hydration. That would have made
+the slow reader — the one the panel was added for — the one it punished.
+
+**Where it does not appear:** client-side navigations (the route transition
+covers those), reduced motion, JavaScript off, and the `/lab`, `/v2` and
+`/homepagev2` sandboxes.

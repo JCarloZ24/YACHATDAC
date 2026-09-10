@@ -18,6 +18,11 @@ export const homeLoader = {
   label: "Loading homepage",
   enter: "Walk with us",
   skip: "Skip",
+  /* Interface labels for the film's sound control (user direction, 11 Sep
+     2026). They name the CURRENT state, not the action — the rule HeroVideo
+     set on Wonder, and the two controls have to read the same way. */
+  soundOn: "Sound on",
+  soundOff: "Sound off",
 };
 
 /** Figma/screenshot interface label, 8 September 2026; not narrative copy. */

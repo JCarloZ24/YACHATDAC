@@ -1,6 +1,6 @@
 # Decisions, Risks & Issues — paste-ready
 
-*Last updated: 10 September 2026*
+*Last updated: 11 September 2026*
 
 Everything here is written to be **copied straight into Proyekto**:
 
@@ -185,6 +185,7 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 | D23 | Is `/our-people` a route? | **Final** (26 Aug) — yes | Marc |
 | D24 | Persistent homepage navbar, or no nav until block 6? | **Superseded** (31 Aug) — persistent navbar on every page, per wireframe | Marc, Ivy |
 | D25 | Where the empty state's "ask us what exists" goes | **Final** (26 Aug) — the same page's contribute block | Marc |
+| D26 | Which of Marc's two type scales the site is built on | **Final** (11 Sep) — the **rem column**, i.e. the `YACHATDAC Type` variable collection already in `globals.css`. Every page brought onto `text-h1`…`text-h6`; Wonder's frame-literal 96/56/40 ramp retired | August, Marc |
 | F1 | Homepage copy lives in the repo | **Superseded** by D12 | August |
 | F2 | Homepage thread is a plain vertical rule | **On hold** | August, Ivy, JC |
 | F3 | Homepage Truth beat is typographic | **On hold** | August, Ivy |

@@ -13,12 +13,17 @@
  * which is the point — it is the front door, and it should still open for
  * someone arriving fresh. It just stops charging the same person twice.
  *
- * ⚠ NOT the pattern The Record uses. `<html data-record-loaded>` is
- * per-DOCUMENT, so a reload replays that loader too; it suppresses SPA returns
- * and nothing else. Same for `route-entry`'s `navigated`, `site-entry`'s
- * `entered` and PageLoader's `shownThisPageLoad` — every flag in the repo dies
- * on reload. `sessionStorage` in lofi/Preloader.tsx is the only thing here with
- * real session lifetime, and this follows it, key namespace included.
+ * ⚠ THE ONLY LOADING SCREEN ON THE SITE as of 11 September 2026. User
+ * direction: the opening film is it. The Record's cover and Living Work's
+ * panel were removed outright and Wonder's was unmounted but kept
+ * (wonder/_components/Loader.tsx), so `<html data-record-loaded>` — the
+ * per-document flag this note used to contrast against — no longer exists.
+ *
+ * The contrast is still worth keeping, because the remaining flags are all
+ * per-document: `route-entry`'s `navigated`, `site-entry`'s `entered` and
+ * PageLoader's `shownThisPageLoad` all die on reload. `sessionStorage` in
+ * lofi/Preloader.tsx is the only other thing here with real session lifetime,
+ * and this follows it, key namespace included.
  */
 
 export const INTRO_SEEN_KEY = "yachatdac:seen-intro";

@@ -172,7 +172,10 @@ export function ConnectHero() {
 
       <div className={`${COLUMN} relative flex min-h-[92svh] flex-col justify-center py-24 lg:min-h-[130svh] lg:py-0`}>
         <p className={EYEBROW_DARK}>Connect</p>
-        <h1 className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.05] tracking-[-0.017em] sm:text-7xl lg:text-[6.25rem]">
+        {/* `text-h1` since 11 Sep 2026 — was a 56/72/100 ladder. The
+            tracking stays: it is this hero's own optical correction on two
+            short words, not part of the scale. */}
+        <h1 className="headline mt-6 max-w-[1240px] text-h1 tracking-[-0.017em]">
           Get in touch
         </h1>
         <p className="mt-8 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl">

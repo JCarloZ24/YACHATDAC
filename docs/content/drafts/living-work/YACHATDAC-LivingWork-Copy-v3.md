@@ -290,8 +290,26 @@ Direct-to-handset satellite messaging is expected to change this within a couple
 - Solar with wifi-enabled regulators
 - Data can be pulled off the regulators remotely
 - 240 volt supply to the mesh network
+- Petrol and diesel in tanks on site
 
 Renewable self-sufficiency is a Stage 4 goal.
+
+> **CR5, part-applied 11 September 2026.** The fuel tanks are added as fact —
+> Steve (FNAN), 10:19: *"Also they have on-site petrol and diesel tanks."*
+> Sizes and what they feed were not given and are not invented.
+>
+> The SWER half is **written but not asserted**, and renders on the page marked
+> *awaiting confirmation* rather than as a bullet:
+>
+> - Single-Wire Earth Return line — one wire, earth as the return
+> - *SWER is what made a line to a property this far out affordable, and a small
+>   load ceiling is the trade. The solar and the fuel on site carry the rest.*
+>
+> **[ To confirm: is Turraburra on a SWER line, and what does it run — the
+> house, the shed, the bore pumps? If the property is off-grid entirely, this
+> comes out rather than being softened. ]** What Steve supplied was a general
+> definition of how SWER works, not a statement about this property; the two are
+> different claims. See **R19**.
 
 ##### Monitoring gear
 

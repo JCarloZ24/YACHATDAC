@@ -37,7 +37,7 @@ session could move it.** Read live, the rows are:
 | CR2 | `approved` | yes, 28 Aug | Applied |
 | CR3 | `approved` | yes, 28 Aug | **Applied in full, 10 Sep** |
 | CR4 | `submitted` | — | **Applied 7 Sep, in the quotation** |
-| CR5 | `submitted` | — | Proposed |
+| CR5 | `submitted` | — | **Part-applied 11 Sep** |
 | CR6 | `submitted` | — | **Applied 7 Sep** |
 | CR7 | `approved` | yes, 28 Aug | Applied |
 | CR8 | `withdrawn` | — | **Approved 7 Sep** |
@@ -247,7 +247,7 @@ the same day. Pablito is named as agreeing with one item.
 | CR2 | Card title "Carbon" → "Biological Sequestration" | Terminology | Proposed — check it is accurate | August, with the client |
 | CR3 | "Cool burns" and "right-way fire" → "fire-stick farming" | Terminology | **APPLIED IN FULL (10 Sep)** — the slug carve-out closed with D17 | August, JC |
 | CR4 | "settlers" → "colonists" | Terminology | **Applied in the quotation (7 Sep)** — unratified; hold overruled | August → Suzanne |
-| CR5 | Add SWER, and on-site petrol and diesel tanks | New content | Proposed — **facts unverified**. See R19 | August, with the client |
+| CR5 | Add SWER, and on-site petrol and diesel tanks | New content | **PART-APPLIED (11 Sep)** — fuel tanks as fact; SWER written, marked, not asserted. See R19 | August, with the client |
 | CR6 | Add rail via Rockhampton to *Getting here* | New content | **APPLIED (7 Sep)** | August |
 | CR7 | "No town glow" → "Magic at night" | Copy rewrite | Proposed — offered as a suggestion | August, Ivy |
 | CR8 | Homepage hero — "maybe something more heroic" | Copy rewrite | **Approved — sequenced last.** Proyekto still reads `withdrawn`; see CR8 | August, Marc |
@@ -465,7 +465,7 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR5 — Add SWER, and the on-site petrol and diesel tanks
+## CR5 — Add SWER, and the on-site petrol and diesel tanks · **PART-APPLIED (11 Sep)**
 
 - **Form** — status `submitted` · move to `changes_requested` once the ask for
   the actual SWER and fuel facts has gone back to Steve (R19)
@@ -496,6 +496,27 @@ Approved in this round, and now locked: see Part 4.
   the move to `changes_requested` would misrecord what happened. Nothing is
   written until that content arrives; if it does not, ship the Power block
   without it, which is complete as it stands (**R19**).
+- **11 Sep — written and applied, in two halves.** August's direction: draft the
+  copy now rather than wait on the ask.
+  - **Fuel tanks — live, as fact.** *"Petrol and diesel in tanks on site"*, a
+    fourth bullet in Power. Steve stated it about the property; sizes, location
+    and purpose were not given and are not invented, so the bullet says only
+    what was said. The compliance concern in R19 is why it stays this bare.
+  - **SWER — written, marked, not asserted.** It is carried in a new `proposed`
+    field on the block and renders below the bullets in an `EditorialNote`
+    ("Awaiting confirmation — not published as fact"), carrying the line, its
+    note, and the question that settles it. This answers Steve's *"find an
+    appropriate way to include SWER"* without answering a question nobody has
+    asked the client yet.
+  - **The angle, which is the part worth keeping.** SWER earns its place by
+    explaining the rest of the block rather than by being defined: one wire with
+    the earth as the return is what made a line to a property this far out
+    affordable, and its small load ceiling is why the solar, the regulators and
+    the fuel on site exist. Ergon runs ~65,000km of SWER for about 4% of its
+    customers, and rural SWER connections carry export limits in the low
+    single-digit kW. That framing is accurate independent of Turraburra and it
+    keeps the block to two added lines, which is Ivy's column-balance point.
+  - **Still not answered** — whether Turraburra is on a SWER line at all.
 
 ---
 
@@ -939,6 +960,16 @@ Continuing the numbering in `docs/decisions-and-risks.md`, which ends at R15.
 - **Next step** — Request the actual arrangement from the client in their own
   words before writing anything. If it does not arrive, ship the section without
   it — the block is complete as it stands.
+- **11 Sep 2026 — narrowed, not closed.** The copy is now written and applied
+  (CR5), but the SWER half is carried as `proposed` and renders marked *awaiting
+  confirmation*, so the unverified claim is visible as unverified rather than
+  published as fact. The fuel-tank bullet is live, because Steve stated it about
+  the property rather than pasting a definition of it. **The risk this entry
+  describes is therefore no longer "it gets published from a search result" —
+  it is "it ships still marked, and the marking is mistaken for a design
+  element".** The one question in `confirm` closes it either way: an answer
+  promotes the bullet, and "we are off-grid" deletes it. Severity holds at
+  medium until then.
 
 ---
 

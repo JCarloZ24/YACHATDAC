@@ -5,6 +5,7 @@ import { ThreadLine } from "@/components/ui/ThreadLine";
 import { beats } from "@/content/homepage";
 import { HomeLoader } from "./_components/HomeLoader";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { PageTransition } from "@/components/transitions/PageTransition";
 
 /**
  * Homepage — one continuous scroll.
@@ -45,7 +46,12 @@ const [hero, ...rest] = beats;
 
 export default function HomePage() {
   return (
-    <>
+    /* The blink, like every other route (11 September 2026). The homepage had
+       no PageTransition at all, so leaving it was a hard cut into whatever the
+       browser had already painted — the one navigation on the site that
+       flashed. Charcoal is the hero's own ground (HomeHero's `bg-charcoal`),
+       so the first frame under the lights is the colour the page opens on. */
+    <PageTransition ground="#090e12">
       {/* SCR-09, 9 September 2026: match the other immersive pages' wheel inertia. */}
       <SmoothScroll />
       <HomeLoader />
@@ -56,6 +62,6 @@ export default function HomePage() {
       ))}
       {/* Follows the statement panel's ground, not the retired evergreen one. */}
       <FooterGround color="var(--color-charcoal)" />
-    </>
+    </PageTransition>
   );
 }

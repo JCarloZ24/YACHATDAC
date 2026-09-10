@@ -120,7 +120,6 @@ export type EffectName =
   | "homeLandscapeBreeze"
   | "recordPatternDrift"
   | "homeLoaderFilm"
-  | "recordLoader"
   | "homeHeroOpen"
   | "homeInvitation"
   | "homeWayForward"

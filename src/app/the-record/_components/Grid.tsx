@@ -85,6 +85,11 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
           return (
             <div key={item.slug} data-record-tile className="mb-8 break-inside-avoid lg:mb-12">
             <Link href={`/the-record/${item.slug}`} prefetch={true} data-record-card
+              /* NAV-02 owns this navigation — see `onNavigate` below. The
+                 flag keeps RouteBlink off it: that handler is capture
+                 phase, so it would preventDefault the click and the
+                 expanding circle would never run. */
+              data-own-transition
               onPointerEnter={() => router.prefetch(`/the-record/${item.slug}`)}
               onFocus={() => router.prefetch(`/the-record/${item.slug}`)}
               onClick={event => {

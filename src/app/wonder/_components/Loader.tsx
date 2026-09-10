@@ -16,6 +16,17 @@ import { PageLoader } from "@/components/ui/PageLoader";
  * shared default's ~3s, and a 2.5s ceiling past which it lifts regardless.
  * Deleting `<WonderLoader />` from the page is the whole removal if even
  * that reads as too long.
+ *
+ * ⚠ NOT MOUNTED, and SUPERSEDED — 11 September 2026, user direction. Wonder's
+ * panel is now the site's panel: components/layout/RouteLoader renders the
+ * same PageLoader on every route from the root layout, announcing whichever
+ * page it covers, so mounting this as well would put two covers on Wonder.
+ *
+ * Kept rather than deleted (explicitly "hide it only"), and it is still the
+ * one place Wonder's own timing argument is written down — the 8.3s/14.1s
+ * measurement above is why RouteLoader does not wait for hero media either.
+ * If Wonder ever needs a panel tuned differently from the rest of the site,
+ * this is the shape that does it.
  */
 export function WonderLoader() {
   return (

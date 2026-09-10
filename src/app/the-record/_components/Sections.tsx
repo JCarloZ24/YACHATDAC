@@ -14,7 +14,6 @@ import {
   recordPortalMedia,
 } from "@/content/record-media";
 import { RecordPortalMotion } from "./PortalMotion";
-import { RecordLoadingCover } from "./LoadingCover";
 import { RecordPatternMotion } from "./PatternMotion";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import { RecordSignup } from "./Signup";
@@ -98,7 +97,6 @@ export function RecordHeroV2() {
 
   return (
     <>
-    <RecordLoadingCover />
     <header data-record-portal data-nav-hero data-portal-state="loading" data-portal-progress="0" className="record-portal">
       <div data-portal-stage className="record-portal-stage">
         {/* F8, 2026-09-08: hidden image sources and sizing guides for canvas-only
@@ -148,7 +146,7 @@ export function RecordHeroV2() {
           <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold lg:text-xl">
             {recordHero.eyebrow}
           </p>
-          <h1 className="headline mt-3 text-h1 leading-[1.1]">
+          <h1 className="headline mt-3 text-h1">
             {recordHero.title}
           </h1>
           <p className="mt-4 text-base leading-[1.5] lg:text-lg">

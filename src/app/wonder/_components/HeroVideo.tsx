@@ -76,20 +76,32 @@ export type HeroTiers = {
   medium: string;
   large: string;
   /**
-   * A cut FRAMED FOR PORTRAIT, for phones. Optional, and absent today.
+   * THE PORTRAIT CUTS — reframed for the shape, not cropped from the wide one
+   * (delivered 11 September 2026, against the brief in brand/video/README.md).
    *
-   * A 16:9 film full-bleed in a portrait phone is magnified 3.7× by
+   * A 16:9 film full-bleed in a portrait phone is magnified 3.7x by
    * `object-cover` and shows the middle 27% of the frame, so 73% of every
-   * byte is discarded and no landscape encode can be both sharp and light —
-   * 1440 is 14.9 MB at CRF 30 and still soft. The fix is a re-cut framed for
-   * the shape (August's call, 10 September 2026), and it is the editor's to
-   * make: a blind centre crop cuts Suzanne's head in half at 0:20 and slices
-   * the guests at 0:45. See brand/video/README.md for the brief.
+   * byte is discarded and no landscape encode can be both sharp and light.
+   * The fix was never an encode, it was a re-cut: the editor reframed the
+   * same 60.04s edit — same 1501 frames, same audio — to 9:16 for phones and
+   * 3:4 for portrait tablets. Faces sit inside the safe area the brief asked
+   * for, so nothing here has to crop around them.
    *
-   * Set this and phones use it. Until then `pickTier` deliberately does NOT
-   * chase the magnification, so the weight stays where it is today.
+   * WHY TWO ASPECTS. `object-cover` always crops something, and which cut
+   * loses least depends on the box: on a 390 x 844 phone 9:16 keeps 82% of
+   * its width where 3:4 would keep 62%, and on an 820 x 1180 iPad Air 3:4
+   * keeps 93% of its width where 9:16 keeps 81% of its height. `pickTier`
+   * therefore chooses on geometry rather than on a device guess.
+   *
+   * All three are optional: absent, `pickTier` falls back to the landscape
+   * ladder exactly as it did before they existed.
    */
+  /** 9:16 at 810 x 1440 — phones. Covers a DPR-2 phone with no upscale. */
   portrait?: string;
+  /** 9:16 at 648 x 1152 — phones on a link we would not spend the full cut on. */
+  portraitSmall?: string;
+  /** 3:4 at 1152 x 1536 — portrait tablets, where 9:16 loses a fifth of the height. */
+  portraitWide?: string;
 };
 
 type Connection = {
@@ -114,12 +126,45 @@ function slowLink(): boolean {
   );
 }
 
-/** Every tier is the same 16:9 edit at a different width. */
+/** The landscape ladder — the same 16:9 edit at three widths. */
 const TIER_WIDTHS = { small: 960, medium: 1440, large: 1920 } as const;
-const SOURCE_ASPECT = 16 / 9;
+const LANDSCAPE_ASPECT = 16 / 9;
+
+/** One encode to choose between: the shape it was cut in, and how wide it is. */
+type Candidate = { src: string; aspect: number; width: number };
+
+/** The portrait cuts, narrowest file first within each shape. */
+function portraitCuts(tiers: HeroTiers): Candidate[] {
+  const cuts: Candidate[] = [];
+  const p = 9 / 16;
+  if (tiers.portraitSmall)
+    cuts.push({ src: tiers.portraitSmall, aspect: p, width: 648 });
+  if (tiers.portrait) cuts.push({ src: tiers.portrait, aspect: p, width: 810 });
+  if (tiers.portraitWide)
+    cuts.push({ src: tiers.portraitWide, aspect: 3 / 4, width: 1152 });
+  return cuts;
+}
 
 /**
- * How wide a source this element actually needs, in real pixels.
+ * What fraction of a source of this shape survives `object-cover` in a box of
+ * that shape — 1 when they match, and the ratio of the two otherwise.
+ *
+ * This is the whole basis on which a cut is chosen. Cover scales the frame
+ * until the SHORT axis fills, so the narrower of the two shapes decides which
+ * axis is thrown away: a source wider than its box loses width, a source
+ * taller than its box loses height. Choosing the cut that loses least is
+ * strictly better than guessing at device classes, and it is why there is no
+ * "is this a tablet" test anywhere here.
+ */
+function visible(boxAspect: number, sourceAspect: number): number {
+  return boxAspect < sourceAspect
+    ? boxAspect / sourceAspect
+    : sourceAspect / boxAspect;
+}
+
+/**
+ * How wide a source of this shape has to be to fill this box unmagnified, in
+ * real pixels.
  *
  * ⚠ NOT THE VIEWPORT WIDTH (August, 10 September 2026: "the video quality on
  * mobile is blurry"). The film fills a `min-h-svh` header under
@@ -135,13 +180,18 @@ const SOURCE_ASPECT = 16 / 9;
  * box the film is actually painted into and works back through the cover
  * scale. DPR stays clamped at 2: past that the file needed grows faster than
  * any benefit a 6in screen can show.
+ *
+ * The same phone asks a 9:16 cut for only ~950px, which 810 × 1440 answers
+ * with no upscale at all — the re-cut, not a bigger encode, is what made the
+ * number reachable.
  */
-function neededWidth(video: HTMLVideoElement): number {
-  const box = video.getBoundingClientRect();
-  const w = box.width || window.innerWidth;
-  const h = box.height || window.innerHeight;
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  return Math.max(w, h * SOURCE_ASPECT) * dpr;
+function neededWidth(
+  w: number,
+  h: number,
+  dpr: number,
+  aspect: number,
+): number {
+  return Math.max(w, h * aspect) * dpr;
 }
 
 /**
@@ -150,11 +200,17 @@ function neededWidth(video: HTMLVideoElement): number {
  * Which encode to fetch, decided once before the element has a source, so
  * the browser never starts one download and abandons it for another.
  *
+ *   · The shape comes first: whichever cut `visible` says loses least of
+ *     itself in this box. A portrait box takes a portrait cut, and 9:16 or
+ *     3:4 is decided by the box, not by a device guess. Where the landscape
+ *     edit loses least — every desktop, and landscape tablets — the ladder
+ *     below runs exactly as it did before the re-cut existed.
+ *   · Then the width: the narrowest file of that shape which covers
+ *     `neededWidth`, and where nothing covers it the widest one.
  *   · Data saver, or a 2g/3g effective type (Network Information API,
- *     Chromium and Android only) → small, whatever the screen asks for.
- *   · Otherwise the smallest tier that covers `neededWidth`, and where
- *     nothing covers it — every portrait phone, see above — the largest the
- *     link will carry.
+ *     Chromium and Android only) → the lightest file of the right shape.
+ *     For a phone that is `portraitSmall`, which is both lighter AND sharper
+ *     than the landscape `small` it used to be handed.
  *   · `large` still wants a measured 5 Mb/s or an unknown link; a phone on a
  *     slow-but-not-2g connection takes `medium` and stays soft rather than
  *     spending 25 MB.
@@ -164,34 +220,59 @@ function neededWidth(video: HTMLVideoElement): number {
  * film, which is worse than a soft frame.
  *
  * ⚠ WHETHER to fetch at all is decided by the caller, not here — this only
- * answers WHICH. A slow link still gets `small` because by the time this is
- * reached on such a link, the visitor has asked for the film.
+ * answers WHICH. A slow link still gets the lightest file because by the time
+ * this is reached on such a link, the visitor has asked for the film.
  */
 function pickTier(tiers: HeroTiers, video: HTMLVideoElement): string {
   const connection = (navigator as Navigator & { connection?: Connection })
     .connection;
-  if (slowLink()) return tiers.small;
+  const slow = slowLink();
 
   const box = video.getBoundingClientRect();
   const w = box.width || window.innerWidth;
   const h = box.height || window.innerHeight;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const boxAspect = w / h;
 
-  // A box taller than the source's own shape is one where cover crops the
-  // sides — every portrait phone. A cut framed for that shape needs no
-  // magnification at all, so it wins outright when there is one.
-  if (tiers.portrait && h * SOURCE_ASPECT > w) return tiers.portrait;
+  // Does a portrait cut hold more of itself in this box than the wide edit?
+  const cuts = portraitCuts(tiers);
+  let best: Candidate[] = [];
+  let bestVisible = visible(boxAspect, LANDSCAPE_ASPECT);
+  for (const aspect of new Set(cuts.map((c) => c.aspect))) {
+    const held = visible(boxAspect, aspect);
+    if (held > bestVisible) {
+      bestVisible = held;
+      best = cuts.filter((c) => c.aspect === aspect);
+    }
+  }
+  if (best.length > 0) {
+    // ON A SAVER LINK, WEIGHT BEATS FRAMING — and deliberately across shapes,
+    // not just within the winning one. There is no light 3:4 encode, so a
+    // portrait tablet on data saver would otherwise be handed the 11.32 MB cut
+    // it holds 93% of. The lightest portrait file we have is the 648 × 1152
+    // 9:16 at 5.55 MB, and a tablet still holds 81% of its height — against
+    // 39% of the landscape edit it used to get. Half the bytes for a slightly
+    // tighter crop is the right way round when someone has asked us to spend
+    // less of their data.
+    if (slow) {
+      return cuts.reduce((a, b) => (b.width < a.width ? b : a)).src;
+    }
+    const needed = neededWidth(w, h, dpr, best[0].aspect);
+    return (best.find((c) => c.width >= needed) ?? best[best.length - 1]).src;
+  }
 
-  const needed = neededWidth(video);
+  if (slow) return tiers.small;
+
+  const needed = neededWidth(w, h, dpr, LANDSCAPE_ASPECT);
   const fast = connection?.downlink === undefined || connection.downlink >= 5;
 
-  // ⚠ DO NOT CHASE A WIDTH NO TIER CAN REACH. A portrait phone asks for
-  // ~3000px; the widest encode is 1920. Buying it would spend 18–25 MB of
-  // somebody's data to move 3.7× of upscale to 2.1× — still soft, and
-  // against R11's budget, which this film already exceeds at 6.2 MB. Where
-  // the ask is unreachable the honest target is the box's own width: pay for
-  // the pixels that land on screen, stay at today's weight, and let the
-  // portrait cut above be the thing that actually fixes it.
+  // ⚠ DO NOT CHASE A WIDTH NO TIER CAN REACH. A box that crops the wide edit
+  // hard asks for more width than the widest encode has; buying it would
+  // spend 18–25 MB of somebody's data to trade one upscale for a smaller one
+  // — still soft, and against R11's budget. Where the ask is unreachable the
+  // honest target is the box's own width: pay for the pixels that land on
+  // screen and stay at today's weight. This is now the desktop-only path —
+  // the portrait cuts above are what actually fixed the phone.
   const target = needed > TIER_WIDTHS.large ? w * dpr : needed;
 
   if (target <= TIER_WIDTHS.small) return tiers.small;

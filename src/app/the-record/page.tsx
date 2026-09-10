@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { PageTransition } from "@/components/transitions/PageTransition";
 import {
   DocumentsLedger,
   KnowledgeGapsV2,
@@ -87,7 +88,11 @@ export default async function ResourcesPage({
   };
 
   return (
-    <div data-page-root className="min-h-svh bg-charcoal">
+    /* The blink, like every other route (11 September 2026). This page already
+       had the `data-page-root` box the transition wants — it was simply never
+       wrapped, so it was one of the two routes that cut rather than blinked.
+       PageTransition renders the same box, carrying the same charcoal. */
+    <PageTransition ground="#090e12">
       <SmoothScroll />
       <RecordHeroV2 />
 
@@ -107,6 +112,6 @@ export default async function ResourcesPage({
       {/* §06 ends on the off-white wave, not on charcoal — the footer's
           band above its burnt crest is canvas here. */}
       <FooterGround color="var(--color-canvas)" />
-    </div>
+    </PageTransition>
   );
 }

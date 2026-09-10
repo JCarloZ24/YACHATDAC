@@ -10,7 +10,6 @@
 }
 .record-knowledge { --record-ground-progress: 100%; }
 /* SYS-02: prevent even a first-paint loader flash on article return. */
-html[data-record-loaded="true"] [data-record-loader] { display: none !important; }
 @media (min-width: 1024px) {
   .record-contribution-cards { pointer-events: none; }
   .record-contribution-cards > li { pointer-events: auto; }
