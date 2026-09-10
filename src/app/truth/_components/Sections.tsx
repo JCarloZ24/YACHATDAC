@@ -1403,7 +1403,18 @@ export function EraSection({
         title={lead.title}
         deckContent={
           <div className="mx-auto max-w-6xl px-6 lg:px-24">
-            <EntryBlock entry={lead} titleOnPlate withinDeck />
+            {/* The era reaches the gutter here only so the rail's pointer has
+                something to name on Today (user, 10 Sep 2026) — every other
+                era already put its marker there. At lg the block is
+                transparent and the pointer carries it; at md it reads as the
+                section's own marker, which this section did not have. */}
+            <EntryBlock
+              entry={lead}
+              titleOnPlate
+              withinDeck
+              gutterLabel={era.marker}
+              gutterSub={lead.when}
+            />
           </div>
         }
       />

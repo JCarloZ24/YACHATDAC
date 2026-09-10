@@ -123,8 +123,9 @@ its "Start from the beginning" cue; subsequent beats reset to the top and travel
 It remains at the bottom while the 20vh buffer charges, then transfers continuously along the
 SVG guide from the outgoing foot to the incoming head as the cover plays. There is no endpoint
 jump. It carries the era label and its sub at the arrow's tip
-(10 September 2026), and appears only on sections that name one — no number, and still no progress
-bar. On rewind the inverse is true. The marker's
+(10 September 2026). The dot is always there; the ARROW and the label belong to the era, drawn out
+of the rosette and faded in on the section's own read and retracted before the cover. A section
+naming no era keeps the dot alone. No number, and still no progress bar. On rewind the inverse is true. The marker's
 read ScrollTrigger fades it over the final fifth of the 1950s, keeps it absent through the
 escarpment and count, and restores it over the opening fifth of the 1840s. It fades permanently
 over the final fifth of Before people. The visible RECORD strand follows the same silences.

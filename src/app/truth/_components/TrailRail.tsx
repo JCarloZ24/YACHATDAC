@@ -426,19 +426,21 @@ export function TruthTrailRail() {
               ground (open-questions.md) and is already flagged for a
               light-ground cut; type must not inherit that. burnt-deep is
               6.31:1 and is the page's compliant warm. */}
-          {labelWidth > 0 ? (
-            <div
-              data-truth-trail-label-box
-              className="absolute top-0 -translate-y-1/2"
-              style={{ left: LABEL_X, width: labelWidth }}
-            >
-              <p data-truth-trail-label className="eyebrow text-xl text-burnt-deep" />
-              <p
-                data-truth-trail-sub
-                className="mt-1 text-sm font-normal uppercase leading-relaxed text-charcoal"
-              />
-            </div>
-          ) : null}
+          {/* Always rendered, even with no room for it — the deck looks these
+              nodes up once at init, so a box that only appears after a resize
+              would never be found and the label would stay blank until a
+              reload. With no room it is a zero-width clip instead. */}
+          <div
+            data-truth-trail-label-box
+            className="absolute top-0 -translate-y-1/2 overflow-hidden"
+            style={{ left: LABEL_X, width: labelWidth }}
+          >
+            <p data-truth-trail-label className="eyebrow text-xl text-burnt-deep" />
+            <p
+              data-truth-trail-sub
+              className="mt-1 text-sm font-normal uppercase leading-relaxed text-charcoal"
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ import {
   smoothScrollTo,
   unlockScroll,
 } from "@/lib/motion/smooth-scroll";
-import { DUR, SCRUB } from "@/lib/motion/tokens";
+import { SCRUB } from "@/lib/motion/tokens";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -137,6 +137,30 @@ function readableLabel(slide: HTMLElement, index: number): string {
 const POINTER_TILT_DEG = 2;
 const TANGENT_SPAN_DEG = 13.2;
 const TILT_RATIO = POINTER_TILT_DEG / TANGENT_SPAN_DEG;
+
+/**
+ * The arrow DRAWS ITSELF OUT of the rosette rather than fading in:
+ *
+ *     ●        ●-        ●-->
+ *
+ * and runs back the same way on the way out. The artwork is one 96px image
+ * whose rosette occupies the first 44px, so clipping the right 54.2% leaves
+ * the dot alone and 0% shows the whole arrow — the tail and its chevron are
+ * revealed left to right, which is the growth.
+ *
+ * A CIRCLE ALWAYS REMAINS. A section with no era keeps the dot and simply
+ * never grows a tail (user, 10 September 2026); only the 1902 band, where the
+ * rail goes under entirely, has no mark at all.
+ */
+const ROSETTE_CUT = 54.2;
+/** Share of a read span the tail spends growing, and again retracting. */
+const TAIL_RAMP = 0.12;
+/** The label follows the arrow out and leaves before it. */
+const LABEL_RAMP = 0.15;
+const LABEL_DELAY = 0.06;
+
+const rampIn = (p: number, ramp: number, delay = 0) =>
+  clamp01(Math.min((p - delay) / ramp, (1 - p - delay) / ramp));
 
 /** Binary-searches the full-height rail guide at a document-space y. */
 function pointAtY(path: SVGPathElement, targetY: number) {
@@ -267,6 +291,9 @@ export function createGatedDeck({
               const pointer = traveller?.querySelector<HTMLElement>(
                 "[data-truth-trail-pointer]",
               );
+              const labelBox = traveller?.querySelector<HTMLElement>(
+                "[data-truth-trail-label-box]",
+              );
               const labelNode = traveller?.querySelector<HTMLElement>(
                 "[data-truth-trail-label]",
               );
@@ -299,17 +326,6 @@ export function createGatedDeck({
                   slide.querySelector(railLabel) ? [index] : [],
                 ),
               );
-              /**
-               * The pop, as a multiplier rather than a tween on the traveller.
-               *
-               * `paintRail` re-sets autoAlpha and scale every frame, so a tween
-               * competing for those properties is simply overwritten on the
-               * next scroll event. Tweening a number and folding it into that
-               * same set is the only form that survives.
-               */
-              const pop = { value: 1 };
-              let popTween: gsap.core.Tween | null = null;
-              let labelledNow = false;
               let labelIndex = -1;
               const fadeOutRailIndex = slides.findIndex((slide) =>
                 slide.matches(railFadeOutSlide),
@@ -326,9 +342,10 @@ export function createGatedDeck({
                * escarpment/count, and reverses during the 1840s opening. */
               const railOpacityAt = (index: number, progress: number) => {
                 const p = clamp01(progress);
-                // No era, no traveller. Checked first: a slide that names
-                // nothing is silent whatever the fades below would say.
-                if (!labelledIndexes.has(index)) return 0;
+                // A section with no era keeps its DOT; what it loses is the
+                // tail and the label (see tailAt / labelAt). The only mark
+                // that goes entirely is the 1902 band's, where the strand
+                // itself goes under.
                 if (hiddenRailIndexes.has(index)) return 0;
                 if (index === fadeOutRailIndex) {
                   // Over the final HALF, not the final fifth. This slide ramps
@@ -349,6 +366,25 @@ export function createGatedDeck({
                 }
                 return 1;
               };
+
+              /** How far the tail is drawn out, 0 → 1. No era, no tail. */
+              const tailAt = (index: number, progress: number) =>
+                labelledIndexes.has(index)
+                  ? rampIn(clamp01(progress), TAIL_RAMP)
+                  : 0;
+
+              /**
+               * The label's own fade, scrubbed on the section's read.
+               *
+               * Delayed behind the tail at both ends so the arrow arrives
+               * before its words and leaves after them, and finished well
+               * before the cover: a label crossing a seam belongs to neither
+               * section it is over.
+               */
+              const labelAt = (index: number, progress: number) =>
+                labelledIndexes.has(index)
+                  ? rampIn(clamp01(progress), LABEL_RAMP, LABEL_DELAY)
+                  : 0;
 
               const rootDocumentTop = () =>
                 root.getBoundingClientRect().top + window.scrollY;
@@ -378,12 +414,13 @@ export function createGatedDeck({
               };
 
               /**
-               * Put the active slide's era on the pointer, and pop the pair in
-               * when one arrives.
+               * Put the active slide's era on the pointer.
                *
                * Called on slide change only — never per frame. The strings are
                * read straight out of the section's own gutter block, so there
                * is one source for what the era is and no second copy to drift.
+               * Whether the words are actually VISIBLE is `labelAt`'s business,
+               * scrubbed on the read; this only decides what they say.
                */
               const setRailLabel = (index: number) => {
                 const slide = slides[index];
@@ -398,30 +435,13 @@ export function createGatedDeck({
                 }
                 if (subNode) subNode.textContent = sub?.textContent?.trim() ?? "";
 
-                const labelled = labelledIndexes.has(index);
-                if (labelled && !labelledNow) {
-                  popTween?.kill();
-                  pop.value = 0;
-                  popTween = gsap.to(pop, {
-                    value: 1,
-                    duration: DUR.medium,
-                    ease: "country",
-                    // A reader who has stopped gets no scroll paint, so the
-                    // tween has to drive the repaint itself.
-                    onUpdate: () => syncRail(),
-                  });
-                } else if (!labelled) {
-                  popTween?.kill();
-                  pop.value = 1;
-                }
-                labelledNow = labelled;
               };
 
               const paintRail = (
                 index: number,
                 progress: number,
                 bufferProgress = 0,
-                mode: "reading" | "buffer" = "reading",
+                mode: "reading" | "buffer" | "cover" = "reading",
                 opacityOverride?: number,
                 screenYOverride?: number,
               ) => {
@@ -449,17 +469,25 @@ export function createGatedDeck({
 
                 const opacity = opacityOverride ?? railOpacityAt(index, p);
 
+                // The cover is a seam, not a read: the arrow is already back
+                // to a dot and the label already gone before it plays, and
+                // `paintTransitionRail` walks progress backwards, which would
+                // otherwise grow both again halfway across the join.
+                const tail = mode === "cover" ? 0 : tailAt(index, p);
+                const labelAlpha = mode === "cover" ? 0 : labelAt(index, p);
+
                 gsap.set(traveller, {
                   x: sampled.point.x,
                   y: screenY,
-                  autoAlpha: opacity * pop.value,
+                  autoAlpha: opacity,
                 });
                 gsap.set(pointer, {
                   rotation: sampled.rotation * TILT_RATIO,
-                  scale:
-                    (mode === "buffer" ? 1 + buffer * 0.12 : 1) * pop.value,
+                  scale: mode === "buffer" ? 1 + buffer * 0.12 : 1,
                   transformOrigin: "22px 50%",
+                  clipPath: `inset(0% ${((1 - tail) * ROSETTE_CUT).toFixed(2)}% 0% 0%)`,
                 });
+                if (labelBox) gsap.set(labelBox, { autoAlpha: labelAlpha });
                 announce(mode === "buffer" ? "buffer" : "progress", {
                   index,
                   label: readableLabel(slides[index], index),
@@ -485,7 +513,7 @@ export function createGatedDeck({
                   gate.index,
                   1 - progress,
                   0,
-                  "reading",
+                  "cover",
                   transitionRailOpacity(gate.index, progress),
                   outgoing.bottom +
                     (incoming.top - outgoing.bottom) * progress,

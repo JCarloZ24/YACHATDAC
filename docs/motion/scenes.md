@@ -287,12 +287,19 @@ left), so the era still reaches a screen reader that cannot see an `aria-hidden`
 width is measured against the narrowest reading column and it hides below 120px of room, which is
 at roughly 1150px wide; the arrow rides alone from there down to the rail's own 1024px floor.
 
-**The traveller now appears only on sections that name an era**, popping in and out with it — nine
-of the eighteen slides. It is therefore absent on the hero, which is what it was doing there
-before the chronology had started. Its tilt is scaled to ±2° of the strand's ±13.2° tangent: at
-96px long the arrow turned the full tangent into wobble rather than into tracking. Still no
-progress readout and no count — what was banned was a gauge of how far through you are, and the
-chronology is the thing this rail exists to carry. The
+**The mark is always a dot; the ARROW is what belongs to an era.** On a section that names one —
+ten of the eighteen slides, Today included — the tail draws itself out of the rosette left to
+right (`● · ●- · ●-->`) and runs back the same way on the way out, scrubbed on that section's own
+read, and the label fades in just behind it and leaves just before it. On a section that names
+none the dot simply stays and never grows a tail. The one place nothing shows at all is the 1902
+band, where the strand itself goes under.
+
+Both the growth and the label's fade are **scroll-derived, and finish inside the section's read**:
+neither runs across a cover, because a label crossing a seam belongs to neither section it is
+over. The arrow's tilt is scaled to ±2° of the strand's ±13.2° tangent — at 96px long it turned
+the full tangent into wobble rather than into tracking. Still no progress readout and no count:
+what was banned was a gauge of how far through you are, and the chronology is the thing this rail
+exists to carry. The
 visible strand goes under at the escarpment and the traveller shares that silence: the 1950s read
 ScrollTrigger fades it over its final fifth, it remains absent through the escarpment and count,
 and the 1840s read ScrollTrigger restores it over its opening fifth. It fades permanently over the
