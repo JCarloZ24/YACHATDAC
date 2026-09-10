@@ -1,6 +1,6 @@
 # Open questions & blockers
 
-*Last updated: 9 September 2026*
+*Last updated: 10 September 2026*
 
 Live list. Resolve upward — anything marked **blocking** stops real work.
 Cross-referenced to section 17 of the build documentation.
@@ -273,6 +273,36 @@ supersedes are written up as **D26**; these are the loose ends it leaves.
   is spent once" is doctrine, the count is under **R5**, and raising the red or
   lightening the ground is a palette call. **Needs: Steve / the Elder Advisory
   Group, alongside D26 itself.**
+
+  ⚠ **Corrected 10 September 2026 — this failure is on the wrong screen.** The
+  2.84:1 oxide is §15A's title and attribution (`#the-count`, "By 1902 there
+  were thirty-seven."), not the count's numerals. `#the-count-figures` renders
+  no red at all: charcoal ground, off-white numerals and detail, 17.83:1. The
+  same mis-attribution is written into `globals.css`, `kit.ts`,
+  `decisions-and-risks.md` D26 and `scenes.md` — all of which say the count's
+  numerals are "the only red on the page". The claim survives at the level of
+  the *band*, because §15A does carry the page's one oxide on the one dark
+  ground; it is false of the screen every one of them names. The code comment
+  in `truth-scenes.ts` was corrected in the same pass. **The five doc echoes
+  are left as they are** — reworded governance entries in a motion commit is
+  how a record stops being trustworthy. **Needs: a documentation pass, and the
+  contrast question re-aimed at §15A.**
+
+- **The 1902 count is now a display statistic, which `ART-DIRECTION.md` §337
+  says it should not be until Suzanne settles it.** Raised 10 September 2026,
+  when the count screen's display slot moved from the year to the figure on
+  user direction: **37** and **7,500** are now `text-h1`, the years demoted to
+  the rail-marker eyebrow. The argument for it is that prominence is
+  *transferred* rather than added — the screen spends the same one display slot
+  per row, so it is no louder — and the Hoch/Taçon citation still sits directly
+  beneath, which is what keeps it a sourced figure rather than a headline. The
+  argument against it is simply R5: **her recording says thirty-five and the
+  published figure is thirty-seven, and nobody has asked her yet.** The number
+  is set larger than it has ever been on a screen that goes to her for
+  approval. `ART-DIRECTION.md:337` was deliberately **not** amended — that line
+  is a cultural-safety guardrail and reversing it is not a build decision.
+  **Needs: Suzanne Thompson, via the R5 presentation; then either the guardrail
+  lifts or the display slot goes back to the year.**
 
 - **Three artwork cuts have no light-ground version, so they were withdrawn
   rather than shipped invisible.** `ring-spiral-a.svg` (the 06 frame and *Older

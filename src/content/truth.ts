@@ -337,15 +337,31 @@ export const suzanne = {
   role: "Iningai custodian · Founder and Managing Director, YACHATDAC",
   openingQuote: "And I'm a descendant of one of those 37.",
   lede: "To understand that number you have to go back sixteen years, to a drought, and to a decision made out of concern.",
+  /**
+   * The count, split three ways for the screen that carries it.
+   *
+   * The DRAFT IS UNCHANGED and no word moved (D5). Each `detail` is the
+   * drafted sentence with only its leading numeral lifted out into `figure`,
+   * so the screen can set the count in the display face and the year as its
+   * marker. Rejoin `figure` and `detail` with a space and you have the draft's
+   * line back exactly.
+   *
+   * ⚠ The number itself is one of Suzanne's two open questions (R5): her
+   * recording says thirty-five against the published thirty-seven. See
+   * `checkNote` below — this build runs with thirty-seven and it has to be put
+   * to her at the presentation, because the page no longer asks.
+   */
   figures: [
     {
       year: "1902",
-      detail: "37 Iningai adults recorded in the area, and three children.",
+      figure: "37",
+      detail: "Iningai adults recorded in the area, and three children.",
     },
     {
       year: "1886",
+      figure: "7,500",
       detail:
-        "7,500 blankets calculated as necessary for the Iningai nation, sixteen years earlier. When they arrived, some still had to be cut in half, because there were not enough to go round.",
+        "blankets calculated as necessary for the Iningai nation, sixteen years earlier. When they arrived, some still had to be cut in half, because there were not enough to go round.",
     },
   ],
   citation: {

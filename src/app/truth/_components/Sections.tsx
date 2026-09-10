@@ -1609,24 +1609,29 @@ export function EraSection({
  * unchanged (D5) and not one word moved — this is where the page breathes, not
  * what it says.
  *
- * ⛔ The count screen does not move. No arrival, no count-up, no glow: the
- * number is simply there. That is the hard stop's own rule, and the other two
- * screens taking the page's ordinary M1 brightening is precisely why this one
- * must not — stillness only reads as stillness next to something that moved.
+ * ⛔ The count itself does not move. No arrival, no count-up, no glow: the
+ * number is simply there. That is the grammar's figures-of-loss rule — a
+ * number describing people taken is stated and held, never ticked upward —
+ * and it is declared on the numerals, so the sourced line beneath each one is
+ * still read a word at a time (user, 10 Sep 2026). The figure holding while
+ * its own sentence arrives around it is what makes the stillness legible.
  */
 
-/** The charcoal ground, the ring, and the reading column every beat shares. */
+/**
+ * The charcoal ground, the ring, and the reading column every beat shares.
+ *
+ * No screen here is held whole any more. The count marks its own numerals with
+ * `data-v2-static` instead, so the sourced line beneath each figure can still
+ * be read — which is why this takes no `still` prop.
+ */
 function CountScreen({
   id,
   label,
-  still = false,
   readVh,
   children,
 }: {
   id: string;
   label: string;
-  /** ⛔ The count. Declared on the subtree so no later pass can animate it. */
-  still?: boolean;
   /**
    * Scroll distance for this screen, in vh. Default is the deck's 125.
    *
@@ -1646,7 +1651,7 @@ function CountScreen({
         data-truth-slide-label={label}
         data-truth-ground="count"
         {...(readVh ? { "data-truth-read-vh": readVh } : {})}
-        {...(still ? { "data-v2-static": true } : { "data-descent-arrive": true })}
+        data-descent-arrive
         className="relative min-h-svh overflow-hidden bg-charcoal"
       >
         {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B, static, behind
@@ -1773,23 +1778,46 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
  * B · THE COUNT. The numerals take the viewport alone — the draft's build
  * note: "nothing else on screen".
  *
- * ⛔ STILL. `still` puts `data-v2-static` on the section, which every motion
- * module honours. The years are at the top of the type scale (`text-h1`, 56 on
- * desktop) and no further: they arrived at 128px, which is off the scale
- * entirely — nothing in `YACHATDAC Type` exceeds 56 — and at that size they
- * out-shouted the section title by nearly three times and read as a poster
- * dropped into the middle of her account. They are still the largest type on
- * Truth, which is right, because the number is the point.
+ * ⛔ THE FIGURES DO NOT MOVE. `data-v2-static` is on each one rather than on
+ * the section, so `isHeld()` — an ancestor test — holds the numbers still
+ * inside a screen that now reads. The count is stated and held, never ticked
+ * upward: that is the grammar's figures-of-loss ban, not a Truth-local
+ * preference, and it outranks anything this screen might want.
+ *
+ * ⚠ THE DISPLAY SLOT MOVED FROM THE YEAR TO THE COUNT (user, 10 Sep 2026).
+ * The year is now the rail-marker eyebrow the screen above uses, and the count
+ * carries `text-h1`. The screen is no louder than it was — it spends the same
+ * one display slot per row — but note ART-DIRECTION.md's standing caution that
+ * neither 1902 number should be set as a display statistic until Suzanne
+ * settles thirty-five against thirty-seven. Logged against R5 in
+ * open-questions.md; the Hoch/Taçon citation sits directly beneath, which is
+ * what keeps it a sourced figure rather than a headline.
  */
 export function SuzanneCount() {
   return (
-    <CountScreen id="the-count-figures" label="The count" still>
-      <dl className="space-y-16 md:pl-[calc(180px+3rem)]">
+    <CountScreen id="the-count-figures" label="The count" readVh={220}>
+      <dl className="space-y-16">
         {suzanne.figures.map((figure) => (
-          <div key={figure.year} className="max-w-3xl">
-            <dt className="headline text-h1 text-canvas">{figure.year}</dt>
-            <dd className="mt-4 text-lg leading-relaxed text-canvas/80">
-              {figure.detail}
+          <div
+            key={figure.year}
+            className="grid gap-6 md:grid-cols-[180px_1fr] md:gap-12"
+          >
+            {/* Same marker column as SuzanneBand, so the two screens line up.
+                `pt-3` seats the eyebrow against the figure's cap height. */}
+            <dt className="eyebrow self-start pt-3 text-h6 text-canvas">
+              {figure.year}
+            </dt>
+            <dd className="max-w-3xl">
+              <p data-v2-static className="headline text-h1 text-canvas">
+                {figure.figure}
+              </p>
+              {/* The sentence the figure belongs to, read a word at a time —
+                  the treatment her quotations get two screens on. */}
+              <WordEmphasis
+                as="p"
+                text={figure.detail}
+                className="mt-4 text-lg leading-relaxed text-canvas/80"
+              />
             </dd>
           </div>
         ))}

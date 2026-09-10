@@ -256,7 +256,7 @@ the build target.
 | 12 | II | **2003 — Suzanne's father. The portrait is held** | **5** | 116 | **media** | portrait 460×613 | ✓✓ hold |
 | 13 | II | 1950s — the light goes out | 3 | 123 | **transition** | ⟡ held doc slot | — |
 | 14 | II | BREAK · The escarpment — the film goes cold | 5 | 100 | **media** | dissolve pair | ✓ hold |
-| 15 | **III** | **THE HARD STOP — three held screens: who is speaking · the count · her testimony** | **1** | **125 / 125 / 560** | **none** | — | ✓✓ the longest hold on the site |
+| 15 | **III** | **THE HARD STOP — three screens: who is speaking · the count · her testimony** | **1** | **125 / 220 / 560** | **type** | — | ✓✓ the longest hold on the site; the figures themselves never move |
 | 16 | IV | 1840s — what Mitchell recorded | 3 | 135 | **type** | ⟡ held journal scan | — |
 | 17 | IV | Older than the record — the engraving wall | 2 | 69 | **none** | — | ✓ |
 | 18 | IV | Still to be found — open research | 2 | 72 | **type** | evidence strip B | — |
@@ -265,8 +265,8 @@ the build target.
 | 21 | — | Footer — the wave overlaps the last shot by 96px | 1 | 135 | — | — | — |
 
 **Reads as:** no channel runs three deep. §10 carries the brown wave hand-off and is therefore
-`transition`, which is what breaks the 09/10/11 run. §20 joins §06, §15 and §17 as intentional
-stillness; the closing shot does not dissolve back to the hero.
+`transition`, which is what breaks the 09/10/11 run. §20 joins §06 and §17 as intentional
+stillness (§15's is now the count's numerals rather than a whole screen); the closing shot does not dissolve back to the hero.
 
 **The rail carries the chronology and the local reading state.** One frame (`2051:5368`) runs
 the full 2229vh, starting below the header and **breaking at the count**. Both strands are
@@ -400,11 +400,27 @@ is still R5 and `held by community`. And it is no longer one beat: it is **three
 who is speaking, the count, her testimony — split at the joins the copy already had, because as a
 single 2,989px panel the count was something the reader scrolled past on the way somewhere else.
 
-**The count screen itself still does not move.** No arrival, no count-up, no glow: the numerals
-are simply there, at the top of the type scale and no further (`text-h1`, 56 desktop — they were
-built at 128px, which is off the scale entirely). The screens either side of it take the page's
-ordinary M1, and that is exactly why this one must not: stillness only reads as stillness next to
-something that moved. Her quotations undim on the third screen and nothing else there moves. **Every
+**The count itself still does not move, but the screen around it now reads.** Rewritten
+10 September 2026 on user direction.
+
+The display slot moved from the year to the figure: the year is now the rail-marker eyebrow the
+screen above uses (`.eyebrow text-h6`), and **37** and **7,500** carry `text-h1`. The screen is no
+louder for it — it spends the same one display slot per row — and the numerals are still at the top
+of the type scale and no further (they were built at 128px, off the scale entirely). Beneath each
+figure the sourced sentence it belongs to undims a word at a time.
+
+**No arrival, no count-up, no glow on the figures.** That is the grammar's figures-of-loss ban —
+a number describing people taken is stated and held — and not a Truth-local preference. It is
+declared on the numerals (`data-v2-static`) rather than on the screen, because `isHeld()` is an
+ancestor test, which is what lets a figure hold while its own sentence arrives around it. A number
+holding steady while the words near it move reads as stillness more clearly than a screen where
+nothing moves at all.
+
+⚠ `ART-DIRECTION.md` cautions against setting either 1902 number as a display statistic until
+Suzanne settles thirty-five against thirty-seven (R5). Prominence here is transferred from the year
+rather than added, and the Hoch/Taçon citation sits directly beneath it, but the tension is real
+and is logged in `open-questions.md`. Her quotations undim on the third screen and nothing else
+there moves. **Every
 quotation on Truth runs through one implementation** — the 2003 portrait beat
 and both of Suzanne's screens — because they are the same act, a person being
 read, and two things tuned to look alike drift. `speakWords` in
