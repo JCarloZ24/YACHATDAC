@@ -1007,13 +1007,21 @@ function EntryBlock({
           {...(withinDeck ? {} : { "data-truth-deck-track": true })}
           className={entryLayout}
         >
-          {/* The left gutter carries the era label and its sub (the 06 frame). */}
+          {/* The left gutter carries the era label and its sub (the 06 frame).
+              At lg and up the rail's pointer carries them instead, riding at
+              the arrow's tip (user, 10 Sep 2026), so this block goes
+              transparent — but stays in flow and in the accessibility tree.
+              `opacity-0`, not `sr-only` and not `invisible`: `sr-only` is
+              `position: absolute`, which takes the block OUT of the grid, and
+              the 180px column then collapses and drags every reading column on
+              the page 228px to the left. `invisible` keeps the layout but
+              drops the text from the accessibility tree, and the rail that
+              replaces it is aria-hidden — so the era would reach nobody. */}
           {label ? (
-            /* self-start: as a grid child this would stretch to the row height,
-               and the rail centers its pointer on this box. */
-            <div className="hidden self-start pt-2 md:block">
-              {/* data-era-label sits on the year line itself — the rail centers
-              its pointer on this element exactly. */}
+            /* self-start: as a grid child this would stretch to the row
+               height. `data-era-label` / `data-era-sub` are what the deck
+               reads the pointer's strings from — see gated-deck's railLabel. */
+            <div className="hidden self-start pt-2 md:block lg:pointer-events-none lg:opacity-0">
               {/* normal-case: the eyebrow uppercases, and a decade reads
               "1950s", not "1950S". */}
               <p
@@ -1023,7 +1031,10 @@ function EntryBlock({
                 {label}
               </p>
               {sub ? (
-                <p className={`mt-1 text-sm font-normal uppercase leading-relaxed ${ink}`}>
+                <p
+                  data-era-sub
+                  className={`mt-1 text-sm font-normal uppercase leading-relaxed ${ink}`}
+                >
                   {sub}
                 </p>
               ) : null}
@@ -1031,7 +1042,8 @@ function EntryBlock({
           ) : (
             <span aria-hidden className="hidden md:block" />
           )}
-          <div className="max-w-2xl">
+          {/* The rail measures its label budget against this column's left edge. */}
+          <div data-truth-entry-copy className="max-w-2xl">
             {isPartner ? (
               <p className={`eyebrow mb-6 font-normal ${accent}`}>{entry.when}</p>
             ) : null}

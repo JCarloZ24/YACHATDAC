@@ -276,7 +276,23 @@ A **gold mask whose height is document scroll** travels over artwork that is its
 from the beginning" cue; subsequent beats run from the viewport top to its foot. The marker is
 held at the foot while the 20vh buffer charges. During the cover it transfers from the outgoing
 foot to the incoming head while continuing to sample the rendered guide's lateral wander and
-tangent; it never teleports between endpoints. It has no numeric or attached progress UI. The
+tangent; it never teleports between endpoints.
+
+**It carries the era, from 10 September 2026 (user direction).** The era label and its sub ride at
+the arrow's tip — `●-> Ahead / Within five years` — so the arrow points at something; previously it
+indicated an empty margin while the label sat 180px away in the section's own gutter. That gutter
+block stays in the DOM and goes transparent at `lg` (`opacity-0`, never `sr-only` — `sr-only` is
+`position: absolute` and collapses the 180px grid column, dragging every reading column 228px
+left), so the era still reaches a screen reader that cannot see an `aria-hidden` rail. The label's
+width is measured against the narrowest reading column and it hides below 120px of room, which is
+at roughly 1150px wide; the arrow rides alone from there down to the rail's own 1024px floor.
+
+**The traveller now appears only on sections that name an era**, popping in and out with it — nine
+of the eighteen slides. It is therefore absent on the hero, which is what it was doing there
+before the chronology had started. Its tilt is scaled to ±2° of the strand's ±13.2° tangent: at
+96px long the arrow turned the full tangent into wobble rather than into tracking. Still no
+progress readout and no count — what was banned was a gauge of how far through you are, and the
+chronology is the thing this rail exists to carry. The
 visible strand goes under at the escarpment and the traveller shares that silence: the 1950s read
 ScrollTrigger fades it over its final fifth, it remains absent through the escarpment and count,
 and the 1840s read ScrollTrigger restores it over its opening fifth. It fades permanently over the

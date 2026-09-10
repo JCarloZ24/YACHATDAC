@@ -319,6 +319,14 @@ supersedes are written up as **D26**; these are the loose ends it leaves.
   rather than text and the strand they ride was repointed to charcoal, but they
   are the weakest thing on the page now. **Needs: a light-ground cut.**
 
+  ⚠ **Sharpened 10 September 2026.** The traveller now carries the era label at
+  its tip, which makes the weakest mark on the page also the most looked-at one
+  — it is what the reader's eye goes to for "where am I". The TYPE beside it
+  did not inherit the problem: the label is `text-burnt-deep` (6.31:1) and the
+  sub is charcoal, never gold. But an arrow at 1.72:1 introducing a label at
+  6.31:1 is a visible mismatch, and the light-ground cut is now worth more than
+  it was. **Needs: unchanged — a light-ground cut of `trail-point.svg`.**
+
 - **/about carries the same eyebrow defect this pass avoided.** Truth's warm
   accents moved to `--color-burnt-deep` (6.31:1); /about still uses
   `text-burnt` (2.91:1) for its canvas eyebrows, against the deepening rule
