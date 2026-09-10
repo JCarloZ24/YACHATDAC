@@ -6,6 +6,7 @@ import { createTruthDescent } from "@/lib/motion/truth-descent";
 import { createTruthDescentV2 } from "@/lib/motion/truth-descent-v2";
 import { createGatedDeck } from "@/lib/motion/gated-deck";
 import { bindTruthScenes } from "@/lib/motion/truth-scenes";
+import { createTruthRewind } from "@/lib/motion/truth-rewind";
 import { markEntered } from "@/lib/site-entry";
 
 /**
@@ -57,6 +58,10 @@ export function V2TruthMotion() {
           ),
           register(createTruthDescent()),
           register(createTruthDescentV2()),
+          /* The mobile rewind cue. Its own media query is the complement of
+             the deck's, so exactly one of the two ever owns the hero's
+             "Start from the beginning" press. */
+          register(createTruthRewind()),
         ];
         start();
         unwatch = watchVisibility();

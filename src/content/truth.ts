@@ -538,6 +538,23 @@ export const wattanuri = {
 } as const;
 
 /**
+ * The landing cue for the hero's "Start from the beginning" on touch and
+ * narrow screens (user direction, 11 September 2026).
+ *
+ * ⚠ HI-FI, NOT DRAFT. The v3 copy draft carries the button and nothing at the
+ * other end of it, because on the draft's own terms the link is an anchor and
+ * an anchor does not need to explain where it landed. The mobile build makes
+ * it a journey instead, and a reader put down on the oldest screen on the page
+ * has to be told which way the story runs — this page reads UPWARD from here.
+ * Set in the content module rather than typed in markup (D5/D12); it goes to
+ * the draft with the next Truth copy pass.
+ */
+export const rewindCue = {
+  /** Sits under the arrow at the head of the Wattanuri floor. */
+  hint: "The beginning. Read upward from here",
+} as const;
+
+/**
  * Full-bleed photographic breaks — no caption by design, alt text required.
  *
  * ⚠ R10: the lo-fi drew the second break as the escarpment, and that hold
