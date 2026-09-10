@@ -129,15 +129,27 @@ function Slot({
   );
 }
 
-/* The frames' type ramps, Typography/Mobile → Typography/Desktop. Set as
-   explicit sizes rather than the `text-h*` tokens because this page is built
-   to its frame, and the frame's Display sizes (96 / 56 / 40) are the
-   Typography/* TEXT STYLES, not the variable collection the tokens carry —
-   see the globals.css note on the two coexisting scales. The site's `eyebrow`
-   utility is the 13px nav size; the frames' eyebrows are 16 → 20. */
-const H1 = "headline text-[56px] leading-[1.2] lg:text-[96px] lg:leading-none";
-const H2 = "headline text-[36px] leading-[1.2] lg:text-[56px]";
-const H3 = "headline text-[32px] leading-[1.2] lg:text-[40px] lg:leading-none";
+/* ⚠ THE FRAME-LITERAL RAMP IS GONE (August, 11 September 2026). This page
+   used to take its heading sizes straight from its own frames — 56/96 for H1,
+   36/56 for H2 — which is the Typography/* TEXT STYLES scale, and it made
+   Wonder the one page disagreeing with every other about how big a hero is.
+   The `text-h*` tokens carry the `YACHATDAC Type` VARIABLE collection, that
+   collection is what Marc's sheet prints in its rem column, and August's call
+   is that the rem column is the hierarchy. So these now point at the tokens
+   and the page is on the same scale as the rest of the site.
+
+   What moved: H1 96 → 56 and 56 → 40, H2 56 → 48. H3 needed no change at all
+   — 32/40 was already exactly the token — which is the clearest sign the two
+   scales only ever diverged at the top.
+
+   H4–H6 below are NOT this scale and are left alone: they are the frames'
+   eyebrow ramp in Bantayog (`font-eyebrow`), sized 14–36 and uppercased,
+   where the tokens' H4–H6 are 18–32 heading sizes. Converting them would
+   resize every eyebrow on the page to answer a question about headings. The
+   site's own `eyebrow` utility is the 13px nav size, smaller than either. */
+const H1 = "headline text-h1";
+const H2 = "headline text-h2";
+const H3 = "headline text-h3";
 const H4 =
   "font-eyebrow text-[24px] leading-[1.4] font-extrabold lg:text-[36px] lg:leading-[1.3]";
 const H5 =
@@ -236,6 +248,9 @@ export function WonderHero() {
     small: presentSrc(wonderHeroVideo.tiers.small),
     medium: presentSrc(wonderHeroVideo.tiers.medium),
     large: presentSrc(wonderHeroVideo.tiers.large),
+    portraitSmall: presentSrc(wonderHeroVideo.tiers.portraitSmall),
+    portrait: presentSrc(wonderHeroVideo.tiers.portrait),
+    portraitWide: presentSrc(wonderHeroVideo.tiers.portraitWide),
   };
   const film = tiers.medium ?? tiers.large ?? tiers.small;
   const poster = presentSrc(wonderHeroSlot.src);
@@ -252,10 +267,18 @@ export function WonderHero() {
       <div className="absolute inset-0">
         {film && poster ? (
           <HeroVideo
+            /* The three landscape widths fall back to whichever encode is
+               on disk; the portrait cuts pass through as-is, because absent
+               is a meaningful answer to `pickTier` — it keeps the landscape
+               ladder rather than serving a wide file to a portrait box under
+               a portrait name. */
             tiers={{
               small: tiers.small ?? film,
               medium: tiers.medium ?? film,
               large: tiers.large ?? film,
+              portraitSmall: tiers.portraitSmall ?? undefined,
+              portrait: tiers.portrait ?? undefined,
+              portraitWide: tiers.portraitWide ?? undefined,
             }}
             poster={poster}
             silentFrom={0}

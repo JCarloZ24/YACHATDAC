@@ -14,7 +14,6 @@ import {
   WonderStories,
   WonderWhereYouStay,
 } from "./_components/Sections";
-import { WonderLoader } from "./_components/Loader";
 import { WonderMotion } from "./_components/Motion";
 import { wonderHero } from "@/content/wonder";
 
@@ -40,9 +39,12 @@ export const metadata: Metadata = {
 export default function WonderPage() {
   return (
     <PageTransition ground="#4E3524">
-      {/* Hard loads and refreshes only: holds scroll and covers the hero film's
-          first buffer — see _components/Loader. */}
-      <WonderLoader />
+      {/* NO LOADING SCREEN. User direction 11 Sep 2026: the opening film on `/`
+          is the site's only loading screen, so `<WonderLoader />` is unmounted
+          here. Wonder's is HIDDEN, NOT DELETED — _components/Loader.tsx and the
+          shared components/ui/PageLoader it binds are both still in the tree;
+          restoring this page's panel is one import and one element. Living Work
+          and The Record had theirs removed outright in the same pass. */}
       {/* The page's motion script — docs/motion/wonder-plan.md. Renders
           nothing; every screen is a composition with a declared channel. */}
       <WonderMotion />

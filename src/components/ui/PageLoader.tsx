@@ -56,6 +56,8 @@ export function PageLoader({
   rampMs = RAMP_MS,
   sweepMs = SWEEP_MS,
   dwellMs = NAME_DWELL_MS,
+  quietLiftMs,
+  suppressed,
 }: {
   /** What the panel announces at 100% — "You're viewing {name}". */
   name: string;
@@ -68,6 +70,40 @@ export function PageLoader({
   sweepMs?: number;
   /** How long "You're viewing …" stands before the panel lifts. */
   dwellMs?: number;
+  /**
+   * Reach 100% within this many ms and the panel lifts WITHOUT announcing the
+   * page — no "You're viewing", no dwell. Added 11 September 2026 with
+   * RouteLoader, and it is what makes one shared panel bearable on every page.
+   *
+   * A reader on a fast connection refreshing /living-work waits about 400ms
+   * for real readiness. Announcing the page to them turns a cover they would
+   * barely notice into a three-second ceremony they sit through on every
+   * refresh, which is how a loading screen stops being a courtesy. So the
+   * announcement is reserved for the case that earns it: a page that genuinely
+   * took time, where the reader has been looking at a panel long enough to
+   * deserve being told what arrived.
+   *
+   * Omit for the always-announce behaviour Living Work and Wonder had.
+   */
+  quietLiftMs?: number;
+  /**
+   * Asked ONCE at mount: should this panel stand down and lift instantly?
+   *
+   * For the homepage, where the opening film is the cover on a genuine first
+   * arrival and this panel must not stack behind it. It cannot be a plain
+   * boolean prop decided by the caller at render time, because the answer
+   * lives in `sessionStorage`, which does not exist on the server: deciding at
+   * render would mean rendering nothing server-side, and the panel would then
+   * appear only at hydration — measured at 517ms on the production build,
+   * which is 360ms of the stacked frame in plain view. The panel has to be in
+   * the server HTML to cover the thing it exists to cover, so it renders
+   * always and stands down here instead.
+   *
+   * A suppressed panel takes no scroll lock. The film takes its own and
+   * restores what it found; two locks racing over one property is how the
+   * page ends up unscrollable.
+   */
+  suppressed?: () => boolean;
 }) {
   // Shadowed so every use below reads the caller's timing. Together these
   // set the panel's FLOOR: it cannot lift before ramp + dwell, however fast
@@ -94,7 +130,7 @@ export function PageLoader({
 
   useEffect(() => {
     if (shouldShow.current === null) {
-      shouldShow.current = !shownThisPageLoad;
+      shouldShow.current = !shownThisPageLoad && !(suppressed?.() ?? false);
       shownThisPageLoad = true;
     }
     if (!shouldShow.current) {
@@ -294,21 +330,27 @@ export function PageLoader({
           lit = next;
         }
         if (lit >= dots.length && displayRef.current >= 1) {
-          setPhase((current) => current === "loading" ? "named" : current);
+          setPhase((current) => current === "loading" ? conclude() : current);
           return;
         }
       } else if (
         displayRef.current >= 1 &&
         performance.now() - started > HARD_CAP_MS + 1500
       ) {
-        setPhase((current) => current === "loading" ? "named" : current);
+        setPhase((current) => current === "loading" ? conclude() : current);
         return;
       }
       frame = window.requestAnimationFrame(step);
     };
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-  }, [HARD_CAP_MS, SWEEP_MS]);
+    // Measured against the panel's OWN clock, not readiness: what matters is
+    // how long the reader has been looking at it, whatever held it up.
+    function conclude(): "named" | "lifted" {
+      if (quietLiftMs === undefined) return "named";
+      return performance.now() - started <= quietLiftMs ? "lifted" : "named";
+    }
+  }, [HARD_CAP_MS, SWEEP_MS, quietLiftMs]);
 
   // The animation callback announces completion; Escape remains terminal.
 
@@ -322,9 +364,45 @@ export function PageLoader({
     return () => window.clearTimeout(timer);
   }, [phase, NAME_DWELL_MS]);
 
+  /**
+   * THE CEILING THAT CANNOT BE STARVED.
+   *
+   * Every other exit from this panel — the ramp reaching 100, the dot sweep
+   * finishing, even `HARD_CAP_MS` itself — is evaluated inside a
+   * requestAnimationFrame loop, and rAF is exactly what a browser stops
+   * servicing when the main thread is saturated. Measured 11 September 2026 on
+   * /living-work under Slow 3G with 4x CPU throttling: the panel was still up
+   * TWENTY SECONDS in, with its 3.2s cap long past, because the 481-dot sweep
+   * and the cap test were both starved by the same busy thread. The reader was
+   * stranded behind a full-screen cover on a page that had finished loading.
+   *
+   * That is the failure this component's own header calls worse than having no
+   * loading screen at all, and it is worst for precisely the slow-connection
+   * reader the panel is meant to help. So: one timer, on the wall clock,
+   * outside the frame loop, that lifts the panel whatever else is happening.
+   * It fires as soon as the thread yields rather than waiting for a frame's
+   * worth of animation work to be schedulable.
+   *
+   * Generous on purpose — it is a backstop, not the timing. The ordinary lift
+   * happens around a second in; nothing reaches this unless something is
+   * already wrong.
+   */
+  useEffect(() => {
+    if (shouldShow.current === false) return;
+    const ceiling = window.setTimeout(
+      () => setPhase("lifted"),
+      HARD_CAP_MS + NAME_DWELL_MS + 1500,
+    );
+    return () => window.clearTimeout(ceiling);
+  }, [HARD_CAP_MS, NAME_DWELL_MS]);
+
   // Scroll is held while the panel is up; Escape always releases — a loading
   // screen must never be a dead end.
   useEffect(() => {
+    // A panel that is not showing must not touch scroll — see `suppressed`.
+    // Checked before the lifted branch too, so a stood-down panel never
+    // clears an overflow it did not set.
+    if (shouldShow.current === false) return;
     if (phase === "lifted") {
       document.documentElement.style.removeProperty("overflow");
       return;

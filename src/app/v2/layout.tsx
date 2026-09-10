@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { TransitionProvider } from "@/components/motion/TransitionProvider";
-import "@/components/motion/transitions.css";
 
 /**
  * /v2 — the immersive build (F7), living ALONGSIDE the current pages: nothing

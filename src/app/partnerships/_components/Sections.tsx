@@ -380,7 +380,9 @@ export function PartnershipsHero() {
             `lg:` beside the size rather than once on the element. */}
         <h1
           data-pt-heading
-          className="headline mt-6 max-w-[1240px] text-[3.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl lg:mt-[19px] lg:text-[5.25rem] lg:tracking-[-0.0238em]"
+          /* `text-h1` since 11 Sep 2026 — was a 56/60/84 ladder. Tracking
+             is kept, being this hero's own optical correction. */
+          className="headline mt-6 max-w-[1240px] text-h1 tracking-[-0.02em] lg:mt-[19px] lg:tracking-[-0.0238em]"
         >
           {/* ⚠ THE FULL STOP IS DROPPED HERE AND NOWHERE ELSE. The frame sets
               this headline without one; `PRINCIPLE` keeps it, because that

@@ -230,7 +230,10 @@ export function AboutHero() {
           </p>
           <h1
             data-arrive
-            className="headline mt-4 max-w-[1100px] text-[3.5rem] leading-[1.2] sm:text-7xl lg:text-[5rem]"
+            /* `text-h1` since 11 Sep 2026 — the site-wide scale, replacing a
+               56/72/80 ladder of its own. The token carries the sheet's 120%
+               leading, so the local `leading-[1.2]` went with it. */
+            className="headline mt-4 max-w-[1100px] text-h1"
           >
             {aboutHero.title}
           </h1>

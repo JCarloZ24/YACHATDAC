@@ -95,18 +95,26 @@ false. Both tokens are **deleted**; `text-h1`…`text-h6` are live in
 `globals.css` with the mobile values as defaults and the desktop column in a
 single `@media (min-width: 64rem)`.
 
-⚠ **Three scales are in the tree, and you must know which page you are in:**
+✅ **SETTLED 11 September 2026 (D26). The tokens are the scale, everywhere.**
+
+Marc's typography sheet prints two scales on every row — "Font size: 96px /
+3.5rem" is 96 in one column and 56 in the other, and they agree only at H3 and
+H4. The **rem column is the `YACHATDAC Type` variable collection**, which is
+what `globals.css` carries, and August's call is that it wins. The px column is
+the superseded `Typography/*` text styles.
 
 | Where | Scale |
 | --- | --- |
-| The Record, Truth, Living Work, and the shared components (`PageHero`, `Hero`, `TruthHero`, `BeatSection`, `beats`, `InvitationV2`, `WayForwardV2`) | `text-h1`…`text-h6` |
-| **Wonder** | frame-literal, via local `H1`/`H2`/`H3` constants — `text-[56px] lg:text-[96px]` and so on |
-| Anything else | hand-built `text-4xl sm:text-5xl` ladders |
+| **Every hero on the site** | `text-h1` — 56 at 1440, 40 on the phone, 120% leading |
+| The Record, Truth, Living Work, Wonder, and the shared components (`PageHero`, `Hero`, `TruthHero`, `BeatSection`, `beats`, `InvitationV2`, `WayForwardV2`) | `text-h1`…`text-h6` |
+| **Wonder's `H1`/`H2`/`H3` constants** | now thin aliases for `text-h1`/`text-h2`/`text-h3`. Its `H4`–`H6` are NOT this scale — they are the frames' Bantayog eyebrow ramp (14–36, uppercased) and stay as they are |
+| Section headings on /about, /partnerships, /connect, /our-people | still hand-built `text-4xl sm:text-5xl` ladders — **the remaining migration**, see below |
 
-So **a token is still not automatically the answer** — check what the page you
-are editing already uses, and do not half-migrate a page. Reconciling Wonder
-against the tokens is an open question for August and Marc; see
-`docs/design/living-work-qa-2026-09-08.md` §4.
+**What is left.** The heroes are done and the tokens are unchanged, but roughly
+forty section headings across those four pages are still hand-built. Migrate a
+page at a time, and do not half-migrate one. The common `text-4xl sm:text-5xl`
+maps exactly onto `text-h2` (36 → 48); anything that does not map exactly is a
+judgement call and belongs to Marc.
 
 Two faces this scale needs that are not shipped:
 

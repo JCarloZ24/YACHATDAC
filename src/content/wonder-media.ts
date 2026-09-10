@@ -37,25 +37,36 @@ export const wonderHeroSlot: MediaSlot = {
 
 /**
  * The hero film — "1MIN EDIT NO SUPERS" (Downloads, 8 Sep 2026), 60s, 4K
- * ProRes master (2.3 GB), H.264 + AAC in three tiers so the page can match
- * the device and the connection (HeroVideo picks one before the first byte
- * loads — see its `pickTier`):
+ * ProRes master (2.3 GB), H.264 + AAC in six encodes so the page can match
+ * the SHAPE of the box as well as the connection (HeroVideo picks one before
+ * the first byte loads — see its `pickTier`):
  *
- *   small   960 × 540   ~0.8 Mb/s   data saver, 2g/3g, and phones for now
- *   medium  1440 × 810  ~2.5 Mb/s   laptops and tablets
- *   large   1920 × 1080 ~3.5 Mb/s   wide screens on a fast link
+ *   small          960 × 540    5.88 MB  16:9  landscape boxes, saver link
+ *   medium        1440 × 810   17.26 MB  16:9  laptops, landscape tablets
+ *   large         1920 × 1080  24.31 MB  16:9  wide screens on a fast link
+ *   portraitSmall  648 × 1152   5.55 MB   9:16  any portrait box, saver link
+ *   portrait       810 × 1440   8.43 MB   9:16  phones — no upscale at DPR 2
+ *   portraitWide  1152 × 1536  11.32 MB   3:4   portrait tablets
  *
- * ⚠ A FOURTH TIER IS MISSING, and phones are soft until it exists (August,
- * 10 September 2026). Full-bleed in a portrait phone, `object-cover`
- * magnifies this 16:9 frame 3.7× and shows the middle 27% of it, so 73% of
- * every byte is thrown away and no landscape encode fixes it — 1440 costs
- * 14.9 MB at CRF 30 and is still soft. What is needed is a cut FRAMED for
- * portrait, which is the editor's call and not ours: a blind centre crop
- * cuts Suzanne's head in half at 0:20 and slices the guests at 0:45. The
- * brief, with the measurements, is in brand/video/README.md; drop the file
- * in as `tiers.portrait` and HeroVideo will serve it to phones.
+ * THE PORTRAIT CUTS LANDED 11 SEPTEMBER 2026 and closed the flag that stood
+ * here. The editor reframed the same edit — same 1501 frames, same 60.04s,
+ * byte-identical audio — to 9:16 (1080 × 1920) and 3:4 (1536 × 2048) against
+ * the brief in brand/video/README.md. What was asked for and what arrived:
+ * ProRes was asked for, high-bitrate H.264 at 22 Mb/s arrived, so the served
+ * files carry one more lossy generation of PICTURE than the landscape tiers
+ * do; at that bitrate it is not visible at our widths and it was not worth
+ * holding the fix for. Audio is unaffected — it still comes from the master's
+ * PCM. Checked frame by frame at 0:00, 0:02, 0:20, 0:45 and 0:58: no supers,
+ * no letterbox, and the two framings the brief called out by name are right —
+ * Suzanne's head is whole at 0:20 and the guests are not sliced at 0:45.
  *
- * Audio: all three are normalised to −23 LUFS. A replacement MUST be too —
+ * TWO ASPECTS, BECAUSE NO ONE SHAPE FITS. `object-cover` always crops
+ * something. On a 390 × 844 phone 9:16 keeps 82% of its width where 3:4 keeps
+ * 62%; on an 820 × 1180 iPad Air 3:4 keeps 93% of its width where 9:16 keeps
+ * 81% of its height. `pickTier` chooses on that geometry, so neither the
+ * content module nor the component holds a device list.
+ *
+ * Audio: every encode is normalised to −23 LUFS. A replacement MUST be too —
  * the delivered mix was −17 LUFS and clipped once transcoded.
  *
  * MP4 only: H.264 plays everywhere, and a VP9 set on top would double the
@@ -69,7 +80,9 @@ export const wonderHeroVideo = {
     small: "/media/wonder/wonder-hero-960.mp4",
     medium: "/media/wonder/wonder-hero-1440.mp4",
     large: "/media/wonder/wonder-hero-1920.mp4",
-    // portrait: "/media/wonder/wonder-hero-portrait.mp4",  ← awaiting the re-cut
+    portraitSmall: "/media/wonder/wonder-hero-portrait-1152.mp4",
+    portrait: "/media/wonder/wonder-hero-portrait-1440.mp4",
+    portraitWide: "/media/wonder/wonder-hero-wide-1536.mp4",
   },
   supersEnd: 0,
   label:

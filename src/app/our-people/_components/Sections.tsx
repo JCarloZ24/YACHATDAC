@@ -282,7 +282,12 @@ export function OurPeopleHero() {
 
           {/* Y1 · the picture leaves the screen and survives inside the word. */}
           <h1
-            className="headline mt-4 bg-center bg-no-repeat bg-clip-text text-[3.5rem] leading-[1] text-canvas lg:supports-[background-clip:text]:text-transparent sm:text-8xl lg:text-[10rem]"
+            /* `text-h1` since 11 Sep 2026. This was the site's largest
+               heading by a distance — 160px at 1440, nearly 3× the scale —
+               and the photograph clipped into the letterforms was drawn for
+               that size. Worth a look: the fill has far less glyph to show at
+               56. */
+            className="headline mt-4 bg-center bg-no-repeat bg-clip-text text-h1 text-canvas lg:supports-[background-clip:text]:text-transparent"
             style={
               HERO
                 ? {

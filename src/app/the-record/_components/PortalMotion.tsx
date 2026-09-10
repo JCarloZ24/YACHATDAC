@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { register, start } from "@/lib/motion-controller";
-import { createRecordLoader } from "@/lib/motion/record-loader";
+import { start } from "@/lib/motion-controller";
 
 /**
  * F7/F8, user direction 2026-09-08. Only the opening uses Three.js; defer its
@@ -32,7 +31,6 @@ export function RecordPortalMotion({
     let loading = false;
     let unregister: (() => void) | undefined;
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const cover = root.closest("[data-page-root]")?.querySelector<HTMLDivElement>("[data-record-loader]");
     const abort = () => {
       abandoned = true;
       unregister?.();
@@ -40,7 +38,6 @@ export function RecordPortalMotion({
       root.dataset.portalState = "fallback";
     };
     root.addEventListener("record-portal-abort", abort);
-    const unregisterLoader = cover ? register(createRecordLoader(cover, root)) : undefined;
     start();
     // A stalled request must cancel the scene before revealing the fallback;
     // otherwise a late WebGL mount could replace the page after dismissal.
@@ -85,7 +82,6 @@ export function RecordPortalMotion({
       root.removeEventListener("record-portal-abort", abort);
       preference.removeEventListener("change", activate);
       unregister?.();
-      unregisterLoader?.();
     };
   }, [maskSrc, stoneSrc, stencilSrc]);
 

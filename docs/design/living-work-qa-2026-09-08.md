@@ -212,14 +212,17 @@ Correct, and deliberate as of 8 Sep. The frame draws `Display/96`; the build
 ships `text-h1`, which is 56 on desktop and 40 on the phone, from the
 `YACHATDAC Type` variable collection that `globals.css` names as source of truth.
 
-⚠ **Say this honestly: Wonder currently ships 96.** It takes its sizes literally
-from its own frames via local `H1`/`H2`/`H3` constants
-(`src/app/wonder/_components/Sections.tsx:125`). So the site now has two pages
-disagreeing about hero size, and **that is a live inconsistency for August and
-Marc to settle**, not a settled rule this page is following. Three scales are
-currently in the tree: the `text-h*` tokens (The Record, Truth, the shared
-components, and now Living Work), Wonder's frame-literal 96/56/40, and whatever
-each remaining page hand-built.
+~~⚠ **Say this honestly: Wonder currently ships 96.**~~ **SETTLED 11 September
+2026 (D26).** August's call is the rem column of Marc's sheet — the
+`YACHATDAC Type` variable collection the tokens already carried. Wonder's
+frame-literal ramp is retired and **every hero on the site is now `text-h1`:
+56 at 1440, 40 on the phone, 120% leading**. Leading came from the sheet in the
+same pass (H1–H3 120%, H4 130/140%, H5–H6 140%), replacing values tuned to a
+Display/96 that no longer ships.
+
+The answer to this question is now simply: yes, the hero is smaller than the
+frame, on every page, deliberately, and they all match. What remains unmigrated
+is section headings on /about, /partnerships, /connect and /our-people.
 
 ### "§09's cards have no photographs."
 

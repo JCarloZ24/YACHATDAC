@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PageTransition } from "@/components/transitions/PageTransition";
-import { LivingWorkLoader } from "./_components/Loader";
 import { V2LivingWorkMotion } from "./_components/Motion";
 import {
   LivingWorkAperture,
@@ -41,10 +40,6 @@ export const metadata: Metadata = {
 export default function LivingWorkPage() {
   return (
     <PageTransition ground="#22372B">
-      {/* Hard loads only — covers the motion build's settling window, counts
-          to 100 against real readiness gates, announces the page, lifts onto
-          the hero. */}
-      <LivingWorkLoader />
       <V2LivingWorkMotion />
       <div className="relative text-canvas">
         <LivingWorkHero />

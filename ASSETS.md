@@ -199,9 +199,66 @@ Served copies, in `public/media/home/derivatives/`:
 
 | file | scale | size | bitrate | who gets it |
 | --- | --- | --- | --- | --- |
-| `home-loader-960.mp4` | 960×540 | **1.78 MB** | 380 kbps | phones, data saver, 2g/3g, and every screen under 1800 device px |
-| `home-loader-1440.mp4` | 1440×810 | **3.55 MB** | 760 kbps | 1800+ device px on a fast link |
+| `home-loader-960.mp4` | 960×540 | **4.35 MB** | 790 kbps + 128 kbps AAC | phones, data saver, 2g/3g |
+| `home-loader-1440.mp4` | 1440×810 | **11.31 MB** | 2275 kbps + 128 kbps AAC | laptops |
+| `home-loader-1920.mp4` | 1920×1080 | **15.97 MB** | 3271 kbps + 128 kbps AAC | wide screens on a fast link |
 | `home-loader-poster.webp` | 1280 wide | 0.11 MB | — | first paint, and the whole of it under reduced motion |
+
+**⚠ RE-ENCODED 11 September 2026** (August: *"fix the video quality just like what we did on
+Wonder"*), and the table above is the new set — the 10 September pair was 1.78 / 3.55 MB at
+380 / 760 kbps, silent. Three things changed:
+
+- **Three tiers at Wonder's measured bitrates** (750 / 2341 / 3325 kbps on `wonder-hero-*.mp4`)
+  rather than a budget guess. The old figures were sized against a 45% flat scrim that no
+  longer exists — the scrim came down to a 10–30% curve the same week, and a film you can see
+  through is a film whose macroblocking you can also see.
+- **The picker was the other half of the blur.** It read `innerWidth`, so a portrait phone
+  measured ~390 and was handed the 960 file, which `object-cover` then magnified 3.7×. It now
+  uses HeroVideo's `neededWidth` geometry. Same fix, same reason, second page.
+- **Audio, where there was none.** The 10 September encodes carried `-an`. The master's mix is
+  **−10.50 LUFS with a +0.44 dBFS true peak** — already clipping, and 6.5 LU hotter than the
+  Wonder mix that startled people. Two-pass `loudnorm` to −23 LUFS with `linear=true`; measured
+  back at **−23.05 LUFS / −11.64 dBFS, LRA 8.90 unchanged**. 128 kbps stereo, not Wonder's
+  64 kbps mono: this bed is music.
+
+**This exceeds R11's 2.5 MB above-the-fold budget, knowingly** — so does the Wonder hero, at
+5.55 MB for its smallest tier (the portrait cut, since 11 September 2026). The mitigations are real and unchanged: `+faststart` streams,
+and `home-loader.ts` attaches no source at all on a data-saver or 2g/3g link or under reduced
+motion, so nobody on a metered connection pays any of it. If the spend has to come back, the
+tier bitrates are the dial and 1440 is where the money is.
+
+### Wonder hero — the portrait cuts, 11 September 2026
+
+The hero film now ships in **six** encodes, not three. The editor delivered the same 60.04s
+edit reframed for portrait (brief and verification in
+[`brand/video/README.md`](brand/video/README.md)), which is the fix R11 could not buy with
+bitrate: a phone was being served a 16:9 file that `object-cover` magnified 3.7× and cropped
+to the middle 27%.
+
+| file | scale | aspect | size | who gets it |
+| --- | --- | --- | --- | --- |
+| `wonder-hero-960.mp4` | 960×540 | 16:9 | 5.88 MB | landscape boxes on a saver link |
+| `wonder-hero-1440.mp4` | 1440×810 | 16:9 | 17.26 MB | laptops, landscape tablets |
+| `wonder-hero-1920.mp4` | 1920×1080 | 16:9 | 24.31 MB | wide screens on a fast link |
+| `wonder-hero-portrait-1152.mp4` | 648×1152 | 9:16 | **5.55 MB** | any portrait box on a saver link |
+| `wonder-hero-portrait-1440.mp4` | 810×1440 | 9:16 | **8.43 MB** | phones |
+| `wonder-hero-wide-1536.mp4` | 1152×1536 | 3:4 | **11.32 MB** | portrait tablets |
+
+Two-pass at 700 / 1100 / 1500 kbps, picture only, with audio muxed once from the ProRes
+master's PCM — all three verify at **−23.01 LUFS, −5.77 dBFS, LRA 6.80 unchanged**.
+
+**The weight went up and the waste went down.** A 390 × 844 phone was paying 5.88 MB to see
+27% of a frame at a 3.7× upscale; it now pays 8.43 MB to see 82% of one at no upscale, and
+5.55 MB — *less than before* — if it has asked us to save its data. `pickTier` chooses on the
+box's aspect ratio rather than on a device list, so the 3:4 cut reaches portrait tablets
+(93% of its width on an iPad Air, against 81% of the height a 9:16 source would hold) without
+anything in the code naming a tablet.
+
+**R11 still is not satisfied, and this does not claim to satisfy it** — 8.43 MB against a
+2.5 MB above-the-fold budget. What changed is that the overspend is no longer being thrown
+away by the crop. The remaining lever is the one the brief already identified: HEVC for the
+portrait tier alone, roughly 45% fewer bytes at the same quality, gated behind a
+`canPlayType` check that `HeroVideo` does not yet have.
 
 **These are R11's first real numbers.** Its "next step" was *"set targets before the homepage
 video is graded"* — here they are, measured rather than guessed. Two facts worth carrying:

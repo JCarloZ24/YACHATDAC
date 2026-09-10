@@ -7,34 +7,57 @@
  * No fire used as atmosphere.
  */
 /**
- * THE LOADING FILM — user direction 10 September 2026.
+ * THE LOADING FILM — user direction 10 September 2026, RE-ENCODED 11 September.
  *
- * Supplied as `Main_V2_16.mp4`, 39.32s, H.264/AAC, 22.2 Mbps, **104.2 MiB**.
+ * Supplied as `Main_V2_16.mp4`, 39.29s, H.264/AAC, 22.2 Mbps, **104.2 MiB**.
  * That master is gitignored and never served: it is 42x the whole 2.5 MB
  * above-the-fold budget, and at 104.2 MiB it also exceeds GitHub's 100 MiB
  * hard file limit, so committing it would make the repo unpushable. R11
  * covers exactly this — "never ship masters".
  *
- * Two tiers, chosen before the first byte by HeroVideo's `pickTier` logic, so
- * a phone on a data plan never pays for the wide encode:
+ * ⚠ THREE TIERS AND AUDIO NOW (August, 11 September 2026: "fix the video
+ * quality just like what we did on Wonder", and the film needs sound).
  *
- *   small   960 wide   phones, data saver, 2g/3g
- *   large  1440 wide   wide screens on a fast link
+ *   small    960 wide   790 kbps    4.35 MB   phones, data saver, 2g/3g
+ *   medium  1440 wide  2275 kbps   11.31 MB   laptops
+ *   large   1920 wide  3271 kbps   15.97 MB   wide screens on a fast link
  *
- * Neither is the source's native 1920. Two reasons: this film sits under a
- * 45% charcoal scrim with artwork over it, so detail it does not have cannot
- * be missed; and CRF could not hit the budget on footage this busy — a CRF 30
- * pass at 1280 came out at 6.77 MB and CRF 32 at 1920 at 10.21 MB, against a
- * 2.5 MB above-the-fold budget. These are TWO-PASS at a target bitrate, which
- * is the only way to guarantee a number rather than hope for one.
+ * The 10 September set was two tiers at 380 / 755 kbps — 1.86 and 3.72 MB.
+ * That was sized against a scrim that no longer exists. The reasoning then
+ * was "this film sits under a 45% charcoal scrim with artwork over it, so
+ * detail it does not have cannot be missed"; the scrim came down to a 10-30%
+ * curve on the same day's direction (HomeLoader.tsx), and a film you can now
+ * actually see through is a film whose macroblocking you can also see. So
+ * these carry WONDER'S measured bitrates — 750 / 2341 / 3325 kbps on
+ * `wonder-hero-*.mp4` — rather than a budget guess, which is what "just like
+ * Wonder" has to mean if it means anything.
+ *
+ * ⚠ THIS BLOWS R11'S 2.5 MB ABOVE-THE-FOLD BUDGET, KNOWINGLY. So does the
+ * Wonder hero, at 5.88 MB for its smallest tier. The mitigations are the same
+ * two and they are real: `+faststart` puts the moov atom first so playback
+ * begins after a few hundred KB rather than after the whole file, and
+ * `home-loader.ts` attaches NO SOURCE AT ALL on a data-saver or 2g/3g link or
+ * under reduced motion — the count travels on the clock and nobody pays. What
+ * is left is a fast link being asked for 4.6-16.8 MB of a film that IS the
+ * page's opening. Recorded as a deliberate spend, not an oversight; if it has
+ * to come back, the tier bitrates are the dial and 1440 is where the money is.
  *
  * MP4 only. `wonder-media.ts` already ruled that a VP9 set on top would
  * double the repo's video weight for a marginal win; this follows it rather
- * than reopening it. Encoded `-an` — the film carries no speech, so the audio
- * track was pure weight, and a silent file removes any question about whether
- * muted autoplay is doing something to the material. `+faststart` puts the
- * moov atom first so playback begins after a few hundred KB rather than after
- * the whole 39 seconds.
+ * than reopening it.
+ *
+ * THE AUDIO, which the 10 September encodes did not have at all (`-an`, on
+ * the reasoning that a muted autoplay background carries weight nobody can
+ * hear — true then, wrong now that there is a sound control). Taken from the
+ * master's AAC and normalised the way Wonder's was, because the delivery mix
+ * has the same fault and worse: **−10.50 LUFS with a +0.44 dBFS true peak**,
+ * i.e. already clipping, and 6.5 LU hotter than the Wonder mix that startled
+ * people. Two-pass `loudnorm` to −23 LUFS with `linear=true`, so the 8.90 LU
+ * range is preserved rather than pumped — measured back at −23.05 LUFS,
+ * −11.64 dBFS peak, LRA 8.90 unchanged. 128 kbps stereo, not the 64 kbps mono
+ * Wonder uses: this bed is MUSIC, and mono at 64k is audibly wrong on it.
+ * Anyone recutting the film has to re-normalise the replacement or the
+ * clipping comes straight back — the commands are in brand/video/README.md.
  *
  * ⚠ CONTENT: ambient Country, and PEOPLE APPEAR (user, 10 September 2026).
  * Nobody has cleared it. Identifiable people here carry the same consent
@@ -44,13 +67,14 @@
 export const homeLoaderFilm = {
   tiers: {
     small: "/media/home/derivatives/home-loader-960.mp4",
-    large: "/media/home/derivatives/home-loader-1440.mp4",
+    medium: "/media/home/derivatives/home-loader-1440.mp4",
+    large: "/media/home/derivatives/home-loader-1920.mp4",
   },
   poster: "/media/home/derivatives/home-loader-poster.webp",
   origin: "Main_V2_16.mp4 (supplied master, gitignored)",
   grade: "frame" as const,
   /** Seconds. The count is driven off the element, not this — see loading.ts. */
-  duration: 39.32,
+  duration: 39.29,
 };
 
 export type HomeHeroFrame = {
