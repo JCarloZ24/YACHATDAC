@@ -10,7 +10,10 @@ import "@/components/motion/transitions.css";
  */
 export default function TruthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-charcoal text-canvas">
+    /* One ground, egg white — client direction, 9 September 2026. The segment
+       wrapper is what shows through on overscroll, so it carries the same
+       ground the page does or the rubber-band flashes the old charcoal. */
+    <div className="bg-canvas text-charcoal">
       <SmoothScroll />
       <TransitionProvider />
       {children}

@@ -372,7 +372,7 @@ the build target.
 | 12 | II | **2003 — Suzanne's father. The portrait is held** | **5** | 116 | **media** | portrait 460×613 | ✓✓ hold |
 | 13 | II | 1950s — the light goes out | 3 | 123 | **transition** | ⟡ held doc slot | — |
 | 14 | II | BREAK · The escarpment — the film goes cold | 5 | 100 | **media** | dissolve pair | ✓ hold |
-| 15 | **III** | **THE HARD STOP — the count. No photograph, no motion** | **1** | **104** | **none** | — | ✓✓ the longest hold on the site |
+| 15 | **III** | **THE HARD STOP — three screens: who is speaking · the count · her testimony** | **1** | **125 / 220 / 560** | **type** | — | ✓✓ the longest hold on the site; the figures themselves never move |
 | 16 | IV | 1840s — what Mitchell recorded | 3 | 135 | **type** | ⟡ held journal scan | — |
 | 17 | IV | Older than the record — the engraving wall | 2 | 69 | **none** | — | ✓ |
 | 18 | IV | Still to be found — open research | 2 | 72 | **type** | evidence strip B | — |
@@ -381,30 +381,214 @@ the build target.
 | 21 | — | Footer — the wave overlaps the last shot by 96px | 1 | 135 | — | — | — |
 
 **Reads as:** no channel runs three deep. §10 carries the brown wave hand-off and is therefore
-`transition`, which is what breaks the 09/10/11 run. The four 5s — 04, 12, 14, 20 — are never
-consecutive, and §15 at ⚡1 is the rest after §14.
+`transition`, which is what breaks the 09/10/11 run. §20 joins §06 and §17 as intentional
+stillness (§15's is now the count's numerals rather than a whole screen); the closing shot does not dissolve back to the hero.
 
-**The rail carries the chronology.** One frame (`2051:5368`) runs the full 2229vh, starting below
-the header and **breaking at the count**. Both strands are instanced from Leonard Mickelo's
-supplied meander — never redrawn, never chopped, never tiled. The only moving part is a **gold
-mask whose height is the scroll position**, travelling over artwork that is itself static.
+**The rail carries the chronology and the local reading state.** One frame (`2051:5368`) runs
+the full 2229vh, starting below the header and **breaking at the count**. Both strands are
+instanced from Leonard Mickelo's supplied meander — never redrawn, never chopped, never tiled.
+A **gold mask whose height is document scroll** travels over artwork that is itself static. One
+`trail-point` traveller separately reports the current beat. The hero starts below its "Start
+from the beginning" cue; subsequent beats run from the viewport top to its foot. The marker is
+held at the foot while the 20vh buffer charges. During the cover it transfers from the outgoing
+foot to the incoming head while continuing to sample the rendered guide's lateral wander and
+tangent; it never teleports between endpoints.
 
-**The ground falls.** Colour is not repainted per section; it ramps down the ladder — evergreen
-*living present* → roasted brown *the return* → charcoal → navy *before the record* → charcoal
-*deep time* — with Marc's `Wave / Divider` as the visible seam at **five** hand-offs: evergreen
-after §01, brown after §09, charcoal after §14, navy after §15, charcoal after §18. Each is seated
-at `sectionHeight − 105` so the 151px wave overhangs the join by 46px, and each carries the colour
-of the section it *introduces*. **Rust Red is spent once**, on the count, and nowhere else on the
+**It carries the era, from 10 September 2026 (user direction).** The era label and its sub ride at
+the arrow's tip — `●-> Ahead / Within five years` — so the arrow points at something; previously it
+indicated an empty margin while the label sat 180px away in the section's own gutter. That gutter
+block stays in the DOM and goes transparent at `lg` (`opacity-0`, never `sr-only` — `sr-only` is
+`position: absolute` and collapses the 180px grid column, dragging every reading column 228px
+left), so the era still reaches a screen reader that cannot see an `aria-hidden` rail. The label's
+width is measured against the narrowest reading column and it hides below 120px of room, which is
+at roughly 1150px wide; the arrow rides alone from there down to the rail's own 1024px floor.
+
+**The mark is always a dot; the ARROW is what belongs to an era.** On a section that names one —
+ten of the eighteen slides, Today included — the tail draws itself out of the rosette left to
+right (`● · ●- · ●-->`) and runs back the same way on the way out, scrubbed on that section's own
+read, and the label fades in just behind it and leaves just before it. On a section that names
+none the dot simply stays and never grows a tail. The one place nothing shows at all is the 1902
+band, where the strand itself goes under.
+
+Both the growth and the label's fade are **scroll-derived, and finish inside the section's read**:
+neither runs across a cover, because a label crossing a seam belongs to neither section it is
+over. The arrow's tilt is scaled to ±2° of the strand's ±13.2° tangent — at 96px long it turned
+the full tangent into wobble rather than into tracking. Still no progress readout and no count:
+what was banned was a gauge of how far through you are, and the chronology is the thing this rail
+exists to carry. The
+visible strand goes under at the escarpment and the traveller shares that silence: the 1950s read
+ScrollTrigger fades it over its final fifth, it remains absent through the escarpment and count,
+and the 1840s read ScrollTrigger restores it over its opening fifth. It fades permanently over the
+final fifth of Before people, before the closing Wattanuri floor. Under reduced motion the
+traveller is absent. This is G1,
+**the guide leading the eye**, and `the page holding its ground`, not a timeline mark per era.
+
+**§15C IS PACED BY THE LINE, 10 September 2026 (user direction).** Her testimony is the
+longest screen on the page and the only one whose read span is derived rather than chosen. The
+words undim in reading order (`WordEmphasis`, the same treatment §12 gets), and the scroll they
+are given is `rendered lines × LINE_VH`, not a fraction of the section — so the section costs
+what there is to read, and roughly one line arrives per meaningful scroll. After the last word
+the screen is **held for a further 1.2 viewports** before the 1840s covers it; without that tail
+the next section arrived over a quotation that was still being read. `readVh={560}` on the screen
+in `Sections.tsx` is the budget those two numbers spend, and `truth-scenes.ts` prints the figure
+to use if the copy grows past it.
+
+**THE GROUND NO LONGER FALLS — one egg white, 9 September 2026 (client direction, D26).**
+`/truth` renders on a single ground, Off-White `#f6f6ec`, the same one /about uses. Two
+exceptions carry what is left of the descent: **the hard stop keeps its charcoal**, and **the
+1950s band travels** from the egg white down to that charcoal as it is read, so the reader
+arrives at the count already in the dark. The 1950s is now the only ground on the site that
+moves.
+
+What that costs is worth keeping written down. Truth has no dated photographs, so chronology had
+exactly two carriers — type and ground colour — and it now has one. **Rust Red is still spent
+once**, on the count, but it now reads as the only red *because* it lands on the only dark
+ground; the count's charcoal is load-bearing in a way it was not before.
+
+The five wave hand-offs become **four**. A divider is filled with the colour of the section it
+introduces, so between two sections of the same colour it has nothing to carry — the seam at the
+foot of "Older than the record" is dropped, exactly as /about drops its charcoal-to-charcoal
+seam ("nothing carries; that is the point"). The four that survive each still cross a real
+change: over the hero photograph, over the TODAY plate, off the foot of the Country-now break,
+and into and back out of the count. Each is still seated at `sectionHeight − 105` so the 151px
+wave overhangs the join by 46px.
+
+**Each is seated on the section it INTRODUCES.** The hand-off out of the count was the one
+exception and it was a bug, corrected 9 September 2026: it sat in flow at the count's own foot,
+riding the escarpment slide's track, so it stopped when that track stopped and the 1840s covered
+it instead of carrying it. It now leads the 1840s article — the element the deck actually moves —
+and breaks the reading column's width with the same `calc(50% - 50vw)` escape the pinned slide's
+ground uses. The trail rail's restart anchor (`data-count-wave`) moved with it, and is now
+measured through `offsetTop` rather than a viewport rect, so a mid-scroll re-measure can no longer
+read it off a pinned, translated surface.
+
+*Superseded, kept for the record:* each section used to own its own solid colour and the
+supplied divider carried it down the ladder — evergreen *living present* → roasted brown *the
+return* → charcoal → navy *before the record* → charcoal *deep time* — with Marc's
+`Wave / Divider` as the visible seam at five hand-offs: evergreen after §01, brown after §09,
+charcoal after §14, navy after §15, charcoal after §18. `DESCENT_LADDER` in `kit.ts` still holds
+that order and still governs every other page.
+
 site.
+
+The hero→Ahead divider is seated on the incoming Ahead deck, never on the hero runway. Its root
+remains structural while the reusable About ink pulls from 0.6 to full height and rolls home over
+the final 20vh of the hero ScrollTrigger. It is already complete when the buffer begins, so buffer
+charge cannot detach or distort the crest.
+
+**Every active entrance is scroll-scrubbed and reversible, AGAINST ITS OWN SECTION'S READING
+SPAN** (9 September 2026). B5 headings retain their line masks; Truth-local M1 entries use
+`brighten` from 0.4 to 1 with no translation. Ordinary movable image planes push from 1 to 1.06.
+
+The span is the correction. While the deck pins every slide, a viewport-relative trigger inside
+one measures a journey that does not happen: the slide is fixed, so a `top 88%` span is spent
+while the section is still climbing BEHIND the slide covering it. Every entrance was completing
+off-screen, and then nothing moved for the 125vh the section was actually read — which is why the
+page read as though its choreography were missing when all of it was firing. Interior beats are
+now authored as fractions of `read.start`→`read.end`, handed out by the deck through
+`onSlideSpans` (`SCR-02`, `src/lib/motion/truth-scenes.ts`). The unpinned path — touch, under
+1024px, no Lenis — keeps the viewport triggers, which are correct exactly there.
+
+What each beat does with its span:
+
+| Scene | Interior beat |
+|---|---|
+| 01 | The hero photograph **breathes**: 1.04 → 1.00 across its read AND its cover. ⚠ This SUPERSEDES "the hero … held at its rendered state" — user direction, 9 September 2026, "breathes rather than sits still". Its copy is still held; only the photograph moves, and the 20vh runway still exists to clear the navbar rather than to be read. |
+| 02–03 | The two Ahead records arrive as a set, 0.30 of the span apart, **brightness only** — M1 is explicit that an entrance here does not travel, and the descent supplies the movement. The **lift is the hover**: the card rises 4px and the picture scales 1.03 inside a frame that does not move. Their photographs take no scroll push — §02/§03 are type-channel scenes, and a plane cannot carry both a GSAP push and a CSS hover, because the inline transform wins and the hover silently never appears. ⚠ The frame draws three cards, L/M/R; the draft carries two. Raised, not invented. |
+| 05, 18 | Montages laid down by hand — uneven fixed offsets, never a single stagger. |
+| 07 | The strip pulls across L→R (~.012 apart), then drifts 40px left over the remainder. |
+| 08, 14 | The breaks **pull back**, 1.06 → 1.00, where ordinary media pushes in. The page has already stopped; advancing the camera into a held image while the scroll is locked reads as impatience. |
+| 12 | Words undim at speaking pace; the attribution is held to .78 of the span, so the speaker is named only after the last word lands. The portrait is **held**, per this ledger's own "the portrait is held" — it previously took the default push, which is the ordinary-media treatment and this is not ordinary media. |
+| 13 | The ground **deteriorates** — and since D26 it does so by changing colour, not by dimming: the band walks Off-White → Charcoal across its read span, through the slide's own `::before` painter. Straight, with no intermediate stop (user direction). A version routed via Roasted Brown was built and rejected — it measured better, 5.89:1 worst against 3.47:1, but the brown read as a third ground appearing halfway down. An alpha wash was right over roasted brown and reads as grey over egg white, a bruise rather than a dusk. The ink steps with it at the crossover (charcoal → off-white), and the warm accent is dropped in this band because no warm in the palette clears the middle — the colour drains out of the labels as the light goes out. The ramp is LINEAR — an eased version was built and rejected: it held the ground still for the first third of the section and then lurched, which reads as broken rather than eased, and `machine` is the token rule for scrubbed media anyway. Measured 17.83:1 at both ends and 4.67:1 at its worst, so the band clears AA the whole way down. The photograph still takes no push. |
+| 19 | The seabed **builds downward**, top → middle → bottom: the one section that accumulates in the same direction as the scroll. |
+| 21 | Footer links fade up once, together, no stagger. |
+
+Scenes 06, 15, 17 and 20 and Suzanne's portrait are held at their rendered state. They carry
+`data-v2-static` in the markup rather than being listed in a motion module: 06 and 15 both ride
+inside slides that DO move, so a slide-level exclusion would be wrong in both directions at once.
+
+**The twenty story beats resolve into sixteen gated decks on desktop/fine-pointer input** (user
+direction, 9 September 2026). "What is being built" and "Work with us" share the Ahead deck;
+TODAY's full image and its Iningai Rangers record share a composed deck; "The site is studied with
+its owners" and "Research & discovery" share another; and the escarpment image and 1902 count
+share a fourth. Each pair is one viewport surface with one internal content track and one gate,
+rather than two stacked slides. TODAY repeats About's
+Breath → WhatWeDo cover: the original evergreen record and its attached divider rise from below
+over the image, scrim and heading as one underlay. The heading's foot begins against the wave and
+follows it one-for-one until the heading crown reaches the viewport crown; the heading clamps
+there without resize or reflow while the higher-z wave covers it. The record receives no
+second translation. The escarpment/count deck repeats the same cover without moving the
+frame-graded image plane: its charcoal ground and divider rise on the internal track and close
+the image window. Every short deck remains one visible viewport
+high. The hero's wrapper adds a
+short 20vh ScrollTrigger-owned pin span: its image and copy remain still while the independent
+site navbar clears. Every later deck uses a normalized 125vh pin span before its magnetic 100%
+mark, so short and tall records share one heavy scroll pace without padding the authored records.
+The fifteen content joins play as whole 0.9s covers only after the
+buffer commits. The footer join is ordinary flow. Touch, missing Lenis and reduced motion create
+no holds or pins. The complete hero is visible on first paint.
 
 **Scene 06 is deliberately intensity 1.** The Figma note on that beat says it in as many words —
 *"the page stops moving here, on purpose."* Story-wall material is withheld under F3.
 
-**Scene 15 is the turn** (`spine.md` §5) and gets the longest hold on the site. Suzanne's
-testimony, words not reproduced, no photograph, no motion, under **R5**. The lo-fi specifies a
-genuine scroll lock with a keyboard escape; under `prefers-reduced-motion` the lock is **not
-created** and degrades to a full-viewport band the reader scrolls through normally, rail broken
-either side.
+**Scene 15 is the turn** (`spine.md` §5). Suzanne's testimony, under **R5**, no photograph.
+
+⚠ **Rewritten 10 September 2026.** Two things this row used to say are no longer true. Her words
+ARE now reproduced — the band was unheld on 9 Sep (August) as a build gate only; the publish gate
+is still R5 and `held by community`. And it is no longer one beat: it is **three gated screens** —
+who is speaking, the count, her testimony — split at the joins the copy already had, because as a
+single 2,989px panel the count was something the reader scrolled past on the way somewhere else.
+
+**The count itself still does not move, but the screen around it now reads.** Rewritten
+10 September 2026 on user direction.
+
+The display slot moved from the year to the figure: the year is now the rail-marker eyebrow the
+screen above uses (`.eyebrow text-h6`), and **37** and **7,500** carry `text-h1`. The screen is no
+louder for it — it spends the same one display slot per row — and the numerals are still at the top
+of the type scale and no further (they were built at 128px, off the scale entirely). Beneath each
+figure the sourced sentence it belongs to undims a word at a time.
+
+**No arrival, no count-up, no glow on the figures.** That is the grammar's figures-of-loss ban —
+a number describing people taken is stated and held — and not a Truth-local preference. It is
+declared on the numerals (`data-v2-static`) rather than on the screen, because `isHeld()` is an
+ancestor test, which is what lets a figure hold while its own sentence arrives around it. A number
+holding steady while the words near it move reads as stillness more clearly than a screen where
+nothing moves at all.
+
+⚠ `ART-DIRECTION.md` cautions against setting either 1902 number as a display statistic until
+Suzanne settles thirty-five against thirty-seven (R5). Prominence here is transferred from the year
+rather than added, and the Hoch/Taçon citation sits directly beneath it, but the tension is real
+and is logged in `open-questions.md`. Her quotations undim on the third screen and nothing else
+there moves. **Every
+quotation on Truth runs through one implementation** — the 2003 portrait beat
+and both of Suzanne's screens — because they are the same act, a person being
+read, and two things tuned to look alike drift. `speakWords` in
+`truth-scenes.ts`: words undim from 0.28 on a staggered scrub, `amount` and not
+`each`, no movement at all.
+
+**On Suzanne's two screens the same tween runs on the ARRIVAL span**, not on
+the reading span: it starts a viewport before the section is pinned and
+finishes partway into the read. Words light where they are when their turn
+comes, so bound to the reading span alone they lit while sitting near the
+ceiling — measured, the read/unread boundary sat between 35px and 190px down a
+900px viewport for the whole beat. Given their turn during the arrival instead,
+the boundary starts at about 856px, which is where the rail pointer sits (96%
+of the viewport), and sweeps up through 715 → 574 → 472 → 370 as the section
+rises. The reveal runs with the reader from the foot of the screen rather than
+ahead of them at the top. The 2003 beat needs none of this: its own copy barely
+moves, so its words are already in the reading band when they light.
+
+A reading-line variant — each word lighting as it crossed 62% of the viewport,
+computed per frame — was built and rejected (user direction, 10 September
+2026). It placed the boundary well, at 430–520px, but did not READ like the
+2003 beat, and matching that beat is the point. Recorded so the measurement is
+not later mistaken for a reason to reopen it.
+
+Her testimony is set in the READING face, not the display one — `PullQuote`'s new `voice`
+variant. Setting a transcript in the same face as the section titles is a large part of why a bare
+quote "reads as our copy — it isn't" (Steve, 7 September 2026). It participates in the same legible gated hold as
+the other beats without gaining content animation. Under `prefers-reduced-motion` the lock is
+**not created** and it degrades to a full-viewport band the reader scrolls through normally.
 
 **Scene 17 carries no photograph as built.** That was originally a hard constraint — every
 engraving frame in its pool was ⛔R10 quarantined — and it is **no longer.** Ivy released

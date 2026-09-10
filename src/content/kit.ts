@@ -308,6 +308,15 @@ export const WAVE_DIVIDER: ArtworkPiece = {
  * order is load-bearing and must not be sorted or re-grouped. Ivy confirmed on
  * 2026-08-30 that the Figma kit is the live source where it disagreed with the
  * motion skill's older token list.
+ *
+ * ⚠ /truth NO LONGER RENDERS THIS (client direction, 9 Sep 2026 — D26). The
+ * page walks one ground, Off-White, keeping only the count's charcoal and the
+ * 1950s band's travel down into it. This array stays exactly as it is: it is
+ * the record of the Figma kit's zone 01, not a description of the built page,
+ * and it is what a reversal would restore. Do not prune it to match the page.
+ *
+ * "Red is spent once" still holds, and now rests on one thing: the count's red
+ * reads as the only red BECAUSE it lands on the only dark ground.
  */
 export const DESCENT_LADDER = [
   { id: "evergreen", hex: "#22372B", label: "Deep Evergreen" },

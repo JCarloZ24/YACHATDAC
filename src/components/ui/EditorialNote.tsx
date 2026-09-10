@@ -37,9 +37,34 @@ export function EditorialNote({
    * a quieter register on the dark grounds. Still a placeholder, still
    * data-placeholder — the pre-launch grep sees both tones.
    */
-  tone?: "ochre" | "canvas";
+  tone?: "ochre" | "canvas" | "ink";
   className?: string;
 }) {
+  /**
+   * `ink` — the note takes whatever colour its surroundings are already using,
+   * through currentColor.
+   *
+   * The other two cuts each assume a ground: `canvas` is off-white and dies on
+   * a light page, `ochre` measures 2.30:1 on off-white and is the live defect
+   * ART-DIRECTION open question #14 already names. Truth needs neither,
+   * because since the page went to one egg-white ground its notes sit on
+   * charcoal type — and the 1950s note sits on a ground that MOVES from cream
+   * to charcoal as it is read, so no fixed colour could have been right for it
+   * at both ends. Inheriting is the only thing that travels.
+   */
+  if (tone === "ink") {
+    return (
+      <aside
+        data-placeholder="editorial-note"
+        className={`rounded-sm border border-dashed border-current/35 bg-current/5 p-5 ${className}`}
+      >
+        <p className="eyebrow text-current">{label}</p>
+        <div className="mt-2 space-y-2 text-sm leading-relaxed text-current">
+          {children}
+        </div>
+      </aside>
+    );
+  }
   if (tone === "canvas") {
     return (
       <aside

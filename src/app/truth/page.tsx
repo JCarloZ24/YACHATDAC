@@ -7,6 +7,8 @@ import {
   EraSection,
   FullBleedBreak,
   SuzanneBand,
+  SuzanneCount,
+  SuzanneTestimony,
   TruthHeroV2,
   WattanuriBand,
 } from "./_components/Sections";
@@ -50,34 +52,34 @@ export default function TruthPage() {
   const [mitchell, olderThanRecord, beginning] = erasAfter;
 
   return (
-    <PageTransition ground="#22372B">
+    <PageTransition ground="#f6f6ec">
       <V2TruthMotion />
       <div
         data-descent-root
-        className="relative -mb-[13.9vw] bg-evergreen text-canvas"
+        className="relative -mb-[13.9vw] bg-canvas text-charcoal"
       >
         {/* The winding record trail — the wireframe's scroll indicator: the
             path of the descent with a mark at each era, gold up to where the
             reader stands. */}
         <TruthTrailRail />
 
-        <section data-descent-band="present" className="bg-evergreen">
+        <section data-descent-band="present" className="bg-canvas">
           <TruthHeroV2 />
           <EraSection era={ahead} />
           <EraSection era={today} />
           {/* The 08 break closes the present band and hands the reader to
               Bought back's roasted ground via Marc's wave. */}
-          <FullBleedBreak which="countryNow" waveTo="roasted" />
+          <FullBleedBreak which="countryNow" waveTo="canvas" />
         </section>
 
-        <section data-descent-band="return" className="bg-roasted">
+        <section data-descent-band="return" className="bg-canvas">
           <EraSection era={boughtBack} prependEntries={todayRecords} />
         </section>
 
         {/* Bought Back and the 1950s share one roasted-brown ground. The
             1950s frame deepens it locally; no unapproved sixth divider or
             independent viewport cross-fade is introduced at this join. */}
-        <section data-descent-band="named-wrong" className="bg-roasted">
+        <section data-descent-band="named-wrong" className="bg-canvas">
           <EraSection era={namedWrong} />
           {/* 14 → 15 is one composed deck: the charcoal count ground and
               its divider rise over the held escarpment image, matching the
@@ -85,12 +87,25 @@ export default function TruthPage() {
           <DissolveBreak deckContent={<SuzanneBand withinDeck />} />
         </section>
 
-        <section data-descent-band="before-record" className="bg-midnight">
+        {/* 15 · THE HARD STOP, in three held screens (10 Sep 2026).
+            Who is speaking arrives on the escarpment cover above; the count
+            and her testimony are screens of their own, so the numerals take a
+            viewport alone as the draft's build note asks and her words are not
+            something the reader scrolls past on the way somewhere else.
+            They carry data-truth-ground="count", which is also what finally
+            makes the deck's own railHiddenSlides selector do its job — the
+            rail is silent across all three. */}
+        <section data-descent-band="count" className="bg-charcoal">
+          <SuzanneCount />
+          <SuzanneTestimony />
+        </section>
+
+        <section data-descent-band="before-record" className="bg-canvas">
           <EraSection era={mitchell} />
           <EraSection era={olderThanRecord} />
         </section>
 
-        <section data-descent-band="deep-time" className="bg-charcoal">
+        <section data-descent-band="deep-time" className="bg-canvas">
           {/* 19 runs straight into 20 (16341 + 1447 = 17788): no trail between. */}
           <EraSection era={beginning} />
           <WattanuriBand />

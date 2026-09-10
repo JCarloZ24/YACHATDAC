@@ -325,6 +325,13 @@ cropping to use, are too small for full-bleed, and **no artist is recorded for t
 
 - `SCR-04` horizontal scroll or `SCR-02` pinned section with a scrubbed timeline.
 - **Colour is the chronology.** The descent ladder in [`src/content/kit.ts`](../src/content/kit.ts) is ordered, not decorative — "red is spent once" — and `wave-divider.svg` carries the handoff between grounds. Do not sort or re-group it.
+  - ⚠ **SUPERSEDED ON `/truth` ITSELF, 9 September 2026 — see D26.** The built page now
+    renders on ONE ground, Off-White `#f6f6ec`, on client direction. Two exceptions carry what
+    is left of the chronology: the 1902 count keeps its charcoal, and the 1950s band travels
+    from the egg white down to that charcoal as it is read. Note what this costs, because the
+    sentence above is the reason it matters: Truth has **no dated photographs**, so chronology
+    had exactly two carriers, type and ground colour, and it now has one. The ladder below
+    stands as the kit record and still governs every other page.
 - Progress must be visible — the user always knows where they are in the span.
 - **Provide a static index.** A timeline that can only be read by scrolling through it is not an archive. Every event needs a direct link. Truth's own "Start from the beginning ↓" targets the *last* entry, which is why global smooth-scroll is deliberately off.
 - ⚠ **The 1902 count is unresolved.** The Truth draft records "thirty-five" in one recording against a published thirty-seven adults and three children, with a note asking Suzanne to confirm. The homepage repeats thirty-seven without the caveat. Do not set either number as a display statistic until it is settled.

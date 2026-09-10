@@ -312,12 +312,20 @@ export const erasBefore: readonly TruthEra[] = [
  * for reading. Nothing here is published until she has seen it and signed it
  * off."
  *
- * That warning renders on the page. It is the single most important editorial
- * marker on this site and it does not get quietly dropped because the section
- * looks finished.
+ * ⚠ CORRECTED 10 September 2026 — this comment said the warning "renders on
+ * the page" and that `checkNote` "is also rendered". NEITHER DOES, since
+ * 9 September: both were pulled from the band on August's instruction so that
+ * the build presents as the page rather than as a marked-up draft, because
+ * this build is itself the approval ask. See the comments in
+ * src/app/truth/_components/Sections.tsx.
  *
- * Her two open questions are in `checkNote` and are also rendered. Neither has
- * been answered.
+ * The strings stay here and in the v3 draft, and both fields are still live —
+ * restore them if this section is ever shown anywhere other than that review.
+ *
+ * Her two open questions — the order of the count against the blankets, and
+ * thirty-five against thirty-seven — are in `checkNote`. Neither has been
+ * answered, and the page no longer asks them, so they must be PUT TO HER IN
+ * THE PRESENTATION.
  */
 export const suzanne = {
   marker: "1902, and then further back",
@@ -329,15 +337,31 @@ export const suzanne = {
   role: "Iningai custodian · Founder and Managing Director, YACHATDAC",
   openingQuote: "And I'm a descendant of one of those 37.",
   lede: "To understand that number you have to go back sixteen years, to a drought, and to a decision made out of concern.",
+  /**
+   * The count, split three ways for the screen that carries it.
+   *
+   * The DRAFT IS UNCHANGED and no word moved (D5). Each `detail` is the
+   * drafted sentence with only its leading numeral lifted out into `figure`,
+   * so the screen can set the count in the display face and the year as its
+   * marker. Rejoin `figure` and `detail` with a space and you have the draft's
+   * line back exactly.
+   *
+   * ⚠ The number itself is one of Suzanne's two open questions (R5): her
+   * recording says thirty-five against the published thirty-seven. See
+   * `checkNote` below — this build runs with thirty-seven and it has to be put
+   * to her at the presentation, because the page no longer asks.
+   */
   figures: [
     {
       year: "1902",
-      detail: "37 Iningai adults recorded in the area, and three children.",
+      figure: "37",
+      detail: "Iningai adults recorded in the area, and three children.",
     },
     {
       year: "1886",
+      figure: "7,500",
       detail:
-        "7,500 blankets calculated as necessary for the Iningai nation, sixteen years earlier. When they arrived, some still had to be cut in half, because there were not enough to go round.",
+        "blankets calculated as necessary for the Iningai nation, sixteen years earlier. When they arrived, some still had to be cut in half, because there were not enough to go round.",
     },
   ],
   citation: {

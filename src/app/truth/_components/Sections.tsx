@@ -130,7 +130,7 @@ export function TruthHeroV2() {
     /* The hero owns no divider. Its incoming Ahead deck carries that wave,
        keeping the crest attached to the cover rather than to this pinned
        runway. */
-    <div data-truth-slide-runway data-nav-hero className="relative bg-evergreen">
+    <div data-truth-slide-runway data-nav-hero className="relative bg-canvas">
       <header
         data-truth-slide
         data-truth-slide-label="Truth"
@@ -242,14 +242,25 @@ function entryGround(id: string | undefined): BandId {
  */
 function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }) {
   const [lead, side] = slots;
-  const anyFrameGraded = slots.some((slot) => MOTION_GRADE[slot.bucket] === "frame");
+  /* NO CAMERA PUSH, deliberately, and this is the only media frame on the page
+     without one. Two reasons, and either would be enough:
+
+     §02/§03's loud channel is TYPE (scenes.md) — the precinct is argued in
+     words and its photographs are evidence, so a scrubbed push here would be a
+     second loud channel on a screen that already has one.
+
+     And the plane's transform is spoken for. These are the only photographs on
+     Truth that respond to a pointer: hovering the card scales the picture
+     inside its fixed frame. GSAP writes `pushIn` as an inline transform, which
+     beats a stylesheet rule, so a push and a hover cannot share one plane —
+     the hover would simply never appear. The quieter of the two wins. */
   return (
-    <figure
-      {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
-      className="mt-10 max-w-4xl"
-    >
+    <figure className="mt-10 max-w-4xl">
       <div className="grid items-end gap-6 sm:grid-cols-[3fr_2fr] sm:gap-10">
-        <div className="relative aspect-3/2 overflow-hidden rounded-2xl">
+        <div
+          data-truth-tile="0"
+          className="relative aspect-3/2 overflow-hidden rounded-2xl"
+        >
           <MediaOrField
             src={presentSrc(lead.src)}
             alt={lead.expects}
@@ -274,7 +285,10 @@ function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string
             loading="lazy"
           />
         </div>
-        <div className="relative aspect-3/2 overflow-hidden rounded-2xl sm:mb-10">
+        <div
+          data-truth-tile="1"
+          className="relative aspect-3/2 overflow-hidden rounded-2xl sm:mb-10"
+        >
           <MediaOrField
             src={presentSrc(side.src)}
             alt={side.expects}
@@ -292,7 +306,7 @@ function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string
         </div>
       </div>
       {caption ? (
-        <figcaption className="mt-3 text-xs leading-relaxed text-canvas/50">
+        <figcaption className="mt-3 text-xs leading-relaxed text-charcoal/60">
           {caption}
         </figcaption>
       ) : null}
@@ -318,8 +332,16 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
         {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
         className="grid items-start gap-6 sm:grid-cols-[13fr_9fr]"
       >
+        {/* data-truth-tile carries the LAYING order, which is not DOM order:
+            the grid reads down its left column then its right, and the frame
+            lays the montage lead → tunnel → hand → picker. The module wants
+            the order a hand would put them down in, so it is stated here
+            rather than inferred from the column split. */}
         <div className="space-y-6">
-          <div className="relative aspect-3/2 overflow-hidden rounded-2xl">
+          <div
+            data-truth-tile="0"
+            className="relative aspect-3/2 overflow-hidden rounded-2xl"
+          >
             <MediaOrField
               src={presentSrc(lead.src)}
               alt={lead.expects}
@@ -335,7 +357,10 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
               loading="lazy"
             />
           </div>
-          <div className="relative aspect-3/2 w-3/5 overflow-hidden rounded-2xl">
+          <div
+            data-truth-tile="2"
+            className="relative aspect-3/2 w-3/5 overflow-hidden rounded-2xl"
+          >
             <MediaOrField
               src={presentSrc(hand.src)}
               alt={hand.expects}
@@ -345,7 +370,10 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
           </div>
         </div>
         <div className="space-y-6">
-          <div className="relative aspect-8/5 overflow-hidden rounded-2xl">
+          <div
+            data-truth-tile="1"
+            className="relative aspect-8/5 overflow-hidden rounded-2xl"
+          >
             <MediaOrField
               src={presentSrc(tunnel.src)}
               alt={tunnel.expects}
@@ -361,7 +389,10 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
               loading="lazy"
             />
           </div>
-          <div className="relative aspect-3/2 overflow-hidden rounded-2xl">
+          <div
+            data-truth-tile="3"
+            className="relative aspect-3/2 overflow-hidden rounded-2xl"
+          >
             <MediaOrField
               src={presentSrc(picker.src)}
               alt={picker.expects}
@@ -516,8 +547,12 @@ function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
           />
         </div>
       ) : (
+        /* tone="ink", not "canvas" or "ochre": this slot reads on the page's
+           egg-white ground, where the canvas cut is off-white on off-white
+           (1.0:1) and the ochre cut is 2.30:1. Inheriting the page's charcoal
+           clears both. */
         <EditorialNote
-          tone="canvas"
+          tone="ink"
           label="HELD — this is a document slot, not a photograph."
           className="mt-6 min-h-45 max-w-3xl"
         >
@@ -538,8 +573,17 @@ function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
  * right for testimony, wrong for marketing copy. The ramp runs from the
  * descent module; without it the words read at full opacity.
  *
- * The portrait uses the page's default 1.00→1.06 camera push. It remains
- * withheld from frame-graded slots.
+ * The portrait is HELD — no push, no scale, whatever its bucket allows. The
+ * ledger says so in as many words (scenes.md §12, "the portrait is held",
+ * intensity ✓✓) and the grammar's "a person speaking" row says "no movement at
+ * all". It used to take the page's default 1.00→1.06 camera push, which is the
+ * ordinary-media treatment and this is not ordinary media: it is the one
+ * photograph on the page of the man being spoken about. The permission the
+ * bucket grants is not the same as the instruction the frame gives.
+ *
+ * The attribution waits for the last word. Someone finishes speaking and only
+ * then are they named — naming them while they are still talking puts the
+ * caption ahead of the testimony.
  *
  * No testimony in the content means no quotation on the page: the slot
  * renders an editorial note instead. A quote is never paraphrased into
@@ -552,13 +596,12 @@ function PortraitTestimony({
   slot: MediaSlot;
   testimony?: TruthEntry["testimony"];
 }) {
-  const frameGraded = MOTION_GRADE[slot.bucket] === "frame";
   return (
     <figure className="mt-10 max-w-4xl">
       <div className="grid gap-8 sm:grid-cols-[294fr_626fr] sm:gap-14">
         <div className="relative aspect-294/386 overflow-hidden rounded-3xl">
           <div
-            {...(frameGraded ? {} : { "data-v2-camera": true })}
+            data-v2-static
             data-motion={MOTION_GRADE[slot.bucket]}
             className="absolute inset-0"
           >
@@ -577,9 +620,12 @@ function PortraitTestimony({
               <WordEmphasis
                 as="blockquote"
                 text={testimony.quote}
-                className="max-w-xl text-xl font-medium leading-relaxed text-canvas sm:text-2xl"
+                className="max-w-xl text-xl font-medium leading-relaxed text-charcoal/92 sm:text-2xl"
               />
-              <figcaption className="eyebrow mt-10 max-w-xs text-xs leading-relaxed text-gold">
+              <figcaption
+                data-truth-attribution
+                className="eyebrow mt-10 max-w-xs text-xs leading-relaxed text-burnt-deep"
+              >
                 {testimony.attribution} &middot; {testimony.role}
               </figcaption>
             </>
@@ -642,7 +688,7 @@ function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
       </div>
       <div className="mt-6 max-w-3xl">
         {documentSrc ? (
-          <div className="relative aspect-[768/180] overflow-hidden rounded-sm border border-canvas/35">
+          <div className="relative aspect-[768/180] overflow-hidden rounded-sm border border-current/30">
             <MediaOrField
               src={documentSrc}
               alt={document.expects}
@@ -651,8 +697,10 @@ function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
             />
           </div>
         ) : (
+          /* tone="ink": this note is inside the band whose ground travels
+             from cream to charcoal, so it has to travel with it. */
           <EditorialNote
-            tone="canvas"
+            tone="ink"
             label="HELD — this is a document slot, not a photograph."
             className="min-h-45"
           >
@@ -685,14 +733,18 @@ function StrataStack({ slots }: { slots: MediaSlot[] }) {
   ];
   return (
     <figure className="mt-10 max-w-4xl">
+      {/* §19 is the one section that builds DOWNWARD, with the scroll rather
+          than against it — the seabed accumulates the way the strata did. The
+          index is stated so the module sequences top → middle → bottom
+          explicitly instead of relying on a stagger reading DOM order. */}
       {strata.map(({ slot, offset }, i) => (
         <div
           key={slot.id}
           data-motion={MOTION_GRADE[slot.bucket]}
+          data-truth-strata-layer={i}
           {...(MOTION_GRADE[slot.bucket] === "frame" ? {} : { "data-v2-camera": true })}
-          className={`relative aspect-[699/221] w-full overflow-hidden rounded-2xl sm:w-[76%] ${offset} ${
-            i > 0 ? "mt-6 sm:mt-9" : ""
-          }`}
+          className={`relative aspect-[699/221] w-full overflow-hidden rounded-2xl sm:w-[76%] ${offset} ${i > 0 ? "mt-6 sm:mt-9" : ""
+            }`}
         >
           <MediaOrField
             src={presentSrc(slot.src)}
@@ -742,19 +794,23 @@ function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }
     <figure className={strip ? "mt-8 max-w-4xl" : "mt-8 max-w-3xl"}>
       <div
         {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
+        {...(strip ? { "data-truth-strip": true } : {})}
         className={`grid gap-3 ${cols}`}
       >
-        {slots.map((slot) => (
+        {/* Both six-up strips share this component; the interior recipe is
+            chosen by the article the strip sits in, not here. §07 pulls across
+            L→R and then drifts; §18 is laid down unevenly. */}
+        {slots.map((slot, index) => (
           <div
             key={slot.id}
             data-motion={MOTION_GRADE[slot.bucket]}
-            className={`relative overflow-hidden ${
-              strip
-                ? "aspect-square rounded-lg"
-                : slots.length === 1
-                  ? "aspect-video max-w-xl"
-                  : "aspect-4/3"
-            }`}
+            data-truth-tile={index}
+            className={`relative overflow-hidden ${strip
+              ? "aspect-square rounded-lg"
+              : slots.length === 1
+                ? "aspect-video max-w-xl"
+                : "aspect-4/3"
+              }`}
           >
             <MediaOrField
               src={presentSrc(slot.src)}
@@ -766,7 +822,7 @@ function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }
         ))}
       </div>
       {caption ? (
-        <figcaption className="mt-3 text-xs leading-relaxed text-canvas/50">
+        <figcaption className="mt-3 text-xs leading-relaxed text-charcoal/60">
           {caption}
         </figcaption>
       ) : null}
@@ -860,216 +916,288 @@ function EntryBlock({
     gutterSub ?? (entry.when && entry.when !== label ? entry.when : undefined);
   const whenKicker =
     !isPartner && !label && !isToday ? entry.when : undefined;
-  const entryLayout = `relative grid gap-6 md:grid-cols-[180px_1fr] md:gap-12 ${
-    isPartner ? "py-16 md:py-24" : "py-10"
-  }`;
+  /* The Ahead deck's two records are read as a SET rather than as two
+     paragraphs: they arrive one after another and each lifts as it brightens.
+     The frame shows a three-across row (L, M, R at ~100ms); the governing
+     draft carries only these two entries, so the third card does not exist to
+     stagger — raised as a drift rather than invented here. */
+  const isAheadCard = entry.id === "precinct" || isPartner;
+  /* THE INK. Every entry now reads on the page's one egg-white ground, so the
+     dark-ground palette inverts: charcoal body, evergreen headings, and
+     burnt-deep for warm accents — the only warm the measured table clears on
+     #f6f6ec (6.31:1, where gold is 1.72 and ochre 2.30).
+
+     The 1950s is the exception, because its ground MOVES. Its band walks from
+     egg white to the count's charcoal as it is read, so its type cannot be a
+     fixed utility in either palette — it rides the same ramped custom
+     properties the ground does and crosses over with it.
+
+     Oxide is deliberately absent: it is the count's red, spent once, and the
+     canvas tone set in tone.ts would have handed it to every eyebrow here.
+
+     Written as whole literal class strings, never assembled — Tailwind scans
+     source text and cannot see a class built at runtime. */
+  const ink = isArtGallery ? "text-[color:var(--truth-ink)]" : "text-charcoal";
+  const inkBody = isArtGallery ? "text-[color:var(--truth-ink)]" : "text-charcoal/92";
+  const inkMuted = isArtGallery ? "text-[color:var(--truth-ink)]" : "text-charcoal/60";
+  const inkHead = isArtGallery ? "text-[color:var(--truth-ink)]" : "text-evergreen";
+  /* In the 1950s the accent IS the ink. No warm in the palette clears 4.5:1
+     across that band's travel — burnt-deep wants a near-white ground and gold
+     a near-black one, and the band spends its middle between the two. The
+     colour drains out of the labels as the light goes out of the band. */
+  const accent = isArtGallery
+    ? "text-[color:var(--truth-ink)]"
+    : "text-burnt-deep";
+  const accentHover = isArtGallery
+    ? "hover:text-[color:var(--truth-ink)]"
+    : "hover:text-burnt-deep";
+  const entryLayout = `relative grid gap-6 md:grid-cols-[180px_1fr] md:gap-12 ${isPartner ? "py-16 md:py-24" : "py-10"
+    }`;
   const article = (
     <article
       id={entry.id}
       {...(withinDeck
         ? {}
         : {
-            "data-truth-slide": true,
-            "data-truth-slide-label": entry.title,
-            "data-truth-ground": entryGround(entry.id),
-          })}
-      {...(isStill ? {} : { "data-descent-arrive": true })}
+          "data-truth-slide": true,
+          "data-truth-slide-label": entry.title,
+          "data-truth-ground": entryGround(entry.id),
+        })}
+      /* A still beat is marked HELD in the markup rather than remembered in a
+         motion module. data-v2-static is the existing "never give this motion"
+         hook, and every module already honours it, so the stillness survives a
+         pass that does not know why it is there. §06 — "the page stops moving
+         here, on purpose" (Figma). §17 — older than the record; the stillness
+         is the argument. */
+      {...(isStill
+        ? { "data-v2-static": true }
+        : { "data-descent-arrive": true })}
+      {...(isAheadCard ? { "data-truth-card": true } : {})}
+      /* The 1950s band is the one ground that DETERIORATES as it is read. The
+         dim has to ride the slide, not the section around it: once the deck
+         pins the article the section stays behind in flow, so a section-level
+         overlay stops covering the very thing it is meant to darken. */
+      {...(isArtGallery ? { "data-truth-deteriorates": true } : {})}
       /* No rule between records (2026-09-03): the hi-fi frames run the
          entries straight on, separated by the grounds and their spacing. */
       className="relative"
     >
+      {/* The hand-off out of the count, seated on the section it INTRODUCES.
+
+          This is the general law — "the hero→Ahead divider is seated on the
+          incoming Ahead deck, never on the hero runway" (scenes.md) — and this
+          seam was the one place that broke it. Sitting in flow at the count's
+          foot, the wave rode the escarpment slide's track, stopped when that
+          track stopped, and was then covered by this section rising over it
+          instead of leading it. A divider has to be attached to the surface
+          that moves during the cover.
+
+          Sibling of the deck viewport, not inside it: the deck sets
+          overflow:hidden on [data-truth-deck-viewport] and overflow:visible on
+          the slide precisely so an incoming crest can overhang upward onto the
+          outgoing beat.
+
+          data-count-wave stays on it — TrailRail measures the record strand's
+          restart from this node, and drops to the band top if it vanishes. */}
+      {isMitchell && !withinDeck ? (
+        <HandoffWave to="canvas" placement="leading" railAnchor bleed />
+      ) : null}
       <div {...(withinDeck ? {} : { "data-truth-deck-viewport": true })}>
         <div
           {...(withinDeck ? {} : { "data-truth-deck-track": true })}
           className={entryLayout}
         >
-      {/* The left gutter carries the era label and its sub (the 06 frame). */}
-      {label ? (
-        /* self-start: as a grid child this would stretch to the row height,
-           and the rail centers its pointer on this box. */
-        <div className="hidden self-start pt-2 md:block">
-          {/* data-era-label sits on the year line itself — the rail centers
-              its pointer on this element exactly. */}
-          {/* normal-case: the eyebrow uppercases, and a decade reads
+          {/* The left gutter carries the era label and its sub (the 06 frame).
+              At lg and up the rail's pointer carries them instead, riding at
+              the arrow's tip (user, 10 Sep 2026), so this block goes
+              transparent — but stays in flow and in the accessibility tree.
+              `opacity-0`, not `sr-only` and not `invisible`: `sr-only` is
+              `position: absolute`, which takes the block OUT of the grid, and
+              the 180px column then collapses and drags every reading column on
+              the page 228px to the left. `invisible` keeps the layout but
+              drops the text from the accessibility tree, and the rail that
+              replaces it is aria-hidden — so the era would reach nobody. */}
+          {label ? (
+            /* self-start: as a grid child this would stretch to the row
+               height. `data-era-label` / `data-era-sub` are what the deck
+               reads the pointer's strings from — see gated-deck's railLabel. */
+            <div className="hidden self-start pt-2 md:block lg:pointer-events-none lg:opacity-0">
+              {/* normal-case: the eyebrow uppercases, and a decade reads
               "1950s", not "1950S". */}
-          <p
-            data-era-label
-            className={`eyebrow text-xl text-gold ${/^\d/.test(label) ? "normal-case" : ""}`}
-          >
-            {label}
-          </p>
-          {sub ? (
-            <p className="mt-1 text-sm font-normal uppercase leading-relaxed text-canvas">
-              {sub}
-            </p>
-          ) : null}
-        </div>
-      ) : (
-        <span aria-hidden className="hidden md:block" />
-      )}
-      <div className="max-w-2xl">
-        {isPartner ? (
-          <p className="eyebrow mb-6 font-normal text-burnt">{entry.when}</p>
-        ) : null}
-        {kicker || whenKicker ? (
-          /* Undated whens ("More of this") are Link-weight, not ExtraBold —
-             only the era kicker keeps the eyebrow's full weight. */
-          <p
-            className={`eyebrow mb-6 text-burnt ${whenKicker && !kicker ? "font-normal" : ""}`}
-          >
-            {kicker ?? whenKicker}
-          </p>
-        ) : null}
-        {label ? (
-          <div className="mb-6 md:hidden">
-            <p className={`eyebrow text-gold ${/^\d/.test(label) ? "normal-case" : ""}`}>
-              {label}
-            </p>
-            {sub ? (
-              <p className="mt-1 text-xs font-normal uppercase text-canvas">
-                {sub}
-              </p>
-            ) : null}
-          </div>
-        ) : null}
-        {titleOnPlate ? null : (
-          <h3
-            className={`headline text-canvas ${
-              kicker || isPartner || label || whenKicker
-                ? "text-3xl sm:text-5xl"
-                : "text-2xl"
-            }`}
-          >
-            {entry.href ? (
-              <Link href={entry.href} className="transition-colors hover:text-ochre">
-                {entry.title}
-              </Link>
-            ) : (
-              entry.title
-            )}
-          </h3>
-        )}
-        {kicker || isRenamed || isMitchell ? (
-          /* The wireframe's dotted-trail rule under the display title — its
-             own gold cut (360×24), delivered 2026-09-02. Static, decorative.
-             The 2020 and 1840s frames carry it too, at 0.55. */
-          /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
-          <img
-            src="/artwork/dots-rule-gold.svg"
-            alt=""
-            aria-hidden
-            className={`mt-8 w-72 ${isRenamed || isMitchell ? "opacity-55" : ""}`}
-            loading="lazy"
-          />
-        ) : null}
-        {entry.body.map((paragraph) => (
-          <p
-            key={paragraph.slice(0, 32)}
-            className={`leading-relaxed ${
-              isPartner
-                ? "mt-8 text-lg text-canvas sm:text-xl"
-                : isGroundFrame
-                  ? "mt-6 max-w-3xl text-canvas"
-                  : "mt-4 text-canvas/75"
-            }`}
-          >
-            {/* The 2020 frame folds the date into the body's first line. */}
-            {isDiptych && entry.when && paragraph === entry.body[0]
-              ? `${entry.when}. ${paragraph}`
-              : paragraph}
-          </p>
-        ))}
-        {entry.claim ? (
-          <p className="headline mt-8 max-w-xl text-3xl leading-snug text-canvas">
-            {entry.claim}
-          </p>
-        ) : null}
-        {/* The coda is the record's large statement (the 05 and 2022
-            frames) — it reads before the photographs. */}
-        {entry.coda ? (
-          <p
-            className={`mt-8 max-w-2xl text-xl leading-snug text-canvas sm:text-2xl ${
-              isGroundFrame ? "font-medium leading-relaxed" : ""
-            }`}
-          >
-            {entry.coda}
-          </p>
-        ) : null}
-        {entry.id && truthEntryMedia[entry.id] && !isEngraving ? (
-          entry.id === "precinct" ? (
-            <FeatureMedia
-              slots={truthEntryMedia[entry.id]}
-              caption={entry.caption}
-            />
-          ) : isToday ? (
-            <TodayMontage slots={truthEntryMedia[entry.id]} />
-          ) : isFather ? (
-            <PortraitTestimony
-              slot={truthEntryMedia[entry.id][0]}
-              testimony={entry.testimony}
-            />
-          ) : isDiptych ? (
-            <Diptych
-              slots={truthEntryMedia[entry.id]}
-              variant={isRenamed ? "seam" : "lead"}
-            />
-          ) : isArtGallery ? (
-            <WrittenRecordFrame slots={truthEntryMedia[entry.id]} />
-          ) : isMitchell ? (
-            <CountryAndDocument slots={truthEntryMedia[entry.id]} />
-          ) : isSeabed ? (
-            <StrataStack slots={truthEntryMedia[entry.id]} />
-          ) : (
-            <EntryMedia slots={truthEntryMedia[entry.id]} caption={entry.caption} />
-          )
-        ) : null}
-        {entry.footnotes?.map((footnote) => (
-          <p key={footnote.slice(0, 32)} className="mt-4 text-xs leading-relaxed text-canvas/45">
-            {footnote}
-          </p>
-        ))}
-        {entry.source && entry.cta ? (
-          /* The wireframe sets the record label and the CTA on one row. */
-          <div className="mt-8 flex flex-wrap items-baseline justify-between gap-4">
-            <p className="eyebrow text-[10px] font-normal text-burnt">
-              {entry.source}
-            </p>
-            <Link
-              href={entry.cta.href}
-              /* The ground frames (17, 18) set the CTA at Yellow Gold. */
-              className={`eyebrow text-xs transition-transform duration-300 hover:translate-x-1 ${
-                isGroundFrame ? "text-gold" : "text-ochre"
-              }`}
-            >
-              {entry.cta.label} &rarr;
-            </Link>
-          </div>
-        ) : (
-          <>
-            {entry.source ? (
-              /* The ground frames (10–12) set the tag in Burnt Ochre with or
-                 without a CTA; elsewhere it stays quiet. */
               <p
-                className={`eyebrow mt-8 text-[10px] font-normal ${
-                  isGroundFrame ? "text-burnt" : "text-canvas/40"
-                }`}
+                data-era-label
+                className={`eyebrow text-xl ${accent} ${/^\d/.test(label) ? "normal-case" : ""}`}
               >
-                {entry.source}
+                {label}
+              </p>
+              {sub ? (
+                <p
+                  data-era-sub
+                  className={`mt-1 text-sm font-normal uppercase leading-relaxed ${ink}`}
+                >
+                  {sub}
+                </p>
+              ) : null}
+            </div>
+          ) : (
+            <span aria-hidden className="hidden md:block" />
+          )}
+          {/* The rail measures its label budget against this column's left edge. */}
+          <div data-truth-entry-copy className="max-w-2xl">
+            {isPartner ? (
+              <p className={`eyebrow mb-6 font-normal ${accent}`}>{entry.when}</p>
+            ) : null}
+            {kicker || whenKicker ? (
+              /* Undated whens ("More of this") are Link-weight, not ExtraBold —
+                 only the era kicker keeps the eyebrow's full weight. */
+              <p
+                className={`eyebrow mb-6 ${accent} ${whenKicker && !kicker ? "font-normal" : ""}`}
+              >
+                {kicker ?? whenKicker}
               </p>
             ) : null}
-            {entry.cta ? (
-              <Link
-                href={entry.cta.href}
-                className={`eyebrow mt-6 inline-block text-xs transition-transform duration-300 hover:translate-x-1 ${
-                  isGroundFrame ? "text-gold" : "text-ochre"
-                }`}
-              >
-                {entry.cta.label} &rarr;
-              </Link>
+            {label ? (
+              <div className="mb-6 md:hidden">
+                <p className={`eyebrow ${accent} ${/^\d/.test(label) ? "normal-case" : ""}`}>
+                  {label}
+                </p>
+                {sub ? (
+                  <p className={`mt-1 text-xs font-normal uppercase ${ink}`}>
+                    {sub}
+                  </p>
+                ) : null}
+              </div>
             ) : null}
-          </>
-        )}
-      </div>
+            {titleOnPlate ? null : (
+              <h3
+                className={`headline ${inkHead} ${kicker || isPartner || label || whenKicker
+                  ? "text-3xl sm:text-5xl"
+                  : "text-2xl"
+                  }`}
+              >
+                {entry.href ? (
+                  <Link href={entry.href} className={`transition-colors ${accentHover}`}>
+                    {entry.title}
+                  </Link>
+                ) : (
+                  entry.title
+                )}
+              </h3>
+            )}
+            {kicker || isRenamed || isMitchell ? (
+              /* ⚠ WITHDRAWN on the egg-white ground, not deleted from the design.
+                 The wireframe's dotted-trail rule under the display title ships in
+                 one cut only, gold (360×24), which measures 1.72:1 on #f6f6ec and
+                 draws as a smear. There is no charcoal or roasted cut of this
+                 asset — public/artwork has gold and off-white and nothing else —
+                 so the honest move is to leave the slot empty until one is drawn
+                 rather than ship a mark nobody can see. Logged in
+                 docs/open-questions.md. Restore this when the light cut lands. */
+              null
+            ) : null}
+            {entry.body.map((paragraph) => (
+              <p
+                key={paragraph.slice(0, 32)}
+                className={`leading-relaxed ${isPartner
+                  ? `mt-8 text-lg ${inkBody} sm:text-xl`
+                  : isGroundFrame
+                    ? `mt-6 max-w-3xl ${inkBody}`
+                    : `mt-4 ${inkBody}`
+                  }`}
+              >
+                {/* The 2020 frame folds the date into the body's first line. */}
+                {isDiptych && entry.when && paragraph === entry.body[0]
+                  ? `${entry.when}. ${paragraph}`
+                  : paragraph}
+              </p>
+            ))}
+            {entry.claim ? (
+              <p className={`headline mt-8 max-w-xl text-3xl leading-snug ${inkHead}`}>
+                {entry.claim}
+              </p>
+            ) : null}
+            {/* The coda is the record's large statement (the 05 and 2022
+            frames) — it reads before the photographs. */}
+            {entry.coda ? (
+              <p
+                className={`mt-8 max-w-2xl text-xl leading-snug ${inkBody} sm:text-2xl ${isGroundFrame ? "font-medium leading-relaxed" : ""
+                  }`}
+              >
+                {entry.coda}
+              </p>
+            ) : null}
+            {entry.id && truthEntryMedia[entry.id] && !isEngraving ? (
+              entry.id === "precinct" ? (
+                <FeatureMedia
+                  slots={truthEntryMedia[entry.id]}
+                  caption={entry.caption}
+                />
+              ) : isToday ? (
+                <TodayMontage slots={truthEntryMedia[entry.id]} />
+              ) : isFather ? (
+                <PortraitTestimony
+                  slot={truthEntryMedia[entry.id][0]}
+                  testimony={entry.testimony}
+                />
+              ) : isDiptych ? (
+                <Diptych
+                  slots={truthEntryMedia[entry.id]}
+                  variant={isRenamed ? "seam" : "lead"}
+                />
+              ) : isArtGallery ? (
+                <WrittenRecordFrame slots={truthEntryMedia[entry.id]} />
+              ) : isMitchell ? (
+                <CountryAndDocument slots={truthEntryMedia[entry.id]} />
+              ) : isSeabed ? (
+                <StrataStack slots={truthEntryMedia[entry.id]} />
+              ) : (
+                <EntryMedia slots={truthEntryMedia[entry.id]} caption={entry.caption} />
+              )
+            ) : null}
+            {entry.footnotes?.map((footnote) => (
+              <p key={footnote.slice(0, 32)} className={`mt-4 text-xs leading-relaxed ${inkMuted}`}>
+                {footnote}
+              </p>
+            ))}
+            {entry.source && entry.cta ? (
+              /* The wireframe sets the record label and the CTA on one row. */
+              <div className="mt-8 flex flex-wrap items-baseline justify-between gap-4">
+                <p className={`eyebrow text-[10px] font-normal ${accent}`}>
+                  {entry.source}
+                </p>
+                <Link
+                  href={entry.cta.href}
+                  /* The ground frames (17, 18) set the CTA at Yellow Gold. */
+                  className={`eyebrow text-xs transition-transform duration-300 hover:translate-x-1 ${accent
+                    }`}
+                >
+                  {entry.cta.label} &rarr;
+                </Link>
+              </div>
+            ) : (
+              <>
+                {entry.source ? (
+                  /* The ground frames (10–12) set the tag in Burnt Ochre with or
+                     without a CTA; elsewhere it stays quiet. */
+                  <p
+                    className={`eyebrow mt-8 text-[10px] font-normal ${isGroundFrame ? accent : inkMuted
+                      }`}
+                  >
+                    {entry.source}
+                  </p>
+                ) : null}
+                {entry.cta ? (
+                  <Link
+                    href={entry.cta.href}
+                    className={`eyebrow mt-6 inline-block text-xs transition-transform duration-300 hover:translate-x-1 ${accent
+                      }`}
+                  >
+                    {entry.cta.label} &rarr;
+                  </Link>
+                ) : null}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </article>
@@ -1150,9 +1278,8 @@ function EntryPlate({
         data-truth-slide
         data-truth-slide-label={title}
         data-truth-ground={id === "deed" ? "return" : "present"}
-        className={`relative min-h-svh overflow-hidden ${
-          hasDeckContent ? "" : "flex items-end"
-        }`}
+        className={`relative min-h-svh overflow-hidden ${hasDeckContent ? "" : "flex items-end"
+          }`}
       >
         <div
           data-v2-plate
@@ -1171,21 +1298,19 @@ function EntryPlate({
               incoming record covers both image and copy from below. */}
           <div
             aria-hidden
-            className={`absolute inset-0 bg-linear-to-b ${
-              deep
-                ? "from-black/0 via-black/40 to-black/85"
-                : "from-black/0 via-black/35 to-black/80"
-            }`}
+            className={`absolute inset-0 bg-linear-to-b ${deep
+              ? "from-black/0 via-black/40 to-black/85"
+              : "from-black/0 via-black/35 to-black/80"
+              }`}
           />
         </div>
         <div
           data-descent-arrive
           data-truth-wave-heading={hasDeckContent ? true : undefined}
-          className={`mx-auto w-full max-w-6xl px-6 lg:px-24 ${
-            hasDeckContent
-              ? "absolute inset-x-0 bottom-[16svh] z-10"
-              : `relative z-30 ${deep ? "pb-[24svh]" : "pb-[16svh]"}`
-          }`}
+          className={`mx-auto w-full max-w-6xl px-6 lg:px-24 ${hasDeckContent
+            ? "absolute inset-x-0 bottom-[16svh] z-10"
+            : `relative z-30 ${deep ? "pb-[24svh]" : "pb-[16svh]"}`
+            }`}
         >
           <p className="eyebrow text-lg text-gold sm:text-2xl">{eyebrow}</p>
           {kicker ? (
@@ -1202,9 +1327,9 @@ function EntryPlate({
         {deckContent ? (
           <div data-truth-deck-viewport className="relative z-20">
             <div data-truth-deck-track className="pt-[100svh]">
-              <div className="relative bg-evergreen">
+              <div className="relative bg-canvas">
                 <WaveDivider
-                  ground="var(--color-evergreen)"
+                  ground="var(--color-canvas)"
                   hook="today-wave"
                 />
                 <div>{deckContent}</div>
@@ -1278,7 +1403,18 @@ export function EraSection({
         title={lead.title}
         deckContent={
           <div className="mx-auto max-w-6xl px-6 lg:px-24">
-            <EntryBlock entry={lead} titleOnPlate withinDeck />
+            {/* The era reaches the gutter here only so the rail's pointer has
+                something to name on Today (user, 10 Sep 2026) — every other
+                era already put its marker there. At lg the block is
+                transparent and the pointer carries it; at md it reads as the
+                section's own marker, which this section did not have. */}
+            <EntryBlock
+              entry={lead}
+              titleOnPlate
+              withinDeck
+              gutterLabel={era.marker}
+              gutterSub={lead.when}
+            />
           </div>
         }
       />
@@ -1330,19 +1466,15 @@ export function EraSection({
           ) : null}
         </EntryPlate>
         {/* The 10 frame owns its Roasted Brown (#4E3524) ground outright. */}
-        <section className="relative overflow-clip bg-roasted">
-          {/* The 06 frame's PENDING-MOTIF — Artwork Ring A (Marc's Wonder
-              footer spiral, 349:3461), static behind the copy. Its 0.14 ×
-              0.08 opacity is baked into the delivered cut. Spec position:
-              x900 y60 of the 1440 frame, 416px wide. */}
-          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-          <img
-            src="/artwork/ring-spiral-a.svg"
-            alt=""
-            aria-hidden
-            className="pointer-events-none absolute right-[8.6%] top-14 w-104"
-            loading="lazy"
-          />
+        <section className="relative overflow-clip bg-canvas">
+          {/* ⚠ RING WITHDRAWN on the egg-white ground. The delivered cut of
+              ring-spiral-a is off-white with its 0.14 × 0.08 opacity baked in,
+              so on #f6f6ec it is the ground painted onto the ground and draws
+              literally nothing — ART-DIRECTION §299-305 records this exact
+              failure ("which is why The Record §04's ring had never once been
+              visible"). The house fix is a roasted repath at 0.30, and
+              ring-a/ring-b have one; this spiral does not. Withdrawn rather
+              than shipped invisible. Logged in docs/open-questions.md. */}
           <div className="relative mx-auto max-w-6xl px-6 py-20 lg:px-24">
             {orderedEntries.map((entry) => {
               if (entry.id === "research-discovery" && studyPair.length === 2) {
@@ -1364,8 +1496,8 @@ export function EraSection({
                   entry={entry}
                   gutterSub={
                     entry.id === "renamed" ||
-                    entry.id === "just-us" ||
-                    entry.id === "father"
+                      entry.id === "just-us" ||
+                      entry.id === "father"
                       ? era.title
                       : undefined
                   }
@@ -1385,7 +1517,7 @@ export function EraSection({
       {foldsEra || eraTitleInGutter ? null : (
         <h2
           data-descent-heading
-          className="headline mt-4 max-w-3xl text-3xl text-canvas sm:text-5xl"
+          className="headline mt-4 max-w-3xl text-3xl text-evergreen sm:text-5xl"
         >
           {era.title}
         </h2>
@@ -1427,7 +1559,7 @@ export function EraSection({
           {/* The wave belongs to the incoming Ahead deck, so its crest stays
               attached while the hero is pinned. The gated deck scrubs the
               shared About ink over the final 20vh before the buffer. */}
-          <WaveDivider ground="var(--color-evergreen)" hook="truth-wave" />
+          <WaveDivider ground="var(--color-canvas)" hook="truth-wave" />
           <div data-truth-deck-viewport>
             <div data-truth-deck-track>{inner}</div>
           </div>
@@ -1437,10 +1569,19 @@ export function EraSection({
   }
   if (titleInGutter) {
     /* The 13 frame keeps the shared Roasted Brown (#4E3524) ground and adds
-       its local 0.34 dim — "the light is going out of this band". */
+       its local dim — "the light is going out of this band".
+
+       The dim DEEPENS as the band is read (0.10 -> 0.45, around the frame's
+       0.34): this is the one ground that deteriorates under the reader rather
+       than simply being darker than its neighbour. The photograph itself still
+       takes no push — giving it camera movement would flatter it.
+
+       It is painted by the slide's own ::after (globals.css) off a custom
+       property, so the scrub writes one CSS variable rather than a colour
+       string, the dim travels with the pin, and the resting value is the
+       frame's own number — no-JS and reduced motion both read as drawn. */
     return (
-      <section id={era.id} className="relative bg-roasted">
-        <div aria-hidden className="absolute inset-0 bg-[rgba(9,14,18,0.34)]" />
+      <section id={era.id} className="relative bg-canvas">
         {inner}
       </section>
     );
@@ -1452,25 +1593,24 @@ export function EraSection({
             copy. Spec: x900 y70 of the 1440 frame, 416px wide, 0.12 over the
             0.08 fill. The delivered cut bakes 0.14 × 0.08, so it is dimmed to
             0.86 here. Artwork-motion permission is not recorded. */}
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-        <img
-          src="/artwork/ring-spiral-a.svg"
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute right-[8.6%] top-[70px] w-104 opacity-[0.86]"
-          loading="lazy"
-        />
+        {/* ⚠ RING WITHDRAWN — same reason as the 06 frame's: the off-white
+            cut is invisible on the off-white ground and no roasted repath of
+            this spiral exists. */}
         {inner}
-        {/* Wave / Divider · CHARCOAL — into deep time. Fill = the ground of
-            the band it introduces, over the foot of this one. */}
-        <HandoffWave to="charcoal" />
+        {/* NO WAVE HERE. This seam used to hand roasted-brown into charcoal;
+            both sides are now the one egg-white ground, and a divider filled
+            with the colour it introduces has nothing to carry — it would draw
+            canvas onto canvas. /about settles the same case the same way: its
+            charcoal-to-charcoal seam is deliberately waveless, "nothing
+            carries; that is the point". The four waves that survive are the
+            ones that still cross a real change. */}
       </section>
     );
   }
   if (isBeginning) {
     /* The 19 frame owns the incoming Charcoal Black (#090E12) ground. */
     return (
-      <section id={era.id} className="relative bg-charcoal">
+      <section id={era.id} className="relative bg-canvas">
         {inner}
       </section>
     );
@@ -1479,55 +1619,165 @@ export function EraSection({
 }
 
 /**
- * 1902 — the count, then Suzanne's words.
+ * THE COUNT IS THREE SCREENS, not one scroll.
  *
- * The numerals take the viewport alone (the draft's build note: "nothing else
- * on screen"). Everything from the testimony down is still: no arrive, no
- * depth, no split — the stated exception.
- */
-/**
- * Wired (2026-09-09, August's direction): the band renders the drafted copy
- * from `suzanne` in src/content/truth.ts — marker, title, figures, citation,
- * her quotations, the closing paragraphs — in the draft's own order.
+ * It arrived as a single 2,989px panel — head, then the figures, then her
+ * testimony — inside the escarpment slide's deck track. At three and a third
+ * viewports it read as a long scroll through a dark passage, and the count
+ * itself, which is the thing the whole descent has been walking toward, was
+ * just something you went past on the way.
  *
- * The 2026-09-03 hold on this band is lifted as a BUILD gate only, under F8
- * (build-first, 31 Aug): the section is built so that it can be reviewed.
- * What the hold was protecting is unchanged and enforced elsewhere:
+ * Split at the joins the copy already has, each one a gated screen the deck
+ * holds: WHO IS SPEAKING, THE COUNT, HER TESTIMONY. The draft's order is
+ * unchanged (D5) and not one word moved — this is where the page breathes, not
+ * what it says.
  *
- *  · Truth is `held by community` in docs/content/STATUS.md and does not
- *    PUBLISH without Suzanne's approval (R5). That gate, not this file, is
- *    what keeps this off the public site.
- *  · Both editorial blocks were removed from the band on 9 Sep (August): the
- *    draft's standing "awaiting her approval" warning at the head, and the
- *    check note carrying her two open questions at the foot. This build IS
- *    the approval ask, so it presents as the page rather than as a marked-up
- *    draft. THE QUESTIONS ARE STILL OPEN — the order of the count against
- *    the blankets, and thirty-five against thirty-seven — and the page no
- *    longer asks them, so they have to be put to her in the presentation.
- *    Both texts are kept in src/content/truth.ts and in the v3 draft.
- *  · CR4 ("settlers" → "colonists") is still unratified inside her recorded
- *    words — see the ⚠⚠ comment on `quotes` in src/content/truth.ts.
- *  · Her portrait slot stays HELD: a photograph is a separate permission and
- *    no file has been delivered.
+ * ⛔ The count itself does not move. No arrival, no count-up, no glow: the
+ * number is simply there. That is the grammar's figures-of-loss rule — a
+ * number describing people taken is stated and held, never ticked upward —
+ * and it is declared on the numerals, so the sourced line beneath each one is
+ * still read a word at a time (user, 10 Sep 2026). The figure holding while
+ * its own sentence arrives around it is what makes the stillness legible.
  */
 
-export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
-  const content = (
-      <div
-        id="the-count"
-        data-descent-band={withinDeck ? "count" : undefined}
-        {...(withinDeck
-          ? {}
-          : {
-              "data-truth-slide": true,
-              "data-truth-slide-label": "The count",
-              "data-truth-ground": "count",
-            })}
-        className="relative overflow-hidden bg-charcoal"
+/**
+ * The charcoal ground, the ring, and the reading column every beat shares.
+ *
+ * No screen here is held whole any more. The count marks its own numerals with
+ * `data-v2-static` instead, so the sourced line beneath each figure can still
+ * be read — which is why this takes no `still` prop.
+ */
+function CountScreen({
+  id,
+  label,
+  readVh,
+  children,
+}: {
+  id: string;
+  label: string;
+  /**
+   * Scroll distance for this screen, in vh. Default is the deck's 125.
+   *
+   * This is the budget the pacing in truth-scenes.ts spends: enough for her
+   * words at LINE_VH per rendered line, plus the tail the screen is held for
+   * afterwards. Too small and the words are compressed to fit — dev builds
+   * print the number to use.
+   */
+  readVh?: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <div data-truth-slide-runway className="relative">
+      <section
+        id={id}
+        data-truth-slide
+        data-truth-slide-label={label}
+        data-truth-ground="count"
+        {...(readVh ? { "data-truth-read-vh": readVh } : {})}
+        data-descent-arrive
+        className="relative min-h-svh overflow-hidden bg-charcoal"
       >
-      {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B, static, behind
-          the copy. Spec: x900 y90 of the 1440 frame, 465 wide, 0.1 — the
-          delivered cut is off-white; the opacity is applied here. */}
+        {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B, static, behind
+            the copy. Spec: x900 y90 of the 1440 frame, 465 wide, 0.1 — the
+            delivered cut is off-white; the opacity is applied here. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/artwork/ring-b.svg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
+          loading="lazy"
+        />
+        {/* The deck pins a slide at exactly 100svh and clips it, so a screen
+            whose content is taller than the viewport loses the overflow —
+            measured, her testimony ran 1,053px into a 900px box and the first
+            quotation was cut off at the top. The deck track is the mechanism
+            for that: it carries the content up across the section's own
+            reading span, which is how TODAY and the escarpment already work.
+
+            The inner wrapper keeps `min-h-svh` + centring, so a screen that
+            FITS (the count) sits centred and its track has nothing to travel,
+            while one that does not (her testimony) grows and is carried. */}
+        <div data-truth-deck-viewport className="relative">
+          <div data-truth-deck-track>
+            <div className="relative mx-auto flex min-h-svh w-full max-w-6xl flex-col justify-center px-6 py-24 lg:px-24">
+              {children}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/**
+ * A · WHO IS SPEAKING. Rides the escarpment cover, so it is the screen the
+ * charcoal ground arrives on.
+ *
+ * Order follows the draft (D5): marker, title, who is speaking, her opening
+ * line, the lede.
+ *
+ * The draft's standing warning — "Draft, awaiting her approval"
+ * (`suzanne.draftWarning`) — is NOT rendered. Removed 9 September 2026 on
+ * August's instruction: this build is what goes in front of Suzanne and the
+ * Elder Advisory Group to be approved, so the band shows the page as it would
+ * read rather than announcing its own draft state. The check note at the foot
+ * came off in the same pass. Neither text is deleted — both stay in
+ * src/content/truth.ts and in the v3 draft — but nothing on this page now says
+ * the copy is unapproved, so restore both if the section is ever shown
+ * anywhere other than that review.
+ */
+export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
+  const head = (
+    <div className="grid gap-6 md:grid-cols-[180px_1fr] md:gap-12">
+      <p className="eyebrow self-start pt-3 text-h6 text-canvas">
+        {suzanne.marker}
+      </p>
+      <div>
+        <h2 className="headline max-w-4xl text-h2 leading-[1.2] text-oxide">
+          {suzanne.title}
+        </h2>
+        {/* `.eyebrow`, not a hand-rolled one. This label used to be Work Sans
+            set uppercase with letter-spacing, two lines above a real eyebrow —
+            two micro-labels in two different faces, touching. */}
+        <p className="eyebrow mt-10 text-canvas/70">Told by</p>
+        <div className="mt-6 grid gap-8 sm:grid-cols-[320px_1fr] sm:gap-8">
+          {/* ⟡ PORTRAIT SLOT — Suzanne. STILL HELD (R5): her words are wired
+              from the draft, her photograph is a separate permission and no
+              file has been delivered. The slot stays dashed until it is. */}
+          <div
+            data-placeholder="portrait-held"
+            aria-hidden
+            className="aspect-4/5 w-full max-w-80 rounded-xs border border-dashed border-oxide/50"
+          />
+          <div>
+            <p className="eyebrow text-base text-oxide">{suzanne.attribution}</p>
+            <p className="mt-2 text-sm leading-relaxed text-canvas">
+              {suzanne.role}
+            </p>
+            {/* Her opening line is testimony: it is read in stillness, never in
+                the callout face — and, since 10 Sep, never in the display face
+                either. `voice` sets it in the reading face. */}
+            <PullQuote tone="charcoal" voice className="mt-8">
+              {suzanne.openingQuote}
+            </PullQuote>
+          </div>
+        </div>
+        <p className="mt-10 max-w-2xl leading-relaxed text-canvas/80">
+          {suzanne.lede}
+        </p>
+      </div>
+    </div>
+  );
+
+  /* Inside the escarpment deck the wrappers belong to that slide, so this beat
+     is cargo. Standalone it is a screen of its own like the other two. */
+  return withinDeck ? (
+    <div
+      id="the-count"
+      data-descent-band="count"
+      className="relative overflow-hidden bg-charcoal"
+    >
       {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
       <img
         src="/artwork/ring-b.svg"
@@ -1536,155 +1786,136 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
         className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
         loading="lazy"
       />
-      <div {...(withinDeck ? {} : { "data-truth-deck-viewport": true })}>
-        <div {...(withinDeck ? {} : { "data-truth-deck-track": true })}>
-      <div className="relative mx-auto max-w-6xl px-6 lg:px-24">
-        {/* The 15 frame's head: era at Eyebrow/Section-24 in off-white on
-            the gutter line, the title at Display/96 in Rust Red — the only
-            red on the page — then the testimony block: portrait slot HELD
-            (R5) left, attribution and her opening words right. Nothing here
-            moves. Order follows the draft (D5): marker, title, who is
-            speaking, her opening line, the lede. */}
-        <div className="grid gap-6 pb-24 pt-36 md:grid-cols-[180px_1fr] md:gap-12">
-          <p className="eyebrow self-start pt-3 text-xl text-canvas">
-            {suzanne.marker}
-          </p>
-          <div>
-            {/* The draft's standing warning — "Draft, awaiting her approval"
-                (`suzanne.draftWarning`) — is NOT rendered here. Removed
-                9 September 2026 on August's instruction: this build is what
-                goes in front of Suzanne and the Elder Advisory Group to be
-                approved, so the band shows the page as it would read rather
-                than announcing its own draft state. The check note at the
-                foot came off in the same pass. Neither text is deleted —
-                both stay in src/content/truth.ts and in the v3 draft — but
-                nothing on this page now says the copy is unapproved, so
-                restore both if the section is ever shown anywhere other
-                than that review. */}
-            <h2 className="headline max-w-4xl text-h2 leading-[1.2] text-oxide">
-              {suzanne.title}
-            </h2>
-            <p className="mt-10 text-sm uppercase tracking-wide text-canvas/70">
-              Told by
-            </p>
-            <div className="mt-6 grid gap-8 sm:grid-cols-[320px_1fr] sm:gap-8">
-              {/* ⟡ PORTRAIT SLOT — Suzanne. STILL HELD (R5): her words are
-                  wired from the draft, her photograph is a separate
-                  permission and no file has been delivered. The slot stays
-                  dashed until it is. */}
-              <div
-                data-placeholder="portrait-held"
-                aria-hidden
-                className="aspect-4/5 w-full max-w-80 rounded-xs border border-dashed border-oxide/50"
-              />
-              <div>
-                <p className="eyebrow text-base text-oxide">{suzanne.attribution}</p>
-                <p className="mt-2 text-sm leading-relaxed text-canvas">
-                  {suzanne.role}
-                </p>
-                {/* Her opening line is testimony: it is read in stillness,
-                    never in the callout face. */}
-                <PullQuote tone="charcoal" className="mt-8">
-                  {suzanne.openingQuote}
-                </PullQuote>
-              </div>
-            </div>
-            <p className="mt-10 max-w-2xl leading-relaxed text-canvas/80">
-              {suzanne.lede}
-            </p>
-          </div>
-        </div>
-
-        {/* The count takes the viewport alone — the draft's build note:
-            "nothing else on screen". */}
-        <div className="flex min-h-[100svh] flex-col justify-center py-24 md:pl-[calc(180px+3rem)]">
-          <dl className="space-y-16">
-            {suzanne.figures.map((figure) => (
-              <div key={figure.year} className="max-w-3xl">
-                <dt className="headline text-7xl text-canvas sm:text-9xl">
-                  {figure.year}
-                </dt>
-                <dd className="mt-4 text-lg leading-relaxed text-canvas/80">
-                  {figure.detail}
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50">
-            <a
-              href={suzanne.citation.href}
-              className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
-            >
-              {suzanne.citation.text}
-            </a>
-          </p>
-        </div>
-
-        {/* Testimony. Still, by rule — these are her words being read. */}
-        <div className="max-w-3xl pb-24 md:pl-[calc(180px+3rem)]">
-          {/* The first of these carries the unratified CR4 word. Steve's
-              note of 7 Sep is explicit that as a bare pull quote it "reads
-              as our copy — it isn't", so this one is attributed on the spot
-              rather than relying on the "Told by" line a screen above. */}
-          {suzanne.quotes.map((quote, index) => (
-            <PullQuote
-              key={quote.slice(0, 32)}
-              tone="charcoal"
-              className="mt-10 first:mt-0"
-              {...(index === 0
-                ? { attribution: suzanne.attribution, role: suzanne.role }
-                : {})}
-            >
-              {quote}
-            </PullQuote>
-          ))}
-          <p className="mt-10 leading-relaxed text-canvas/80">{suzanne.afterQuotes}</p>
-          {/* The line the page stands on. Set large, but still marked up as
-              the quotation it is — these are her words, not the site's. */}
-          <blockquote className="headline mt-14 text-4xl text-canvas sm:text-5xl">
-            {suzanne.standingQuote}
-          </blockquote>
-          {suzanne.closing.map((paragraph) => (
-            <p key={paragraph.slice(0, 32)} className="mt-8 leading-relaxed text-canvas/80">
-              {paragraph}
-            </p>
-          ))}
-          {/* `suzanne.checkNote` — her two open questions, the order of the
-              count against the blankets and thirty-five against thirty-seven
-              — is NOT rendered here. Removed 9 September 2026 on August's
-              instruction, with the head warning, so the band presents as the
-              page rather than as a marked-up draft. Both questions are still
-              open and still unanswered; they now have to be PUT TO HER IN THE
-              PRESENTATION, because the page no longer asks them. The text is
-              kept in src/content/truth.ts and in the Truth v3 draft. */}
-        </div>
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-36 lg:px-24">
+        {head}
       </div>
-      {/* Wave / Divider · NAVY — Marc's hand-off, filled with the ground it
-          INTRODUCES: what came before the record. The record strand on the
-          rail surfaces again here (data-count-wave), under the count. */}
-      <svg
-        aria-hidden
-        data-count-wave
-        data-descent-wave
-        viewBox="0 0 1442 151"
-        preserveAspectRatio="none"
-        className="block h-16 w-full sm:h-28"
-      >
-        <path
-          d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
-          className="fill-midnight"
-        />
-      </svg>
-        </div>
-      </div>
-      </div>
-  );
-  return withinDeck ? (
-    content
-  ) : (
-    <div data-truth-slide-runway className="relative">
-      {content}
     </div>
+  ) : (
+    <CountScreen id="the-count" label="Who is speaking">
+      {head}
+    </CountScreen>
+  );
+}
+
+/**
+ * B · THE COUNT. The numerals take the viewport alone — the draft's build
+ * note: "nothing else on screen".
+ *
+ * ⛔ THE FIGURES DO NOT MOVE. `data-v2-static` is on each one rather than on
+ * the section, so `isHeld()` — an ancestor test — holds the numbers still
+ * inside a screen that now reads. The count is stated and held, never ticked
+ * upward: that is the grammar's figures-of-loss ban, not a Truth-local
+ * preference, and it outranks anything this screen might want.
+ *
+ * ⚠ THE DISPLAY SLOT MOVED FROM THE YEAR TO THE COUNT (user, 10 Sep 2026).
+ * The year is now the rail-marker eyebrow the screen above uses, and the count
+ * carries `text-h1`. The screen is no louder than it was — it spends the same
+ * one display slot per row — but note ART-DIRECTION.md's standing caution that
+ * neither 1902 number should be set as a display statistic until Suzanne
+ * settles thirty-five against thirty-seven. Logged against R5 in
+ * open-questions.md; the Hoch/Taçon citation sits directly beneath, which is
+ * what keeps it a sourced figure rather than a headline.
+ */
+export function SuzanneCount() {
+  return (
+    <CountScreen id="the-count-figures" label="The count" readVh={220}>
+      <dl className="space-y-16">
+        {suzanne.figures.map((figure) => (
+          <div
+            key={figure.year}
+            className="grid gap-6 md:grid-cols-[180px_1fr] md:gap-12"
+          >
+            {/* Same marker column as SuzanneBand, so the two screens line up.
+                `pt-3` seats the eyebrow against the figure's cap height. */}
+            <dt className="eyebrow self-start pt-3 text-h6 text-canvas">
+              {figure.year}
+            </dt>
+            <dd className="max-w-3xl">
+              <p data-v2-static className="headline text-h1 text-canvas">
+                {figure.figure}
+              </p>
+              {/* The sentence the figure belongs to, read a word at a time —
+                  the treatment her quotations get two screens on. */}
+              <WordEmphasis
+                as="p"
+                text={figure.detail}
+                className="mt-4 text-lg leading-relaxed text-canvas/80"
+              />
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50 md:pl-[calc(180px+3rem)]">
+        <a
+          href={suzanne.citation.href}
+          className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
+        >
+          {suzanne.citation.text}
+        </a>
+      </p>
+    </CountScreen>
+  );
+}
+
+/**
+ * C · HER TESTIMONY. Her words, read in stillness — the words undim at
+ * speaking pace and nothing else moves.
+ *
+ * `suzanne.checkNote` — her two open questions, the order of the count against
+ * the blankets and thirty-five against thirty-seven — is NOT rendered here.
+ * Removed 9 September 2026 on August's instruction, with the head warning, so
+ * the band presents as the page rather than as a marked-up draft. Both
+ * questions are still open and still unanswered; they now have to be PUT TO
+ * HER IN THE PRESENTATION, because the page no longer asks them. The text is
+ * kept in src/content/truth.ts and in the Truth v3 draft.
+ */
+export function SuzanneTestimony() {
+  return (
+    /* 300vh, not the deck's 125. Sixty-three words of her speech undim one
+       after another here; at the normalised span they arrived about seven to a
+       line every 145px of scroll, which is faster than the line can be read.
+       The last third of the span is deliberately left after the words have
+       finished, so the section is not already handing over to the 1840s while
+       she is still being read. */
+    <CountScreen id="the-count-testimony" label="Her testimony" readVh={560}>
+      <div className="py-28 max-w-3xl md:pl-[calc(180px+3rem)]">
+        {/* The first of these carries the unratified CR4 word. Steve's note of
+            7 Sep is explicit that as a bare pull quote it "reads as our copy —
+            it isn't", so this one is attributed on the spot rather than relying
+            on the "Told by" line two screens above. */}
+        {suzanne.quotes.map((quote, index) => (
+          <PullQuote
+            key={quote.slice(0, 32)}
+            tone="charcoal"
+            voice
+            className="mt-10 first:mt-0"
+            {...(index === 0
+              ? { attribution: suzanne.attribution, role: suzanne.role }
+              : {})}
+          >
+            {quote}
+          </PullQuote>
+        ))}
+        <p className="mt-10 leading-relaxed text-canvas/80">
+          {suzanne.afterQuotes}
+        </p>
+        {/* The line the page stands on. Set large, but a step BELOW the section
+            title and in the reading face — it is her sentence, not a heading of
+            ours. It was set in the display face at the title's own size, which
+            made the page appear to say it. */}
+        <blockquote className="mt-14 text-h3 leading-[1.2] text-canvas">
+          {suzanne.standingQuote}
+        </blockquote>
+        {suzanne.closing.map((paragraph) => (
+          <p
+            key={paragraph.slice(0, 32)}
+            className="mt-8 leading-relaxed text-canvas/80"
+          >
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </CountScreen>
   );
 }
 
@@ -1697,6 +1928,7 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
  *  INTRODUCES (the 08 spec). Literal map: Tailwind cannot see computed
  *  classes. */
 const WAVE_FILL: Record<string, string> = {
+  canvas: "fill-canvas",
   roasted: "fill-roasted",
   evergreen: "fill-evergreen",
   charcoal: "fill-charcoal",
@@ -1712,21 +1944,45 @@ const WAVE_FILL: Record<string, string> = {
 export function HandoffWave({
   to,
   placement = "trailing",
+  railAnchor = false,
+  bleed = false,
 }: {
   to: keyof typeof WAVE_FILL;
   placement?: "leading" | "trailing";
+  /**
+   * Break out of a width-constrained ancestor to span the viewport.
+   *
+   * Most waves sit on a full-width surface and need nothing. The count's
+   * hand-off does: it is seated on the 1840s ARTICLE, because that is the
+   * element the deck pins and moves, and the article lives inside the page's
+   * max-w-6xl reading column. Left alone it drew a wave across the column
+   * only, with the outgoing escarpment showing down both margins. This is the
+   * same `calc(50% - 50vw)` escape the pinned slide's own ground uses in
+   * globals.css, for the same reason.
+   */
+  bleed?: boolean;
+  /**
+   * Stamps `data-count-wave`, which the trail rail measures the record
+   * strand's restart from. Exactly one wave on the page carries it — the
+   * hand-off out of the count — and the rail falls back to the top of the
+   * before-record band if it ever goes missing.
+   */
+  railAnchor?: boolean;
 }) {
   return (
     <svg
       aria-hidden
       data-descent-wave
+      {...(railAnchor ? { "data-count-wave": true } : {})}
       viewBox="0 0 1442 151"
       preserveAspectRatio="none"
-      className={`pointer-events-none absolute inset-x-0 h-16 w-full sm:h-28 ${
-        placement === "leading"
+      className={`pointer-events-none absolute h-16 sm:h-28 ${bleed
+        ? "left-[calc(50%-50vw)] w-screen"
+        : "inset-x-0 w-full"
+        } ${placement === "leading"
           ? "top-0 -translate-y-[calc(100%-1px)]"
           : "bottom-0"
-      }`}
+        }`}
     >
       <path
         d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
@@ -1746,29 +2002,33 @@ export function FullBleedBreak({
   waveTo?: keyof typeof WAVE_FILL;
 }) {
   const slot = truthBreakMedia[which];
+  /* The breaks PULL BACK where ordinary media pushes in. The reader is being
+     let go of at the join, not driven through it — the page has already
+     stopped here, and advancing the camera into a held image while the scroll
+     is locked reads as impatience. */
   return (
     <div data-truth-slide-runway className="relative">
       <section
         id={truthBreaks[which].id}
         data-truth-slide
         data-truth-slide-label={truthBreaks[which].id}
-        data-v2-camera
+        data-v2-pullback
         data-motion={MOTION_GRADE[slot.bucket]}
         className="relative min-h-[80svh] overflow-hidden"
       >
-      <MediaOrField
-        src={slot.src}
-        alt={truthBreaks[which].alt}
-        sizes={COVER_FULL_BLEED}
-        quality={85}
-        fieldClass={FIELD_CLASS[slot.tone]}
-      />
-      {/* The 08 spec's light scrim — nothing to read here. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-linear-to-b from-charcoal/40 via-transparent to-charcoal/40"
-      />
-      {waveTo ? <HandoffWave to={waveTo} /> : null}
+        <MediaOrField
+          src={slot.src}
+          alt={truthBreaks[which].alt}
+          sizes={COVER_FULL_BLEED}
+          quality={85}
+          fieldClass={FIELD_CLASS[slot.tone]}
+        />
+        {/* The 08 spec's light scrim — nothing to read here. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-b from-charcoal/40 via-transparent to-charcoal/40"
+        />
+        {waveTo ? <HandoffWave to={waveTo} /> : null}
       </section>
     </div>
   );
@@ -1777,8 +2037,8 @@ export function FullBleedBreak({
 /**
  * 14 · BREAK The Escarpment — DISSOLVE PAIR (2026-09-03). Two full-bleed
  * country shots stacked: B beneath, A on top dissolving 1 → 0 across the
- * break's travel ([data-v2-dissolve]); B pulls back a touch as it is
- * revealed ([data-v2-plate], the plates' own push). Light scrim. Marc's
+ * break's travel ([data-v2-dissolve]); B pulls back as it is revealed
+ * ([data-v2-pullback], 1.06 → 1.00). Light scrim. Marc's
  * charcoal wave over the foot — the last hand-off, into the count.
  *
  * While shot B is undelivered A holds at full: [data-v2-dissolve] is only
@@ -1789,60 +2049,113 @@ export function DissolveBreak({ deckContent }: { deckContent?: React.ReactNode }
   const incomingSrc = presentSrc(incoming.src);
   const hasDeckContent = Boolean(deckContent);
   return (
-    <div data-truth-slide-runway className="relative">
+    /* bg-charcoal ON THE RUNWAY, which is the document-space box behind this
+       slide while it is pinned.
+
+       The deck's hand-off glues the outgoing slide's foot to the incoming
+       slide's head by capping the exit at the incoming's measured position.
+       That cap is only ever as fresh as the exit tween's last render, and on a
+       fast flick the two stop agreeing: the incoming rides the raw scroll
+       while the outgoing rides a scrubbed tween, so for a frame or two they
+       differ by twenty or thirty pixels. Measured on an upward flick, a 28px
+       strip opened at this seam.
+
+       That desync is not fixable by tuning — it is two clocks, and a scrub has
+       lag by design. What IS fixable is what shows through: this break lives
+       in the page's egg-white band, so the strip read as a white line across
+       the darkest passage on the page. Charcoal behind it and the same
+       twenty pixels are invisible. */
+    <div data-truth-slide-runway className="relative bg-charcoal">
       <section
         id={truthBreaks.escarpment.id}
         data-truth-slide
         data-truth-slide-label={truthBreaks.escarpment.id}
         /* The frame's 900 on 1440 — the break keeps that proportion rather
-           than a viewport-height minimum, so it never towers on a wide screen. */
-        className="relative h-[62.5vw] min-h-[24rem] overflow-hidden"
+           than a viewport-height minimum, so it never towers on a wide screen.
+
+           bg-charcoal because THIS SLIDE HAS A TRANSPARENT LAYER IN IT. Shot B
+           is undelivered, so its MediaOrField renders the honest tonal field —
+           `bg-charcoal/50`, half transparent — and once the dissolve has faded
+           shot A out, that half-transparency was compositing over the page's
+           egg-white band. Scrolling back up, the count's charcoal panel lags a
+           few tens of pixels behind the scroll while the scrub settles, and
+           that strip at the top of the slide read as a band of white in the
+           middle of the darkest passage on the page.
+
+           The lag is not the bug and cannot be tuned away — a scrub has lag by
+           design, "the slight lag IS the weight". What was wrong is that a
+           full-bleed photographic break was letting the page ground show
+           through at all. A solid ground under the plates fixes it whatever
+           the timing does, and it is the right colour anyway: this break hands
+           into the count. */
+        className="relative h-[62.5vw] min-h-[24rem] overflow-hidden bg-charcoal"
       >
-      <div
-        data-v2-plate
-        data-motion={MOTION_GRADE[incoming.bucket]}
-        className="absolute inset-0"
-      >
-        <MediaOrField
-          src={incomingSrc}
-          alt=""
-          sizes={COVER_FULL_BLEED}
-          quality={85}
-          fieldClass={FIELD_CLASS[incoming.tone]}
+        {/* Shot B pulls back as it is revealed, matching the Country now break.
+          The plate's own push would drive INTO the escarpment while the page
+          is held; withdrawing from it is the colder read the frame asks for. */}
+        <div
+          data-v2-pullback
+          data-motion={MOTION_GRADE[incoming.bucket]}
+          className="absolute inset-0"
+        >
+          <MediaOrField
+            src={incomingSrc}
+            alt=""
+            sizes={COVER_FULL_BLEED}
+            quality={85}
+            fieldClass={FIELD_CLASS[incoming.tone]}
+          />
+        </div>
+        <div
+          {...(incomingSrc ? { "data-v2-dissolve": true } : {})}
+          className="absolute inset-0"
+        >
+          <MediaOrField
+            src={presentSrc(outgoing.src)}
+            alt={truthBreaks.escarpment.alt}
+            sizes={COVER_FULL_BLEED}
+            quality={85}
+            fieldClass={FIELD_CLASS[outgoing.tone]}
+          />
+        </div>
+        {/* scrim · light — 0 → .18 → .40 */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-b from-black/0 via-black/18 to-black/40"
         />
-      </div>
-      <div
-        {...(incomingSrc ? { "data-v2-dissolve": true } : {})}
-        className="absolute inset-0"
-      >
-        <MediaOrField
-          src={presentSrc(outgoing.src)}
-          alt={truthBreaks.escarpment.alt}
-          sizes={COVER_FULL_BLEED}
-          quality={85}
-          fieldClass={FIELD_CLASS[outgoing.tone]}
-        />
-      </div>
-      {/* scrim · light — 0 → .18 → .40 */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-linear-to-b from-black/0 via-black/18 to-black/40"
-      />
-      {hasDeckContent ? (
-        <div data-truth-deck-viewport className="relative z-20">
-          <div data-truth-deck-track className="pt-[100svh]">
-            <div className="relative bg-charcoal">
-              {/* The divider belongs to the incoming count ground. Riding
+        {hasDeckContent ? (
+          <div data-truth-deck-viewport className="relative z-20">
+            <div data-truth-deck-track className="pt-[100svh]">
+              {/* THE COUNT CLOSES THE IMAGE COMPLETELY.
+
+                The deck translates this cover by exactly its own height and
+                lands it bottom-flush, so what stays visible of the escarpment
+                is `100svh − panel`. A full viewport leaves nothing.
+
+                Sizing it to "one viewport minus the wave" was the obvious
+                move and it does not work, because a wave divider is not a
+                rectangle: the SVG box is transparent ABOVE the crest, and the
+                crest dips about 60% of the way down its own height at the left
+                edge. Fitting the box on screen therefore still showed a wedge
+                of photograph through the dip — thin on the right where the
+                crest runs high, sixty pixels deep on the left.
+
+                So the panel takes the whole screen and the crest rides off the
+                top. The wave still does all its work on the way up, which is
+                where the reader sees it; at rest the count is what the frame
+                asks for — bare charcoal, nothing behind the words. */}
+              <div className="relative min-h-svh bg-charcoal">
+                {/* The divider belongs to the incoming count ground. Riding
                   this translated panel makes it close the image window in
                   exactly the same way as TODAY's evergreen cover. */}
-              <HandoffWave to="charcoal" placement="leading" />
-              {deckContent}
+                <HandoffWave to="charcoal" placement="leading" />
+                {deckContent}
+              </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <HandoffWave to="charcoal" />
-      )}
+        ) : (
+          <HandoffWave to="charcoal" />
+        )}
       </section>
     </div>
   );
@@ -1894,47 +2207,47 @@ export function WattanuriBand() {
         data-v2-static
         className="relative flex min-h-svh items-end overflow-hidden"
       >
-      <div className="absolute inset-0">
-        <MediaOrField
-          src={presentSrc(outgoing.src)}
-          alt={outgoing.expects}
-          sizes={COVER_TALL_BLEED}
-          quality={85}
-          fieldClass={FIELD_CLASS[outgoing.tone]}
-        />
-      </div>
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.387] to-black/[0.86]"
-      />
-      {/* pb clears the footer's burnt crest (13.9vw), which rides the foot of
-          this photograph — the page root is pulled up under it. */}
-      <div data-truth-deck-viewport className="relative z-10">
-        <div data-truth-deck-track>
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-[calc(12svh+14vw)] pt-[36svh] lg:px-24">
-        <p className="eyebrow text-lg text-gold sm:text-2xl">{wattanuri.marker}</p>
-        <h2 className="headline mt-4 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl">
-          {wattanuri.title}
-        </h2>
-        <p className="mt-8 max-w-3xl leading-relaxed text-canvas">{wattanuri.body}</p>
-        <EditorialNote
-          tone="canvas"
-          label="SPEC — COPY NOT COMMISSIONED"
-          className="mt-8 max-w-3xl"
-        >
-          <p className="text-xl font-medium leading-relaxed text-canvas sm:text-2xl">
-            {wattanuri.floor}
-          </p>
-        </EditorialNote>
-        <Link
-          href={wattanuri.cta.href}
-          className="eyebrow mt-10 inline-block text-xs text-gold transition-transform duration-300 hover:translate-x-1"
-        >
-          {wattanuri.cta.label} &rarr;
-        </Link>
-      </div>
+        <div className="absolute inset-0">
+          <MediaOrField
+            src={presentSrc(outgoing.src)}
+            alt={outgoing.expects}
+            sizes={COVER_TALL_BLEED}
+            quality={85}
+            fieldClass={FIELD_CLASS[outgoing.tone]}
+          />
         </div>
-      </div>
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.387] to-black/[0.86]"
+        />
+        {/* pb clears the footer's burnt crest (13.9vw), which rides the foot of
+          this photograph — the page root is pulled up under it. */}
+        <div data-truth-deck-viewport className="relative z-10">
+          <div data-truth-deck-track>
+            <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-[calc(12svh+14vw)] pt-[36svh] lg:px-24">
+              <p className="eyebrow text-lg text-gold sm:text-2xl">{wattanuri.marker}</p>
+              <h2 className="headline mt-4 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl">
+                {wattanuri.title}
+              </h2>
+              <p className="mt-8 max-w-3xl leading-relaxed text-canvas">{wattanuri.body}</p>
+              <EditorialNote
+                tone="canvas"
+                label="SPEC — COPY NOT COMMISSIONED"
+                className="mt-8 max-w-3xl"
+              >
+                <p className="text-xl font-medium leading-relaxed text-canvas sm:text-2xl">
+                  {wattanuri.floor}
+                </p>
+              </EditorialNote>
+              <Link
+                href={wattanuri.cta.href}
+                className="eyebrow mt-10 inline-block text-xs text-gold transition-transform duration-300 hover:translate-x-1"
+              >
+                {wattanuri.cta.label} &rarr;
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );
