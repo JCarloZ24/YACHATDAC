@@ -4,7 +4,13 @@ export const homeLoader = { label: "Loading homepage" };
 /** Figma/screenshot interface label, 8 September 2026; not narrative copy. */
 export const homeHero = { scrollLabel: "Scroll" };
 
-/** Screenshot text sequence, user direction 9 September 2026 (D5 hi-fi amendment). */
+/** Screenshot text sequence, user direction 9 September 2026 (D5 hi-fi amendment).
+ *
+ * ⚠ NOT RENDERED on `/` since 10 September 2026, when the painting it was
+ * spoken over left the homepage opening (user direction). It is still on
+ * screen at /homepagev2, from that route's own content module. Kept here for
+ * the same reason the pathways and the tagline were kept through v2: content
+ * is not deleted to match a layout. */
 export const homePaintingCopy = {
   entrance: "You are entering",
   place: "Turraburra",
@@ -215,8 +221,14 @@ export const beats: Beat[] = [
  */
 export const invitation = {
   eyebrow: "The invitation",
-  headline:
-    "Every journey begins differently — we welcome you to walk alongside us.",
+  /* Shortened to the frame, 9 September 2026, user direction. The clause
+     "— we welcome you to walk alongside us." is removed. The draft carried
+     the longer line and D5 had been holding it against the Figma frame and
+     the prototype screenshot, which both show only the first sentence; the
+     direction settles that the shorter line is the copy, so v3 is amended
+     rather than overridden. "Walk alongside us" survives in the Wonder card
+     description below, so the phrase is not lost from the section. */
+  headline: "Every journey begins differently.",
   body: "",
   cards: [
     {
@@ -269,10 +281,22 @@ export const wayForward = {
    * These are the page's second and last navigation, and they are a different
    * set from the Invitation's — that one routes by pillar, this one routes by
    * what the visitor wants to do.
+   *
+   * ⚠ They went unrendered when the old Way Forward section was replaced by
+   * the statement panel, and came back on 9 September 2026, user direction,
+   * as their own section below the pinned canvas. Titles, descriptions,
+   * destinations and CTAs are the draft's, unchanged (D5).
+   *
+   * `eyebrow` is hi-fi only: it is on the prototype deck's cards and in no
+   * draft, so it is here rather than typed into markup. The deck labels the
+   * fourth card LIVING WORK, which is the third card's pillar and not this
+   * one's — it routes to The Record — so that one reads as a slip in the deck
+   * and is corrected here. Worth confirming at review.
    */
   paths: [
     {
       title: "Come on Country",
+      eyebrow: "Guesting",
       description:
         "Guesting On-Country for families, school groups and visitors. Small groups, dates arranged with you.",
       cta: "Guesting On-Country",
@@ -280,6 +304,7 @@ export const wayForward = {
     },
     {
       title: "Research with us",
+      eyebrow: "Research",
       description:
         "What we do not know and would like studied — how old the wall is, what lives here, what is in the ground.",
       cta: "Open research",
@@ -287,6 +312,7 @@ export const wayForward = {
     },
     {
       title: "Ranger exchange",
+      eyebrow: "Living Work",
       description:
         "On-Country training camps and exchanges with other First Nations ranger groups.",
       cta: "Get in touch",
@@ -294,6 +320,7 @@ export const wayForward = {
     },
     {
       title: "Read the record",
+      eyebrow: "The Record",
       description:
         "Stories, historical accounts, research and recordings. Some of it is science, some of it is memory.",
       cta: "The Record",

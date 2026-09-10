@@ -76,7 +76,7 @@ export function WonderMotion() {
       wire("hero", (el) => heroArrival(el, 100));
       wire("facts", (el) => factsCopy(el, 320));
       wire("highlights", (el) => cardRail(el, 100));
-      wire("getting-here", (el) => gettingHereCopy(el, 300));
+      wire("getting-here", (el) => gettingHereCopy(el, 180));
       wire("country", wonderLandscape);
       wire("itinerary", (el) => itinerary(el));
       wire("before", (el) => conversion(el, 100));

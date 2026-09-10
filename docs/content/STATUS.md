@@ -14,7 +14,7 @@ it decides who has to sign off.
 | Document | Page | State | Circle | Blocked on |
 | --- | --- | --- | --- | --- |
 | `drafts/homepage/YACHATDAC-Homepage-Copy-v3.md` | Homepage | 📥 **v3** uploaded | open | Welcome to Country is marked draft for Suzanne — note 1 |
-| `drafts/wonder/YACHATDAC-Wonder-Copy-v3.md` | Wonder | 📥 **v3** uploaded | open | Inclusions still unconfirmed; cost now answered — note 7 |
+| `drafts/wonder/YACHATDAC-Wonder-Copy-v3.md` | Wonder | 📥 **v3** uploaded, "Getting here" revised 10 Sep 2026 | open | Inclusions still unconfirmed; cost now answered — note 7. Getting here rewritten on user direction (Redford story, per-stop details and Gray Rock coda removed); applied to `src/content/wonder.ts` in the same pass |
 | `drafts/truth/YACHATDAC-Truth-Copy-v3.md` | Truth | 📥 **v3** uploaded | **held by community** | **Suzanne Thompson's approval — stated on the document itself.** Both her questions are still open — note 5 |
 | `drafts/living-work/YACHATDAC-LivingWork-Copy-v3.md` | Living Work | 📥 **v3** uploaded | shared with care | Rainbow Credits unwritten; status labels unconfirmed — note 8 |
 | `drafts/resources/YACHATDAC-Resources-Copy-v1.md` | Resources — "The Record" | 📥 **v1** uploaded | open | First draft of this page. Access-request response time and contact point unwritten — note 13 |
@@ -327,7 +327,7 @@ The page is built around a sticky enquiry panel, so both sit directly on the
 page's one conversion. See R13.
 
 Also in v2: the day-by-day *2 Night / 3 Day* outline is **gone**, replaced by
-stages (Arriving / The first night / Walking out to the wall / …) and the
+stages (Arriving / The first night / Walking out to Marra Wonga / …) and the
 explicit line "We do not run a set itinerary, because the work does not." That
 closes the old *guesting itinerary validation* question — there is no
 reconstructed itinerary left to validate — and makes

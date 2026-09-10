@@ -1,34 +1,28 @@
 /* Home, screenshot direction 8 September 2026. Only progressive enhancement
    hides copy: no JS, failed WebGL and reduced motion remain readably still. */
-.home-hero-stage { width: max(100%, 900px); }
 /* Screenshot-specific display scale, user 8 September 2026: keep text-h1 and
    the licensed face, but locally enlarge this hero to the reference's two-line
    headline. Shared heading tokens elsewhere remain the 7 September scale. */
-[data-home-hero] { --text-h1: clamp(2.5rem, 5.55vw, 5rem); }
+/* Scoped to the hero's OWN copy block (10 September 2026, type sweep).
+
+   This was `[data-home-hero] { ... }`, which is the whole pinned section — so
+   every panel riding the canvas inherited an 80px H1 meant for one full-screen
+   line. Most panels happened to be safe because they declare their own scale
+   below; The Invitation, Pathways and the statement did not, and Pathways was
+   shipping its heading at 80 against The Invitation's 64 for the same job.
+   Narrowing it here means a panel now gets the global token unless it asks for
+   something else, which is the way round it should have been.
+
+   [data-hero-copy] is also on the scroll cue at the foot of the hero, which
+   carries no heading, so this reaches exactly the one H1 it is for. */
+[data-home-hero] [data-hero-copy] { --text-h1: clamp(2.5rem, 5.55vw, 5rem); }
+
+/* The closing statement keeps hero scale, now by declaration rather than by
+   inheritance: it is one centred line alone on the last screen, deliberately
+   bookending the opening. Drop it to 4rem to sit with the other panels. */
+.home-way-forward { --text-h1: clamp(2.5rem, 5.55vw, 5rem); }
 .home-hero-canvas { visibility: hidden; }
-/* Only the enhanced painting scene exposes these repeated narrative fragments. */
-.home-painting-copy { opacity: 0; visibility: hidden; }
-/* 9 September reference: cream display hierarchy with local media scrims.
-   Keep the licensed heading face; the scrim fades with each text fragment. */
-.painting-introduction { position: relative; font-size: clamp(1.75rem, 3.8vw, 4rem); }
-.painting-place { position: relative; font-size: clamp(2.75rem, 6.2vw, 6.5rem); margin-top: 0.08em; }
-.painting-story { --text-h3: clamp(1.5rem, 2.85vw, 3rem); }
-.painting-introduction, .painting-place, .painting-story {
-  isolation: isolate;
-  text-shadow: 0 3px 8px color-mix(in srgb, var(--color-charcoal) 55%, transparent);
-}
-.painting-introduction::before, .painting-place::before, .painting-story::before {
-  content: "";
-  position: absolute;
-  inset: -18px -24px;
-  z-index: -1;
-  pointer-events: none;
-  /* Full text bounds stay shaded; only the outer perimeter feathers away. */
-  background: color-mix(in srgb, var(--color-charcoal) 68%, transparent);
-  border-radius: 18px;
-  filter: blur(18px);
-}
-/* Wonder's screenshot uses a smaller display than the opening collage headline. */
+/* Wonder's screenshot uses a smaller display than the welcome headline. */
 .home-wonder-copy { opacity: 0; visibility: hidden; --text-h1: clamp(2rem, 4vw, 3.75rem); }
 /* Latest screenshot: centred Truth introduction over the same road canvas. */
 .home-truth-copy { opacity: 0; visibility: hidden; --text-h1: 2.5rem; }
@@ -38,26 +32,13 @@
 }
 /* The existing Wonder section remains the no-WebGL/reduced-motion fallback. */
 body:has([data-hero-canvas="ready"]) #wonder { display: none; }
-/* 9 September screenshot: static media scrim (X5), feathered dark blur at
-   the perimeter. Copy sits above the backdrop so its letterforms stay sharp. */
-.home-hero-edge-treatment {
-  background: color-mix(in srgb, var(--color-charcoal) 80%, transparent);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 48%, transparent 38%, black 100%);
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 48%, transparent 38%, black 100%);
-}
 [data-hero-copy] { z-index: 1; }
-@media (min-width: 64rem) {
-  .home-hero-edge-treatment {
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    -webkit-mask-image: radial-gradient(ellipse 56% 72% at 50% 48%, transparent 35%, black 100%);
-    mask-image: radial-gradient(ellipse 56% 72% at 50% 48%, transparent 35%, black 100%);
-  }
-}
 [data-hero-canvas="ready"] .home-hero-canvas { visibility: visible; }
 [data-hero-canvas="ready"] [data-hero-fallback] { visibility: hidden; }
+/* The canvas carries the frame's own black (HOME_SCENE.shade), so over a
+   working canvas these would be a second scrim laid on top of the first.
+   They exist for the still behind it, which has no grade of its own. */
+[data-hero-canvas="ready"] [data-hero-scrim] { display: none; }
 [data-hero-motion="preparing"] [data-hero-copy] { visibility: hidden; }
 [data-home-hero] [data-hero-word] { display: inline-block; }
 /* The black beat covers imagery and temporarily clears overlaid furniture. */

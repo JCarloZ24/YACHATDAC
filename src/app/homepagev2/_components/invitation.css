@@ -1,0 +1,61 @@
+/* /homepagev2 fork, 10 September 2026, user direction. Every class is
+   prefixed v2- so the two pages cannot style each other, whatever a
+   future bundler decides to put in one stylesheet. */
+
+/* Figma 3371:41740, 9 September 2026.
+
+   The panel now lives inside the pinned hero (see Invitation.tsx), so it is
+   sized to one viewport rather than to the document. What was a section
+   background is nothing at all: the land behind it is the live canvas plate,
+   and the only darkening is the hero's own --landscape-exit-shade. */
+.v2-home-invitation {
+  --text-h1: 2.5rem;
+  --text-h3: 2rem;
+}
+/* Held clear until the dissolve brings it up, so it cannot sit over the dated
+   Truth account before its turn; GSAP takes over from there. Gated on the
+   canvas the same way the old overlap margin was, so that a reduced-motion or
+   failed-WebGL page — where no timeline ever runs — still shows the panel. */
+[data-hero-canvas="ready"] .v2-home-invitation,
+[data-hero-canvas="ready"] .v2-home-way-forward,
+[data-hero-canvas="ready"] .v2-home-offer,
+[data-hero-canvas="ready"] .v2-home-pathways-panel {
+  visibility: hidden;
+}
+/* The card's own charcoal has to stay opaque — it is what holds the photograph
+   fill off the land behind it. */
+.v2-home-invitation-card {
+  min-height: 400px;
+}
+/* Below lg the three 400px cards cannot stack inside a viewport, so they are
+   read across instead of down: a snap scroller, full copy intact, one card in
+   frame at a time. Grid takes over at 1440's three columns. */
+.v2-home-invitation-cards {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /* Bleed to the viewport edges so the next card shows its shoulder, while
+     the first still lines up with the 24px content box. */
+  margin-inline: -1.5rem;
+  padding-inline: 1.5rem;
+  scrollbar-width: none;
+}
+.v2-home-invitation-cards::-webkit-scrollbar { display: none; }
+.v2-home-invitation-cards > * {
+  flex: 0 0 80%;
+  scroll-snap-align: center;
+}
+.v2-home-landscape-exit-shade {
+  opacity: 0;
+  background: linear-gradient(to bottom, transparent, var(--color-charcoal));
+}
+@media (min-width: 64rem) {
+  .v2-home-invitation { --text-h1: 4rem; }
+  .v2-home-invitation-cards {
+    display: grid;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}

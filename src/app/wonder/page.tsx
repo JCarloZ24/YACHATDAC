@@ -12,7 +12,7 @@ import {
   WonderOutHere,
   WonderStay,
   WonderStories,
-  WonderWhereYouSleep,
+  WonderWhereYouStay,
 } from "./_components/Sections";
 import { WonderLoader } from "./_components/Loader";
 import { WonderMotion } from "./_components/Motion";
@@ -53,7 +53,7 @@ export default function WonderPage() {
         <WonderCountry />
         <WonderStay />
         <WonderBeforeYouCome />
-        <WonderWhereYouSleep />
+        <WonderWhereYouStay />
         <WonderOutHere />
         <WonderHosts />
         <WonderStories />

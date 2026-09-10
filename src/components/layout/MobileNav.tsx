@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ConnectButton } from "@/components/layout/ConnectButton";
 import { org, primaryAction, primaryNav } from "@/content/site";
+import { navHeroFoot } from "@/lib/nav-hero";
 
 /**
  * Navbar / Mobile — Marc's 375×80 frame (2026-09-02): the wordmark at 135×40
@@ -13,9 +14,13 @@ import { org, primaryAction, primaryNav } from "@/content/site";
  * same frame), and a white panel of nav links plus the Connect action when
  * open. Over the hero — the first viewport height — the bar is transparent
  * with the white cut of the wordmark, like the desktop band; past it (or with
- * the panel open) it becomes the solid white bar with the black cut. The
- * desktop header stays the transparent 88px band; this bar exists below `md`
- * only.
+ * the panel open) it becomes the solid white bar with the black cut.
+ *
+ * ⚑ THIS BAR RUNS BELOW `lg`, NOT BELOW `md` (9 September 2026). The V2 file
+ * has two grids — Mobile/375 and Desktop/1440 — and every number in the
+ * desktop band is the 1440 column, so the band may only be drawn where `lg:`
+ * values apply. Between 768 and 1024 there is no frame to build from, and
+ * inventing a tablet step is what the house rule forbids: this bar covers it.
  *
  * The bar is fixed and scroll-linked: it slides away with a downward swipe
  * and is dragged back by any upward one, moving with the thumb rather than
@@ -27,6 +32,10 @@ import { org, primaryAction, primaryNav } from "@/content/site";
  * authored vectors as the white cut, per build documentation §5 (never
  * recreate or approximate the mark in code).
  */
+/** Bar height, px — the supplied 375×80 frame (9 September 2026). Kept as a
+ *  constant because the scroll-link measures against it before layout. */
+const BAR_H = 80;
+
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const bar = useRef<HTMLDivElement>(null);
@@ -43,7 +52,10 @@ export function MobileNav() {
          scroll settles it snaps to whichever edge is nearer.
        · solid — 0 over the hero (transparent bar, white cut of the wordmark)
          to 1 past it, ramped over the last 96px of the hero so the white
-         fades in with the scroll instead of switching at a line.
+         fades in with the scroll instead of switching at a line. The hero's
+         foot comes from `navHeroFoot`, so this bar and the desktop band hand
+         over at the same edge; it used to be a flat viewport height, which was
+         wrong on every hero that is not exactly 100svh.
      With the panel open the bar is pinned shown and solid. */
   useEffect(() => {
     const el = bar.current;
@@ -71,8 +83,8 @@ export function MobileNav() {
       const y = window.scrollY;
       const delta = y - last;
       last = y;
-      const height = el.offsetHeight || 64;
-      const heroY = window.innerHeight - 64;
+      const height = el.offsetHeight || BAR_H;
+      const heroY = navHeroFoot() - BAR_H;
 
       if (el.dataset.open === "true") {
         offset = 0;
@@ -164,9 +176,9 @@ export function MobileNav() {
       /* Initial paint: transparent over the hero with the white cut; the
          effect takes over from the first frame. Background/colour are
          written per frame, so only the wordmark crossfade is transitioned. */
-      className="fixed inset-x-0 top-0 z-30 bg-transparent text-white will-change-transform md:hidden"
+      className="fixed inset-x-0 top-0 z-30 bg-transparent text-white will-change-transform lg:hidden"
     >
-      <div className="flex h-16 items-center justify-between pl-5 pr-3">
+      <div className="flex h-20 items-center justify-between pl-5 pr-3">
         <Link
           href="/"
           aria-label={`${org.name} — home`}
@@ -290,7 +302,10 @@ export function MobileNav() {
             ))}
           </ul>
           {/* The same CONNECT blob as the desktop header — one CTA, one asset,
-              one water fill (see ConnectButton). */}
+              one water fill (see ConnectButton). `onLight`, because the panel
+              only ever opens on the solid white bar: the cream cut of the blob
+              would be invisible on it (9 September 2026, user direction — the
+              button is black wherever the bar is white). */}
           <div
             className={`mt-4 transition-[opacity,transform] ${
               open
@@ -303,7 +318,11 @@ export function MobileNav() {
                 : "0ms",
             }}
           >
-            <ConnectButton href={primaryAction.href} label={primaryAction.title} />
+            <ConnectButton
+              href={primaryAction.href}
+              label={primaryAction.title}
+              tone="onLight"
+            />
           </div>
         </nav>
       </div>

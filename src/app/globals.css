@@ -388,6 +388,140 @@ body {
   font-weight: 400;
 }
 
+/* ---------------------------------------------------------------------------
+   THE POINTER
+
+   A custom cursor site-wide, from the kit — user direction, 10 September 2026,
+   choosing the full replacement over a companion that follows the native
+   arrow. The mark is the hand-drawn chevron August supplied the same day (the
+   one the CTAs carry), rotated to point north-west. Swapping it for something
+   else is the two `--cursor-*` values below and nothing else.
+
+   ⚠ THE CHEVRON IS USED WHOLE AND UNALTERED. `cursor/point.svg` is the
+   supplied path byte-for-byte inside a rotate and a drop shadow — no tail has
+   been drawn onto it. Adding one would be new geometry on the artist's mark,
+   which the 8 September amendment permits but only as a GENERATED asset,
+   recorded as such. That is a decision to take deliberately, not a detail to
+   slip into a cursor file.
+
+   ⚠ THE SHADOW IS LOAD-BEARING, not decoration. The supplied fill is #FCF7F0,
+   which is invisible on canvas, on white and on the legal pages — half the
+   site. The cursor is the one element that cannot know what it is over, so it
+   carries its own contrast: a soft charcoal shadow behind cream reads on both
+   grounds without recolouring or outlining the mark itself.
+
+   ⚠ WHY THE COPIES IN public/artwork/cursor/ EXIST. `cursor: url()` renders an
+   image at its INTRINSIC size — there is no way to scale it from CSS — so the
+   cursor needs its own copies at cursor sizes. They are resized only: the
+   viewBox and every path are the artist's, untouched, and `preserveAspectRatio
+   ="none"` is dropped so the proportions cannot stretch. See kit.ts.
+
+   ⚠ THE HOT-POINT IS THE TWO NUMBERS AFTER THE URL, and it is the whole
+   difference between a cursor and a picture: it says which pixel of the image
+   the click lands on. It is the chevron's TIP, which is why this mark works
+   where a dot or an emu silhouette would not — a reader aims with a point,
+   and a shape without one leaves them guessing where the click lands.
+
+   ⚠ SAFARI ignores SVG cursors. Every rule therefore ends in a real keyword,
+   so an unsupported browser gets the correct native cursor rather than none.
+
+   Chrome ignores any cursor image over 128×128, which is why these are 28/36.
+   --------------------------------------------------------------------------- */
+:root {
+  --cursor-default: url("/artwork/cursor/point.svg") 3 3;
+  /* Interactive is the same mark, larger — the affordance is the growth, so
+     there is one pointer on the site rather than two that must agree. */
+  --cursor-interactive: url("/artwork/cursor/point-lg.svg") 3 3;
+}
+
+/* Unlayered on purpose: Tailwind's utilities live in `@layer utilities`, and
+   an unlayered rule outranks a layered one whatever its specificity. Without
+   that, every `cursor-pointer` in the app would punch the system hand back
+   through the custom mark. */
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: var(--cursor-default), auto;
+  }
+
+  /* Everything that answers a click. `.cursor-pointer` is in the list because
+     the app sets it directly on `<summary>` and on carousel cards. */
+  a[href],
+  button:not(:disabled),
+  summary,
+  label[for],
+  [role="button"],
+  .cursor-pointer {
+    cursor: var(--cursor-interactive), pointer;
+  }
+
+  /* ⚠ THESE KEEP THE NATIVE CURSOR, and each one is a decision rather than an
+     oversight. Text needs the I-beam to show where the caret will land and
+     that the words can be selected; a drag needs the grab hand to show the
+     surface moves; a refusal needs the barred circle to read as refusal. A
+     dot cannot say any of that, and a pretty cursor is not worth a control
+     that no longer explains itself. */
+  input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  [contenteditable="true"] {
+    cursor: text;
+  }
+
+  .cursor-grab,
+  .cursor-grabbing,
+  .active\:cursor-grabbing:active,
+  .cursor-not-allowed,
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: revert;
+  }
+}
+
+/* THE WATERLINE, on text.
+ *
+ * The CONNECT blob fills with gold from wherever the cursor entered it (see
+ * ConnectButton); on 10 September 2026 August asked for the same gesture on
+ * the nav links. This is that, painted through the glyphs: one radial gradient
+ * whose centre is the entry point and whose radius is tweened by
+ * `WaterNavLink`, clipped to the text.
+ *
+ * ⚠ NO TURBULENCE HERE, and it is not an omission. The blob's ragged edge is
+ * an SVG displacement filter on the fill layer. A CSS filter applies to the
+ * whole element BEFORE the background is clipped, so the same trick on text
+ * would displace the letterforms themselves rather than the waterline — and
+ * at 16px the noise would be illegible even if it could be aimed correctly.
+ * The glyph edges do that job here instead.
+ *
+ * `currentColor` is the outer stop, so the resting colour stays whatever the
+ * element's `color` is — the band's `text-night-black` /
+ * `data-[over-hero=true]:text-canvas` pair keeps working untouched, and its
+ * `transition-colors` still eases the base across the hero's edge.
+ * `-webkit-text-fill-color`, not `color: transparent`: it empties the glyph
+ * without destroying `currentColor`, and where it is unsupported the link
+ * simply renders in its own colour with no fill. */
+@utility water-fill {
+  --water-x: 50%;
+  --water-y: 50%;
+  --water-r: 0px;
+  background-image: radial-gradient(
+    circle at var(--water-x) var(--water-y),
+    var(--color-gold) 0px,
+    /* A 1.5px feather, so the waterline is an edge rather than a cut. */
+    var(--color-gold) max(0px, calc(var(--water-r) - 1.5px)),
+    currentColor var(--water-r)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Forced colours replace our palette with the reader's own, and a gradient
+     is not a colour it can replace — the words would be emptied glyphs with
+     nothing painted through them. Hand the fill back and drop the effect. */
+  @media (forced-colors: active) {
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
 /* X2 — scroll cue. 2.4s is the spec's own figure, not a tuned value. The only
    ambient loop allowed above the fold, and it is killed permanently on the
    first scroll (see Hero) rather than left running. */

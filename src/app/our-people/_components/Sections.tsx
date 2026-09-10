@@ -220,7 +220,7 @@ export function OurPeopleAdvisory() {
  */
 export function OurPeopleHero() {
   return (
-    <section className="relative bg-charcoal text-canvas">
+    <section data-nav-hero className="relative bg-charcoal text-canvas">
       {/* The photograph. 1150 of the frame's 1890, hard-cut into charcoal at
           its foot — the scrim carries the cut so it does not read as a seam. */}
       <div className="relative h-[62svh] w-full overflow-hidden sm:h-[86svh] lg:h-[128svh]">
