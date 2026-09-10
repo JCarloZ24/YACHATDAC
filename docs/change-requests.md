@@ -1,6 +1,6 @@
 # Change Requests — paste-ready
 
-*Last updated: 7 September 2026*
+*Last updated: 10 September 2026*
 
 Companion to `docs/decisions-and-risks.md`. That file holds the standing
 Decision and Risk registers; this one holds **Change Requests** — a request from
@@ -35,7 +35,7 @@ session could move it.** Read live, the rows are:
 | --- | --- | --- | --- |
 | CR1 | `approved` | yes, 28 Aug | Applied |
 | CR2 | `approved` | yes, 28 Aug | Applied |
-| CR3 | `approved` | yes, 28 Aug | Applied, partial |
+| CR3 | `approved` | yes, 28 Aug | **Applied in full, 10 Sep** |
 | CR4 | `submitted` | — | **Applied 7 Sep, in the quotation** |
 | CR5 | `submitted` | — | Proposed |
 | CR6 | `submitted` | — | **Applied 7 Sep** |
@@ -245,7 +245,7 @@ the same day. Pablito is named as agreeing with one item.
 | --- | --- | --- | --- | --- |
 | CR1 | "cultural sites" → "cultural heritage sites" | Terminology | Proposed — straightforward | August → Marc |
 | CR2 | Card title "Carbon" → "Biological Sequestration" | Terminology | Proposed — check it is accurate | August, with the client |
-| CR3 | "Cool burns" and "right-way fire" → "fire-stick farming" | Terminology | Proposed — **widest sweep, touches a URL** | August, JC |
+| CR3 | "Cool burns" and "right-way fire" → "fire-stick farming" | Terminology | **APPLIED IN FULL (10 Sep)** — the slug carve-out closed with D17 | August, JC |
 | CR4 | "settlers" → "colonists" | Terminology | **Applied in the quotation (7 Sep)** — unratified; hold overruled | August → Suzanne |
 | CR5 | Add SWER, and on-site petrol and diesel tanks | New content | Proposed — **facts unverified**. See R19 | August, with the client |
 | CR6 | Add rail via Rockhampton to *Getting here* | New content | **APPLIED (7 Sep)** | August |
@@ -316,11 +316,11 @@ Approved in this round, and now locked: see Part 4.
 
 ---
 
-## CR3 — "Cool burns" and "right-way fire" both become "fire-stick farming" · **APPLIED (28 Aug), except the slug**
+## CR3 — "Cool burns" and "right-way fire" both become "fire-stick farming" · **APPLIED IN FULL (10 Sep)**
 
 - **Form** — status `submitted` · decision note: accepted as an edit pass, slug
   held on D17
-- **Type** — Terminology · **Status** — **Applied, partial** · **Owner** — August, JC
+- **Type** — Terminology · **Status** — **Applied in full** · **Owner** — August, JC
 - **Applied 28 Aug** — every occurrence across `living-work.ts`, `wonder.ts`,
   `truth.ts`, `resources.ts` and the matching v3/v1 drafts now reads
   "fire-stick farming", including the two manner-phrasings, rewritten rather
@@ -328,8 +328,14 @@ Approved in this round, and now locked: see Part 4.
   alone — those two lines are historical quotes of what the v2 draft said on
   20 Aug, not live copy. **Not applied** — the Resources article title/slug
   (`right-way-fire-and-the-carbon-in-the-soil`) and the matching Truth link
-  title, exactly as this entry says: held on **D17**, still open. Mark
-  `applied` in Proyekto with that carve-out noted in the decision note.
+  title were held on **D17**.
+- **Applied 10 Sep — the carve-out closed.** D17 was resolved on August's
+  direction (option 1) and the article was renamed title-and-slug together:
+  `fire-stick-farming-and-the-carbon-in-the-soil`, *"Fire-stick farming and the
+  carbon in the soil"*, with Truth's link title and both of its hrefs moved
+  with it and a permanent redirect from the old route in `next.config.ts`.
+  `record-media.ts` keys moved too. Nothing in the built site says "right-way
+  fire" now. Mark `applied` in Proyekto with no carve-out.
 - **Raised by** — Steve (FNAN), 15:15, against the Wonder chip list. Two
   instructions in one message: replace **"Cool Burns"** with **"Fire-stick
   Farming"**, *and* replace every occasion **"right-way fire"** has been used
@@ -341,7 +347,7 @@ Approved in this round, and now locked: see Part 4.
   | File | Hits | Notes |
   | --- | --- | --- |
   | `docs/content/drafts/living-work/YACHATDAC-LivingWork-Copy-v3.md` | 9 | Body copy, the ranger list, the practice card, the fee-for-service card and the Land management services pathway |
-  | `docs/content/drafts/resources/YACHATDAC-Resources-Copy-v1.md` | 2 | An article **title** and a research question |
+  | `docs/content/drafts/the-record/YACHATDAC-Resources-Copy-v1.md` | 2 | An article **title** and a research question |
   | `docs/content/drafts/truth/YACHATDAC-Truth-Copy-v3.md` | 2 | A card link title and an image direction note |
   | `docs/content/drafts/wonder/YACHATDAC-Wonder-Copy-v3.md` | 2 | The chip list Steve screenshotted, and the "no set itinerary" paragraph |
   | `src/content/homepage.ts` | 1 | Line 146 — **already coded**, an image art-direction string |
@@ -436,7 +442,7 @@ Approved in this round, and now locked: see Part 4.
      speaking**: *"In 1886 the settlers had all come…"* Truth v3 is tagged
      **held by community** on the content status board and carries Suzanne's
      approval requirement on the document itself.
-  2. `docs/content/drafts/connect/YACHATDAC-OurPeople-Copy-v1.md:63` — **Graham
+  2. `docs/content/drafts/our-people/YACHATDAC-OurPeople-Copy-v1.md:63` — **Graham
      Ambridge** describing himself: *"he speaks to the settler side of this
      history, which is his own."* Not flagged by Steve, but it is the same word
      and will be noticed if one changes and the other does not.
@@ -663,7 +669,7 @@ Approved in this round, and now locked: see Part 4.
 - **Where it lands** —
   1. `docs/content/drafts/wonder/YACHATDAC-Wonder-Copy-v3.md:118` — "bought back
      for **our people** in April 2019" (the screenshotted line)
-  2. `docs/content/drafts/connect/YACHATDAC-About-Copy-v1.md:41` — "bought back
+  2. `docs/content/drafts/about/YACHATDAC-About-Copy-v1.md:41` — "bought back
      for **our people** in 2019", the same sentence in miniature
   3. `docs/content/drafts/truth/YACHATDAC-Truth-Copy-v3.md:207` — "**our
      people** were off their lands", again inside Suzanne's quotation
@@ -774,10 +780,24 @@ option **selected** in the options list.
 
 ---
 
-## D17 — Does the fire-stick farming rename change a URL?
+## D17 — Does the fire-stick farming rename change a URL? · **FINAL — yes, 10 Sep 2026**
 
 - **Category** — Information architecture
-- **Status** — Proposed · **Visibility** — Shared · **Owner** — Marc, David
+- **Status** — **Final (10 Sep 2026)** · **Visibility** — Shared · **Owner** — Marc, David
+- **Ruled** — **Option 1, rename both.** August's direction, 10 Sep 2026, on the
+  screenshots of Steve's 15:15 instruction: replace "right-way fire" *across the
+  site*. The article is now
+  `/the-record/fire-stick-farming-and-the-carbon-in-the-soil`, titled
+  *"Fire-stick farming and the carbon in the soil"*; Truth's link title and both
+  hrefs moved with it; the old route 301s in `next.config.ts`.
+- **What it settles beyond this one article** — Record article slugs **track
+  their titles**, and a rename ships with a permanent redirect. That is the
+  answer David needed for Record routing, and it matches the pattern
+  `/resources` → `/the-record` already set. Option 3 (stable short slugs
+  independent of titles) is not taken.
+- **Marc and David have not confirmed this.** They own the decision on paper and
+  the ruling is August's, taken under F8 build-first. It stands as built and is
+  reviewable at presentation like everything else.
 - **The decision** — Whether CR3's terminology change extends to the Resources
   article slug `/resources/right-way-fire-and-the-carbon-in-the-soil`.
 - **Context** — Truth v3 links to that route, and the Resources page carries the

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { photoById } from "@/content/kit";
 import { FadeIn } from "@/components/motion/text/FadeIn";
+import { EditorialNote } from "@/components/ui/EditorialNote";
 import { SeamGlyph } from "@/components/ui/Furniture";
 import { SignupField } from "@/components/ui/SignupField";
 import { RangerCarousel } from "./RangerCarousel";
@@ -1275,6 +1276,28 @@ export function LivingWorkInfrastructure() {
                   <p className="mt-4 text-sm leading-relaxed text-canvas/60">
                     {block.note}
                   </p>
+                ) : null}
+                {/* CR5 / R19. Written copy resting on an unconfirmed fact —
+                    it renders below the block's own bullets, dashed and
+                    dimmed, so a reader can tell at a glance that this line is
+                    not yet load-bearing. Same register as About's pending
+                    notes; the pre-launch grep for data-placeholder sees it. */}
+                {block.proposed ? (
+                  <EditorialNote
+                    tone="canvas"
+                    label="Awaiting confirmation — not published as fact"
+                    className="mt-5"
+                  >
+                    <ul>
+                      {block.proposed.points.map((point) => (
+                        <li key={point} className="text-canvas/80">
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                    {block.proposed.note ? <p>{block.proposed.note}</p> : null}
+                    <p className="text-canvas/55">{block.proposed.confirm}</p>
+                  </EditorialNote>
                 ) : null}
               </div>
             ))}

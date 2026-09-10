@@ -466,13 +466,27 @@ body {
     cursor: text;
   }
 
-  .cursor-grab,
-  .cursor-grabbing,
-  .active\:cursor-grabbing:active,
   .cursor-not-allowed,
   button:disabled,
   [aria-disabled="true"] {
     cursor: revert;
+  }
+
+  /* ⚠ THE GRAB HAND NEEDS THE KEYWORD, NOT `revert` (August, 10 September
+     2026, found while wiring the rail drag). `cursor` is an INHERITED
+     property and the rules above declare it on `body`, so `revert` — which
+     rolls back to the user-agent origin, where no `cursor` rule exists for a
+     div — resolves to the inherited value and hands back the custom mark.
+     The rail carried `.cursor-grab` and still computed to `point.svg`. The
+     three above are unaffected: `not-allowed` and the disabled pair reach a
+     real UA declaration, so `revert` does what it says for them. */
+  .cursor-grab {
+    cursor: grab;
+  }
+
+  .cursor-grabbing,
+  .active\:cursor-grabbing:active {
+    cursor: grabbing;
   }
 }
 

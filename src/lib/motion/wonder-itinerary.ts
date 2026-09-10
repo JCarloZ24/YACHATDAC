@@ -33,6 +33,9 @@ export function itinerary(root: HTMLElement): MotionModule {
     media.add("(prefers-reduced-motion: no-preference)", (context) => {
       // DevTools can emulate a touch pointer at any width. Pointer type is
       // irrelevant to this scroll sequence; only the layout needs to fit.
+      // 10 September 2026, August's direction, after reading the 375 frame:
+      // the phone is the frame's accordion, not the held screen. Its height
+      // follows the open stop rather than the frame's fixed 1047px.
       if (window.matchMedia("(min-width: 64rem)").matches) {
         const cleanup = heldItinerary(root, context);
         if (cleanup) return cleanup;
@@ -67,16 +70,14 @@ export function itinerary(root: HTMLElement): MotionModule {
 
       const finish = () => active?.progress(1);
 
-      context.add("toggleStage", (event: MouseEvent) => {
-        const summary = (event.target as Element).closest<HTMLElement>("[data-stage-head]");
-        if (!summary || !root.contains(summary)) return;
-        const stage = summary.parentElement as HTMLDetailsElement;
+      /** One stop opens or closes. Called by a click and, on the phone, by
+          the rule below a stop reaching a full fill. */
+      const runToggle = (stage: HTMLDetailsElement, open: boolean) => {
+        const summary = stage.querySelector<HTMLElement>("[data-stage-head]");
         const panel = stage.querySelector<HTMLElement>("[data-stage-panel]");
-        if (!panel) return;
-        event.preventDefault();
+        if (!summary || !panel) return;
         finish();
 
-        const open = !stage.open;
         const rowIndex = details.indexOf(stage);
         const following = rows.slice(rowIndex + 1);
         if (end) following.push(end);
@@ -112,18 +113,54 @@ export function itinerary(root: HTMLElement): MotionModule {
           panel.style.removeProperty("right");
           panel.style.removeProperty("clip-path");
           stage.querySelector<HTMLElement>("[data-stage-copy]")?.style.removeProperty("opacity");
-          stage.querySelector<HTMLElement>("[data-stage-chevron]")?.style.removeProperty("transform");
           following.forEach((el) => el.style.removeProperty("transform"));
         };
         active = gsap.timeline().add(gsap.effects.disclose(stage, { open, following, offsets }));
-        if (open) active.stageArrival(stage, {}, 0.12);
+        // No heading reveal on a stop the reader opened: only the copy and
+        // the picture arrive.
+        if (open) active.stageArrival(stage, { title: false }, 0.12);
         active!.eventCallback("onComplete", () => {
           finishState?.();
           finishState = undefined;
           active = undefined;
           refreshSoon();
         });
+      };
+
+      context.add("toggleStage", (event: MouseEvent) => {
+        const summary = (event.target as Element).closest<HTMLElement>("[data-stage-head]");
+        if (!summary || !root.contains(summary)) return;
+        const stage = summary.parentElement as HTMLDetailsElement;
+        event.preventDefault();
+        runToggle(stage, !stage.open);
       });
+      context.add("advanceStage", (stage: HTMLDetailsElement, open: boolean) => {
+        if (stage.open === open) return;
+        runToggle(stage, open);
+      });
+      // The rule below a stop reads that stop's passage through the viewport,
+      // and its full fill is what opens the next day (10 September 2026,
+      // August's direction). Grammar: "the world opening", itinerary rule.
+      // Nothing closes on the way down: opening a stop below the reader adds
+      // height below them, so the page never jumps under the thumb; scrolling
+      // back up past the same rule closes it again, which removes that same
+      // height from below. The closing rule is skipped — the last day has no
+      // next one to open.
+      rows.forEach((row, index) => {
+        const next = details[index + 1];
+        const fill = rows[index + 1]?.querySelector<HTMLElement>("[data-stage-fill]");
+        if (!fill || !next) return;
+        ScrollTrigger.create({
+          trigger: fill,
+          animation: gsap.effects.stageRule(fill),
+          start: "top bottom-=12%",
+          end: "top 55%",
+          scrub: 0.6,
+          onLeave: () => context.advanceStage(next, true),
+          onEnterBack: () => context.advanceStage(next, false),
+        });
+      });
+
       const onClick = (event: MouseEvent) => context.toggleStage(event);
       root.addEventListener("click", onClick);
       window.addEventListener("resize", finish);
@@ -134,6 +171,8 @@ export function itinerary(root: HTMLElement): MotionModule {
         active?.kill();
         finishState?.();
         revertSplits(root);
+        root.querySelectorAll<HTMLElement>("[data-stage-fill]")
+          .forEach((fill) => fill.style.removeProperty("--stage-fill"));
       };
     }, root);
   };
@@ -157,7 +196,17 @@ export function itinerary(root: HTMLElement): MotionModule {
 
   // A width change can turn a short paragraph into a tall one even when it
   // stays inside the desktop breakpoint. Re-check fit, not just the query.
+  // Mobile browsers fire resize whenever the address bar collapses, and a
+  // remount there would drop the held screen mid-scroll, so a height-only
+  // change under the toolbar's own travel is ignored (10 September 2026).
+  let lastWidth = window.innerWidth;
+  let lastHeight = window.innerHeight;
   const onResize = () => {
+    const sameWidth = window.innerWidth === lastWidth;
+    const toolbarOnly = sameWidth && Math.abs(window.innerHeight - lastHeight) <= 140;
+    lastWidth = window.innerWidth;
+    lastHeight = window.innerHeight;
+    if (toolbarOnly) return;
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
       media?.revert();
@@ -212,11 +261,28 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
     return null;
   }
 
-  const viewHeight = screen.clientHeight;
+  // The stage window, not the whole screen: on the phone the screen is the
+  // tall box the window sticks inside, and overflow is measured against the
+  // window in both cuts (10 September 2026).
+  const viewHeight = viewport.clientHeight;
   const spans = overflow.map((extra) => 1 + extra / viewHeight);
   const starts = spans.map((_, index) => spans.slice(0, index).reduce((sum, value) => sum + value, 0));
   const totalSpan = spans.reduce((sum, value) => sum + value, 0);
   root.style.setProperty("--itinerary-span", `${totalSpan * 100}vh`);
+
+  // The dotted rule under the active stop is the list's scroll indicator:
+  // it fills in burnt ochre across that stop's span and is full at the
+  // handover. Grammar: "the world opening", itinerary rule (10 Sep 2026).
+  const fills = stages.map((_, index) =>
+    (rows[index + 1] ?? root.querySelector<HTMLElement>("[data-stage-end]"))
+      ?.querySelector<HTMLElement>("[data-stage-fill]") ?? null);
+  const paint = (index: number, ratio: number) => {
+    fills.forEach((fill, i) => {
+      if (!fill) return;
+      const value = i < index ? 1 : i > index ? 0 : gsap.utils.clamp(0, 1, ratio);
+      fill.style.setProperty("--stage-fill", `${value * 100}%`);
+    });
+  };
 
   let selected = -1;
   let active: gsap.core.Timeline | undefined;
@@ -270,6 +336,8 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
     const next = starts.findIndex((start) => start > position);
     return next === -1 ? stages.length - 1 : Math.max(0, next - 1);
   };
+  const fillAt = (progress: number, index: number) =>
+    (progress * totalSpan - starts[index]) / spans[index];
   const readAt = (progress: number, index: number) =>
     gsap.utils.clamp(0, overflow[index], (progress * totalSpan - starts[index] - 0.2) * viewHeight);
   const controller = ScrollTrigger.create({
@@ -287,11 +355,13 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
       // Only transform work on scroll. Geometry is measured at selection or
       // refresh; oversized copy travels through the same clipped track.
       gsap.set(track, { y: -rowOffset - readAt(self.progress, index) });
+      paint(index, fillAt(self.progress, index));
     },
     onRefresh: (self) => {
       finish();
       context.showStage(at(self.progress), false);
       align(selected, readAt(self.progress, selected));
+      paint(selected, fillAt(self.progress, selected));
     },
   });
 
@@ -332,6 +402,7 @@ function heldItinerary(root: HTMLElement, context: gsap.Context): (() => void) |
     root.removeEventListener("keydown", keydown);
     active?.kill();
     revertSplits(root);
+    fills.forEach((fill) => fill?.style.removeProperty("--stage-fill"));
     rows.forEach((row, i) => {
       row.inert = false;
       headings[i].removeAttribute("tabindex");

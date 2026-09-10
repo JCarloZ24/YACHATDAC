@@ -1,11 +1,18 @@
 /* D5/F7, 9 September 2026: the restored accordion becomes a held reading
    screen on request. The tighter vertical spacing lets the longest current
    stop fit at 1440 x 900 while retaining the 1040px grid, type and 500 x 400
-   picture. The unenhanced Figma spacing remains in Sections.tsx. */
+   picture. The unenhanced Figma spacing remains in Sections.tsx.
+
+   10 September 2026, August's direction: the held screen stays desktop only.
+   The 375 frame (2576:23040) draws the itinerary as one accordion, so that is
+   what the phone gets — laid out from the frame's spacing, but with its height
+   following the open stop instead of the frame's fixed 1047px. Every rule
+   here is scoped to the held cut and never reaches the phone. */
 .itinerary[data-itinerary-mode="scroll"] {
   height: calc(var(--itinerary-span) + 100svh + 164px);
   padding-top: 0;
   padding-bottom: 164px;
+  gap: 0;
   overflow-anchor: none;
 }
 
@@ -34,4 +41,28 @@
 
 .itinerary[data-itinerary-mode="scroll"] [data-stage] {
   padding-block: 24px;
+}
+
+/* 10 September 2026, August's direction: the dotted rules read the itinerary's
+   scroll. The same artwork masks a burnt-ochre field, revealed left to right by
+   `--stage-fill` (written per frame by the motion module — see the grammar row
+   "the world opening", itinerary rule). Nothing here animates on its own, so
+   with no JavaScript the rules stay the plain black dots of the frame. */
+.ruleFill {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--color-burnt);
+  mask-image: url("/wonder/dotted-line-mobile.svg");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  /* Clip rather than resize: the mask keeps the dots at the rule's own
+     geometry while the fill edge travels across it. */
+  clip-path: inset(0 calc(100% - var(--stage-fill, 0%)) 0 0);
+}
+
+@media (min-width: 64rem) {
+  .ruleFill {
+    mask-image: url("/wonder/dotted-line.svg");
+  }
 }

@@ -17,9 +17,9 @@ it decides who has to sign off.
 | `drafts/wonder/YACHATDAC-Wonder-Copy-v3.md` | Wonder | 📥 **v3** uploaded, "Getting here" revised 10 Sep 2026 | open | Inclusions still unconfirmed; cost now answered — note 7. Getting here rewritten on user direction (Redford story, per-stop details and Gray Rock coda removed); applied to `src/content/wonder.ts` in the same pass |
 | `drafts/truth/YACHATDAC-Truth-Copy-v3.md` | Truth | 📥 **v3** uploaded | **held by community** | **Suzanne Thompson's approval — stated on the document itself.** Both her questions are still open — note 5 |
 | `drafts/living-work/YACHATDAC-LivingWork-Copy-v3.md` | Living Work | 📥 **v3** uploaded | shared with care | Rainbow Credits unwritten; status labels unconfirmed — note 8 |
-| `drafts/resources/YACHATDAC-Resources-Copy-v1.md` | Resources — "The Record" | 📥 **v1** uploaded | open | First draft of this page. Access-request response time and contact point unwritten — note 13 |
-| `drafts/connect/YACHATDAC-About-Copy-v1.md` | About | 📥 **v1** uploaded | open | ICN/ABN missing; legal-name spelling unconfirmed — notes 10, 13 |
-| `drafts/connect/YACHATDAC-OurPeople-Copy-v1.md` | Our People | 📥 **v1** uploaded | shared with care | Names, roles, photographs and consent to be named — note 13 |
+| `drafts/the-record/YACHATDAC-Resources-Copy-v1.md` | Resources — "The Record" | 📥 **v1** uploaded | open | First draft of this page. Access-request response time and contact point unwritten — note 13 |
+| `drafts/about/YACHATDAC-About-Copy-v1.md` | About | 📥 **v1** uploaded | open | ICN/ABN missing; legal-name spelling unconfirmed — notes 10, 13 |
+| `drafts/our-people/YACHATDAC-OurPeople-Copy-v1.md` | Our People | 📥 **v1** uploaded | shared with care | Names, roles, photographs and consent to be named — note 13 |
 | `sitemap/YACHATDAC-Sitemap-v1.png` | Site-wide | 📥 draft uploaded | open | Partly overtaken by D1 and D3, and now by v3's own nav — notes 6, 9 |
 
 **v3 uploaded 24 Aug 2026**, replacing the v2 set from 20 Aug. Two things are
@@ -33,11 +33,16 @@ different about this upload:
    behaviour and interaction — those belong to the wireframes, not to a copy
    draft. Where a prototype implies a layout, it is a suggestion.
 2. **It covers three pages that had no draft before** — Resources ("The
-   Record"), About, and Our People. About and Our People are filed under
-   `drafts/connect/` because build documentation §2 and `src/content/site.ts`
-   put both under Connect. That is a **filing choice, not an answer to D2** —
-   the prototypes themselves link to `/about` and `/our-people` as top-level
-   routes. See note 13.
+   Record"), About, and Our People. Each now has its own folder —
+   `drafts/about/`, `drafts/our-people/`, `drafts/the-record/` — one per page,
+   matching the other five (August's direction, 10 Sep 2026). The first two
+   were previously filed together under `drafts/connect/` because build
+   documentation §2 and `src/content/site.ts` put both under Connect; splitting
+   them is filing hygiene and is **not an answer to D2** — the prototypes
+   themselves link to `/about` and `/our-people` as top-level routes. The
+   supplied filenames are unchanged: `YACHATDAC-Resources-Copy-v1.md` keeps the
+   word Resources because it is a client document, not ours to rename. See
+   note 13.
 
 The v2 files are deleted rather than kept alongside — git history holds them.
 

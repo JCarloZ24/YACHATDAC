@@ -1,6 +1,6 @@
 # Lo-fi wireframe spec
 
-*Companion to the Figma file. Last updated: 26 August 2026.*
+*Companion to the Figma file. Last updated: 10 September 2026.*
 
 **The canvas is deliberately quiet.** Everything that used to sit on it as a
 spec panel or a margin note lives here instead. What remains on the frames is
@@ -529,7 +529,7 @@ is the information; the hi-fi's structure is its own.
 Drawn new on 26 Aug — neither designer had a frame for it and four inbound links
 point at it: the homepage Belonging CTA, About's *Meet the people*, and the
 footer's Organisation column. Source:
-`docs/content/drafts/connect/YACHATDAC-OurPeople-Copy-v1.md`.
+`docs/content/drafts/our-people/YACHATDAC-OurPeople-Copy-v1.md`.
 
 ⚠⚠ **Eight of nine people cards are held.** Five team roles and three board seats
 have no name, and **consent to be named and photographed has not been recorded

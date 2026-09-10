@@ -187,5 +187,5 @@ forearm tattoo). `aerial-crew-burnedge` shows around fifteen people and **nobody
 identifiable**, which is what makes it the safe crew frame.
 
 Naming people is Our People's job, and identification travels with consent — see
-`docs/content/drafts/connect/YACHATDAC-OurPeople-Copy-v1.md`, which already flags that
+`docs/content/drafts/our-people/YACHATDAC-OurPeople-Copy-v1.md`, which already flags that
 Rangers are unnamed across the site and that a full list with consent is needed.

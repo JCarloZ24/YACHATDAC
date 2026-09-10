@@ -94,7 +94,8 @@ of retrying.
 - **YACHATDAC is the organisation; Turraburra is the property.** Turraburra is not
   Terraburra (the 1884 clan name) — both spellings are correct in their own sentence.
 - House style: *Country* capitalised, *cultural heritage sites*, *fire-stick farming*
-  (not "cool burn" / "right-way fire" except the held D17 article slug), *Iningai* (not
+  (never "cool burn" / "right-way fire" — the last exception closed when D17 was
+  ruled Final, 10 Sep 2026), *Iningai* (not
   Innigai), *Biological Sequestration*. Full table in `docs/terminology.md`.
 - Placeholders are explicit: `[ … ]` markers in drafts, `[ Image — … ]` for photo slots,
   "Not built yet" on stubs. Never fill an `awaiting-suzanne` slot from a draft.

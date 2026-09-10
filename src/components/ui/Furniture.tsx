@@ -135,27 +135,86 @@ const BLOB_TONE = {
   muted: "bg-current/10",
 } as const;
 
-const BLOB_MASK = {
-  maskImage: "url(/artwork/blob-button.svg)",
-  WebkitMaskImage: "url(/artwork/blob-button.svg)",
-  maskSize: "100% 100%",
-  WebkitMaskSize: "100% 100%",
-  maskRepeat: "no-repeat",
-  WebkitMaskRepeat: "no-repeat",
+/**
+ * TWO SHAPES, AND THEY ARE NOT ONE SCALED.
+ *
+ * The kit holds two supplied blob exports — 264 x 56 and 276 x 56 — and the
+ * frames use both: the hero and Ways in blobs are drawn 276, §08's ending
+ * button 264 (readouts, 10 September 2026). Until August sent the 264 export
+ * the code had only the wide one, so a narrow instance would have meant
+ * stretching a 276 mask down 12px. `preserveAspectRatio="none"` would have let
+ * it, silently — the hand-drawn wobble squashed against every other button on
+ * the site rather than a second drawn shape.
+ *
+ * Compared end to end they are not a uniform scale: the outer curves sit at
+ * 275.887 / 263.892 and 276.594 / 264.568, so the narrow cut takes ~12 out of
+ * the flat middle and leaves both caps as Marc drew them. Scaling would have
+ * pulled the caps in too.
+ *
+ * ⚠ THE EXPORT'S OWN FILL IS IRRELEVANT HERE and deliberately left alone.
+ * These are used as MASKS, so only the alpha matters and the tone comes from
+ * the palette — which is why the 264 file still carries the #AF231C it was
+ * exported with while nothing on the page renders oxide.
+ */
+const BLOB_SHAPE = {
+  wide: { box: "w-[17.25rem]", src: "/artwork/blob-button.svg" },
+  narrow: { box: "w-[16.5rem]", src: "/artwork/blob-button-264.svg" },
 } as const;
 
-function BlobShape({ tone }: { tone: keyof typeof BLOB_TONE }) {
+const blobMask = (src: string) =>
+  ({
+    maskImage: `url(${src})`,
+    WebkitMaskImage: `url(${src})`,
+    maskSize: "100% 100%",
+    WebkitMaskSize: "100% 100%",
+    maskRepeat: "no-repeat",
+    WebkitMaskRepeat: "no-repeat",
+  }) as const;
+
+function BlobShape({
+  tone,
+  shape,
+}: {
+  tone: keyof typeof BLOB_TONE;
+  shape: keyof typeof BLOB_SHAPE;
+}) {
   return (
     <span
       aria-hidden
       className={`absolute inset-0 ${BLOB_TONE[tone]}`}
-      style={BLOB_MASK}
+      style={blobMask(BLOB_SHAPE[shape].src)}
     />
   );
 }
 
-const BLOB_BOX =
-  "relative inline-flex h-14 w-[17.25rem] max-w-full items-center justify-center gap-2 px-6";
+/* Width now comes from BLOB_SHAPE — the two exports are different widths. */
+const BLOB_BOX = "relative inline-flex h-14 max-w-full items-center gap-2";
+
+/**
+ * WHERE THE LABEL SITS IN THE SHAPE.
+ *
+ * `center` is what every blob on the site did until 10 September 2026, and it
+ * is a reasonable default for a shape nobody has a readout for.
+ *
+ * `frame` is the Partnerships hi-fi's own measurement, and it is NOT centred:
+ * the label is inset 26 from the left and 63 from the right of the 276-wide
+ * shape, which is 37px left of centre. The supplied blob artwork — the PNG
+ * August sent with the label already drawn into it — is weighted the same way,
+ * so this is the designer's placement rather than a rounding error in one
+ * frame. Read off `primary CTA · Button / Blob` (label x=26, w=187, y=16,
+ * h=24) and checked against the artwork export.
+ *
+ * ⚠ NOT MADE THE DEFAULT, deliberately. The shape is shared by Wonder,
+ * Connect and The Record, and I have a readout for exactly one of them.
+ * Flipping the default would move four other buttons against frames nobody
+ * has checked. If those frames turn out to inset the same way — and the
+ * artwork export suggests they do — this becomes the default and `center`
+ * goes away.
+ */
+const BLOB_ALIGN = {
+  center: "justify-center px-6",
+  frame: "justify-start pl-[26px] pr-[63px]",
+} as const;
 
 /**
  * The chevron the Wonder hi-fi (2033:7104) sets after its two closing labels:
@@ -210,6 +269,13 @@ const BLOB_LABEL = {
   /* CTA16 carries no tracking (like the story-card links); the utility's
      0.12em pushed the label onto two lines inside the 276 shape. */
   lg: "text-base tracking-normal whitespace-nowrap",
+  /* ⚑ `Nav & CTA/16` AS THE PARTNERSHIPS FRAME ACTUALLY SETS IT — 16px, 800,
+     150%, letter-spacing 1.28px. That 1.28 is 0.08em at this size, which is
+     the number `lg` is missing: `lg` zeroes tracking because the utility's
+     own 0.12em wrapped Wonder's longer labels, and 0.08 is the value the
+     frame asks for rather than either extreme. At 0.08em the label measures
+     187px, which is exactly the width the readout gives it. */
+  cta: "text-base tracking-[0.08em] whitespace-nowrap",
 } as const;
 
 export function BlobButton({
@@ -219,6 +285,8 @@ export function BlobButton({
   still = false,
   icon,
   size = "sm",
+  align = "center",
+  shape = "wide",
   className = "",
 }: {
   href: string;
@@ -234,18 +302,22 @@ export function BlobButton({
   /** Trailing chevron — right for a link, down for a download. */
   icon?: "right" | "down";
   size?: keyof typeof BLOB_LABEL;
+  /** Where the label sits in the shape — see BLOB_ALIGN. */
+  align?: keyof typeof BLOB_ALIGN;
+  /** Which drawn blob — see BLOB_SHAPE. Sets the width as well as the mask. */
+  shape?: keyof typeof BLOB_SHAPE;
   className?: string;
 }) {
   return (
     <Link
       href={href}
-      className={`group ${BLOB_BOX} text-canvas ${
+      className={`group ${BLOB_BOX} ${BLOB_SHAPE[shape].box} ${BLOB_ALIGN[align]} text-canvas ${
         still
           ? ""
           : "transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-0.5"
       } ${className}`}
     >
-      <BlobShape tone={tone} />
+      <BlobShape tone={tone} shape={shape} />
       <span className={`eyebrow relative ${BLOB_LABEL[size]}`}>{children}</span>
       {icon ? <BlobChevron dir={icon} /> : null}
     </Link>
@@ -280,9 +352,9 @@ export function BlobHold({
   return (
     <span
       data-placeholder="blob-hold"
-      className={`${BLOB_BOX} ${muted ? "text-current/55" : "text-canvas"} ${className}`}
+      className={`${BLOB_BOX} ${BLOB_SHAPE.wide.box} ${BLOB_ALIGN.center} ${muted ? "text-current/55" : "text-canvas"} ${className}`}
     >
-      <BlobShape tone={tone} />
+      <BlobShape tone={tone} shape="wide" />
       <span
         className={`eyebrow relative ${muted ? "text-[11px]" : BLOB_LABEL[size]}`}
       >

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Children } from "react";
 import { SliderDots } from "@/components/ui/SliderDots";
+import { DragScrollRail } from "@/components/ui/DragScrollRail";
 
 /**
  * Where you stay — the carousel, /wonder §08 only.
@@ -15,12 +16,16 @@ import { SliderDots } from "@/components/ui/SliderDots";
  * component and CardRail is untouched.
  *
  * ⚠ NO JAVASCRIPT IN THE MECHANISM, which is CardRail's rule and is kept
- * here. Native touch scrolling and CSS scroll-snap; no drag handler, no
- * arrows, no scroll listener on the scroller's own behaviour. With JS off it
- * scrolls and snaps exactly the same and the dots render inert on the first
- * card. On a desktop pointer the row is scrolled with a trackpad swipe, the
- * scrollbar, or by tabbing to it — the same affordances the phone rail has
- * always had, plus the peek of the next card.
+ * here. Native touch scrolling and CSS scroll-snap; no arrows, no scroll
+ * listener on the scroller's own behaviour. With JS off it scrolls and snaps
+ * exactly the same and the dots render inert on the first card.
+ *
+ * MOUSE DRAG IS LAYERED ON TOP OF THAT, NOT INSTEAD OF IT (August,
+ * 10 September 2026). `ui/DragScrollRail` wraps the row in a `display:
+ * contents` scope and attaches to `[data-drag-rail]` below; it adds no
+ * markup, the native scroller is still the mechanism, and the whole thing is
+ * inert without JS. This row is a rail at EVERY width, so unlike CardRail's
+ * the drag is useful at every width.
  *
  * ⚠ NO ENTRANCE ANIMATION on the cards, by direction (August, 10 September
  * 2026). The old two-card row opened each card with `frameOpen`; ten cards
@@ -58,26 +63,32 @@ export function StayRail({
 }) {
   return (
     <div className="flex flex-col gap-6">
-      {/* A real tab stop at every width: the cards hold no focusable child,
-          so without it a keyboard cannot reach anything past card two. */}
-      <div
-        tabIndex={0}
-        role="group"
-        aria-label={label}
-        className="-my-2 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain py-2 lg:gap-12"
-      >
-        {Children.map(children, (card) => (
-          /* Literal both ways — Tailwind cannot see a computed class. The
-             desktop width is half the row less one `lg:gap-12`, so two cards
-             sit exactly where the frame's two cards did. */
-          <div
-            className="w-full shrink-0 snap-start lg:w-[calc((100%-3rem)/2)] [&>*]:h-full"
-          >
-            {card}
-          </div>
-        ))}
-      </div>
-      <SliderDots count={Children.count(children)} label={label} />
+      {/* `label` is a real tab stop at every width: the cards hold no
+          focusable child, so without it a keyboard cannot reach anything past
+          card two. */}
+      <DragScrollRail>
+        <div
+          data-drag-rail
+          tabIndex={0}
+          role="group"
+          aria-label={label}
+          className="-my-2 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain py-2 lg:gap-12"
+        >
+          {Children.map(children, (card) => (
+            /* Literal both ways — Tailwind cannot see a computed class. The
+               desktop width is half the row less one `lg:gap-12`, so two
+               cards sit exactly where the frame's two cards did. */
+            <div className="w-full shrink-0 snap-start lg:w-[calc((100%-3rem)/2)] [&>*]:h-full">
+              {card}
+            </div>
+          ))}
+        </div>
+      </DragScrollRail>
+      {/* `everyWidth`: this row is a rail on desktop and laptop too, so the
+          dots stay under it there (August, 10 September 2026). Two cards are
+          visible at 1024 and the dots count frames, not pages — the same way
+          the frames draw them. */}
+      <SliderDots count={Children.count(children)} label={label} everyWidth />
     </div>
   );
 }

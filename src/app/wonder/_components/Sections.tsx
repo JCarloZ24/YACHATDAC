@@ -29,6 +29,7 @@ import {
   wonderStoryMedia,
 } from "@/content/wonder-media";
 import { CardRail } from "@/components/ui/CardRail";
+import { DragScrollRail } from "@/components/ui/DragScrollRail";
 import { StayRail } from "./StayRail";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
@@ -403,63 +404,77 @@ export function WonderHighlights() {
         {/* One card at a time with the frame's dots under it (2576:24613 is a
             single 335 × 400 Column, 2576:24656 the dots 24 below it), not the
             house peek — August, 9 Sep 2026. */}
-        <CardRail
-          bleed={RAIL_BLEED}
-          columns="sm:grid-cols-2 lg:grid-cols-3"
-          gap="sm:gap-6 lg:gap-12"
-          label="Highlights"
-          dots
-        >
-          {wonderHighlights.map((card, i) => {
-            const media = wonderHighlightMedia[i];
-            return (
-              <article
-                key={card.title}
-                data-card
-                className="relative flex min-h-[400px] min-w-0 flex-col justify-end gap-4 overflow-hidden rounded-3xl p-5 text-canvas lg:min-h-[500px] lg:p-10"
-              >
-                {/* frame grade: the clip opens, the picture inside holds. */}
-                <div
-                  data-frame-media
-                  data-motion="frame"
-                  className="absolute inset-0"
+        {/* Mouse drag, added 10 September 2026 — wrapped rather than passed
+            as a CardRail prop, because CardRail is shipped by three pages
+            that are static by decision and importing a client component into
+            it put the drag chunk in all three (measured on the build).
+            `DragScrollRail` is a `display: contents` scope that finds this
+            rail by its `role="group"` and attaches a handler; the markup is
+            unchanged and CardRail is untouched.
+
+            ⚠ IT ONLY BITES BELOW 640. CardRail is the house grid from `sm`
+            up, where the row does not overflow — the cursor stays a pointer
+            and nothing drags, correctly. If Highlights should be a carousel
+            at desktop too, that is a layout decision, not this. */}
+        <DragScrollRail>
+          <CardRail
+            bleed={RAIL_BLEED}
+            columns="sm:grid-cols-2 lg:grid-cols-3"
+            gap="sm:gap-6 lg:gap-12"
+            label="Highlights"
+            dots
+          >
+            {wonderHighlights.map((card, i) => {
+              const media = wonderHighlightMedia[i];
+              return (
+                <article
+                  key={card.title}
+                  data-card
+                  className="relative flex min-h-[400px] min-w-0 flex-col justify-end gap-4 overflow-hidden rounded-3xl p-5 text-canvas lg:min-h-[500px] lg:p-10"
                 >
-                  {/* A 1.9:1 photograph covering a 395 × 500 card renders
+                  {/* frame grade: the clip opens, the picture inside holds. */}
+                  <div
+                    data-frame-media
+                    data-motion="frame"
+                    className="absolute inset-0"
+                  >
+                    {/* A 1.9:1 photograph covering a 395 × 500 card renders
                       about 950px wide, so the sizes hint has to say so or the
                       browser picks a candidate half the size and the card
                       blurs at 2×. The focal point per card is the frame's
                       own crop (2033:5436), read off its image offsets. */}
-                  <Slot
-                    slot={media}
-                    sizes="(min-width: 1024px) 960px, 160vw"
-                    className={`object-cover ${HIGHLIGHT_FOCUS[i] ?? "object-center"}`}
-                  />
-                </div>
-                {/* The frame's overlay (2033:5436): flat black, no gradient —
+                    <Slot
+                      slot={media}
+                      sizes="(min-width: 1024px) 960px, 160vw"
+                      className={`object-cover ${HIGHLIGHT_FOCUS[i] ?? "object-center"}`}
+                    />
+                  </div>
+                  {/* The frame's overlay (2033:5436): flat black, no gradient —
                     10% on the pale sandstone card, 25% on the two darker
                     photographs. Literal per card; Tailwind cannot see a
                     computed class. */}
-                <div
-                  aria-hidden
-                  className={`absolute inset-0 ${HIGHLIGHT_OVERLAY[i] ?? "bg-black/25"}`}
-                />
-                <div
-                  data-card-copy
-                  className="relative flex flex-col items-start gap-4"
-                >
-                  <Chip>{card.eyebrow}</Chip>
-                  <div className="flex flex-col gap-2">
-                    <h3 className={H3}>{card.title}</h3>
-                    {/* The frame sets the body pure white, the title off-white. */}
-                    <p className="text-base leading-normal font-medium text-white">
-                      {card.body}
-                    </p>
+                  <div
+                    aria-hidden
+                    className={`absolute inset-0 ${HIGHLIGHT_OVERLAY[i] ?? "bg-black/25"}`}
+                  />
+                  <div
+                    data-card-copy
+                    className="relative flex flex-col items-start gap-4"
+                  >
+                    <Chip>{card.eyebrow}</Chip>
+                    <div className="flex flex-col gap-2">
+                      <h3 className={H3}>{card.title}</h3>
+                      {/* The frame sets the body pure white, the title off-white. */}
+                      <p className="text-base leading-normal font-medium text-white">
+                        {card.body}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </article>
-            );
-          })}
-        </CardRail>
+                </article>
+              );
+            })}
+          </CardRail>
+        </DragScrollRail>
       </Container>
     </section>
   );
@@ -676,11 +691,18 @@ function LandscapeBackdrop({ slot }: { slot: MediaSlot }) {
     <div className={landscapeStyles.backdrop}>
       <div data-landscape-viewport className={landscapeStyles.viewport}>
         <div data-landscape-approach className={landscapeStyles.approach}>
-          <div data-landscape-image data-motion="full" className={landscapeStyles.image}>
+          <div
+            data-landscape-image
+            data-motion="full"
+            className={landscapeStyles.image}
+          >
             <Slot slot={slot} sizes="(min-width: 1024px) 110vw, 300vw" />
           </div>
         </div>
-        <div aria-hidden className="absolute inset-0 bg-linear-to-t from-charcoal/80 via-charcoal/30 to-charcoal/10" />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-t from-charcoal/80 via-charcoal/30 to-charcoal/10"
+        />
       </div>
     </div>
   );
@@ -688,12 +710,21 @@ function LandscapeBackdrop({ slot }: { slot: MediaSlot }) {
 
 /** Same reading position and 80vh hold for both landscapes. D5: words remain
  * supplied by the content module; only their container sticks (9 Sep 2026). */
-function LandscapeScreen({ title, children }: { title: string; children: ReactNode }) {
+function LandscapeScreen({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
   return (
     <div data-landscape-screen className={landscapeStyles.screen}>
       <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
         <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
-        <div data-plate-copy className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
+        <div
+          data-plate-copy
+          className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6"
+        >
           <h2 className={H2}>{title}</h2>
           {children}
         </div>
@@ -724,15 +755,38 @@ function WonderTurraburra() {
         stage list
    ------------------------------------------------------------------------- */
 
+/**
+ * The rule under a stop doubles as the itinerary's scroll indicator (motion
+ * grammar, "the world opening" / itinerary rule, 10 September 2026, user
+ * direction). The burnt-ochre layer is the same artwork used as a mask, so
+ * the dots that fill are the artist's dots; `--stage-fill` is written by
+ * `src/lib/motion/wonder-itinerary.ts` and is 0% with no JavaScript.
+ */
 function DottedLine() {
   return (
-    /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
-    <img
-      src="/wonder/dotted-line.svg"
-      alt=""
+    <div
+      data-stage-rule
       aria-hidden
-      className="block h-[7px] w-full lg:h-[9.59848px]"
-    />
+      className="relative block h-[7px] w-full lg:h-[9.59848px]"
+    >
+      {/* Two cuts of the same hand-drawn rule: the 335 artwork the 375 frame
+          draws with, and the 1040 one. Supplied 10 September 2026. */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+      <img
+        src="/wonder/dotted-line-mobile.svg"
+        alt=""
+        aria-hidden
+        className="block h-full w-full lg:hidden"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+      <img
+        src="/wonder/dotted-line.svg"
+        alt=""
+        aria-hidden
+        className="hidden h-full w-full lg:block"
+      />
+      <span data-stage-fill className={itineraryStyles.ruleFill} />
+    </div>
   );
 }
 
@@ -751,13 +805,12 @@ export function WonderStay() {
       data-wonder="itinerary"
       className={`${itineraryStyles.itinerary} relative flex flex-col items-center gap-20 bg-canvas px-5 py-10 text-charcoal lg:px-[200px] lg:pt-28 lg:pb-[164px]`}
     >
-      <div
-        data-itinerary-screen
-        className="w-full"
-      >
+      <div data-itinerary-screen className="w-full">
         <Container
           width="max-w-[1040px]"
-          className="flex flex-col gap-5 lg:gap-10"
+          /* 48px between the heading block and the list on the phone, from
+             the 375 frame (2576:23040); the 1440 frame keeps 40. */
+          className="flex flex-col gap-12 lg:gap-10"
         >
           <div data-itinerary-heading className="flex flex-col gap-5 lg:gap-6">
             <p data-eyebrow className={`${H5} text-burnt`}>
@@ -802,7 +855,9 @@ export function WonderStay() {
                               {i + 1}
                             </span>
                           </span>
-                          <span data-stage-title className={H3}>{stage.title}</span>
+                          <span data-stage-title className={H3}>
+                            {stage.title}
+                          </span>
                         </span>
                         {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
                         <img
@@ -810,12 +865,22 @@ export function WonderStay() {
                           src="/wonder/chevron-up.svg"
                           alt=""
                           aria-hidden
-                          className="h-8 w-[33px] shrink-0 rotate-180 group-open:rotate-0"
+                          /* The turn is CSS so it is smooth in both the
+                             manual accordion and the held reading screen,
+                             where the module changes `open` directly.
+                             Grammar: "the world opening", chevron `quiet`. */
+                          className="h-8 w-[33px] shrink-0 rotate-180 transition-[rotate] duration-[320ms] ease-out group-open:rotate-0 motion-reduce:transition-none"
                         />
                       </summary>
 
-                      <div data-stage-panel className="flex flex-col gap-5 pt-5 lg:flex-row lg:items-start lg:gap-10 lg:pt-[30px]">
-                        <div data-stage-copy className="flex min-w-0 flex-1 flex-col gap-4 text-base leading-normal font-medium lg:text-xl">
+                      <div
+                        data-stage-panel
+                        className="flex flex-col gap-5 pt-5 lg:flex-row lg:items-start lg:gap-10 lg:pt-[30px]"
+                      >
+                        <div
+                          data-stage-copy
+                          className="flex min-w-0 flex-1 flex-col gap-4 text-base leading-normal font-medium lg:text-xl"
+                        >
                           {stage.body.map((para) => (
                             <p key={para}>{para}</p>
                           ))}
@@ -832,7 +897,11 @@ export function WonderStay() {
                             </p>
                           ) : null}
                         </div>
-                        <div data-stage-picture data-motion="frame" className="relative h-[200px] w-full min-w-0 overflow-hidden rounded-3xl lg:h-[400px] lg:w-auto lg:flex-1">
+                        <div
+                          data-stage-picture
+                          data-motion="frame"
+                          className="relative h-[200px] w-full min-w-0 overflow-hidden rounded-3xl lg:h-[400px] lg:w-auto lg:flex-1"
+                        >
                           {media ? (
                             <Slot
                               slot={media}
@@ -848,7 +917,7 @@ export function WonderStay() {
               <div data-stage-end className="hidden lg:block">
                 <DottedLine />
               </div>
-          </div>
+            </div>
           </div>
         </Container>
       </div>
@@ -1002,7 +1071,10 @@ export function WonderOutHere() {
       {/* No wave at this join — the frame runs Where you sleep straight
           into the photo (the next Wave Line is 2033's at y=8265, which is
           Your hosts rising). */}
-      <section data-landscape-section className={`${landscapeStyles.section} text-canvas`}>
+      <section
+        data-landscape-section
+        className={`${landscapeStyles.section} text-canvas`}
+      >
         <LandscapeScreen title={whatItIsLike.title}>
           <ul className="text-base leading-normal font-medium lg:text-xl">
             {whatItIsLike.points.map((point) => (
@@ -1084,63 +1156,70 @@ export function WonderStories() {
         {/* One card at a time with the frame's dots under it, as Highlights
             (§03) and Where you sleep — August, 9 Sep 2026. The peek was
             leaving a sliced second plate under the phone's 375 gutter. */}
-        <CardRail
-          bleed={RAIL_BLEED}
-          columns="sm:grid-cols-2 lg:grid-cols-3"
-          gap="sm:gap-6 lg:gap-12"
-          label="Stories from out here"
-          dots
-        >
-          {wonderStories.items.map((item, i) => {
-            const media = wonderStoryMedia[i];
-            return (
-              <article
-                key={item.href}
-                data-card
-                className="group/card relative flex min-w-0 flex-col overflow-hidden rounded-3xl bg-charcoal text-canvas transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-1"
-              >
-                {/* Marra Wonga is frame-grade: the image plane holds under
+        {/* Mouse drag, as Highlights — wrapped at the call site so CardRail
+            stays untouched for the three static pages. See §03. */}
+        <DragScrollRail>
+          <CardRail
+            bleed={RAIL_BLEED}
+            columns="sm:grid-cols-2 lg:grid-cols-3"
+            gap="sm:gap-6 lg:gap-12"
+            label="Stories from out here"
+            dots
+          >
+            {wonderStories.items.map((item, i) => {
+              const media = wonderStoryMedia[i];
+              return (
+                <article
+                  key={item.href}
+                  data-card
+                  className="group/card relative flex min-w-0 flex-col overflow-hidden rounded-3xl bg-charcoal text-canvas transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-1"
+                >
+                  {/* Marra Wonga is frame-grade: the image plane holds under
                     the pointer; the card lifts, the label answers. */}
-                <div
-                  data-frame-media
-                  data-motion="frame"
-                  className="relative h-[240px] w-full lg:h-[320px]"
-                >
-                  <Slot slot={media} sizes="(min-width: 1024px) 400px, 78vw" />
-                </div>
-                {/* flex-1 + mt-auto: the link seats on the card's foot so
-                    the three CTAs line up whatever the summary's length. */}
-                <div
-                  data-card-copy
-                  className="flex flex-1 flex-col items-start gap-4 p-6 lg:px-9 lg:py-10"
-                >
-                  <Chip>{item.tag.replace("#", "")}</Chip>
-                  <div className="flex flex-1 flex-col gap-10">
-                    <div className="flex flex-col gap-4">
-                      <h3 className={H3}>{item.title}</h3>
-                      <p className="text-base leading-normal font-medium">
-                        {item.summary}
-                      </p>
-                    </div>
-                    <Link
-                      href={item.href}
-                      className="mt-auto inline-flex items-center gap-2 font-eyebrow text-base leading-normal font-bold text-gold uppercase after:absolute after:inset-0 group-hover/card:underline group-hover/card:underline-offset-4"
-                    >
-                      {wonderStories.cta}
-                      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-                      <img
-                        src="/wonder/chevron-right.svg"
-                        alt=""
-                        aria-hidden
-                        className="size-6 transition-transform duration-(--dur-small) ease-quiet group-hover/card:translate-x-1"
-                      />
-                    </Link>
+                  <div
+                    data-frame-media
+                    data-motion="frame"
+                    className="relative h-[240px] w-full lg:h-[320px]"
+                  >
+                    <Slot
+                      slot={media}
+                      sizes="(min-width: 1024px) 400px, 78vw"
+                    />
                   </div>
-                </div>
-              </article>
-            );
-          })}
-        </CardRail>
+                  {/* flex-1 + mt-auto: the link seats on the card's foot so
+                    the three CTAs line up whatever the summary's length. */}
+                  <div
+                    data-card-copy
+                    className="flex flex-1 flex-col items-start gap-4 p-6 lg:px-9 lg:py-10"
+                  >
+                    <Chip>{item.tag.replace("#", "")}</Chip>
+                    <div className="flex flex-1 flex-col gap-10">
+                      <div className="flex flex-col gap-4">
+                        <h3 className={H3}>{item.title}</h3>
+                        <p className="text-base leading-normal font-medium">
+                          {item.summary}
+                        </p>
+                      </div>
+                      <Link
+                        href={item.href}
+                        className="mt-auto inline-flex items-center gap-2 font-eyebrow text-base leading-normal font-bold text-gold uppercase after:absolute after:inset-0 group-hover/card:underline group-hover/card:underline-offset-4"
+                      >
+                        {wonderStories.cta}
+                        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+                        <img
+                          src="/wonder/chevron-right.svg"
+                          alt=""
+                          aria-hidden
+                          className="size-6 transition-transform duration-(--dur-small) ease-quiet group-hover/card:translate-x-1"
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </CardRail>
+        </DragScrollRail>
       </Container>
     </section>
   );

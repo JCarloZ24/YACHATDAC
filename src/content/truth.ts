@@ -153,14 +153,13 @@ export const erasBefore: readonly TruthEra[] = [
         id: "today-fire",
         when: "Now",
         /**
-         * ⚠ CR3 — applied everywhere else. This title and href are
-         * deliberately still "right-way fire" — renaming them would rename
-         * the linked article and, with it, the route below. That is an IA
-         * change, not a copy change, and is raised separately as D17, still
-         * open. Left as drafted until D17 is answered.
+         * ⚠ CR3 — applied here on 10 Sep 2026, with D17 resolved (August's
+         * direction): the linked article was renamed title-and-slug together,
+         * so this title and both hrefs below moved with it. The old route
+         * 301s — see next.config.ts.
          */
-        title: "Right-way fire, springs, and two flux towers",
-        href: "/the-record/right-way-fire-and-the-carbon-in-the-soil",
+        title: "Fire-stick farming, springs, and two flux towers",
+        href: "/the-record/fire-stick-farming-and-the-carbon-in-the-soil",
         body: [
           "The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on Country managed this way, one on grazed land, checked against each other.",
         ],
@@ -169,7 +168,7 @@ export const erasBefore: readonly TruthEra[] = [
         source: "Living memory",
         cta: {
           label: "What the towers are showing",
-          href: "/the-record/right-way-fire-and-the-carbon-in-the-soil",
+          href: "/the-record/fire-stick-farming-and-the-carbon-in-the-soil",
         },
       },
       {

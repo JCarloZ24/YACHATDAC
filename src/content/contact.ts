@@ -2,8 +2,8 @@
  * The "Get in touch" block.
  *
  * Source of truth: the identical closing sections of
- * docs/content/drafts/connect/YACHATDAC-About-Copy-v1.md and
- * docs/content/drafts/connect/YACHATDAC-OurPeople-Copy-v1.md (decision D5).
+ * docs/content/drafts/about/YACHATDAC-About-Copy-v1.md and
+ * docs/content/drafts/our-people/YACHATDAC-OurPeople-Copy-v1.md (decision D5).
  * Both v1 drafts carry the same block word for word, so it lives here once and
  * both pages import it — and so does /connect, which every other page links to
  * without there being a Connect draft of its own.

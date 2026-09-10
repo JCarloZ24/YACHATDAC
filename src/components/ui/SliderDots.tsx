@@ -35,11 +35,24 @@ const DOT_PATH =
 export function SliderDots({
   count,
   label,
+  everyWidth = false,
 }: {
   /** How many cards the rail holds. */
   count: number;
   /** Names the row for a screen reader, e.g. "Highlights". */
   label: string;
+  /**
+   * Keep the dots from `sm` up as well as on the phone.
+   *
+   * OFF BY DEFAULT, because a CardRail row stops being a rail at 640 — it is
+   * the house grid from there and there is nothing to page through, so an
+   * indicator would be pointing at a static row. StayRail (/wonder §08, Where
+   * you stay) is a rail at EVERY width, ten frames two-up on desktop, so it
+   * passes this and the dots stay under the row on laptop and desktop where
+   * they are the only sign there is more than what is shown (August, 10
+   * September 2026).
+   */
+  everyWidth?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -102,8 +115,12 @@ export function SliderDots({
     /* The frame seats the dots 24 under the card and centres them on the
        container (2576:24656 — five dots spanning 132.72 → 202.28, centre
        167.5, which is 335/2). Gone from `sm` up, where the row is the house
-       grid and there is nothing to page through. */
-    <div ref={ref} className="flex justify-center gap-2 sm:hidden">
+       grid and there is nothing to page through — unless `everyWidth` says the
+       row is still a rail up there. */
+    <div
+      ref={ref}
+      className={`flex justify-center gap-2 ${everyWidth ? "" : "sm:hidden"}`}
+    >
       {Array.from({ length: count }, (_, i) => (
         <button
           key={i}

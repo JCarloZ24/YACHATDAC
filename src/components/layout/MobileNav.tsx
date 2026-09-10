@@ -28,6 +28,10 @@ import { navHeroFoot } from "@/lib/nav-hero";
  * photography the whole time. The white fade across the hero's edge tracks
  * the scroll the same way.
  *
+ * ⚑ IT LEAVES OVER THE HERO AS WELL (10 September 2026). The hero used to pin
+ * it shown; the desktop band did not, so the two disagreed for the length of
+ * an opening screen. See the note at the offset below.
+ *
  * The black wordmark is public/brand/logo-wordmark-black.svg — the same
  * authored vectors as the white cut, per build documentation §5 (never
  * recreate or approximate the mark in code).
@@ -97,8 +101,15 @@ export function MobileNav() {
       // The ramp: transparent until 96px before the hero's edge, solid at it.
       paintSolid(Math.min(1, Math.max(0, (y - (heroY - 96)) / 96)));
 
-      // Over the hero (and rubber-banding past the top) the bar stays put.
-      if (y < heroY || y <= 0) offset = 0;
+      // ⚑ THE BAR NOW LEAVES OVER THE HERO TOO — user direction, 10 September
+      // 2026, "hide the nav bar when scrolling down mobile/tablet/laptop/
+      // desktop". It used to be `y < heroY`, which pinned it shown for the
+      // whole opening screen: on a 130svh hero that is more than a viewport of
+      // scrolling with the bar sitting on the picture, while the desktop band
+      // had already gone at 130px. One rule now — past its own height it moves
+      // with the thumb, at any ground. `y <= 0` stays: that is rubber-banding
+      // past the top, not a scroll down.
+      if (y <= BAR_H) offset = 0;
       else offset = Math.min(height, Math.max(0, offset + delta));
       el.style.transitionProperty = "none";
       paint();

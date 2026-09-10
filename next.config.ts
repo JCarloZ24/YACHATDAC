@@ -40,6 +40,22 @@ const nextConfig: NextConfig = {
         destination: "/the-record/:slug",
         permanent: true,
       },
+      /**
+       * D17 resolved 2026-09-10 (August's direction, option 1): CR3's
+       * "right-way fire" → "fire-stick farming" rename was extended to this
+       * article's title AND its slug, so Record slugs track their titles and a
+       * rename ships with a redirect. Same reasoning as /resources above —
+       * the drafts and anything already sent out still carry the old path.
+       *
+       * A hit on /resources/right-way-fire-… takes the wildcard above first
+       * and lands here on the second hop. Two 301s, both permanent; not worth
+       * a fourth rule to flatten.
+       */
+      {
+        source: "/the-record/right-way-fire-and-the-carbon-in-the-soil",
+        destination: "/the-record/fire-stick-farming-and-the-carbon-in-the-soil",
+        permanent: true,
+      },
     ];
   },
 };

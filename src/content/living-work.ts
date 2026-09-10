@@ -256,14 +256,47 @@ export type InfrastructureBlock = {
   points: readonly string[];
   /** The line the draft sets below the bullets, where it gives one. */
   note?: string;
+  /**
+   * Copy that is written and ready but rests on a fact nobody on our side has
+   * confirmed. It renders marked, below the confirmed bullets, rather than
+   * sitting in `points` where it would read as established.
+   *
+   * This exists because of CR5 and it should stay empty the rest of the time.
+   * The moment `confirm` is answered, move `points` up into the block's own
+   * `points`, fold `note` in, and delete the key.
+   */
+  proposed?: {
+    points: readonly string[];
+    note?: string;
+    /** The question that has to come back before this is fact. */
+    confirm: string;
+  };
 };
 
 /**
- * ⚠ R19 / CR5. The client has asked for Single-Wire Earth Return and on-site
- * petrol and diesel tanks to be added to Power. Nothing has been added,
- * because what was supplied is a generic definition of SWER rather than a
- * statement of what is on this property. Ask, then write. Do not paraphrase
- * the definition — this block is read by funders and neighbouring properties.
+ * ⚠ R19 / CR5 — written 11 Sep 2026, and only half of it is fact.
+ *
+ * **The fuel tanks are applied as fact.** Steve stated them flatly about the
+ * property — "they have on-site petrol and diesel tanks" — which is the client
+ * describing their own place. Sizes and what they feed were not given, so the
+ * bullet says only what was said.
+ *
+ * **SWER is written but NOT asserted.** What arrived was a pasted general
+ * definition of how SWER works, not a statement that Turraburra is on a SWER
+ * line, and the two are not the same claim. The copy below is drafted and
+ * carried in `proposed` so it is ready the day it is confirmed and cannot
+ * publish as fact before then. This block is read by funders and by
+ * neighbouring properties; an invented connection detail is the kind of error
+ * they would be the first to catch.
+ *
+ * The general SWER description in that copy is accurate and independent of
+ * this property — one conductor with the earth as the return path, which is
+ * how Queensland ran power to holdings this far apart. Ergon operates roughly
+ * 65,000km of it for about 4% of its customers, and its defining trait is a
+ * small load ceiling. That ceiling is the honest reason SWER belongs in this
+ * block at all: it is what the solar, the regulators and the fuel on site are
+ * answering. A pasted definition would not have earned the space (CR5, Ivy's
+ * point about the column balance).
  */
 export const infrastructure: readonly InfrastructureBlock[] = [
   {
@@ -291,8 +324,16 @@ export const infrastructure: readonly InfrastructureBlock[] = [
       "Solar with wifi-enabled regulators",
       "Data can be pulled off the regulators remotely",
       "240 volt supply to the mesh network",
+      /** CR5 — Steve, 10:19, stated as fact about the property. */
+      "Petrol and diesel in tanks on site",
     ],
     note: "Renewable self-sufficiency is a Stage 4 goal.",
+    proposed: {
+      points: ["Single-Wire Earth Return line — one wire, earth as the return"],
+      note: "SWER is what made a line to a property this far out affordable, and a small load ceiling is the trade. The solar and the fuel on site carry the rest.",
+      confirm:
+        "Is Turraburra on a SWER line, and what does it actually run — the house, the shed, the bore pumps? If the property is off-grid entirely, this comes out rather than being softened.",
+    },
   },
   {
     title: "Monitoring gear",

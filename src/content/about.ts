@@ -1,12 +1,15 @@
 /**
  * About YACHATDAC.
  *
- * Source of truth: docs/content/drafts/connect/YACHATDAC-About-Copy-v1.md
+ * Source of truth: docs/content/drafts/about/YACHATDAC-About-Copy-v1.md
  * (D5). First draft of this page — the old page-specs file had no entry for it
  * at all.
  *
- * ⚠ FILED UNDER CONNECT, ROUTED AT TOP LEVEL. The draft lives in
- * `drafts/connect/` because build documentation §2 puts About inside Connect.
+ * ⚠ GROUPED UNDER CONNECT, ROUTED AT TOP LEVEL. The draft lived in
+ * `drafts/connect/` because build documentation §2 puts About inside Connect;
+ * it now sits in its own `drafts/about/`, one folder per page, at August's
+ * direction 10 Sep 2026. The move is filing hygiene and changes nothing about
+ * the IA — §2 still groups this page under Connect.
  * The prototype links it as `/about`, and so does the v3 homepage nav. This
  * page is built at `/about` because that is what every draft links to — but
  * that is a routing decision, **not an answer to D2**, which asks whether
