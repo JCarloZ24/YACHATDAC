@@ -2001,8 +2001,24 @@ export function DissolveBreak({ deckContent }: { deckContent?: React.ReactNode }
         data-truth-slide
         data-truth-slide-label={truthBreaks.escarpment.id}
         /* The frame's 900 on 1440 — the break keeps that proportion rather
-           than a viewport-height minimum, so it never towers on a wide screen. */
-        className="relative h-[62.5vw] min-h-[24rem] overflow-hidden"
+           than a viewport-height minimum, so it never towers on a wide screen.
+
+           bg-charcoal because THIS SLIDE HAS A TRANSPARENT LAYER IN IT. Shot B
+           is undelivered, so its MediaOrField renders the honest tonal field —
+           `bg-charcoal/50`, half transparent — and once the dissolve has faded
+           shot A out, that half-transparency was compositing over the page's
+           egg-white band. Scrolling back up, the count's charcoal panel lags a
+           few tens of pixels behind the scroll while the scrub settles, and
+           that strip at the top of the slide read as a band of white in the
+           middle of the darkest passage on the page.
+
+           The lag is not the bug and cannot be tuned away — a scrub has lag by
+           design, "the slight lag IS the weight". What was wrong is that a
+           full-bleed photographic break was letting the page ground show
+           through at all. A solid ground under the plates fixes it whatever
+           the timing does, and it is the right colour anyway: this break hands
+           into the count. */
+        className="relative h-[62.5vw] min-h-[24rem] overflow-hidden bg-charcoal"
       >
       {/* Shot B pulls back as it is revealed, matching the Country now break.
           The plate's own push would drive INTO the escarpment while the page
