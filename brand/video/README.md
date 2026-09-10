@@ -29,8 +29,32 @@ ffmpeg -i loop.mp4 -vframes 1 -q:v 3 poster.jpg
 
 Serve as `muted playsinline loop preload="metadata"` with the poster set.
 
-⚠ `ffmpeg` is **not installed** on this machine — it was probed during the 2026-08-31 audit
-and is missing, along with ImageMagick. Install it, or do the transcode elsewhere.
+✅ `ffmpeg` **is installed** as of 10 September 2026 — 9.0.1-full_build, via
+`winget install Gyan.FFmpeg`. (ImageMagick is still missing.) The 2026-08-31 audit's note that
+it was absent no longer holds.
+
+## What the first real transcode taught us, 10 September 2026
+
+The homepage loading film (`Main_V2_16.mp4`, a separate 104.2 MiB file, not the 162 MB master
+above) went through this pipeline and produced R11's first measured targets — see
+[`../../ASSETS.md`](../../ASSETS.md) §7. Two corrections to the recipe below:
+
+- **Use two-pass, not CRF, when a budget is hard.** CRF 30 at 1280 came out at 6.77 MB and CRF
+  32 at 1920 at 10.21 MB. CRF targets a *quality*, not a *size*, and on busy footage — foliage,
+  drone motion, fire — it will overshoot a byte budget every time:
+
+  ```bash
+  ffmpeg -y -i in.mp4 -vf "scale=960:-2:flags=lanczos" -c:v libx264 -b:v 380k          -preset slow -profile:v high -pix_fmt yuv420p -an -pass 1 -f null NUL
+  ffmpeg -y -i in.mp4 -vf "scale=960:-2:flags=lanczos" -c:v libx264 -b:v 380k          -preset slow -profile:v high -pix_fmt yuv420p -an -pass 2          -movflags +faststart out.mp4
+  ```
+
+- **"Roughly 1.2 MB" is a figure for a LOOP.** A 39-second film cannot reach it and stay
+  watchable; 1.78 MB at 960 wide was the honest floor. `+faststart` is what makes that
+  survivable — playback starts after a few hundred KB, so length costs bandwidth but not
+  time-to-first-frame.
+
+- **Drop the audio (`-an`) unless it is doing work.** It is weight, and on a muted autoplay
+  background it is weight nobody can hear.
 
 ## What this unblocks
 
