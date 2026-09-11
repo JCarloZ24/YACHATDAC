@@ -1,4 +1,5 @@
 import { photoById } from "@/content/kit";
+import { ourPeopleMedia } from "@/content/our-people-media";
 import {
   acknowledgements,
   culturalAdvice,
@@ -107,10 +108,16 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * Suzanne is the exception and is not in this map: she is the one person shown
  * as herself, and `lw-hero` is her frame (378A7604_1.40.2).
  */
-const HERO = photoById("op-hero");
+const HERO = ourPeopleMedia.hero;
 const SUZANNE = photoById("lw-hero");
-const BREATH_TEAM = photoById("op-breath-01");
-const BREATH_PIVOT = photoById("op-breath-02");
+const BREATH_TEAM = ourPeopleMedia.breathTeam;
+const BREATH_PIVOT = ourPeopleMedia.breathPivot;
+
+/** R11, user sharpness refinement (11 September 2026): 85 is already allowed
+ * by Next. Sizes account for the full image width required by object-cover,
+ * particularly a landscape source inside a portrait card or the panorama.
+ */
+const PHOTO_QUALITY = 85;
 
 /**
  * THE MOBILE RAMP, read off the one mobile design that exists.
@@ -217,7 +224,7 @@ export function OurPeopleHero() {
     <section data-people-scene="hero" data-nav-hero className="relative bg-charcoal text-canvas">
       {/* The photograph. 1150 of the frame's 1890, hard-cut into charcoal at
           its foot — the scrim carries the cut so it does not read as a seam. */}
-      <div className="relative h-[62svh] w-full overflow-hidden sm:h-[86svh] lg:h-[128svh]">
+      <div data-people-hero-frame className="relative h-[62svh] w-full overflow-hidden sm:h-[86svh] lg:h-[128svh]">
         <div
           data-media
           data-motion="frame"
@@ -226,7 +233,8 @@ export function OurPeopleHero() {
           <MediaOrField
             src={HERO?.src ?? null}
             alt="Rangers walking burnt Country"
-            sizes="(min-width: 1024px) 100vw, 260vw"
+            sizes="(min-width: 1024px) max(100vw, 171svh), (min-width: 640px) max(100vw, 115svh), max(100vw, 83svh)"
+            quality={PHOTO_QUALITY}
             priority
             fieldClass="bg-charcoal"
           />
@@ -263,7 +271,7 @@ export function OurPeopleHero() {
       {/* User reference, 11 September 2026 (D5: reference governs layout):
           a broad, centred display with breathing room before the canvas wave.
           This section uses the current 20/64px viewport gutters. */}
-      <div className="mx-auto w-full max-w-[1920px] px-5 pt-8 pb-32 lg:px-16 lg:pb-60">
+      <div data-people-hero-copy className="mx-auto w-full max-w-[1920px] px-5 pt-8 pb-32 lg:px-16 lg:pb-60">
         {/* Captioned by what the frame SHOWS, never by who the people are —
             which is the rule this caption obeys, not a sentence for a reader. */}
         <p className="max-w-[760px] text-sm leading-[1.5] text-canvas/60">
@@ -288,7 +296,7 @@ export function OurPeopleHero() {
             style={
               HERO
                 ? {
-                    backgroundImage: `url(${HERO.src})`,
+                    backgroundImage: `url(${ourPeopleMedia.titleFallback ?? HERO.src})`,
                     backgroundSize: "108.7% 408.16%",
                     /* Keep the reference crop held inside the letterforms. */
                     backgroundPositionX: "50%",
@@ -350,7 +358,8 @@ export function SuzanneTestimony() {
             <MediaOrField
               src={SUZANNE?.src ?? null}
               alt="Suzanne Thompson standing in the Country being brought back"
-              sizes="(min-width: 1024px) 1240px, 100vw"
+              sizes="(min-width: 1024px) 1240px, 135vw"
+              quality={PHOTO_QUALITY}
               fieldClass="bg-evergreen/40"
             />
           </div>
@@ -541,7 +550,8 @@ function PersonCard({
           <MediaOrField
             src={photo?.src ?? null}
             alt=""
-            sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 680px, (min-width: 640px) 90vw, 160vw"
+            quality={PHOTO_QUALITY}
             fieldClass="bg-charcoal"
           />
         </div>
@@ -660,7 +670,8 @@ export function BreathTeam() {
         <MediaOrField
           src={BREATH_TEAM?.src ?? null}
           alt=""
-          sizes="(min-width: 1024px) 100vw, 260vw"
+          sizes="max(100vw, 74svh)"
+          quality={PHOTO_QUALITY}
           fieldClass="bg-evergreen/40"
         />
       </div>
@@ -950,7 +961,8 @@ export function BreathPivot() {
         <MediaOrField
           src={BREATH_PIVOT?.src ?? null}
           alt=""
-          sizes="(min-width: 1024px) 100vw, 260vw"
+          sizes="max(100vw, 249svh)"
+          quality={PHOTO_QUALITY}
           fieldClass="bg-roasted"
         />
       </div>

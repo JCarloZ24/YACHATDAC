@@ -10,11 +10,12 @@ import gsap from "gsap";
 import {
   CanvasTexture, Color, DataTexture, LinearFilter, Mesh, MeshBasicMaterial,
   OrthographicCamera, PlaneGeometry, Scene, ShaderMaterial, SRGBColorSpace,
-  Texture, Vector2, WebGLRenderer,
+  Texture, Vector2, Vector4, WebGLRenderer,
 } from "three";
 import type { PeopleState } from "./effects/people";
 
 export type PeopleSection = { element: HTMLElement; top: number; height: number; color: string };
+export type PeopleHeroFlight = { frameTravel: number; titleTravel: number };
 type Box = { left: number; top: number; width: number; height: number };
 type Photo = {
   element: HTMLImageElement;
@@ -38,11 +39,17 @@ const vertexShader = `
 const fragmentShader = `
   uniform sampler2D picture;
   uniform sampler2D mask;
+  uniform sampler2D aperture;
   uniform vec2 crop;
   uniform vec2 offset;
   uniform vec2 size;
   uniform float radius;
   uniform float masked;
+  uniform vec4 apertureBox;
+  uniform float closing;
+  uniform vec4 prefixBox;
+  uniform float prefixHidden;
+  uniform float letterReveal;
   varying vec2 vUv;
   void main() {
     vec2 sampleUv = (vUv - 0.5) * crop + 0.5 + offset;
@@ -58,7 +65,20 @@ const fragmentShader = `
       vec2 centre = vec2(p.x < radius ? radius : size.x - radius, radius);
       alpha *= 1.0 - smoothstep(radius - 1.0, radius, length(p - centre));
     }
-    if (masked > 0.5) alpha *= texture2D(mask, vUv).a;
+    if (closing > 0.0) {
+      vec2 apertureUv = (p - apertureBox.xy) / apertureBox.zw;
+      float inside = step(0.0, apertureUv.x) * step(apertureUv.x, 1.0)
+        * step(0.0, apertureUv.y) * step(apertureUv.y, 1.0);
+      float silhouette = texture2D(aperture, vec2(apertureUv.x, 1.0 - apertureUv.y)).a * inside;
+      alpha *= mix(1.0, silhouette, closing);
+    }
+    if (masked > 0.5) {
+      alpha *= texture2D(mask, vUv).a;
+      vec2 prefixUv = (p - prefixBox.xy) / prefixBox.zw;
+      float initial = step(0.0, prefixUv.x) * step(prefixUv.x, 1.0)
+        * step(0.0, prefixUv.y) * step(prefixUv.y, 1.0);
+      alpha *= mix(letterReveal, 1.0 - prefixHidden, initial);
+    }
     gl_FragColor = vec4(ink.rgb, ink.a * alpha);
     #include <colorspace_fragment>
   }
@@ -67,10 +87,13 @@ const fragmentShader = `
 function material(width: number, height: number, blank: Texture, radius = 0) {
   return new ShaderMaterial({
     uniforms: {
-      picture: { value: blank }, mask: { value: blank },
+      picture: { value: blank }, mask: { value: blank }, aperture: { value: blank },
       crop: { value: new Vector2(1, 1) }, offset: { value: new Vector2() },
       size: { value: new Vector2(width, height) },
       radius: { value: radius }, masked: { value: 0 },
+      apertureBox: { value: new Vector4(0, 0, 1, 1) }, closing: { value: 0 },
+      prefixBox: { value: new Vector4(0, 0, 1, 1) }, prefixHidden: { value: 0 },
+      letterReveal: { value: 1 },
     },
     vertexShader, fragmentShader, transparent: true,
     depthTest: false, depthWrite: false,
@@ -85,7 +108,9 @@ export function peopleBox(element: Element, track: HTMLElement): Box {
 
 /** Y1: rasterise only the headline silhouette, from the utility's actual
  * loaded font. Word ranges preserve browser wrapping and CMS-edited titles.
- * Font families are never named here, and no text is split into characters.
+ * Font families are never named here, and the HTML is never split. The user-
+ * requested Living Work handoff also measures the first glyph as an aperture;
+ * this is one continuous silhouette, not a character-staggered text effect.
  */
 function titleMask(element: HTMLElement, width: number, height: number) {
   const bitmap = document.createElement("canvas");
@@ -102,6 +127,7 @@ function titleMask(element: HTMLElement, width: number, height: number) {
   context.textBaseline = "alphabetic";
   const origin = element.getBoundingClientRect();
   const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  let initial: { ink: string; box: Box; x: number; baseline: number } | undefined;
   let node: Node | null;
   while ((node = walker.nextNode())) {
     for (const word of (node.textContent ?? "").matchAll(/\S+/g)) {
@@ -111,16 +137,56 @@ function titleMask(element: HTMLElement, width: number, height: number) {
       const rect = range.getBoundingClientRect();
       const ink = style.textTransform === "uppercase" ? word[0].toUpperCase() : word[0];
       const metrics = context.measureText(ink);
-      const ascent = metrics.fontBoundingBoxAscent;
-      const fontHeight = ascent + metrics.fontBoundingBoxDescent;
-      context.fillText(ink, rect.left - origin.left,
-        rect.top - origin.top + (rect.height - fontHeight) / 2 + ascent);
+      const ascent = metrics.fontBoundingBoxAscent ?? metrics.actualBoundingBoxAscent;
+      const fontHeight = ascent + (metrics.fontBoundingBoxDescent ?? metrics.actualBoundingBoxDescent);
+      const x = rect.left - origin.left;
+      const baseline = rect.top - origin.top + (rect.height - fontHeight) / 2 + ascent;
+      context.fillText(ink, x, baseline);
+      if (!initial) {
+        const glyph = new Intl.Segmenter(undefined, { granularity: "grapheme" })
+          .segment(ink)[Symbol.iterator]().next().value?.segment;
+        if (glyph) {
+          const bounds = context.measureText(glyph);
+          initial = { ink: glyph, x, baseline, box: {
+            left: x - bounds.actualBoundingBoxLeft - 1,
+            top: baseline - bounds.actualBoundingBoxAscent - 1,
+            width: bounds.actualBoundingBoxLeft + bounds.actualBoundingBoxRight + 2,
+            height: bounds.actualBoundingBoxAscent + bounds.actualBoundingBoxDescent + 2,
+          } };
+        }
+      }
     }
   }
   const texture = new CanvasTexture(bitmap);
   texture.minFilter = LinearFilter;
   texture.generateMipmaps = false;
-  return texture;
+  let aperture: CanvasTexture | null = null;
+  if (initial) {
+    const glyphBitmap = document.createElement("canvas");
+    // The initial starts almost a viewport tall. Give that silhouette its own
+    // resolution budget instead of magnifying the small final-heading mask.
+    const glyphScale = Math.min(16, Math.max(2,
+      Math.min(window.innerHeight * 2, 2048) / initial.box.height));
+    glyphBitmap.width = Math.ceil(initial.box.width * glyphScale);
+    glyphBitmap.height = Math.ceil(initial.box.height * glyphScale);
+    const glyphContext = glyphBitmap.getContext("2d");
+    if (glyphContext) {
+      glyphContext.scale(glyphBitmap.width / initial.box.width, glyphBitmap.height / initial.box.height);
+      glyphContext.font = context.font;
+      glyphContext.letterSpacing = context.letterSpacing;
+      glyphContext.fillStyle = "white";
+      glyphContext.fillText(initial.ink, initial.x - initial.box.left, initial.baseline - initial.box.top);
+      aperture = new CanvasTexture(glyphBitmap);
+      aperture.minFilter = LinearFilter;
+      aperture.generateMipmaps = false;
+    }
+  }
+  return { texture, aperture, initial: initial?.box };
+}
+
+function phase(start: number, end: number, value: number) {
+  const progress = Math.max(0, Math.min(1, (value - start) / (end - start)));
+  return progress * progress * (3 - 2 * progress);
 }
 
 export function createPeopleWorld(
@@ -130,9 +196,12 @@ export function createPeopleWorld(
   width: number,
   height: number,
   invalidate: () => void,
+  flight?: PeopleHeroFlight,
 ) {
   const renderer = new WebGLRenderer({ canvas, alpha: false, antialias: true, powerPreference: "low-power" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  // User sharpness refinement, 11 September 2026: retain native retina detail
+  // up to 2×, with a cap so large/high-density screens keep a bounded buffer.
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setSize(width, height, false);
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.setClearColor(new Color(sections[0].color), 1);
@@ -204,14 +273,15 @@ export function createPeopleWorld(
 
   const title = track.querySelector<HTMLElement>("[data-people-title]");
   const hero = photos.find(photo => photo.element.closest('[data-people-scene="hero"]'));
-  let titleTexture: CanvasTexture | null = null;
+  const titleBox = title ? peopleBox(title, track) : null;
+  let masks: ReturnType<typeof titleMask> = null;
   let titleMesh: Mesh<PlaneGeometry, ShaderMaterial> | null = null;
-  if (title && hero) {
-    const box = peopleBox(title, track);
-    titleTexture = titleMask(title, box.width, box.height);
-    if (titleTexture) {
+  if (title && hero && titleBox) {
+    const box = titleBox;
+    masks = titleMask(title, box.width, box.height);
+    if (masks) {
       const ink = material(box.width, box.height, blank);
-      ink.uniforms.mask.value = titleTexture;
+      ink.uniforms.mask.value = masks.texture;
       ink.uniforms.masked.value = 1;
       (ink.uniforms.crop.value as Vector2).set(0.92, 0.245);
       titleMesh = new Mesh(geometry, ink);
@@ -220,8 +290,14 @@ export function createPeopleWorld(
       titleMesh.renderOrder = 2;
       titleMesh.visible = false;
       scene.add(titleMesh);
+      if (masks.aperture && masks.initial && flight) {
+        hero.mesh.material.uniforms.aperture.value = masks.aperture;
+        const initial = masks.initial;
+        (ink.uniforms.prefixBox.value as Vector4).set(initial.left, initial.top, initial.width, initial.height);
+      }
     }
   }
+  const hasPortal = Boolean(flight && masks?.aperture && masks.initial);
 
   function render(state: PeopleState) {
     if (disposed || document.hidden) return;
@@ -238,10 +314,51 @@ export function createPeopleWorld(
       // P4 frame grade: the aperture moves, the pixels inside it stay held.
       (photo.mesh.material.uniforms.offset.value as Vector2).set(x / photo.box.width * crop.x, 0);
     }
-    if (titleMesh && hero?.texture && title) {
+    if (titleMesh && hero?.texture && title && titleBox) {
       titleMesh.visible = true;
       titleMesh.material.uniforms.picture.value = hero.texture;
-      (titleMesh.material.uniforms.offset.value as Vector2).set(0, 0.16 * (1 - state.knockout));
+      const ink = titleMesh.material.uniforms;
+      if (hasPortal && flight && masks?.initial) {
+        const k = state.knockout;
+        const photo = hero.box;
+        const initial = masks.initial;
+        const heldTop = photo.top - flight.frameTravel;
+        const moving = k > 0 && k < 1;
+        titleMesh.position.y = -titleBox.top - titleBox.height / 2
+          - (moving ? state.travel - flight.titleTravel : 0);
+        hero.mesh.visible = Boolean(hero.texture) && (k < 1);
+        hero.mesh.position.y = -photo.top - photo.height / 2
+          - (k > 0 ? Math.min(state.travel, flight.titleTravel) - flight.frameTravel : 0);
+        const aperture = hero.mesh.material.uniforms;
+        aperture.closing.value = phase(0, 0.22, k);
+        const gather = phase(0.22, 0.78, k);
+        const initialHeight = Math.min(Math.min(height, photo.height) * 0.82,
+          photo.width * 0.9 * initial.height / initial.width);
+        const apertureHeight = initialHeight + (initial.height - initialHeight) * gather;
+        const apertureWidth = apertureHeight * initial.width / initial.height;
+        const fromX = photo.left + photo.width / 2;
+        const fromY = Math.max(0, heldTop) + Math.min(height, photo.height) / 2;
+        const toX = titleBox.left + initial.left + initial.width / 2;
+        const toY = titleBox.top + initial.top + initial.height / 2 - flight.titleTravel;
+        (aperture.apertureBox.value as Vector4).set(
+          fromX + (toX - fromX) * gather - apertureWidth / 2 - photo.left,
+          fromY + (toY - fromY) * gather - apertureHeight / 2 - heldTop,
+          apertureWidth, apertureHeight,
+        );
+        // P4: both windows sample the same held photograph in screen space.
+        // The glyph shrinks, but the people inside it never change scale.
+        const crop = aperture.crop.value as Vector2;
+        const titleScreenTop = titleBox.top - flight.titleTravel;
+        (ink.crop.value as Vector2).set(titleBox.width / photo.width * crop.x, titleBox.height / photo.height * crop.y);
+        (ink.offset.value as Vector2).set(
+          (titleBox.left + titleBox.width / 2 - photo.left - photo.width / 2) / photo.width * crop.x,
+          (heldTop + photo.height / 2 - titleScreenTop - titleBox.height / 2) / photo.height * crop.y,
+        );
+        ink.prefixHidden.value = k < 1 ? 1 : 0;
+        ink.letterReveal.value = phase(0.76, 0.96, k);
+      } else {
+        (ink.offset.value as Vector2).set(0, 0.16 * (1 - state.knockout));
+      }
       if (!title.hasAttribute("data-people-knockout")) title.dataset.peopleKnockout = "true";
     }
     renderer.render(scene, camera);
@@ -258,7 +375,8 @@ export function createPeopleWorld(
       photo.mesh.material.dispose();
     }
     title?.removeAttribute("data-people-knockout");
-    titleTexture?.dispose();
+    masks?.texture.dispose();
+    masks?.aperture?.dispose();
     titleMesh?.material.dispose();
     grounds.forEach(ground => ground.dispose());
     geometry.dispose();
@@ -272,5 +390,5 @@ export function createPeopleWorld(
     renderer.dispose();
     scene.clear();
   }
-  return { render, destroy };
+  return { render, destroy, hasPortal };
 }

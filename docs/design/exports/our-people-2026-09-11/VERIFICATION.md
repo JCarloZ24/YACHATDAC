@@ -27,7 +27,7 @@ screenshot is shipped as a page texture.
 | Footer and route cleanup | Footer is outside the stage. Its position survives a resize. Navigating to Privacy removes the canvas and pin; going back creates one of each. |
 
 The renderer paints with the timeline's update and on asset/viewport changes;
-it has no independent animation loop. Pixel ratio is capped at 1.5 and portrait
+it has no independent animation loop. Pixel ratio is capped at 2 and portrait
 frames move around held image pixels. Measurements happen during setup and
 rebuild, not during the scroll render. See the Our People rows in
 `docs/motion/motion-grammar.md` for the effect vocabulary and timing.
@@ -43,3 +43,36 @@ Implementation captures, from the local build at `localhost:3001`:
 - [Desktop — photo-filled title](qa-desktop-hero.png)
 - [Desktop — the gathering](qa-desktop-team.png)
 - [Mobile — keyboard focus in the contact rail](qa-mobile-contact.png)
+
+## Photo-to-title and sharpness refinement — 11 September 2026
+
+The user's Living Work reference now guides a 35vh photograph hold, 220vh
+handoff through a large initial-letter aperture, and 60vh title hold. The
+photograph keeps its screen registration while the aperture gathers into the
+existing unsplit H1. The remaining title shapes and copy appear at rest.
+
+The same three full-width photographs were retrieved from their original
+Figma image fills at 4096px wide and exported to 3840px WebP derivatives.
+No enlargement, retouching or replacement of subjects was applied. Source
+nodes, dimensions and provenance are in `src/content/our-people-media.ts`.
+All page photos use the existing quality-85 allowlist entry. Image `sizes`
+now accounts for cover cropping; the panorama and portrait cards request
+enough source pixels for their actual frame height. The renderer supports
+native density up to 2×.
+
+| Refinement check | Result |
+| --- | --- |
+| Desktop/mobile | Inspected at 1440 × 900 and 375 × 812; one canvas, one pin, no mobile overflow. The large initial fits within the narrow frame. |
+| Retina | At 1440px / DPR 2 the buffer is 2880px and the hero requests 3840px at quality 85. At 375px / DPR 2 the buffer is 750px. All six portrait crops request 1920px on the desktop Retina check. |
+| Initial photographs | Retina hero AVIF: 531,995 bytes; existing static title fallback: 481,910 bytes. Combined photographic payload approximately 1.01 MB. Later photographs remain incremental. |
+| Words and reversal | Main text remains exactly 4,632 characters and identical to the original. A forward/reverse screenshot at the same handoff position matched byte-for-byte. |
+| Recovery | Live reduced motion, Escape and print remove the pin and clear both local hero transforms. WebGL context loss restores the document; restoration creates exactly one stage. |
+| Navigation | Mobile hard loading `#contact` reaches the contact section; keyboard focus brings its link into view. |
+| Final checks | TypeScript, full ESLint, typography lint (zero errors/warnings), production build (46 routes) and whitespace checks passed. Browser checks produced no JavaScript or WebGL errors. |
+
+Latest captures (development controls hidden for the captures only):
+
+- [Desktop — photograph gathering into its initial](qa-handoff-desktop-aperture.png)
+- [Desktop — complete title](qa-handoff-desktop-title.png)
+- [Mobile — initial aperture](qa-handoff-mobile-aperture.png)
+- [Mobile — complete title](qa-handoff-mobile-title.png)

@@ -10,7 +10,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReduced, type MotionModule } from "@/lib/motion-controller";
 import { registerYachatdacEffects, revertSplits } from "./effects";
-import { peopleTimeAt, type PeopleLeg, type PeopleState, type PeopleStop } from "./effects/people";
+import { PEOPLE_HANDOFF_VH, PEOPLE_PHOTO_HOLD, peopleTimeAt, type PeopleLeg, type PeopleState, type PeopleStop } from "./effects/people";
 import { clampScrollTo, refreshScrollBounds } from "./smooth-scroll";
 import { createPeopleWorld, peopleBox, type PeopleSection } from "./our-people-world";
 
@@ -55,12 +55,24 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const printing = window.matchMedia("print");
     const setTrack = gsap.quickSetter(track, "y", "px");
+    const heroFrame = track.querySelector<HTMLElement>("[data-people-hero-frame]");
+    const heroCopy = track.querySelector<HTMLElement>("[data-people-hero-copy]");
+    const setHeroFrame = heroFrame ? gsap.quickSetter(heroFrame, "y", "px") : null;
+    const setHeroCopy = heroCopy ? gsap.quickSetter(heroCopy, "y", "px") : null;
+    let heroFlight: { frameTravel: number; titleTravel: number } | undefined;
 
     const paint = () => {
       cancelAnimationFrame(frame);
       frame = 0;
       if (disposed || document.hidden || !world) return;
       setTrack(-state.travel);
+      if (heroFlight && setHeroFrame) setHeroFrame(gsap.utils.clamp(
+        0, heroFlight.titleTravel - heroFlight.frameTravel, state.travel - heroFlight.frameTravel,
+      ));
+      // Y1: supporting copy appears at its resting location while the aperture
+      // lands. At the end of the handoff its local transform reaches zero.
+      if (heroFlight && setHeroCopy) setHeroCopy(state.knockout > 0 && state.knockout < 1
+        ? state.travel - heroFlight.titleTravel : 0);
       world.render(state);
       const index = sections.findLastIndex(section => section.top <= state.travel + viewport * 0.35);
       if (index !== lastScene && index >= 0) {
@@ -103,6 +115,8 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
       revertSplits(track);
       world?.destroy();
       gsap.set(track, { clearProps: "transform" });
+      if (heroFrame) gsap.set(heroFrame, { clearProps: "transform" });
+      if (heroCopy) gsap.set(heroCopy, { clearProps: "transform" });
       root.removeAttribute("data-people-ready");
       root.removeAttribute("data-people-active");
       sections.forEach(section => section.element.removeAttribute("data-people-scroll"));
@@ -270,8 +284,6 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
           const box = peopleBox(element, track!);
           return { element, top: box.top, height: box.height, color: colors[index] };
         });
-        world = createPeopleWorld(canvas, track!, sections, width, viewport, invalidate);
-
         context = gsap.context(() => {
           registerYachatdacEffects();
           const stops: PeopleStop[] = [{ y: 0, hold: 0.12, key: "advisory" }];
@@ -280,10 +292,25 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
             const box = peopleBox(element, track!);
             const available = Math.max(viewport * 0.08, (viewport - Math.min(box.height, viewport * 0.84)) / 2);
             const y = gsap.utils.clamp(0, maxTravel, box.top - Math.min(viewport * align, available));
-            stops.push({ y, hold, key });
+            const stop: PeopleStop = { y, hold, key };
+            stops.push(stop);
+            return stop;
           };
           const title = track!.querySelector<HTMLElement>("[data-people-title]");
-          addStop(title?.parentElement ?? null, 0.45, "title", 0.24);
+          const titleStop = addStop(title?.parentElement ?? null, 0.6, "title", 0.24);
+          if (heroFrame && titleStop) {
+            const photo = peopleBox(heroFrame, track!);
+            heroFlight = {
+              frameTravel: photo.top + Math.max(0, (photo.height - viewport) / 2),
+              titleTravel: titleStop.y,
+            };
+          }
+          // Measure masks before any effect changes HTML opacity/transforms.
+          world = createPeopleWorld(canvas, track!, sections, width, viewport, invalidate, heroFlight);
+          if (world.hasPortal && heroFlight && titleStop) {
+            stops.push({ y: heroFlight.frameTravel, hold: PEOPLE_PHOTO_HOLD, key: "hero-photo" });
+            titleStop.travelVh = PEOPLE_HANDOFF_VH;
+          } else heroFlight = undefined;
           addStop(track!.querySelector('[data-people-scene="suzanne"] figure'), 0.25, "portrait", 0.12);
           const quote = track!.querySelector<HTMLElement>("[data-people-testimony] p");
           addStop(quote, 1.15, "testimony", 0.3);
@@ -309,7 +336,12 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
           const at = (element: HTMLElement, screenFraction = 0.8) =>
             peopleTimeAt(legs, Math.max(0, peopleBox(element, track!).top - viewport * screenFraction));
 
-          if (title) timeline.add(gsap.effects.peopleKnockout(title, { state, duration: 0.65 }), at(title, 0.95));
+          if (title) timeline.add(gsap.effects.peopleKnockout(title, {
+            state,
+            duration: heroFlight ? PEOPLE_HANDOFF_VH / 100 : 0.65,
+            frame: heroFlight ? heroFrame : undefined,
+            copy: heroFlight ? heroCopy : undefined,
+          }), heroFlight ? `hero-photo+=${PEOPLE_PHOTO_HOLD}` : at(title, 0.95));
           if (quote) {
             const speech = gsap.effects.dim(quote) as gsap.core.Tween;
             speech.duration(0.85);

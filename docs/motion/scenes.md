@@ -1415,6 +1415,16 @@ photographs, belong to the stage; the shared HTML footer is outside it. The
 original markup remains the accessible text layer and the complete fallback.
 No narrative words, names, placeholders or destinations change.
 
+**11 September 2026 — photo-to-title refinement.** Following the user's
+reference to Living Work's *Our challenges*, the hero holds for 35vh, then
+gathers into a large aperture taken from the headline's actual initial. Across
+220vh that aperture closes and travels into the existing title as the remaining
+word shapes and supporting copy appear; the complete title holds for 60vh.
+The photograph remains registered to the viewport while its window moves, so
+the people neither zoom nor warp. Font silhouettes are measured from the loaded
+headline utility without splitting the H1 or assuming a fixed content string.
+This is `peopleKnockout` within the same renderer and pin, not a separate scene.
+
 The reading clock uses measured section heights rather than the frame's fixed
 pixel totals, so longer CMS copy and mobile wrapping extend the journey. Short
 holds land on the title, portrait, decision, team rows, ratio and acknowledgements.
