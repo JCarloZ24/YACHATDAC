@@ -192,7 +192,9 @@ export function createGatedDeck({
   railTraveller = "[data-truth-trail-traveller]",
   railGuide = "[data-truth-trail-guide]",
   firstRailAnchor = "[data-hero-cue]",
-  wave: waveSelector = '[data-seam="truth-wave"]',
+  /* Every `WaveDivider` on an incoming slide, not one named hook — see the
+     note at the roll itself for why this is `[data-seam]` and not every wave. */
+  wave: waveSelector = "[data-seam]",
   railHiddenSlides = '#break-escarpment, [data-truth-ground="count"]',
   railFadeOutSlide = "#art-gallery",
   railFadeInSlide = "#mitchell",
@@ -305,8 +307,20 @@ export function createGatedDeck({
                   const travel = track
                     ? Math.max(0, track.scrollHeight - slide.clientHeight)
                     : 0;
+                  /* ⚠ A COVER IS VIEWPORT-SCALE. `lead > 0` was the first cut
+                     of this test and it was wrong: EVERY EntryBlock puts its
+                     `entryLayout` on its own deck track, and that carries
+                     `py-10` — 40px of reading padding, not a cover. On a slide
+                     whose track is only a little taller than the viewport
+                     `travel` is small, so 40/travel landed late in the read and
+                     the era label waited almost to the end of the section
+                     instead of arriving in it (reported on "Before people",
+                     11 September 2026). What the plates actually lead with is
+                     `pt-[100svh]` — one whole slide — so the test is against
+                     the slide, not against zero. */
+                  const isCover = lead >= slide.clientHeight * 0.5;
                   coverFractions[index] =
-                    lead > 0 && travel > 0 ? clamp01(lead / travel) : 0;
+                    isCover && travel > 0 ? clamp01(lead / travel) : 0;
                 });
               };
               prepareRunways();
@@ -800,11 +814,32 @@ export function createGatedDeck({
                   }
                 }
                 const over = gate.over;
-                const wave = over?.querySelector<SVGElement>(waveSelector);
-                const ink = wave?.querySelector<SVGGElement>(
-                  "[data-wave-ink]",
-                );
-                if (wave && ink) {
+                /* EVERY divider on the incoming slide, not just the first.
+                  Truth rolled exactly one crest — the hero seam — because this
+                  read `querySelector` against a single hard-coded hook, while
+                  About has always rolled all of its. Widened 11 September 2026
+                  (client: "make the wave animation the same as /about").
+
+                  ⚠ ONLY `WaveDivider` CAN ROLL, and that is why the selector is
+                  still `[data-seam]` rather than every wave on the page. The
+                  roll works by translating a THREE-TILE STRIP of the same path
+                  by `WAVE_ROLL`, which lands on an identical tile — the shape
+                  is authored to repeat. `HandoffWave` is a different, single
+                  crest on its own viewBox with no strip behind it; tiling it
+                  would mean guessing whether Marc's shape repeats seamlessly,
+                  and a guess that is wrong shows as a hard join across the full
+                  width of the page. Left still until that is settled with the
+                  artwork, not in code. */
+                const waves = over
+                  ? Array.from(
+                      over.querySelectorAll<SVGElement>(waveSelector),
+                    )
+                  : [];
+                waves.forEach((wave, waveIndex) => {
+                  const ink = wave.querySelector<SVGGElement>(
+                    "[data-wave-ink]",
+                  );
+                  if (!ink) return;
                   // About pulls this same ink with buffer charge. Truth's
                   // pull is earned by the last 20vh of ordinary reading:
                   // ScrollTrigger brings the crest to full at 100%, then it
@@ -823,7 +858,7 @@ export function createGatedDeck({
                       ease: "none",
                       immediateRender: true,
                       scrollTrigger: {
-                        id: `${eventPrefix}-wave-${index}`,
+                        id: `${eventPrefix}-wave-${index}-${waveIndex}`,
                         trigger: runways[index],
                         start: () =>
                           Math.max(
@@ -838,7 +873,7 @@ export function createGatedDeck({
                       },
                     },
                   );
-                }
+                });
                 if (over) {
                   ScrollTrigger.create({
                     id: `${eventPrefix}-pin-${index}`,

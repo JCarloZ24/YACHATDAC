@@ -40,6 +40,19 @@
      It is 2.83:1 on charcoal, so it must NEVER be used on a dark ground —
      dark grounds already use --color-gold and are fine. */
   --color-burnt-deep: #8a4a02;
+
+  /* THE BRAND YELLOW, DEEPENED, FOR LIGHT GROUNDS ONLY — 11 September 2026,
+     client direction: Truth's warm accent moves from Burnt Ochre to the brand
+     colour. `--color-ochre` itself is NOT repointed; it is correct, and it is
+     what the dark grounds use (7.74:1 on charcoal, no help needed).
+     But #d69828 is 2.30:1 on the off-white ground — WORSE than the 2.91:1 that
+     made --color-burnt-deep necessary in the first place, and the eyebrow
+     utility is still 13px, which is still not WCAG "large text".
+     So this is the same move made twice: the brand hue (38.6°) at the brand
+     saturation, walked down in value until it clears the floor.
+       off-white #f6f6ec 4.58 · charcoal 3.89
+     Light grounds only, for the mirror of burnt-deep's reason. */
+  --color-ochre-deep: #92681b;
   --color-evergreen: #22372b; /* Deep Evergreen — Living Country */
   --color-canvas: #f6f6ec; /* Off-White      — Natural Canvas */
   --color-midnight: #122449; /* Midnight Navy  — Night Sky */

@@ -166,10 +166,17 @@ export function TruthHeroV2() {
             </div>
           </div>
         </SharedMorph>
-        {/* X5 — the spec's linear wash: heavier at the foot, never opaque. */}
+        {/* X5 — the spec's linear wash: heavier at the foot, never opaque.
+            DEEPENED THROUGH THE MIDDLE, 11 September 2026 (client: the hero is
+            not readable under its white type). The wash was built bottom-
+            weighted — 80% at the foot falling to 10% at the crown — but the
+            copy block is seated MID-FRAME, which is exactly where it was
+            thinnest. The foot is left where it was; what changes is the band
+            the words actually sit in. Still never opaque: this is a scrim over
+            a photograph, the one gradient the token rules allow. */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-linear-to-t from-charcoal/80 via-charcoal/30 to-charcoal/10"
+          className="absolute inset-0 bg-linear-to-t from-charcoal/85 via-charcoal/55 to-charcoal/25"
         />
 
         {/* Spec column: text block ~225px in from the frame edge, lines running
@@ -632,7 +639,7 @@ function PortraitTestimony({
               />
               <figcaption
                 data-truth-attribution
-                className="eyebrow mt-10 max-w-xs text-xs leading-relaxed text-burnt-deep"
+                className="eyebrow mt-10 max-w-xs text-xs leading-relaxed text-ochre-deep"
               >
                 {testimony.attribution} &middot; {testimony.role}
               </figcaption>
@@ -957,17 +964,23 @@ function EntryBlock({
   const ink = isArtGallery ? "text-[color:var(--truth-ink)]" : "text-charcoal";
   const inkBody = isArtGallery ? "text-[color:var(--truth-ink)]" : "text-charcoal/92";
   const inkMuted = isArtGallery ? "text-[color:var(--truth-ink)]" : "text-charcoal/60";
-  const inkHead = isArtGallery ? "text-[color:var(--truth-ink)]" : "text-evergreen";
+  /* The heading is the SAME dark green in the 1950s as everywhere else (client
+     direction, 11 September 2026) — it used to take the band's travelling ink,
+     which meant it opened charcoal rather than evergreen. It cannot simply stay
+     evergreen, though: this band's ground walks to charcoal and evergreen is
+     1.52:1 there. `nineteenFifties` steps it to off-white at the band's own
+     0.53 crossover, the same instant the body ink crosses. */
+  const inkHead = "text-evergreen";
   /* In the 1950s the accent IS the ink. No warm in the palette clears 4.5:1
      across that band's travel — burnt-deep wants a near-white ground and gold
      a near-black one, and the band spends its middle between the two. The
      colour drains out of the labels as the light goes out of the band. */
   const accent = isArtGallery
     ? "text-[color:var(--truth-ink)]"
-    : "text-burnt-deep";
+    : "text-ochre-deep";
   const accentHover = isArtGallery
     ? "hover:text-[color:var(--truth-ink)]"
-    : "hover:text-burnt-deep";
+    : "hover:text-ochre-deep";
   const entryLayout = `relative grid gap-6 md:grid-cols-[180px_1fr] md:gap-12 ${isPartner ? "py-16 md:py-24" : "py-10"
     }`;
   const article = (
@@ -1367,7 +1380,7 @@ function EntryPlate({
         >
           <p className="eyebrow text-lg text-gold sm:text-2xl">{eyebrow}</p>
           {kicker ? (
-            <p className="eyebrow mt-1 text-burnt sm:text-base">{kicker}</p>
+            <p className="eyebrow mt-1 text-ochre sm:text-base">{kicker}</p>
           ) : null}
           <h2
             data-descent-heading
@@ -1512,7 +1525,7 @@ export function EraSection({
           ) : null}
           {deed.source && deed.cta ? (
             <div className="mt-10 flex flex-wrap items-baseline gap-x-16 gap-y-4">
-              <p className="eyebrow text-[10px] font-normal text-burnt">
+              <p className="eyebrow text-[10px] font-normal text-ochre">
                 {deed.source}
               </p>
               <Link
@@ -2326,8 +2339,16 @@ function RewindArrow() {
 
 /**
  * The floor. Below the seabed, closing the descent — see the wattanuri note
- * in src/content/truth.ts. Still, like the testimony: one authored closing
- * shot, no return to the hero, dissolve, push, fade or entrance.
+ * in src/content/truth.ts.
+ *
+ * ⚠ IT USED TO BE COMPLETELY STILL, and that is no longer true. This comment
+ * read "still, like the testimony: one authored closing shot, no return to the
+ * hero, dissolve, push, fade or entrance" from the day it was built until
+ * 11 September 2026, when the client asked the closing photograph to drift.
+ * The COPY is still held — `data-v2-static` stays, and it still holds
+ * everything in the band — but the photograph now carries a slow diagonal
+ * under it (`closingDrift`). Recorded rather than quietly dropped: the
+ * stillness was an argument, and it has been overruled, not forgotten.
  *
  * 20 · UNDERNEATH ALL OF IT. Bottom-weighted scrim 0 → .387 → .86. The copy
  * sits at the gutter's left edge, not the entry column and carries no M1.
@@ -2342,6 +2363,23 @@ export function WattanuriBand() {
   const { outgoing } = truthWattanuriMedia;
   return (
     <div data-truth-slide-runway className="relative">
+      {/* THE CREST INTO THE FLOOR (client direction, 11 September 2026).
+          Flipped, so it rises into the seabed above rather than falling into
+          this band — the egg-white ground dipping down over the closing
+          photograph. Canvas-filled because that is the ground it comes FROM;
+          every other divider on the page carries the colour it introduces,
+          and this one is the exception that proves the rule: it introduces a
+          photograph, which has no ground token to carry.
+
+          ⚠ SEATED ON THE RUNWAY, NOT INSIDE THE SECTION. The section below is
+          `overflow-hidden`, and a leading divider lives ENTIRELY above its own
+          box — inside, it would simply be clipped away. Same trap the 1840s
+          wave and About's seams both document.
+
+          The existing note in truth/page.tsx — "19 runs straight into 20: no
+          trail between" — is about the gold dot TRAIL, not a wave; nothing
+          there is being contradicted. */}
+      <WaveDivider ground="var(--color-canvas)" flip hook="floor-wave" />
       <section
         id={wattanuri.id}
         data-truth-slide
@@ -2356,7 +2394,22 @@ export function WattanuriBand() {
         className="relative flex min-h-svh items-end overflow-hidden outline-none"
       >
         <RewindArrow />
-        <div className="absolute inset-0">
+        {/* ⚠ THE ONE MOVING THING IN A HELD BAND. The section is
+            `data-v2-static`, which is an ANCESTOR test — `isHeld()` walks the
+            chain — so every module skips everything in here, and that is still
+            what the copy wants. The photograph is the stated exception (client
+            direction, 11 September 2026): `data-truth-galaxy` is a hook no
+            shared beat reads, and `closingDrift` in truth-scenes targets it
+            directly and says in as many words that it is reaching past the
+            hold. Nothing else in the band moves, and nothing else should.
+
+            `scale-105` is not decoration: a plane that travels needs somewhere
+            to travel from, or the drift walks its own edge into frame. Every
+            other moving plate on the page opens oversized for the same reason. */}
+        <div
+          data-truth-galaxy
+          className="absolute inset-0 scale-105 overflow-hidden will-change-transform"
+        >
           <MediaOrField
             src={presentSrc(outgoing.src)}
             alt={outgoing.expects}
@@ -2365,9 +2418,14 @@ export function WattanuriBand() {
             fieldClass={FIELD_CLASS[outgoing.tone]}
           />
         </div>
+        {/* LIGHTENED, 11 September 2026 (client: the ending is too dark). The
+            wash was 0 → .387 → .86; the foot cannot move far, because that is
+            where the band's white type sits and the copy has to clear it, so
+            the lift is taken through the middle and the foot comes back only
+            as far as the type allows. */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.387] to-black/[0.86]"
+          className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.25] to-black/[0.68]"
         />
         {/* pb clears the footer's burnt crest (13.9vw), which rides the foot of
           this photograph — the page root is pulled up under it. */}

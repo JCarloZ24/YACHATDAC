@@ -72,6 +72,8 @@ const STRIP_DRIFT = -40;
  */
 const CANVAS = "#f6f6ec";
 const CHARCOAL = "#090e12";
+/** The heading's opening colour in that band — `--color-evergreen`. */
+const EVERGREEN = "#22372b";
 
 /** The seabed builds downward — the only section that moves with the scroll. */
 const STRATA_WINDOWS = [
@@ -257,36 +259,85 @@ const heroBreath: Recipe = (_timeline, slide, span) => {
  * Their photographs deliberately take no push (see FeatureMedia) — the plane's
  * transform belongs to the hover.
  */
-const aheadCards: Recipe = (timeline, slide) => {
-  query<HTMLElement>(slide, "[data-truth-card]")
-    .filter((card) => !isHeld(card))
-    .forEach((card, index) => {
-      // The first card is already legible; the set assembles behind it.
-      if (index === 0) {
-        query<HTMLElement>(card, "[data-truth-tile]").forEach((tile) => {
-          const order = Number(tile.dataset.truthTile ?? 0);
-          const from = 0.08 + order * 0.06;
-          brightenAt(timeline, [tile], from, from + 0.18);
-        });
-        return;
-      }
-      const at = index * 0.3;
-      // Brightness only, no travel. M1 says so, and the card's transform is
-      // spoken for: the hover lift is a CSS rule and GSAP writes transforms
-      // inline, which beats a stylesheet. Animating `y` here does not error —
-      // the card just silently never lifts again.
-      timeline.fromTo(
-        card,
-        { opacity: M1_DIM },
-        { opacity: 1, ease: "none", duration: 0.18 },
-        at,
-      );
-      query<HTMLElement>(card, "[data-truth-tile]").forEach((tile) => {
-        const order = Number(tile.dataset.truthTile ?? 0);
-        const from = at + 0.08 + order * 0.06;
-        brightenAt(timeline, [tile], from, from + 0.18);
-      });
-    });
+/**
+ * §02–§03 "What is being built" — the entrance REGISTERS (client direction,
+ * 11 September 2026).
+ *
+ * Grammar: "arriving quietly" — 16px and a fade, the site's baseline entrance,
+ * the same one the homepage uses.
+ *
+ * WHAT WAS WRONG. Every block in here entered on `brighten`: opacity 0.4 → 1,
+ * `ease: "none"`, SCRUBBED across the read. Scrubbed means the entrance is tied
+ * to scroll DISTANCE rather than to a duration, so on a 125vh pinned slide the
+ * fade is spread over a screen and a quarter of scrolling and never resolves
+ * into a moment — "too subtle and takes too long to register", which is exactly
+ * what a quarter-opacity ramp over 1,100px looks like. Nothing was broken; it
+ * was simply the wrong instrument.
+ *
+ * So this beat is PLAYED, not scrubbed: one 0.55s `arrive` on its own trigger
+ * at the slide's read start. A viewport trigger cannot be used here — a pinned
+ * slide never crosses the viewport (SCR-02, the note at the head of this file)
+ * — so the trigger is the read clock's own start, which is the moment the
+ * reader actually arrives.
+ *
+ * ⛔ THE CARDS TAKE NO TRAVEL, and this is not a style choice. `[data-truth-card]`
+ * carries its hover lift as a CSS rule, GSAP writes transforms inline, and an
+ * inline transform beats a stylesheet — a card animated on `y` silently never
+ * lifts again for the rest of the visit. They get opacity alone, fast enough to
+ * read as an arrival, and `clearProps` hands the transform back to CSS when it
+ * lands. The tiles and the copy inside them take the full 16px.
+ *
+ * ⚠ ONE LOUD CHANNEL. scenes.md gives §02/§03 TYPE as their loud channel, and
+ * FeatureMedia's own comment explains that its photographs deliberately take no
+ * camera push for that reason. Photographs that now enter visibly are a second
+ * channel on that screen. Asked for explicitly, so shipped — but if a reviewer
+ * pulls on it, the copy keeps `arrive` and the tiles go back to `brighten`.
+ */
+const aheadCards: Recipe = (timeline, slide, span) => {
+  const cards = query<HTMLElement>(slide, "[data-truth-card]").filter(
+    (card) => !isHeld(card),
+  );
+  const tiles = query<HTMLElement>(slide, "[data-truth-tile]").filter(
+    (tile) => !isHeld(tile),
+  );
+  /* The section's own copy blocks, which `arriveRest` would otherwise brighten
+     on the scrubbed timeline. `bindTruthScenes` claims them for this recipe. */
+  const copy = query<HTMLElement>(slide, "[data-descent-arrive]").filter(
+    (el) => !isHeld(el),
+  );
+
+  if (!cards.length && !tiles.length && !copy.length) return;
+
+  /* Its own timeline, deliberately NOT the scrubbed one handed in: this is the
+     one beat on the page that is played rather than scrubbed, and mixing the
+     two on one clock is what would put it back on scroll distance. */
+  const entrance = gsap.timeline({
+    scrollTrigger: {
+      trigger: span.runway,
+      start: () => span.read.start,
+      toggleActions: "play none none reverse",
+      invalidateOnRefresh: true,
+      refreshPriority: span.index * 10 + 6,
+    },
+  });
+
+  if (copy.length) entrance.arrive(copy, {}, 0);
+  if (tiles.length) entrance.arrive(tiles, {}, 0.12);
+  cards.forEach((card, index) => {
+    entrance.fromTo(
+      card,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 0.45,
+        ease: "power2.out",
+        /* Hand the box back to CSS the moment it lands, or the inline opacity
+           sits on the element and the hover rule has a fight it cannot win. */
+        clearProps: "opacity",
+      },
+      0.1 + index * 0.08,
+    );
+  });
 };
 
 /** §04/§05 TODAY. The plate pushes; the montage is laid down by hand. */
@@ -506,6 +557,22 @@ const nineteenFifties: Recipe = (timeline, slide) => {
     timeline.fromTo(
       railLabels,
       { color: CHARCOAL },
+      { color: CANVAS, ease: "none", duration: 0.004 },
+      CROSS_AT,
+    );
+  }
+
+  // AND THE HEADING, which is the dark green of the section above it (client
+  // direction, 11 September 2026) rather than the band's travelling ink. It
+  // steps at the same instant for the same reason everything else in here does:
+  // evergreen is 11.71:1 on the opening egg white and 1.52:1 on the charcoal
+  // this band walks to, so a heading that simply stayed green would be gone for
+  // the whole second half of its own section.
+  const heading = query<HTMLElement>(band, "[data-descent-heading]");
+  if (heading.length) {
+    timeline.fromTo(
+      heading,
+      { color: EVERGREEN },
       { color: CANVAS, ease: "none", duration: 0.004 },
       CROSS_AT,
     );
@@ -752,6 +819,45 @@ const herTestimony: Recipe = (timeline, slide, span) => {
 };
 
 /**
+ * §20 · the closing plate drifts (client direction, 11 September 2026).
+ *
+ * Grammar: "being drawn in" — the camera moving over a held frame. The plate is
+ * `country` bucket, so `full` grade: the image plane itself may be moved.
+ *
+ * ⚠ THIS REACHES PAST A HOLD, AND DOES SO DELIBERATELY. The Wattanuri band is
+ * `data-v2-static`, and `isHeld()` is an ancestor test — every shared beat in
+ * this file skips everything inside it, which is still what the copy wants. So
+ * this recipe does NOT go through `cameraFrames`; it takes
+ * `[data-truth-galaxy]` directly, a hook nothing else reads. The band's own doc
+ * comment records that its stillness was overruled rather than forgotten.
+ *
+ * Bottom-right to top-left, which is a negative x and a negative y in equal
+ * measure — that equality IS the 45°. Small: the whole point is that the sky
+ * looks like it is moving, not that the page is panning. The plane opens at
+ * `scale-105` in the markup so the travel never walks an edge into frame.
+ */
+const CLOSING_DRIFT = 26;
+
+const closingDrift: Recipe = (timeline, slide) => {
+  const plane = slide.querySelector<HTMLElement>("[data-truth-galaxy]");
+  if (!plane) return;
+  timeline.fromTo(
+    plane,
+    { xPercent: 0, yPercent: 0 },
+    {
+      /* px, not percent: percent would scale the travel with the plate, and
+         this plate is a whole viewport tall on desktop and taller on a phone —
+         the same number would read as a crawl on one and a lurch on the other. */
+      x: -CLOSING_DRIFT,
+      y: -CLOSING_DRIFT,
+      ease: "none",
+      duration: 1,
+    },
+    0,
+  );
+};
+
+/**
  * Selected by the anchors already in the markup, never by index: re-ordering
  * the slides would silently re-point an index-keyed table and a section would
  * quietly perform another section's choreography. A slide matching nothing
@@ -774,6 +880,7 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "#the-count-figures", recipe: theCount },
   { match: "#the-count-testimony", recipe: herTestimony },
   { match: "#seabed", recipe: strata },
+  { match: "#underneath-all-of-it", recipe: closingDrift },
 ];
 
 /**
@@ -829,12 +936,19 @@ export function bindTruthScenes(
         pushMedia(timeline, slide);
       }
 
-      // The Ahead cards animate themselves, so the generic arrival pass must
-      // not brighten them a second time.
+      // The Ahead deck animates ITSELF, on its own played clock — so the
+      // generic scrubbed arrival must not also claim anything in it. It used
+      // to claim only the cards; since 11 September 2026 the copy blocks enter
+      // with them, so the whole slide is handed over when cards are present.
+      const aheadOwned = query<HTMLElement>(slide, "[data-truth-card]");
       arriveRest(
         timeline,
         slide,
-        new Set<HTMLElement>(query<HTMLElement>(slide, "[data-truth-card]")),
+        new Set<HTMLElement>(
+          aheadOwned.length
+            ? [...aheadOwned, ...query<HTMLElement>(slide, "[data-descent-arrive]")]
+            : aheadOwned,
+        ),
       );
 
       // A wholly still slide — the closing shot, the engraving — ends up here
