@@ -398,8 +398,20 @@ body {
     transition: translate var(--dur-small) var(--ease-quiet);
   }
 
+  /* ⚠ `!important`, AND IT IS EARNED. GSAP writes `translate: none` INLINE on
+     every element it transforms — deliberately, so the independent transform
+     properties cannot interfere with the `transform` it owns — and an inline
+     declaration outranks any stylesheet rule. These cards take a GSAP `arrive`
+     entrance, so without this the rule compiled, matched, and did nothing:
+     `:hover` was true and the computed `translate` stayed `none`.
+
+     It is safe precisely because it is narrow. Nothing else sets `translate` on
+     these cards, GSAP does not animate `translate` on them, and the whole rule
+     is already fenced inside a hover-capable, motion-willing media query. If a
+     future score DOES animate `translate` here, this is the line that will
+     fight it — and the fix then is a wrapper element, not a bigger hammer. */
   [data-pt-lift]:hover {
-    translate: 0 -6px;
+    translate: 0 -6px !important;
   }
 }
 
