@@ -48,6 +48,23 @@
 export type MotionGrade = "full" | "frame";
 
 /**
+ * Site icons, user direction 11 September 2026 (F8 build-first).
+ * Origin: the symbol in the supplied footer lockup, matching the user's image.
+ * Cropped and resized from the existing PNG; no new artwork or recolouring.
+ * Browser icons preserve source transparency (user correction, same day).
+ * Next.js discovers the files in src/app. See public/brand/README.md.
+ */
+export const SITE_ICONS = {
+  source: "/brand/logo-stacked.png",
+  crop: { left: 596, top: 0, width: 798, height: 1187 },
+  credit: "Source artist unconfirmed",
+  permission: "User requested this supplied symbol as the favicon, 11 September 2026",
+  favicon: "/favicon.ico",
+  icon: "/icon.png",
+  apple: "/apple-icon.png",
+};
+
+/**
  * Homepage loader, user reference 8 September 2026; reused by The Record's
  * readiness loader at user direction on 9 September 2026. Origin: existing supplied
  * vectors, dots-wave (2051:3365) gold instance and ring-b (2051:4024).

@@ -1,6 +1,6 @@
 # Brand assets
 
-*Last updated: 8 September 2026*
+*Last updated: 11 September 2026*
 
 ## Logo
 
@@ -11,6 +11,7 @@ dot-painting motifs in Yellow Ochre and Burnt Ochre.
 | File | Use | Status |
 | --- | --- | --- |
 | `logo-wordmark.svg` | Wordmark only — header, loader, small sizes | ✅ **in** |
+| `logo-stacked.png` | Supplied stacked raster lockup — footer; source for the favicon symbol | ✅ **in** |
 | `logo-full.svg` | Wordmark + motifs + legal-name lockup | not supplied |
 | `logo-mono.svg` | Single-colour version | not supplied |
 
@@ -23,8 +24,33 @@ Figma file `Qk35pAX0sz2ntNRXceY7Gb`, and exported whole. Its paths are already
 gone. Rendering the artist's real vector satisfies §5; redrawing, recolouring
 or restyling it does not — do neither.
 
-⚠ It is the wordmark **only**. The full lockup with boomerang and dot-painting
-motifs, and the single-colour cut, still have to come from the brand team.
+The SVG is the wordmark **only**. The full lockup is available as
+`logo-stacked.png`; a full vector lockup and the single-colour cut still have
+to come from the brand team.
+
+### Site icons — 11 September 2026
+
+The user requested the boomerang and dot motif shown in their reference as
+the favicon. It matches the artwork above the wordmark in the existing
+1990 × 2338 `logo-stacked.png`. The derivative uses the source rectangle
+`left: 596, top: 0, width: 798, height: 1187`, preserving the supplied artwork
+and its colours. The source file is unchanged; no artwork was redrawn or
+AI-generated. Source artist credit is unconfirmed.
+
+The browser favicon and PNG icon preserve the source transparency, per the
+user's correction on 11 September 2026. The Apple home-screen icon retains
+the existing Charcoal ground (`--color-charcoal`). All variants fit the
+symbol proportionally, with `max(1, round(size / 32))` pixels of padding on
+each side. ICO entries are RGBA PNGs, as required by the Next.js decoder.
+
+| File | Size | Use |
+| --- | --- | --- |
+| `src/app/favicon.ico` | 16, 32, 48, 64, 128 and 256 px | Browser favicon |
+| `src/app/icon.png` | 512 × 512 | Higher-resolution app icon |
+| `src/app/apple-icon.png` | 180 × 180 | Apple home-screen icon |
+
+Next.js discovers these files and adds their links to every route. Origin
+and permission are also recorded in `SITE_ICONS` in `src/content/kit.ts`.
 
 ## Commissioned artwork — what is here
 
