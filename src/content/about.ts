@@ -16,8 +16,11 @@
  * Connect survives as a navigation item. The site nav is unchanged.
  *
  * ⚠ R15 and the ICN/ABN gap are the same piece of work. The draft carries its
- * own note about the legal-name spelling and both registration numbers; it
- * renders on the page.
+ * own note about the legal-name spelling and both registration numbers. That
+ * note NO LONGER RENDERS — the editorial notes came off this page on
+ * 11 September 2026 (user direction) — so the `pending` strings below and
+ * docs/content/STATUS.md are the record instead. They are kept for exactly
+ * that reason; see the comment on each.
  */
 
 export const aboutHero = {
@@ -55,7 +58,13 @@ export const whatWeAre = {
     },
     { label: "Based", value: "Barcaldine, Central Western Queensland" },
   ],
-  /** ⚠ R15. The draft's own note, rendered rather than dropped. */
+  /**
+   * ⚠ R15 — HELD FOR THE LAUNCH CHECKLIST, NOT RENDERED. The editorial notes came
+   * off /about on 11 September 2026 (user direction). Do not delete these strings:
+   * they are the only per-paragraph record that the copy above is unconfirmed,
+   * and EditorialNote.tsx's own comment says why losing that record is the
+   * failure mode. The page-level record is docs/content/STATUS.md.
+   */
   pending:
     "Add ICN and ABN. Confirm spelling: Yambangku or Yumbangku — the logo and the published research differ.",
 } as const;
@@ -124,6 +133,13 @@ export const howWeWork = {
       body: "Relationships with partners, funders and visitors carry mutual obligation. Everyone who comes here gives something back to the land and the people, not only takes.",
     },
   ],
+  /**
+   * ⚠ HELD FOR THE LAUNCH CHECKLIST, NOT RENDERED. The editorial notes came off
+   * /about on 11 September 2026 (user direction). Do not delete these strings:
+   * they are the only per-paragraph record that the copy above is unconfirmed,
+   * and EditorialNote.tsx's own comment says why losing that record is the
+   * failure mode. The page-level record is docs/content/STATUS.md.
+   */
   pending:
     "Three of the seven values in the Strategic Plan. The others — sharing and learning, respect, integrity, resilience — are claimed by every organisation and read as filler in public. These three constrain actual decisions. Also: the plan describes reciprocity as the Ngapartji-Ngapartji principle, which is Western Desert language, not Iningai. Confirm with Suzanne.",
 } as const;
@@ -141,6 +157,10 @@ export const whoDecides = {
     href: "/the-record",
   },
   /**
+   * ⚠ HELD FOR THE LAUNCH CHECKLIST, NOT RENDERED since 11 September 2026 (user
+   * direction). This comment, not the page, is now the record — which is the
+   * whole reason it is written out here rather than only in the string.
+   *
    * ⚠ Keep the Elder Advisory Group in the future tense until it is sitting.
    * The draft flags this and it is easy to lose in an edit — "is being
    * established" and "once it is sitting" are doing real work.
@@ -191,6 +211,13 @@ export const partners = {
       names: ["Queensland Tourism Industry Council", "Lake Eyre Basin Rangers"],
     },
   ],
+  /**
+   * ⚠ HELD FOR THE LAUNCH CHECKLIST, NOT RENDERED. The editorial notes came off
+   * /about on 11 September 2026 (user direction). Do not delete these strings:
+   * they are the only per-paragraph record that the copy above is unconfirmed,
+   * and EditorialNote.tsx's own comment says why losing that record is the
+   * failure mode. The page-level record is docs/content/STATUS.md.
+   */
   pending:
     "Confirm the current list, get approved logo files, and check whether each partnership is active. The 2024 flyer also listed Preston Campbell Foundation, ANFAB, Phyre Design, The Cameleers and Dixon Homes.",
   /*

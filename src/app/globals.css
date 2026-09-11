@@ -558,6 +558,28 @@ body {
   }
 }
 
+/* thread-dots — /about §06's thread, drawn as the artist's dotted line rather
+   than a bar. Same mechanism as Wonder's itinerary rule (see `.ruleFill` in
+   `src/app/wonder/_components/Itinerary.module.css`): the dot artwork masks a
+   solid ochre field, so the colour stays a token and no new colour is drawn.
+
+   The mask REPEATS at the tile's natural 216 x 20, and never stretches. That is
+   the entire reason the tile exists as a single seamless wavelength: a stretched
+   mask (`mask-size: 100% 100%`, as Wonder can afford with a straight rule) would
+   pull every dot into an ellipse as the viewport widened, and the whole point of
+   this rule over the old 2px bar is that the dots stay round.
+
+   The draw is a `clip-path` inset carried by `boardHandoff` — grammar row "the
+   world opening", About timeline rule. Nothing here animates on its own, so with
+   no JavaScript the thread stands whole, which is its final state anyway. */
+@utility thread-dots {
+  background-color: var(--color-ochre);
+  mask-image: url("/artwork/wave-dots-rule.svg");
+  mask-size: 216px 20px;
+  mask-repeat: repeat-x;
+  mask-position: left center;
+}
+
 /* X2 — scroll cue. 2.4s is the spec's own figure, not a tuned value. The only
    ambient loop allowed above the fold, and it is killed permanently on the
    first scroll (see Hero) rather than left running. */
