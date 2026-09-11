@@ -1,6 +1,6 @@
 # Resources — "The Record" — draft copy v1
 
-*Last updated: 10 September 2026*
+*Last updated: 11 September 2026*
 
 > **Page:** Resources — "The Record" · **Version:** v1 · **State:** draft ·
 > **Governance circle:** open
@@ -66,9 +66,9 @@ Story
 
 Iningai knowledge
 
-#### It nearly didn’t happen
+#### It nearly didn't happen
 
-Suzanne Thompson on getting Turraburra back — the phone call on the road, the incognito purchase, and the night they slept on the floor.
+Suzanne Thompson on getting Turraburra back.
 
 The buyback
 
@@ -80,9 +80,9 @@ Story
 
 Iningai knowledge
 
-#### Wattanuri, and the sisters he followed
+#### Wattanuri, and the ones he followed.
 
-Ten clusters of engravings run south to north along the wall. Read in that order they tell the Seven Sisters.
+The published record, and as much of the rest as is told away from Country.
 
 Seven Sisters · Marra Wonga
 
@@ -94,9 +94,9 @@ Story
 
 Iningai knowledge
 
-#### Bringing a spring back
+#### Bringing a spring back.
 
-A thousand litres carted twice a day through drought, until it held on its own. Eight days, then a koala.
+A thousand litres, twice a day, for eight days. Then a koala came to drink.
 
 Water & springs · Rangers
 
@@ -110,7 +110,7 @@ Published research
 
 #### You are standing on a seabed
 
-The Eromanga Sea covered inland Queensland. The escarpment is its floor, and the footprints set in the mud are still here.
+The ground under Turraburra was the floor of an inland sea long before it was anything else.
 
 Deep time & fossils
 
@@ -134,9 +134,9 @@ Historical account
 
 Colonial record
 
-#### What Mitchell wrote down
+#### What Mitchell wrote down.
 
-The explorer passed through in the 1840s and described huts built solidly enough to carry bark tiles. The first written account of the people here was written by a stranger.
+The oldest written account of this Country was made by a stranger passing through, in a hurry, looking for something else entirely.
 
 First contact & the frontier
 
@@ -162,9 +162,9 @@ Historical account
 
 Colonial record
 
-#### Gracevale becomes Turraburra
+#### Gracevale becomes Turraburra.
 
-Bought back in April 2019, renamed on 1 October 2020 after the Terraburra clan recorded on this Country in an 1884 map.
+The name was written down in 1884. It took over a hundred years, and a buyback, for anyone to use it again.
 
 The buyback
 
@@ -176,9 +176,9 @@ Research
 
 Published research
 
-#### Fifteen thousand markings, read in order
+#### Fifteen thousand markings, read in order.
 
-Our account of the two-year study of Marra Wonga, documented with Iningai people as research partners.
+Two ways of reading the same wall — what the study found, and what Iningai law already held.
 
 Marra Wonga · Seven Sisters
 
@@ -190,9 +190,9 @@ Research
 
 Iningai knowledge
 
-#### Fire-stick farming and the carbon in the soil
+#### Fire-stick farming and the carbon in the soil.
 
-Two flux towers, one on Country managed our way and one on grazed land, read against each other for more than a year.
+Two flux towers, side by side. One tells you what grazing does. The other tells you what law does.
 
 Fire · Carbon & climate
 
@@ -204,9 +204,9 @@ Documentation
 
 Iningai knowledge
 
-#### A season of bush foods
+#### A season of bush foods.
 
-What comes on when, across the year, and the Country each one grows out of.
+What grows here, how we’ve always used it, and what the science is now confirming.
 
 Bush foods
 
@@ -216,9 +216,9 @@ Documentation
 
 Published research
 
-#### Pollen at sixty metres
+#### Pollen at sixty metres.
 
-A 480-metre bore kept a soil sample every six metres. Sixty metres down, there was pollen. Samples held with QUT.
+A water bore went 480 metres down. What came up on the way is still being read.
 
 Deep time & fossils
 
@@ -230,9 +230,9 @@ Recording
 
 Iningai knowledge
 
-#### What the recorders hear at night
+#### What the recorders hear at night.
 
-Four acoustic recorders listen across the property, two of them at the springs. Frogs, birds at first light, and a good deal not yet identified.
+Four acoustic recorders, one national research platform, and a library that’s ours to open or lock away.
 
 Animals & birds
 
@@ -356,3 +356,23 @@ Plenty of what belongs to this Country sits in other people's sheds, albums and 
 - Old tour brochures, newspaper clippings, survey reports
 
 [Tell us what you have →](/connect)
+
+
+## Article revision amendment — 11 September 2026 (D5/F8)
+
+The eleven PDFs in `docs/revisions/the-record-content/` supply full article
+bodies, now transcribed in `articles/`. Their titles and standfirsts supersede
+the eleven corresponding catalogue entries above. Wattanuri now reads
+“Wattanuri, and the ones he followed.”, matching its existing route. Fire-stick
+farming retains the CR3/D17 title and redirect despite the older PDF title.
+The two other catalogue bodies and Cultural Knowledge Precinct remain unwritten.
+
+Five supplied photographs are served as WebP; the footprint link currently
+requires Drive access. The repeated close-up link is used in both specified
+positions. The supposed mud-wasp image is a hand-stencil photograph: the supplied
+image is used, with descriptive alt text rather than a false caption. Details:
+`../../../revisions/the-record-content/README.md`.
+
+Article interface copy: “Sources”; “Back to the record”; “Related in the record”;
+“Not built yet”; “This article is being prepared. Its title and summary are
+available in the record.” No new narrative copy is supplied by these labels.

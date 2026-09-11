@@ -24,13 +24,20 @@ Returning from an article never shows the loader or applies its scroll/focus
 lock again. CSS suppresses the returning cover before effects run. A full
 browser reload starts a fresh loading cycle; the canvas still initializes.
 
-**Record card interaction, 9 September 2026 / INT-05, NAV-02.** Hover and focus
-lift an inner card wrapper 6px independently of the masonry transform; the
-title underlines. Catalogue links use a native View Transition to reveal the
-actual article in a 420ms expanding circle from the click (keyboard: card
-centre). The persistent Record layout waits for the route commit before
-revealing. Reduced motion, unsupported browsers and modified clicks retain
-ordinary navigation. Article routes prefetch on visibility and pointer/focus intent. A 650ms cap releases stalled snapshots into ordinary navigation; the root snapshot does not resize or crossfade.
+**Record card interaction, updated 11 September 2026 / INT-05, NAV-06.**
+Hover and focus lift an inner card wrapper 6px independently of the masonry
+transform; the title underlines. On user direction, catalogue navigation now
+fades to charcoal over 200ms, holds the existing "Loading the record" label
+until the article commits and its actual responsive hero image decodes, then
+fades into the article over 450ms. This replaces the circular View Transition.
+The persistent Record layout owns a CSS opacity cover, using the same lifecycle
+exception as the global route blink; there is no cross-route GSAP timeline.
+No image or a failed image releases the cover; an eight-second ceiling prevents
+an indefinite hold. Back navigation and unmount cancel pending work. Modified
+clicks retain ordinary browser behaviour; reduced motion skips fade durations.
+The hero image also fades in over 450ms after decoding on direct visits and
+late loads, without moving its pixels. Print and JavaScript-off retain the image.
+Article routes still prefetch on visibility and pointer/focus intent.
 
 **Record closing object, 9 September 2026 / INT-04.** A Three.js boomerang
 anchors the existing contribution CTA. Procedural rounded geometry and wood

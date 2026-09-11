@@ -1,5 +1,7 @@
 # Photo index
 
+*Last updated: 11 September 2026*
+
 What every photograph actually shows, so choosing one for a page is a lookup rather than a
 hunt through 136 thumbnails. Every frame below was opened and described from the image
 itself — nothing is inferred from a filename.
@@ -7,6 +9,7 @@ itself — nothing is inferred from a filename.
 - **[Batch 1 — 50 frames](photo-notes/batch-1.md)** · elder / knowledge shoot · 3840×2024
 - **[Batch 2 — 39 frames](photo-notes/batch-2.md)** · guiding shoot · 2000px long edge
 - **[Batch 3 — 44 frames](photo-notes/batch-3.md)** · cultural burning shoot · 4096×3072
+- **[The Record revisions — 5 available, 1 awaiting access](photo-notes/record-revisions.md)** · article photographs · up to 2000 px
 - **[Paintings — 3 works](photo-notes/paintings.md)** · photographed dot paintings
 
 **The photographs are not in git.** `brand/photography/` is gitignored — the client media

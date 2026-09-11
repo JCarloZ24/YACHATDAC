@@ -1,6 +1,6 @@
 # Terminology sheet
 
-*Last updated: 10 September 2026*
+*Last updated: 11 September 2026*
 
 **Home painting display ? 9 September 2026:** screenshot excerpts read ?You are entering?, ?Turraburra?, and ?Story held in stone and starlight?. Turraburra names the property; the full hero sentence remains unchanged.
 
@@ -185,3 +185,28 @@ Against the deliverable's acceptance criteria:
 
 
 **Home Truth timeline, 9 September 2026 (user direction):** Figma Homepage Prototype frames 3371:45208, 45418, 45628, 45839, 46050, 46261 and 46472 supply display years 1861, 1871, 1881, 1891, 1896, 1902 and 2026 respectively. These are prototype labels, not newly researched dates. Draft wording remains authoritative: the Landsborough sentence retains "Iningai Country" where Figma says "our Country".
+
+
+## The Record article revisions — 11 September 2026
+
+Eleven supplied PDFs are applied under D5/F8 in the article drafts and
+`src/content/record-articles.ts`; catalogue titles and standfirsts match.
+
+- Wattanuri is now **“Wattanuri, and the ones he followed.”**, the new supplied
+  title; its existing `wattanuri-and-the-ones-he-followed` path already matches.
+- CR3/D17 remains applied: **“Fire-stick farming and the carbon in the soil.”**
+  replaces the older PDF title. Narration says “burned and managed through
+  fire-stick farming, the Iningai way” and “Fire-stick farming works differently.”
+- CR4 applies outside speech: George Porter is a **colonist** in the Gracevale
+  article. Mitchell narration uses **Country** where referring to Country.
+- **Terraburra** remains the historical clan name; **Turraburra** the property.
+  The supplied Gracevale paragraph conflates the map name and property spelling;
+  that draft discrepancy is recorded in the revision readme, not silently rewritten.
+- The PDFs' first-person narration is retained as YACHATDAC's supplied voice.
+  Suzanne's and Mitchell's quotations remain verbatim. The buyback queries
+  `[Cheryl?]`, `[Ed Wood?]`, `[Steve?]`, `[Trish?]` remain explicit.
+- **Eco Sounds register** names the local collection; **Ecosounds** names QUT's
+  platform, as supplied. **Rainbow Carbon** remains the supplied framework name.
+- The deed photo caption remains “Signing the deed of grant, 12:15pm, Friday
+  26 June 2026.” Image descriptions state visible subjects; the supplied
+  hand-stencil image is not described as a mud-wasp nest.

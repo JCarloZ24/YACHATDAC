@@ -8,11 +8,8 @@ import { isLight, toneInk, type Tone } from "@/lib/tone";
  * Used by Wonder's "Stories from out here", Truth's cross-links and the
  * Resources browser, so the same item looks the same wherever it surfaces.
  *
- * ⚠ Every one of these currently points at an article that has not been
- * written. src/app/the-record/[slug]/page.tsx catches them: it renders the
- * item's own title and summary above a marked "not written yet" panel rather
- * than 404ing. That is deliberate — a dead link reads as a bug, and inventing
- * the article body would put words in the client's mouth.
+ * Eleven Record bodies were supplied on 2026-09-11 (D5/F8). The article
+ * route renders those bodies and keeps explicit stubs for outstanding copy.
  */
 export function ArticleCard({
   title,

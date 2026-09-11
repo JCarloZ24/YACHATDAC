@@ -1,6 +1,6 @@
 # Content status board
 
-*Last updated: 10 September 2026*
+*Last updated: 11 September 2026*
 
 One row per document. Update it in the same commit that moves a file between
 folders.
@@ -21,6 +21,17 @@ it decides who has to sign off.
 | `drafts/about/YACHATDAC-About-Copy-v1.md` | About | 📥 **v1** uploaded | open | ICN/ABN missing; legal-name spelling unconfirmed — notes 10, 13 |
 | `drafts/our-people/YACHATDAC-OurPeople-Copy-v1.md` | Our People | 📥 **v1** uploaded | shared with care | Names, roles, photographs and consent to be named — note 13 |
 | `sitemap/YACHATDAC-Sitemap-v1.png` | Site-wide | 📥 draft uploaded | open | Partly overtaken by D1 and D3, and now by v3's own nav — notes 6, 9 |
+| `drafts/the-record/articles/fifteen-thousand-markings-read-in-order.md` | The Record — Fifteen thousand markings, read in order. | Supplied revision applied 11 September 2026 | shared with care | One Drive image unavailable; supplied hand-stencil/nest mismatch recorded |
+| `drafts/the-record/articles/it-nearly-didnt-happen.md` | The Record — It nearly didn't happen | Supplied revision applied 11 September 2026 | shared with care | Bracketed names unconfirmed; photo consent/credit not supplied |
+| `drafts/the-record/articles/wattanuri-and-the-ones-he-followed.md` | The Record — Wattanuri, and the ones he followed. | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
+| `drafts/the-record/articles/a-season-of-bush-foods.md` | The Record — A season of bush foods. | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
+| `drafts/the-record/articles/what-the-recorders-hear-at-night.md` | The Record — What the recorders hear at night. | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
+| `drafts/the-record/articles/fire-stick-farming-and-the-carbon-in-the-soil.md` | The Record — Fire-stick farming and the carbon in the soil. | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
+| `drafts/the-record/articles/gracevale-becomes-turraburra.md` | The Record — Gracevale becomes Turraburra. | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
+| `drafts/the-record/articles/what-mitchell-wrote-down.md` | The Record — What Mitchell wrote down. | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
+| `drafts/the-record/articles/pollen-at-sixty-metres.md` | The Record — Pollen at sixty metres. | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
+| `drafts/the-record/articles/bringing-a-spring-back.md` | The Record — Bringing a spring back. | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
+| `drafts/the-record/articles/you-are-standing-on-a-seabed.md` | The Record — You are standing on a seabed | Supplied revision applied 11 September 2026 | shared with care | Source and factual details remain for presentation review (F8) |
 
 **v3 uploaded 24 Aug 2026**, replacing the v2 set from 20 Aug. Two things are
 different about this upload:
@@ -603,3 +614,18 @@ about these people, borrowing another nation's language for the reciprocity ask
 is the error the page indicts. The client's own plan uses the term, so this is a
 question for Suzanne rather than a correction to make unilaterally. Raised as
 **R22**.
+
+
+### 18. The Record article package — 11 September 2026
+
+Eleven full bodies supplied in `docs/revisions/the-record-content/` now render
+at their existing article routes. Five unique photos are served locally, with
+one restricted Drive image retained as an explicit placeholder. See that
+folder's README and `brand/photo-notes/record-revisions.md` for asset provenance
+and source discrepancies. Build-first review applies; these state changes do
+not assert cultural approval or independent verification of the supplied claims.
+
+`a-day-with-the-rangers`, `when-they-called-it-the-art-gallery` and
+`cultural-knowledge-precinct` have no supplied bodies and remain marked
+“Not built yet”. The eleven documents/reports downloads are a separate content
+set; these article PDFs do not fulfil those slots.

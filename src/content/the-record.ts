@@ -17,11 +17,10 @@
  * 10 Sep 2026 — but the client draft's own filename keeps the word Resources
  * and is not renamed: it is a supplied document, not ours to edit.
  *
- * ⚠ NONE OF THESE ARTICLES EXIST. The thirteen items below are the record's
- * index; their bodies have not been written. src/app/the-record/[slug] renders
- * each one's title and summary above a marked "not written yet" panel rather
- * than 404ing, because a dead link reads as a bug and inventing the article
- * would put words in the client's mouth.
+ * User revision 2026-09-11 (D5/F8): eleven article bodies now exist in
+ * record-articles.ts, transcribed into drafts/the-record/articles/. Their
+ * titles and standfirsts below follow that package. The Rangers, Art Gallery
+ * and Cultural Knowledge Precinct bodies remain explicit stubs.
  *
  * ⚠ This list is CMS content in waiting. Build documentation §8 makes
  * Resources a filterable collection; the browser in
@@ -94,7 +93,7 @@ export const recordItems: readonly RecordItem[] = [
     source: "Iningai knowledge",
     title: "It nearly didn't happen",
     summary:
-      "Suzanne Thompson on getting Turraburra back — the phone call on the road, the incognito purchase, and the night they slept on the floor.",
+      "Suzanne Thompson on getting Turraburra back.",
     subjects: ["The buyback"],
     image: "Story thumbnail — the buyback.",
   },
@@ -102,9 +101,9 @@ export const recordItems: readonly RecordItem[] = [
     slug: "wattanuri-and-the-ones-he-followed",
     type: "Story",
     source: "Iningai knowledge",
-    title: "Wattanuri, and the sisters he followed",
+    title: "Wattanuri, and the ones he followed.",
     summary:
-      "Ten clusters of engravings run south to north along the wall. Read in that order they tell the Seven Sisters.",
+      "The published record, and as much of the rest as is told away from Country.",
     subjects: ["Seven Sisters", "Marra Wonga"],
     tags: ["lore"],
     image: "Story thumbnail — the engraved wall.",
@@ -113,9 +112,9 @@ export const recordItems: readonly RecordItem[] = [
     slug: "bringing-a-spring-back",
     type: "Story",
     source: "Iningai knowledge",
-    title: "Bringing a spring back",
+    title: "Bringing a spring back.",
     summary:
-      "A thousand litres carted twice a day through drought, until it held on its own. Eight days, then a koala.",
+      "A thousand litres, twice a day, for eight days. Then a koala came to drink.",
     subjects: ["Water & springs", "Rangers"],
     tags: ["guesting"],
     image: "Story thumbnail — a spring in open country.",
@@ -126,7 +125,7 @@ export const recordItems: readonly RecordItem[] = [
     source: "Published research",
     title: "You are standing on a seabed",
     summary:
-      "The Eromanga Sea covered inland Queensland. The escarpment is its floor, and the footprints set in the mud are still here.",
+      "The ground under Turraburra was the floor of an inland sea long before it was anything else.",
     subjects: ["Deep time & fossils"],
     image: "Story thumbnail — fossil footprints in rock.",
   },
@@ -145,9 +144,9 @@ export const recordItems: readonly RecordItem[] = [
     slug: "what-mitchell-wrote-down",
     type: "Historical account",
     source: "Colonial record",
-    title: "What Mitchell wrote down",
+    title: "What Mitchell wrote down.",
     summary:
-      "The explorer passed through in the 1840s and described huts built solidly enough to carry bark tiles. The first written account of the people here was written by a stranger.",
+      "The oldest written account of this Country was made by a stranger passing through, in a hurry, looking for something else entirely.",
     subjects: ["First contact & the frontier"],
   },
   {
@@ -164,9 +163,9 @@ export const recordItems: readonly RecordItem[] = [
     slug: "gracevale-becomes-turraburra",
     type: "Historical account",
     source: "Colonial record",
-    title: "Gracevale becomes Turraburra",
+    title: "Gracevale becomes Turraburra.",
     summary:
-      "Bought back in April 2019, renamed on 1 October 2020 after the Terraburra clan recorded on this Country in an 1884 map.",
+      "The name was written down in 1884. It took over a hundred years, and a buyback, for anyone to use it again.",
     subjects: ["The buyback"],
     image: "Archival thumbnail — the station sign.",
   },
@@ -174,9 +173,9 @@ export const recordItems: readonly RecordItem[] = [
     slug: "fifteen-thousand-markings-read-in-order",
     type: "Research",
     source: "Published research",
-    title: "Fifteen thousand markings, read in order",
+    title: "Fifteen thousand markings, read in order.",
     summary:
-      "Our account of the two-year study of Marra Wonga, documented with Iningai people as research partners.",
+      "Two ways of reading the same wall — what the study found, and what Iningai law already held.",
     subjects: ["Marra Wonga", "Seven Sisters"],
     tags: ["lore"],
     image: "Research thumbnail — the shelter wall.",
@@ -196,9 +195,9 @@ export const recordItems: readonly RecordItem[] = [
      * Nothing is published, so the change cost redirects and nothing else.
      * Two pages link this route; both were rewritten in the same pass.
      */
-    title: "Fire-stick farming and the carbon in the soil",
+    title: "Fire-stick farming and the carbon in the soil.",
     summary:
-      "Two flux towers, one on Country managed our way and one on grazed land, read against each other for more than a year.",
+      "Two flux towers, side by side. One tells you what grazing does. The other tells you what law does.",
     subjects: ["Fire", "Carbon & climate"],
     image: "Research thumbnail — a flux tower.",
   },
@@ -206,9 +205,9 @@ export const recordItems: readonly RecordItem[] = [
     slug: "a-season-of-bush-foods",
     type: "Documentation",
     source: "Iningai knowledge",
-    title: "A season of bush foods",
+    title: "A season of bush foods.",
     summary:
-      "What comes on when, across the year, and the Country each one grows out of.",
+      "What grows here, how we’ve always used it, and what the science is now confirming.",
     subjects: ["Bush foods"],
     tags: ["country"],
     image: "Documentation thumbnail — bush foods in season.",
@@ -217,18 +216,18 @@ export const recordItems: readonly RecordItem[] = [
     slug: "pollen-at-sixty-metres",
     type: "Documentation",
     source: "Published research",
-    title: "Pollen at sixty metres",
+    title: "Pollen at sixty metres.",
     summary:
-      "A 480-metre bore kept a soil sample every six metres. Sixty metres down, there was pollen. Samples held with QUT.",
+      "A water bore went 480 metres down. What came up on the way is still being read.",
     subjects: ["Deep time & fossils"],
   },
   {
     slug: "what-the-recorders-hear-at-night",
     type: "Recording",
     source: "Iningai knowledge",
-    title: "What the recorders hear at night",
+    title: "What the recorders hear at night.",
     summary:
-      "Four acoustic recorders listen across the property, two of them at the springs. Frogs, birds at first light, and a good deal not yet identified.",
+      "Four acoustic recorders, one national research platform, and a library that’s ours to open or lock away.",
     subjects: ["Animals & birds"],
     image: "Recording thumbnail — an acoustic recorder at the springs.",
   },

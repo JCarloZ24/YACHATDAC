@@ -55,7 +55,6 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
 }) {
   const root = useRef<HTMLElement>(null);
   const router = useRouter();
-  const clickOrigin = useRef({ x: 0, y: 0 });
   useEffect(() => {
     if (!root.current) return;
     const unregister = register(createRecordWave(root.current));
@@ -85,21 +84,14 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
           return (
             <div key={item.slug} data-record-tile className="mb-8 break-inside-avoid lg:mb-12">
             <Link href={`/the-record/${item.slug}`} prefetch={true} data-record-card
-              /* NAV-02 owns this navigation — see `onNavigate` below. The
-                 flag keeps RouteBlink off it: that handler is capture
-                 phase, so it would preventDefault the click and the
-                 expanding circle would never run. */
+              /* NAV-06 owns the image-readiness fade. Keep RouteBlink's
+                 capture handler from intercepting this navigation. */
               data-own-transition
               onPointerEnter={() => router.prefetch(`/the-record/${item.slug}`)}
               onFocus={() => router.prefetch(`/the-record/${item.slug}`)}
-              onClick={event => {
-                const box = event.currentTarget.getBoundingClientRect();
-                clickOrigin.current = event.detail === 0 ? { x: box.left + box.width / 2, y: Math.max(0, Math.min(innerHeight, box.top + box.height / 2)) } : { x: event.clientX, y: event.clientY };
-              }}
               onNavigate={event => {
-                if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
                 event.preventDefault();
-                window.dispatchEvent(new CustomEvent("record-navigate", { detail: { href: `/the-record/${item.slug}`, ...clickOrigin.current } }));
+                window.dispatchEvent(new CustomEvent("record-navigate", { detail: { href: `/the-record/${item.slug}` } }));
               }}
               className="block rounded-3xl focus-visible:opacity-100! focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold">
               <div data-card-hover className={`relative flex flex-col overflow-hidden rounded-3xl text-canvas ${SOURCE_GROUND[item.source]}`}>

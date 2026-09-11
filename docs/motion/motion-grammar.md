@@ -19,7 +19,8 @@ rebuild the measured journey; anchor and keyboard focus seek to the same clock.
 | Record interaction | Behaviour | Timing | Reference | Effect |
 | --- | --- | --- | --- | --- |
 | **lifts**, catalogue card | Inner contents lift 6px on hover/focus; the photo stays undistorted. Title underlines. | 0.25s | INT-05, user direction 9 September 2026 | `recordCardHover` |
-| **opens**, catalogue article | The actual destination page expands in a circle from the clicked card over the held catalogue. Keyboard origin is the card centre. | 0.42s | NAV-02, user direction 9 September 2026 | Native View Transition, `record-article-circle` |
+| **surfaces**, catalogue article | Fade through charcoal, hold a loading label until the route commits and its hero image decodes, then fade into the article. Failed or absent images release to the source-colour field; an eight-second ceiling prevents a stuck cover. | 0.2s out, readiness hold, 0.45s in; no fade under reduced motion | NAV-06, user direction 11 September 2026 | `record-article-fade`, owned CSS opacity transition (same lifecycle exception as the global route blink; no GSAP timeline) |
+| **surfaces**, article photograph | The hero photograph fades in after decoding, including direct visits and images arriving after the navigation ceiling. Pixels stay still. | 0.45s; immediate under reduced motion | NAV-06 / frame grade, user direction 11 September 2026 | `record-image-fade`, readiness-driven CSS opacity transition |
 
 | Interactive addition | Behaviour | Input | Reference | Effect |
 | --- | --- | --- | --- | --- |

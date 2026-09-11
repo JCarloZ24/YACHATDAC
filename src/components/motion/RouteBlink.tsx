@@ -84,14 +84,8 @@ export function RouteBlink() {
       if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download"))
         return;
 
-      // ⚠ LINKS THAT OWN THEIR OWN TRANSITION ARE LEFT ALONE. The Record's
-      // catalogue cards run NAV-02 — the article opening as a 420ms circle
-      // expanding from the click (the-record/_components/RecordNavigation).
-      // That is a native View Transition driven from the card's `onNavigate`,
-      // and this listener runs in the CAPTURE phase: preventing the click here
-      // would stop `onNavigate` ever firing, silently replacing a deliberate
-      // effect with the blink. The reader would still arrive; the circle would
-      // simply be gone, and nothing would say why.
+      // Record catalogue links own NAV-06: fade through image readiness.
+      // Let their onNavigate handler run rather than capturing the click here.
       if (anchor.closest("[data-own-transition]")) return;
 
       const url = new URL(anchor.href, window.location.href);

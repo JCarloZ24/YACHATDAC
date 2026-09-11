@@ -44,6 +44,26 @@ export type RecordMediaSlot = MediaSlot & { motionGrade: "full" | "frame" };
 const RECORD = "/media/library/record";
 
 /**
+ * User screenshot direction, 2026-09-11 (D5/F8): the buyback article opens
+ * with the original grass photograph under an evergreen media scrim. This
+ * is an opening image, separate from the revised deed-signing card/body photo.
+ * Origin: client-supplied The Record Assets, 2026-09-04, original story 1.
+ * Website use supplied by the client; photographer credit not supplied.
+ * Still image plane; no new motion. Explicit size reserves the hero layout.
+ */
+const recordArticleHeroOverrides: Readonly<Record<string, {
+  src: string;
+  width: number;
+  height: number;
+}>> = {
+  "it-nearly-didnt-happen": {
+    src: `${RECORD}/therecord-story1.webp`,
+    width: 3840,
+    height: 2024,
+  },
+};
+
+/**
  * F7/F8 amendment, latest user correction 2026-09-08: the opening wall and
  * stone are Three.js stage furniture. One supplied ink print defines separate
  * holes: black opens through the wall; white remains stone. Surrounding prints
@@ -122,15 +142,15 @@ export const recordGrowsSlot: RecordMediaSlot = {
  * slot ever loses its photograph — it deliberately echoes the card's ground.
  */
 export const recordCardMedia: Record<string, RecordMediaSlot> = {
-  /* 01 · Country, not a portrait — the frame is explicit that this entry names
-     a person and therefore does not show one. The delivered frame obeys it. */
+  /* 01 · User revision 2026-09-11 supersedes the earlier Country thumbnail:
+     the supplied deed-signing photograph now carries the card and breakout.
+     Identifiable people keep the image at frame grade (F7/F8). */
   "it-nearly-didnt-happen": {
     id: "card-buyback",
-    motionGrade: "full",
-    bucket: "country",
-    expects:
-      "Grass heads catching the last light on the outcrop, the plain below — Country, not a portrait",
-    src: `${RECORD}/therecord-story1.webp`,
+    motionGrade: "frame",
+    bucket: "work",
+    expects: "Two people sit at a table with laptops on a timber deck, with a dog in the foreground.",
+    src: "/media/library/record/articles/two-people-laptops-on-deck.webp",
     tone: "evergreen",
   },
   /* 02 · story-wall → frame grade. */
@@ -209,14 +229,13 @@ export const recordCardMedia: Record<string, RecordMediaSlot> = {
     src: `${RECORD}/therecord-story8.webp`,
     tone: "roasted",
   },
-  /* 09 · story-wall → frame grade. */
+  /* 09 · User revision 2026-09-11: supplied wide shelter photograph, frame grade. */
   "fifteen-thousand-markings-read-in-order": {
     id: "card-markings",
     motionGrade: "frame",
-    bucket: "story-wall",
-    expects:
-      "A hand resting on the engraved sandstone, the markings running under it",
-    src: `${RECORD}/therecord-story9.webp`,
+    bucket: "cultural-site",
+    expects: "Three people beneath a sandstone overhang, with engravings along the shelter wall.",
+    src: "/media/library/record/articles/people-beneath-sandstone-overhang.webp",
     tone: "midnight",
   },
   /* 10 · the entry's own subject, exactly — the carbon in the soil. */
@@ -262,9 +281,43 @@ export const recordCardMedia: Record<string, RecordMediaSlot> = {
 };
 
 /**
+ * User follow-up, 2026-09-11 (D5/F8): all article openings share the same
+ * layout, but inherit their own catalogue photograph and source colour.
+ * Dimensions measured from supplied files. Buyback keeps the explicitly
+ * requested grass opening above. Missing card images remain tonal fields.
+ * Origin/permission and subject caveats follow recordCardMedia above.
+ */
+const recordCardDimensions: Readonly<Record<string, readonly [number, number]>> = {
+  "it-nearly-didnt-happen": [2000, 1500],
+  "wattanuri-and-the-ones-he-followed": [3840, 2024],
+  "bringing-a-spring-back": [3840, 2024],
+  "you-are-standing-on-a-seabed": [2000, 1334],
+  "a-day-with-the-rangers": [2000, 1334],
+  "when-they-called-it-the-art-gallery": [3840, 2024],
+  "gracevale-becomes-turraburra": [2000, 1124],
+  "fifteen-thousand-markings-read-in-order": [2000, 1334],
+  "fire-stick-farming-and-the-carbon-in-the-soil": [4267, 3200],
+  "a-season-of-bush-foods": [3840, 2024],
+  "what-the-recorders-hear-at-night": [3840, 2024],
+};
+
+export const recordArticleHeroMedia: Readonly<Record<string, {
+  src: string | null;
+  width: number;
+  height: number;
+}>> = Object.fromEntries(Object.entries(recordCardMedia).map(([slug, slot]) => {
+  const dimensions = recordCardDimensions[slug];
+  return [slug, recordArticleHeroOverrides[slug] ?? {
+    src: slot.src,
+    width: dimensions?.[0] ?? 1,
+    height: dimensions?.[1] ?? 1,
+  }];
+}));
+
+/**
  * The three breakouts — an entry taking the whole screen as the grid runs.
  *
- * A · Iningai knowledge — card 01. The same Country frame the card carries;
+ * A · Iningai knowledge — card 01. The same supplied photograph the card carries;
  *     the breakout IS that card at full size, so it is the same photograph.
  * B · Colonial record — card 07, the engraved wall. story-wall, frame grade.
  * C · Published research — card 12. The frame carries NO photograph at all:
@@ -275,4 +328,86 @@ export const recordBreakoutMedia: Record<string, RecordMediaSlot | null> = {
   "when-they-called-it-the-art-gallery":
     recordCardMedia["when-they-called-it-the-art-gallery"],
   "pollen-at-sixty-metres": null,
+};
+
+/**
+ * User-supplied article photographs, 2026-09-11 (D5/F8).
+ * Origin links are from docs/revisions/the-record-content. Originals remain in
+ * ignored brand/photography/record-revisions; metadata-free WebP derivatives
+ * are served locally. No cropping, upscaling or generated imagery. Every plane
+ * is held at frame grade. See brand/photo-notes/record-revisions.md for visual
+ * checks, permissions, the unavailable footprint and the hand-stencil mismatch.
+ */
+export type RecordArticleMedia = {
+  src: string | null;
+  alt: string;
+  width: number;
+  height: number;
+  motionGrade: "frame";
+  origin: string;
+  credit: string;
+  permission: string;
+};
+
+export const recordArticleMedia: Readonly<Record<string, RecordArticleMedia>> = {
+  "wall-wide": {
+    "src": "/media/library/record/articles/people-beneath-sandstone-overhang.webp",
+    "alt": "Three people beneath a sandstone overhang, with engravings along the shelter wall.",
+    "width": 2000,
+    "height": 1334,
+    "motionGrade": "frame",
+    "origin": "https://drive.google.com/file/d/1kmUR_jXLWJ3aJaiPWIOPsWdWHVN-6BOT/view",
+    "credit": "Photographer not supplied",
+    "permission": "User supplied for website use in the 11 September 2026 revision request (F8); photographer credit and depicted-person consent records not supplied."
+  },
+  "wall-detail": {
+    "src": "/media/library/record/articles/sandstone-lines-and-hand-stencils.webp",
+    "alt": "Incised lines and red hand stencils across a sandstone wall.",
+    "width": 2000,
+    "height": 1334,
+    "motionGrade": "frame",
+    "origin": "https://drive.google.com/file/d/1RXZTiEdI19g-OKRRHUZKzqp-scdcn513/view",
+    "credit": "Photographer not supplied",
+    "permission": "User supplied for website use in the 11 September 2026 revision request (F8); photographer credit and depicted-person consent records not supplied."
+  },
+  "footprints": {
+    "src": null,
+    "alt": "Footprint engravings — image awaiting access.",
+    "width": 2000,
+    "height": 1334,
+    "motionGrade": "frame",
+    "origin": "https://drive.google.com/file/d/1QZe4o4Sm-_mFT5_otZDn6jZnzOcmRwOV/view",
+    "credit": "Photographer not supplied",
+    "permission": "User supplied for website use in the 11 September 2026 revision request (F8); photographer credit and depicted-person consent records not supplied. Drive access required; file not downloaded."
+  },
+  "wall-guide": {
+    "src": "/media/library/record/articles/hand-pointing-at-sandstone-markings.webp",
+    "alt": "A person in a broad-brimmed hat points at markings on sandstone.",
+    "width": 2000,
+    "height": 1334,
+    "motionGrade": "frame",
+    "origin": "https://drive.google.com/file/d/1Wp1XrBRqrit3WPtg811VPGmF1NSfhAmk/view",
+    "credit": "Photographer not supplied",
+    "permission": "User supplied for website use in the 11 September 2026 revision request (F8); photographer credit and depicted-person consent records not supplied."
+  },
+  "hand-stencil": {
+    "src": "/media/library/record/articles/red-hand-stencil-on-pale-sandstone.webp",
+    "alt": "A red hand stencil on pale sandstone, with small holes in the rock.",
+    "width": 2000,
+    "height": 1333,
+    "motionGrade": "frame",
+    "origin": "https://drive.google.com/file/d/1gfJZk84wT7YpVGhuMAYNUMnj4NK0iSrU/view",
+    "credit": "Photographer not supplied",
+    "permission": "User supplied for website use in the 11 September 2026 revision request (F8); photographer credit and depicted-person consent records not supplied."
+  },
+  "deed-signing": {
+    "src": "/media/library/record/articles/two-people-laptops-on-deck.webp",
+    "alt": "Two people sit at a table with laptops on a timber deck, with a dog in the foreground.",
+    "width": 2000,
+    "height": 1500,
+    "motionGrade": "frame",
+    "origin": "https://drive.google.com/file/d/13hmMzMDbmNPnhjXMHRuHfc4hF2VsmYYO/view",
+    "credit": "Photographer not supplied",
+    "permission": "User supplied for website use in the 11 September 2026 revision request (F8); photographer credit and depicted-person consent records not supplied."
+  }
 };
