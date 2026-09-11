@@ -354,14 +354,35 @@ export const inclusionsNote =
  * bed. `body` became an array of paragraphs in the same pass — it was one
  * string and the revision is four — and `WonderWhereYouStay` maps it.
  * The two photo notes became ten with the carousel; see `whereYouStayMedia`.
+ *
+ * Revised again 11 September 2026, August's direction. Three substantive
+ * changes, all in the words rather than the shape:
+ *
+ *  · "This is camp life." is now `lead` rather than the first item of `body`,
+ *    because the revision sets it bold. The weight is a property of that
+ *    sentence and not of its position, so it is carried here — markup must
+ *    not decide which paragraph is emphasised (D5), and a CMS edit that
+ *    reorders `body` must not move the bold with the index (D12).
+ *  · The camp is named to the lake — "a shared camp area beside Yumba Lake" —
+ *    and the day is described in two sentences (mornings over breakfast,
+ *    everyone back together at the end of it) that the old copy did not have.
+ *    "The Yumba lake" became "Yumba Lake": it is the place's name.
+ *  · The last line closes on "close to Country", not "close to the land" —
+ *    Country capitalised, per docs/terminology.md.
+ *
+ * Gone in the same pass: "shared meals", "a stocked pantry" and "space to
+ * sit, talk, swim and slow down". The meals are now the breakfast sentence,
+ * and the pantry is a Camping inclusion above, not a line of the picture.
  */
 export const whereYouStay = {
   title: "Where you stay",
+  /** Bold, set apart from `body` — see the note above. */
+  lead: "This is camp life.",
   body: [
-    "This is camp life.",
-    "Swags and tents, shared meals, time around the fire, simple bathrooms, a stocked pantry and space to sit, talk, swim and slow down.",
-    "The Yumba lake nearby, plenty of room to spread out, and everything you need for a comfortable stay on Country.",
-    "Cabins and a lodge may come later. For now, this is how we stay — simple, shared and close to the land.",
+    "Swags and tents, simple bathrooms, and a shared camp area beside Yumba Lake where we cook, eat, sit around the fire and spend time together.",
+    "It is where mornings start over breakfast and where everyone comes back together at the end of the day.",
+    "There is plenty of space to spread out, slow down and make yourself comfortable.",
+    "Cabins and a lodge may come later. For now, this is how we stay — simple, shared and close to Country.",
   ],
 } as const;
 
@@ -384,9 +405,33 @@ export const whatItIsLike = {
   image: "Standing on top of the escarpment looking out over woodland.",
 } as const;
 
+/**
+ * Revised 11 September 2026, August's direction. The substantive change is
+ * that the section no longer NAMES who will be there.
+ *
+ * It used to promise "Suzanne Thompson, Graham Ambridge and the Iningai
+ * Rangers host every group ourselves". That is a commitment about two
+ * specific people on every booking, and it is not one the page can make: the
+ * revision says so in its own second sentence — "the people with you may
+ * change from visit to visit". What is constant is the standing, not the
+ * roster, so the copy now names the standing: Traditional Custodians of this
+ * Country and the Iningai Rangers who care for and work on it.
+ *
+ * `body` became an array in the same pass — it was one string and the
+ * revision is two paragraphs — and `WonderWhoYouAreWith` maps it.
+ *
+ * ⚠ THE PHOTOGRAPH STILL NAMES THREE PEOPLE, which is `hostsPeople` in
+ * wonder-media.ts and is not a contradiction: those three are named as who
+ * is IN THAT FRAME, not as who will meet a visitor. If the client's team
+ * photo replaces it (see `hostsSlot`), that index has to be re-made against
+ * the new frame or dropped — it is positional.
+ */
 export const whoYouAreWith = {
   title: "Who you are with",
-  body: "Suzanne Thompson, Graham Ambridge and the Iningai Rangers host every group ourselves. This is the same Country we work every week, so you are with us the whole time rather than handed to a guide.",
+  body: [
+    "You will be hosted by the Traditional Custodians of this Country and the Iningai Rangers who care for and work on Country.",
+    "The people with you may change from visit to visit, but you will always be spending time with people who know this Country, work on it and have a connection to the stories and places they share with you.",
+  ],
   image: "Suzanne talking with a small group out on Country.",
   /** The organisation's own line. It is on the logo and three pages carry it. */
   tagline:

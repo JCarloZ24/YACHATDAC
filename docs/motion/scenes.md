@@ -309,6 +309,41 @@ the button's label on the way. Doing it the safe way round, muted then unmute,
 is what produces the pop. Where there is no film there is no control: it is
 removed, not disabled.
 
+**The fade, 11 September 2026** (August: *"add fade in when sound on"*). There
+already was one, at 400ms, and it could not be heard as a fade for two reasons
+that compounded. It was short — Wonder gets 220ms only because its film opens
+on a quiet guitar scale that does the fading itself, where this bed opens at
+level — and, more importantly, it was LINEAR IN `video.volume`, which is
+amplitude. Perceived loudness goes as roughly amplitude^0.6, so a straight-line
+ramp spends most of its audible travel in the first fifth of its duration and
+crawls through the rest: an abrupt arrival followed by nothing. It now runs for
+**1.0s** and interpolates in perceived-loudness space (raise to 1/1.7, travel in
+a straight line, raise back), in both directions and from the live level, so an
+interrupted ramp resumes on the curve. The fade-OUT stays at 0.6s because it is
+tied to the cover's exit tween — change one and change the other.
+
+⚠ **Turning sound back ON used to turn it straight back off** (August, 11
+September 2026: *"the sound fades out when clicking sound off to sound on"*).
+`setSound` treated ANY `play()` rejection as a policy refusal and muted — but
+by the time this control can be pressed the element is already playing, and a
+redundant `play()` on a playing element rejects with `AbortError` the moment
+anything else touches it in the same frame. It now asks only when the element
+is genuinely paused and surrenders only to `NotAllowedError`. The second half
+of the same fault was a **listener leak**: the button handlers were attached
+inside `gsap.context`, whose `revert()` undoes animations and has never removed
+an `addEventListener`, so a destroyed instance kept answering clicks alongside
+the live one — two handlers, two `play()` calls, one `AbortError`. Every
+listener in `home-loader.ts` now hangs off one `AbortController`, aborted in
+`finish()`. React StrictMode made this the normal case in development.
+
+The film is **VP9/Opus in WebM, one container**, from 11 September 2026 —
+briefly both, then the H.264 tiers were deleted the same afternoon to follow
+Wonder (user direction). 31.6 MiB became 21.9 MiB. There is no `<source>`
+fallback: a browser without VP9 takes the `error` path and the count ramps on
+the clock in 1.2s, so it enters the site without the opening rather than
+seeing a broken one. Sizes and the encode recipe are in `ASSETS.md` §7 and
+`brand/video/README.md`.
+
 Reduced motion and JavaScript-off skip it entirely, fetching no film at all; so
 does a data-saver or 2g/3g link, where the count travels on its own in 1.2s and
 the door opens at the old prototype's pace. **Escape dismisses; Tab no longer

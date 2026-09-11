@@ -111,19 +111,45 @@ type Connection = {
 };
 
 /**
- * Is this a link we should not spend 6 MB of somebody's data plan on
- * uninvited? Data saver on, or a 2g/3g effective type, or a measured
- * downlink under 1.5 Mb/s (Network Information API — Chromium and Android
- * only; Safari and Firefox always answer no and are judged on screen alone).
+ * Is this a link we should not spend 5 MB of somebody's data plan on
+ * uninvited? Data saver on, or a 2g/3g effective type (Network Information
+ * API — Chromium and Android only; Safari and Firefox always answer no and
+ * are judged on screen alone).
+ *
+ * ⚠ `downlink` USED TO BE IN HERE AND WAS THE WRONG TEST (August, 11
+ * September 2026: "I thought the wonder hero video is autoplay right? why am
+ * I seeing Play the film button?"). The clause was
+ * `connection.downlink < 1.5`, and it was holding the film on fast links.
+ *
+ * `downlink` is not a line speed. It is a rolling estimate of THROUGHPUT
+ * RECENTLY OBSERVED, rounded to 25 kbps and capped at 10 — so at first paint,
+ * before much has been transferred, it is seeded low and warms up over the
+ * next few seconds. Measured on this dev machine on localhost, where there is
+ * no network at all: 1.7, i.e. a fifth of a megabit above the threshold, on
+ * a page being served from the same computer. Fibre and office LANs land
+ * either side of 1.5 at load for the same reason. The check was a coin toss
+ * and the reported "Play the film" button is what losing it looks like.
+ *
+ * `saveData` stays: it is an explicit choice by the visitor, not an estimate.
+ * `effectiveType` stays: it is a four-bucket classification with hysteresis
+ * built in, far steadier than the raw number — and where it IS briefly wrong
+ * at load, the `change` listener in the component now corrects it, which
+ * nothing did before.
  */
 function slowLink(): boolean {
   const connection = (navigator as Navigator & { connection?: Connection })
     .connection;
   return (
     connection?.saveData === true ||
-    /(^|-)(2g|3g)$/.test(connection?.effectiveType ?? "") ||
-    (connection?.downlink !== undefined && connection.downlink < 1.5)
+    /(^|-)(2g|3g)$/.test(connection?.effectiveType ?? "")
   );
+}
+
+/** The `connection` object, where the browser has one. */
+function netInfo(): (EventTarget & Connection) | undefined {
+  return (
+    navigator as Navigator & { connection?: EventTarget & Connection }
+  ).connection;
 }
 
 /** The landscape ladder — the same 16:9 edit at three widths. */
@@ -213,7 +239,7 @@ function neededWidth(
  *     than the landscape `small` it used to be handed.
  *   · `large` still wants a measured 5 Mb/s or an unknown link; a phone on a
  *     slow-but-not-2g connection takes `medium` and stays soft rather than
- *     spending 25 MB.
+ *     spending 15 MB.
  *
  * Browsers without the API (Safari, Firefox) are judged on screen alone.
  * The choice is not revisited mid-play: a tier switch would restart the
@@ -248,9 +274,9 @@ function pickTier(tiers: HeroTiers, video: HTMLVideoElement): string {
   if (best.length > 0) {
     // ON A SAVER LINK, WEIGHT BEATS FRAMING — and deliberately across shapes,
     // not just within the winning one. There is no light 3:4 encode, so a
-    // portrait tablet on data saver would otherwise be handed the 11.32 MB cut
+    // portrait tablet on data saver would otherwise be handed the 6.97 MB cut
     // it holds 93% of. The lightest portrait file we have is the 648 × 1152
-    // 9:16 at 5.55 MB, and a tablet still holds 81% of its height — against
+    // 9:16 at 3.53 MB, and a tablet still holds 81% of its height — against
     // 39% of the landscape edit it used to get. Half the bytes for a slightly
     // tighter crop is the right way round when someone has asked us to spend
     // less of their data.
@@ -268,7 +294,7 @@ function pickTier(tiers: HeroTiers, video: HTMLVideoElement): string {
 
   // ⚠ DO NOT CHASE A WIDTH NO TIER CAN REACH. A box that crops the wide edit
   // hard asks for more width than the widest encode has; buying it would
-  // spend 18–25 MB of somebody's data to trade one upscale for a smaller one
+  // spend 10.6–14.9 MB of somebody's data to trade one upscale for a smaller one
   // — still soft, and against R11's budget. Where the ask is unreachable the
   // honest target is the box's own width: pay for the pixels that land on
   // screen and stay at today's weight. This is now the desktop-only path —
@@ -285,8 +311,8 @@ function pickTier(tiers: HeroTiers, video: HTMLVideoElement): string {
  * source is attached only where the film is actually going to autoplay. On
  * a data-saver or 2g/3g link, and under reduced motion, the element is
  * marked held and left sourceless: with `preload="auto"` an attached source
- * is a committed download, and even the phone tier is 6.3 MB against R11's
- * 2.5 MB above-the-fold budget. Under reduced motion that was 6.3 MB for a
+ * is a committed download, and even the phone tier is 5.2 MB against R11's
+ * 2.5 MB above-the-fold budget. Under reduced motion that was 5.2 MB for a
  * film that never plays at all. Held, the poster stands as the hero still
  * and the corner button fetches and plays on request, which is the state
  * reduced motion was always meant to be in.
@@ -320,17 +346,40 @@ export function HeroVideo({
   /** Held = no source attached, poster standing, button will fetch on click. */
   const [held, setHeld] = useState(false);
 
+  /**
+   * Bumped whenever the browser revises its connection estimate, to re-run
+   * the source effect below.
+   *
+   * ⚠ A HOLD USED TO BE PERMANENT FOR THE PAGE VIEW (11 September 2026, same
+   * report as `slowLink`). `sync` listened to `prefers-reduced-motion` and to
+   * nothing else, so the connection was read exactly once — at mount, which
+   * is the one moment the estimate is least settled — and a link that was
+   * classified 3g on the first tick and 4g a second later stayed held until
+   * the visitor navigated away. The estimate moving is now a reason to look
+   * again.
+   */
+  const [linkTick, setLinkTick] = useState(0);
+
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const net = netInfo();
     // Both flags are read in one place so the button's label and the DOM's
     // own `data-held` record can never disagree.
     const sync = () => {
       setReduced(motion.matches);
       setHeld(motion.matches || slowLink());
     };
+    const onLink = () => {
+      sync();
+      setLinkTick((n) => n + 1);
+    };
     sync();
     motion.addEventListener("change", sync);
-    return () => motion.removeEventListener("change", sync);
+    net?.addEventListener("change", onLink);
+    return () => {
+      motion.removeEventListener("change", sync);
+      net?.removeEventListener("change", onLink);
+    };
   }, []);
 
   // The source is set here, not in markup: the tier is a client decision
@@ -339,7 +388,7 @@ export function HeroVideo({
   // browser never starts one download only to abandon it for another.
   //
   // It is attached ONLY where the film will autoplay. Held — reduced motion,
-  // or a link too slow to spend 6.3 MB uninvited — the element stays
+  // or a link too slow to spend 5.2 MB uninvited — the element stays
   // sourceless and the poster is the hero; `toggle` fetches on request.
   useEffect(() => {
     const video = ref.current;
@@ -361,8 +410,10 @@ export function HeroVideo({
     if (video.readyState >= 1) start();
     else video.addEventListener("loadedmetadata", start, { once: true });
     return () => video.removeEventListener("loadedmetadata", start);
+    // `linkTick`: a revised connection estimate re-runs this, so a film held
+    // on a first-tick 3g reading starts as soon as the browser says 4g.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- tiers are static per page
-  }, [reduced, silentFrom]);
+  }, [reduced, silentFrom, linkTick]);
 
   /**
    * THE FILM STOPS ONCE IT IS COVERED (9 Sep 2026, mobile pass).

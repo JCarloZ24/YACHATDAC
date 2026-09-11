@@ -28,12 +28,18 @@
  * detail it does not have cannot be missed"; the scrim came down to a 10-30%
  * curve on the same day's direction (HomeLoader.tsx), and a film you can now
  * actually see through is a film whose macroblocking you can also see. So
- * these carry WONDER'S measured bitrates — 750 / 2341 / 3325 kbps on
+ * these carry WONDER'S measured bitrates — 750 / 2341 / 3325 kbps, read off
  * `wonder-hero-*.mp4` — rather than a budget guess, which is what "just like
  * Wonder" has to mean if it means anything.
  *
+ * ⚠ THOSE FILES NO LONGER EXIST, and neither do these. Wonder moved to
+ * VP9/WebM on 11 September 2026 (user direction — see wonder-media.ts), so the
+ * figures above are its SUPERSEDED H.264 bitrates, kept because they are what
+ * this film's encodes were derived from. The homepage film followed it the
+ * same afternoon — see below.
+ *
  * ⚠ THIS BLOWS R11'S 2.5 MB ABOVE-THE-FOLD BUDGET, KNOWINGLY. So does the
- * Wonder hero, at 5.88 MB for its smallest tier. The mitigations are the same
+ * Wonder hero, now at 3.74 MB for its smallest tier (5.88 MB as H.264). The mitigations are the same
  * two and they are real: `+faststart` puts the moov atom first so playback
  * begins after a few hundred KB rather than after the whole file, and
  * `home-loader.ts` attaches NO SOURCE AT ALL on a data-saver or 2g/3g link or
@@ -42,9 +48,29 @@
  * page's opening. Recorded as a deliberate spend, not an oversight; if it has
  * to come back, the tier bitrates are the dial and 1440 is where the money is.
  *
- * MP4 only. `wonder-media.ts` already ruled that a VP9 set on top would
- * double the repo's video weight for a marginal win; this follows it rather
- * than reopening it.
+ * ⚠ WEBM ONLY — 11 September 2026, user direction ("are the home-loader mp4s
+ * still in use? if not we should delete them"), following `wonder-media.ts`
+ * the same afternoon and for its reasoning, which is recorded there in full.
+ * The three H.264 tiers were deleted: 31.6 MiB of MP4 became 21.9 MiB of
+ * WebM, the same pixels and the same 39.297s at ~0.65x the bitrate.
+ *
+ * WHAT WE GAVE UP is the universal fallback, and it costs MORE here than it
+ * does on Wonder. `home-loader.ts` assigns `video.src` directly, so there is
+ * no `<source>` list and no automatic second choice: a browser without VP9
+ * hits the `error` path, the count ramps on the clock in 1.2s and the door
+ * opens. Wonder degrades to a still poster and keeps its page; this degrades
+ * to NO OPENING AT ALL. Not broken — the site is entered, just not through the
+ * film. Judged safe on the same evidence Wonder was: macOS Safari has played
+ * WebM/VP9 since 14.1, iOS Safari since 15. The live cost is decode rather
+ * than compatibility, and hardware VP9 starts at the A14.
+ *
+ * ⚠⚠ THESE ARE A SECOND LOSSY GENERATION, transcoded from the served H.264
+ * derivatives because `Main_V2_16.mp4` is gitignored and was not on the
+ * machine — where Wonder's were re-encoded from its masters. Invisible at
+ * these bitrates, and there is no longer an first-generation file beside them
+ * to fall back to, which is exactly why it is written here in capitals: WHEN
+ * THE MASTER IS TO HAND AGAIN, RE-ENCODE FROM IT. Commands in
+ * brand/video/README.md.
  *
  * THE AUDIO, which the 10 September encodes did not have at all (`-an`, on
  * the reasoning that a muted autoplay background carries weight nobody can
@@ -65,10 +91,20 @@
  * under F8. Not a build blocker; a "nobody knows" blocker.
  */
 export const homeLoaderFilm = {
+  /**
+   * Three widths, ONE container (August, 11 September 2026: "could we also
+   * make the home-loader webm?", then "if not we should delete them").
+   *
+   * The mp4s are gone — see the WEBM ONLY note above. This is the same shape
+   * `wonder-media.ts` carries, and for the same reason: `home-loader.ts`
+   * assigns `video.src` directly rather than walking a `<source>` list, so a
+   * second container would have had to be chosen in code anyway, and having
+   * chosen it, having it was the whole cost.
+   */
   tiers: {
-    small: "/media/home/derivatives/home-loader-960.mp4",
-    medium: "/media/home/derivatives/home-loader-1440.mp4",
-    large: "/media/home/derivatives/home-loader-1920.mp4",
+    small: "/media/home/derivatives/home-loader-960.webm",
+    medium: "/media/home/derivatives/home-loader-1440.webm",
+    large: "/media/home/derivatives/home-loader-1920.webm",
   },
   poster: "/media/home/derivatives/home-loader-poster.webp",
   origin: "Main_V2_16.mp4 (supplied master, gitignored)",
@@ -93,6 +129,52 @@ export const homeInvitationMedia = [
 ];
 
 /**
+ * ⚠ THE DERIVATIVE LAYER IS GONE FROM BOTH SETS BELOW — 11 September 2026,
+ * user direction ("optimize the images in homepage for better quality"). The
+ * offer plates and the pathway cards now point straight at the library
+ * masters in `public/media/library/`. This paragraph is the reasoning for
+ * both; it is written once, here, because they were one mistake.
+ *
+ * WHAT WAS WRONG. These eight slots were served 480–520px WebPs — 7 to 38 KB
+ * each. Both sets are `fill` + `object-cover` in a box far wider than the
+ * declared `sizes` suggests, because cover scales an image until its SHORT
+ * axis fills and then crops the long one: a 1.897:1 photograph in the pathway
+ * card's 5:4 box is painted 459 CSS px wide at a 1440 viewport, 918 at DPR 2.
+ * A 480px file into 918px of box is a 1.9x upscale, and that is the softness —
+ * the same arithmetic, and the same class of mistake, as the video picker that
+ * read `innerWidth` (see homeLoaderFilm above and HeroVideo.tsx).
+ *
+ * WHY REPOINTING IS FREE. `next.config.ts` has image optimisation ON with
+ * AVIF/WebP, so `next/image` resizes each request down to a device bucket:
+ * the browser is served the bucket, never the file behind it. The source's
+ * only job is to be the CEILING, and a 480px source is a 480px ceiling. The
+ * masters are 2000–3840 wide and are ALREADY IN THE REPO and already served
+ * to other routes, so this adds no bytes to git and no bytes to the wire —
+ * it removes a cap. `MediaOrField`'s tonal fallback is unaffected.
+ *
+ * VERIFIED PURE DOWNSCALES, not crops or grades, before repointing: every
+ * derivative's aspect matched its master to within 0.002, and SSIM against a
+ * fresh downscale of the master ran 0.92–0.98 across the channels evenly,
+ * which is WebP loss at 30 KB rather than a colour move. Framing is
+ * unchanged, so nothing here is a design edit. ⚠ Check that again before
+ * repointing anything else — a derivative that IS a crop cannot be swapped
+ * for its master without changing what the picture shows.
+ *
+ * The derivative files STAY on disk: `homeHeroFrames` below still references
+ * all eight for the /homepagev2 collage, where they are 100px plates and the
+ * small file is the right one.
+ *
+ * ⚠ THE INVITATION'S THREE ARE NOT FIXED and cannot be from here. They are
+ * Figma fill exports capped at 1000px (public/media/home/README.md), not
+ * library downscales, and there is no master behind them in this repo — an
+ * SSIM sweep of all 126 library images scored ~0.10 against each, i.e. no
+ * match. They are mildly under-served (about 1.2x on the middle card, and
+ * `person-beside-smoking-fire` is only 802px at source, so it is already AT
+ * its ceiling). Fixing them means re-downloading the fills from Figma node
+ * 3371:41740 at full resolution.
+ */
+
+/**
  * The closing offer's four photographs — prototype deck slide 23, user
  * direction 9 September 2026. Read as a set around the body copy, two above
  * and two below, none of them touching it.
@@ -105,6 +187,13 @@ export const homeInvitationMedia = [
  * are. Credits and identities unconfirmed; F8 permits the use, and no
  * identity or role is implied by placing a face here.
  */
+/**
+ * ⚠ `width`/`height` ARE THE FILE'S REAL PIXELS and are read, not decorative
+ * (11 September 2026). `WayForwardOffer` divides them to get the source's
+ * aspect ratio and works out how much of it `object-cover` actually paints —
+ * see the `sizes` comment there. Record what the file is; a wrong number here
+ * silently under-serves the plate.
+ */
 export type HomeOfferSlot = {
   src: string; origin: string; grade: "frame";
   width: number; height: number;
@@ -112,14 +201,14 @@ export type HomeOfferSlot = {
 };
 
 export const homeOfferMedia: HomeOfferSlot[] = [
-  { src: "/media/home/derivatives/scrub-through-trees.webp", origin: "/media/library/partnerships/pt-breath.webp",
-    grade: "frame", width: 480, height: 270, left: 21, top: 5, w: 31.5, aspect: 1.8 },
-  { src: "/media/home/derivatives/woodland-track.webp", origin: "/media/library/about/about-road.webp",
-    grade: "frame", width: 480, height: 270, left: 68.2, top: 14.3, w: 24, aspect: 1.68 },
-  { src: "/media/home/derivatives/sunset-outcrop.webp", origin: "/media/library/record/therecord-hero.webp",
-    grade: "frame", width: 480, height: 253, left: 6.5, top: 57, w: 22.5, aspect: 1.48 },
-  { src: "/media/home/derivatives/elder-portrait.webp", origin: "/media/library/elder-portrait.webp",
-    grade: "frame", width: 520, height: 274, left: 68, top: 59, w: 13.75, aspect: 0.79 },
+  { src: "/media/library/partnerships/pt-breath.webp", origin: "/media/library/partnerships/pt-breath.webp",
+    grade: "frame", width: 2000, height: 1126, left: 21, top: 5, w: 31.5, aspect: 1.8 },
+  { src: "/media/library/about/about-road.webp", origin: "/media/library/about/about-road.webp",
+    grade: "frame", width: 2000, height: 1124, left: 68.2, top: 14.3, w: 24, aspect: 1.68 },
+  { src: "/media/library/record/therecord-hero.webp", origin: "/media/library/record/therecord-hero.webp",
+    grade: "frame", width: 3840, height: 2024, left: 6.5, top: 57, w: 22.5, aspect: 1.48 },
+  { src: "/media/library/elder-portrait.webp", origin: "/media/library/elder-portrait.webp",
+    grade: "frame", width: 2000, height: 1054, left: 68, top: 59, w: 13.75, aspect: 0.79 },
 ];
 
 /**
@@ -140,13 +229,13 @@ export const homeOfferMedia: HomeOfferSlot[] = [
  * it says. Flag at review if the fire is the point.
  */
 export const homePathwayMedia = [
-  { src: "/media/home/derivatives/escarpment-walk.webp", origin: "/media/library/escarpment-approach.webp",
+  { src: "/media/library/escarpment-approach.webp", origin: "/media/library/escarpment-approach.webp",
     icon: "/media/home/derivatives/invitation-ring.svg", grade: "frame", position: "center" },
-  { src: "/media/home/derivatives/emu-woodland.webp", origin: "/media/library/living-work/livingwork-spring.webp",
+  { src: "/media/library/living-work/livingwork-spring.webp", origin: "/media/library/living-work/livingwork-spring.webp",
     icon: "/media/home/derivatives/invitation-spiral.svg", grade: "frame", position: "center" },
-  { src: "/media/home/derivatives/mortar-at-ute.webp", origin: "/media/library/living-work/livingwork-work7.webp",
+  { src: "/media/library/living-work/livingwork-work7.webp", origin: "/media/library/living-work/livingwork-work7.webp",
     icon: "/media/home/derivatives/invitation-boomerang.svg", grade: "frame", position: "center" },
-  { src: "/media/home/derivatives/hand-at-rock.webp", origin: "/media/library/engravings-hand.webp",
+  { src: "/media/library/engravings-hand.webp", origin: "/media/library/engravings-hand.webp",
     icon: "/media/home/derivatives/invitation-boomerang.svg", grade: "frame", position: "center" },
 ];
 

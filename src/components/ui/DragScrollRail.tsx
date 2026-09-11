@@ -17,9 +17,12 @@ import { useEffect, useRef, type ReactNode } from "react";
  * ⚠ WHY A SCOPE AND NOT A COMPONENT THAT RENDERS THE RAIL. Two constraints
  * meet here and only this shape satisfies both:
  *
- *  · `SliderDots` finds the scroller with `previousElementSibling`, so no
- *    node may sit between the rail and its dots. Hence `display: contents` —
- *    this wrapper has no box and no place in the layout.
+ *  · The rail must keep its place in the row's own layout — it is one child
+ *    of a flex column with the dots — so this wrapper takes no box:
+ *    `display: contents`. (It does NOT make the rail a DOM sibling of the
+ *    dots; `SliderDots` looks through this wrapper for it. See `findRail`
+ *    there — correcting that assumption on 11 September 2026 is what made the
+ *    dots light and click on /wonder.)
  *  · `CardRail` is shipped by /about, /partnerships and /our-people, which
  *    are static by decision, and its contract is that they get the row and
  *    nothing else. Importing a client component INTO CardRail broke that:
@@ -282,8 +285,8 @@ export function DragScrollRail({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  /* `contents` so this has no box: SliderDots reaches the rail with
-     `previousElementSibling` and a real wrapper would hide it. */
+  /* `contents` so this has no box and the rail keeps its own place in the
+     row's flex column. SliderDots looks through it for the scroller. */
   return (
     <div ref={scope} className="contents">
       {children}

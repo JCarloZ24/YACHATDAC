@@ -60,6 +60,7 @@ export function WaveDivider({
   ground,
   flip = false,
   mirror = false,
+  seat = "overhang",
   hook,
   className = "",
 }: {
@@ -67,6 +68,22 @@ export function WaveDivider({
   ground: string;
   /** A crest that rises rather than falls (Figma's flip=up). */
   flip?: boolean;
+  /**
+   * Where the ink sits relative to this element's own box.
+   *
+   * `overhang` (the default, and every caller before 11 September 2026) pulls
+   * the wave UP out of the top of the section that owns it — Figma's rule,
+   * where the divider overlaps the foot of the outgoing section.
+   *
+   * `inline` drops that pull-up and leaves the ink filling its own box. It
+   * exists for a seam that is its OWN element rather than the lip of a
+   * section: /living-work's §01 → §02 join is a transparent block between a
+   * sticky hero and a pinned aperture, and there the wave has to sit inside
+   * that block's height or it overhangs the photograph and undoes the
+   * full-bleed hero the block exists to give. Give the owner the same height
+   * the wave has (`h-10 sm:h-26`).
+   */
+  seat?: "overhang" | "inline";
   /** Thick end on the left — the frame's Wave Lines laid out at x=1441
       with a 1441 width are horizontally flipped instances. */
   mirror?: boolean;
@@ -93,9 +110,11 @@ export function WaveDivider({
          preserveAspectRatio="none" stretches the crop back to full width. */
       viewBox="1.00123 0 1467.84877 105.324"
       preserveAspectRatio="none"
-      className={`pointer-events-none absolute inset-x-0 top-0 h-10 w-full -translate-y-[calc(100%-1px)] sm:h-26 ${
-        flip ? "scale-y-[-1]" : ""
-      } ${mirror ? "scale-x-[-1]" : ""} ${className}`}
+      className={`pointer-events-none absolute inset-x-0 top-0 h-10 w-full sm:h-26 ${
+        seat === "overhang" ? "-translate-y-[calc(100%-1px)]" : ""
+      } ${flip ? "scale-y-[-1]" : ""} ${
+        mirror ? "scale-x-[-1]" : ""
+      } ${className}`}
     >
       {/* The ink, as a three-tile strip (see WAVE_ROLL). At rest only the
           first tile shows — the others sit beyond the viewBox crop — so the

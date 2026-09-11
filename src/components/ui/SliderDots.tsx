@@ -32,6 +32,31 @@ const DOT_BOX = "132.72 0 7.51 7.42";
 const DOT_PATH =
   "M137.507 7.29029C136.889 7.43693 136.06 7.46952 135.425 7.29029C133.637 6.7852 132.417 4.8463 132.791 3.08663C133.181 1.31066 134.645 0.104955 136.255 0.00719573C138.076 -0.106857 139.588 1.14773 140.108 2.85852C140.677 4.71595 139.23 6.89925 137.523 7.29029H137.507Z";
 
+/**
+ * The scroller these dots belong to.
+ *
+ * ⚠ `display: contents` DOES NOT MAKE A NODE A DOM SIBLING (August, 11
+ * September 2026 — "sliderdots state not moving and not clickable"). The
+ * original idiom here was `previousElementSibling` alone, and `DragScrollRail`
+ * was written to be `contents` so that it would still work. It does not:
+ * `contents` removes the box from LAYOUT, not the element from the TREE, so
+ * on /wonder §08 the previous sibling is the drag scope's wrapper and the
+ * rail is a level below it. The dots then listened to nothing, lit nothing
+ * and scrolled nothing.
+ *
+ * So the previous sibling is taken when it IS the scroller, and otherwise the
+ * rail is looked up inside it — the same two markers `DragScrollRail`
+ * matches on, `data-drag-rail` and the `role="group"` that `label` sets.
+ * CardRail's rows, which have no wrapper, resolve on the first branch exactly
+ * as before.
+ */
+function findRail(dots: HTMLElement | null): HTMLElement | null {
+  const previous = dots?.previousElementSibling;
+  if (!(previous instanceof HTMLElement)) return null;
+  if (/auto|scroll/.test(getComputedStyle(previous).overflowX)) return previous;
+  return previous.querySelector<HTMLElement>("[data-drag-rail], [role='group']");
+}
+
 export function SliderDots({
   count,
   label,
@@ -58,11 +83,12 @@ export function SliderDots({
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    // The scroller is the node directly above this one — the same idiom the
-    // hero's tier script uses. Reached this way so CardRail can stay a server
-    // component and the static pages never cross a client boundary.
-    const rail = ref.current?.previousElementSibling;
-    if (!(rail instanceof HTMLElement)) return;
+    // The scroller is found from the node directly above this one — reached
+    // this way so CardRail can stay a server component and the static pages
+    // never cross a client boundary. See `findRail` for why it is not simply
+    // that node.
+    const rail = findRail(ref.current);
+    if (!rail) return;
 
     // Whichever card's leading edge sits nearest the rail's own snap edge
     // wins. Measured off live rects rather than a card width, so a rail whose
@@ -98,8 +124,8 @@ export function SliderDots({
   }, []);
 
   const go = (i: number) => {
-    const rail = ref.current?.previousElementSibling;
-    if (!(rail instanceof HTMLElement)) return;
+    const rail = findRail(ref.current);
+    if (!rail) return;
     const cell = rail.children[i];
     if (!(cell instanceof HTMLElement)) return;
     cell.scrollIntoView({

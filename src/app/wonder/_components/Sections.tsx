@@ -338,8 +338,12 @@ export function WonderFacts() {
           canvas starts at the wave's foot on the wrapper below. Neither the
           sticky screen (overflow-hidden at lg) nor the map clip may parent
           the wave, or it is cut off. */}
+      {/* `hook` since 11 Sep 2026 (August: make this wave move, "similar to
+          this effect on About"). It is About's crest motion and NOT About's
+          seam deck — see lib/motion/wave-roll.ts for where that line is
+          drawn. The Record's catalogue seam already carries the same cut. */}
       <div className="absolute inset-x-0 top-10 z-10 sm:top-26">
-        <WaveDivider ground="var(--color-canvas)" />
+        <WaveDivider ground="var(--color-canvas)" hook="wonder-wave" />
       </div>
       {/* Padding on the section, not a margin here — a margin collapses
           through the section and shoves the whole section below the hero. */}
@@ -1039,6 +1043,10 @@ export function WonderWhereYouStay() {
             data-card-copy
             className="flex flex-col gap-4 text-base leading-normal font-medium"
           >
+            {/* The lead is bold by direction (August, 11 September 2026) and
+                is its own field in the content module, so the weight follows
+                the sentence and not an index. */}
+            <p className="font-bold">{whereYouStay.lead}</p>
             {whereYouStay.body.map((para) => (
               <p key={para}>{para}</p>
             ))}
@@ -1131,9 +1139,14 @@ export function WonderHosts() {
             Your hosts
           </p>
           <h2 className={H2}>{whoYouAreWith.title}</h2>
-          <p className="text-base leading-normal font-medium lg:text-xl">
-            {whoYouAreWith.body}
-          </p>
+          {/* Two paragraphs since 11 Sep 2026 — see the note on
+              `whoYouAreWith`. The gap is the frame's paragraph step, not a
+              new rhythm for this section. */}
+          <div className="flex flex-col gap-4 text-base leading-normal font-medium lg:text-xl">
+            {whoYouAreWith.body.map((para) => (
+              <p key={para}>{para}</p>
+            ))}
+          </div>
         </div>
         {/* Three of the eight in frame are named (hostsPeople). The pointer
             names them; the photograph itself never moves — portraits hold

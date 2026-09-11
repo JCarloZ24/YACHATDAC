@@ -224,13 +224,15 @@ If you want to put your hands in and help, you are welcome to.
 
 ### Where you stay
 
-This is camp life.
+**This is camp life.**
 
-Swags and tents, shared meals, time around the fire, simple bathrooms, a stocked pantry and space to sit, talk, swim and slow down.
+Swags and tents, simple bathrooms, and a shared camp area beside Yumba Lake where we cook, eat, sit around the fire and spend time together.
 
-The Yumba lake nearby, plenty of room to spread out, and everything you need for a comfortable stay on Country.
+It is where mornings start over breakfast and where everyone comes back together at the end of the day.
 
-Cabins and a lodge may come later. For now, this is how we stay — simple, shared and close to the land.
+There is plenty of space to spread out, slow down and make yourself comfortable.
+
+Cabins and a lodge may come later. For now, this is how we stay — simple, shared and close to Country.
 
 [ Carousel — ten frames, camp and guests mixed:
   1. Camp among the trees at first light, sun coming through.
@@ -256,9 +258,13 @@ Cabins and a lodge may come later. For now, this is how we stay — simple, shar
 
 ### Who you are with
 
-Suzanne Thompson, Graham Ambridge and the Iningai Rangers host every group ourselves. This is the same Country we work every week, so you are with us the whole time rather than handed to a guide.
+You will be hosted by the Traditional Custodians of this Country and the Iningai Rangers who care for and work on Country.
 
-[ Image — Suzanne talking with a small group out on Country. ]
+The people with you may change from visit to visit, but you will always be spending time with people who know this Country, work on it and have a connection to the stories and places they share with you.
+
+[ Image — The hosts and rangers on the red dirt at dusk. Kept as shot
+  (August, 11 September 2026); a team photo of the same kind is to be
+  requested from the client to replace it. ]
 
 Ancient traditions walking together with contemporary visions. It is on our logo, and it is also just how the work gets done out here.
 

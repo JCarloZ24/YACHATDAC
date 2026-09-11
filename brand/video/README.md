@@ -100,6 +100,39 @@ and the clipping comes straight back.
 doing work"*. That was correct for a muted autoplay background. The film now carries a sound
 control, so the audio is doing work.
 
+### WebM — 11 September 2026, and the mp4s are gone
+
+August, twice in an afternoon: *"could we also make the home-loader webm?"*, then *"are the
+home-loader mp4s still in use? if not we should delete them."* Every tier ships **once**, as
+VP9/Opus, matching `wonder-media.ts`. The H.264 recipe above is kept because it is what these
+were derived from and what a re-cut from the master should re-derive — not because anything
+serves it. `src/lib/motion/home-loader.ts` assigns `video.src` directly, so there is no
+`<source>` fallback: a browser without VP9 gets the `error` path and enters the site without
+the opening.
+
+VP9 bitrates are **~0.65× the H.264 target** for matching quality — that ratio is the whole
+recipe, so a recut at a different mp4 bitrate scales from it rather than reusing these numbers.
+Two passes, `-row-mt 1` for encode speed, `-tile-columns 2` so a 1080p frame decodes across
+cores on a phone:
+
+```bash
+# 960/700k · 1440/1500k · 1920/2200k — audio 80k/96k/96k Opus
+ffmpeg -y -i Main_V2_16.mp4 -vf "scale=1440:-2:flags=lanczos" -c:v libvpx-vp9 -b:v 1500k \
+  -row-mt 1 -tile-columns 2 -cpu-used 4 -deadline good -g 240 -an \
+  -pass 1 -passlogfile p1440w -f null -
+ffmpeg -y -i Main_V2_16.mp4 -vf "scale=1440:-2:flags=lanczos" -c:v libvpx-vp9 -b:v 1500k \
+  -row-mt 1 -tile-columns 2 -cpu-used 2 -deadline good -g 240 \
+  -pass 2 -passlogfile p1440w -af "$LN" -c:a libopus -b:a 96k -ar 48000 -ac 2 \
+  home-loader-1440.webm
+```
+
+⚠⚠ **The served WebMs were transcoded from the served mp4s, not from the master** — it is
+gitignored and was not on the machine, where Wonder's were re-encoded from its masters. That is
+a second lossy generation, invisible at these bitrates, and since the mp4s were deleted there
+is **no first-generation file left beside them**. When `Main_V2_16.mp4` is to hand again,
+re-encode from it; the `$LN` normalisation above applies to the Opus track exactly as it does
+to the AAC one.
+
 ---
 
 ## Wonder hero — audio spec, 10 September 2026
@@ -180,8 +213,8 @@ failing that a reason to restore the wrap fade, not something the player should 
 
 | File | | Served as |
 | --- | --- | --- |
-| `Mobile_9x16_1080x1920.mp4` | 1080 × 1920, 9:16, 60.04s, 25 fps, 167 MB | `wonder-hero-portrait-1440.mp4` (810 × 1440, 8.43 MB) and `-portrait-1152.mp4` (648 × 1152, 5.55 MB) |
-| `Tablet_Vertical_3x4_1536x2048.mp4` | 1536 × 2048, 3:4, 60.04s, 25 fps, 171 MB | `wonder-hero-wide-1536.mp4` (1152 × 1536, 11.32 MB) |
+| `Mobile_9x16_1080x1920.mp4` | 1080 × 1920, 9:16, 60.04s, 25 fps, 167 MB | `wonder-hero-portrait-1440.webm` (810 × 1440, 5.24 MB) and `-portrait-1152.webm` (648 × 1152, 3.53 MB) |
+| `Tablet_Vertical_3x4_1536x2048.mp4` | 1536 × 2048, 3:4, 60.04s, 25 fps, 171 MB | `wonder-hero-wide-1536.webm` (1152 × 1536, 6.97 MB) |
 
 **The tablet cut was not asked for and is the more useful of the two.** The brief conceded
 that 9:16 leaves an iPad Air at 81% of its height, the worst case in the table below; a 3:4
@@ -229,7 +262,7 @@ All three verify at **−23.01 LUFS, −5.77 dBFS true peak, LRA 6.80 unchanged*
 
 | | Before | Now |
 | --- | --- | --- |
-| Served to a 390 × 844 phone | `wonder-hero-960.mp4`, 16:9 | `wonder-hero-portrait-1440.mp4`, 9:16 |
+| Served to a 390 × 844 phone | `wonder-hero-960.webm`, 16:9 | `wonder-hero-portrait-1440.webm`, 9:16 |
 | Of the frame on screen | **27%** | **82%** |
 | Magnification under cover | **3.7× upscale** | **none** — 810 covers the ~950px asked at DPR 2 |
 | Weight | 5.88 MB | 8.43 MB, or 5.55 MB on a saver link |
@@ -311,22 +344,55 @@ phone; it beats the 16:9 we have today but is well behind 9:16.
 
 ### What we serve, and why
 
-**H.264 High in MP4 with `+faststart` is the baseline and is not optional** — it is the one
-thing every browser plays. Measured on a 10s portrait sample, extrapolated to 60s:
+⚠ **WEBM/VP9 ONLY as of 11 September 2026** (user direction). This section used to open
+"H.264 High in MP4 with `+faststart` is the baseline and is not optional". It is no longer
+the baseline, and the sentence was load-bearing for a decision that has been reversed — so
+read the rest of this page with that in mind.
 
-| Codec | Setting | 60s at 810 × 1440 |
-| --- | --- | --- |
-| H.264 | CRF 23 | 24.8 MB |
-| H.264 | CRF 28 | 12.0 MB |
-| **H.265 / HEVC** | CRF 28 | **13.5 MB** — roughly H.264 CRF 23's quality for ~45% fewer bytes |
-| AV1 (SVT, preset 6) | CRF 32 | 17.2 MB — needs a slower preset to show its real advantage |
+**What changed.** The old rule assumed a second codec set would be carried ON TOP of the
+MP4s, doubling the repo's video weight for a marginal win. Replacing them instead moves the
+weight the other way. Re-encoded from the three masters, two-pass VP9 at roughly 60% of each
+tier's old H.264 bitrate, audio re-derived as Opus 64k because WebM cannot carry AAC:
 
-Not quality-matched, so treat these as indicative. The standing decision in
-`src/content/wonder-media.ts` is **MP4 only** — a second codec set doubles the repo's video
-weight for a marginal win. That reasoning holds for the landscape tiers and is worth
-revisiting for the **portrait tier alone**, where the saving is not marginal and the audience
-is on mobile data: HEVC covers iOS and Safari natively, which is most phone traffic, with the
-H.264 file as the fallback. `HeroVideo` sets `video.src` directly rather than using `<source>`
-elements, so that would need a `canPlayType` check — not yet built.
+| Tier | H.264 MP4 | VP9 WebM | |
+| --- | --- | --- | --- |
+| 960 × 540 | 5.88 MB | **3.74 MB** | −36% |
+| 1440 × 810 | 17.26 MB | **10.57 MB** | −39% |
+| 1920 × 1080 | 24.31 MB | **14.88 MB** | −39% |
+| 648 × 1152 | 5.55 MB | **3.53 MB** | −36% |
+| 810 × 1440 | 8.43 MB | **5.24 MB** | −38% |
+| 1152 × 1536 | 11.32 MB | **6.97 MB** | −38% |
+| **total** | **72.7 MB** | **44.9 MB** | **−38%** |
+
+Same pixel dimensions, same 1501 frames, same 60.04s. Audio measured on the output at
+−22.99 LUFS, true peak −6.2 dBFS — the −23 LUFS rule above still holds and still must.
+
+**What we gave up, stated plainly.** There is no fallback. `HeroVideo` assigns `video.src`
+directly rather than using `<source>` elements, so a browser without VP9 gets no film —
+it gets the poster, which is the hero frame, so the page is still and not broken. That is
+acceptable at launch because iOS Safari has played WebM/VP9 since **iOS 15** (September
+2021) and macOS Safari since **14.1**. The real cost is decode rather than support:
+hardware VP9 begins at the **A14 (iPhone 12)**, so an iPhone 11 or older software-decodes
+sixty seconds of full-bleed film and pays in battery and possibly dropped frames. If that
+becomes a real complaint the answer is ONE small MP4 behind a `canPlayType` check — not
+undoing this.
+
+**The commands.** Two-pass, because a hard byte budget needs a bitrate target rather than a
+CRF (the same lesson recorded in §"What the first real transcode taught us"):
+
+```bash
+# pass 1 — no audio, faster cpu-used, discard the output
+ffmpeg -y -i MASTER -vf "scale=960:-2:flags=lanczos" -c:v libvpx-vp9 -b:v 450k        -row-mt 1 -tile-columns 2 -cpu-used 4 -pix_fmt yuv420p -an        -pass 1 -passlogfile LOG -f null /dev/null
+
+# pass 2 — the real encode, audio normalised from the master's measurements
+ffmpeg -y -i MASTER -vf "scale=960:-2:flags=lanczos" -c:v libvpx-vp9 -b:v 450k        -row-mt 1 -tile-columns 2 -cpu-used 2 -pix_fmt yuv420p        -af "loudnorm=I=-23:TP=-2:LRA=7:measured_I=-17.07:measured_TP=-0.14:measured_LRA=6.80:measured_thresh=-27.23:offset=0:linear=true"        -c:a libopus -b:a 64k -ar 48000 -pass 2 -passlogfile LOG out.webm
+```
+
+Bitrate targets used: 450k / 1400k / 2000k landscape, 420k / 660k portrait, 900k for the
+3:4. All three masters measure identically (−17.07 LUFS, TP −0.14, LRA 6.80, thresh −27.23),
+so one loudnorm setting covers every tier.
+
+**`*.webm` is tracked by Git LFS** (`.gitattributes`), so these land in LFS automatically —
+which is the other reason the swap is worth it.
 
 *Last updated: 11 September 2026*

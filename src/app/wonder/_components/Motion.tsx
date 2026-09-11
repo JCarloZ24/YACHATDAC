@@ -19,6 +19,7 @@ import {
   sleepCards,
 } from "@/lib/motion/wonder";
 import { wonderLandscape } from "@/lib/motion/wonder-landscape";
+import { createWaveRoll } from "@/lib/motion/wave-roll";
 
 /**
  * /wonder — the page's motion script. Verb: ARRIVES.
@@ -31,6 +32,7 @@ import { wonderLandscape } from "@/lib/motion/wonder-landscape";
  *
  *   §01 hero          media       100vh   the film, and the title rising
  *   §02 facts         media       320vh   the Queensland map draws · copy in tiers
+ *                                            · the canvas crest rolls up over the film
  *   §03 highlights    media       100vh   the card rail opens
  *   §04 getting here  media       300vh   the route map draws in stages
  *   §05 turraburra    media       180vh   landscape + copy hold, mouse tilt and drift
@@ -75,6 +77,13 @@ export function WonderMotion() {
 
       wire("hero", (el) => heroArrival(el, 100));
       wire("facts", (el) => factsCopy(el, 320));
+      // The canvas crest rising over the film — About's wave motion on this
+      // one seam, scrubbed across §02's approach. Registered SEPARATELY from
+      // factsCopy rather than folded into it: the wave is the join between
+      // §01 and §02 and belongs to neither section's composition, and §02's
+      // loud channel is already the map. Grammar: "a change of ground",
+      // Record wave / SCR-11.
+      wire("facts", (el) => createWaveRoll(el, "wonder-wave"));
       wire("highlights", (el) => cardRail(el, 100));
       wire("getting-here", (el) => gettingHereCopy(el, 180));
       wire("country", wonderLandscape);

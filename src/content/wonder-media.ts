@@ -37,16 +37,16 @@ export const wonderHeroSlot: MediaSlot = {
 
 /**
  * The hero film — "1MIN EDIT NO SUPERS" (Downloads, 8 Sep 2026), 60s, 4K
- * ProRes master (2.3 GB), H.264 + AAC in six encodes so the page can match
+ * ProRes master (2.3 GB), VP9 + Opus in six WebM encodes so the page can match
  * the SHAPE of the box as well as the connection (HeroVideo picks one before
  * the first byte loads — see its `pickTier`):
  *
- *   small          960 × 540    5.88 MB  16:9  landscape boxes, saver link
- *   medium        1440 × 810   17.26 MB  16:9  laptops, landscape tablets
- *   large         1920 × 1080  24.31 MB  16:9  wide screens on a fast link
- *   portraitSmall  648 × 1152   5.55 MB   9:16  any portrait box, saver link
- *   portrait       810 × 1440   8.43 MB   9:16  phones — no upscale at DPR 2
- *   portraitWide  1152 × 1536  11.32 MB   3:4   portrait tablets
+ *   small          960 × 540    3.74 MB  16:9  landscape boxes, saver link
+ *   medium        1440 × 810   10.57 MB  16:9  laptops, landscape tablets
+ *   large         1920 × 1080  14.88 MB  16:9  wide screens on a fast link
+ *   portraitSmall  648 × 1152   3.53 MB   9:16  any portrait box, saver link
+ *   portrait       810 × 1440   5.24 MB   9:16  phones — no upscale at DPR 2
+ *   portraitWide  1152 × 1536   6.97 MB   3:4   portrait tablets
  *
  * THE PORTRAIT CUTS LANDED 11 SEPTEMBER 2026 and closed the flag that stood
  * here. The editor reframed the same edit — same 1501 frames, same 60.04s,
@@ -69,20 +69,43 @@ export const wonderHeroSlot: MediaSlot = {
  * Audio: every encode is normalised to −23 LUFS. A replacement MUST be too —
  * the delivered mix was −17 LUFS and clipped once transcoded.
  *
- * MP4 only: H.264 plays everywhere, and a VP9 set on top would double the
- * repo's video weight for a marginal size win. It replaced the "WITH SUPERS"
- * cut the same day: no burned-in titles, so nothing sits under the H1 and
- * `supersEnd` is 0. Content not yet reviewed for cultural sensitivity by
- * Suzanne or Marc — R-flag until it is.
+ * ⚠ WEBM ONLY — 11 September 2026, user direction, REVERSING the "MP4 only"
+ * rule that stood here. That rule was right about one thing and wrong about
+ * the other: H.264 does play everywhere, but the reasoning was that a VP9 set
+ * would be carried ON TOP of the MP4s and double the repo's video weight. It
+ * replaces them instead, so the weight goes the other way — 72.7 MB of MP4
+ * became 44.9 MB of WebM, a 38% cut across all six tiers, and every tier is
+ * the same pixels and the same 1501 frames.
+ *
+ * Re-encoded from the three MASTERS, not from the served MP4s, so the picture
+ * carries no extra lossy generation. Two-pass VP9 at ~60% of each tier's old
+ * H.264 bitrate — VP9 buys the difference back. Audio had to become Opus
+ * (WebM cannot carry AAC) and was re-derived from each master's own audio at
+ * 64 kbps; measured on the output at −22.99 LUFS, true peak −6.2 dBFS.
+ *
+ * WHAT WE GAVE UP is the universal fallback. Nothing here is a `<source>` set:
+ * HeroVideo assigns `video.src` directly, so there is no automatic fallback
+ * and a browser without VP9 gets no film at all — it gets the poster, which is
+ * the hero frame, so the page is not broken, only still. That is safe as of
+ * launch: iOS Safari has played WebM/VP9 since iOS 15 (September 2021) and
+ * macOS Safari since 14.1. The live cost is decode, not compatibility —
+ * hardware VP9 starts at the A14 (iPhone 12), so an iPhone 11 or older
+ * software-decodes 60 seconds of full-bleed film and pays for it in battery.
+ * If that becomes a real complaint, the answer is ONE small MP4 behind a
+ * `canPlayType` check, not undoing this.
+ *
+ * It replaced the "WITH SUPERS" cut on 8 September: no burned-in titles, so
+ * nothing sits under the H1 and `supersEnd` is 0. Content not yet reviewed for
+ * cultural sensitivity by Suzanne or Marc — R-flag until it is.
  */
 export const wonderHeroVideo = {
   tiers: {
-    small: "/media/wonder/wonder-hero-960.mp4",
-    medium: "/media/wonder/wonder-hero-1440.mp4",
-    large: "/media/wonder/wonder-hero-1920.mp4",
-    portraitSmall: "/media/wonder/wonder-hero-portrait-1152.mp4",
-    portrait: "/media/wonder/wonder-hero-portrait-1440.mp4",
-    portraitWide: "/media/wonder/wonder-hero-wide-1536.mp4",
+    small: "/media/wonder/wonder-hero-960.webm",
+    medium: "/media/wonder/wonder-hero-1440.webm",
+    large: "/media/wonder/wonder-hero-1920.webm",
+    portraitSmall: "/media/wonder/wonder-hero-portrait-1152.webm",
+    portrait: "/media/wonder/wonder-hero-portrait-1440.webm",
+    portraitWide: "/media/wonder/wonder-hero-wide-1536.webm",
   },
   supersEnd: 0,
   label:
@@ -321,6 +344,15 @@ export const whereYouStayMedia: MediaSlot[] = [
     // met the set's mean and still left the ground under the trees a black
     // mass in the 400px crop; the gamma opens it. Cool by nature: it is a
     // backlit dawn, and warming it would be inventing a different morning.
+    //
+    // Re-graded 11 Sep 2026 (August: "some images need better
+    // lighting/colouring"). The pass above lifted it into HAZE — as the
+    // first card of the rail it opened the row on a flat blue-grey wash with
+    // no black in it at all. Per-channel black points 6/9/15 (the blue is
+    // clipped hardest because the haze is blue), c×1.07 s×1.16, b×0.98 and
+    // an unsharp — luma sd 72 → 82. The black point is set per channel
+    // rather than by saturation so the sun flare survives; a stronger clip
+    // tried first turned the sky teal and the ground to mud.
     id: "stay-dawn-camp",
     bucket: "country",
     expects: "Camp among the trees at first light, sun coming through",
@@ -331,6 +363,19 @@ export const whereYouStayMedia: MediaSlot[] = [
     // Gamma 0.72 rather than a linear lift, then c×1.06 s×1.28 — 57/0.26
     // → 80/0.28. The frame is shadow-heavy under the shelter; a brightness
     // push flattened the highlights, opening the shadows did not.
+    //
+    // Re-graded and sharpened 11 Sep 2026 (August: "2nd image on carousel is
+    // blurry"). Gamma 0.84, b×0.94 r×1.06 off the blue cast, c×1.10 s×1.30,
+    // then an unsharp at r1.6/110%. Luma 80 → 93, sd 50 → 57.
+    //
+    // ⚠ THE SOFTNESS IS IN THE SOURCE AND SHARPENING ONLY RECOVERS SOME OF
+    // IT. At 1:1 this file is a small frame that was already scaled up to
+    // 2000px before it reached this tree — the compression blocks are
+    // visible and there is no fine detail under them, which is why it
+    // measured the softest of the ten (edge sd 42 against 63–85 for the
+    // rest) while being the same pixel dimensions. The unsharp restores the
+    // local contrast the upscale lost; it cannot put detail back. NOT
+    // AI-upscaled. A re-export from the original frame is the real fix.
     id: "stay-table",
     bucket: "country",
     expects: "Breakfast around the long table under the camp shelter",
@@ -354,10 +399,25 @@ export const whereYouStayMedia: MediaSlot[] = [
     tone: "roasted",
   },
   {
+    // Gamma 0.80 c×1.06 s×1.25 + unsharp — 65/0.24 → 78/0.30 (11 Sep 2026).
+    // It was the last ungraded frame of the run and read as a different day
+    // from the nine around it: a hard backlight with the tent and the person
+    // in front of it dropping to near-black in the 400px crop. The gamma
+    // opens that side without touching the blown woodland behind it.
+    //
+    // WEBP AND RENAMED in the same pass. It was the only .jpg left in the
+    // row along with `stay-dusk-fire`, and the `sleep-` slug is the old
+    // section name — see `whereYouStay` in wonder.ts, retitled 10 Sep.
+    //
+    // ⚠ 900px WIDE, the smallest in the set — a card is ~660 CSS px at 1440,
+    // so this is the one frame with no retina headroom. Not upscaled: the
+    // master is not in this tree (brand/photography/wonder holds one file),
+    // and inventing pixels is not a fix. Flagged for a re-export from the
+    // original rather than worked around here.
     id: "sleep-tent",
     bucket: "work",
     expects: "Pegging out a tent at camp, mallet in hand, in open woodland",
-    src: `${WONDER}/wonder-sleep-tent.jpg`,
+    src: `${WONDER}/wonder-stay-pitching.webp`,
     tone: "roasted",
   },
   {
@@ -387,11 +447,18 @@ export const whereYouStayMedia: MediaSlot[] = [
     tone: "charcoal",
   },
   {
+    // Gamma 0.90 c×1.08 s×1.22 + unsharp, warmed b×0.98 — 75/0.29 → 81/0.35
+    // (11 Sep 2026). A light hand on purpose: the fire is the subject and
+    // the light really is going, so this is graded to sit in the run rather
+    // than to become a brighter evening than it was. Webp and renamed off
+    // the retired `sleep-` slug with `stay-pitching`, above.
+    //
+    // ⚠ 1000px wide — see the headroom note on `sleep-tent`.
     id: "sleep-dusk",
     bucket: "country",
     expects:
       "Camp at dusk — three tents, a group around the fire as the light goes",
-    src: `${WONDER}/wonder-sleep-campfire.jpg`,
+    src: `${WONDER}/wonder-stay-dusk-fire.webp`,
     tone: "midnight",
   },
   {
@@ -437,7 +504,22 @@ export const whatItIsLikeSlot: MediaSlot = {
   tone: "evergreen",
 };
 
-/** YOUR HOSTS — one 400px card. */
+/**
+ * YOUR HOSTS — one 400px card.
+ *
+ * KEPT AS SHOT, and a replacement is being asked for (August, 11 September
+ * 2026: "let's keep this one, but we will tell the client to send us a team
+ * photo similar to this"). So this is the frame the section ships with and
+ * not a placeholder — nothing here waits on the request, and if the client's
+ * photo arrives it lands as a NEW filename rather than an overwrite, for the
+ * next/image cache reason recorded on `whatItIsLikeSlot`.
+ *
+ * ⚠ `hostsPeople` BELOW IS POSITIONAL and belongs to THIS frame: three sets
+ * of percentage coordinates over three people standing where they stand. A
+ * replacement photograph invalidates it outright — the names would land on
+ * whoever happens to be at those percentages. Re-make it against the new
+ * frame or drop it; do not carry the numbers across.
+ */
 export const hostsSlot: MediaSlot = {
   id: "wonder-hosts",
   bucket: "work",

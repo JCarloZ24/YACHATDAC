@@ -14,6 +14,7 @@ import {
   vessels,
   whatItTakes,
 } from "@/lib/motion/recipes";
+import { createWaveRoll } from "@/lib/motion/wave-roll";
 
 /**
  * /living-work — the page’s motion script. Verb: ACCUMULATES.
@@ -60,6 +61,13 @@ export function V2LivingWorkMotion() {
       };
 
       wire(find("hero"), (el) => fullBleedOpen(el, 100));
+      // The canvas crest rising over the held hero — About's wave motion,
+      // scrubbed across the seam block's approach (one hero's height of
+      // scroll). Its own element and its own registration: the wave belongs
+      // to neither section's composition, and neither could carry it anyway —
+      // §01 is sticky and §02 is pinned. Grammar: "a change of ground",
+      // rolling wave / SCR-11.
+      wire(find("seam"), (el) => createWaveRoll(el, "lw-wave"));
       wire(find("aperture"), (el) => apertureSequence(el, 400));
       wire(find("challenges"), (el) =>
         // bone → dust → dry earth. The ground dries out while the section is

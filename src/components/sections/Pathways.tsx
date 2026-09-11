@@ -95,7 +95,31 @@ export function Pathways() {
                   {/* Frame grade: the photograph is held, and the mark sits
                       over its top corner exactly as the Invitation's does. */}
                   <div className="relative aspect-[5/4] max-h-[34svh] overflow-hidden rounded-[20px] lg:max-h-[40svh]">
-                    <Image src={media.src} alt="" fill sizes="(min-width: 1024px) 28vw, 90vw"
+                    {/* ⚠ `sizes` IS NOT THE CARD WIDTH, and reading it as one
+                        is what under-served these for two days (fixed 11
+                        September 2026). `object-cover` scales a photograph
+                        until its SHORT axis fills the box and crops the long
+                        one, so the width actually PAINTED is the box's
+                        HEIGHT times the source's aspect — not the box's own
+                        width. All four sources are 1.897:1 in a 5:4 box, so:
+                        boxW x 0.8 x 1.897 = boxW x 1.518. At `lg` the card is
+                        21vw, so the browser paints 32vw of photograph; at
+                        `sm` 46vw becomes 70vw. Below `sm` the `max-h-[34svh]`
+                        cap bites first — 238px of height on a 375x700 phone,
+                        so 451 CSS px, i.e. 120vw. Over 100vw is legal and
+                        correct: the crop really is wider than the screen.
+
+                        The old value was 28vw at every width, which was the
+                        card's OLD basis (the comment above records the move to
+                        21vw) rather than any painted width. Two errors that
+                        happened to partly cancel. */}
+                    <Image src={media.src} alt="" fill
+                      sizes="(min-width: 1024px) 32vw, (min-width: 640px) 70vw, 120vw"
+                      /* 85, not the default 75: the same call The Record's
+                         cards made (next.config.ts allowlists it) and for the
+                         same reason — a heavy cover crop magnifies whatever
+                         softening the encoder does. */
+                      quality={85}
                       className="object-cover" style={{ objectPosition: media.position }} />
                     <Image src={media.icon} alt="" width={45} height={42}
                       className="absolute left-6 top-6 h-[42px] w-[45px] object-contain" />

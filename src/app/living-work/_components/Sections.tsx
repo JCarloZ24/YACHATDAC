@@ -3,7 +3,7 @@ import Link from "next/link";
 import { photoById } from "@/content/kit";
 import { FadeIn } from "@/components/motion/text/FadeIn";
 import { EditorialNote } from "@/components/ui/EditorialNote";
-import { SeamGlyph } from "@/components/ui/Furniture";
+import { SeamGlyph, WaveDivider } from "@/components/ui/Furniture";
 import { SignupField } from "@/components/ui/SignupField";
 import { RangerCarousel } from "./RangerCarousel";
 import {
@@ -135,7 +135,16 @@ export function LivingWorkHero() {
       id="hero"
       data-lw="hero"
       data-nav-hero
-      className="relative -mb-0.5 flex min-h-svh items-end overflow-hidden bg-charcoal"
+      /* FULL BLEED SINCE 11 SEP 2026 (August: "apply the same wave from about
+         to living work … so the hero image will be full bleed").
+         `sticky top-0`, and the wave is GONE from this section — it now lives
+         at the top of §02 and rides up over the held photograph, which is the
+         arrangement /wonder's hero already has. At rest the picture fills the
+         screen with nothing carved out of its foot.
+         `-mb-0.5` went with the wave: it existed only to cover the seam where
+         the GPU rasterised the wave's own compositing layer a device pixel
+         short, and there is no wave in this section to leave one. */
+      className="relative sticky top-0 flex min-h-svh items-end overflow-hidden bg-charcoal"
     >
       {/* 1.40.2 — the subject sits right of centre and the headline never
           crosses her.
@@ -287,39 +296,56 @@ export function LivingWorkHero() {
         </FadeIn>
       </div>
 
-      {/* Marc's divider hands the photograph off into the page. The path's
-          closing corner is pushed past the box on the left (x=-4) and below it
-          (y=120): the supplied asset closed at x=1, which left a one-pixel
-          column of photograph beside the fill at the left edge. */}
-      <div
-        data-wave
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 text-canvas"
-      >
-        {/* viewBox bottom sits just above where the path bottoms out (y≈105.3)
-            so the fill overdraws the box's lower edge. The path's shallowest
-            point (x=0, y≈93) leaves only ~11 units of flat fill above the
-            box's bottom, so the seam cover below must stay thinner than that
-            or it shows as a flat step at the left edge — hence the section's
-            2px overlap into the next, and nothing taller. */}
-        <svg
-          viewBox="0 0 1442 104"
-          preserveAspectRatio="none"
-          className="block h-[9vw] w-full"
-        >
-          <path
-            d="M1470 8C1427.5 -2.1 1377.2 -2.7 1334 6.6c-63.6 13.6-109.7 36-176.5 44.2-44.4 5.5-85.4 1.5-129.4-.3-59-2.3-111-.6-167.3 9.8-52.9 9.7-104.2 22.3-159.8 27.2-67.6 6-136.5-3.7-201.6-15.2C434.4 62 369.3 48.6 300.8 46.8 195.6 44 95.7 68.9 1 93.1L-4 94.4V120h1480V8Z"
-            fill="currentColor"
-          />
-        </svg>
-      </div>
-      {/* Seam: the motion pass leaves a transform on [data-wave], promoting it
-          to its own compositing layer, and the GPU can rasterise that layer's
-          bottom edge a device pixel short of the section edge. The section's
-          -mb-0.5 pulls the next section 2px up over this edge so the canvas
-          fills overlap. 2px, not more: the wave's left edge has ~4px of flat
-          fill on phones and anything taller reads as a step. */}
+      {/* ⚠ THE HERO'S WAVE USED TO BE HERE and is now §02's — see the
+          section's own note above, and `LivingWorkAperture` for where it went.
+          It was a hand-inlined copy of Marc's path rather than `WaveDivider`,
+          which is why this page had no `data-wave-ink` strip to roll; the
+          shared component supplies one. `fullBleedOpen` looks the wave up with
+          `if (wave)` and simply skips the `waveHandoff` beat now that there is
+          none — the recipe is untouched, and /partnerships and §04, which do
+          still carry a `[data-wave]`, are unaffected. */}
     </section>
+  );
+}
+
+/* -------------------------------------------------------------------------
+   01b — the seam
+   ------------------------------------------------------------------------- */
+
+/**
+ * The §01 → §02 join, as its own block (11 September 2026, August: "apply the
+ * same wave from about to living work … so the hero image will be full bleed").
+ *
+ * WHY IT IS NOT PART OF EITHER SECTION, which is the whole design of it:
+ *
+ *  · NOT §01. The hero is `sticky top-0` so that the picture is held full
+ *    bleed while the page moves over it. A wave inside it would be held too
+ *    and would never cross the screen.
+ *  · NOT §02. `apertureSequence` pins that section for its 400vh span, so
+ *    anything seated at its top stops at the fold and stays there. Seated as
+ *    a transparent lead-in band it froze at the top of the screen and left the
+ *    sticky hero visible above the countdown for the entire sequence — which
+ *    is exactly the report this block answers.
+ *
+ * So the seam is an ordinary unpinned element between the two: TRANSPARENT, so
+ * the crest reads against the photograph, and exactly the wave's own height,
+ * so at rest it sits wholly below the fold and §01 is uncut. It scrolls
+ * normally — the crest rides up over the held hero and leaves the screen —
+ * and §02's canvas then starts at the wave's foot with a ground of its own,
+ * edge to edge, nothing showing through.
+ *
+ * `seat="inline"` for the same reason: the default overhang would pull the
+ * ink up out of this block and back over the photograph.
+ *
+ * The motion is About's crest — swell and sideways roll, scrubbed across this
+ * block's approach, which is one hero's height of scroll. NOT About's seam
+ * deck; see lib/motion/wave-roll.ts for where that line is drawn.
+ */
+export function LivingWorkSeam() {
+  return (
+    <div data-lw="seam" aria-hidden className="relative h-10 sm:h-26">
+      <WaveDivider ground="var(--color-canvas)" hook="lw-wave" seat="inline" />
+    </div>
   );
 }
 
@@ -367,6 +393,16 @@ export function LivingWorkAperture() {
 
          `lg:block` hands the desktop layout back untouched, where the empty
          space below IS the composition: it is where the theater opens. */
+      /* ⚠ THIS SECTION IS PINNED (`apertureSequence`, pin: true) AND MAY NOT
+         CARRY THE SEAM. A transparent lead-in band was tried here on 11 Sep
+         2026 — Wonder's §02 arrangement — and it fails on this page for a
+         reason Wonder does not have: Wonder's facts section SCROLLS while an
+         inner wrapper sticks, so its band crosses the fold and leaves. This
+         one is pinned at `top top` for its whole 400vh span, so the band
+         froze at the top of the screen and the sticky hero showed through it
+         behind the countdown for the entire sequence (reported the same day).
+         The seam lives in `LivingWorkSeam`, an unpinned block between §01 and
+         §02, and this section keeps its own ground edge to edge. */
       className="relative flex min-h-svh flex-col justify-center bg-canvas lg:block"
     >
       {/* The artist's rings as ground.

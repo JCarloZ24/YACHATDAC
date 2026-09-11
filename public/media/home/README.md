@@ -1,6 +1,6 @@
 # Homepage collage derivatives
 
-*Last updated: 9 September 2026*
+*Last updated: 11 September 2026*
 
 ## Replacement painting
 
@@ -62,3 +62,38 @@ Origin: Figma YACHATDAC V2, Homepage Prototype 3371:45208-46472. `derivatives/tr
 
 ### Invitation - 9 September 2026
 Origin: Figma 7XBvi0Mdbtmym10nkF9IGp, frame 3371:41740. Photos sandstone-overhang-group.webp (3371:41802), verandah-table-people.webp (3371:41842), person-beside-smoking-fire.webp (3371:41865) are exact supplied fills converted with Sharp to WebP quality 88, maximum width 1000 without enlargement. Credits and identities unconfirmed; use authorised by user direction/F8. All three use frame motion. Fire photograph accompanies Caring for Country only. No generated photography. invitation-ring.svg (3371:41805), invitation-spiral.svg (3371:41845), invitation-boomerang.svg (3371:41868), invitation-chevron.svg (I3371:41841;4179:9009) are unchanged Figma exports.
+
+### Pathway cards and offer plates repointed to the library - 11 September 2026
+
+User direction: *"let's optimize the images in homepage for better quality."* The four pathway
+cards and the four closing-offer plates no longer use `derivatives/`. They point straight at the
+masters in `public/media/library/`, which are 2000-3840px and already served to other routes.
+
+**What was wrong.** Those eight slots were 480-520px WebPs, 7-38 KB each. Both sets are `fill` +
+`object-cover`, and cover scales a photograph until its *short* axis fills the box and crops the
+long one - so the width actually painted is the box's HEIGHT times the source's aspect, not the
+box's width. A 1.897:1 photograph in the pathway card's 5:4 box is painted 459 CSS px wide at a
+1440 viewport, 918 at DPR 2. A 480px file into 918px of box is a 1.9x upscale, and that is the
+softness. The declared `sizes` had the same error and has been corrected in all three components
+(the Invitation included); the offer plates now *derive* theirs from the slot geometry and the
+recorded pixel size rather than declaring a flat figure.
+
+**Why it costs nothing.** `next.config.ts` has image optimisation on (AVIF/WebP), so `next/image`
+serves a resized device bucket and the file behind it is only a ceiling. Measured against the dev
+server: asking the old derivative for 1080px returns 480px - the ceiling - at 12.8 KB; the master
+returns a real 1080px AVIF at 49 KB. No bytes added to git, no masters copied, one layer removed.
+
+**Verified pure downscales before repointing.** Every derivative's aspect matched its master to
+within 0.002, and SSIM against a fresh downscale of the master ran 0.92-0.98 evenly across the
+channels - WebP loss at 30 KB, not a colour move. Framing is unchanged, so this is not a design
+edit. ⚠ Re-run that check before repointing anything else: a derivative that *is* a crop cannot be
+swapped for its master without changing what the picture shows.
+
+The derivative files stay on disk - `homeHeroFrames` still uses all eight for the /homepagev2
+collage, where they are 100px plates and the small file is the right one.
+
+⚠ **The Invitation's three are NOT fixed and cannot be from here.** They are the Figma fills
+recorded above, capped at 1000px with no master in this repo; an SSIM sweep of all 126 library
+images scored ~0.10 against each, i.e. no match. `person-beside-smoking-fire` is 802px and is
+already at its ceiling. Fixing them means re-downloading the fills from node 3371:41740 at full
+resolution.

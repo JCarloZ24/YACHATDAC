@@ -199,10 +199,33 @@ Served copies, in `public/media/home/derivatives/`:
 
 | file | scale | size | bitrate | who gets it |
 | --- | --- | --- | --- | --- |
-| `home-loader-960.mp4` | 960×540 | **4.35 MB** | 790 kbps + 128 kbps AAC | phones, data saver, 2g/3g |
-| `home-loader-1440.mp4` | 1440×810 | **11.31 MB** | 2275 kbps + 128 kbps AAC | laptops |
-| `home-loader-1920.mp4` | 1920×1080 | **15.97 MB** | 3271 kbps + 128 kbps AAC | wide screens on a fast link |
+| `home-loader-960.webm` | 960×540 | **3.65 MB** | 700 kbps VP9 + 80 kbps Opus | phones, data saver, 2g/3g |
+| `home-loader-1440.webm` | 1440×810 | **7.47 MB** | 1500 kbps VP9 + 96 kbps Opus | laptops |
+| `home-loader-1920.webm` | 1920×1080 | **10.74 MB** | 2200 kbps VP9 + 96 kbps Opus | wide screens on a fast link |
 | `home-loader-poster.webp` | 1280 wide | 0.11 MB | — | first paint, and the whole of it under reduced motion |
+
+**⚠ WEBM ONLY FROM 11 September 2026.** The three H.264 tiers listed here until this
+afternoon — 4.35 / 11.31 / 15.97 MB at 790 / 2275 / 3271 kbps + 128 kbps AAC — were added as
+WebM *siblings* (August: *"could we also make the home-loader webm?"*) and then **deleted**
+hours later (*"are the home-loader mp4s still in use? if not we should delete them"*), following
+`wonder-media.ts`, which made the same move the same day. **31.6 MiB of MP4 became 21.9 MiB of
+WebM**, the same pixels and the same 39.297s at ~0.65× the bitrate — that ratio is the recipe,
+not these numbers.
+
+**The universal fallback went with them, and it costs more here than on Wonder.**
+`home-loader.ts` assigns `video.src` directly, so there is no `<source>` list and no automatic
+second choice: a browser without VP9 takes the `error` path, the count ramps on the clock in
+1.2s and the door opens. Wonder degrades to a still poster and keeps its page; this degrades to
+**no opening at all** — entered, but not through the film. Judged safe on Wonder's evidence:
+macOS Safari has played WebM/VP9 since 14.1, iOS Safari since 15, and the live cost is decode
+rather than compatibility (hardware VP9 starts at the A14).
+
+**⚠⚠ SECOND LOSSY GENERATION.** Unlike Wonder's, these were transcoded from the *served* mp4s,
+because `Main_V2_16.mp4` is gitignored and was not on the machine. Invisible at these bitrates
+— but there is no longer a first-generation file beside them, so: **when the master is to hand
+again, re-encode from it.** Commands in `brand/video/README.md`. All three verified at the full
+39.297s; a truncated encode reads as a film that "cuts down", because the count is scrubbed
+from `video.duration`.
 
 **⚠ RE-ENCODED 11 September 2026** (August: *"fix the video quality just like what we did on
 Wonder"*), and the table above is the new set — the 10 September pair was 1.78 / 3.55 MB at

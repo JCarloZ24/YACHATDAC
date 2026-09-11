@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { register, start } from "@/lib/motion-controller";
-import { createRecordWave } from "@/lib/motion/record-wave";
+import { createWaveRoll } from "@/lib/motion/wave-roll";
 import { createRecordMasonry } from "@/lib/motion/record-masonry";
 import { createRecordCardHover } from "@/lib/motion/record-card-hover";
 import { browserCopy, type RecordItem, type RecordSource } from "@/content/the-record";
@@ -57,7 +57,7 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
   const router = useRouter();
   useEffect(() => {
     if (!root.current) return;
-    const unregister = register(createRecordWave(root.current));
+    const unregister = register(createWaveRoll(root.current, "record-wave"));
     const unregisterMasonry = register(createRecordMasonry(root.current));
     const unregisterHover = register(createRecordCardHover(root.current));
     start();

@@ -12,19 +12,35 @@ type Connection = { saveData?: boolean; effectiveType?: string; downlink?: numbe
 /**
  * Is this a link we should not spend megabytes of somebody's data plan on
  * uninvited? Same test HeroVideo.tsx applies, and for the same reason — data
- * saver on, a 2g/3g effective type, or a measured downlink under 1.5 Mb/s.
- * Safari and Firefox do not implement the API and always answer no.
+ * saver on, or a 2g/3g effective type. Safari and Firefox do not implement
+ * the API and always answer no.
+ *
+ * ⚠ `downlink < 1.5` WAS THE THIRD CLAUSE AND IS GONE (11 September 2026).
+ * It was reported on /wonder — the hero showing "Play the film" on a fast
+ * connection — and the full argument is in HeroVideo.tsx's copy of this
+ * function. Short version: `downlink` is a rolling estimate of recently
+ * observed throughput, seeded low and warming up over the first seconds of a
+ * page view, so at load it reads under 1.5 on fibre, on a LAN and on
+ * localhost. The cost HERE was larger than on Wonder: this gate does not
+ * just swap a poster for a film, it skips the site's opening sequence
+ * outright and opens the door at the held pace, so a mis-read deleted the
+ * whole intro for that visit.
+ *
+ * ⚠ KEEP THE TWO FUNCTIONS IN STEP. They are deliberately separate — this
+ * module is not a React component and HeroVideo is not a GSAP module — but
+ * they answer the same question and a change to one is a change to both.
  */
 function slowLink(): boolean {
   const c = (navigator as Navigator & { connection?: Connection }).connection;
   return (
-    c?.saveData === true ||
-    /(^|-)(2g|3g)$/.test(c?.effectiveType ?? "") ||
-    (c?.downlink !== undefined && c.downlink < 1.5)
+    c?.saveData === true || /(^|-)(2g|3g)$/.test(c?.effectiveType ?? "")
   );
 }
 
-/** Every tier is the same 16:9 film at a different width. */
+/** Every tier is the same 16:9 film at a different width — and, since
+ *  11 September 2026, in one container. The `canPlayType` probe that used to
+ *  choose between WebM and MP4 went with the MP4s; see homepage-media.ts for
+ *  what that fallback was worth and what its loss costs. */
 const TIER_WIDTHS = { small: 960, medium: 1440, large: 1920 } as const;
 const SOURCE_ASPECT = 16 / 9;
 
@@ -69,16 +85,45 @@ function pickTier(cover: HTMLElement): string {
 }
 
 /**
+ * What the browser will say to an audible autoplay, asked rather than found
+ * out. Firefox and Chrome 118+ implement it; Safari does not, and an engine
+ * that cannot answer returns `undefined` — which is an unknown, not a no.
+ * Only the literal "disallowed" is treated as one. See the call site for why
+ * the difference is worth a function: it is a label flicker on the first
+ * screen of the site.
+ */
+type AutoplayPolicy = "allowed" | "allowed-muted" | "disallowed" | undefined;
+
+function autoplayPolicy(video: HTMLVideoElement): AutoplayPolicy {
+  const nav = navigator as Navigator & {
+    getAutoplayPolicy?: (target: HTMLMediaElement) => AutoplayPolicy;
+  };
+  try {
+    return nav.getAutoplayPolicy?.(video);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * SOUND — user direction, 11 September 2026: "sound should be on by default,
  * but provide the sound off option right away."
  *
  * Both halves of that are load-bearing and they pull against each other.
  * Browsers refuse to autoplay audible video until the visitor has interacted
- * with the page, so "on by default" cannot be a promise — it can only be an
- * ATTEMPT, made first, with a silent fallback that keeps the film running.
- * Wonder solved the same problem the other way round (silent always, sound on
- * request) because its film opens under a headline someone is reading; this
- * one IS the page, so it asks.
+ * with the page, so "on by default" cannot be a promise on the first frame —
+ * it can only be an ATTEMPT, made first, with a silent fallback that keeps the
+ * film running. Wonder solved the same problem the other way round (silent
+ * always, sound on request) because its film opens under a headline someone is
+ * reading; this one IS the page, so it asks.
+ *
+ * ⚠ AND, from later the same day ("on start sound on by default"), it KEEPS
+ * asking. A refused attempt arms `armSound()`, and the reader's first gesture
+ * anywhere on the cover brings the bed up — because a gesture is precisely
+ * what the browser was holding out for. Without that, "by default" survived
+ * only on browsers that already knew the origin, which on localhost is none of
+ * them, and everywhere else it quietly became "press this button". The
+ * fallback is now where the default WAITS, not where it gives up.
  *
  * The order matters: unmuted `play()` is tried first, and only its rejection
  * turns `muted` on and retries. Doing it the safe way round — start muted,
@@ -90,12 +135,45 @@ function pickTier(cover: HTMLElement): string {
  * under an interface, and the visitor's own system volume takes it from there.
  */
 const SOUND_MAX = 0.8;
-/** Long enough to be a fade rather than a switch; short enough to be under
- *  the first bar. Wonder's fade-in is 220ms because its opening guitar scale
- *  is the quietest passage in the file and a long ramp fell on top of it;
- *  this bed opens at level, so it gets an ordinary one. */
-const FADE_IN_MS = 400;
+/**
+ * ⚠ 400ms UNTIL 11 September 2026 (August: "add fade in when sound on"). There
+ * WAS a fade at 400 — it simply could not be heard as one, for two compounding
+ * reasons, and both had to move.
+ *
+ * The length is the smaller half. Wonder gets away with 220ms because its film
+ * opens on a quiet guitar scale, so the first bar does the fading and a long
+ * ramp lands on top of it; this bed opens AT LEVEL, which is exactly the case
+ * that needs the ramp to be long enough to notice. A second is where a fade
+ * stops being a de-click and starts being a gesture.
+ *
+ * The bigger half is `LOUDNESS_GAMMA` below — a second of LINEAR volume still
+ * sounds like a switch.
+ *
+ * FADE_OUT_MS is untouched and still tied to the cover's exit tween; see
+ * leave().
+ */
+const FADE_IN_MS = 1000;
 const FADE_OUT_MS = 600;
+
+/**
+ * Perceived loudness rises roughly as amplitude^0.6 (Stevens' power law), and
+ * `video.volume` is AMPLITUDE. So a straight-line ramp from 0 to 0.8 spends
+ * most of its audible travel in the first fifth of its duration and then
+ * crawls: it is heard as an abrupt arrival followed by nothing, which is why
+ * "there is a 400ms fade here" and "there is no fade" were both true.
+ *
+ * Interpolating in perceived-loudness space instead — raise to 1/γ, travel in
+ * a straight line, raise back — makes the loudness the ear tracks move evenly
+ * across the whole duration. 1.7 is the working inverse of 0.6; the exact
+ * exponent is argued over and does not need settling, because anything in the
+ * 1.5-2 range fixes the shape and nothing outside it is audibly better.
+ *
+ * It is applied to BOTH directions and reads the live `from`, so an interrupted
+ * ramp (off, then on again mid-fade) resumes on the curve rather than jumping.
+ */
+const LOUDNESS_GAMMA = 1.7;
+const asHeard = (amplitude: number) => Math.pow(Math.max(0, amplitude), 1 / LOUDNESS_GAMMA);
+const asVolume = (heard: number) => Math.pow(Math.max(0, heard), LOUDNESS_GAMMA);
 
 /** How long a stalled film gets before we stop pretending and open the door. */
 const START_GRACE_MS = 3000;
@@ -171,6 +249,21 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
 
       let finished = false;
       let opened = false;
+      /**
+       * EVERY listener this init adds hangs off one signal, aborted in
+       * finish().
+       *
+       * ⚠ Added 11 September 2026 to close a real leak. The click handlers
+       * below were attached inside `gsap.context`, and context.revert() only
+       * undoes ANIMATIONS — it has never removed an addEventListener. So a
+       * destroyed instance kept answering clicks on a cover a live instance
+       * now owned. React StrictMode makes that the NORMAL case in dev (mount,
+       * destroy, mount), which is where it was found: two sound handlers on
+       * one button, two play() calls in one frame, and the AbortError that
+       * produced used to mute the film (see setSound).
+       */
+      const listeners = new AbortController();
+      const bound = { signal: listeners.signal };
       let timeline: gsap.core.Timeline | undefined;
       let frame = 0;
       let ramp: gsap.core.Tween | undefined;
@@ -193,19 +286,25 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
       };
 
       const rampVolume = (target: number, done?: () => void) => {
-        if (!video) return;
+        if (!video || finished) return;
         cancelFade();
         const from = video.volume;
         // Clamped to the ceiling as well as to 0-1, so no caller can reach
         // full scale by passing 1.
         const to = Math.min(SOUND_MAX, Math.max(0, target));
         const ms = to > from ? FADE_IN_MS : FADE_OUT_MS;
+        // The two ends in perceived-loudness space — see LOUDNESS_GAMMA. `k`
+        // travels between these in a straight line and the result is raised
+        // back to an amplitude on the way to `video.volume`.
+        const fromHeard = asHeard(from);
+        const toHeard = asHeard(to);
         // rAF's timestamp can precede performance.now() by a frame, so the
         // fraction is clamped at both ends — a negative k throws IndexSizeError.
         const started = performance.now();
         const step = (now: number) => {
           const k = Math.min(1, Math.max(0, (now - started) / ms));
-          video.volume = Math.min(1, Math.max(0, from + (to - from) * k));
+          const level = asVolume(fromHeard + (toHeard - fromHeard) * k);
+          video.volume = Math.min(1, Math.max(0, level));
           if (k < 1) {
             fadeFrame = window.requestAnimationFrame(step);
           } else {
@@ -224,19 +323,41 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
         soundButton?.setAttribute("aria-pressed", String(on));
       };
 
-      const setSound = (on: boolean) => {
-        if (!video) return;
-        if (on) {
+      const setSound = (wanted: boolean) => {
+        if (!video || finished) return;
+        if (wanted) {
           video.volume = 0;
           video.muted = false;
           showSound(true);
           rampVolume(SOUND_MAX);
-          // A play() that resolves is the only proof the browser accepted an
-          // audible stream; a rejection means the policy said no and the
-          // control must go back to telling the truth.
-          void video.play().catch(() => {
+          // ⚠ A REJECTION HERE IS NOT PROOF THE BROWSER REFUSED SOUND, and
+          // treating it as one is what made "sound off → sound on" fade
+          // straight back out again (August, 11 September 2026). By the time
+          // this control can be pressed the element is already PLAYING —
+          // turning sound off never paused it — and a redundant play() on a
+          // playing element rejects with AbortError as soon as anything else
+          // touches it in the same frame. The old catch muted on any
+          // rejection at all, so one AbortError undid the press the reader
+          // had just made, and the 600ms fade-out made it look deliberate.
+          //
+          // So the fix is in the CATCH, not in whether we call: only
+          // surrender to the one error that means the policy said no.
+          // Wonder's toggle (HeroVideo.tsx:505) swallows the rejection
+          // outright; the fallback is kept here because this control can also
+          // be pressed while the first pass is still being refused.
+          //
+          // ⚠ And the call itself is UNCONDITIONAL, including on an element
+          // that is already playing. Chrome's answer to being unmuted without
+          // user activation is to PAUSE the element — so the one case where
+          // skipping a redundant play() looked like a saving is exactly the
+          // case where it is load-bearing.
+          void video.play().catch((error: DOMException) => {
+            if (finished || error?.name !== "NotAllowedError") return;
+            cancelFade();
             video.muted = true;
+            video.volume = SOUND_MAX;
             showSound(false);
+            armSound();
             void video.play().catch(() => {});
           });
           return;
@@ -247,6 +368,61 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
           video.volume = SOUND_MAX;
         });
       };
+
+      /* ── "On by default", kept as a promise ────────────────────────────
+         August, 11 September 2026: "on start sound on by default." It already
+         ASKED first — but on a browser that has not yet seen an interaction
+         on this origin the ask is refused, the film falls back to a muted
+         pass, and the reader is left pressing a button to get the default
+         they were promised. On localhost, where nobody has any media
+         engagement history, that refusal is the normal outcome.
+
+         So the intent is HELD rather than abandoned: after a refusal, the
+         reader's very first gesture anywhere on the cover redeems it, and the
+         film comes up through the same 400ms fade an accepted autoplay would
+         have used. This is not a second policy — a gesture is exactly what
+         the browser was waiting for, and the cover is a full-screen overlay
+         where the only thing under the pointer is the film itself.
+
+         ⚠ A press on any BUTTON disarms instead of redeeming, and that is the
+         whole reason this is not three lines. `pointerdown` fires before
+         `click`, so without it a reader pressing a control that reads "Sound
+         off" would have this turn sound ON, and their own click would then
+         toggle it straight back off — the fault they reported this morning,
+         rebuilt from the other end. Escape and Tab are ignored for the same
+         reason: Escape is an exit, and nobody tabbing to a control is asking
+         for audio. */
+      let armed = false;
+      /** Arm, or re-arm after an attempt that the browser still would not take.
+       *  A flag, NOT a fresh pair of listeners — those are bound once below, or
+       *  every refusal would leave another two behind. */
+      const armSound = () => {
+        if (!finished) armed = true;
+      };
+      const onGesture = (event: Event) => {
+        if (!armed || finished) return;
+        // Escape is an exit and Tab is navigation; neither is a request for
+        // audio, and Escape in particular is about to dismiss the cover.
+        if (event instanceof KeyboardEvent && (event.key === "Escape" || event.key === "Tab")) return;
+        armed = false;
+        // Their own press speaks for itself — see the block comment above.
+        if ((event.target as HTMLElement | null)?.closest("button")) return;
+        setSound(true);
+      };
+      /* FOUR events, because "what counts as a user gesture" is not agreed.
+         Chrome activates on `pointerdown`; WebKit has historically only
+         counted `touchend` and `click`, so a pointerdown-triggered unmute on
+         an iPhone would be refused and this would look broken on the
+         platform least able to spare it. Whichever arrives first
+         disarms the rest, and a refusal re-arms — which is why these are bound
+         once and gated on a flag rather than added per attempt.
+
+         ⚠ Scroll and wheel are NOT here and must not be added: no engine
+         counts them as activation, so they would spend the one shot on a
+         gesture that cannot redeem it. */
+      for (const type of ["pointerdown", "touchend", "click", "keydown"]) {
+        window.addEventListener(type, onGesture, bound);
+      }
 
       /** Scrub the count and the wave to an absolute position. */
       const setProgress = (p: number) => {
@@ -321,8 +497,9 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
         }
         cover.hidden = true;
         root.style.overflow = previousOverflow;
-        window.removeEventListener("keydown", onKey);
-        preference.removeEventListener("change", onPreference);
+        // One abort for the lot — window, media query, buttons and the video
+        // element. See the AbortController above for why the buttons matter.
+        listeners.abort();
       };
 
       /** The exit: fade the cover, then hand off. */
@@ -369,8 +546,8 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
       };
 
       release = finish;
-      window.addEventListener("keydown", onKey);
-      preference.addEventListener("change", onPreference);
+      window.addEventListener("keydown", onKey, bound);
+      preference.addEventListener("change", onPreference, bound);
 
       // Hard cap, independent of GSAP and of the film: a paused ticker, a
       // background tab or a half-delivered file must never leave the reader
@@ -386,9 +563,9 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
         gsap.to(cover.querySelectorAll("[data-loader-art], [data-loader-skip], [data-loader-sound]"),
           { opacity: 1, duration: 0.4, delay: 0.14 });
 
-        skip?.addEventListener("click", () => rampTo100(SKIP_RAMP_S));
-        enter?.addEventListener("click", leave);
-        soundButton?.addEventListener("click", () => setSound(!soundOn));
+        skip?.addEventListener("click", () => rampTo100(SKIP_RAMP_S), bound);
+        enter?.addEventListener("click", leave, bound);
+        soundButton?.addEventListener("click", () => setSound(!soundOn), bound);
 
         // NOTHING IS FETCHED WHERE NOTHING WILL PLAY. On a data-saver or 2g/3g
         // link the film is the wrong 3 MB to spend, and without the film there
@@ -438,11 +615,11 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
         video.addEventListener("error", () => {
           soundButton?.remove();
           rampTo100(HELD_RAMP_S);
-        });
+        }, bound);
         video.addEventListener("playing", () => {
           window.clearTimeout(graceTimer);
           frame = window.requestAnimationFrame(tick);
-        }, { once: true });
+        }, { once: true, signal: listeners.signal });
 
         // If it has not started by now it is not going to feel like a film.
         graceTimer = window.setTimeout(() => {
@@ -463,15 +640,41 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
         // the round trip and corrects itself on rejection; `video.volume` is
         // raised by the ramp, not set here, so an accepted stream still fades
         // in rather than starting at level.
+        //
+        // ⚠ UNLESS THE BROWSER HAS ALREADY TOLD US. Where `getAutoplayPolicy`
+        // exists (Firefox, Chrome 118+) the answer is known before asking, and
+        // asking anyway costs a visible flicker: the control reads "Sound on"
+        // for the length of a promise round trip and then corrects itself to
+        // "Sound off" in front of the reader, on the first screen of the site.
+        // So a `disallowed` answer goes straight to the muted pass with the
+        // gesture armed — the same outcome, arrived at silently. Safari does
+        // not implement it and returns undefined, which is NOT a refusal: an
+        // unknown answer still gets asked, because that is where the attempt
+        // was always going to be decided by the try itself.
+        if (autoplayPolicy(video) === "disallowed") {
+          video.muted = true;
+          video.volume = SOUND_MAX;
+          showSound(false);
+          armSound();
+          void video.play().catch(() => rampTo100(HELD_RAMP_S));
+          return;
+        }
         video.volume = 0;
         video.muted = false;
         showSound(true);
         rampVolume(SOUND_MAX);
         void video.play().catch(() => {
+          // ⚠ `finished` first. This promise outlives the instance that made
+          // it, and a destroyed instance muting the element a live one has
+          // just unmuted is the same "sound went away on its own" fault the
+          // AbortController above closes from the other end.
+          if (finished) return;
           cancelFade();
           video.muted = true;
           video.volume = SOUND_MAX;
           showSound(false);
+          // Refused, not abandoned — the next gesture redeems it.
+          armSound();
           void video.play().catch(() => rampTo100(HELD_RAMP_S));
         });
       }, cover);

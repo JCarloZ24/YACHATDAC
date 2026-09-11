@@ -46,7 +46,21 @@ export function Invitation() {
             return (
               <Link key={card.href} href={card.href} data-invitation-card
                 className="home-invitation-card relative flex flex-col overflow-hidden rounded-[20px] bg-charcoal p-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas lg:p-10">
-                <Image src={media.src} alt="" fill sizes="(min-width: 1024px) 30vw, 80vw" className="object-cover" style={{ objectPosition: media.position }} />
+                {/* 45vw, not 30 (11 September 2026). Same correction as the
+                    pathway cards and the offer plates: `object-cover` paints
+                    the box's HEIGHT times the source's aspect whenever the
+                    source is the wider shape, so the measured 395x400 crop
+                    below is painted 604px wide for `verandah-table-people`
+                    (1.511:1) and 464 for the fire — not the 395 that 30vw was
+                    sizing for. 45vw covers the widest of the three at 1440.
+
+                    ⚠ THE GAIN HERE IS SMALL, and honestly so: unlike the other
+                    two sets these are Figma fill exports capped at 1000px with
+                    no master in the repo, so the source is the binding limit
+                    either way. `person-beside-smoking-fire` is 802px and is
+                    already at its ceiling. See homepage-media.ts for what
+                    fixing them properly would take. */}
+                <Image src={media.src} alt="" fill sizes="(min-width: 1024px) 45vw, 90vw" quality={85} className="object-cover" style={{ objectPosition: media.position }} />
                 {/* X5 media scrim — the palette's one sanctioned gradient, and
                     it has to be a gradient here because the copy moved up.
 

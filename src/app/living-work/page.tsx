@@ -10,6 +10,7 @@ import {
   LivingWorkInvitation,
   LivingWorkOutputs,
   LivingWorkRangers,
+  LivingWorkSeam,
   LivingWorkSpring,
   LivingWorkStreams,
 } from "./_components/Sections";
@@ -43,6 +44,10 @@ export default function LivingWorkPage() {
       <V2LivingWorkMotion />
       <div className="relative text-canvas">
         <LivingWorkHero />
+        {/* The §01 → §02 seam. Its own block, because the hero is sticky and
+            the aperture is pinned and neither can carry a wave that has to
+            cross the screen — see LivingWorkSeam. */}
+        <LivingWorkSeam />
         <LivingWorkAperture />
         <LivingWorkChallenges />
         <LivingWorkRangers />

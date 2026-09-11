@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { register, start } from "@/lib/motion-controller";
@@ -80,6 +80,10 @@ export function HomeLoader() {
           `src` in the markup — home-loader.ts attaches one only where the film
           is actually going to play, so a data-saver link and reduced motion
           never spend the bytes (the rule HeroVideo.tsx set on 9 September).
+          There are no `<source>` children either, and after 11 September 2026
+          nothing to put in them: the tiers are WebM only (homepage-media.ts),
+          so a browser without VP9 takes the `error` path rather than a second
+          format. A source list would also undo the held fetch.
           bg-night-black stays on the root beneath it: a film that fails to
           load leaves charcoal, which is the ground this screen always had.
 
@@ -252,29 +256,237 @@ export function HomeLoader() {
         </p>
         {/* Not BlobButton: that one requires an href and renders a Link, and
             this is an action, not navigation (see Signup.tsx — there is no
-            button variant). This is the auto-sizing inline-mask pattern the
-            homepage hero already uses, which also avoids BlobButton's
-            hard-coded 56x276 box — and the box is the point here, because the
-            height came down to 44px on user direction. Ochre ground, charcoal
-            label: 7.7 : 1.
+            button variant). It also avoids BlobButton's hard-coded 56x276 box
+            — and the box is the point here, because the height came down to
+            44px on user direction. Ochre ground, charcoal label: 7.7 : 1.
 
-            No focus-visible override here: globals.css engineers a measured
-            dual ring (charcoal outline inside a gold halo, worst ground
-            6.04 : 1) precisely for unknown backgrounds like a film, and a
-            local `outline-canvas` would have replaced the half that survives
-            on light frames. */}
-        <button
-          type="button"
-          data-loader-enter
-          aria-hidden="true"
-          tabIndex={-1}
-          className="pointer-events-none relative mt-8 inline-flex min-h-11 items-center gap-5 px-8 py-2.5 text-charcoal opacity-0 lg:mt-10"
-        >
-          <span aria-hidden="true" className="absolute inset-0 bg-ochre [mask-image:url('/artwork/blob-button.svg')] [mask-size:100%_100%]" />
-          <span className="eyebrow relative text-base leading-[1.4] tracking-normal">{homeLoader.enter}</span>
-          <span aria-hidden="true" className="relative text-2xl">&rsaquo;</span>
-        </button>
+            Everything home-loader.ts reaches for lives on the <button> inside
+            EnterButton below — `data-loader-enter`, the opacity it tweens, the
+            `pointer-events-none` it strips at 100%, the aria-hidden and
+            tabIndex it clears. Moving any of those is a change to that module
+            as well as to this one. */}
+        <EnterButton />
       </div>
     </div>
+  );
+}
+
+/** viewBox geometry of the supplied blob (public/artwork/blob-button.svg). */
+const BLOB_VB_W = 276;
+const BLOB_VB_H = 56;
+
+/**
+ * That blob's single path, inlined. ⚠ The SVG file is still the source of
+ * truth — a redrawn blob means re-copying this, not editing it here.
+ *
+ * It is inlined rather than used as a CSS mask (which is what this button did
+ * until 11 September 2026) because a mask can only clip ONE painted layer, and
+ * the water below needs the ochre base and the white fill clipped to the same
+ * shape as a single group. See the group's own comment for why that matters.
+ */
+const BLOB_BUTTON_D =
+  "M275.887 34.415C276.594 40.5689 273.913 44.8518 269.833 46.8634C263.812 49.8376 257.651 51.4707 251.045 52.3251C226.13 55.5697 54.3528 56.0954 29.2727 55.9872C22.5441 55.9548 9.87967 54.1049 4.53298 49.3029C0.57643 45.7663 -0.682099 39.9153 0.337885 34.0318C1.44835 27.64 2.69043 21.5077 4.81265 15.7324C8.66227 5.25242 22.4881 -0.230507 31.3636 0.00742848C52.0183 0.591452 219.335 2.06662 239.916 3.88358C249.285 4.71636 255.989 5.64647 264.396 10.6756C271.387 14.8611 274.752 24.4542 275.887 34.415Z";
+
+/**
+ * Displacement amplitude of the waterline, in viewBox units.
+ *
+ * ⚠ NOT ConnectButton's 14, and the difference is arithmetic rather than
+ * taste. Every filter number here is in VIEWBOX units, and the two blobs have
+ * different viewBoxes — 116x44 there, 276x56 here — so copying the values
+ * across unchanged would render the same effect about two and a half times
+ * finer on this button. These are that component's values rescaled by the
+ * ratio of the two boxes, so the water reads at the same size on screen:
+ *
+ *   scale        14 -> 18       (14/44 of the height, kept)
+ *   baseFreq x   0.09 -> 0.038  (x 116/276)
+ *   baseFreq y   0.13 -> 0.102  (x 44/56)
+ *   shimmer      0.035 0.16 -> 0.015 0.126
+ */
+const WATER_SCALE = 18;
+
+/**
+ * Covers the whole blob from any entry point: the box's diagonal (~282) plus
+ * the full displacement and a little. ConnectButton carries the argument for
+ * the margin — at bare diagonal the roughened edge falls back INSIDE the shape
+ * in places and the base shows through as a rim.
+ */
+const COVER_R = 282 + WATER_SCALE * 2 + 12;
+
+/**
+ * "Walk with us" — the door out of the opening film.
+ *
+ * THE HOVER, user direction 11 September 2026: "add hover effect on button,
+ * like the effect on connect in nav bar, but use color white." So this is
+ * ConnectButton's waterline — a fill that spreads from wherever the cursor
+ * entered, its edge roughened by animated turbulence so no two hovers look
+ * alike, receding toward the exit point on leave.
+ *
+ * It is REPRODUCED rather than shared, deliberately. ConnectButton bakes its
+ * label into the asset as paths and carries a two-tone light/dark system this
+ * button has no use for; extracting the water from all that is a bigger job
+ * than the ask, and doing it badly would put a hover effect in the critical
+ * path of the site header. If a third blob ever wants water, extract then —
+ * this paragraph is the note saying so.
+ *
+ * WHAT IS GENUINELY SIMPLER HERE, and it is the one real difference.
+ * ConnectButton has to paint its label TWICE — its own colour underneath, a
+ * midnight copy clipped to the rising water above — because cream lettering on
+ * gold water measures about 1.9 : 1. This water is WHITE and this label is
+ * already charcoal, so it reads 7.7 : 1 on the ochre and better than 18 : 1 on
+ * the white, and needs no clipped copy at all. Label and chevron are live
+ * text, not paths, which is also why the SVG sits behind them rather than
+ * containing them.
+ *
+ * `preserveAspectRatio="none"`, as the supplied asset itself declares: the
+ * blob stretches to whatever box the label makes, exactly as the CSS mask it
+ * replaces did. The circle stretches with it, which is right — it should
+ * spread through the shape as drawn, not as a true circle laid over it.
+ */
+function EnterButton() {
+  const uid = useId();
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const ripple = useRef<SVGCircleElement | null>(null);
+  const turbulence = useRef<SVGFETurbulenceElement | null>(null);
+  const shimmer = useRef<gsap.core.Tween | null>(null);
+
+  const clipId = `${uid}-blob`;
+  const waterId = `${uid}-water`;
+
+  /** Pointer position in viewBox coordinates. */
+  const toLocal = (event: React.PointerEvent) => {
+    const rect = svgRef.current?.getBoundingClientRect();
+    if (!rect) return { x: BLOB_VB_W / 2, y: BLOB_VB_H / 2 };
+    return {
+      x: ((event.clientX - rect.left) / rect.width) * BLOB_VB_W,
+      y: ((event.clientY - rect.top) / rect.height) * BLOB_VB_H,
+    };
+  };
+
+  const fillFrom = (x: number, y: number) => {
+    const circle = ripple.current;
+    if (!circle) return;
+    gsap.killTweensOf(circle);
+    gsap.set(circle, { attr: { cx: x, cy: y } });
+    // A fresh seed per entry is what makes the pattern inconsistent — the
+    // same hover never draws the same waterline twice.
+    const turb = turbulence.current;
+    if (turb) {
+      turb.setAttribute("seed", String(Math.floor(Math.random() * 1000)));
+      shimmer.current?.kill();
+      shimmer.current = gsap.to(turb, {
+        attr: { baseFrequency: "0.015 0.126" },
+        duration: 1.1,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+      });
+    }
+    gsap.to(circle, { attr: { r: COVER_R }, duration: 0.76, ease: "power2.out" });
+  };
+
+  const drainTo = (x: number, y: number) => {
+    const circle = ripple.current;
+    if (!circle) return;
+    gsap.killTweensOf(circle);
+    gsap.to(circle, {
+      attr: { cx: x, cy: y, r: 0 },
+      duration: 0.58,
+      ease: "power2.in",
+      onComplete: () => {
+        shimmer.current?.kill();
+        shimmer.current = null;
+      },
+    });
+  };
+
+  // A quick on/off/on cancels whichever ramp is running (killTweensOf above),
+  // and the shimmer is killed when the water finishes draining — but a reader
+  // who presses the button mid-hover unmounts this with a repeating tween
+  // still going, so it is killed here too.
+  useEffect(() => () => {
+    shimmer.current?.kill();
+    shimmer.current = null;
+  }, []);
+
+  // NO REDUCED-MOTION BRANCH, and that is not an oversight. The whole cover is
+  // `motion-reduce:hidden` and home-loader.ts returns before building any of
+  // it under the preference, so no reader can both reach this button and be
+  // refusing motion. ConnectButton needs its instant-fill branch because it
+  // sits in the navbar on every page; this does not.
+  return (
+    <button
+      type="button"
+      data-loader-enter
+      aria-hidden="true"
+      tabIndex={-1}
+      onPointerEnter={(event) => {
+        const { x, y } = toLocal(event);
+        fillFrom(x, y);
+      }}
+      onPointerLeave={(event) => {
+        const { x, y } = toLocal(event);
+        drainTo(x, y);
+      }}
+      onFocus={() => fillFrom(BLOB_VB_W / 2, BLOB_VB_H / 2)}
+      onBlur={() => drainTo(BLOB_VB_W / 2, BLOB_VB_H / 2)}
+      /* No focus-visible override: globals.css engineers a measured dual ring
+         (charcoal outline inside a gold halo, worst ground 6.04 : 1) precisely
+         for unknown backgrounds like a film, and a local `outline-canvas`
+         would replace the half that survives on light frames. */
+      className="pointer-events-none relative mt-8 inline-flex min-h-11 items-center gap-5 px-8 py-2.5 text-charcoal opacity-0 lg:mt-10"
+    >
+      <svg
+        ref={svgRef}
+        aria-hidden="true"
+        viewBox={`0 0 ${BLOB_VB_W} ${BLOB_VB_H}`}
+        preserveAspectRatio="none"
+        className="absolute inset-0 h-full w-full"
+      >
+        <defs>
+          <clipPath id={clipId}>
+            <path d={BLOB_BUTTON_D} />
+          </clipPath>
+          {/* The watery edge: turbulence displaces the expanding circle so it
+              reads as a spill, not a radar ping. The filter region is widened
+              so the displaced edge is not cropped square. */}
+          <filter id={waterId} x="-40%" y="-40%" width="180%" height="180%">
+            <feTurbulence
+              ref={turbulence}
+              type="fractalNoise"
+              baseFrequency="0.038 0.102"
+              numOctaves="2"
+              seed="7"
+            />
+            <feDisplacementMap in="SourceGraphic" scale={WATER_SCALE} />
+          </filter>
+        </defs>
+        {/* ⚠ ONE CLIPPED GROUP, base and water together — ConnectButton's
+            hard-won lesson (10 September 2026). Drawing the base as its own
+            path and the water as a separate clipped layer gives the shape TWO
+            independently antialiased edges, and the base's half-covered pixels
+            stay visible under the water's as a rim. Inside one clip there is a
+            single edge — the clip's — and whatever is topmost at it is what
+            blends with the film behind. The rect overhangs the viewBox because
+            the supplied path does too; it is clipped regardless, so the extra
+            costs nothing. */}
+        <g clipPath={`url(#${clipId})`}>
+          <rect
+            x={-4}
+            y={-4}
+            width={BLOB_VB_W + 8}
+            height={BLOB_VB_H + 8}
+            fill="var(--color-ochre)"
+          />
+          <circle
+            ref={ripple}
+            r="0"
+            fill="var(--color-canvas)"
+            filter={`url(#${waterId})`}
+          />
+        </g>
+      </svg>
+      <span className="eyebrow relative text-base leading-[1.4] tracking-normal">{homeLoader.enter}</span>
+      <span aria-hidden="true" className="relative text-2xl">&rsaquo;</span>
+    </button>
   );
 }
