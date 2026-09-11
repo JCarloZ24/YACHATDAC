@@ -162,9 +162,23 @@ export function TruthTrailRail() {
       // More than one wordmark is in the DOM (the mobile bar's is first but
       // display:none at lg, measuring a zero rect), so take the visible one.
       // Falls back to the content container's margin if the logo is absent.
+      //
+      // ⚠ NOT THE LOADING PANEL'S. RouteLoader mounts PageLoader in the ROOT
+      // layout ABOVE SiteHeader (11 September 2026), and its wordmark is
+      // `mx-auto` inside a full-screen cover — first in document order, and
+      // visible, because the panel is server-rendered to cover the settling
+      // window. This measurement runs while it is still up, so the rail
+      // centred the whole descent on the middle of the screen and stayed
+      // there: the panel lifts without changing the root's height, so the
+      // ResizeObserver below never fires to correct it. The rail belongs to
+      // the NAVBAR wordmark, which is the one it has always meant.
       const logo = [
         ...document.querySelectorAll<HTMLElement>('img[src*="logo-wordmark"]'),
-      ].find((el) => el.getBoundingClientRect().width > 0);
+      ].find(
+        (el) =>
+          !el.closest("[data-page-loader]") &&
+          el.getBoundingClientRect().width > 0,
+      );
       if (logo) {
         const rect = logo.getBoundingClientRect();
         const aCenter = rect.left + rect.width * (2.5 / 9); // "C", 3rd of 9 letters
