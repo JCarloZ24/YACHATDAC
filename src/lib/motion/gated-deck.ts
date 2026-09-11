@@ -251,6 +251,21 @@ export function createGatedDeck({
                 return Math.max(1, window.innerHeight * (vh / 100));
               };
 
+              /**
+               * Where in each slide's read its own track finishes covering the
+               * plate it rises over, 0 for a slide with nothing to cover.
+               *
+               * A deck track that LEADS WITH PADDING — the ENTRY plates, whose
+               * record sits a full viewport below the photograph — spends that
+               * much of its travel before its ground reaches the top of the
+               * slide. Until it does, the plate is what is on screen, and the
+               * rail's arrow and era label were being drawn across the
+               * photograph (user, 11 September 2026). Measured here rather
+               * than read per frame: `paintRail` runs every frame, and
+               * `getComputedStyle` in it would be a layout read per frame.
+               */
+              const coverFractions: number[] = [];
+
               // The runway is a clock, not content spacing. Its extra block
               // size sits behind a continuously pinned viewport surface, so
               // it can never appear as an empty tail. The first portion is
@@ -282,6 +297,16 @@ export function createGatedDeck({
                       });
                     }
                   }
+                  // Measured after the height above is set, so the slide is
+                  // already at the 100svh the travel is calculated against.
+                  const lead = track
+                    ? parseFloat(getComputedStyle(track).paddingTop) || 0
+                    : 0;
+                  const travel = track
+                    ? Math.max(0, track.scrollHeight - slide.clientHeight)
+                    : 0;
+                  coverFractions[index] =
+                    lead > 0 && travel > 0 ? clamp01(lead / travel) : 0;
                 });
               };
               prepareRunways();
@@ -367,11 +392,30 @@ export function createGatedDeck({
                 return 1;
               };
 
+              /**
+               * A slide whose record covers a plate hands the pointer a
+               * different clock: the arrow and the label belong to the RECORD,
+               * not to the photograph it rises over, so they wait for the
+               * cover and then HOLD to the end of the section rather than
+               * ramping back out. Nothing is retracted at this seam because
+               * the record's own ground is behind them the whole way — the
+               * "label crossing a seam" problem the ramp below exists for
+               * cannot arise once the cover has landed.
+               *
+               * THE DOT IS UNAFFECTED. It always remains (grammar: "the guide
+               * leading the eye, Truth cut"); what waits is the tail it grows.
+               */
+              const afterCover = (index: number, p: number, ramp: number, delay = 0) =>
+                clamp01((p - coverFractions[index] - delay) / ramp);
+
               /** How far the tail is drawn out, 0 → 1. No era, no tail. */
-              const tailAt = (index: number, progress: number) =>
-                labelledIndexes.has(index)
-                  ? rampIn(clamp01(progress), TAIL_RAMP)
-                  : 0;
+              const tailAt = (index: number, progress: number) => {
+                if (!labelledIndexes.has(index)) return 0;
+                const p = clamp01(progress);
+                return coverFractions[index] > 0
+                  ? afterCover(index, p, TAIL_RAMP)
+                  : rampIn(p, TAIL_RAMP);
+              };
 
               /**
                * The label's own fade, scrubbed on the section's read.
@@ -381,10 +425,13 @@ export function createGatedDeck({
                * before the cover: a label crossing a seam belongs to neither
                * section it is over.
                */
-              const labelAt = (index: number, progress: number) =>
-                labelledIndexes.has(index)
-                  ? rampIn(clamp01(progress), LABEL_RAMP, LABEL_DELAY)
-                  : 0;
+              const labelAt = (index: number, progress: number) => {
+                if (!labelledIndexes.has(index)) return 0;
+                const p = clamp01(progress);
+                return coverFractions[index] > 0
+                  ? afterCover(index, p, LABEL_RAMP, LABEL_DELAY)
+                  : rampIn(p, LABEL_RAMP, LABEL_DELAY);
+              };
 
               const rootDocumentTop = () =>
                 root.getBoundingClientRect().top + window.scrollY;
@@ -435,6 +482,16 @@ export function createGatedDeck({
                 }
                 if (subNode) subNode.textContent = sub?.textContent?.trim() ?? "";
 
+                // AN ERA'S OWN STYLING DOES NOT OUTLIVE THE ERA. A section
+                // whose ground changes under the reader may take the rail's
+                // label with it — Truth's 1950s does, because the label is
+                // that band's own era name and burnt-deep on charcoal is
+                // 1.4:1 — and it writes an inline colour to do it. That
+                // section's scrub sits at its end once the reader has left,
+                // so it cannot put the colour back itself. Cleared here, on
+                // the one call that already knows the era has changed.
+                labelNode?.style.removeProperty("color");
+                subNode?.style.removeProperty("color");
               };
 
               const paintRail = (
