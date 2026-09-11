@@ -12,8 +12,8 @@ import { MOTION_GRADE, type MediaSlot } from "@/content/lofi/media";
 import { rewindCue, truthBreaks, wattanuri } from "@/content/truth";
 import {
   truthBreakMedia,
-  truthDissolveMedia,
   truthEntryMedia,
+  truthCountPortrait,
   truthDeedPlateSlot,
   truthHeroSlot,
   truthTodayPlateSlot,
@@ -561,20 +561,13 @@ function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
             fieldClass={FIELD_CLASS[document.tone]}
           />
         </div>
-      ) : (
-        /* tone="ink", not "canvas" or "ochre": this slot reads on the page's
-           egg-white ground, where the canvas cut is off-white on off-white
-           (1.0:1) and the ochre cut is 2.30:1. Inheriting the page's charcoal
-           clears both. */
-        <EditorialNote
-          tone="ink"
-          label="HELD — this is a document slot, not a photograph."
-          className="mt-6 min-h-45 max-w-3xl"
-        >
-          Wants a scan of the journal page. Nothing is missing; nothing has
-          been supplied yet.
-        </EditorialNote>
-      )}
+      ) : null}
+      {/* THE HELD NOTE IS GONE from this slot (client direction, 11 September
+          2026). The journal scan is still outstanding and the slot is still
+          here waiting for it — `documentSrc` renders the moment one is
+          supplied — but the page no longer says so on its own face. The
+          placeholder doctrine is unchanged everywhere else; this is one
+          section being taken out of draft dress for the presentation. */}
     </figure>
   );
 }
@@ -668,6 +661,12 @@ function PortraitTestimony({
  * supplied — nothing is faked into it. The band's ground (#4E3524 under a
  * 0.34 dim) is the descent module's named-wrong layer.
  */
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars -- KEPT ON PURPOSE.
+   Its call site was withdrawn on 11 September 2026 (see the 1950s branch in
+   EntryBlock) and the two `art-gallery` slots are still in the manifest, so
+   this comes back by restoring one line the day a replacement photograph and
+   write-up scan are supplied. Deleting it would mean re-deriving the frame's
+   920x300 proportion and the seated cluster/glyph placement from the hi-fi. */
 function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
   const [visitor, document] = slots;
   const documentSrc = presentSrc(document?.src ?? null);
@@ -740,12 +739,15 @@ function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
  * Country bucket, so the layers take the ground's depth drift.
  */
 function StrataStack({ slots }: { slots: MediaSlot[] }) {
-  const [surface, treeLine, stone] = slots;
-  const strata: Array<{ slot: MediaSlot; offset: string }> = [
-    { slot: surface, offset: "ml-0" },
-    { slot: treeLine, offset: "sm:ml-[14%]" },
-    { slot: stone, offset: "sm:ml-[7%]" },
-  ];
+  /* Built from what the manifest actually holds rather than from three fixed
+     names: a withdrawn layer (stratum 3 went, client direction 11 September
+     2026) used to destructure to `undefined` and take the whole figure down
+     on `slot.id`. The indents stay in their order, so the layers that remain
+     keep the offsets they were drawn with. */
+  const STRATA_OFFSETS = ["ml-0", "sm:ml-[14%]", "sm:ml-[7%]"] as const;
+  const strata = slots
+    .filter(Boolean)
+    .map((slot, i) => ({ slot, offset: STRATA_OFFSETS[i] ?? "ml-0" }));
   return (
     <figure className="mt-10 max-w-4xl">
       {/* §19 is the one section that builds DOWNWARD, with the scroll rather
@@ -1160,7 +1162,13 @@ function EntryBlock({
                   variant={isRenamed ? "seam" : "lead"}
                 />
               ) : isArtGallery ? (
-                <WrittenRecordFrame slots={truthEntryMedia[entry.id]} />
+                /* WITHDRAWN, client direction 11 September 2026: the visitor
+                   photograph AND the held write-up slot both come off the
+                   1950s entry, so the band is carried by its words alone —
+                   which is what the section is about. `WrittenRecordFrame`
+                   and the two `art-gallery` slots stay in place for when a
+                   replacement is supplied. */
+                null
               ) : isMitchell ? (
                 <CountryAndDocument slots={truthEntryMedia[entry.id]} />
               ) : isSeabed ? (
@@ -1273,6 +1281,7 @@ function EntryPlate({
   kicker,
   title,
   deep,
+  focus,
   children,
   deckContent,
 }: {
@@ -1282,6 +1291,15 @@ function EntryPlate({
   kicker?: string;
   title: string;
   deep?: boolean;
+  /**
+   * Where a cover crop holds, when the centre is the wrong part of the frame.
+   * A plate is a viewport-tall window onto a 1.9:1 photograph, so `object-cover`
+   * keeps the middle band and throws away most of the top and bottom — and on
+   * TODAY the middle band is canopy, which left the burn reading as smoke in
+   * trees with no ground under it (client, 11 September 2026). Tailwind cannot
+   * see a computed class, so call sites pass a literal.
+   */
+  focus?: string;
   children?: React.ReactNode;
   deckContent?: React.ReactNode;
 }) {
@@ -1318,7 +1336,7 @@ function EntryPlate({
             alt={slot.expects}
             sizes={COVER_PLATE}
             quality={85}
-            className="object-cover"
+            className={`object-cover ${focus ?? ""}`}
             fieldClass={FIELD_CLASS[slot.tone]}
           />
           {/* The spec's scrim remains part of the untouched plate while the
@@ -1429,6 +1447,9 @@ export function EraSection({
       <EntryPlate
         id={era.id}
         slot={truthTodayPlateSlot}
+        /* Hold the foot of the frame: the fire is on the ground, and the
+           centred crop was showing canopy (client, 11 September 2026). */
+        focus="object-[50%_82%]"
         eyebrow={
           <>
             {era.marker} &middot; {lead.when}
@@ -1478,8 +1499,11 @@ export function EraSection({
           title={deed.title}
           deep
         >
+          {/* The plate's own line (client direction, 11 September 2026). It
+              replaces the `when` + `body[0]` pair this used to set; the draft
+              sentence it displaces is flagged on the entry in truth.ts. */}
           <p className="mt-8 max-w-3xl leading-relaxed text-canvas">
-            {deed.when}. {deed.body[0]}
+            {deed.plateCaption ?? `${deed.when}. ${deed.body[0]}`}
           </p>
           {deed.coda ? (
             <p className="mt-6 max-w-3xl text-xl font-medium leading-relaxed text-canvas sm:text-2xl">
@@ -1806,14 +1830,28 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
             two micro-labels in two different faces, touching. */}
         <p className="eyebrow mt-10 text-canvas/70">Told by</p>
         <div className="mt-6 grid gap-8 sm:grid-cols-[320px_1fr] sm:gap-8">
-          {/* ⟡ PORTRAIT SLOT — Suzanne. STILL HELD (R5): her words are wired
-              from the draft, her photograph is a separate permission and no
-              file has been delivered. The slot stays dashed until it is. */}
+          {/* ⟡ PORTRAIT SLOT — Suzanne. A photograph was supplied for it on
+              11 September 2026 (client direction), so the dashed hold comes
+              off. Held still: `data-v2-static` — this is the woman whose
+              testimony the next two screens are, and the grammar's "a person
+              speaking" row is no movement at all. Centre crop, which is what
+              a 4:5 window on this frame wants.
+
+              ⚠ R5 IS NOT CLOSED BY THIS. Her words still await her approval;
+              what changed is that there is now a file for the slot. */}
           <div
-            data-placeholder="portrait-held"
-            aria-hidden
-            className="aspect-4/5 w-full max-w-80 rounded-xs border border-dashed border-oxide/50"
-          />
+            data-v2-static
+            className="relative aspect-4/5 w-full max-w-80 overflow-hidden rounded-xs"
+          >
+            <MediaOrField
+              src={presentSrc(truthCountPortrait.src)}
+              alt={truthCountPortrait.expects}
+              sizes="(min-width: 640px) 320px, 100vw"
+              quality={85}
+              className="object-cover object-center"
+              fieldClass={FIELD_CLASS[truthCountPortrait.tone]}
+            />
+          </div>
           <div>
             <p className="eyebrow text-base text-oxide">{suzanne.attribution}</p>
             <p className="mt-2 text-sm leading-relaxed text-canvas">
@@ -2116,127 +2154,49 @@ export function FullBleedBreak({
  * set when there is something to dissolve TO. Country bucket only (R10).
  */
 export function DissolveBreak({ deckContent }: { deckContent?: React.ReactNode }) {
-  const { outgoing, incoming } = truthDissolveMedia;
-  const incomingSrc = presentSrc(incoming.src);
   const hasDeckContent = Boolean(deckContent);
   return (
-    /* bg-charcoal ON THE RUNWAY, which is the document-space box behind this
-       slide while it is pinned.
+    /* THE ESCARPMENT PHOTOGRAPH IS WITHDRAWN (client direction, 11 September
+       2026). This slide used to be the page's second full-bleed break — two
+       country shots cross-dissolving while the camera pulled back, with the
+       count's charcoal panel then rising to close the image completely. The
+       photographs come off; the hand-off does not.
 
-       The deck's hand-off glues the outgoing slide's foot to the incoming
-       slide's head by capping the exit at the incoming's measured position.
-       That cap is only ever as fresh as the exit tween's last render, and on a
-       fast flick the two stop agreeing: the incoming rides the raw scroll
-       while the outgoing rides a scrubbed tween, so for a frame or two they
-       differ by twenty or thirty pixels. Measured on an upward flick, a 28px
-       strip opened at this seam.
+       What is kept, and why:
+       · the SLIDE itself, because it is what the deck pins and what carries
+         the count's opening screen — `#break-escarpment` is also the id the
+         rail's `railHiddenSlides` names, so removing the section would put the
+         traveller back over the hard stop;
+       · the charcoal ground, which is now the whole surface rather than a
+         backstop behind a half-transparent plate;
+       · Marc's leading wave, which is the animation asked to stay — it still
+         cuts into the outgoing egg white exactly as it did.
 
-       That desync is not fixable by tuning — it is two clocks, and a scrub has
-       lag by design. What IS fixable is what shows through: this break lives
-       in the page's egg-white band, so the strip read as a white line across
-       the darkest passage on the page. Charcoal behind it and the same
-       twenty pixels are invisible. */
+       What goes with the image is the viewport of lead the track carried. The
+       `pt-[100svh]` existed so the count could travel UP over the photograph
+       and land bottom-flush against it; with nothing to cover, it was simply a
+       blank charcoal screen to scroll past before the words. The reader now
+       arrives on the words. */
     <div data-truth-slide-runway className="relative bg-charcoal">
       <section
         id={truthBreaks.escarpment.id}
         data-truth-slide
         data-truth-slide-label={truthBreaks.escarpment.id}
-        /* The frame's 900 on 1440 — the break keeps that proportion rather
-           than a viewport-height minimum, so it never towers on a wide screen.
-
-           bg-charcoal because THIS SLIDE HAS A TRANSPARENT LAYER IN IT. Shot B
-           is undelivered, so its MediaOrField renders the honest tonal field —
-           `bg-charcoal/50`, half transparent — and once the dissolve has faded
-           shot A out, that half-transparency was compositing over the page's
-           egg-white band. Scrolling back up, the count's charcoal panel lags a
-           few tens of pixels behind the scroll while the scrub settles, and
-           that strip at the top of the slide read as a band of white in the
-           middle of the darkest passage on the page.
-
-           The lag is not the bug and cannot be tuned away — a scrub has lag by
-           design, "the slight lag IS the weight". What was wrong is that a
-           full-bleed photographic break was letting the page ground show
-           through at all. A solid ground under the plates fixes it whatever
-           the timing does, and it is the right colour anyway: this break hands
-           into the count. */
-        /* Off-deck the section takes its height from what is inside it, and
-           the cover below carries the 62.5vw proportion instead. Fixed at
-           62.5vw everywhere, the whole count deck — WHO IS SPEAKING, the
-           attribution, the escarpment's charcoal hand-off wave — sat 844px
-           down a 384px box under `overflow-hidden` and was simply not on the
-           mobile page (measured 11 September 2026). */
-        className="relative overflow-hidden bg-charcoal lg:h-[62.5vw] lg:min-h-[24rem]"
+        className="relative overflow-hidden bg-charcoal"
       >
-        {/* The two shots and their scrim, as one cover. In flow below lg so the
-            charcoal panel can follow it down the page; the absolute plate the
-            deck scrubs from lg up. */}
-        <div className="relative h-[62.5vw] min-h-[24rem] overflow-hidden lg:absolute lg:inset-0 lg:h-auto lg:min-h-0">
-          {/* Shot B pulls back as it is revealed, matching the Country now break.
-            The plate's own push would drive INTO the escarpment while the page
-            is held; withdrawing from it is the colder read the frame asks for. */}
-          <div
-            data-v2-pullback
-            data-motion={MOTION_GRADE[incoming.bucket]}
-            className="absolute inset-0"
-          >
-            <MediaOrField
-              src={incomingSrc}
-              alt=""
-              sizes={COVER_FULL_BLEED}
-              quality={85}
-              fieldClass={FIELD_CLASS[incoming.tone]}
-            />
-          </div>
-          <div
-            {...(incomingSrc ? { "data-v2-dissolve": true } : {})}
-            className="absolute inset-0"
-          >
-            <MediaOrField
-              src={presentSrc(outgoing.src)}
-              alt={truthBreaks.escarpment.alt}
-              sizes={COVER_FULL_BLEED}
-              quality={85}
-              fieldClass={FIELD_CLASS[outgoing.tone]}
-            />
-          </div>
-          {/* scrim · light — 0 → .18 → .40 */}
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-linear-to-b from-black/0 via-black/18 to-black/40"
-          />
-        </div>
         {hasDeckContent ? (
           <div data-truth-deck-viewport className="relative z-20">
-            <div data-truth-deck-track className="lg:pt-[100svh]">
-              {/* THE COUNT CLOSES THE IMAGE COMPLETELY.
-
-                The deck translates this cover by exactly its own height and
-                lands it bottom-flush, so what stays visible of the escarpment
-                is `100svh − panel`. A full viewport leaves nothing.
-
-                Sizing it to "one viewport minus the wave" was the obvious
-                move and it does not work, because a wave divider is not a
-                rectangle: the SVG box is transparent ABOVE the crest, and the
-                crest dips about 60% of the way down its own height at the left
-                edge. Fitting the box on screen therefore still showed a wedge
-                of photograph through the dip — thin on the right where the
-                crest runs high, sixty pixels deep on the left.
-
-                So the panel takes the whole screen and the crest rides off the
-                top. The wave still does all its work on the way up, which is
-                where the reader sees it; at rest the count is what the frame
-                asks for — bare charcoal, nothing behind the words. */}
+            <div data-truth-deck-track>
               <div className="relative min-h-svh bg-charcoal">
-                {/* The divider belongs to the incoming count ground. Riding
-                  this translated panel makes it close the image window in
-                  exactly the same way as TODAY's evergreen cover. */}
                 <HandoffWave to="charcoal" placement="leading" />
                 {deckContent}
               </div>
             </div>
           </div>
         ) : (
-          <HandoffWave to="charcoal" />
+          <div className="relative min-h-svh bg-charcoal">
+            <HandoffWave to="charcoal" placement="leading" />
+          </div>
         )}
       </section>
     </div>
@@ -2320,9 +2280,11 @@ function RewindArrow() {
  * 20 · UNDERNEATH ALL OF IT. Bottom-weighted scrim 0 → .387 → .86. The copy
  * sits at the gutter's left edge, not the entry column and carries no M1.
  *
- * The "consequence line" is spec, not draft: the frame flags it
- * [ SPEC — COPY NOT COMMISSIONED ] and so does the page — an editorial note,
- * never prose (the EditorialNote rule).
+ * The frame's "consequence line" (`wattanuri.floor`) is NOT rendered. It was
+ * spec rather than draft, carried as an editorial note flagged [ SPEC — COPY
+ * NOT COMMISSIONED ] because spec copy is never set as prose; it came off on
+ * 11 September 2026, client direction, with the rest of the page's placeholder
+ * dress. The content and the reasoning both survive in src/content/truth.ts.
  */
 export function WattanuriBand() {
   const { outgoing } = truthWattanuriMedia;
@@ -2369,15 +2331,14 @@ export function WattanuriBand() {
                 {wattanuri.title}
               </h2>
               <p className="mt-8 max-w-3xl leading-relaxed text-canvas">{wattanuri.body}</p>
-              <EditorialNote
-                tone="canvas"
-                label="SPEC — COPY NOT COMMISSIONED"
-                className="mt-8 max-w-3xl"
-              >
-                <p className="text-xl font-medium leading-relaxed text-canvas sm:text-2xl">
-                  {wattanuri.floor}
-                </p>
-              </EditorialNote>
+              {/* THE CONSEQUENCE LINE COMES OFF (client direction, 11 September
+                  2026) — `wattanuri.floor`, inside its [ SPEC — COPY NOT
+                  COMMISSIONED ] note. It was the last placeholder dress left on
+                  the page, and the floor now closes on the Lore itself and its
+                  one link out. The text is NOT deleted: it stays in
+                  src/content/truth.ts, where the note on `wattanuri` explains
+                  what it was for, so it can be restored the day the line is
+                  actually commissioned. */}
               <Link
                 href={wattanuri.cta.href}
                 className="eyebrow mt-10 inline-block text-xs text-gold transition-transform duration-300 hover:translate-x-1"

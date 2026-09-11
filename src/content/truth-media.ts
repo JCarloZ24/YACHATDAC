@@ -235,7 +235,12 @@ export const truthEntryMedia: Record<string, MediaSlot[]> = {
       id: "father-portrait",
       bucket: "work",
       expects: "The elder, head bowed, hat on — black and white, the shade of the trees behind",
-      src: `${TRUTH}/truth-livingmemory7.webp`,
+      /* HELD BLANK, client direction 11 September 2026. The delivered
+         livingmemory7 is withdrawn and no replacement has been supplied, so
+         the slot renders its honest tonal field rather than the wrong man:
+         this is the one photograph on the page OF the person being spoken
+         about. Restore a src here when the replacement arrives. */
+      src: null,
       tone: "charcoal",
     },
   ],
@@ -330,14 +335,32 @@ export const truthEntryMedia: Record<string, MediaSlot[]> = {
       src: `${TRUTH}/truth-theeromangasea2.webp`,
       tone: "charcoal",
     },
-    {
-      id: "seabed-stone",
-      bucket: "country",
-      expects: "Stratum 3 · deepest — the escarpment's stone, from a lawful distance",
-      src: `${TRUTH}/truth-theeromangasea3.webp`,
-      tone: "charcoal",
-    },
+    /* STRATUM 3 WITHDRAWN, client direction 11 September 2026. The seabed
+       now builds in two layers, not three. The stack renders whatever it is
+       given, so nothing else moves; the motion module's third window simply
+       has no layer to drive. */
   ],
+};
+
+/**
+ * §15A · the portrait beside "Told by" on the count's opening screen.
+ *
+ * Supplied 11 September 2026 (client direction) against a slot that had stood
+ * dashed since the band was built — her words were wired from the draft while
+ * her photograph was a separate permission with no file behind it.
+ *
+ * HELD, not movable, whatever the bucket allows: the frame carries it
+ * `data-v2-static`, because this is the person whose testimony the next two
+ * screens are and the grammar's "a person speaking" row is no movement at all.
+ *
+ * ⚠ R5 IS UNCHANGED. What is settled here is the file, not the approval.
+ */
+export const truthCountPortrait: MediaSlot = {
+  id: "count-portrait",
+  bucket: "work",
+  expects: "Suzanne Thompson, Iningai custodian",
+  src: `${TRUTH}/truth-openresearch6.webp`,
+  tone: "charcoal",
 };
 
 /** The two full-bleed breaks. Country bucket only — see truthBreaks in truth.ts (R10). */
