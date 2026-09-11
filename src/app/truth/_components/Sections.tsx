@@ -2280,9 +2280,11 @@ function RewindArrow() {
  * 20 · UNDERNEATH ALL OF IT. Bottom-weighted scrim 0 → .387 → .86. The copy
  * sits at the gutter's left edge, not the entry column and carries no M1.
  *
- * The "consequence line" is spec, not draft: the frame flags it
- * [ SPEC — COPY NOT COMMISSIONED ] and so does the page — an editorial note,
- * never prose (the EditorialNote rule).
+ * The frame's "consequence line" (`wattanuri.floor`) is NOT rendered. It was
+ * spec rather than draft, carried as an editorial note flagged [ SPEC — COPY
+ * NOT COMMISSIONED ] because spec copy is never set as prose; it came off on
+ * 11 September 2026, client direction, with the rest of the page's placeholder
+ * dress. The content and the reasoning both survive in src/content/truth.ts.
  */
 export function WattanuriBand() {
   const { outgoing } = truthWattanuriMedia;
@@ -2329,15 +2331,14 @@ export function WattanuriBand() {
                 {wattanuri.title}
               </h2>
               <p className="mt-8 max-w-3xl leading-relaxed text-canvas">{wattanuri.body}</p>
-              <EditorialNote
-                tone="canvas"
-                label="SPEC — COPY NOT COMMISSIONED"
-                className="mt-8 max-w-3xl"
-              >
-                <p className="text-xl font-medium leading-relaxed text-canvas sm:text-2xl">
-                  {wattanuri.floor}
-                </p>
-              </EditorialNote>
+              {/* THE CONSEQUENCE LINE COMES OFF (client direction, 11 September
+                  2026) — `wattanuri.floor`, inside its [ SPEC — COPY NOT
+                  COMMISSIONED ] note. It was the last placeholder dress left on
+                  the page, and the floor now closes on the Lore itself and its
+                  one link out. The text is NOT deleted: it stays in
+                  src/content/truth.ts, where the note on `wattanuri` explains
+                  what it was for, so it can be restored the day the line is
+                  actually commissioned. */}
               <Link
                 href={wattanuri.cta.href}
                 className="eyebrow mt-10 inline-block text-xs text-gold transition-transform duration-300 hover:translate-x-1"
