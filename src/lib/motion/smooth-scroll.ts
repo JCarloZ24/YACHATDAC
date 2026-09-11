@@ -85,6 +85,15 @@ export function smoothScrollActive(): boolean {
   return lenis !== null;
 }
 
+/** A rebuilt pin changes document height immediately. Refresh Lenis's
+ * cached limit before restoring a reading position; its observer normally
+ * catches up later, which would clamp a mobile rebuild to the desktop end.
+ * Our People's single canvas calls this only when its geometry changes.
+ */
+export function refreshScrollBounds(): void {
+  lenis?.resize();
+}
+
 /**
  * Instant, force-through-lenis reposition — the hold's clamp. `force` writes
  * lenis's own internal target too, so restarting it after a lock cannot

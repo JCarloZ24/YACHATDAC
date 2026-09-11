@@ -81,17 +81,11 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * ⚠ D16 is open on the page's own title — CR10 asks whether "our people" can
  * be said in this voice. Suzanne decides it.
  *
- * ⚠ THIS PAGE IS STATIC, AND THAT IS THE DESIGN — not a stage waiting to be
- * finished. It carries no scroll animation, no reveal, no pinned section and
- * no motion module, and the `data-*` hooks that a motion pass would have used
- * are gone rather than left dangling.
- *
- * The page therefore renders identically with JavaScript on or off, and under
- * `prefers-reduced-motion` there is nothing to reduce. What the Figma frame's
- * NOTE lane describes as motion — the knockout scrub, the word-by-word dim,
- * the gathering's scatter and escape, the ground wipe — is expressed here as
- * the FINISHED STATE of each of those moves, which is what the reader was
- * always going to be left looking at.
+ * User direction, 11 September 2026: preserve this existing markup and put
+ * the ten sections onto the homepage's single-canvas architecture. The
+ * `data-people-*` hooks connect to one controller-owned journey; they do not
+ * create separate pinned sections. Text stays selectable above the Three.js
+ * world. This exact document is also the reduced-motion / no-WebGL fallback.
  *
  * TYPE. Figma sets the display face as Baloo 2 ExtraBold; the built page uses
  * Block Berthold via `.headline`, which is the repo-wide decision in fonts.css
@@ -182,6 +176,7 @@ const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
 export function OurPeopleAdvisory() {
   return (
     <section
+      data-people-scene="advisory"
       className="relative flex min-h-[45svh] items-center bg-charcoal text-canvas"
     >
       <div className={`${COLUMN} pt-16 lg:pt-28`}>
@@ -205,9 +200,8 @@ export function OurPeopleAdvisory() {
  * rather than over the grass, where it was unreadable.
  *
  * The photograph is held: there are people in it, so no push-in and no Ken
- * Burns — and on a static page, nothing moves at all. The fill sits at the
- * crop the frame chose (50% / 17.88% of a 108.7% x 408.16% background) and
- * stays there.
+ * Burns. The CSS fill is the fallback; the shared canvas uses the same hero
+ * photograph in a mask measured from this heading's actual loaded font (Y1).
  *
  * ⚠ KNOCKOUT FALLBACK. `background-clip: text` with transparent ink is
  * invisible where the property is unsupported, which would delete the page's
@@ -220,13 +214,13 @@ export function OurPeopleAdvisory() {
  */
 export function OurPeopleHero() {
   return (
-    <section data-nav-hero className="relative bg-charcoal text-canvas">
+    <section data-people-scene="hero" data-nav-hero className="relative bg-charcoal text-canvas">
       {/* The photograph. 1150 of the frame's 1890, hard-cut into charcoal at
           its foot — the scrim carries the cut so it does not read as a seam. */}
       <div className="relative h-[62svh] w-full overflow-hidden sm:h-[86svh] lg:h-[128svh]">
         <div
           data-media
-          data-motion={HERO?.grade ?? "full"}
+          data-motion="frame"
           className="absolute inset-0"
         >
           <MediaOrField
@@ -285,6 +279,7 @@ export function OurPeopleHero() {
 
           {/* Y1 · the picture leaves the screen and survives inside the word. */}
           <h1
+            data-people-title
             /* User reference, 11 September 2026: scoped display-size exception
                to the H1 token, matching the photograph-filled title's scale.
                Keep the licensed face and allow CMS copy to wrap. Canvas is
@@ -336,14 +331,13 @@ export function OurPeopleHero() {
  * this page of a named, living person, and a decorative mark laid over her
  * portrait is a different act from one laid over Country.
  *
- * The quote sits low, with most of a screen of canvas above it, so the
- * testimony arrives after a pause rather than under a paragraph. The frame's
- * word-by-word `dim` is not built — the page is static — so the quote simply
- * reads at full strength, which is that effect's own end state.
+ * The quote sits low so testimony arrives after a pause. Y2 now holds the
+ * shared track still while the words undim, then keeps the whole quotation
+ * lit for a reading beat (user direction, 11 September 2026).
  */
 export function SuzanneTestimony() {
   return (
-    <section className="relative bg-canvas text-charcoal">
+    <section data-people-scene="suzanne" className="relative bg-canvas text-charcoal">
       <WaveDivider ground="var(--color-canvas)" />
 
       <div className={`${COLUMN} pt-24 pb-20 lg:pt-28 lg:pb-24`}>
@@ -388,7 +382,7 @@ export function SuzanneTestimony() {
         </div>
 
         {/* The testimony. Sits low on purpose — a screen of canvas above it. */}
-        <blockquote className="mt-24 lg:mt-32">
+        <blockquote data-people-testimony className="mt-24 lg:mt-32">
           <span
             aria-hidden
             className="headline block text-[5rem] leading-[1] text-ochre/30 sm:text-[7.5rem] lg:text-[8rem]"
@@ -437,6 +431,7 @@ export function SuzanneTestimony() {
 export function HerDecision() {
   return (
     <section
+      data-people-scene="decision"
       className="relative flex min-h-[92svh] items-center lg:min-h-[140svh] bg-roasted text-canvas"
     >
       <WaveDivider ground="var(--color-roasted)" />
@@ -477,12 +472,9 @@ export function HerDecision() {
  * Six cards at 380x520 in a 3x2 set, ALL ON ONE GROUND. One carries a name;
  * five carry a role at full weight and a gold rule where a name would be.
  *
- * The frame choreographs this — cards scattering into a set, the named one
- * resolving while the five held ones hold still, then a held card taking the
- * whole screen. NONE OF THAT IS BUILT: the page is static. What survives is
- * the thing that choreography was carrying, which is the only part that was
- * ever load-bearing — six identical cards, one name among them, and five gold
- * rules that a reader can count.
+ * The existing grid now gathers by row inside the single page stage (P4,
+ * 11 September 2026). Frame apertures travel around held image pixels; names
+ * and roles retain their existing prominence. Nothing pulses while held.
  *
  * The argument does not depend on the movement. It depends on the five rules
  * being the same size as the one name.
@@ -528,6 +520,7 @@ function PersonCard({
 
   return (
     <article
+      data-people-card={index}
       /* Same size, same ground, whether the person is named or not. A held
          card is not a lesser card, and the ground never varies across the
          set — that is §03's whole argument. */
@@ -540,7 +533,9 @@ function PersonCard({
             without the face inside it changing size. */}
         <div
           data-media
-          data-motion={photo?.grade ?? "full"}
+          /* Portrait override: the older kit entries say full. P4 holds every
+             face; only its containing frame may gather (11 September 2026). */
+          data-motion="frame"
           className="absolute inset-0"
         >
           <MediaOrField
@@ -603,6 +598,7 @@ function PersonCard({
 export function TheGathering() {
   return (
     <section
+      data-people-scene="team"
       className="relative overflow-hidden bg-canvas text-charcoal"
     >
       <div className={`${COLUMN} py-16 lg:py-24`}>
@@ -653,6 +649,7 @@ export function TheGathering() {
 export function BreathTeam() {
   return (
     <section
+      data-people-scene="breath-team"
       className="relative h-[55svh] w-full bg-charcoal"
     >
       <div
@@ -711,6 +708,7 @@ function HeldSeat({
 }) {
   return (
     <div
+      data-people-seat
       className="relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/55 bg-charcoal p-5 lg:p-[26px]"
     >
       <p className="eyebrow text-xs tracking-[0.5em] text-gold">Seat held</p>
@@ -738,7 +736,7 @@ function HeldSeat({
 
 export function Governance() {
   return (
-    <section className="relative bg-evergreen text-canvas">
+    <section data-people-scene="governance" className="relative bg-evergreen text-canvas">
       <WaveDivider ground="var(--color-evergreen)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="b" className="top-[4%] left-[64.4%] w-[56.25rem]" />
@@ -790,7 +788,7 @@ export function Governance() {
         </div>
 
         {/* The ratio DRAWN TO SCALE — 992 and 248 of 1240. */}
-        <div className="mt-10 flex h-4 w-full max-w-[1240px] overflow-hidden rounded-lg">
+        <div data-people-ratio className="mt-10 flex h-4 w-full max-w-[1240px] overflow-hidden rounded-lg">
           <div className="h-full basis-4/5 rounded-lg bg-gold" />
           <div className="h-full basis-1/5 rounded-lg bg-ochre/55" />
         </div>
@@ -869,7 +867,7 @@ export function Governance() {
  */
 export function Acknowledgements() {
   return (
-    <section className="relative bg-charcoal text-canvas">
+    <section data-people-scene="acknowledgements" className="relative bg-charcoal text-canvas">
       <WaveDivider ground="var(--color-charcoal)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="b" className="top-[7%] left-[48.6%] w-[62.5rem]" />
@@ -941,6 +939,7 @@ export function Acknowledgements() {
 export function BreathPivot() {
   return (
     <section
+      data-people-scene="breath-pivot"
       className="relative h-[55svh] w-full bg-charcoal"
     >
       <div
@@ -1006,6 +1005,7 @@ const DOOR_GROUNDS = [
 export function GetInTouch() {
   return (
     <section
+      data-people-scene="contact"
       id="contact"
       className="relative scroll-mt-28 bg-canvas text-charcoal"
     >

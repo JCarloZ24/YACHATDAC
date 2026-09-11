@@ -1,0 +1,62 @@
+/* F7 / D5, 11 September 2026. One viewport on the same model as HomeHero.
+   No layout changes until Three has painted. Removing the attribute is a
+   complete fallback, including all the long copy and the native contact rail. */
+.people-canvas { display: none; }
+
+[data-people-ready] {
+  /* ScrollTrigger rounds a fixed pin up by a pixel. Keep the photo camera
+     and the CSS viewport identical, also avoiding a ResizeObserver rebuild. */
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100svh !important;
+  max-height: 100svh !important;
+  overflow: hidden;
+}
+
+[data-people-ready] > .people-canvas {
+  display: block;
+  z-index: 0;
+}
+
+[data-people-ready] > .people-track {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  will-change: transform;
+}
+
+/* Solid grounds and photographic planes live in the single WebGL scene.
+   Text stays real, selectable HTML above it, just as it does on the homepage.
+   Only successfully decoded/uploaded photographs hand over to the canvas. */
+[data-people-ready] [data-people-scene] { background-color: transparent; }
+[data-people-ready] [data-people-texture] { opacity: 0; }
+[data-people-ready] [data-people-card] { background-color: transparent; }
+[data-people-ready] [data-people-card] > :last-child { background-color: var(--color-evergreen); }
+[data-people-ready] [data-people-card] { will-change: transform; }
+[data-people-ready] [data-people-knockout] {
+  background-image: none !important;
+  background-color: transparent;
+  color: transparent;
+}
+
+/* Keep the one existing mobile rail native; the stage never intercepts touch.
+   Its text and controls remain inside the same pinned viewport. */
+.people-stage a:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 5px;
+}
+
+@media print {
+  [data-people-stage] {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: relative !important;
+    transform: none !important;
+  }
+  [data-people-stage] > .people-canvas { display: none !important; }
+  [data-people-stage] > .people-track {
+    position: relative !important;
+    transform: none !important;
+  }
+}

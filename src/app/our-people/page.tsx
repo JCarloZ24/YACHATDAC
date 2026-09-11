@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { ourPeopleHero } from "@/content/our-people";
+import { OurPeopleCanvas } from "./_components/OurPeopleCanvas";
+import "./_components/our-people.css";
 import {
   Acknowledgements,
   BreathPivot,
@@ -44,10 +47,10 @@ export const metadata: Metadata = {
  * CTA, About's "Meet the people", and the footer's Organisation column (twice).
  * The one anchor other pages target is #contact, on §06.
  *
- * ⚠ THIS PAGE IS STATIC BY DECISION, not by omission. It mounts no motion
- * module and carries no scroll animation; it renders the same with JavaScript
- * on or off. A motion pass was built against this markup and then removed —
- * see git history if it is ever wanted back, and do not re-add it piecemeal.
+ * User direction, 11 September 2026, supersedes the earlier static decision:
+ * use the homepage's one-canvas architecture. All ten existing sections ride
+ * one Three.js stage and one controller-owned reading clock. Their original
+ * markup is the accessible text layer and the ordinary-flow fallback (D5/D12).
  *
  * `PageTransition` stays: it paints the page's own ground behind everything,
  * and its route transition is site-wide chrome that every page.tsx carries
@@ -56,19 +59,23 @@ export const metadata: Metadata = {
 export default function OurPeoplePage() {
   return (
     <PageTransition ground="#090e12">
-      {/* The advisory renders FIRST, above everything, and nothing sits above
-          it. Australian cultural protocol, and the draft's own placement. */}
-      <OurPeopleAdvisory />
-
-      <OurPeopleHero />
-      <SuzanneTestimony />
-      <HerDecision />
-      <TheGathering />
-      <BreathTeam />
-      <Governance />
-      <Acknowledgements />
-      <BreathPivot />
-      <GetInTouch />
+      <SmoothScroll />
+      <div data-people-stage className="people-stage relative isolate bg-charcoal">
+        <OurPeopleCanvas />
+        <div data-people-track className="people-track relative">
+          {/* The advisory renders first, as the draft specifies. */}
+          <OurPeopleAdvisory />
+          <OurPeopleHero />
+          <SuzanneTestimony />
+          <HerDecision />
+          <TheGathering />
+          <BreathTeam />
+          <Governance />
+          <Acknowledgements />
+          <BreathPivot />
+          <GetInTouch />
+        </div>
+      </div>
 
       {/* §06 ends on canvas, so the footer's band above its burnt crest is
           canvas here — the same handover The Record makes. */}

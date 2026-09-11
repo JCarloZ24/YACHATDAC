@@ -48,6 +48,7 @@ import { registerDisclosure } from "./disclosure";
 import { registerLoading } from "./loading";
 import { registerHome } from "./home";
 import { registerPointer } from "./pointer";
+import { registerPeople } from "./people";
 
 gsap.registerPlugin(CustomEase);
 
@@ -76,6 +77,7 @@ export function registerYachatdacEffects(): void {
   registerLoading();
   registerHome();
   registerPointer();
+  registerPeople();
 }
 
 /**
@@ -107,6 +109,10 @@ function bezierOf(css: string): string {
  * is what gives the vocabulary autocomplete and makes it discoverable.
  */
 export type EffectName =
+  | "peopleJourney"
+  | "peopleGather"
+  | "peopleKnockout"
+  | "peopleGround"
   | "clickBloom"
   | "landscapeApproach"
   | "landscapeGyroscope"

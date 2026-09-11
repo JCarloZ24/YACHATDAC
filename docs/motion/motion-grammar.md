@@ -2,6 +2,20 @@
 
 *Last updated: 11 September 2026*
 
+| Our People — single canvas, user direction 11 September 2026 | Behaviour | Timing | Reference | Effect |
+| --- | --- | --- | --- | --- |
+| **the page gathers**, one continuous stage | One pinned viewport, one Three.js renderer and one reading clock carry all ten existing sections. The camera and accessible text track travel together; measured content determines the distance. The footer follows in ordinary flow. | Travel: 100vh per viewport; short holds at the title, portrait, decision, card rows, ratio and names. Reverse scroll retraces the same route. | SCR-02 / SCR-09; same architecture as `/`, explicit user direction | `peopleJourney` |
+| **the photograph survives in the word** | The held hero photograph hands its texture to the existing headline silhouette. Its sampling window settles as the title arrives. No magnification or distortion of people. | 65vh approaching the title, followed by a 45vh hold | Y1; Figma 2841:25360 | `peopleKnockout` |
+| **people gather on equal ground** | Card frames arrive from either side into their existing grid. Portrait pixels stay registered to their resting position while the frame travels around them. Every card receives the same treatment. | 65vh per row; `country`; 8vh spacing | P4 / L3; Figma 2841:25363 | `peopleGather` |
+| **a person speaking**, Our People | The track stops while Suzanne's words brighten in place, then holds the complete quotation before continuing. No moving or character-split testimony. | 85vh read + 30vh hold, per-word opacity only | Y2; Figma 2841:25361 | `dim` inside `peopleJourney` |
+| **a change of ground**, Our People | Existing wave crests rise from their baseline to carry each incoming solid palette ground across the shared canvas. The constitution's bar opens to its existing 80/20 proportions; headings and names settle by line. | 50vh crest rise; 50vh ratio reveal; 40vh line settlement | X7 / B5; Figma 2841:25362–25368 | `peopleGround`, `settle` |
+| **places held, doors offered**, Our People | The existing board seats and contact choices arrive quietly within their ground, using the site's shared 16px entrance. Their contents and order stay intact. | 45vh seats; 40vh doors with 6vh spacing; `country` | X4; Figma 2841:25365 / 2841:25368 | `arrive` |
+
+This supersedes the earlier static Our People implementation. No new copy or
+artwork is introduced. Reduced motion, JavaScript off, renderer failure, print
+and Escape retain the complete existing document. Resize and font changes
+rebuild the measured journey; anchor and keyboard focus seek to the same clock.
+
 | Record interaction | Behaviour | Timing | Reference | Effect |
 | --- | --- | --- | --- | --- |
 | **lifts**, catalogue card | Inner contents lift 6px on hover/focus; the photo stays undistorted. Title underlines. | 0.25s | INT-05, user direction 9 September 2026 | `recordCardHover` |

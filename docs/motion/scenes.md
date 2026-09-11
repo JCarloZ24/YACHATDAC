@@ -1401,6 +1401,26 @@ cropping. Stop icons moved from frame pixels to percentages of the artwork in th
 
 ## Our People — verb *gathers* — 1835vh, 11 sections
 
+**11 September 2026 — one canvas, latest user direction.** The existing built
+sections now share one pinned stage and one Three.js renderer, following the
+homepage architecture. All ten sections, including the advisory and both breath
+photographs, belong to the stage; the shared HTML footer is outside it. The
+original markup remains the accessible text layer and the complete fallback.
+No narrative words, names, placeholders or destinations change.
+
+The reading clock uses measured section heights rather than the frame's fixed
+pixel totals, so longer CMS copy and mobile wrapping extend the journey. Short
+holds land on the title, portrait, decision, team rows, ratio and acknowledgements.
+Suzanne's quotation gets an 85vh still reading span and 30vh fully lit hold.
+The card frames gather around held portraits; the original waves carry the solid
+grounds. Every movement reverses with scroll. Escape, reduced motion, unavailable
+WebGL and print restore normal document flow; hash links and keyboard focus map
+back to the measured reading clock. See `peopleJourney` in the motion grammar.
+
+Reference captures: `docs/design/exports/our-people-2026-09-11/`, one PNG per
+Figma section, captured before implementation. The older scene table below is
+the design reference; the runtime measures the already-built page.
+
 Built to `06 · Our People — HI-FI · Desktop · the page gathers` (Figma `2841:25358` at x=0,
 1440 × 16,515px). The frame is 1,835vh; the scroll span is ~1,865vh because §03 pins 330vh
 against 270vh drawn — the same convention as About §03 and Living Work §02.

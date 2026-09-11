@@ -58,7 +58,7 @@ let settled = false;
  * ⚠ THE SECOND BRANCH IS NOT A CONVENIENCE. A page with no motion modules
  * never calls start(), so `settled` would stay false forever and a panel
  * gated on it would sit there until its hard cap — three seconds of loading
- * screen on a page that was ready immediately. /about, /our-people, /connect
+ * screen on a page that was ready immediately. /about, /connect
  * and the legal pages are all in that position. So: once the document has
  * finished loading and a grace beat has passed with nothing registered, there
  * is no motion pass to wait for and this reports settled.
