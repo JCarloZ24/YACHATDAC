@@ -363,22 +363,63 @@ export const truthCountPortrait: MediaSlot = {
   tone: "charcoal",
 };
 
-/** The two full-bleed breaks. Country bucket only — see truthBreaks in truth.ts (R10). */
-export const truthBreakMedia: Record<"countryNow" | "duskCountry", MediaSlot> = {
+/**
+ * The two full-bleed breaks, each a DISSOLVE PAIR. Country bucket only — see
+ * truthBreaks in truth.ts (R10).
+ *
+ * §08's Figma note ("BREAK · Country Now — you never see the join", 2051:5464)
+ * has always asked for two shots rather than one: "Two shots of the same
+ * country, and you never see the join. The first shot holds full screen while
+ * the page stops moving under you. As you keep scrolling, the second shot comes
+ * up through the first until the first is gone."
+ *
+ * The delivered file has carried the words "the 08 break's shot B" since the
+ * batch landed — it is the INCOMING half, and shot A was never supplied. So the
+ * pair is declared here with `outgoing.src = null` and the mechanism is built
+ * around it (user direction, 11 September 2026): an undelivered shot A simply
+ * means the incoming photograph holds, which is what the page does today. Drop
+ * a file in and the dissolve turns itself on.
+ */
+export const truthBreakMedia: Record<
+  "countryNow" | "duskCountry",
+  { outgoing: MediaSlot; incoming: MediaSlot }
+> = {
   countryNow: {
-    id: "break-country-now",
-    bucket: "country",
-    expects: "Sunset over the plains from the outcrop — the 08 break's shot B. No caption.",
-    src: `${TRUTH}/truth-break1.webp`,
-    tone: "roasted",
-    alternates: AWAITING_ALTERNATES,
+    outgoing: {
+      id: "break-country-now-a",
+      bucket: "country",
+      expects:
+        "Shot A — the same Country as shot B, held first while the page stops. Not yet delivered.",
+      src: null,
+      tone: "roasted",
+    },
+    incoming: {
+      /* The section id the rail knows. It stays on the INCOMING slot because
+         that is the photograph the break resolves to — and because
+         truthBreaks.countryNow.id, railHiddenSlides and the anchor all name it. */
+      id: "break-country-now",
+      bucket: "country",
+      expects: "Sunset over the plains from the outcrop — the 08 break's shot B. No caption.",
+      src: `${TRUTH}/truth-break1.webp`,
+      tone: "roasted",
+      alternates: AWAITING_ALTERNATES,
+    },
   },
   duskCountry: {
-    id: "break-dusk",
-    bucket: "country",
-    expects: "Open Country at dusk. No people, no caption, edge to edge.",
-    src: null,
-    tone: "charcoal",
+    outgoing: {
+      id: "break-dusk-a",
+      bucket: "country",
+      expects: "Open Country at dusk — shot A. Not yet delivered.",
+      src: null,
+      tone: "charcoal",
+    },
+    incoming: {
+      id: "break-dusk",
+      bucket: "country",
+      expects: "Open Country at dusk. No people, no caption, edge to edge.",
+      src: null,
+      tone: "charcoal",
+    },
   },
 };
 
@@ -390,6 +431,13 @@ export const truthBreakMedia: Record<"countryNow" | "duskCountry", MediaSlot> = 
  * Truth photograph is accounted for — so it renders as the tonal field
  * until it lands, and A holds rather than dissolving into nothing.
  * Country bucket, both: no people, no cultural site (R10).
+ *
+ * ⚠ NOT RENDERED ANYWHERE AS OF 11 SEPTEMBER 2026. The client withdrew the
+ * escarpment break's photographs, so §14 is now charcoal ground and a wave and
+ * this pair has no consumer. Kept rather than deleted because both slots and
+ * their reasoning are still the record of what that break was specified to be
+ * — and because `truth-thecount.webp` is still in the library, unreferenced,
+ * if it is ever wanted elsewhere. Do not read this as live.
  */
 export const truthDissolveMedia: { outgoing: MediaSlot; incoming: MediaSlot } = {
   outgoing: {

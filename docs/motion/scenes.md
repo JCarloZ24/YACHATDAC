@@ -684,6 +684,38 @@ Wattanuri floor's runway to `22svh`, both so the cover crop they ask for is insi
 need 1,604 CSS px and 260vw was serving 1,014. **Nothing above `lg` changed** — measured
 after: plate 879 = slide 879, break 879, track `padding-top` 879, heading identity transform.
 
+**§08 BREAK Country Now is built, 11 September 2026.** The table above has carried it as a
+`dissolve pair` with **transition** as its loud channel since the ledger was written, and
+until now the page rendered a single held photograph with the hand-off wave parked at its
+foot for the entire read — an egg-white shape laid over a picture from the first frame,
+which is the opposite of a hand-off. Two beats replace it, and nothing else happens on the
+screen. Shot A lies over shot B and fades to nothing across the read, opacity only; then
+from 0.70 the next era's colour rises over the bottom of the shot as a wave, "before the
+page releases you" (the Figma note, 2051:5464). The reference's opacity ladder — 1 / 0.55 /
+0.2 / 0 at 0 / 40 / 70% / 100% — is a straight line, so the fade is linear from zero rather
+than from the 40% its frame caption names; the caption is describing when the fade becomes
+visible.
+
+**The break stopped pulling back**, which is a ruling rather than a simplification. Its own
+note asks for a slow withdrawal — "the camera pulls slowly back the whole time, so the land
+gets bigger than you as you look at it" — and the ERA DISSOLVE reference (2309:4172) says
+the photographs "cross-dissolve on opacity — nothing scales during the dissolve (P9's
+rule)". The two disagree, and the generic one was taken (user direction). ⚠ Worth putting
+back to whoever owns the boards: the section-specific note is the one being overruled.
+Since shot A was never delivered, the practical result today is a completely still screen
+until the crest — the honest read of a page that has stopped, but a knowing choice.
+
+**Shot A is still outstanding.** The delivered file has carried the words "the 08 break's
+shot B" since the batch landed; it is the incoming half. The pair is declared with
+`outgoing.src = null` and `[data-v2-dissolve]` is written only when shot A has a file, so
+the delivered photograph holds until one arrives and the dissolve then turns itself on with
+no further work.
+
+**The crest rests SEATED, not parked.** `yPercent: 100` is set by the recipe, never by the
+markup. The deck is desktop-only, so touch, narrow, no-JS and reduced motion never play the
+timeline — and a wave parked below the foot in CSS would simply be missing on all four,
+turning the seam hard. Same shape as the 1950s ground: the rest state is the end state.
+
 ## Living Work — verb *accumulates* — ~1607vh, 9 sections
 
 Built to `03 · Living Work · HI-FI · the field notebook` (Figma 2137:2613, 18407px ≈ 2045vh).

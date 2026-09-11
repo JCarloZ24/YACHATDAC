@@ -2103,19 +2103,32 @@ export function FullBleedBreak({
    *  incoming section's ground. */
   waveTo?: keyof typeof WAVE_FILL;
 }) {
-  const slot = truthBreakMedia[which];
-  /* The breaks PULL BACK where ordinary media pushes in. The reader is being
-     let go of at the join, not driven through it — the page has already
-     stopped here, and advancing the camera into a held image while the scroll
-     is locked reads as impatience. */
+  const { outgoing, incoming } = truthBreakMedia[which];
+  const outgoingSrc = presentSrc(outgoing.src);
+  /**
+   * §08 · "you never see the join" (Figma 2051:5464, built 11 September 2026).
+   *
+   * Two shots of the same Country stacked, and the join is never on screen:
+   * shot B sits beneath at full opacity from the first frame, shot A lies over
+   * it and fades to nothing across the read. Nothing slides and nothing
+   * scales — the ERA DISSOLVE reference (2309:4172) is explicit that the
+   * photographs cross-dissolve on opacity alone, "nothing scales during the
+   * dissolve (P9's rule)", and that ruling was taken over this break's own
+   * note asking for a slow pull-back (user, 11 September 2026). So
+   * `data-v2-pullback` is gone from here: the page has stopped, and it shows
+   * it by being still.
+   *
+   * `data-v2-dissolve` is set ONLY when shot A has a file. Without it the
+   * attribute is absent, no recipe finds anything to fade, and the delivered
+   * photograph simply holds — which is what this break has always done.
+   */
   return (
     <div data-truth-slide-runway className="relative">
       <section
         id={truthBreaks[which].id}
         data-truth-slide
         data-truth-slide-label={truthBreaks[which].id}
-        data-v2-pullback
-        data-motion={MOTION_GRADE[slot.bucket]}
+        data-motion={MOTION_GRADE[incoming.bucket]}
         /* 80svh on a phone is a 390x675 box, and a 1.9:1 photograph covering
            it needs 1,283 CSS px of crop against the 1,014 that 260vw asks for
            — the soft break the reader meets on the way out of TODAY (user, 11
@@ -2126,32 +2139,64 @@ export function FullBleedBreak({
         className="relative min-h-[58svh] overflow-hidden lg:min-h-[80svh]"
       >
         <MediaOrField
-          src={slot.src}
+          src={incoming.src}
           alt={truthBreaks[which].alt}
           sizes={COVER_FULL_BLEED}
           quality={85}
-          fieldClass={FIELD_CLASS[slot.tone]}
+          fieldClass={FIELD_CLASS[incoming.tone]}
         />
+        {outgoingSrc ? (
+          <div data-v2-dissolve className="absolute inset-0">
+            <MediaOrField
+              src={outgoingSrc}
+              alt=""
+              sizes={COVER_FULL_BLEED}
+              quality={85}
+              fieldClass={FIELD_CLASS[outgoing.tone]}
+            />
+          </div>
+        ) : null}
         {/* The 08 spec's light scrim — nothing to read here. */}
         <div
           aria-hidden
           className="absolute inset-0 bg-linear-to-b from-charcoal/40 via-transparent to-charcoal/40"
         />
-        {waveTo ? <HandoffWave to={waveTo} /> : null}
+        {waveTo ? (
+          /* ⚠ THE BOX IS A MOTION HOOK WITH A JOB, not a wrapper for its own
+             sake — the same one /partnerships puts around its divider, for the
+             same reason. `waveHandoff` travels its target by `yPercent`, and a
+             wave SVG is untouchable: it seats itself on a Tailwind transform
+             that an inline GSAP write clobbers (About's disappearing-wave
+             defect). So the effect moves this box, and the box is given the
+             divider's own height — h-16 / sm:h-28, matching HandoffWave — so
+             `yPercent: 100` is exactly one wave-height of travel: parked, it
+             sits below the section's foot where `overflow-hidden` clips it;
+             played, it rises onto the photograph.
+
+             ⚠ AND IT RESTS SEATED, NOT PARKED. The recipe sets yPercent 100
+             itself before playing to 0. The deck is desktop-only, so on touch,
+             below lg, with no JavaScript and under reduced motion there is no
+             read span to play — and a wave whose CSS rest state were `hidden`
+             would leave a hard seam on every one of those paths. Same shape as
+             the 1950s ground: the rest state is the END state. */
+          <div
+            data-truth-break-wave
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-16 sm:h-28"
+          >
+            <HandoffWave to={waveTo} />
+          </div>
+        ) : null}
       </section>
     </div>
   );
 }
 
 /**
- * 14 · BREAK The Escarpment — DISSOLVE PAIR (2026-09-03). Two full-bleed
- * country shots stacked: B beneath, A on top dissolving 1 → 0 across the
- * break's travel ([data-v2-dissolve]); B pulls back as it is revealed
- * ([data-v2-pullback], 1.06 → 1.00). Light scrim. Marc's
- * charcoal wave over the foot — the last hand-off, into the count.
- *
- * While shot B is undelivered A holds at full: [data-v2-dissolve] is only
- * set when there is something to dissolve TO. Country bucket only (R10).
+ * 14 · BREAK The Escarpment. Built 2026-09-03 as a dissolve pair — two
+ * full-bleed country shots stacked, the upper one fading across the break's
+ * travel while the lower pulled back — and stripped of both photographs on
+ * 11 September 2026 at the client's direction. What remains is charcoal ground
+ * and Marc's charcoal wave — the last hand-off, into the count.
  */
 export function DissolveBreak({ deckContent }: { deckContent?: React.ReactNode }) {
   const hasDeckContent = Boolean(deckContent);
