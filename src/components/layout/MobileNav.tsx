@@ -35,6 +35,10 @@ import { navHeroFoot } from "@/lib/nav-hero";
  * The black wordmark is public/brand/logo-wordmark-black.svg — the same
  * authored vectors as the white cut, per build documentation §5 (never
  * recreate or approximate the mark in code).
+ *
+ * D2 amendment, user direction 11 September 2026: About expands to the same
+ * three organisation links as desktop. The nested list changes immediately;
+ * the existing panel opening remains the only movement.
  */
 /** Bar height, px — the supplied 375×80 frame (9 September 2026). Kept as a
  *  constant because the scroll-link measures against it before layout. */
@@ -42,7 +46,9 @@ const BAR_H = 80;
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
   const bar = useRef<HTMLDivElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
   const solidMark = useRef<HTMLImageElement>(null);
   const glassMark = useRef<HTMLImageElement>(null);
   const pathname = usePathname();
@@ -178,12 +184,20 @@ export function MobileNav() {
   if (pathname !== seenPath) {
     setSeenPath(pathname);
     setOpen(false);
+    setExpanded(null);
   }
 
   return (
     <div
       ref={bar}
       data-open={open}
+      onKeyDown={(event) => {
+        if (event.key !== "Escape" || !open) return;
+        event.preventDefault();
+        setOpen(false);
+        setExpanded(null);
+        menuButton.current?.focus();
+      }}
       /* Initial paint: transparent over the hero with the white cut; the
          effect takes over from the first frame. Background/colour are
          written per frame, so only the wordmark crossfade is transitioned. */
@@ -219,10 +233,15 @@ export function MobileNav() {
           />
         </Link>
         <button
+          ref={menuButton}
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          aria-controls="mobile-primary-menu"
+          onClick={() => {
+            setOpen((value) => !value);
+            setExpanded(null);
+          }}
           className="flex size-12 items-center justify-center"
         >
           {/* The frame's own menu icon — three rounded rules. The outer two
@@ -274,6 +293,7 @@ export function MobileNav() {
           motion-tokens.css). inert/aria-hidden keep the closed panel out of
           the tab order and the accessibility tree. */}
       <div
+        id="mobile-primary-menu"
         className={`grid ${
           open
             ? "grid-rows-[1fr] duration-(--dur-medium) ease-country"
@@ -284,7 +304,8 @@ export function MobileNav() {
       >
         <nav
           aria-label="Primary"
-          className={`min-h-0 overflow-hidden px-5 transition-[padding] ${
+          data-lenis-prevent
+          className={`max-h-[calc(100svh-80px)] min-h-0 overflow-y-auto overscroll-contain px-5 transition-[padding] ${
             open ? "pb-10 pt-2" : "py-0"
           }`}
         >
@@ -292,6 +313,13 @@ export function MobileNav() {
             {primaryNav.map((item, i) => (
               <li
                 key={item.href}
+                onKeyDown={(event) => {
+                  if (event.key !== "Escape" || expanded !== item.href) return;
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setExpanded(null);
+                  event.currentTarget.querySelector("button")?.focus();
+                }}
                 className={`transition-[opacity,transform] ${
                   open
                     ? "translate-y-0 opacity-100 duration-(--dur-medium) ease-country"
@@ -303,12 +331,47 @@ export function MobileNav() {
                     : "0ms",
                 }}
               >
-                <Link
-                  href={item.href}
-                  className="block py-3 text-base leading-6 text-black"
-                >
-                  {item.title}
-                </Link>
+                {item.children?.length ? (
+                  <>
+                    <button
+                      type="button"
+                      aria-expanded={expanded === item.href}
+                      aria-controls={`mobile-submenu-${i}`}
+                      onClick={() => setExpanded((value) => value === item.href ? null : item.href)}
+                      className="flex w-full items-center justify-between py-3 text-base leading-6 text-black focus-visible:outline-2 focus-visible:outline-offset-2"
+                    >
+                      {item.title}
+                      <svg aria-hidden width="12" height="8" viewBox="0 0 12 8" fill="none">
+                        <path d={expanded === item.href ? "M1 7L6 2L11 7" : "M1 1L6 6L11 1"} stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </button>
+                    <ul id={`mobile-submenu-${i}`} hidden={expanded !== item.href} className="mb-2 ml-3 border-l border-charcoal/15 pl-4">
+                      {item.children.map((child) => (
+                        <li key={child.href}>
+                          <Link
+                            href={child.href}
+                            aria-current={pathname === child.href ? "page" : undefined}
+                            onClick={() => {
+                              setOpen(false);
+                              setExpanded(null);
+                            }}
+                            className="block min-h-11 px-3 py-2.5 text-base leading-6 text-night-black hover:bg-canvas focus-visible:bg-canvas focus-visible:outline-2 aria-[current=page]:bg-canvas"
+                          >
+                            {child.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="block py-3 text-base leading-6 text-black"
+                  >
+                    {item.title}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

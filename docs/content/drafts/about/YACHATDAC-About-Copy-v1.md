@@ -1,5 +1,7 @@
 # About — draft copy v1
 
+*Last updated: 11 September 2026*
+
 > **Page:** About · **Version:** v1 · **State:** draft ·
 > **Governance circle:** open
 >
@@ -116,6 +118,12 @@ In 2031 an external reviewer commissioned by the board will assess our first fiv
 
 Suzanne Thompson founded YACHATDAC and runs it. The Iningai Rangers do the work on Country. Three generations of families walked with ours to keep this Country reachable when we did not own an acre of it.
 
+[ Image — Suzanne Thompson, large portrait. Reuse the confirmed supplied
+378A7604_1.40.2 photograph in warm light, with the pink shirt and broad-brim hat.
+User revision, 11 September 2026. The other team portraits remain pending. ]
+
+Image alternative text: “Suzanne Thompson on Country, wearing a pink shirt and broad-brim hat.”
+
 [Meet the people →](/our-people)
 
 ### Partners
@@ -180,3 +188,17 @@ Different things go to different people. Tell us which and it reaches the right 
 [**Something for the record** — Photographs, papers, family records](/connect)
 
 > [ Turraburra has no reliable mobile coverage. If a phone number is published, say which hours it is answered. ]
+
+---
+
+### Navigation amendment — 11 September 2026
+
+User direction, D2: the header's **About** group contains these existing pages,
+in this order, on desktop and mobile:
+
+- [About YACHATDAC](/about)
+- [Our people](/our-people)
+- [Partners](/partnerships)
+
+The same labels and destinations appear in the footer's Organisation column.
+This amendment supplies navigation copy; the page narrative above is unchanged.

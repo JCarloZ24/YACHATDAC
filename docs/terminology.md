@@ -2,6 +2,19 @@
 
 *Last updated: 11 September 2026*
 
+**Screenshot revisions — 11 September 2026, user direction (D5 / R24):** the
+homepage welcome heading is “Reconnection across time and people.” Suzanne's
+recorded core narrative is unchanged. About's large portrait uses the supplied,
+identified Suzanne photograph, with alternative text “Suzanne Thompson on
+Country, wearing a pink shirt and broad-brim hat.” The other team portraits
+remain pending; no name is assigned to a stand-in.
+
+**About navigation — 11 September 2026, user direction (D2):** the About group
+contains “About YACHATDAC”, “Our people” and “Partners”, linking to `/about`,
+`/our-people` and `/partnerships`. “Partners” is the navigation label for the
+existing Partnerships page. The header and footer share these labels from
+`src/content/site.ts`; the About draft records the same interface copy.
+
 **Home painting display ? 9 September 2026:** screenshot excerpts read ?You are entering?, ?Turraburra?, and ?Story held in stone and starlight?. Turraburra names the property; the full hero sentence remains unchanged.
 
 

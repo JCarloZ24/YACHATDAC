@@ -535,20 +535,24 @@ export const PHOTOS: Photo[] = [
   /* ------------------------------------------------------------------ About.
      Six derivatives cut for `05 · About` (Figma 2653:19666). The other two
      frames that page draws are already here: §03's is `country-wide`
-     (378A7604_1.28.1) and §07's left portrait is `op-card-01` (378A7604_1.80.1).
+     (378A7604_1.28.1) and, on user direction 11 September 2026, §07's large
+     portrait reuses Suzanne's confirmed `lw-hero` (378A7604_1.40.2).
 
-     ⚠ THE TWO §07 PORTRAITS ARE THE SAME MAN. batch-1.md:355 opens 1.77.4 with
-     "The same older man" — the same person as 1.80.1, which the page already
-     renders beside it. So `about-people-02` is a second frame of `op-card-01`'s
-     subject, exactly the repeat `op-card-06` is. The library holds no second
-     cleared face, the frame draws two, and inventing a third person is not an
-     option. Both carry ⚠ CONSENT UNRESOLVED in the markup and neither is
-     captioned with a name, which is what keeps this honest rather than false.
-     It goes when real portraits arrive.
+     R24: `about-people-02` remains an unnamed stand-in awaiting the correct
+     team portrait. It carries CONSENT UNRESOLVED in the markup. The large
+     portrait now shows Suzanne herself; neither slot implies a new identity
+     for the remaining man, who also appears in `op-card-01`.
+
+     Origin (about-suzanne): supplied batch 1, 378A7604_1.40.2; existing
+     /media/library/living-work/livingwork-hero.webp derivative, reused intact.
+     Identity: the established Suzanne profile and `lw-hero` note above.
+     Credit: photographer unconfirmed. Use: user requested Suzanne's photo in
+     this slot on 11 September 2026 (F8 / R24). Frame grade; no image-plane motion.
 
      Four of the six show no people at all, which is why they read as Country
      rather than as illustration. `about-reciprocity` shows hands only — the
      notes record no faces in frame at all (batch-2.md:109). */
+  { id: "about-suzanne", src: "/media/library/living-work/livingwork-hero.webp", width: 2000, height: 1126, grade: "frame", batch: 1, master: "378A7604_1.40.2", subject: "Suzanne Thompson on a red-earth track, wearing a pink shirt and broad-brim hat; confirmed profile photograph reused at the user's request" },
   { id: "about-hero", src: "/media/library/about/about-hero.webp", width: 2000, height: 1334, grade: "full", batch: 2, master: "March22-2432", subject: "Three figures on a ledge beneath a banded sandstone escarpment — people as scale, no identifiable faces" },
   { id: "about-road", src: "/media/library/about/about-road.webp", width: 2000, height: 1124, grade: "full", batch: 2, master: "March22-0261", subject: "Aerial down a sandy two-wheel track through low bushland, one vehicle at the end — no people" },
   { id: "about-breath", src: "/media/library/about/about-breath.webp", width: 2000, height: 1054, grade: "full", batch: 1, master: "378A7604_1.76.2", subject: "Open woodland at sunset, sun low behind the trunks — no people" },

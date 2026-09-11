@@ -142,7 +142,8 @@ export const beats: Beat[] = [
     // Not applied. It is a direction rather than a brief, and it sits under a
     // Welcome to Country eyebrow whose wording is still blocked on Suzanne
     // (R1), so rewriting it first risks doing it twice.
-    headline: "Reconnection — across time, across people.",
+    // D5: screenshot copy revision, 11 September 2026; recorded quotations stay as spoken.
+    headline: "Reconnection across time and people.",
     body: [
       "You are entering Turraburra: story held in stone and starlight, still being lived today.",
     ],

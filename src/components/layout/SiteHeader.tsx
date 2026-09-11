@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { org, primaryAction, primaryNav } from "@/content/site";
 import { ConnectButton } from "@/components/layout/ConnectButton";
 import { WaterNavLink } from "@/components/layout/WaterNavLink";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { DesktopNavMenu } from "@/components/layout/DesktopNavMenu";
 import { navHeroFoot } from "@/lib/nav-hero";
 
 /**
@@ -157,8 +158,10 @@ export function SiteHeader() {
   const [overHero, setOverHero] = useState(true);
   /** True once the reader is far enough down that the band has left. */
   const [gone, setGone] = useState(false);
-  /** True while the pointer is in the top strip, or focus is inside the band. */
+  /** True while the pointer is in the top strip or the navigation. */
   const [called, setCalled] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const desktopNav = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let raf = 0;
@@ -193,7 +196,10 @@ export function SiteHeader() {
     const onMove = (event: PointerEvent) => {
       // Setting the same value is a no-op in React, so a mouse crossing the
       // page renders this twice — in and out — not once per event.
-      setCalled(event.clientY <= REVEAL_ZONE);
+      // D2 amendment, 11 September 2026: the About panel extends below the
+      // reveal strip. Keep the header present while its links are in use.
+      const insideNav = event.target instanceof Node && desktopNav.current?.contains(event.target);
+      setCalled(event.clientY <= REVEAL_ZONE || Boolean(insideNav));
     };
     const onOut = (event: PointerEvent) => {
       if (!event.relatedTarget) setCalled(false);
@@ -207,7 +213,7 @@ export function SiteHeader() {
   }, []);
 
   /* Shown at the top of every page, and past that only when called back. */
-  const shown = !gone || called;
+  const shown = !gone || called || focused;
 
   return (
     <header className="fixed inset-x-0 top-0 z-30">
@@ -215,16 +221,17 @@ export function SiteHeader() {
           the hamburger panel. Below `lg` only; the band below is desktop's. */}
       <MobileNav />
       <nav
+        ref={desktopNav}
         aria-label="Primary"
         data-over-hero={overHero}
         data-shown={shown}
         /* Focus inside a band that has left brings it back — see the header
            note. `focusin`/`focusout` bubble, so one pair on the nav covers
            every link and the CTA inside it. */
-        onFocus={() => setCalled(true)}
+        onFocus={() => setFocused(true)}
         onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget)) {
-            setCalled(false);
+            setFocused(false);
           }
         }}
         /* The offset is an inline `transform`, written the way `MobileNav`
@@ -289,14 +296,18 @@ export function SiteHeader() {
             116 = 642. The frame's other 16px gap is INSIDE Actions, between
             action items, and there is only one of those.) */}
           <div className="flex items-center gap-8">
-            {/* Nav links — 494 × 24, 32px between links, flush right. */}
+            {/* D2, 11 September 2026: the About disclosure adds a chevron to
+                the frame's five links; the 32px spacing stays the same. */}
             <ul className="flex items-center gap-8">
               {primaryNav.map((item) => (
                 <li key={item.href}>
-                  <WaterNavLink
-                    href={item.href}
-                    data-over-hero={overHero}
-                    /* Link text — Bantayog Sans 700 / 16px / 150% / #000000 in
+                  {item.children?.length ? (
+                    <DesktopNavMenu label={item.title} links={item.children} overHero={overHero} />
+                  ) : (
+                    <WaterNavLink
+                      href={item.href}
+                      data-over-hero={overHero}
+                      /* Link text — Bantayog Sans 700 / 16px / 150% / #000000 in
                      the frame. `.eyebrow` is the Bantayog utility (the repoint;
                      see the typography skill) and carries the house 0.12em
                      tracking, which `tracking-normal` takes back off: the
@@ -317,10 +328,11 @@ export function SiteHeader() {
                      and it was the direction. Do not copy this pairing into
                      page copy — see the warning on --color-ochre in
                      globals.css. */
-                    className="eyebrow text-base leading-[1.5] tracking-normal whitespace-nowrap text-night-black transition-colors duration-(--dur-small) ease-quiet data-[over-hero=true]:text-canvas motion-reduce:transition-none"
-                  >
-                    {item.title}
-                  </WaterNavLink>
+                      className="eyebrow text-base leading-[1.5] tracking-normal whitespace-nowrap text-night-black transition-colors duration-(--dur-small) ease-quiet data-[over-hero=true]:text-canvas motion-reduce:transition-none"
+                    >
+                      {item.title}
+                    </WaterNavLink>
+                  )}
                 </li>
               ))}
             </ul>

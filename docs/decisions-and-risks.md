@@ -307,6 +307,12 @@ and these moved. D15–D18 live there, not here.
   consumed by `SiteHeader`. `pillars` is deliberately untouched and still drives
   the footer columns — the footer groups content, the header navigates. The
   lo-fi draws the new header on nine of ten frames.
+- **Amendment — 11 September 2026, user direction:** About is a navigation
+  group containing **About YACHATDAC** (`/about`), **Our people**
+  (`/our-people`) and **Partners** (`/partnerships`). Desktop exposes a
+  dropdown and mobile an expandable list. These are the existing D22/D23
+  destinations. `organisationNav` in `src/content/site.ts` supplies both
+  headers and the footer's Organisation column; labels stay content-driven.
 - **Context** — Connect was the utility hub holding About YACHATDAC, the team,
   Suzanne, Turraburra and Resources. The sitemap promotes About and Contact to
   the navbar, which leaves Connect holding a thinner set.

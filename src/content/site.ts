@@ -31,6 +31,8 @@ export type NavChild = {
   stub?: boolean;
 };
 
+export type PrimaryNavItem = NavChild & { children?: NavChild[] };
+
 /**
  * ⚠ NAV IS UNCHANGED, AND THAT IS DELIBERATE (24 Aug 2026).
  *
@@ -77,13 +79,23 @@ export type Pillar = {
  *
  * Decided by Ivy and JC in Marc's absence, with hi-fi starting 28 Aug. One line
  * to override.
+ *
+ * D2 amendment, user direction 11 September 2026: About groups the existing
+ * About YACHATDAC, Our people and Partners destinations in both headers.
+ * The same links supply the footer's Organisation column (D12).
  */
-export const primaryNav: NavChild[] = [
+export const organisationNav: NavChild[] = [
+  { title: `About ${org.name}`, href: "/about" },
+  { title: "Our people", href: "/our-people" },
+  { title: "Partners", href: "/partnerships" },
+];
+
+export const primaryNav: PrimaryNavItem[] = [
   { title: "Wonder", href: "/wonder" },
   { title: "Truth", href: "/truth" },
   { title: "Living Work", href: "/living-work" },
   { title: "The Record", href: "/the-record" },
-  { title: "About", href: "/about" },
+  { title: "About", href: "/about", children: organisationNav },
 ];
 
 /**
@@ -245,15 +257,11 @@ export const legalLinks: NavChild[] = [
 export const footerNav: { title: string; links: NavChild[] }[] = [
   {
     title: "Pages",
-    links: primaryNav.filter((link) => link.title !== "About"),
+    links: primaryNav.filter((link) => link.href !== "/about"),
   },
   {
     title: "Organisation",
-    links: [
-      { title: `About ${org.name}`, href: "/about" },
-      { title: "Our people", href: "/our-people" },
-      { title: "Partners", href: "/partnerships" },
-    ],
+    links: organisationNav,
   },
   {
     title: "Get in touch",

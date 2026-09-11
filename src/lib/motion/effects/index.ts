@@ -156,6 +156,7 @@ export type EffectName =
   | "ghostType"
   | "velocityDrift"
   // grid and Flip
+  | "doorsOpen"
   | "handoff"
   | "escape"
   | "surface"

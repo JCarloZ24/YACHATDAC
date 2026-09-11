@@ -70,7 +70,7 @@ import {
   smoothScrollTo,
   unlockScroll,
 } from "@/lib/motion/smooth-scroll";
-import { DUR, EASE, SCRUB, STAGGER } from "@/lib/motion/tokens";
+import { DUR, EASE, SCRUB } from "@/lib/motion/tokens";
 import type { MotionModule } from "@/lib/motion-controller";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -1072,6 +1072,12 @@ export function partnersDots(root: HTMLElement, span = 175): MotionModule {
  * mis-scrubbed. The thread that started under §03's question draws taut at
  * the reader's own pace, which is the thread's whole conceit.
  *
+ * User revision, 11 September 2026 / grammar "the doors answer": wait for
+ * the deck to seat before playing `doorsOpen`. The old row-only trigger
+ * spent most of its 0.55s reveal during the slide hand-off. Tall headers
+ * also wait for the row itself to enter the viewport. A retained trigger
+ * completes missed entries on refresh, matching composition's X4 handling.
+ *
  * Declares `transition` per the ledger but uses nothing from the LOUD table —
  * honest headroom, the same shape as §08's `none`.
  *
@@ -1085,25 +1091,36 @@ export function doorsAssembly(root: HTMLElement, span = 140): MotionModule {
   return composition("doorsAssembly", root, {
     channel: "transition",
     span,
-    uses: ["arrive"],
+    uses: ["arrive", "doorsOpen"],
     build: () => {
-      const doors = qa(root, "[data-ab-doors] a");
-      if (doors.length) {
-        gsap.set(doors, { clipPath: "inset(0% 0% 98.5% 0%)", y: 24 });
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: q(root, "[data-ab-doors]") ?? root,
-            start: "top 78%",
-            once: true,
+      const row = q(root, "[data-ab-doors]");
+      const doors = row ? qa(row, "a") : [];
+      if (row && doors.length) {
+        const entrance = gsap.effects.doorsOpen(doors, { paused: true }) as gsap.core.Timeline;
+        ScrollTrigger.create({
+          trigger: root,
+          start: () => {
+            const rowOffset = row.getBoundingClientRect().top - root.getBoundingClientRect().top;
+            // The deck rests exactly at top: 0; ScrollTrigger enters only
+            // after crossing its start. A 1vh seating tolerance avoids
+            // requiring one more wheel tick to reveal the waiting cards.
+            return `top ${Math.min(window.innerHeight * 0.01, window.innerHeight * 0.78 - rowOffset)}px`;
+          },
+          onEnter: () => entrance.play(),
+          onEnterBack: () => entrance.play(),
+          onRefresh: (self) => {
+            if (self.scroll() >= self.start) entrance.progress(1);
           },
         });
-        tl.to(doors, {
-          clipPath: "inset(0% 0% 0% 0%)",
-          y: 0,
-          duration: DUR.medium,
-          ease: EASE.catch,
-          stagger: STAGGER.grid,
-        });
+
+        // Focus can move straight to an off-screen link. Reveal it immediately;
+        // the nested context gives matchMedia and the controller its cleanup.
+        gsap.context(() => {
+          const reveal = () => { entrance.progress(1); };
+          row.addEventListener("focusin", reveal);
+          if (row.contains(document.activeElement)) reveal();
+          return () => row.removeEventListener("focusin", reveal);
+        }, root);
       }
 
       const thread = q(root, '[data-ab-rule="thread"]');

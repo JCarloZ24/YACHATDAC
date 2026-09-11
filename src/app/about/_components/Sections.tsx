@@ -146,7 +146,7 @@ const ROAD = photoById("about-road");
 const QUESTION = photoById("country-wide");
 const BREATH = photoById("about-breath");
 const RECIPROCITY = photoById("about-reciprocity");
-const PEOPLE_A = photoById("op-card-01");
+const PEOPLE_A = photoById("about-suzanne");
 const PEOPLE_B = photoById("about-people-02");
 
 /* -------------------------------------------------------------------------
@@ -996,18 +996,11 @@ export function WhoDecides() {
    ------------------------------------------------------------------------- */
 
 /**
- * ⚠⚠ R24 GOVERNS THIS SECTION. Nobody in either photograph has been asked
- * whether they may be named or shown. Ivy's photo clearances are USE
- * clearances, not IDENTIFICATION consent — you may show a face, you may not
- * say whose it is. So both frames carry ⚠ CONSENT UNRESOLVED in the markup,
- * not in a comment and not in a layer name: a screenshot circulated without
- * the marker is exactly how a placeholder becomes a claim.
- *
- * ⚠ THE TWO PORTRAITS ARE THE SAME MAN. `brand/photo-notes/batch-1.md:355`
- * opens 378A7604_1.77.4 with "The same older man" — the same person as
- * 378A7604_1.80.1 beside it. The library holds no second cleared face, the
- * frame draws two slots, and inventing a third person is not an option. It is
- * recorded rather than disguised and it goes when real portraits arrive.
+ * R24 / user revision, 11 September 2026: the large frame now shows Suzanne,
+ * using the already identified 378A7604_1.40.2 profile photograph. Its origin
+ * and requested use are recorded under `about-suzanne` in kit.ts. The image
+ * plane holds still. The second portrait remains an unnamed stand-in until
+ * the correct team photographs arrive, with its consent marker visible.
  *
  * ⚠ THE THIRD SLOT DRAWS ITS OWN ABSENCE. Neither batch holds archival
  * material of any kind, and three generations of families is written here, not
@@ -1085,7 +1078,10 @@ export function ThePeople() {
             section's overflow-hidden was clipping the third slot at every
             viewport. The vertical offsets are the frame's: +60, +110. */}
         <div className="mt-16 flex flex-col gap-8 lg:grid lg:grid-cols-[560fr_370fr_250fr] lg:items-start lg:gap-[1.875rem]">
-          {[PEOPLE_A, PEOPLE_B].map((photo, i) => (
+          {[
+            { photo: PEOPLE_A, alt: thePeople.suzannePortraitAlt, pending: false },
+            { photo: PEOPLE_B, alt: "", pending: true },
+          ].map(({ photo, alt, pending }, i) => (
             <div
               key={photo?.id ?? i}
               className={`relative w-full overflow-hidden rounded-sm ${
@@ -1095,18 +1091,22 @@ export function ThePeople() {
               <div data-motion={photo?.grade ?? "frame"} className="absolute inset-0">
                 <MediaOrField
                   src={photo?.src ?? null}
-                  alt=""
+                  alt={alt}
                   sizes="(min-width: 1024px) 560px, 100vw"
+                  // X6 clears inline motion styles, including Next's fill
+                  // positioning; utilities preserve the portrait crop in that cut.
+                  className="absolute inset-0 h-full w-full object-cover"
                   fieldClass="bg-evergreen/40"
                 />
               </div>
-              {/* On the image, not in a comment. */}
-              <p
-                data-placeholder="consent-unresolved"
-                className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
-              >
-                ⚠ Consent unresolved
-              </p>
+              {pending && (
+                <p
+                  data-placeholder="consent-unresolved"
+                  className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
+                >
+                  ⚠ Consent unresolved
+                </p>
+              )}
             </div>
           ))}
 

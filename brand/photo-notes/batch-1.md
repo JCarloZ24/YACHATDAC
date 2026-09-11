@@ -1,5 +1,7 @@
 # Batch 1 — `378A7604_*`
 
+*Last updated: 11 September 2026*
+
 50 frames, an **elder / knowledge shoot** on Turraburra. Masters 3840×2024 (45 of 50), WebP.
 Figma: `PHOTO LIBRARY · 1st batch`, node `2048:9525`. Local: `brand/photography/batch-1/`.
 
@@ -156,6 +158,8 @@ Every description below is of the visible frame only — no names, roles or ages
 - **Use:** Plant / seed / knowledge detail, or accent between text blocks. Card or detail crop; usable full-bleed with type upper-left.
 
 ### 378A7604_1.40.2
+- **Origin:** Supplied batch-1 master `378A7604_1.40.2`, catalogued in `PHOTO LIBRARY · 1st batch` above; existing derivative `public/media/library/living-work/livingwork-hero.webp`. Photographer credit unconfirmed.
+- **About use — 11 September 2026:** User requested Suzanne's photograph for the large portrait. This is the identified Suzanne frame already used for her profile (`lw-hero`, `kit.ts`); About reuses it as `about-suzanne`, with a static square crop and `frame` motion grade. The remaining team portrait stays pending.
 - **Subject:** A woman in a pink linen shirt and broad-brim hat with a feather in the band, on a red-earth track in open scrub, facing camera.
 - **People:** One woman, brown skin, dark hair, olive hat with feather. **Face frontal, clearly identifiable.** Posed, not shown working.
 - **Frame:** Landscape 16:9. Weight dead centre. Negative space good on both flanks — left and right thirds quiet; narrow clean sky band on top. Text sits left or right of the figure.

@@ -151,6 +151,9 @@ export const whoDecides = {
 
 export const thePeople = {
   title: "The people",
+  // D5 / R24: user revision, 11 September 2026. The confirmed Suzanne frame
+  // replaces the large stand-in; the remaining team photograph is pending.
+  suzannePortraitAlt: "Suzanne Thompson on Country, wearing a pink shirt and broad-brim hat.",
   body: "Suzanne Thompson founded YACHATDAC and runs it. The Iningai Rangers do the work on Country. Three generations of families walked with ours to keep this Country reachable when we did not own an acre of it.",
   cta: { label: "Meet the people", href: "/our-people" },
 } as const;

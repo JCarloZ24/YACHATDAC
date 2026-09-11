@@ -1058,10 +1058,19 @@ not yet sitting. Duotone across §07's frames so the near-greyscale one can sit 
 Overshoot twice — the four cards seating in §04, the four doors in §09. A second use of any of them
 would be decoration.
 
-**⚠ §07 has no archival photograph and the marker renders.** Neither batch holds archival material
-of any kind, so the third slot draws its own absence. Both portraits carry ⚠ CONSENT UNRESOLVED and
-are `frame` grade: the world moves, the image plane holds, and captions describe what the frame
-shows rather than who the person is.
+**§07 portrait revision — 11 September 2026.** The large frame now uses Suzanne's
+confirmed supplied photograph (`about-suzanne`, master 378A7604_1.40.2), at the
+user's request. The second portrait remains an unnamed stand-in with its consent
+marker while the correct team photographs are requested. Both image planes hold
+still. No archival photograph exists for the third slot, whose marker remains.
+
+**§09 entrance revision — 11 September 2026.** `doorsOpen` opens the four enquiry
+cards from their top edges, with a 24px catch and 0.09s stagger. The trigger waits
+until the contact section is seated within 1vh and the row reaches 78vh, after the deck
+hand-off, so the entrance is visible. The phone swipe rail keeps its native
+behaviour. Reduced motion, keyboard focus and restored scroll positions reveal
+the complete cards. Grammar: **the doors answer**; transition remains the section's
+only loud channel.
 
 ## Partnerships — verb *hosts* — 1190vh, 10 sections
 

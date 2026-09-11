@@ -122,7 +122,9 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
             one that shows it. Small, and the kind of small that reads as
             "slightly off" without being nameable. */}
         <p data-hero-quiet className="eyebrow text-sm leading-[1.4] tracking-[0.1em] text-ochre me-[-0.1em] lg:text-base">{beat.eyebrow}</p>
-        <h1 aria-label={beat.headline} className="headline mx-auto mt-14 max-w-[1120px] text-h1 tracking-[-0.015em] text-canvas lg:mt-24">
+        {/* D5, 11 September 2026: balance the revised CMS-editable heading
+            without hard-coding a break or leaving its final word alone. */}
+        <h1 aria-label={beat.headline} className="headline mx-auto mt-14 max-w-[1120px] text-h1 text-balance tracking-[-0.015em] text-canvas lg:mt-24">
           {words.map((word, index) => (
             <span key={`${index}-${word}`} aria-hidden="true">
               <span className="inline-block overflow-hidden align-bottom pb-[0.1em]"><span data-hero-word>{word}</span></span>

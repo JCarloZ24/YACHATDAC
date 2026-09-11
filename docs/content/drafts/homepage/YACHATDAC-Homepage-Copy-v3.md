@@ -1,6 +1,10 @@
 # Homepage — draft copy v3
 
-*Last updated: 9 September 2026*
+*Last updated: 11 September 2026*
+
+**Heading amendment — 11 September 2026:** the welcome heading reads
+“Reconnection across time and people.”, as requested in the user's screenshot.
+This changes the display heading only, not Suzanne's recorded core narrative.
 
 **Painting text amendment ? 9 September 2026:** the screenshot sequence adds ?You are entering?, then ?Turraburra? at the upper left, followed by ?Story held in stone and starlight? at the lower right while the painting reveals. These are display excerpts; the complete hero paragraph remains unchanged.
 
@@ -51,7 +55,7 @@ below verbatim; only their layout and timed entrance change.
 
 [ Image — A red dirt road running out through low scrub under a wide sky. ]
 
-## Reconnection — across time, across people.
+## Reconnection across time and people.
 
 You are entering Turraburra: story held in stone and starlight, still being lived today.
 

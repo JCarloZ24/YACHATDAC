@@ -25,6 +25,31 @@ import { assertEase, noise } from "./shared";
 gsap.registerPlugin(Flip);
 
 export function registerGrid(): void {
+  /* Grammar: "the doors answer", About §09 / F9, 11 September 2026.
+     Open the aperture without overshoot; only the card's short travel catches.
+     The recipe owns the scroll trigger, so the deck can seat before we play. */
+  gsap.registerEffect({
+    name: "doorsOpen",
+    extendTimeline: true,
+    defaults: { duration: DUR.large, stagger: STAGGER.line, paused: false },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      const timing = {
+        duration: config.duration as number,
+        stagger: config.stagger as number,
+      };
+      return gsap.timeline({ paused: config.paused as boolean })
+        .fromTo(
+          targets,
+          { clipPath: "inset(0% 0% 98.5% 0%)" },
+          { clipPath: "inset(0% 0% 0% 0%)", ease: EASE.country, ...timing },
+          0,
+        )
+        .fromTo(targets, { y: 24 }, { y: 0, ease: EASE.catch, ...timing }, 0)
+        // A completed aperture must not clip a keyboard focus outline.
+        .set(targets, { clearProps: "clipPath,transform" });
+    },
+  });
+
   /* Grammar: "the world opening", Record's measured surface cut (F7/F8,
      2026-09-08). React owns both endpoints. Counter-scaling interpolated
      endpoints independently distorts the middle of the flight; the inverse
