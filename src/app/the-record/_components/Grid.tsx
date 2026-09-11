@@ -84,15 +84,10 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
           return (
             <div key={item.slug} data-record-tile className="mb-8 break-inside-avoid lg:mb-12">
             <Link href={`/the-record/${item.slug}`} prefetch={true} data-record-card
-              /* NAV-06 owns the image-readiness fade. Keep RouteBlink's
-                 capture handler from intercepting this navigation. */
-              data-own-transition
+              /* X7 / SYS-02, 11 September 2026: the shared loader covers
+                 navigation and the actual responsive article image decode. */
               onPointerEnter={() => router.prefetch(`/the-record/${item.slug}`)}
               onFocus={() => router.prefetch(`/the-record/${item.slug}`)}
-              onNavigate={event => {
-                event.preventDefault();
-                window.dispatchEvent(new CustomEvent("record-navigate", { detail: { href: `/the-record/${item.slug}` } }));
-              }}
               className="block rounded-3xl focus-visible:opacity-100! focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold">
               <div data-card-hover className={`relative flex flex-col overflow-hidden rounded-3xl text-canvas ${SOURCE_GROUND[item.source]}`}>
               <div className={`relative w-full overflow-hidden ${PHOTO_BAND}`}>

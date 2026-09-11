@@ -110,7 +110,17 @@ default `<body>` (Work Sans), `.callout` (Good Dog, callouts only). **Never** wr
 draws in those and the build repoints them. A build is expected to match the frame on size,
 colour, weight and position and *not* on letterforms. Headings use the responsive `text-h1`…
 `text-h6` tokens (V2 Figma variables, one `lg:` breakpoint); take leading and tracking from
-the frame explicitly. Split text by line or word, never by character.
+the frame explicitly. Split text by line or word. **Characters are the one
+exception and they are narrow** (corrected 11 Sep 2026): sketch B6 / the
+`display` effect splits by character on **short display headings only**.
+Narrative, body and testimony copy stays line-split, always. The rule is
+enforced in code, not by memory — `src/lib/motion/split-text.ts` and
+`src/lib/motion/effects/core.ts` downgrade any target over 48 characters to
+lines on their own, and `aria: "auto"` keeps the accessible name intact either
+way. This line used to read "never by character", which the engine, the grammar
+row and `display`'s place in the LOUD `type` table had all outgrown; per this
+file's own preamble the doc is newer, so the file is fixed rather than the code.
+⚠ `display` is LOUD — a screen using it is spending its one loud channel on type.
 
 ## Design tokens and Figma
 

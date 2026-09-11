@@ -2,6 +2,12 @@
 
 *Last updated: 11 September 2026*
 
+**Site-wide loading interface — 11 September 2026, August (X7 / SYS-02):**
+“You’re viewing” followed by the destination name is the shared loading
+announcement for every public page, including link navigation, refresh and
+hard refresh. The homepage's existing first-visit film follows this readiness
+cover. This interface amendment adds no narrative copy.
+
 **Heading amendment — 11 September 2026:** the welcome heading reads
 “Reconnection across time and people.”, as requested in the user's screenshot.
 This changes the display heading only, not Suzanne's recorded core narrative.

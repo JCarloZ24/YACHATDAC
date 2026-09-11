@@ -4,6 +4,7 @@ import { HomeHero } from "./_components/HomeHero";
 import { ThreadLine } from "@/components/ui/ThreadLine";
 import { beats } from "@/content/homepage";
 import { HomeLoader } from "./_components/HomeLoader";
+import { HomeMotion } from "./_components/Motion";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { PageTransition } from "@/components/transitions/PageTransition";
 
@@ -54,6 +55,10 @@ export default function HomePage() {
     <PageTransition ground="#090e12">
       {/* SCR-09, 9 September 2026: match the other immersive pages' wheel inertia. */}
       <SmoothScroll />
+      {/* The controller lifecycle every other route already had. Without it a
+          client-side navigation to `/` arrived with its motion destroyed by the
+          outgoing page — see Motion.tsx, which carries the measurements. */}
+      <HomeMotion />
       <HomeLoader />
       <ThreadLine />
       <HomeHero beat={hero} wonder={rest[0]} truth={rest[1]} belonging={rest[2]} />

@@ -2,6 +2,11 @@
 
 *Last updated: 11 September 2026*
 
+**Shared loading interface — 11 September 2026, August (X7 / SYS-02):**
+“You’re viewing” introduces the destination name on all public-page loads,
+including link navigation, refresh and hard refresh. This is interface copy,
+shared through `src/content/site.ts`; it adds no narrative or recorded words.
+
 **Screenshot revisions — 11 September 2026, user direction (D5 / R24):** the
 homepage welcome heading is “Reconnection across time and people.” Suzanne's
 recorded core narrative is unchanged. About's large portrait uses the supplied,

@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { RecordNavigation } from "./_components/RecordNavigation";
 import "./_components/navigation.css";
 
-/** NAV-06: persistent navigation host spans catalogue and article routes. */
+/** X7 / SYS-02, 11 September 2026: RouteLoader now covers article navigation
+ * and image decoding. Keep the article image fade in this segment. */
 export default function RecordLayout({ children }: { children: ReactNode }) {
-  return <><RecordNavigation />{children}</>;
+  return children;
 }

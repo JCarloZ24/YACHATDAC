@@ -1129,21 +1129,39 @@ was hand-copied **three times byte-identical**. So the page was built as a **hub
 keep their excerpt and their link, the hub is the only place the whole set sits together, and
 where the same fact appears in both, the hub frames it differently.
 
-| § | Section | ⚡ | vh | Ground | Loud | Source |
+| § | Section | ⚡ | vh | Ground | Loud | Built with |
 |---|---|---|---|---|---|---|
-| 01 | Hero — FULL BLEED · *a guest on Country* | 4 | 150 | photo → evergreen | **media** | `truth.ts:118` |
-| 02 | **The obligation** — alone on a screen | 4 | 100 | evergreen | **type** | `about.ts:117` · `R22` |
-| 03 | Open research — three disciplines resolve | 3 | 120 | canvas | **type** | `truth.ts:393` |
-| 04 | **What we do not know** — ⚑ the gaps as an OFFER | 5 | 190 | canvas | **media** | `resources.ts:274-300` |
-| 04b | BREATH | 1 | 55 | full bleed | **none** | — |
-| 05 | Who we already work with — nine names | 3 | 130 | charcoal | **type** | `about.ts:158-187` |
-| 06 | **Ways in** — ⚑ the section the site never had | 4 | 140 | evergreen | **transition** | `living-work.ts:359-386` |
-| 07 | How work is agreed — the container never fills | 2 | 100 | roasted | **none** | `resources.ts:366-372` |
-| 08 | Get in touch — cloned from Our People §06 | 3 | 150 | canvas → dark | **transition** | `contact.ts` |
+| 01 | Hero — FULL BLEED · *a guest on Country* | 4 | 150 | photo → evergreen | **none** | `partnershipsHero` |
+| 02 | **The obligation** — alone on a screen | 4 | 100 | evergreen | **none** | `partnershipsObligation` |
+| 03 | Open research — three disciplines resolve | 3 | 120 | canvas | **type** | `partnershipsOpenResearch` |
+| 04 | **Four open questions** — ⚑ the gaps as an OFFER | 5 | 190 | canvas | **media** | `hosting` |
+| 04b | BREATH | 1 | 55 | full bleed | **none** | — held |
+| 05 | Who we already work with — nine names | 3 | 130 | charcoal | **none** | `partnershipsPartners` |
+| 06 | **Ways in** — ⚑ the section the site never had | 4 | 140 | evergreen | **none** | `partnershipsWaysIn` |
+| 07 | How work is agreed — the container never fills | 2 | 100 | roasted | **none** | — held |
+| 08 | Get in touch — one address, one action | 3 | 70 | canvas → dark | **none** | `partnershipsEnding` |
 | 09 | Footer | 1 | 135 | charcoal | **none** | shared |
 
-**Reads as:** media · type · type · media · none · type · transition · none · transition · none.
-No channel three deep; both ⚡4–5 runs are broken by a rest.
+**Reads as:** none · none · type · media · none · none · none · none · none · none.
+
+⚠ **THE LOUD COLUMN WAS CORRECTED ON 11 SEPTEMBER 2026, when the page was actually
+built.** It previously read media · type · type · media · none · type · transition · none ·
+transition · none — written from the frame, before a line of this page's motion existed. What
+got built is quieter, and the column now records what the code declares rather than what the
+frame hoped for.
+
+The arbiter is `compose.ts`'s own LOUD table, not judgement: **media** `breakOut` `bleed`
+`plateParallax` `mosaic` `aperture` · **type** `aperture` `ghostType` `knockout` `display` ·
+**transition** `groundRamp` `overlap` `handoff` `escape`. `settle`, `arrive`, `scatterResolve`,
+`flattenReveal`, `waveHandoff` and `hold` are in none of them — so a screen built from those is
+quiet however much it moves. §01 had already been corrected this way on 9 September for exactly
+the same reason; §02, §05, §06 and §08 follow it now.
+
+That leaves **two loud screens on the page** — §03's character `display` and §04's media — which
+is what F7 asks for. No channel is even two deep, let alone three.
+
+⚠ **§08 is 70vh, not 150.** The six-field contact block it was ledgered with was removed on
+2 September; the section is one address and one action.
 
 ### The inversion — §04 is the page's argument
 
@@ -1762,6 +1780,18 @@ The Way Forward on the canvas, 9 September 2026: the closing statement followed 
 ---
 
 ## The site's loading panel
+
+**Latest amendment — 11 September 2026, August (X7 / SYS-02):** the named
+“You're viewing” panel now runs on every public page visit: internal links,
+browser back/forward, direct loads, refreshes and hard refreshes. Warm caches
+still pass readiness checks because animation setup and media decoding happen
+after file retrieval. The panel waits for fonts, opening media, motion setup
+and stable layout, then announces the destination and fades out before gated
+entrances run. Lazy media below the opening view remains deferred. The existing
+homepage film follows the readiness panel on a first visit. Reduced motion
+keeps the static loading state, without the sweep or fade. Escape/Tab and a
+bounded ceiling release failed loads. This supersedes the hard-load-only,
+quiet-lift and separate article-cover behaviour in the earlier notes below.
 
 *Added 11 September 2026, user direction — one panel for every route,
 replacing the per-page loaders.*

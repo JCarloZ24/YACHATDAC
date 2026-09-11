@@ -65,16 +65,10 @@ export default function RootLayout({
             about layout's own comment always said this belonged at the root
             "when more pages promote"; they have. Renders nothing. */}
         <TransitionProvider />
-        {/* The blink itself — the panel that covers the swap. Mounted beside
-            the provider, which owns the scroll reset and the entrance gate
-            that happen behind it. */}
+        {/* X7: request the shared loading cover before following a link. */}
         <RouteBlink />
-        {/* The site's one loading panel, announcing whichever page it covers
-            (user direction 11 September 2026). Hard loads only, gated on the
-            motion pass having built rather than on connection speed — see
-            RouteLoader for the measurements. Sits above the header so it
-            covers the whole document, and mounted here rather than per page so
-            its once-per-page-load flag keeps working across navigations. */}
+        {/* X7 / SYS-02, 11 September 2026: the named readiness cover for every
+            public route, link navigation, refresh and hard refresh. */}
         <RouteLoader />
         <SiteHeader />
         <main className="flex-1">{children}</main>

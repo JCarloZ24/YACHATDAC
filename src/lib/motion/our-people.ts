@@ -118,6 +118,7 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
       if (heroFrame) gsap.set(heroFrame, { clearProps: "transform" });
       if (heroCopy) gsap.set(heroCopy, { clearProps: "transform" });
       root.removeAttribute("data-people-ready");
+      root.dataset.pageReady = "fallback";
       root.removeAttribute("data-people-active");
       sections.forEach(section => section.element.removeAttribute("data-people-scroll"));
       refreshScrollBounds();
@@ -256,6 +257,7 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
     preference.addEventListener("change", restart);
     printing.addEventListener("change", restart);
     if (prefersReduced() || printing.matches || escaped) {
+      root.dataset.pageReady = "fallback";
       // Reading can continue in the ordinary document. Re-enabling motion
       // measures that new position instead of restoring an older saved one.
       position = undefined;
@@ -264,6 +266,8 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
     }
 
     async function build() {
+      // X7 / SYS-02: keep the cover through asynchronous scene composition.
+      root.dataset.pageReady = "loading";
       await document.fonts.ready;
       if (disposed) return;
       try {
@@ -455,6 +459,7 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
         const contentStamp = words();
         mutation = new MutationObserver(() => { if (words() !== contentStamp) schedule(); });
         mutation.observe(track!, { childList: true, subtree: true, characterData: true });
+        root.dataset.pageReady = "ready";
       } catch (error) {
         console.warn("Our People canvas unavailable; the full document remains available.", error);
         release();

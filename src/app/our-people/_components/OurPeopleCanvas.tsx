@@ -23,7 +23,10 @@ export function OurPeopleCanvas() {
       if (cancelled) return;
       unregister = register(createOurPeople(root, element));
       start();
-    }).catch(() => { /* The HTML document is already the fallback. */ });
+    }).catch(() => {
+      // X7 / SYS-02: a failed enhancement also settles the shared loader.
+      if (!cancelled) root.dataset.pageReady = "fallback";
+    });
     return () => { cancelled = true; unregister?.(); };
   }, { scope: canvas });
   return <canvas ref={canvas} aria-hidden="true" className="people-canvas pointer-events-none absolute inset-0 h-full w-full" />;

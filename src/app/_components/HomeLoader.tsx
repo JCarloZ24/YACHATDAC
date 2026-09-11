@@ -9,25 +9,8 @@ import { createHomeLoader } from "@/lib/motion/home-loader";
 import { homeLoader } from "@/content/homepage";
 import { HOME_LOADER_ARTWORK } from "@/content/kit";
 import { homeLoaderFilm } from "@/content/homepage-media";
-import { INTRO_SEEN_KEY } from "@/lib/intro-gate";
 
 gsap.registerPlugin(useGSAP);
-
-/**
- * Runs during HTML PARSE, before first paint — no flash of the cover on a
- * repeat visit. Copied in shape from lofi/Preloader.tsx:53, including the
- * `currentScript.parentNode` reach-up, which needs no id and no querySelector
- * and does not care when hydration happens.
- *
- * It has to live INSIDE the cover rather than stamping <html> from the root
- * layout: /homepagev2 ships a forked loader carrying the same
- * `data-home-loader` attribute, and a global rule would silently gate that too.
- *
- * The ?intro=1 force is tested here as well as at runtime. If only the runtime
- * honoured it, a forced visit would parse with the cover already hidden and
- * then have to un-hide it — a flash in the opposite direction.
- */
-const SKIP_IF_SEEN = `try{if(!/[?&]intro=1(&|$)/.test(location.search)&&sessionStorage.getItem('${INTRO_SEEN_KEY}')){document.currentScript.parentNode.setAttribute('data-seen','');}}catch(e){}`;
 
 /**
  * The homepage opening — a 39-second film, then a door.
@@ -50,6 +33,10 @@ const SKIP_IF_SEEN = `try{if(!/[?&]intro=1(&|$)/.test(location.search)&&sessionS
 export function HomeLoader() {
   const cover = useRef<HTMLDivElement>(null);
 
+  // 11 September 2026, logo navigation fix: the shared PageLoader covers
+  // startup while init checks the session and ?intro=1 before attaching the
+  // film. Keep that check in the lifecycle; React does not execute inline
+  // script tags when this component mounts during client navigation.
   useGSAP(() => {
     if (!cover.current) return;
     const unregister = register(createHomeLoader(cover.current));
@@ -67,9 +54,8 @@ export function HomeLoader() {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={0}
-      className="fixed inset-0 z-[100] overflow-hidden bg-night-black text-gold data-[seen]:hidden motion-reduce:hidden"
+      className="fixed inset-0 z-[100] overflow-hidden bg-night-black text-gold motion-reduce:hidden"
     >
-      <script dangerouslySetInnerHTML={{ __html: SKIP_IF_SEEN }} />
       <noscript><style>{"[data-home-loader]{display:none!important}"}</style></noscript>
       {/* The film. `muted playsInline` in the MARKUP are what make autoplay
           legal at all — the muted attribute is the fallback state, not the

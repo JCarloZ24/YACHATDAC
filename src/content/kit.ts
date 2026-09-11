@@ -600,61 +600,71 @@ export const PHOTOS: Photo[] = [
      `pt-research` nor the tattoo note on `pt-soil` is answered by a better
      export. Both were re-checked against the supplied files on 10 September
      and both still apply. */
-  /* ⚠ 2880 AND NOT 2000, and it is the one row here that breaks the batch
-     convention. Every other photograph on the site is a 2000px export because
-     every other photograph sits in a box narrower than the viewport. This one
-     went full-bleed at 1440 x 900 on 10 September, and at 2x — which is what
-     the reviewer is actually looking at — a 1440 CSS-px box wants 2880 real
-     pixels. next/image asks for 3840, gets capped at the source, and upscales
-     whatever it is given: at 2000 the hero was visibly soft, which is the
-     defect this row fixes. ASSETS.md's note that 2000px frames "do not have
-     headroom for full-bleed at 1440" is exactly this, and the reason it can be
-     answered here is that the batch-3 master is 4267px wide.
+  /* ⚑ THE HERO PHOTOGRAPH WAS REPLACED, 11 September 2026 (user direction).
+     `aerial-crew-burnedge` is gone from this row — the burn-edge frame with the
+     crew walking it — and with it the whole apparatus that frame needed. What
+     stood here recorded a 4x-upscaled drone VIDEO frame, an unsharp pass to
+     hide it, and an outstanding request to the videographer for a better
+     source. None of that applies any more and keeping it would have described
+     a picture the site no longer shows.
 
-     644KB, against the 2.5MB above-the-fold budget (R11) and as the only
-     above-fold media on the route. Do not raise it further without re-reading
-     that budget — quality 82 was chosen against 78 and 86 on size, not taste.
+     ⚑ THE NEW SOURCE IS A REAL PHOTOGRAPH, measured rather than assumed. At
+     2000 x 1124 it carries 1.618 bits per pixel, and round-tripping it down to
+     1440 and back costs 32.8 dB. The frame it replaces cost 42.5 dB at the same
+     width — above 40 dB means nothing is there, so the old master held no real
+     detail past ~1200px while this one holds it to its full width. Seven times
+     the useful information, from a file a third the pixel count.
 
-     ⚠⚠ THE MASTER IS AN UPSCALED VIDEO FRAME, AND 2880 DOES NOT MAKE IT SHARP.
-     Measured 10 September, because the picture still read soft after the
-     resolution fix and a second guess was not good enough. Round-tripping the
-     4267px master down and back up costs 42.5dB at 1440 and 38.8dB at 1000 —
-     against 37.4dB at 1440 for `hands-soil`, a genuine stills capture from the
-     same batch. In plain terms: discarding everything above ~1200px in this
-     frame is very nearly lossless, so the master carries roughly 1080p of real
-     detail upscaled about four times. It is a drone VIDEO frame, which the
-     Figma readout's source name (`…_1_105_c.png`) already implied and a 1:1
-     crop confirms — no leaf detail, smeared branches, blocked-up burn scar.
+     ⚠ 2880 IS STILL AN UPSCALE, just a defensible one. The box is full-bleed at
+     1440 CSS px and wants 2880 device pixels at 2x; this source gives 1954 after
+     the straightening crop, so the export is a 1.47x lanczos enlargement of
+     genuinely sharp pixels rather than the old 4x enlargement of mush. No
+     unsharp pass is applied and none is needed. 793KB against R11's 2.5MB
+     above-the-fold budget, as the only above-fold media on the route.
 
-     NO EXPORT SETTING FIXES THIS. The pixels are not in the file. 2880 is kept
-     anyway because the browser needs 2880 device pixels at 2x regardless, and
-     a lanczos upscale here beats the browser's on the same source.
+     ⚠ THE FILENAME CHANGED WITH THE PHOTOGRAPH, and that is deliberate rather
+     than tidy. Writing a different picture to the same `pt-hero.webp` left
+     `next/image` serving the OLD one: its optimizer caches by (src, width,
+     quality), the path had not changed, and deleting `.next/cache/images` did
+     not shift it — the raw file returned 2880x1588 while the optimized URL
+     kept returning the previous frame's 1.341 aspect. The alt text updated and
+     the pixels did not, which is the worst version of that bug because it
+     looks like the change simply did not happen.
 
-     ⚠ AN UNSHARP PASS IS APPLIED TO THIS DERIVATIVE — `unsharp=5:5:0.8:5:5:0`
-     — and it is the only photograph on the site carrying one. It restores edge
-     acutance on the track, the burn boundary and the branches; it does NOT add
-     detail and it is not an AI upscale, which the artwork rules forbid. The
-     master in `brand/photography/` is untouched, per the never-overwrite-a-
-     master rule. Recorded here so nobody mistakes this file for the delivered
-     frame or re-derives it without the pass.
+     A new path is a new cache key, so every layer — the browser, the dev
+     optimizer, Vercel's optimizer and any CDN in front of it — fetches the new
+     photograph instead of a returning visitor keeping the old one. Replace the
+     picture, replace the filename.
 
-     ⚑ THE REAL FIX IS A BETTER SOURCE, and it is outstanding. Ask the
-     videographer for either a stills capture of this moment or the original
-     4K clip it was pulled from. The one 4K master on the machine
-     (`1MIN EDIT NO SUPERS.mov`, 3840x2160 ProRes) was checked frame by frame
-     and does NOT contain this shot — it is the guesting edit, no fire and no
-     crew aerial in it.
+     ⚠ IT IS ROTATED 0.55° CLOCKWISE AND CROPPED, and that is the whole of the
+     edit. The user asked for the road level. The angle was not eyeballed: a
+     sweep of candidate rotations picked the one that makes the road's own row
+     profile sharpest, peaking at 0.55°, which agreed with an independent fit of
+     the road's centre line (0.38°) and disagreed with the vehicle's long axis
+     (1.71° — the vehicle sits slightly askew on the track, so it is not the
+     reference it looks like). The road now measures 0.119° off level, 6px of
+     drift across 2880. The crop is 22px of inset, which is what 0.55° of
+     rotation leaves empty in the corners. The master in `brand/photography/` is
+     untouched.
 
-     ⚠ ANY OTHER ROW GOING FULL-BLEED NEEDS THE SAME TREATMENT, and most of the
-     collection cannot have it: a 2000px derivative whose master is also 2000px
-     has nowhere to go. Check the master before promoting a photograph to a
-     full-width hero.
+     ⚠ SENSITIVITY IS UNCHANGED IN KIND AND BETTER IN DEGREE. This is still an
+     aerial of the property with a track legible, so batch-3's rule for
+     `country-wide-track` and the frame it replaces still binds: NO COORDINATES,
+     NAMES OR BOUNDARIES in captions, alt text or map data.
 
-     `frame`, and the layer name says why: "nobody is identifiable from height,
-     the safe way to show a crew". Fifteen adults from directly above, no face
-     legible at any resolution — the permission rests on the altitude, so the
-     image plane does not move. */
-  { id: "pt-hero", src: "/media/library/partnerships/pt-hero.webp", width: 2880, height: 2148, grade: "frame", batch: 3, master: "aerial-crew-burnedge", subject: "Drone view along an escarpment burn edge, a crew walking it on foot — no faces identifiable" },
+     What has gone is the people. The old frame carried fifteen adults and its
+     permission rested entirely on altitude — "nobody is identifiable from
+     height, the safe way to show a crew" — which is why it was graded `frame`
+     and why src/lib/motion/partnerships.ts holds the plane still under the
+     overture. This frame has one vehicle and no one in it, so that argument no
+     longer applies to it.
+
+     ⚠ THE GRADE STAYS `frame` ANYWAY, and deliberately. Nothing here needs the
+     plane to move, the hero's score was written around a held photograph, and
+     raising it to `full` is a motion decision for a person rather than a
+     consequence of swapping an image. Raise it if someone asks; do not assume
+     it. */
+  { id: "pt-hero", src: "/media/library/partnerships/pt-hero-track.webp", width: 2880, height: 1588, grade: "frame", batch: 3, master: "NECI_TurraBurra_AStudios_March22-0267", subject: "Drone view straight down on a red dirt track through scrub, one vehicle on it — no people in frame" },
   /* ⚠ CONSENT UNRESOLVED. The one research frame in the collection, and its
      subject's face is visible and identifiable (batch-1.md). R24 applies here
      exactly as it does on Our People and About §07: use was cleared,

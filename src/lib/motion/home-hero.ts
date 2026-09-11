@@ -10,6 +10,7 @@ import { prefersReduced, type MotionModule } from "@/lib/motion-controller";
 import { HOME_SCENE, registerHome } from "./effects/home";
 import { createLandMaterial } from "./home-land";
 import { HOME_PORTAL } from "@/content/kit";
+import { awaitEntry, routeEntryPending } from "./route-entry";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,11 +75,13 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
 
   const init = () => {
     destroy();
+    root.dataset.pageReady = "loading";
     let disposed = false;
     let renderer: WebGLRenderer | undefined;
     let context: gsap.Context | undefined;
     let resizeObserver: ResizeObserver | undefined;
     let loaderObserver: MutationObserver | undefined;
+    let releaseEntry: (() => void) | undefined;
     let intersection: IntersectionObserver | undefined;
     let clearListeners = () => {};
     let offscreen = false;
@@ -98,6 +101,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
      * which hides the cover in CSS before any of this runs.
      */
     const loaderCovering = () => {
+      if (routeEntryPending()) return true;
       const loader = document.querySelector<HTMLElement>("[data-home-loader]");
       return Boolean(loader) && !loader!.hidden
         && getComputedStyle(loader!).display !== "none";
@@ -114,6 +118,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
     const materials: ShaderMaterial[] = [];
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const restore = () => {
+      root.dataset.pageReady = "fallback";
       root.removeAttribute("data-hero-canvas");
       root.removeAttribute("data-hero-motion");
       root.removeAttribute("data-hero-phase");
@@ -123,6 +128,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
       disposed = true;
       disarmSafety();
       loaderObserver?.disconnect();
+      releaseEntry?.();
       resizeObserver?.disconnect();
       intersection?.disconnect();
       breeze?.kill();
@@ -179,7 +185,10 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
     };
     cleanup = release;
     preference.addEventListener("change", init);
-    if (prefersReduced()) return;
+    if (prefersReduced()) {
+      root.dataset.pageReady = "fallback";
+      return;
+    }
     // ⚠ NOT armed while the opening film is still up (10 September 2026). This
     // guard destroys the canvas after ten seconds and `restore()` strips
     // data-hero-canvas — the attribute invitation.css uses to hide The
@@ -366,6 +375,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         document.addEventListener("visibilitychange", onVisibility);
         // The async canvas pin changes the following sections' document position.
         ScrollTrigger.refresh();
+        root.dataset.pageReady = "ready";
 
         const begin = () => {
           if (disposed || document.hidden) return;
@@ -384,7 +394,9 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           loaderObserver = new MutationObserver(begin);
           loaderObserver.observe(loader, { attributes: true, attributeFilter: ["hidden"] });
         }
-        begin();
+        // X7 / SYS-02, 11 September 2026: a warm-cache canvas must also wait
+        // for the shared readiness cover. The film keeps its own door after it.
+        releaseEntry = awaitEntry(begin);
       } catch {
         // WebGL, the network or a decode can fail independently of the
         // readable page: the DOM still and the copy over it stay.

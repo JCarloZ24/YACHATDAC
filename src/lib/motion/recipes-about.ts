@@ -369,33 +369,9 @@ export function coverSeams(
           const nameOf = (g: (typeof gates)[number]) =>
             (g.t.vars.pin as HTMLElement).getAttribute("data-ab") ?? "?";
 
-          // The site header is an 88px overlay that scrolls with the page,
-          // and the FIRST hold parks well short of that (the hero's 100%
-          // mark is ~84px in), leaving the navbar's lower half hanging on
-          // screen. A scrubbed exit boost walks it out ~1.5× faster than
-          // the page, so it is fully gone by the moment the hold can
-          // engage — and it returns symmetrically on the way back up.
-          // gates[0] is the hero's (the pair list starts there).
-          const header = document.querySelector<HTMLElement>("header");
-          const firstGate = gates[0];
-          if (header && firstGate && !firstGate.isShort()) {
-            gsap.fromTo(
-              header,
-              { y: 0 },
-              {
-                y: () =>
-                  -Math.max(0, header.offsetHeight - readMark(firstGate) + 8),
-                ease: EASE.machine,
-                scrollTrigger: {
-                  trigger: document.body,
-                  start: 0,
-                  end: () => readMark(firstGate),
-                  scrub: SCRUB.light,
-                  invalidateOnRefresh: true,
-                },
-              },
-            );
-          }
+          // D2, August, 11 September 2026: SiteHeader owns its scroll exit
+          // and hover reveal. The former exit boost moved its parent too,
+          // leaving the recalled 130px bar clipped by 48px on this page.
 
           let lastY = window.scrollY;
           let playing = false;

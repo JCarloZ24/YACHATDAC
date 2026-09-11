@@ -27,7 +27,7 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
   const words = beat.headline?.split(/\s+/).filter(Boolean) ?? [];
   const truthParagraphs = [[truth.sequence?.subjectDetail[0] ?? ""], ...(truth.sequence?.steps.map(step => [step.text]) ?? []), [truth.body[0] ?? ""], truth.body.slice(1)];
   return (
-    <section id={beat.id} data-home-hero data-nav-hero className="relative isolate h-svh min-h-[680px] overflow-hidden bg-charcoal lg:min-h-[760px]">
+    <section id={beat.id} data-home-hero data-nav-hero data-page-ready="loading" className="relative isolate h-svh min-h-[680px] overflow-hidden bg-charcoal lg:min-h-[760px]">
       {/* The scene itself, as markup. The canvas draws this same photograph,
           so a machine with no WebGL — and a reader who asked for less motion —
           gets the hero it was meant to have rather than a black screen.

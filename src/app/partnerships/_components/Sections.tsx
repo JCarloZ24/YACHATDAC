@@ -30,13 +30,27 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  *   08  The ending — one action
  *   09  Footer — already built to Marc's styling; the page declares its ground
  *
- * ⚠ §01 MOVES; §02 DOWN ARE STATIC BY DECISION, like /our-people and /about.
- * The hero carries an arrival overture and the only `data-pt-*` hooks in this
- * file (user direction, 9 September 2026) — its score, and the reason the
- * photograph holds still under it, are at src/lib/motion/partnerships.ts.
- * Every other section has no motion module, no scroll animation, no hover and
- * no data-* motion hooks, and the whole page still renders the same with
- * JavaScript off: the overture only ever animates *to* the server markup.
+ * ⚑ THE WHOLE PAGE MOVES NOW (user direction, 11 September 2026), scored from
+ * the wireframe's side-notes. This replaces the "§02 down are static by
+ * decision" note that stood here from 9 September; §04b and §07 are the only
+ * still screens left and both are still by instruction — the breath is a held
+ * photograph, the protocol screen "cites hold".
+ *
+ * The scores are at src/lib/motion/partnerships.ts (§02, §03, §05, §06, §08),
+ * `hosting` in src/lib/motion/recipes.ts (§04) and the hero's own overture.
+ * They are wired in ./Motion.tsx and ledgered in docs/motion/scenes.md.
+ *
+ * ⚠ THE MARKUP IS STILL THE FINISHED DOCUMENT. Every score animates *to* the
+ * server markup, never away from it, so the page reads the same with
+ * JavaScript off and under reduced motion — where `clearAll` strips every
+ * inline style. The one place that needed arranging for it is §04's shutter,
+ * which renders OPEN and is closed by the timeline rather than the reverse;
+ * see the note at the disclosure.
+ *
+ * Motion hooks in this file: `data-pt` on a section root, and inside it
+ * `data-pt-settle`, `data-pt-display`, `data-pt-arrive`, `data-pt-card`,
+ * `data-pt-media` — plus §04's `data-heading` / `data-shutter` /
+ * `data-vessel-source`, which are `hosting`'s contract and not this page's.
  *
  * ⚠⚠ THIS PAGE HAS NO DRAFT, and that is its defining constraint. /about and
  * /our-people were built from client drafts; this route exists because four
@@ -298,21 +312,28 @@ export function PartnershipsHero() {
           `frame` (kit.ts, `pt-hero`) and carries no motion hook, so this box
           holds still under everything the overture does around it.
 
-          ⚠ THE VISIBLE ⟡ STAND-IN BADGE WAS REMOVED on user request,
-          9 September 2026. What it said is still true and still held:
-          `aerial-crew-burnedge` is a placeholder — THERE IS NO PHOTOGRAPH OF
-          RESEARCH, A SURVEY OR A SCIENTIST ANYWHERE IN THE COLLECTION, and
-          this frame stands in because nobody is identifiable from height,
-          which is the safe way to show a crew. It must be replaced with a
-          cleared frame of research being done on Country before launch. The
-          claim now lives only here, in `kit.ts` and in
-          docs/motion/scenes.md — a reviewer looking at the page will no
-          longer be told. */}
+          ⚑ THE PHOTOGRAPH WAS REPLACED on 11 September 2026 (user direction):
+          a drone frame looking straight down on a track through scrub, one
+          vehicle on it, straightened so the road reads level. The note that
+          stood here described `aerial-crew-burnedge` — the burn-edge frame
+          with the crew — as a stand-in, and that is no longer what this box
+          shows. Provenance and the straightening are recorded at `pt-hero` in
+          kit.ts.
+
+          ⚠ ONE THING FROM THAT NOTE SURVIVES AND IS STILL OPEN: THERE IS NO
+          PHOTOGRAPH OF RESEARCH, A SURVEY OR A SCIENTIST ANYWHERE IN THE
+          COLLECTION. Replacing the hero did not answer that — it only means
+          the hero is no longer standing in for it. §03 still carries the
+          single research frame, still with consent unresolved (R24).
+
+          ⚠ AND IT IS STILL AN AERIAL WITH A TRACK LEGIBLE, so batch-3's rule
+          binds on the alt text above as much as on any caption: no
+          coordinates, names or boundaries. */}
       <div className="relative h-[58svh] w-full overflow-hidden lg:h-screen">
         <div data-motion={HERO?.grade ?? "frame"} className="absolute inset-0">
           <MediaOrField
             src={HERO?.src ?? null}
-            alt="A drone view along an escarpment burn edge, a crew walking it on foot"
+            alt="A drone view looking straight down on a dirt track running through scrub, a single vehicle on it"
             sizes="100vw"
             priority
             fieldClass="bg-evergreen"
@@ -414,12 +435,12 @@ export function PartnershipsHero() {
               centred. Measured off the readout, not guessed — the button was
               rendering a 12px label centred at 73/73, which is why it read as
               floating in the blob. */}
-          <BlobButton href="#ways-in" tone="burnt" still size="cta" align="frame">
+          <BlobButton href="#ways-in" tone="burnt" size="cta" align="frame">
             See the ways in →
           </BlobButton>
           <a
             href="#open-questions"
-            className="eyebrow text-sm tracking-[0.28em] text-gold"
+            className="eyebrow inline-block text-sm tracking-[0.28em] text-gold underline-offset-4 transition-transform duration-(--dur-small) ease-quiet hover:underline motion-safe:hover:translate-x-1"
           >
             → Four open questions
           </a>
@@ -451,17 +472,26 @@ export function TheObligation() {
   const [claim, consequence] = sentences(RECIPROCITY_BODY);
 
   return (
-    <section className={`relative overflow-hidden bg-evergreen text-canvas ${SCREEN.obligation}`}>
+    <section
+      data-pt="obligation"
+      className={`relative overflow-hidden bg-evergreen text-canvas ${SCREEN.obligation}`}
+    >
       <RingArtwork
         piece="b"
         className="-top-32 left-[44%] w-[62.5rem]"
       />
       <div className={`${COLUMN} relative py-16 lg:py-28`}>
         <p className={EYEBROW_DARK}>The obligation</p>
-        <h2 className="headline mt-8 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]">
+        <h2
+          data-pt-settle
+          className="headline mt-8 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]"
+        >
           {claim}
         </h2>
-        <p className="mt-14 max-w-[1000px] text-xl leading-[1.5] font-medium sm:text-[1.75rem]">
+        <p
+          data-pt-arrive
+          className="mt-14 max-w-[1000px] text-xl leading-[1.5] font-medium sm:text-[1.75rem]"
+        >
           {consequence}
         </p>
       </div>
@@ -557,7 +587,12 @@ export function OpenResearch() {
           <div>
             {DISCIPLINES.map((discipline) => (
               <div key={discipline} className="border-t border-charcoal/14 py-8">
-                <p className="headline text-2xl leading-[1.2] text-evergreen sm:text-[2.5rem]">
+                {/* One `display` target per line — the effect splits only its
+                    first element, so three lines are three calls. */}
+                <p
+                  data-pt-display
+                  className="headline text-2xl leading-[1.2] text-evergreen sm:text-[2.5rem]"
+                >
                   {discipline}
                 </p>
               </div>
@@ -568,6 +603,7 @@ export function OpenResearch() {
           <figure className="relative">
             <div className="relative aspect-[420/300] w-full overflow-hidden rounded-3xl">
               <div
+                data-pt-media
                 data-motion={RESEARCH?.grade ?? "frame"}
                 className="absolute inset-0"
               >
@@ -673,7 +709,10 @@ export function OpenQuestions() {
             has no draft, so the frame governs here. See the header note in
             src/content/partnerships.ts — the override is local and the shared
             module is deliberately untouched. */}
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]">
+        <h2
+          data-heading
+          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+        >
           {partnershipsHiFi.openQuestions.title}
         </h2>
         {/* The frame's shorter lede, not `knowledgeGaps.lede`. The Record's
@@ -709,7 +748,7 @@ export function OpenQuestions() {
             canvas eyebrows on this page moved with it for the same reason. */}
         <a
           href="#ways-in"
-          className="eyebrow mt-8 block text-sm tracking-[0.28em] text-ochre"
+          className="eyebrow mt-8 inline-block text-sm tracking-[0.28em] text-ochre underline-offset-4 transition-transform duration-(--dur-small) ease-quiet hover:underline motion-safe:hover:translate-x-1"
         >
           → See the ways in
         </a>
@@ -764,14 +803,35 @@ export function OpenQuestions() {
                     {gap.detail}
                   </p>
 
-                  {/* The disclosure, at rest: already open. */}
+                  {/* THE DISCLOSURE. Rest state is OPEN — the answer is plain
+                      text and the shutter is `scale-y-0` — and `hosting` closes
+                      the shutter only for readers whose timeline actually runs.
+                      Authoring it shut would hide the answer with JavaScript
+                      off and under reduced motion, where the cut clears every
+                      inline style. See the contract note on `hosting`.
+
+                      The shutter wears the card's OWN ground, not a new tone:
+                      it is the card closing over its answer, not a panel
+                      arriving on top of one. It is a sibling of
+                      [data-vessel-source] because flattenReveal looks for the
+                      source in the shutter's parentElement. */}
                   <div className="mt-auto pt-10">
                     <p className="eyebrow text-[10px] leading-[1.3] tracking-[0.5em] text-gold">
                       What is running
                     </p>
-                    <p className="mt-2 text-[1.0625rem] leading-[1.4] font-medium">
-                      {gap.running}
-                    </p>
+                    <div className="relative mt-2">
+                      <p
+                        data-vessel-source
+                        className="text-[1.0625rem] leading-[1.4] font-medium"
+                      >
+                        {gap.running}
+                      </p>
+                      <span
+                        data-shutter
+                        aria-hidden
+                        className={`pointer-events-none absolute inset-0 origin-bottom-left scale-y-0 ${GAP_GROUNDS[i]}`}
+                      />
+                    </div>
                   </div>
                 </div>
               </article>
@@ -804,7 +864,12 @@ export function Breath() {
           fieldClass="bg-evergreen/40"
         />
       </div>
-      <SeamGlyph motif="a" className="right-10 bottom-8 w-11" />
+      {/* Top-right, per the frame (2955:26144): 60 from the top of the image
+          and 113 from its right edge, not the 24 the card glyphs use. The
+          build had it bottom-right at 40/32. The image is `h-[55svh]` — 495 at
+          a 900 viewport, against the frame's 493 — so the frame's own pixel
+          insets land in the right place without being converted. */}
+      <SeamGlyph motif="a" className="top-[60px] right-[113px] w-11" />
     </section>
   );
 }
@@ -843,7 +908,10 @@ const PARTNER_GROUNDS = ["bg-evergreen", "bg-roasted", "bg-midnight"] as const;
 
 export function AlreadyWorkingWith() {
   return (
-    <section className={`relative overflow-hidden bg-charcoal text-canvas ${SCREEN.partners}`}>
+    <section
+      data-pt="partners"
+      className={`relative overflow-hidden bg-charcoal text-canvas ${SCREEN.partners}`}
+    >
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="b" className="top-[8%] left-[62%] w-[62.5rem]" />
         <RingArtwork piece="a" className="-left-52 bottom-[6%] w-[45rem]" />
@@ -851,7 +919,10 @@ export function AlreadyWorkingWith() {
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
         <p className={EYEBROW_DARK}>{partnershipsHiFi.partners.eyebrow}</p>
-        <h2 className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]">
+        <h2
+          data-pt-settle
+          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]"
+        >
           Who we already work with
         </h2>
         <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl">
@@ -869,6 +940,7 @@ export function AlreadyWorkingWith() {
           {partners.groups.map((group, i) => (
             <div
               key={group.title}
+              data-pt-card
               className={`relative rounded-3xl ${PARTNER_GROUNDS[i]} p-6 lg:min-h-[27.5rem] lg:p-8`}
             >
               {/* ⚑ THE FRAME'S CARD, 10 September 2026 (node 0-1).
@@ -990,7 +1062,10 @@ export function WaysIn() {
             larger and only this one has a readout, so only this one moves.
             ⚑ If the rest of the page is meant to be 64 too, that is a single
             change across five headings — ask before assuming it. */}
-        <h2 className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.023em] sm:text-5xl lg:text-[4rem]">
+        <h2
+          data-pt-settle
+          className="headline mt-6 text-4xl leading-[1.2] tracking-[-0.023em] sm:text-5xl lg:text-[4rem]"
+        >
           Ways in
         </h2>
 
@@ -1002,6 +1077,8 @@ export function WaysIn() {
             <a
               key={way.title}
               href={way.href}
+              data-pt-card
+              data-pt-lift
               /* THE FRAME'S CARD, read off node 2958:26269 (way 1).
                  298 x 360, radius 24, padding 24 — all three already fell out
                  of the grid: `lg:grid-cols-4` inside the 1240 column at the
@@ -1020,7 +1097,7 @@ export function WaysIn() {
 
                  The glyph is w-11 (44) and not w-14 (56): the frame's asset
                  panel gives the boomerang 44.67 wide. */
-              className={`relative flex flex-col rounded-3xl ${way.ground} px-6 pb-[42px] pt-[112px] text-canvas lg:min-h-[22.5rem]`}
+              className={`group relative flex flex-col rounded-3xl ${way.ground} px-6 pb-[42px] pt-[112px] text-canvas lg:min-h-[22.5rem]`}
             >
               <SeamGlyph
                 motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
@@ -1048,7 +1125,31 @@ export function WaysIn() {
                   the y the frame gives it. Setting it as a margin on this
                   element instead would have put the number in the wrong place
                   and left the 24/42 asymmetry looking like a mistake. */}
-              <p className="eyebrow mt-auto pt-6 text-xs leading-[1.5] tracking-[0.333em] text-gold">
+              {/* ⚠ A FIXED ONE-LINE BOX, and that is what keeps the four CTAs
+                  on one line as a row.
+
+                  `mt-auto` pins this element's BOTTOM to the card's content
+                  edge, so its height decides where its first line sits. "Four
+                  open questions" is the only label that wraps, and at two
+                  lines the box grew to 36 and pushed its first line 18px above
+                  the other three — visible as one CTA sitting higher than its
+                  neighbours.
+
+                  `h-[18px]` freezes the box at one line however many lines the
+                  label takes, so the FIRST line always lands at 300 from the
+                  card top like the others, and the wrap hangs into the 42px of
+                  bottom padding below it rather than lifting everything. The
+                  overflow is deliberate and the card carries no
+                  `overflow-hidden`, so it shows.
+
+                  `pt-6` went with it: with a fixed height it would have eaten
+                  the line box (Tailwind is border-box), and `mt-auto` already
+                  holds the label off the body copy above. */}
+              {/* The label answers a hover on the CARD, not on itself: it is a
+                  <p> and the whole card is the anchor, so without `group-hover`
+                  it sat inert while the card lifted under it. Underline is the
+                  part that says "clickable"; the nudge is motion-safe only. */}
+              <p className="eyebrow mt-auto h-[18px] text-xs leading-[1.5] tracking-[0.333em] text-gold underline-offset-4 transition-transform duration-(--dur-small) ease-quiet group-hover:underline motion-safe:group-hover:translate-x-1">
                 → {way.label}
               </p>
             </a>
@@ -1080,8 +1181,8 @@ export function WaysIn() {
             size + align are the hero's, and the frame's numbers agree: label
             inset 26 from the left and 16 from the top, 24 tall, which is
             `Nav & CTA/16` at 150%. */}
-        <div className="mt-16 lg:mt-[107px]">
-          <BlobButton href="/connect" tone="burnt" still size="cta" align="frame">
+        <div data-pt-arrive className="mt-16 lg:mt-[107px]">
+          <BlobButton href="/connect" tone="burnt" size="cta" align="frame">
             Get in touch →
           </BlobButton>
         </div>
@@ -1241,7 +1342,10 @@ export function TheEnding() {
   const office = contactDetails.find((d) => !d.pending);
 
   return (
-    <section className={`relative bg-canvas text-charcoal ${SCREEN.ending}`}>
+    <section
+      data-pt="ending"
+      className={`relative bg-canvas text-charcoal ${SCREEN.ending}`}
+    >
       <WaveDivider ground="var(--color-canvas)" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Canvas ground, so roasted — the same off-white-on-off-white fault
@@ -1260,7 +1364,7 @@ export function TheEnding() {
           One column below lg — at 1024 the two would be 392px apiece and the
           button would sit a screen-width from the words it answers. */}
       <div className={`${COLUMN} relative grid gap-x-12 gap-y-12 pt-16 pb-16 lg:grid-cols-2 lg:items-end lg:pt-24 lg:pb-28`}>
-        <div>
+        <div data-pt-arrive>
           <p className="eyebrow text-xl leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
             Where we are
           </p>
@@ -1275,7 +1379,7 @@ export function TheEnding() {
           </div>
         </div>
 
-        <div className="lg:justify-self-end">
+        <div data-pt-arrive className="lg:justify-self-end">
           {/* OXIDE RED, matching the frame — user direction, 10 September 2026.
 
               ⚑ THIS REVERSES A CALL MADE MINUTES EARLIER in the same session,
@@ -1308,7 +1412,6 @@ export function TheEnding() {
           <BlobButton
             href="/connect"
             tone="oxide"
-            still
             size="cta"
             align="frame"
             shape="narrow"

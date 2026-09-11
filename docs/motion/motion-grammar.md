@@ -1,5 +1,13 @@
 # The motion grammar
 
+**Shared loading amendment — 11 September 2026, user direction (X7 / SYS-02).**
+The following row supersedes the hard-load-only page panel, quiet lift and
+separate route/article covers described below.
+
+| Meaning | Behaviour | Timing | Authority | Implementation |
+| --- | --- | --- | --- | --- |
+| **the page is ready**, every public route | One charcoal cover shows the supplied wordmark and dot sweep, then “You're viewing” and the destination name. Runs on link navigation, browser history, direct arrival, refresh and hard refresh. Waits for fonts, opening image decoding, video frame readiness, the motion build and stable layout; lower-page lazy media loads as needed. Entrances wait until the cover clears. | 200ms dim on navigation; readiness-paced count; 700ms name dwell; 260ms fade out. 12s readiness ceiling, Escape/Tab release and CSS backstop. Reduced motion retains a static readiness cover without animated transitions. | August, 11 September 2026 | `RouteLoader`, `PageLoader`; owned CSS transition, no cross-route GSAP timeline |
+
 *Last updated: 11 September 2026*
 
 | Our People — single canvas, user direction 11 September 2026 | Behaviour | Timing | Reference | Effect |

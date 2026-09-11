@@ -312,10 +312,15 @@ export function BlobButton({
   children: string;
   tone?: "burnt" | "ochre" | "oxide";
   /**
-   * Drop the hover lift. For pages that are static by decision — /our-people,
-   * /about and /partnerships do not move, and that includes under a pointer.
-   * The blob is already a hand-drawn shape rather than a rectangle; it does
-   * not need to answer a cursor to read as a button.
+   * Drop the hover lift. For pages that are static by decision — /our-people
+   * and /about do not move, and that includes under a pointer. The blob is
+   * already a hand-drawn shape rather than a rectangle; it does not need to
+   * answer a cursor to read as a button.
+   *
+   * ⚑ /partnerships LEFT THIS LIST on 11 September 2026. It was static by
+   * decision and passed `still` on all three of its blobs; the page is now
+   * scored, so the buttons answer the cursor like every other moving page's.
+   * The flag itself is unchanged and still correct for the two pages above.
    */
   still?: boolean;
   /** Trailing chevron — right for a link, down for a download. */

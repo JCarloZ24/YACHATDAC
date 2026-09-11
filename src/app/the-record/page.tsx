@@ -109,9 +109,13 @@ export default async function ResourcesPage({
       <OnRequestHold />
       <RecordGrowsV2 />
 
-      {/* §06 ends on the off-white wave, not on charcoal — the footer's
-          band above its burnt crest is canvas here. */}
-      <FooterGround color="var(--color-canvas)" />
+      {/* §06 now ends on its own charcoal ground: the off-white wave that used
+          to close it was removed on 11 September 2026 (see Sections.tsx), and
+          this has to follow it. Left at canvas, the footer would paint a cream
+          band above its burnt crest against a section that is no longer cream —
+          which is the pale gap the wave was removed to be rid of, moved down a
+          section rather than gone. */}
+      <FooterGround color="var(--color-charcoal)" />
     </PageTransition>
   );
 }

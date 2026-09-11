@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { org, primaryAction, primaryNav } from "@/content/site";
 import { ConnectButton } from "@/components/layout/ConnectButton";
 import { WaterNavLink } from "@/components/layout/WaterNavLink";
@@ -158,16 +159,49 @@ export function SiteHeader() {
   const [overHero, setOverHero] = useState(true);
   /** True once the reader is far enough down that the band has left. */
   const [gone, setGone] = useState(false);
-  /** True while the pointer is in the top strip or the navigation. */
+  /** Pointer reveal, released by leaving the navigation or scrolling down. */
   const [called, setCalled] = useState(false);
+  /** Keyboard focus keeps the controls visible; a mouse click must not pin them. */
   const [focused, setFocused] = useState(false);
   const desktopNav = useRef<HTMLElement>(null);
+  const pathname = usePathname();
+
+  /**
+   * A route change puts the band back on its scroll position, and nothing
+   * else (August, 11 September 2026: "scrolling down doesn't hide nav bar it
+   * gets stuck when clicking a page from it").
+   *
+   * `called` is latched by `pointermove`, and clicking a nav link is the one
+   * gesture guaranteed to leave the pointer inside the reveal strip with no
+   * further movement to follow. So the band arrived on the new page already
+   * called back, and because a wheel produces no `pointermove`, scrolling
+   * down could not take it away again. The route reset handles arrival; the
+   * scroll handler also releases any later hover, including a click on the
+   * current route, which does not change `pathname`. Only keyboard focus can
+   * hold the band open while scrolling (D2, August, 11 September 2026).
+   *
+   * Cleared during render rather than in an effect, so the new route's first
+   * paint already has the band in its resting state instead of showing it for
+   * a frame and then pulling it away.
+   */
+  const [seenPath, setSeenPath] = useState(pathname);
+  if (pathname !== seenPath) {
+    setSeenPath(pathname);
+    setCalled(false);
+    setFocused(false);
+  }
 
   useEffect(() => {
     let raf = 0;
+    let lastY = window.scrollY;
     const read = () => {
       raf = 0;
       const y = window.scrollY;
+      // A wheel/trackpad scroll produces no pointermove. Downward travel must
+      // release the last hover even when the cursor is still over a clicked
+      // link; a fresh pointer movement into the top band can reveal it again.
+      if (y > lastY) setCalled(false);
+      lastY = y;
       // Setting the same value is a no-op in React, so this is one render per
       // crossing rather than one per scroll event. The hero's foot is measured
       // by `navHeroFoot` so this band and the phone bar cross at one line.
@@ -177,15 +211,30 @@ export function SiteHeader() {
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(read);
     };
+    const onWheel = (event: WheelEvent) => {
+      // About's section transitions can hold scrollY while consuming the
+      // wheel. Downward intent still dismisses a recalled bar during a hold.
+      if (event.deltaY > 0 && !event.ctrlKey) setCalled(false);
+    };
     read();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("wheel", onWheel, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      window.removeEventListener("wheel", onWheel);
       cancelAnimationFrame(raf);
     };
-  }, []);
+    // ⚠ `pathname` IS A REAL DEPENDENCY, not tidiness. `overHero` is measured
+    // against `[data-nav-hero]`, which is a DIFFERENT ELEMENT on every route,
+    // and it is only ever recomputed from a scroll or resize event. Arriving
+    // from deep inside one page onto the top of another where the incoming
+    // scroll position happens to match, no event fires, and the band keeps the
+    // outgoing page's answer — a solid white bar sitting on the new page's
+    // hero photograph. Re-reading on the route is what makes the band correct
+    // in the frame it arrives in rather than on the reader's first scroll.
+  }, [pathname]);
 
   /* The pointer reveal. A `pointermove` reading rather than a hit area, so
      nothing on the page loses a click to an invisible strip — see the header
@@ -194,6 +243,7 @@ export function SiteHeader() {
      it the band would stay called back until the mouse returned. */
   useEffect(() => {
     const onMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
       // Setting the same value is a no-op in React, so a mouse crossing the
       // page renders this twice — in and out — not once per event.
       // D2 amendment, 11 September 2026: the About panel extends below the
@@ -225,10 +275,15 @@ export function SiteHeader() {
         aria-label="Primary"
         data-over-hero={overHero}
         data-shown={shown}
-        /* Focus inside a band that has left brings it back — see the header
-           note. `focusin`/`focusout` bubble, so one pair on the nav covers
-           every link and the CTA inside it. */
-        onFocus={() => setFocused(true)}
+        /* D2, 11 September 2026: mouse clicks also focus links, so only
+           focus-visible holds the band open. Switching back to the keyboard
+           on an already-focused link needs keydown because no focusin fires;
+           clicking that same link likewise needs pointerdown to release it. */
+        onFocus={(event) => setFocused(event.target.matches(":focus-visible"))}
+        onKeyDown={(event) => {
+          if (!event.altKey && !event.ctrlKey && !event.metaKey) setFocused(true);
+        }}
+        onPointerDownCapture={() => setFocused(false)}
         onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget)) {
             setFocused(false);
@@ -302,7 +357,12 @@ export function SiteHeader() {
               {primaryNav.map((item) => (
                 <li key={item.href}>
                   {item.children?.length ? (
-                    <DesktopNavMenu label={item.title} links={item.children} overHero={overHero} />
+                    <DesktopNavMenu
+                      label={item.title}
+                      links={item.children}
+                      overHero={overHero}
+                      headerShown={shown}
+                    />
                   ) : (
                     <WaterNavLink
                       href={item.href}

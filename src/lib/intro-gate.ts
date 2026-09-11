@@ -20,8 +20,8 @@
  * per-document flag this note used to contrast against — no longer exists.
  *
  * The contrast is still worth keeping, because the remaining flags are all
- * per-document: `route-entry`'s `navigated`, `site-entry`'s `entered` and
- * PageLoader's `shownThisPageLoad` all die on reload. `sessionStorage` in
+ * per-document: `route-entry`'s `navigated` and `site-entry`'s `entered`
+ * die on reload. The shared PageLoader now repeats on every visit. `sessionStorage` in
  * lofi/Preloader.tsx is the only other thing here with real session lifetime,
  * and this follows it, key namespace included.
  */

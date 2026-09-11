@@ -362,6 +362,45 @@ body {
   [data-truth-card]:hover [data-media-plane] {
     transform: scale(1.03);
   }
+
+  /* Partnerships §06 — the same "lifts" row (INT-05), 6px as that row states.
+     Added 11 September 2026 with the page's motion pass.
+
+     ⚠ `[data-pt-lift]`, NOT `[data-pt-card]`. The page tags three card groups
+     for motion and only ONE of them is clickable: §06's ways in are anchors,
+     while §04's gaps are `article`s and §05's partner groups are `div`s. A
+     lift on a card that does nothing when you click it is a lie about the
+     affordance, so the hover hook is separate from the motion hook and only
+     the links carry it.
+
+     It sits in this block rather than beside the button's Tailwind utilities
+     for the two guards the block already applies — no lift under reduced
+     motion, and none on a coarse pointer, where :hover latches on tap and the
+     card would stay lifted after the finger leaves. */
+  /* ⚠ `translate`, NOT `transform`, AND THAT IS A BUG FIX not a preference.
+     Found 11 September 2026: these cards also carry a GSAP `arrive` entrance,
+     and `arrive` is a `gsap.from()` — its DESTINATION is whatever y the element
+     has when the tween is built. A `transition: transform` here made the
+     previous instance's revert animate over 320ms instead of landing instantly,
+     so on React's dev double-mount the second instance read a mid-transition
+     y≈16 as the card's natural position and animated 16 → 16. The cards stayed
+     16px low for good while their opacity faded in normally.
+
+     `translate` is a separate CSS property from `transform`. GSAP writes
+     `transform`; this writes `translate`; the compositor adds them. Neither can
+     read or clobber the other, so the hover works during and after the
+     entrance and the entrance lands where it should.
+
+     ⚑ THE SAME TRAP IS OPEN ABOVE. `[data-truth-card]` transitions `transform`
+     and is fine only because nothing GSAP-transforms those cards. If a Truth
+     entrance is ever added to them, it will fail exactly this way. */
+  [data-pt-lift] {
+    transition: translate var(--dur-small) var(--ease-quiet);
+  }
+
+  [data-pt-lift]:hover {
+    translate: 0 -6px;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -654,37 +693,25 @@ body {
   transition-timing-function: var(--ease-quiet) !important;
 }
 
-/* THE LOADING PANEL'S NO-JAVASCRIPT ESCAPE HATCH — 11 September 2026.
-   See components/layout/RouteLoader and components/ui/PageLoader.
-
-   The panel is server-rendered so it covers the settling window from first
-   paint (that is the whole point of it). The cost of that is a cover which
-   exists BEFORE any script does, and every mechanism that lifts it —
-   the readiness gates, HARD_CAP_MS, even the wall-clock ceiling — is React
-   code that cannot start until hydration does.
-
-   Measured on /living-work under Slow 3G with 4x CPU throttling, 11 September
-   2026: the panel stood for more than twenty seconds, not because anything was
-   stuck but because the bundle had not arrived to lift it. That inverts the
-   entire intent — the reader on the slow connection is the one the panel was
-   added to help, and instead they were the one held behind it longest.
-
-   So the last resort is CSS, which arrives with the document. The delay only
-   ever elapses if JavaScript has not already taken over: the ordinary lift
-   happens around a second in and the scripted ceiling at roughly six, both far
-   inside this. A zero-length animation with `forwards` simply pins the end
-   state, so it does not fight the transition that normally does the lifting.
-
-   `visibility` rather than `display` so it cannot cause a reflow of the page
-   underneath as it goes. Reduced motion hides the panel outright and never
-   reaches this. */
+/* X7 / SYS-02, 11 September 2026; grammar "the page is ready".
+   Server HTML covers refreshes before hydration. The CSS backstop releases
+   a document whose scripts never arrive; the scripted cap normally wins. */
 @keyframes y-page-loader-bail {
-  to {
-    visibility: hidden;
-    transform: translateY(-100%);
-  }
+  to { visibility: hidden; opacity: 0; }
 }
-
+@keyframes y-page-loader-arrive {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 [data-page-loader] {
-  animation: y-page-loader-bail 1ms linear 8s forwards;
+  animation: y-page-loader-bail 1ms linear 16s forwards;
+}
+[data-page-loader][data-navigation] {
+  animation: y-page-loader-arrive 200ms linear, y-page-loader-bail 1ms linear 16s forwards;
+}
+[data-page-loader][data-lifted] { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-page-loader][data-navigation] {
+    animation: y-page-loader-bail 1ms linear 16s forwards;
+  }
 }

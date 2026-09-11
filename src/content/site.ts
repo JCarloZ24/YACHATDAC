@@ -105,6 +105,10 @@ export const primaryNav: PrimaryNavItem[] = [
  */
 export const primaryAction = { title: "Connect", href: "/connect" } as const;
 
+/** X7 / SYS-02, August, 11 September 2026: shared loading interface.
+ * Verbatim from the homepage draft's site-wide interface amendment (D5). */
+export const pageLoaderCopy = { viewing: "You’re viewing" };
+
 export const pillars: Pillar[] = [
   {
     id: "wonder",

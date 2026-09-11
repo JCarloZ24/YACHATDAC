@@ -60,7 +60,7 @@ export default function OurPeoplePage() {
   return (
     <PageTransition ground="#090e12">
       <SmoothScroll />
-      <div data-people-stage className="people-stage relative isolate bg-charcoal">
+      <div data-people-stage data-page-ready="loading" className="people-stage relative isolate bg-charcoal">
         <OurPeopleCanvas />
         <div data-people-track className="people-track relative">
           {/* The advisory renders first, as the draft specifies. */}

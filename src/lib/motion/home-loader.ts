@@ -221,16 +221,11 @@ export function createHomeLoader(cover: HTMLDivElement): MotionModule {
         return;
       }
       // Already been through the door this session (10 September 2026, user
-      // direction). The parse-time script in HomeLoader.tsx has normally hidden
-      // the cover before this runs — but not on a client-side navigation back
-      // to `/`, where React renders that script rather than executing it, so
-      // the runtime read is what covers the SPA case.
-      //
-      // `cover.hidden = true` even though CSS may already have hidden it:
-      // home-hero.ts:337 watches THIS attribute to know when to start the
-      // hero's opening. It happens to also test computed display (:340), so
-      // the CSS route alone would work today — but that would leave the hero's
-      // start resting on a line in another file nobody would think to protect.
+      // direction). The shared PageLoader covers startup on refresh and client
+      // navigation, so this check can hide the intro without a parse-time
+      // script (removed 11 September 2026 after React warned on logo clicks).
+      // Preserve the hidden attribute: home-hero.ts observes it to release
+      // the hero's opening, and no film source is attached on this path.
       if (!introForced() && hasSeenIntro()) {
         cover.hidden = true;
         return;

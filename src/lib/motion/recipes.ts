@@ -1264,12 +1264,50 @@ export function gathering(root: HTMLElement, span = 330): MotionModule {
  *   [data-shutter]        the cover over one gap's detail — the flattenReveal target
  *   [data-vessel-source]  the detail underneath. MUST be a sibling of the shutter:
  *                         the effect looks for it in the shutter's parentElement.
+ *
+ * ⚠ THE SHUTTER RENDERS OPEN AND THIS TIMELINE CLOSES IT. Corrected 11 Sep
+ * 2026, before this recipe had its first real consumer. `flattenReveal` is a
+ * `to` — it collapses whatever it finds — so markup that rendered the shutter
+ * CLOSED would hide its answer from anyone the timeline never runs for: no
+ * JavaScript, and reduced motion, where `clearAll` strips every inline style
+ * and hands the element straight back to its CSS rest state. Either way the
+ * disclosure would be shut for good.
+ *
+ * So the shutter is authored `scale-y-0` with a bottom-left origin, and the
+ * `set` below closes it at progress 0 for readers who ARE getting the motion.
+ * The rest state is the accessible state; the animation is the thing that has
+ * to opt in. Same reasoning as the `from`-state note in composition().
  */
-export function hosting(root: HTMLElement, span = 190): MotionModule {
+/**
+ * ⚠ `pin` IS A PARAMETER, AND THE CALLER HAS TO EARN IT. Added 11 September
+ * 2026 after the first real consumer pinned and the page stopped scrolling.
+ *
+ * A pin holds the top viewport of the trigger still. That is only readable if
+ * the whole screen FITS IN ONE VIEWPORT — otherwise the reader scrolls the
+ * full span watching a frozen top third while the thing being animated sits
+ * below the fold the entire time. /partnerships §04 is 1,495px of content in a
+ * 900px window with all four shutters at 929px and 1,433px from its top, so
+ * pinning it held the heading on screen for 1.9 viewports and disclosed four
+ * answers nobody could see.
+ *
+ * Unpinned, `span` still means the same thing — the scrub runs across that
+ * much scrolling — and a section taller than the viewport simply supplies it
+ * by being scrolled through, which is what §04 does.
+ *
+ * Measure before pinning: content height ≤ viewport, or do not pass `true`.
+ */
+export function hosting(
+  root: HTMLElement,
+  span = 190,
+  pin = true,
+): MotionModule {
   return composition("hosting", root, {
     channel: "media",
     span,
-    pin: true,
+    pin,
+    // Only consulted when `pin` is true. The shutters keep working unpinned;
+    // the pin is a desktop affordance and argues with a touch scroller.
+    pinMinWidth: DESKTOP,
     uses: ["flattenReveal", "settle"],
     build: (tl) => {
       const shutters = qa(root, "[data-shutter]");
@@ -1278,6 +1316,10 @@ export function hosting(root: HTMLElement, span = 190): MotionModule {
       // opens them one at a time, which is what makes it reading rather than a
       // reveal animation. 0.12 apart on a 0-1 timeline = four beats over ~48%.
       shutters.forEach((shutter, i) => {
+        // Closed at progress 0 — see the rest-state note above. A plain `set`
+        // rather than markup, so the shut state exists only where the timeline
+        // that opens it does.
+        tl.set(shutter, { scaleY: 1 }, 0);
         tl.flattenReveal(shutter, { duration: DUR.medium }, 0.1 + i * 0.12);
       });
     },

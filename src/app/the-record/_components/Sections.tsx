@@ -487,14 +487,19 @@ export function RecordGrowsV2() {
         </div>
       </div>
 
-      {/* Wave / Divider · OFF-WHITE (2537:17343) — hands the dark run off into
-          the footer. The frame starts it at y=1427, so the ground above it is
-          padded out to meet the crest; the canvas it introduces is then the
-          footer's own band (<FooterGround color=canvas/> on this page), which
-          the footer's burnt crest rides in turn. */}
-      <div className="absolute inset-x-0 bottom-0">
-        <WaveDivider ground="var(--color-canvas)" />
-      </div>
+      {/* ⚠ THE CLOSING OFF-WHITE WAVE IS GONE (2537:17343), user direction
+          11 September 2026: "remove the white section before footer".
+
+          It introduced canvas between this dark section and the footer, and
+          with <FooterGround color=canvas/> beneath it that cream ran on into
+          the footer's own band as well — so the page's last impression was a
+          wide pale gap with the burnt crest sitting in it, rather than the
+          dark run closing into the footer. The frame drew the divider; the
+          built page reads better without it, and that call is the user's.
+
+          If it comes back, it comes back WITH its FooterGround: the two are
+          one decision, and the divider alone would leave a canvas crest on a
+          charcoal band. */}
     </section>
   );
 }

@@ -1,114 +1,33 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { pageLoaderCopy } from "@/content/site";
+import { BLINK_LIT_MS } from "@/lib/motion/route-entry";
 
-/**
- * The page loading screen — hard loads and refreshes only. Built for Living
- * Work (its file header below is the original reasoning) and lifted here on
- * 8 Sep 2026 when Wonder needed the same panel over an 11 MB hero film:
- * `name` is what the panel announces, `ready` an extra readiness gate the
- * count cannot pass without (Wonder: the hero video can play), `hardCapMs`
- * the ceiling a heavy page may raise.
- *
- * Why it exists: on a refresh the server document paints in its rest state,
- * then fonts resolve, the motion pass builds, pin spacers change the page's
- * height and the browser's restored scroll position lands somewhere
- * meaningless — the reader sees sections flash past and ends up at the hero.
- * This panel covers that whole settling window, counts up to 100, announces
- * the page, and lifts onto a page that is already composed.
- *
- * HOW THE NUMBER IS DRIVEN. A single rAF loop paces a time ramp against real
- * readiness gates: the count cannot pass 35% before fonts have resolved
- * (`document.fonts.ready` — the assets that actually move layout) or 70%
- * before the window `load` event, and a hard cap forces completion at 2.8s so
- * the panel can never hang (a loading screen that can strand the reader is
- * worse than none — same rule as the lofi Preloader's). Everything lives in
- * one closure with no cancelable external stream, which is what makes it
- * safe under dev StrictMode's double-mount: any live mount drives itself to
- * 100 or is unmounted outright.
- *
- * When it does NOT run:
- * - Client-side navigations — the X7 route wipe already covers those. A
- *   module-scope flag survives SPA navigations, resets on a real page load.
- * - Reduced motion — hidden by CSS, absent not slowed (X6).
- * - JavaScript off — hidden by <noscript>; the document is simply readable.
- *
- * Deliberately NOT once-per-session: the flash this covers happens on every
- * refresh, so the panel does too.
+/** X7 / SYS-02, August, 11 September 2026: one repeatable loading cycle.
+ * Grammar: "the page is ready". RouteLoader keys each visit, including warm
+ * navigation and refresh. Progress is readiness-paced, not byte progress.
+ * CSS owns the cross-route fade; the supplied artwork is never redrawn.
  */
-
-/** Module scope: reset by a real page load, kept across SPA navigations. */
-let shownThisPageLoad = false;
-
-/** Minimum time the count takes to read as a count, ms. */
-const RAMP_MS = 1600;
-/** How long the dot sweep takes to cross the wave, ms. */
-const SWEEP_MS = 1500;
-/** Past this the panel completes regardless of readiness state. */
-const DEFAULT_HARD_CAP_MS = 2800;
-/** How long the "You're viewing" line stands before the panel lifts. */
-const NAME_DWELL_MS = 1400;
-
 export function PageLoader({
   name,
   ready,
-  hardCapMs = DEFAULT_HARD_CAP_MS,
-  rampMs = RAMP_MS,
-  sweepMs = SWEEP_MS,
-  dwellMs = NAME_DWELL_MS,
-  quietLiftMs,
-  suppressed,
+  hardCapMs = 12000,
+  rampMs = 700,
+  sweepMs = 650,
+  dwellMs = 700,
+  navigation = false,
+  onReveal,
 }: {
-  /** What the panel announces at 100% — "You're viewing {name}". */
   name: string;
-  /** Polled each frame; the count cannot pass 80% until it returns true. */
   ready?: () => boolean;
   hardCapMs?: number;
-  /** How long the count takes to reach 100 at the earliest. */
   rampMs?: number;
-  /** How long the dot sweep takes to cross the wave. */
   sweepMs?: number;
-  /** How long "You're viewing …" stands before the panel lifts. */
   dwellMs?: number;
-  /**
-   * Reach 100% within this many ms and the panel lifts WITHOUT announcing the
-   * page — no "You're viewing", no dwell. Added 11 September 2026 with
-   * RouteLoader, and it is what makes one shared panel bearable on every page.
-   *
-   * A reader on a fast connection refreshing /living-work waits about 400ms
-   * for real readiness. Announcing the page to them turns a cover they would
-   * barely notice into a three-second ceremony they sit through on every
-   * refresh, which is how a loading screen stops being a courtesy. So the
-   * announcement is reserved for the case that earns it: a page that genuinely
-   * took time, where the reader has been looking at a panel long enough to
-   * deserve being told what arrived.
-   *
-   * Omit for the always-announce behaviour Living Work and Wonder had.
-   */
-  quietLiftMs?: number;
-  /**
-   * Asked ONCE at mount: should this panel stand down and lift instantly?
-   *
-   * For the homepage, where the opening film is the cover on a genuine first
-   * arrival and this panel must not stack behind it. It cannot be a plain
-   * boolean prop decided by the caller at render time, because the answer
-   * lives in `sessionStorage`, which does not exist on the server: deciding at
-   * render would mean rendering nothing server-side, and the panel would then
-   * appear only at hydration — measured at 517ms on the production build,
-   * which is 360ms of the stacked frame in plain view. The panel has to be in
-   * the server HTML to cover the thing it exists to cover, so it renders
-   * always and stands down here instead.
-   *
-   * A suppressed panel takes no scroll lock. The film takes its own and
-   * restores what it found; two locks racing over one property is how the
-   * page ends up unscrollable.
-   */
-  suppressed?: () => boolean;
+  navigation?: boolean;
+  onReveal?: () => void;
 }) {
-  // Shadowed so every use below reads the caller's timing. Together these
-  // set the panel's FLOOR: it cannot lift before ramp + dwell, however fast
-  // the page is. Living Work keeps the original 1600/1500/1400; a page that
-  // wants to feel instant passes shorter ones.
   const HARD_CAP_MS = hardCapMs;
   const RAMP_MS = rampMs;
   const SWEEP_MS = sweepMs;
@@ -116,71 +35,48 @@ export function PageLoader({
   const [display, setDisplay] = useState(0);
   const [phase, setPhase] = useState<"loading" | "named" | "lifted">("loading");
   const panelRef = useRef<HTMLDivElement>(null);
-  // Per-INSTANCE claim on the module flag. StrictMode runs the effect twice
-  // for one mount; deciding inside the effect body would make the second run
-  // read the flag its own first run had set, and skip. The ref survives the
-  // double-run, so one mount gets one answer.
-  const shouldShow = useRef<boolean | null>(null);
-  // The inlined artwork's dots, in the order the flow lights them (see below).
   const waveRef = useRef<HTMLDivElement>(null);
   const dotsRef = useRef<SVGGraphicsElement[]>([]);
   const displayRef = useRef(0);
-  // Synchronise the animation reader after React commits (9 September 2026).
+  const reveal = useRef(onReveal);
   useEffect(() => { displayRef.current = display; }, [display]);
+  useEffect(() => { reveal.current = onReveal; }, [onReveal]);
 
   useEffect(() => {
-    if (shouldShow.current === null) {
-      shouldShow.current = !shownThisPageLoad && !(suppressed?.() ?? false);
-      shownThisPageLoad = true;
+    // Hydration may arrive after the CSS backstop already uncovered the page.
+    if (panelRef.current && getComputedStyle(panelRef.current).visibility === "hidden") {
+      setPhase("lifted");
+      return;
     }
-    if (!shouldShow.current) {
-      panelRef.current?.setAttribute("data-instant", "");
-      const frame = window.requestAnimationFrame(() => setPhase("lifted"));
-      return () => window.cancelAnimationFrame(frame);
-    }
-
-    // The settling window ends at the top of the page by design: presenting
-    // the page from its hero is the point of announcing it.
-    window.scrollTo(0, 0);
-
-    let fontsReady = false;
-    let windowLoaded = document.readyState === "complete";
-    void document.fonts?.ready.then(() => {
-      fontsReady = true;
-    });
-    const onLoad = () => {
-      windowLoaded = true;
-    };
-    window.addEventListener("load", onLoad, { once: true });
-
     let frame = 0;
+    let cancelled = false;
+    let fontsReady = document.fonts.status === "loaded";
+    void document.fonts.ready.then(() => { if (!cancelled) fontsReady = true; });
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const start = performance.now();
     const step = () => {
+      if (panelRef.current?.hasAttribute("data-lifted")) return;
       const t = performance.now() - start;
-      // Ease-out ramp: quick early movement, settling toward the top —
-      // reads as loading rather than as a metronome.
       const x = Math.min(t / RAMP_MS, 1);
       const ramp = 1 - (1 - x) * (1 - x);
       const extra = ready ? ready() : true;
-      const gate =
-        t > HARD_CAP_MS
-          ? 1
-          : 0.35 +
-            (fontsReady ? 0.25 : 0) +
-            (windowLoaded ? 0.2 : 0) +
-            (extra ? 0.2 : 0);
+      if (t >= HARD_CAP_MS && !extra) {
+        // A failed route must not announce a destination that never arrived.
+        setPhase("lifted");
+        return;
+      }
+      const gate = t >= HARD_CAP_MS ? 1 : (fontsReady ? (extra ? 1 : 0.8) : 0.35);
       const value = Math.min(ramp, gate);
-      // Monotonic by construction: ramp and gate only ever rise.
       setDisplay(value);
+      if (reduced.matches && value >= 1) {
+        setPhase(current => current === "loading" ? "named" : current);
+      }
       if (value < 1) frame = window.requestAnimationFrame(step);
     };
     frame = window.requestAnimationFrame(step);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("load", onLoad);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- one run per mount by design
+    return () => { cancelled = true; window.cancelAnimationFrame(frame); };
+    // A keyed instance owns one immutable readiness cycle.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // The artwork is inlined so each dot can be lit individually, in the order
@@ -191,7 +87,7 @@ export function PageLoader({
   // light along the way. (Reveal-by-mask of the supplied vector, per the
   // recorded artwork-motion permission; the geometry itself is untouched.)
   useEffect(() => {
-    if (!shouldShow.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let cancelled = false;
     void fetch("/artwork/dots-wave-gold.svg")
       .then((r) => r.text())
@@ -301,7 +197,7 @@ export function PageLoader({
   // a timeout escape in case the artwork never arrives — the panel must
   // never strand on a missing decoration.
   useEffect(() => {
-    if (!shouldShow.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let frame = 0;
     let lit = 0;
     // Cursor for the per-dot cascade: each dot's fade-in begins strictly
@@ -309,9 +205,10 @@ export function PageLoader({
     let lightAt = 0;
     const started = performance.now();
     const step = () => {
+      if (panelRef.current?.hasAttribute("data-lifted")) return;
       const dots = dotsRef.current;
       if (dots.length) {
-        // Full sweep takes at least ~1.5s (90 frames) whatever the cache.
+        // Pace the full sweep to SWEEP_MS even when the vector is cached.
         const maxStep = Math.max(1, Math.ceil(dots.length / (SWEEP_MS / 16.7)));
         // Spacing between consecutive dots so the whole run of dots still
         // paces to the same ~1.5s sweep — the flow moves dot per dot, never
@@ -330,91 +227,65 @@ export function PageLoader({
           lit = next;
         }
         if (lit >= dots.length && displayRef.current >= 1) {
-          setPhase((current) => current === "loading" ? conclude() : current);
+          setPhase((current) => current === "loading" ? "named" : current);
           return;
         }
       } else if (
         displayRef.current >= 1 &&
-        performance.now() - started > HARD_CAP_MS + 1500
+        performance.now() - started > SWEEP_MS + 500
       ) {
-        setPhase((current) => current === "loading" ? conclude() : current);
+        setPhase((current) => current === "loading" ? "named" : current);
         return;
       }
       frame = window.requestAnimationFrame(step);
     };
     frame = window.requestAnimationFrame(step);
     return () => window.cancelAnimationFrame(frame);
-    // Measured against the panel's OWN clock, not readiness: what matters is
-    // how long the reader has been looking at it, whatever held it up.
-    function conclude(): "named" | "lifted" {
-      if (quietLiftMs === undefined) return "named";
-      return performance.now() - started <= quietLiftMs ? "lifted" : "named";
-    }
-  }, [HARD_CAP_MS, SWEEP_MS, quietLiftMs]);
+  }, [SWEEP_MS]);
 
-  // The animation callback announces completion; Escape remains terminal.
-
-  // …dwells, and the panel lifts. Two effects on purpose: a single effect
-  // that both sets the phase and starts the timer re-runs on its own phase
-  // change and its cleanup cancels the very timer it just set. The dwell
-  // doubles as settling time for the motion build behind the panel.
   useEffect(() => {
     if (phase !== "named") return;
     const timer = window.setTimeout(() => setPhase("lifted"), NAME_DWELL_MS);
     return () => window.clearTimeout(timer);
   }, [phase, NAME_DWELL_MS]);
 
-  /**
-   * THE CEILING THAT CANNOT BE STARVED.
-   *
-   * Every other exit from this panel — the ramp reaching 100, the dot sweep
-   * finishing, even `HARD_CAP_MS` itself — is evaluated inside a
-   * requestAnimationFrame loop, and rAF is exactly what a browser stops
-   * servicing when the main thread is saturated. Measured 11 September 2026 on
-   * /living-work under Slow 3G with 4x CPU throttling: the panel was still up
-   * TWENTY SECONDS in, with its 3.2s cap long past, because the 481-dot sweep
-   * and the cap test were both starved by the same busy thread. The reader was
-   * stranded behind a full-screen cover on a page that had finished loading.
-   *
-   * That is the failure this component's own header calls worse than having no
-   * loading screen at all, and it is worst for precisely the slow-connection
-   * reader the panel is meant to help. So: one timer, on the wall clock,
-   * outside the frame loop, that lifts the panel whatever else is happening.
-   * It fires as soon as the thread yields rather than waiting for a frame's
-   * worth of animation work to be schedulable.
-   *
-   * Generous on purpose — it is a backstop, not the timing. The ordinary lift
-   * happens around a second in; nothing reaches this unless something is
-   * already wrong.
-   */
+  // Timers remain a backstop when a saturated main thread starves rAF.
   useEffect(() => {
-    if (shouldShow.current === false) return;
-    const ceiling = window.setTimeout(
-      () => setPhase("lifted"),
-      HARD_CAP_MS + NAME_DWELL_MS + 1500,
-    );
+    const ceiling = window.setTimeout(() => setPhase("lifted"), HARD_CAP_MS + NAME_DWELL_MS + 1500);
     return () => window.clearTimeout(ceiling);
   }, [HARD_CAP_MS, NAME_DWELL_MS]);
 
-  // Scroll is held while the panel is up; Escape always releases — a loading
-  // screen must never be a dead end.
   useEffect(() => {
-    // A panel that is not showing must not touch scroll — see `suppressed`.
-    // Checked before the lifted branch too, so a stood-down panel never
-    // clears an overflow it did not set.
-    if (shouldShow.current === false) return;
-    if (phase === "lifted") {
-      document.documentElement.style.removeProperty("overflow");
-      return;
-    }
-    document.documentElement.style.overflow = "hidden";
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setPhase("lifted");
+    if (phase !== "lifted") return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // The entrance gate opens after the cover's fade, not at the start of it.
+    const timer = window.setTimeout(() => reveal.current?.(), reduced ? 0 : BLINK_LIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase === "lifted") return;
+    // Event interception avoids racing the homepage film's overflow lock,
+    // and preserves browser-history scroll positions behind this cover.
+    const preventScroll = (event: Event) => {
+      if (event instanceof WheelEvent && event.ctrlKey) return;
+      event.preventDefault();
     };
-    window.addEventListener("keydown", onKeyDown);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.key === "Escape" || event.key === "Tab") {
+        setPhase("lifted");
+      } else if ([" ", "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(event.key)) {
+        event.preventDefault();
+      }
+    };
+    window.addEventListener("wheel", preventScroll, { passive: false, capture: true });
+    window.addEventListener("touchmove", preventScroll, { passive: false, capture: true });
+    window.addEventListener("keydown", onKey, true);
     return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      document.documentElement.style.removeProperty("overflow");
+      window.removeEventListener("wheel", preventScroll, true);
+      window.removeEventListener("touchmove", preventScroll, true);
+      window.removeEventListener("keydown", onKey, true);
     };
   }, [phase]);
 
@@ -425,9 +296,19 @@ export function PageLoader({
     <div
       ref={panelRef}
       data-page-loader
+      data-page-name={name}
+      data-phase={phase}
+      data-navigation={navigation || undefined}
+      data-lenis-prevent
       data-lifted={phase === "lifted" || undefined}
+      onAnimationEnd={event => {
+        if (event.animationName === "y-page-loader-bail") setPhase("lifted");
+      }}
       role="status"
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal ease-country data-[lifted]:pointer-events-none data-[lifted]:-translate-y-full motion-reduce:hidden transition-transform duration-(--dur-large) data-[instant]:transition-none"
+      aria-live="polite"
+      aria-hidden={phase === "lifted" || undefined}
+      className="fixed inset-0 z-[110] flex items-center justify-center bg-charcoal transition-opacity ease-quiet data-[lifted]:pointer-events-none data-[lifted]:opacity-0 motion-reduce:transition-none"
+      style={{ transitionDuration: `${BLINK_LIT_MS}ms` }}
     >
       <noscript>
         <style>{`[data-page-loader]{display:none}`}</style>
@@ -437,7 +318,7 @@ export function PageLoader({
         {/* The count. Fades as the name takes over. */}
         <div
           aria-hidden={named || undefined}
-          className={`transition-opacity duration-(--dur-medium) ease-quiet ${
+          className={`transition-opacity duration-(--dur-medium) ease-quiet motion-reduce:transition-none ${
             named ? "opacity-0" : "opacity-100"
           }`}
         >
@@ -449,7 +330,7 @@ export function PageLoader({
             alt="YACHATDAC"
             width={216}
             height={64}
-            className="mx-auto h-12 w-auto sm:h-16"
+            className="mx-auto h-12 w-auto lg:h-16"
           />
 
           {/* Progress is the artist's dots-wave filling dot by dot along its
@@ -476,7 +357,7 @@ export function PageLoader({
           </div>
 
           <p
-            aria-live="polite"
+            aria-hidden="true"
             className="mt-8 text-sm tabular-nums text-canvas/60"
           >
             {percent}%
@@ -486,12 +367,12 @@ export function PageLoader({
         {/* The announcement — takes the count's place at 100%. */}
         <div
           aria-hidden={!named || undefined}
-          className={`absolute inset-x-0 top-1/2 -translate-y-1/2 transition-opacity duration-(--dur-medium) ease-quiet ${
+          className={`absolute inset-x-0 top-1/2 -translate-y-1/2 transition-opacity duration-(--dur-medium) ease-quiet motion-reduce:transition-none ${
             named ? "opacity-100" : "opacity-0"
           }`}
         >
-          <p className="eyebrow text-xs text-gold">You&rsquo;re viewing</p>
-          <p className="headline mt-4 text-4xl text-canvas sm:text-5xl">
+          <p className="eyebrow text-xs text-gold">{pageLoaderCopy.viewing}</p>
+          <p className="headline mt-4 text-h2 leading-[1.05] tracking-[-0.015em] text-canvas">
             {name}
           </p>
         </div>

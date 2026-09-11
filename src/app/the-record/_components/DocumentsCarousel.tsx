@@ -45,10 +45,26 @@ export function DocumentsCarousel() {
           <h2 className="eyebrow text-xl text-ochre">Documents and reports</h2>
           <p className="mt-2 text-sm">{documents.length} items</p>
         </div>
-        <div className="flex gap-3">
-          <button type="button" aria-label="Previous documents" aria-controls="record-documents-track" disabled={position.first} onClick={() => move(-1)} className="flex size-12 items-center justify-center rounded-full border border-midnight/30 text-2xl text-midnight disabled:opacity-30">←</button>
-          <button type="button" aria-label="Next documents" aria-controls="record-documents-track" disabled={position.last} onClick={() => move(1)} className="flex size-12 items-center justify-center rounded-full border border-midnight/30 text-2xl text-midnight disabled:opacity-30">→</button>
-        </div>
+      </div>
+
+      {/* ⚠ THE CONTROLS SIT AT THE FOOT, AND THEY ARE ABSOLUTE FOR A REASON.
+          They used to ride in the heading row above. This shelf pins at
+          `top top`, so that row lands in the top ~130px of the viewport —
+          which is exactly the strip the header watches, and exactly the space
+          the band fills when it is called back. Hovering up there to reach the
+          navigation dropped a white bar straight onto the two buttons
+          (August, 11 September 2026).
+
+          `absolute` rather than a third row in the flow because the pin is
+          decided by `root.offsetHeight > window.innerHeight` — the shelf only
+          pins if it already fits the viewport, and it clears that test by
+          about 130px at 1440x900. Another ~70px row would have silently
+          stopped the scene pinning on any laptop shorter than roughly 850px,
+          turning a button-placement fix into a lost scene. Out of flow, the
+          shelf's measured height does not change at all. */}
+      <div className="absolute right-6 bottom-8 z-10 flex gap-3 lg:right-8">
+        <button type="button" aria-label="Previous documents" aria-controls="record-documents-track" disabled={position.first} onClick={() => move(-1)} className="flex size-12 items-center justify-center rounded-full border border-midnight/30 text-2xl text-midnight disabled:opacity-30">←</button>
+        <button type="button" aria-label="Next documents" aria-controls="record-documents-track" disabled={position.last} onClick={() => move(1)} className="flex size-12 items-center justify-center rounded-full border border-midnight/30 text-2xl text-midnight disabled:opacity-30">→</button>
       </div>
       <div data-documents-window className="ml-6 overflow-hidden lg:ml-8">
       <ul ref={track} id="record-documents-track" tabIndex={0} aria-label="Documents and reports"
