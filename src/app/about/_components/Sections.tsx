@@ -13,7 +13,6 @@ import { contactRoutes } from "@/content/contact";
 import { ContactDetails } from "@/components/sections/ContactDetails";
 import { ContactDoors } from "@/components/sections/ContactDoors";
 import { CardRail } from "@/components/ui/CardRail";
-import { EditorialNote } from "@/components/ui/EditorialNote";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
   DottedRule,
@@ -344,8 +343,20 @@ export function WhatWeAre() {
           >
             <MediaOrField
               src={ROAD?.src ?? null}
-              alt="An aerial view down a straight sandy two-wheel track through low bushland"
+              /* The vehicle is named because the crop below brings it into frame;
+                 it was entirely cut by the old centred crop. `kit.ts` has recorded
+                 it as the subject all along ("one vehicle at the end — no people"). */
+              alt="An aerial view down a sandy two-wheel track through low bushland, a single vehicle stopped on it"
               sizes="(min-width: 1024px) 100vw, 260vw"
+              /* The plane is 2.70:1 and the photograph 1.78:1, so `object-cover`
+                 discards ~178px at each edge, and the centred default cut the near
+                 end of the track — including the vehicle on it, which is the thing
+                 that gives the aerial its scale. Anchored to the bottom on user
+                 direction, 11 September 2026. This moves the crop INSIDE the plane
+                 only: the plane's own 8% overhang, and so the parallax, is
+                 untouched, and ~48px of the photograph's true foot still sits
+                 below the clip so the travel never exposes ground. */
+              className="object-cover object-bottom"
               fieldClass="bg-roasted/40"
             />
           </div>
@@ -379,12 +390,6 @@ export function WhatWeAre() {
             </div>
           ))}
         </dl>
-
-        <div className="mt-14 max-w-[900px]">
-          <EditorialNote>
-            <p>{whatWeAre.pending}</p>
-          </EditorialNote>
-        </div>
       </div>
 
       {/* The seam. This rule runs past the column and becomes §03's.
@@ -847,13 +852,11 @@ export function HowWeWork() {
         );
       })}
 
-      <div className={`${COLUMN} relative pt-10 pb-16 lg:pt-20 lg:pb-24`}>
-        <div className="max-w-[900px]">
-          <EditorialNote tone="canvas">
-            <p>{howWeWork.pending}</p>
-          </EditorialNote>
-        </div>
-      </div>
+      {/* §04's foot. This was the editorial note's container; the notes came off
+          the page on 11 September 2026 (user direction) and the padding stays,
+          because it is the air between RECIPROCITY and seam 05 -> 06's navy
+          crest, which is pulled up above §06's own box. */}
+      <div aria-hidden className={`${COLUMN} pt-10 pb-16 lg:pt-20 lg:pb-24`} />
     </section>
   );
 }
@@ -875,13 +878,30 @@ export function HowWeWork() {
  * governance body that does not yet exist. Do not tidy them.
  *
  * THE THREAD ACQUIRES A DATE. The rule that started under §03's question runs
- * across this section carrying three beats, and 2031 is set at display size —
+ * into this section carrying three beats — drawn here as a dotted wave rather
+ * than a bar (user direction, 11 September 2026), which is the one place on the
+ * page the thread is dotted — and STOPS on the last of them. It does not run to
+ * the column's edge: it ends on 2031, which is set at display size below it,
  * stated and held, never counted up to. It is the date this page is
- * accountable to.
+ * accountable to, and it is where the thread has been going.
  */
 const BEATS = ["Quarterly", "Annual general meeting", "2031 · the review"] as const;
 /** The frame's marker positions, as fractions of the 1240 column. */
 const BEAT_X = ["lg:left-0", "lg:left-[33.9%]", "lg:left-[73.4%]"] as const;
+/**
+ * Where the thread STOPS: on the last beat, not at the column's edge.
+ *
+ * The thread ends on 2031 because that is what it is for — it is the date this
+ * page is accountable to, and a line that carries on past it is running out of
+ * the section with nothing left to say (user, 11 September 2026: "it's still
+ * extending overshooting"). `left` places a beat's LEFT edge, and the dot is
+ * 18px wide, so the last beat's centre is its fraction + 9px and that is where
+ * the line has to end.
+ *
+ * ⚠ Tied by hand to the last entry of BEAT_X — Tailwind cannot see a computed
+ * class, so neither of these can be derived from the other. Move one, move both.
+ */
+const THREAD_W = "lg:w-[calc(73.4%+9px)]";
 
 export function WhoDecides() {
   const claim = sentences(whoDecides.body[0]);
@@ -941,14 +961,41 @@ export function WhoDecides() {
             pace, and each beat seats with a short catch as the draw reaches
             it — the transition channel this section is loud in. */}
         <div className="relative mt-32">
-          <div aria-hidden data-ab-rule="timeline" className="h-[2px] w-full bg-ochre" />
+          {/* The thread, drawn as a dotted wave rather than a bar (user direction,
+              11 September 2026) — /truth's strand geometry turned horizontal, see
+              `thread-dots` in globals.css. 20px tall because the wave has
+              amplitude, and it is its MIDLINE, not its top, that the beats below
+              have to sit on.
+
+              ⚠ NOT `DottedRule`, and the difference is deliberate. That component
+              is the artist's STRAIGHT supplied rule, gold, static, and §08 uses
+              three of them as dividers between partner groups. This is the thread:
+              ochre, wavy, and drawn. Two dotted things on one page doing two
+              different jobs — do not reconcile them into one. */}
+          <div
+            aria-hidden
+            data-ab-rule="timeline"
+            /* Full width below `lg`, where the beats stack underneath it in their
+               own column and there is no last beat to stop on. */
+            className={`thread-dots h-5 w-full ${THREAD_W}`}
+          />
           <div className="mt-6 flex flex-col gap-5 lg:mt-0 lg:block lg:h-16">
             {BEATS.map((beat, i) => (
               <div key={beat} className={`lg:absolute lg:top-0 ${BEAT_X[i]}`}>
                 <span
                   aria-hidden
                   data-ab-beat
-                  className="block h-[18px] w-[18px] -translate-y-[10px] rounded-full bg-ochre"
+                  /* ⚠ `lg:top-0` is measured from `div.relative.mt-32` — the
+                     wrapper that holds the THREAD as well as this row — so top 0
+                     is the thread's own top, NOT the top of the row this span
+                     sits in. The wave's midline is 10px down from there and the
+                     dot's centre is 9px down from its own top, so +1px lands the
+                     18px dot exactly on the line. (The old 2px rule needed -10px
+                     because a 2px bar has no midline worth the name; carrying
+                     that sign over put the beats 20px into the air.) Below `lg`
+                     the beats stack in their own column and -10px is only an
+                     optical nudge. */
+                  className="block h-[18px] w-[18px] -translate-y-[10px] rounded-full bg-ochre lg:translate-y-[1px]"
                 />
                 <p className="eyebrow mt-2 text-xs tracking-[0.08em] text-ochre">
                   {beat}
@@ -980,12 +1027,6 @@ export function WhoDecides() {
         >
           {whoDecides.cta.label} →
         </a>
-
-        <div className="mt-16 max-w-[900px]">
-          <EditorialNote tone="canvas">
-            <p>{whoDecides.pending}</p>
-          </EditorialNote>
-        </div>
       </div>
     </section>
   );
@@ -1251,12 +1292,6 @@ export function Partners() {
         >
           {partners.cta.label} →
         </a>
-
-        <div className="mt-14 max-w-[900px]">
-          <EditorialNote tone="canvas">
-            <p>{partners.pending}</p>
-          </EditorialNote>
-        </div>
       </div>
     </section>
   );

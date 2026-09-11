@@ -905,7 +905,8 @@ export function valuesRelay(root: HTMLElement, span = 249): MotionModule {
  *
  * Markup:
  *   [data-seam="wave"]          the navy wave — static, rides coverSeams
- *   [data-ab-rule="timeline"]   the thread acquiring its date — scrubbed
+ *   [data-ab-rule="timeline"]   the thread acquiring its date — the dotted
+ *                               wave, clip-drawn, scrubbed
  *   [data-ab-beat]              the three dots, seating as the draw arrives
  *   [data-ab-lift]              the column that lifts and dims at the foot
  *   [data-ab-date]              2031 — reserved, unanimated (never counted up)
@@ -919,11 +920,16 @@ export function boardHandoff(root: HTMLElement, span = 245): MotionModule {
       // The thread acquires a date, at reading pace.
       const rule = q(root, '[data-ab-rule="timeline"]');
       if (rule) {
+        /* Clip, do not scale. Since 11 September 2026 the thread is the dotted
+           wave (`thread-dots`), not a 2px bar, and `scaleX` would stretch every
+           dot into a growing ellipse as the rule drew. A `clip-path` inset is
+           the same edge travelling across held geometry that Wonder's itinerary
+           rule uses, and it leaves the dots their own shape. Pace unchanged. */
         gsap.fromTo(
           rule,
-          { scaleX: 0, transformOrigin: "left center" },
+          { clipPath: "inset(0 100% 0 0)" },
           {
-            scaleX: 1,
+            clipPath: "inset(0 0% 0 0)",
             ease: EASE.machine,
             scrollTrigger: {
               trigger: rule,

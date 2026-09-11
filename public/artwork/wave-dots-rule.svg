@@ -1,0 +1,46 @@
+<svg width="216" height="20" viewBox="0 0 216 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- GENERATED ASSET, not supplied artwork. One seamless wavelength of the /truth
+       strand, turned horizontal, for /about §06's thread — see the "About timeline
+       rule" row of docs/motion/motion-grammar.md.
+
+       Geometry from TrailRail.tsx's strandX(): y = 10 + 2·sin(2π·x/216).
+
+       ⚠ AMPLITUDE IS ±2, a quarter of TrailRail's ±8, and it is not a free number.
+       The three beat dots on this rule are positioned as PERCENTAGES of a fluid
+       column, so the phase of the wave under each one changes with the viewport
+       and no beat can be guaranteed to land on a crest, a trough or a crossing.
+       The amplitude is therefore the worst-case distance a beat can sit from the
+       line it is meant to be on. At ±4 the third beat visibly missed it (user,
+       11 September 2026: "it shoots way off from the dots"); at ±2 the wave
+       still reads as a wander and every beat stays on it at every width.
+
+       Two things make it tile seamlessly, and both are load-bearing:
+         · the sine completes exactly one period across the 216px tile, so the wave
+           is continuous at every join. This is why 216 and not TrailRail's 214 —
+           the 12px dot pitch must divide the wavelength (18 dots) or the
+           spacing breaks at each join.
+         · the dots are offset half a pitch (x = 6, 18, … 210), so none
+           straddles the tile edge and gets sliced into a sliver by the repeat.
+
+       Consumed as a MASK (globals.css → @utility thread-dots), so only the alpha
+       matters; the fill follows public/wonder/dotted-line.svg's single-layer black.
+       A generated tile: not a cultural record, and not the artist's. -->
+  <circle cx="6" cy="10.347" r="1.75" fill="black"/>
+  <circle cx="18" cy="11.000" r="1.75" fill="black"/>
+  <circle cx="30" cy="11.532" r="1.75" fill="black"/>
+  <circle cx="42" cy="11.879" r="1.75" fill="black"/>
+  <circle cx="54" cy="12.000" r="1.75" fill="black"/>
+  <circle cx="66" cy="11.879" r="1.75" fill="black"/>
+  <circle cx="78" cy="11.532" r="1.75" fill="black"/>
+  <circle cx="90" cy="11.000" r="1.75" fill="black"/>
+  <circle cx="102" cy="10.347" r="1.75" fill="black"/>
+  <circle cx="114" cy="9.653" r="1.75" fill="black"/>
+  <circle cx="126" cy="9.000" r="1.75" fill="black"/>
+  <circle cx="138" cy="8.468" r="1.75" fill="black"/>
+  <circle cx="150" cy="8.121" r="1.75" fill="black"/>
+  <circle cx="162" cy="8.000" r="1.75" fill="black"/>
+  <circle cx="174" cy="8.121" r="1.75" fill="black"/>
+  <circle cx="186" cy="8.468" r="1.75" fill="black"/>
+  <circle cx="198" cy="9.000" r="1.75" fill="black"/>
+  <circle cx="210" cy="9.653" r="1.75" fill="black"/>
+</svg>
