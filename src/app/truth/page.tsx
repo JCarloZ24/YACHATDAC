@@ -5,7 +5,6 @@ import { V2TruthMotion } from "./_components/Motion";
 import {
   DissolveBreak,
   EraSection,
-  FullBleedBreak,
   SuzanneBand,
   SuzanneCount,
   SuzanneTestimony,
@@ -67,9 +66,23 @@ export default function TruthPage() {
           <TruthHeroV2 />
           <EraSection era={ahead} />
           <EraSection era={today} />
-          {/* The 08 break closes the present band and hands the reader to
-              Bought back's roasted ground via Marc's wave. */}
-          <FullBleedBreak which="countryNow" waveTo="canvas" />
+          {/* §08 · BREAK Country Now IS WITHDRAWN (client direction, 11
+              September 2026). It closed the present band with a full-bleed
+              photograph and handed the reader to Bought back through Marc's
+              wave; the present band now runs straight into the 2026 deed
+              plate, and the plate's own cover is the whole transition.
+
+              NOTHING IS DELETED BEHIND THIS. `FullBleedBreak`, the
+              `countryNow` pair in truth-media.ts, the `breakDissolve` recipe
+              and `truth-break1.webp` itself are all still here — restoring the
+              section is restoring this one line.
+
+              ⚠ THE SEAM LOSES ITS DIVIDER. This wave was the only one between
+              TODAY's record and the deed plate, and every other join on the
+              page has one. Deliberately not replaced here: seating a crest on
+              the incoming plate is a design decision about a different
+              section, not part of removing this one. Raised rather than
+              quietly reconciled. */}
         </section>
 
         <section data-descent-band="return" className="bg-canvas">

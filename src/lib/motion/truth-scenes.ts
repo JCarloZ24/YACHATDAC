@@ -23,7 +23,8 @@
  *   [data-truth-attribution]       a speaker's name, held until they finish
  *   [data-truth-strata-layer="n"]  a seabed layer, built top → bottom
  *   [data-truth-deteriorates]      a ground that deteriorates as it is read
- *   [data-v2-pullback]             a frame the camera withdraws from
+ *   [data-v2-dissolve]             a shot lying over another, fading out
+ *   [data-truth-break-wave]        the box a break's closing crest travels in
  *   [data-v2-camera] / [data-v2-plate]   ordinary movable image frames
  *   [data-v2-static]               held: never given motion by this module
  */
@@ -43,9 +44,6 @@ const M1_DIM = 0.4;
 
 /** Ordinary movable media pushes exactly this far, and no further. */
 const CAMERA_PUSH = 1.06;
-
-/** A pull-back departs from here and settles at rest. */
-const CAMERA_PULL = 1.06;
 
 /** The hero opens 4% over and breathes down to its resting size. */
 const HERO_BREATH = 1.04;
@@ -154,25 +152,15 @@ function pushMedia(timeline: gsap.core.Timeline, slide: HTMLElement) {
   });
 }
 
-/** Being drawn in, pull-back cut. The camera withdraws instead. */
-function pullMedia(
-  timeline: gsap.core.Timeline,
-  slide: HTMLElement,
-  from = CAMERA_PULL,
-) {
-  const frames = within(slide, "[data-v2-pullback]").filter(
-    (frame) => !isHeld(frame),
-  );
-  frames.forEach((frame) => {
-    const planes = planesOf(frame);
-    if (!planes.length) return;
-    timeline.pullBack(
-      planes,
-      { from, scale: 1, duration: 1, ease: "none" },
-      0,
-    );
-  });
-}
+/* THE PULL-BACK CUT IS RETIRED ON THIS PAGE (11 September 2026). Both breaks
+   carried it — §14 lost its photographs when the client withdrew them, and §08
+   lost the scale itself when the ERA DISSOLVE reference's "nothing scales
+   during the dissolve (P9's rule)" was taken over this break's own note. No
+   element on Truth carries `[data-v2-pullback]` any more, so the helper that
+   drove them is gone rather than left looking live. The `pullBack` EFFECT is
+   untouched and still registered for whoever wants it; what has gone is this
+   page's use of it. The hero's own breath is `heroBreath` below, which has
+   always built its own tween. */
 
 /** B5 / what endures. Line masks, scrubbed against the reading clock. */
 function revealHeadings(
@@ -525,11 +513,40 @@ const nineteenFifties: Recipe = (timeline, slide) => {
 };
 
 /**
- * §08 / §14 the breaks. The page has already stopped; the camera pulls back
- * while one full-bleed image crosses into the other.
+ * §08 · BREAK Country Now — "you never see the join" (Figma 2051:5464 and the
+ * ERA DISSOLVE reference 2309:4172, built 11 September 2026).
+ *
+ * Grammar: "time handing over" (`dissolve`, P9) for the photographs, and "a
+ * change of ground" (`waveHandoff`) for the crest that closes it.
+ *
+ * TWO BEATS, and nothing else happens on this screen:
+ *
+ *   0 → 1     shot A fades to nothing over shot B. Opacity ONLY. The
+ *             reference's opacity ladder — 1 / 0.55 / 0.2 / 0 at 0 / 40 / 70 /
+ *             100% — is a straight line across the whole read, so this is
+ *             linear and starts at zero rather than at the 40% the frame
+ *             caption names; that caption describes when the fade becomes
+ *             VISIBLE, not when it begins.
+ *
+ *   0.70 → 1  the next era's colour rises over the bottom of the shot as a
+ *             wave, "before the page releases you". One wave-height of travel,
+ *             which is what `yPercent: 100 → 0` on a box of the divider's own
+ *             height gives.
+ *
+ * ⛔ NOTHING SCALES. This break used to take a pull-back; the reference is
+ * explicit that "the photographs cross-dissolve on opacity — nothing scales
+ * during the dissolve (P9's rule)", and that ruling was taken over this
+ * break's own note asking for a slow withdrawal (user, 11 September 2026).
+ * With shot A undelivered the result is a completely still screen until the
+ * wave — which is the honest read of a page that has stopped.
+ *
+ * ⚠ THE WAVE'S REST STATE IS ITS END STATE, which is why the 100 is set here
+ * rather than in the markup. The deck is desktop-only, so touch, narrow, no-JS
+ * and reduced motion never play this timeline; a wave parked below the foot by
+ * CSS would simply be missing for all of them, and the seam would go hard.
+ * Same reasoning as the 1950s ground below.
  */
-const breakPullBack: Recipe = (timeline, slide) => {
-  pullMedia(timeline, slide);
+const breakDissolve: Recipe = (timeline, slide) => {
   const dissolve = slide.querySelector<HTMLElement>("[data-v2-dissolve]");
   if (dissolve) {
     timeline.fromTo(
@@ -539,7 +556,16 @@ const breakPullBack: Recipe = (timeline, slide) => {
       0,
     );
   }
+
+  const wave = slide.querySelector<HTMLElement>("[data-truth-break-wave]");
+  if (wave) {
+    timeline.waveHandoff(wave, { duration: WAVE_RISE }, WAVE_AT);
+  }
 };
+
+/** Where the crest starts rising, and how much of the read it takes. */
+const WAVE_AT = 0.7;
+const WAVE_RISE = 0.3;
 
 /**
  * §19 100 million years. The only section that builds downward, with the
@@ -736,10 +762,13 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "[data-truth-card]", recipe: aheadCards },
   { match: "#today-fire", recipe: todayDeck },
   { match: "#research-discovery", recipe: researchStrip },
-  { match: "#break-country-now", recipe: breakPullBack },
+  { match: "#break-country-now", recipe: breakDissolve },
   { match: "#father", recipe: testimony },
   { match: "#art-gallery", recipe: nineteenFifties },
-  { match: "#break-escarpment", recipe: breakPullBack },
+  /* §14 kept its slide and its wave when the client withdrew its photographs
+     on 11 September 2026, but it has no image plane left to move and its wave
+     is the count deck's leading crest, not a trailing one — so it is listed
+     with no recipe rather than pointed at a beat that would find nothing. */
   { match: "#opportunities", recipe: openResearch },
   { match: "#the-count", recipe: herOpening },
   { match: "#the-count-figures", recipe: theCount },

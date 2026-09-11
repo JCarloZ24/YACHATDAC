@@ -139,10 +139,16 @@ export function createTruthDescentV2(): MotionModule {
             });
           });
 
-        // 14 · BREAK The Escarpment — shot A dissolves 1 → 0 over the
-        // break's own travel, revealing shot B (which carries the default
-        // push-in). Opacity only. The attribute is absent while B is
-        // undelivered, so A simply holds.
+        // 08 · BREAK Country Now — shot A dissolves 1 → 0 over the break's
+        // own travel, revealing shot B beneath it. Opacity only: nothing
+        // scales during a dissolve (P9). The attribute is absent while shot A
+        // is undelivered, so the delivered photograph simply holds.
+        //
+        // This is the OFF-DECK path — below lg, on touch, wherever the deck
+        // stands down — and it drives the attribute rather than a section, so
+        // it needs no change when a break gains or loses its pair. §14 carried
+        // the only other one until its photographs were withdrawn on
+        // 11 September 2026.
         gsap.utils
           .toArray<HTMLElement>(onDeck ? [] : "[data-v2-dissolve]")
           .forEach((el) => {
