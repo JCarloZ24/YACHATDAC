@@ -395,4 +395,37 @@ so one loudnorm setting covers every tier.
 **`*.webm` is tracked by Git LFS** (`.gitattributes`), so these land in LFS automatically —
 which is the other reason the swap is worth it.
 
+### ⚠ GIT LFS MUST BE TURNED ON IN VERCEL, OR PROD SHIPS 132-BYTE TEXT FILES
+
+Found live on 11 September 2026. Every video on yachatdac.vercel.app was being served as its
+LFS **pointer** — 132 bytes of `version https://git-lfs.github.com/spec/v1`, handed to the
+browser with `Content-Type: video/webm`. Chrome reports
+`DEMUXER_ERROR_COULD_NOT_OPEN: FFmpegDemuxer: open context failed`, `readyState 0`,
+`networkState 3`. Nothing autoplays, on any page.
+
+**It is not a codec problem and it is not caused by the WebM swap.** The MP4s broke the same
+way the moment the LFS migration was force-pushed; WebM simply inherited it. Vercel's clone
+does not fetch LFS objects unless the project is told to.
+
+**The fix is a project setting, not code.** Vercel → **Settings → Git → Git Large File
+Storage (LFS)** → enable. Vercel then pulls the LFS objects the repo uses, and caches them so
+later builds fetch only new ones. It is free on all plans. **A redeploy is required after
+turning it on** — enabling it does not retro-fix the current deployment.
+
+Two knock-on effects worth knowing, because both look like separate bugs:
+
+- **The homepage sound button disappears.** `home-loader.ts` removes it on the video's
+  `error` event by design — "a dead speaker icon on a screen with no picture is an
+  unanswerable question". No film, no button.
+- **Anything that waits on the film still waits.** The count and the held opening are driven
+  from `video.currentTime`, which never advances.
+
+Check prod after any future LFS change with one command — a real file answers in megabytes,
+a broken one in bytes:
+
+```bash
+curl -s -o /dev/null -w '%{size_download} bytes
+'   https://yachatdac.vercel.app/media/wonder/wonder-hero-960.webm
+```
+
 *Last updated: 11 September 2026*
