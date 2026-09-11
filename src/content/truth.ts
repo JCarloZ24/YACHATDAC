@@ -70,6 +70,12 @@ export type TruthEntry = {
   cta?: { label: string; href: string };
   /** Extra emphasis line, set large. Used once, on the engraving entry. */
   claim?: string;
+  /**
+   * The line an ENTRY plate sets under its title, where the plate says
+   * something shorter than the entry's own body. Hi-fi only — see the note on
+   * the deed entry, which is the one place it is used.
+   */
+  plateCaption?: string;
   /** Footnote-weight material — citations, dating caveats. */
   footnotes?: readonly string[];
   /**
@@ -221,6 +227,21 @@ export const erasBefore: readonly TruthEra[] = [
           "Two people at a table on a timber deck, each at a laptop, a dog asleep beside them.",
         caption:
           "Signing at 12:15pm. Suzanne had finished telling the story of the buyback minutes earlier, then opened the laptop.",
+        /**
+         * ⚠ HI-FI, AND IT REPLACES DRAFT COPY ON THE PLATE (client direction,
+         * 11 September 2026). The 2026 plate used to set `when` and `body[0]`
+         * together — "12:15pm, Friday 26 June 2026. Turraburra is signed over
+         * outright. No longer held on our behalf, no longer shackled to anyone
+         * else's conditions." — and now carries this one line instead.
+         *
+         * `body[0]` is NOT deleted: it is still the governing draft's sentence
+         * and still lives above. But it is no longer rendered anywhere on this
+         * page, which is a real loss of copy the draft carries and has to be
+         * settled in the Truth v3 draft rather than left as a code-only
+         * divergence (D5). Raised, not silently reconciled.
+         */
+        plateCaption:
+          "Signing the deed of grant, 12:15pm, Friday 26 June 2026.",
         coda: "Owning it outright is not the same as getting it back. Getting it back took seven years longer, and nearly did not happen at all.",
         source: "Written record",
         cta: {
