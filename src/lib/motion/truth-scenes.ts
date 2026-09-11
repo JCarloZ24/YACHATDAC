@@ -498,6 +498,30 @@ const nineteenFifties: Recipe = (timeline, slide) => {
     { "--truth-ink": CANVAS, ease: "none", duration: 0.004 },
     CROSS_AT,
   );
+
+  // THE RAIL CARRIES THIS ERA'S NAME, so the light goes out of it too (user,
+  // 11 September 2026). "1950s / ADMIRED UNDER THE WRONG NAME" is the band's
+  // own gutter block, copied onto the traveller — but the traveller is a
+  // sibling of the section, not a descendant, so the `color: var(--truth-ink)`
+  // above never reached it and the label sat burnt-deep on charcoal at 1.4:1
+  // for the second half of the band. Same crossover, same step, same
+  // argument: the colour drains out of the labels as the light goes out.
+  //
+  // Written inline on the traveller's nodes, which are shared by every era;
+  // the deck clears them on the next slide change (`setRailLabel`), because a
+  // scrub that has been left behind cannot undo itself.
+  const railLabels = query<HTMLElement>(
+    document,
+    "[data-truth-trail-label], [data-truth-trail-sub]",
+  );
+  if (railLabels.length) {
+    timeline.fromTo(
+      railLabels,
+      { color: CHARCOAL },
+      { color: CANVAS, ease: "none", duration: 0.004 },
+      CROSS_AT,
+    );
+  }
 };
 
 /**
