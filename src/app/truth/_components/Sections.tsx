@@ -2094,6 +2094,13 @@ export function HandoffWave({
   );
 }
 
+/* ⚠ NO CALL SITE AS OF 11 SEPTEMBER 2026 — KEPT ON PURPOSE.
+   §08's only call site was withdrawn on 11 September 2026 (client direction,
+   see the note in truth/page.tsx). The pair in truth-media.ts, the
+   `breakDissolve` recipe and truth-break1.webp are all still in place, so the
+   section comes back by restoring one line in the page. Deleting this would
+   mean re-deriving the dissolve stack, the scrim and the travelling crest from
+   the Figma boards a second time. */
 export function FullBleedBreak({
   which,
   waveTo,

@@ -684,7 +684,17 @@ Wattanuri floor's runway to `22svh`, both so the cover crop they ask for is insi
 need 1,604 CSS px and 260vw was serving 1,014. **Nothing above `lg` changed** — measured
 after: plate 879 = slide 879, break 879, track `padding-top` 879, heading identity transform.
 
-**§08 BREAK Country Now is built, 11 September 2026.** The table above has carried it as a
+**§08 BREAK Country Now IS WITHDRAWN, 11 September 2026 (client direction)** — the
+section was removed from the page the same day the work below landed, so none of it
+renders. The present band now runs straight into the 2026 deed plate and that plate's own
+cover is the whole transition. ⚠ **The seam lost its divider**: this break's wave was the
+only one between TODAY's record and the plate, and every other join on the page has one.
+Not replaced, because seating a crest on the incoming plate is a decision about a different
+section. `FullBleedBreak`, the `countryNow` pair, the `breakDissolve` recipe and
+`truth-break1.webp` are all still in place — the section returns by restoring one line in
+`truth/page.tsx`. What follows is what it was built to do, kept as the record of it.
+
+**§08 BREAK Country Now was built, 11 September 2026.** The table above has carried it as a
 `dissolve pair` with **transition** as its loud channel since the ledger was written, and
 until now the page rendered a single held photograph with the hand-off wave parked at its
 foot for the entire read — an egg-white shape laid over a picture from the first frame,
