@@ -7,7 +7,8 @@ import {
   SRGBColorSpace, Texture, Vector2, WebGLRenderer,
 } from "three";
 import { prefersReduced, type MotionModule } from "@/lib/motion-controller";
-import { HOME_SCENE, registerHome } from "./effects/home";
+import { HOME_SCENE } from "./effects/home";
+import { registerYachatdacEffects } from "./effects";
 import { createLandMaterial } from "./home-land";
 import { HOME_PORTAL } from "@/content/kit";
 import { awaitEntry, routeEntryPending } from "./route-entry";
@@ -351,8 +352,14 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(root);
         resize();
-        context = gsap.context(() => {
-          registerHome();
+        // SCR-09 / mobile startup, 12 September 2026: Home's dissolve uses
+        // frameOpen from the media family. Register the full vocabulary here;
+        // ClickBloom happens to do that on desktop, but never runs on touch.
+        registerYachatdacEffects();
+        // Store the context BEFORE building. If an effect throws halfway
+        // through, release() must still revert the intro's hidden text.
+        context = gsap.context(() => {}, root);
+        context.add(() => {
           breeze = gsap.effects.homeLandscapeBreeze(root, {
             phase: land.uniforms.breezePhase, render,
           });
@@ -373,7 +380,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
             animation: dissolve,
             invalidateOnRefresh: true,
           });
-        }, root);
+        });
         document.addEventListener("visibilitychange", onVisibility);
         // The async canvas pin changes the following sections' document position.
         ScrollTrigger.refresh();
@@ -399,7 +406,8 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         // X7 / SYS-02, 11 September 2026: a warm-cache canvas must also wait
         // for the shared readiness cover. The film keeps its own door after it.
         releaseEntry = awaitEntry(begin);
-      } catch {
+      } catch (error) {
+        console.warn("Homepage canvas could not initialise", error);
         // WebGL, the network or a decode can fail independently of the
         // readable page: the DOM still and the copy over it stay.
         release();
