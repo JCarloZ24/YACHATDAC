@@ -1330,7 +1330,7 @@ function EntryPlate({
         {/* The crest that introduces this plate — below Ahead on TODAY, below
             TODAY's record on the deed (client direction, 11 September 2026).
             Egg-white over the photograph, which is where it reads. */}
-        <LeadingCrest hook={id === "deed" ? "deed-wave" : "plate-wave"} />
+        <LeadingCrest hook={id === "deed" ? "deed-wave" : "plate-wave"} retreats />
         {/* …and the deed plate also hands ON, into 2022 below it. */}
         {id === "deed" ? <TrailingCrest hook="boughtback-wave" /> : null}
         <div
@@ -2339,10 +2339,32 @@ function TrailingCrest({ hook }: { hook: string }) {
  * seated on a runway is outside that subtree and silently never rolls, which is
  * the other half of what was wrong with the floor seam.
  */
-function LeadingCrest({ hook }: { hook: string }) {
+function LeadingCrest({
+  hook,
+  retreats = false,
+}: {
+  hook: string;
+  /**
+   * Withdraw off the top of the slide once the reader has arrived.
+   *
+   * A crest on an ordinary section scrolls away by itself. A crest on a PINNED
+   * slide does not — it sits on the photograph for the whole read, and on the
+   * ENTRY plates the photograph is the point: the TODAY plate opened with an
+   * egg-white band eating its sky and never gave it back (client, 12 September
+   * 2026). So on those, the crest marks the hand-off and then lifts clear,
+   * revealing the plate whole.
+   *
+   * The lift is authored in `bindTruthScenes`, not here, and the CSS rest
+   * state stays SEATED — off the deck, below lg, with no JavaScript and under
+   * reduced motion there is no read to play, and a crest that rested lifted
+   * would simply be a seam with no divider on all four.
+   */
+  retreats?: boolean;
+}) {
   return (
     <div
       aria-hidden
+      {...(retreats ? { "data-truth-crest-retreats": true } : {})}
       className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 translate-y-full sm:h-26"
     >
       <WaveDivider ground="var(--color-canvas)" flip hook={hook} />

@@ -932,6 +932,24 @@ export function bindTruthScenes(
         },
       });
 
+      /* A crest that marks an arrival and then gets out of the way.
+         Grammar: "a change of ground" — the divider is part of the TRANSITION,
+         not furniture the section keeps. On an ordinary page it leaves by being
+         scrolled past; on a pinned slide nothing scrolls, so it has to be told.
+         It lifts by exactly its own height, which puts it above the slide's top
+         edge where `overflow-hidden` takes it, and it goes early — the reader
+         has seen the hand-off by 18% of a read and wants the photograph. */
+      query<HTMLElement>(slide, "[data-truth-crest-retreats]").forEach(
+        (crest) => {
+          timeline.fromTo(
+            crest,
+            { yPercent: 0 },
+            { yPercent: -100, ease: "none", duration: 0.18 },
+            0,
+          );
+        },
+      );
+
       revealHeadings(timeline, slide, splits);
 
       const matched = RECIPES.filter(({ match }) =>
