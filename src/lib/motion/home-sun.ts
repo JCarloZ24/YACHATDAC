@@ -11,7 +11,7 @@ import { ShaderMaterial, Vector3, Vector4 } from "three";
  * horizon crossings in view without stretching the solar disc.
  */
 const SOLAR_STOPS = [
-  [0, -0.07],       // Opening night.
+  [0, -0.13],       // Opening night: below astronomical twilight (star amendment).
   [316, -0.012],    // Welcome: dawn twilight.
   [600, 0.018],     // Wonder: sunrise.
   [1422, 0.30],     // Truth introduction: late morning.
@@ -80,6 +80,9 @@ export function createSunUpdater(material: ShaderMaterial) {
     material.uniforms.solarWarmth.value = (1 - smooth(0.025, 0.3, elevation))
       * smooth(-0.045, 0.015, elevation);
     material.uniforms.solarAspect.value = aspect;
+    // Belonging's meteor safety gate still waits for deep twilight. The
+    // fixed stars now respond to local sky luminance in home-stars.ts.
+    material.uniforms.solarDepression.value = -elevation * 180 / Math.PI;
     // "Country carries the day", 13 September 2026 follow-up: atmosphere
     // changes the disc's appearance continuously, without per-year switches.
     const horizonWeight = 1 - smooth(0, 0.14, Math.max(0, elevation));
@@ -114,6 +117,7 @@ export const solarAtmosphere = /* glsl */ `
   uniform float solarDaylight;
   uniform float solarWarmth;
   uniform float solarAspect;
+  uniform float solarDepression;
   uniform vec4 sunDisc; // angular radius, vertical compression, edge, exposure
   uniform float sunTransmission;
 

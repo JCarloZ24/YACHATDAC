@@ -44,6 +44,9 @@ const LANDSCAPE_INVITATION_ZOOM = 1.32;
  * Taste lives in the timing below. Solar amendment, 13 September 2026:
  * "Country carries the day" derives the sun/atmosphere from this same sky
  * clock in home-sun.ts; these offsets now also drive generated lighting.
+ * "The stars emerge as daylight leaves", 13 September 2026: stellar
+ * visibility follows the resulting local sky light, not a panel entrance
+ * or a whole-field fade based on the sun's elevation.
  */
 export const HOME_SCENE = {
   night: { sky: 0, light: 0, lightHeight: 8028, shade: 0.4 },
@@ -93,7 +96,8 @@ const LANDSCAPE_EXIT_SHADE = 0.55;
  * timelines without touching that route.
  */
 export function registerHome(): void {
-  // AMB-05: one seamless phase; the canvas owner controls visibility/cleanup.
+  // AMB-05 / "the stars emerge as daylight leaves": one seamless phase for
+  // breeze and restrained stellar scintillation; the owner controls cleanup.
   gsap.registerEffect({
     name: "homeLandscapeBreeze",
     defaults: {},

@@ -69,7 +69,8 @@ const SCROLL_PER_UNIT = 0.8;
  * F7 holds: media is the loud channel and the type is quiet over it. AMB-05's
  * vegetation wind now starts as soon as the photograph decodes rather than on
  * the portal's arrival. R11: the collage's twenty-six above-the-fold WebPs
- * went with it, leaving this one photograph and its three layer maps.
+ * went with it. The 13 September solar/star treatment leaves just the
+ * photograph and its night light map; the sky is generated in the shader.
  */
 export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): MotionModule {
   let cleanup = () => {};
@@ -239,13 +240,11 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         (land.uniforms.beyond.value as Color).copy(dark);
         renderer.setClearColor(dark, 1);
         materials.push(land);
-        // Three layers, and they are the whole page: the photograph, the sky
-        // sequence behind it and the light sequence over it. The separate
-        // daylight sky (HOME_PORTAL.sky) went with the old opening -- every
-        // beat now reads the sequences, so there is nothing left for it to do.
+        // "The stars emerge as daylight leaves", 13 September 2026: the
+        // sky is generated at every hour now. Only the photograph and its
+        // night light sequence need maps; no second, baked star-field request.
         const maps = [
           { src: HOME_PORTAL.src, uniform: "landscape" },
-          { src: HOME_PORTAL.truthSky, uniform: "skyMap" },
           { src: HOME_PORTAL.truthLight, uniform: "lightMap" },
         ].map(({ src, uniform }) => {
           const image = new Image();
@@ -277,12 +276,12 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           syncBreeze();
           if (disposed || document.hidden || offscreen) return;
           land.uniforms.belonging.value = exit.belonging;
-          land.uniforms.skyOffset.value = exit.sky;
           land.uniforms.lightOffset.value = exit.light;
           land.uniforms.lightHeight.value = exit.lightHeight;
           land.uniforms.shade.value = exit.shade;
           // "Country carries the day", 13 September 2026: one reading clock
-          // also owns the sun; the breeze never advances its time of day.
+          // also owns the sun and twilight star visibility; the breeze never
+          // advances its time of day.
           updateSun(exit.sky, viewportAspect);
           // Where the cover crop's window sits in the photograph. Recomputed
           // per frame rather than on resize because the push-in moves it: the
