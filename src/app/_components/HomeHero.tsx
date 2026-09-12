@@ -5,6 +5,7 @@ import { Invitation } from "@/components/sections/Invitation";
 import { WayForwardStatement } from "@/components/sections/WayForwardStatement";
 import { WayForwardOffer } from "@/components/sections/WayForwardOffer";
 import { Pathways } from "@/components/sections/Pathways";
+import { BeatSection } from "@/components/sections/BeatSection";
 import { HOME_PORTAL } from "@/content/kit";
 import { homeHero, type Beat } from "@/content/homepage";
 import "./home-hero.css";
@@ -28,6 +29,11 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
   const truthParagraphs = [[truth.sequence?.subjectDetail[0] ?? ""], ...(truth.sequence?.steps.map(step => [step.text]) ?? []), [truth.body[0] ?? ""], truth.body.slice(1)];
   return (
     <section id={beat.id} data-home-hero data-nav-hero data-page-ready="loading" className="relative isolate h-svh min-h-[680px] overflow-hidden bg-charcoal lg:min-h-[760px]">
+      {/* SCR-09 / user report, 12 September 2026: a real opening viewport
+          keeps the static page readable while canvas textures decode or if
+          WebGL fails. Once ready, display: contents restores the shared
+          positioning context used by the existing scene. */}
+      <div className="home-hero-opening relative h-svh min-h-[680px] lg:min-h-[760px]">
       {/* The scene itself, as markup. The canvas draws this same photograph,
           so a machine with no WebGL — and a reader who asked for less motion —
           gets the hero it was meant to have rather than a black screen.
@@ -91,17 +97,6 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
           <span aria-hidden="true" className="relative text-2xl">›</span>
         </a>}
       </div>
-      {/* Beat 6 rides the same pinned canvas as Wonder, Truth and Belonging
-          (9 September 2026, user direction). It arrives last, travelling up
-          one viewport over the drifting land — see homeHeroDissolve. */}
-      <Invitation />
-      {/* The page ends on this line, still on the same canvas: it comes up as
-          The Invitation leaves and the lift finishes carrying the land off. */}
-      <WayForwardStatement />
-      {/* The line clears and the offer takes the same canvas: deck 22 and 23. */}
-      <WayForwardOffer />
-      {/* And the last screen of the page, still on this canvas: deck 24. */}
-      <Pathways />
       {/* Media scrim is the palette's explicit gradient exception (X5). These
           two are the whole of the darkening the welcome is read against, and
           the scroll takes them off to leave the photograph clean — turn the
@@ -141,6 +136,16 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
           <span aria-hidden="true">↓</span>{homeHero.scrollLabel}
         </a>
       </div>
+      </div>
+      {/* D5 / SCR-09: preserve the reading order in the static fallback.
+          These same beats are hidden once their canvas panels take over. */}
+      {[wonder, truth, belonging].map((section) => (
+        <BeatSection key={section.id} beat={section} />
+      ))}
+      <Invitation />
+      <WayForwardStatement />
+      <WayForwardOffer />
+      <Pathways />
     </section>
   );
 }

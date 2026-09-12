@@ -345,10 +345,12 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           renderer?.setSize(width, height, false);
           render();
         };
+        // SCR-09, 12 September 2026: only adopt the pinned layout after all
+        // maps decode. Measure that viewport, not the taller static fallback.
+        root.dataset.heroCanvas = "ready";
         resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(root);
         resize();
-        root.dataset.heroCanvas = "ready";
         context = gsap.context(() => {
           registerHome();
           breeze = gsap.effects.homeLandscapeBreeze(root, {

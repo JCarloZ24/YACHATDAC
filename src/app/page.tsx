@@ -1,5 +1,4 @@
 import { FooterGround } from "@/components/layout/FooterGround";
-import { BeatSection } from "@/components/sections/BeatSection";
 import { HomeHero } from "./_components/HomeHero";
 import { ThreadLine } from "@/components/ui/ThreadLine";
 import { beats } from "@/content/homepage";
@@ -32,7 +31,9 @@ import { PageTransition } from "@/components/transitions/PageTransition";
  *
  * ⚠ The Way Forward is now a statement panel, and it followed The Invitation
  * onto the hero canvas the same day. Both are rendered by HomeHero; what is
- * left here is the hero, the three beats and the footer ground. Its pathways
+ * left here is the hero and the footer ground. On 12 September 2026 the
+ * static beats moved into HomeHero so slow/failed canvas startup preserves
+ * their reading order before the closing panels (SCR-09). Its pathways
  * and signup went with the old section — see the note in
  * WayForwardStatement.tsx before assuming they moved somewhere.
  *
@@ -62,9 +63,6 @@ export default function HomePage() {
       <HomeLoader />
       <ThreadLine />
       <HomeHero beat={hero} wonder={rest[0]} truth={rest[1]} belonging={rest[2]} />
-      {rest.map((beat) => (
-        <BeatSection key={beat.id} beat={beat} />
-      ))}
       {/* Follows the statement panel's ground, not the retired evergreen one. */}
       <FooterGround color="var(--color-charcoal)" />
     </PageTransition>

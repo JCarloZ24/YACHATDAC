@@ -22,6 +22,66 @@
    bookending the opening. Drop it to 4rem to sit with the other panels. */
 .home-way-forward { --text-h1: clamp(2.5rem, 5.55vw, 5rem); }
 .home-hero-canvas { visibility: hidden; }
+/* SCR-09 / user mobile report, 12 September 2026. Before readiness, on
+   failure and with reduced motion, read the same content in document order.
+   Absolute closing panels used to cover the welcome as soon as the canvas
+   gate was absent. Only a decoded canvas adopts the single pinned viewport. */
+[data-home-hero]:not([data-hero-canvas="ready"]) {
+  height: auto;
+}
+[data-hero-canvas="ready"] .home-hero-opening { display: contents; }
+[data-home-hero]:not([data-hero-canvas="ready"]) :is(
+  .home-invitation, .home-way-forward, .home-offer, .home-pathways-panel
+) {
+  position: relative;
+  inset: auto;
+  height: auto;
+  max-height: none;
+  padding-block: 64px;
+}
+[data-home-hero]:not([data-hero-canvas="ready"]) .home-way-forward {
+  min-height: 60svh;
+}
+[data-home-hero]:not([data-hero-canvas="ready"]) [data-offer-plate] {
+  display: none;
+}
+[data-home-hero]:not([data-hero-canvas="ready"]) .home-pathways-panel {
+  display: block;
+}
+[data-home-hero]:not([data-hero-canvas="ready"]) .home-pathways-mask {
+  overflow: visible;
+  padding-inline: 20px;
+}
+[data-home-hero]:not([data-hero-canvas="ready"]) [data-pathways-track] {
+  display: grid;
+  height: auto;
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: none;
+  gap: 40px;
+  padding: 0;
+}
+[data-home-hero]:not([data-hero-canvas="ready"]) [data-pathway-card] {
+  display: block;
+  grid-row: auto;
+}
+[data-home-hero]:not([data-hero-canvas="ready"]) [data-pathway-card] > a {
+  display: flex;
+}
+[data-home-hero]:not([data-hero-canvas="ready"]) .home-pathway-image {
+  height: auto;
+  max-height: none;
+  aspect-ratio: 5 / 4;
+}
+@media (min-width: 64rem) {
+  [data-home-hero]:not([data-hero-canvas="ready"]) .home-pathways-mask {
+    padding-inline: 64px;
+  }
+  [data-home-hero]:not([data-hero-canvas="ready"]) [data-pathways-track] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
 /* Wonder's screenshot uses a smaller display than the welcome headline. */
 .home-wonder-copy { opacity: 0; visibility: hidden; --text-h1: clamp(2rem, 4vw, 3.75rem); }
 /* Latest screenshot: centred Truth introduction over the same road canvas. */
