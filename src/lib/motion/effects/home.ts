@@ -378,13 +378,10 @@ export function registerHome(): void {
       );
       // Anything but "black" restores the header and the thread line.
       timeline.call(() => { root.dataset.heroPhase = "scene"; }, [], 0.14);
-      // Night is SET at the top of the intro rather than being a fromTo's
-      // start value: the scrubbed timeline owns the same state object and
-      // parks it on the welcome frame the moment it is built, so a start
-      // value that is only applied when its own tween begins would leave the
-      // first second and a half of the page sitting on the wrong hour and
-      // then snap back. A set renders when the playhead reaches it, which is
-      // what the black beat is covering.
+      // Night is set under the black beat before the timed light lift.
+      // SCR-09 / solar handoff fix, 13 September 2026: this state belongs
+      // only to the opening. home-hero.ts selects the separate scroll state
+      // once reading begins, so this tween cannot reset Wonder to twilight.
       timeline.set(config.state,
         { sky: HOME_SCENE.night.sky, light: HOME_SCENE.night.light, onComplete: config.render }, 0);
       timeline.to(config.state,

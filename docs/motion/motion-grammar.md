@@ -10,6 +10,8 @@ separate route/article covers described below.
 
 *Last updated: 13 September 2026*
 
+Solar handoff correction, 13 September 2026 (user reports an intermittent reset at Wonder; **Country carries the day** / **the page opens on Country** / SCR-09): the opening and scroll effects keep separate scene states. The opening alone owns the initial night-to-welcome light. On its completion, or as soon as scroll advances the scene (including a restored position), ownership passes permanently to the scroll state. Early scroll finishes the opening copy/black reveal; it cannot replay the opening or return the sky to night. Returning to scroll zero restores welcome, not the opening night. The solar path, reading spans, reverse scrub and reduced-motion fallback are unchanged.
+
 SCR-10 clarification, 13 September 2026: the early Truth reveal shows only the dotted line. The marker artwork and its first year fade in together over 0.4 units (sine.inOut) at `wonderAt + 2.3`, when the dated sequence starts; reverse scroll hides both again while the line remains visible in the introduction.
 
 | Home solar amendment — 13 September 2026 | Behaviour | Timing | Authority | Implementation |
