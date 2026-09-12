@@ -30,6 +30,8 @@ import { nightAtmosphere } from "./home-stars";
  * as daylight leaves" extends one generated field to every night, with
  * local sky-luminance visibility. The supplied night light remains;
  * the actual land alpha holds both sun and stars behind the trees.
+ * "Clouds carry the passing hours" adds premultiplied cloud radiance and
+ * opacity ahead of celestial light, still behind that same woodland alpha.
  */
 export function createLandMaterial(): ShaderMaterial {
   return new ShaderMaterial({
@@ -46,6 +48,8 @@ export function createLandMaterial(): ShaderMaterial {
       shade: { value: 0.4 },
       belonging: { value: 0 },
       breezePhase: { value: 0 },
+      cloudMap: { value: null as Texture | null },
+      cloudReady: { value: 0 },
       sunDirection: { value: new Vector3(0, -1, 1).normalize() },
       sunEnergy: { value: 0 },
       sunDisc: { value: new Vector4(0.011625, 1, 0.00008, 0) },
@@ -90,6 +94,8 @@ export function createLandMaterial(): ShaderMaterial {
       uniform float lightHeight;
       uniform float shade;
       uniform float breezePhase;
+      uniform sampler2D cloudMap;
+      uniform float cloudReady;
       uniform float landscapeReady;
       uniform sampler2D landscape;
       uniform sampler2D lightMap;
@@ -243,6 +249,19 @@ export function createLandMaterial(): ShaderMaterial {
         // wash. Atmosphere and land are exposed together, in linear light.
         vec3 sunlit = mix(atmosphere, solarTerrain(terrain.rgb, landscapeUv), terrain.a);
         view = mix(sunlit, view, solarNight);
+        // "Clouds carry the passing hours", 13 September 2026: premultiplied
+        // cloud light covers only sky, never the held photograph. Both discs
+        // and stars sit behind the same cloud opacity, including thin edges.
+        vec4 cloud = vec4(0.0);
+        if (cloudReady > 0.5 && sUv.y >= 0.0 && sUv.y <= 1.0) {
+          cloud = texture2D(cloudMap, sUv);
+        }
+        vec3 nightExposure = sRGBTransferEOTF(vec4(
+          sRGBTransferOETF(vec4(skyBand, 1.0)).rgb * (1.0 - shade), 1.0)).rgb;
+        vec3 clearSky = mix(atmosphere, nightExposure, solarNight);
+        vec3 cloudySky = clearSky * (1.0 - cloud.a) + cloud.rgb;
+        view += (cloudySky - clearSky) * (1.0 - terrain.a);
+        discHighlight *= 1.0 - cloud.a;
         // The existing media-scrim exception: protect cream Truth copy when
         // the low sun reaches the phone's upper reading band. This travels
         // with the scene and clears into night; it never changes the text.
@@ -261,15 +280,12 @@ export function createLandMaterial(): ShaderMaterial {
         // Reproduce the sky-only night exposure and reading scrim, excluding
         // terrain and DOM copy. Sampling view would let a dark branch reveal
         // a star; using solarDepression would hide the dusk's spatial contrast.
-        vec3 nightExposure = sRGBTransferEOTF(vec4(
-          sRGBTransferOETF(vec4(skyBand, 1.0)).rgb * (1.0 - shade), 1.0)).rgb;
-        vec3 clearSky = mix(atmosphere, nightExposure, solarNight);
-        clearSky *= 1.0 - readShade
+        cloudySky *= 1.0 - readShade
           * (1.0 - discHighlight * (1.0 - solarNight) * highlightRoom * 0.9);
-        vec3 starlight = nightStars(sUv, horizon, clearSky);
+        vec3 starlight = nightStars(sUv, horizon, cloudySky);
         starlight += vec3(0.72, 0.86, 1.0) * shootingStar(sUv) * 0.45
           * smoothstep(0.9, 1.0, belonging) * smoothstep(12.0, 18.0, solarDepression);
-        view += starlight * (1.0 - terrain.a);
+        view += starlight * (1.0 - terrain.a) * (1.0 - cloud.a);
         // What the lift uncovers. Opaque, so it covers the renderer's own
         // clear colour. The hand-off is a fade across the lower part of the
         // blurred band, never a step: below the edge there is only charcoal,

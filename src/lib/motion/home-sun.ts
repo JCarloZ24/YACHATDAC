@@ -103,8 +103,9 @@ export function createSunUpdater(material: ShaderMaterial) {
 /**
  * Analytic Rayleigh/Mie scattering, adapted for our photo composite from the
  * MIT-licensed Three.js Sky shader (three/addons/objects/Sky.js). All values
- * are linear radiance until the shared output conversion. No cloud noise,
- * extra texture, render target or animation loop. User direction, 13 September
+ * are linear radiance until the shared output conversion. Cloud density is
+ * handled separately in home-clouds.ts, sharing these sun uniforms and the
+ * existing animation clock. User direction, 13 September
  * 2026: retain the larger horizon sun but let its appearance follow the hour.
  * The 2–2.5× display scale is scenic; extinction, subtle flattening, limb
  * darkening and derivative antialiasing make the disc read as light.

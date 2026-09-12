@@ -98,6 +98,9 @@ const LANDSCAPE_EXIT_SHADE = 0.55;
 export function registerHome(): void {
   // AMB-05 / "the stars emerge as daylight leaves": one seamless phase for
   // breeze and restrained stellar scintillation; the owner controls cleanup.
+  // "Clouds carry the passing hours", 13 September 2026: the renderer also
+  // reads this timeline's totalTime for continuous cloud travel. Keep the
+  // wrapping phase for foliage/twinkle, never for the cloud translation.
   gsap.registerEffect({
     name: "homeLandscapeBreeze",
     defaults: {},

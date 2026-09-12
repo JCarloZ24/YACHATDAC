@@ -11,6 +11,7 @@ import { HOME_SCENE } from "./effects/home";
 import { registerYachatdacEffects } from "./effects";
 import { createLandMaterial } from "./home-land";
 import { createSunUpdater } from "./home-sun";
+import { createCloudPass } from "./home-clouds";
 import { HOME_PORTAL } from "@/content/kit";
 import { awaitEntry, routeEntryPending } from "./route-entry";
 
@@ -117,6 +118,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
     let breeze: gsap.core.Timeline | undefined;
     let syncBreeze = () => {};
     let geometry: PlaneGeometry | undefined;
+    let clouds: ReturnType<typeof createCloudPass> | undefined;
     const textures: Texture[] = [];
     const materials: ShaderMaterial[] = [];
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -137,6 +139,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
       breeze?.kill();
       clearListeners();
       context?.revert();
+      clouds?.dispose();
       materials.forEach((material) => material.dispose());
       textures.forEach((texture) => texture.dispose());
       geometry?.dispose();
@@ -227,19 +230,26 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         const exit = { ...HOME_SCENE.night, belonging: 0, landscapeLift: 0, landscapeZoom: 1 };
         let landscapeReady = false;
         syncBreeze = () => {
-          breeze?.paused(disposed || offscreen || document.hidden || !landscapeReady);
+          breeze?.paused(disposed || offscreen || document.hidden || !landscapeReady
+            || exit.landscapeLift >= 1);
         };
         const tokens = getComputedStyle(document.documentElement);
         const dark = new Color(tokens.getPropertyValue("--color-charcoal").trim());
         geometry = new PlaneGeometry(1, 1);
         const land = createLandMaterial();
+        materials.push(land);
+        // "Clouds carry the passing hours", 13 September 2026: one optional
+        // half-resolution pass in this renderer. Retain the existing clear
+        // sky on devices without a floating-point colour buffer.
+        if (renderer.extensions.has("EXT_color_buffer_float")) {
+          clouds = createCloudPass(renderer, land);
+        }
         const updateSun = createSunUpdater(land);
         let viewportAspect = 1;
         // What sits behind the land once the lift takes it up, and what shows
         // anywhere the plate is not yet opaque: charcoal, from the token.
         (land.uniforms.beyond.value as Color).copy(dark);
         renderer.setClearColor(dark, 1);
-        materials.push(land);
         // "The stars emerge as daylight leaves", 13 September 2026: the
         // sky is generated at every hour now. Only the photograph and its
         // night light sequence need maps; no second, baked star-field request.
@@ -315,6 +325,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           // Maps this plate into the old top-900 crop the shader thresholds
           // were calibrated against. See the HOME_PORTAL note in kit.ts.
           land.uniforms.legacyScale.value = HOME_PORTAL.height / HOME_PORTAL.legacyHeight;
+          clouds?.render(exit.sky, breeze?.totalTime() ?? 0);
           renderer?.render(scene, camera);
         };
 
@@ -350,6 +361,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
             Math.min(1, aspect / landscapeAspect), Math.min(1, landscapeAspect / aspect),
           );
           renderer?.setSize(width, height, false);
+          clouds?.resize(width, height);
           render();
         };
         // SCR-09, 12 September 2026: only adopt the pinned layout after all

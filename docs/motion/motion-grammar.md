@@ -10,6 +10,14 @@ separate route/article covers described below.
 
 *Last updated: 13 September 2026*
 
+Cloud amendment, 13 September 2026: the user requests realistic timelapse clouds in the existing Home sky. This supersedes the solar pass's deferred-cloud note; it does not change the reading sequence or add weather to other pages.
+
+| Meaning | Treatment | Timing / access | Authority | Implementation |
+| --- | --- | --- | --- | --- |
+| **clouds carry the passing hours** | A broken, procedural volumetric cloud deck travels in perspective above the held woodland. Rounded, eroded forms evolve as they drift; sunlight scatters through their edges and their bodies self-shadow. Dawn and dusk warm the clouds; night leaves subdued silhouettes. Cloud opacity conceals the sun and stars without replacing the local-darkness star reveal. | Existing reversible solar offset supplies timelapse travel; the elapsed, pausable `homeLandscapeBreeze` clock adds slow drift at rest without a repeat-boundary jump. One renderer, a capped half-resolution cloud pass, no new ticker, network texture or reading hold. Hidden/offscreen pauses and static reduced-motion/WebGL fallback remain. | User direction, 13 September 2026 | `homeHeroOpen`, `homeHeroDissolve`, `homeLandscapeBreeze` → `home-clouds.ts`, `home-hero.ts`, `home-land.ts` |
+
+The cloud volume is generated scenic weather, not supplied artwork, a cultural record or a weather reconstruction. Lighting is an approximation; the held photograph receives no invented moving cast shadows. Cloud coverage leaves clear sky between forms and the existing reading scrim still protects the copy. GPU noise, render target and material are disposed with the scene.
+
 SCR-10 clarification, 13 September 2026: the early Truth reveal shows only the dotted line. The marker artwork and its first year fade in together over 0.4 units (sine.inOut) at `wonderAt + 2.3`, when the dated sequence starts; reverse scroll hides both again while the line remains visible in the introduction.
 
 | Home solar amendment — 13 September 2026 | Behaviour | Timing | Authority | Implementation |
