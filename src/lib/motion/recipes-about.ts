@@ -1606,34 +1606,182 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
 }
 
 /* -------------------------------------------------------------------------
-   §05 — valuesRelay · seam 04 → 05's landing
+   §05 — theValues · the page's fourth held screen
    ------------------------------------------------------------------------- */
 
 /**
+ * ⚑ THE INTERIORS PASS (12 September 2026, user direction). Supersedes
+ * `valuesRelay`, which was the seam pass's one tween on the first value's rule.
+ *
+ * Grammar rows: "what endures" (`settle`), "the page holding its ground, the
+ * interior scrub without a read clock", "a change of ground, the frame opens
+ * and the picture does not move".
+ *
+ * ⚠ NO REFERENCE BOARD. §02, §03 and §04 each have one; §05 does not. The page
+ * frame (Figma 2653:19672) gives the composition and the constraints and the
+ * sequence is the user's own, so where this departs from anything it is worth
+ * saying which of the two is being followed.
+ *
+ * "How we work" stands for the whole section. Each value is read on its own —
+ * rule, label, lede, then the conclusion that actually constrains a decision —
+ * and clears. After the second, the photograph opens from the top and pushes
+ * the heading and the column down into the space it takes, and RECIPROCITY is
+ * read beneath it. The picture stays: it is the rest scene that value arrives
+ * out of.
+ *
+ * ⚠ KEPT QUIET, DELIBERATELY. The ledger scores this ⚡2 with "rest after" —
+ * the page's breather between §04 and §06, both ⚡4. Held on user direction,
+ * but the beats are `settle` and a fade and nothing else: no overshoot, no
+ * ground ramp, no contraction. §03b's Breath is still the page's hard rest.
+ * Anything added here should be measured against that.
+ *
+ * ⚠ THE IMAGE PLANE IS NEVER TOUCHED. §02's band counter-travels its plane so
+ * a chosen edge stays in view; this one holds absolutely still. The frame's own
+ * layer note is "P1 full-bleed hold: the ground and the type move around it,
+ * the image plane NEVER does", and the photograph is `frame` grade — the notes
+ * record four people cropped to hands, one of them a child. The band's CLIP
+ * opens and the column travels; nothing writes a transform to `[data-ab5-plane]`.
+ *
+ * ⚠ THE FOLD RUNS ONCE. §02's road gives its height back across the register's
+ * four rows; this one opens and stays open, because the picture is not making
+ * room for anything — it is what the last value is read against.
+ *
+ * ⚠ `[data-ab-rule="value"]` AND `[data-ab-eyebrow]` ARE SEAM 04 → 05's
+ * LANDING. §04's contracting loop hands off to the first value's rule and
+ * label; `theLoop` says so in as many words. Renaming either hook means
+ * changing that recipe too.
+ *
+ * Span 300 − 100 = 200; the deck's BUFFER does not come off it. See the
+ * arithmetic at `theQuestion`.
+ *
  * Markup:
- *   [data-ab-rule="value"]  the first value's gold rule — the contracted
- *                           ring's landing (the frame's "bullet" is not built)
- *   [data-ab-eyebrow]       COUNTRY FIRST, arriving with it
- *   [data-arrive]           the header block
+ *   [data-ab5-head]          "How we work" — stands, then travels with the band
+ *   [data-ab5-value] ×3      one cell, one value on screen at a time
+ *   [data-ab5-rule]          each value's gold thread
+ *   [data-ab5-label] [data-ab5-lede] [data-ab5-conclusion]
+ *   [data-ab5-band]          the photograph's frame; its clip opens
+ *   [data-ab5-caption]       arrives with the picture, derived from the fold
  */
-export function valuesRelay(root: HTMLElement, span = 249): MotionModule {
-  return composition("valuesRelay", root, {
-    channel: "none",
+export function theValues(root: HTMLElement, span = 200): MotionModule {
+  return composition("theValues", root, {
+    channel: "type",
     span,
-    uses: ["arrive"],
-    build: () => {
-      const rule = q(root, '[data-ab-rule="value"]');
-      if (!rule) return;
-      gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: rule, start: "top 85%", once: true },
+    minWidth: "1024px",
+    minHeight: "820px",
+    uses: ["settle", "arrive"],
+    build: (tl) => {
+      const stage = q(root, "[data-ab-stage]");
+      const values = qa(root, "[data-ab5-value]");
+      if (!values.length) return;
+
+      root.dataset.abHeld = "true";
+
+      // Rest state is the finished document, so everything the sequence brings
+      // on is hidden here rather than in the markup. A mask is not a hiding
+      // place — `settle` splits with `autoSplit` and a re-split orphans the
+      // tween's line nodes, which is annotated at `freshSplit` and has bitten
+      // twice. The element is hidden; the mask only does the rise.
+      gsap.set(values, { autoAlpha: 0 });
+      values.forEach((value) => {
+        const rule = q(value, "[data-ab5-rule]");
+        if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
       });
-      tl.to(rule, { scaleX: 1, duration: DUR.large, ease: EASE.country });
-      const eyebrow = q(root, "[data-ab-eyebrow]");
-      if (eyebrow) tl.arrive(eyebrow, {}, "-=0.35");
+
+      // ---- the values, one at a time ------------------------------------
+      // Each arrives in the order the eye reads it — the thread, then who it
+      // belongs to, then what it says, then the sentence that constrains a
+      // decision. Then it clears WHOLE: a block fade, not a second split beat
+      // on copy that already took one.
+      // Written out rather than derived from a step, because the band has to
+      // land BETWEEN the second value clearing and the third arriving and a
+      // single stride cannot express that. A value's own internal beats run
+      // `at` → `at + 0.193`; it is read until it clears.
+      //
+      // ⚠ THE LAST VALUE HAS TO FINISH BY ~.89. It settles last and is the
+      // longest of the three, and the section is scored as a rest — if it is
+      // still arriving at 1.0 there is no rest left to take, which is what the
+      // first cut did (measured, 12 September 2026).
+      // ⚠ EACH VALUE'S INTERNAL RUN IS ~.14, AND IT HAS TO BE. Three values,
+      // a photograph and a rest have to fit 200vh; at ~.19 apiece the last
+      // conclusion was still rising at 1.0 and the section had no rest left to
+      // take, which is the one thing its ledger row asks of it (measured,
+      // 12 September 2026). The scrub also trails by roughly .07 of the read,
+      // so a beat that ends at .82 on paper lands near .89 on screen — the
+      // last one is placed against the screen, not against the paper.
+      const ARRIVES = [0.03, 0.33, 0.68];
+      const CLEARS = [0.26, 0.55];
+      const BAND_AT = 0.58;
+
+      values.forEach((value, i) => {
+        const at = ARRIVES[i];
+        const rule = q(value, "[data-ab5-rule]");
+        const label = q(value, "[data-ab5-label]");
+        const lede = q(value, "[data-ab5-lede]");
+        const conclusion = q(value, "[data-ab5-conclusion]");
+
+        tl.set(value, { autoAlpha: 1 }, at);
+        if (rule) {
+          tl.to(
+            rule,
+            { scaleX: 1, duration: 0.04, ease: EASE.country },
+            at,
+          );
+        }
+        if (label) quietly(tl, label, at + 0.025, 0.025);
+        if (lede) tl.settle(lede, lineBeat(0.05), at + 0.045);
+        // "LANDS SEPARATELY, after a beat" — the frame's own words for the
+        // conclusion, and the reason it is not staggered in with the lede.
+        if (conclusion) tl.settle(conclusion, lineBeat(0.055), at + 0.08);
+
+        // The last value is not cleared: it is what the section ends on, and
+        // the picture above it is the rest it arrives out of.
+        if (i < CLEARS.length) {
+          tl.to(
+            value,
+            { autoAlpha: 0, duration: 0.05, ease: EASE.country },
+            CLEARS[i],
+          );
+        }
+      });
+
+      // ---- the photograph opens ------------------------------------------
+      // Between the second value clearing and the third arriving. One number
+      // drives the frame's clip, the caption's opacity and the travel of
+      // everything below — and deliberately NOT the plane. See the head of
+      // this recipe and the note in about.css.
+      if (stage) {
+        tl.to(
+          stage,
+          { "--ab5-fold": 0, duration: 0.09, ease: EASE.country },
+          BAND_AT,
+        );
+      }
+
+      // ---- the rest ------------------------------------------------------
+      // ⚠ A TRAILING REST HAS TO HOLD THE CLOCK OPEN, or it is not a rest at
+      // all — it is every earlier beat played late.
+      //
+      // A scrub maps the reader's 0→1 onto 0→`tl.duration()`, and the duration
+      // is wherever the LAST tween happens to end. Leave the final stretch
+      // genuinely empty and the duration becomes .82, so a beat written at .76
+      // actually plays at .76/.82 = .93 of the read and the last conclusion is
+      // still rising as the section hands over. Measured exactly that, twice,
+      // before this was understood (12 September 2026).
+      //
+      // §02, §03 and §04 all end ON their last beat, so their clocks normalise
+      // themselves and the trap never fired. This is the first section scored
+      // with a rest AFTER its last beat, so the rest is declared: an inert
+      // tween on a throwaway object that occupies the final stretch, holds the
+      // duration at 1.0, and touches nothing. The picture stands, the last
+      // value is read under it, and nothing moves.
+      tl.to({}, { duration: 0.12 }, 0.88);
     },
+    // The heading only, and it never leaves.
     enter: arrivals,
-    cut: clearAll,
+    cut: (el) => {
+      delete el.dataset.abHeld;
+      clearAll(el);
+    },
   });
 }
 

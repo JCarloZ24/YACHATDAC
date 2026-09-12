@@ -376,6 +376,84 @@
   [data-ab="what-we-do"][data-ab-held] [data-ab4-ground] {
     display: block;
   }
+  /* -------------------------------------------------------------------------
+     §05 — "How we work", three values and a held photograph.
+
+     Fourth held screen on the page, and the only one of the four with no
+     reference board behind it: the page frame 2653:19672 gives the composition
+     and the constraints, the sequence is the user's. SCOPED BY SECTION NAME,
+     like every other section in this file.
+     ------------------------------------------------------------------------- */
+
+  /* The band takes its own height, the heading takes its own, the values take
+     what is left and share one cell so exactly one is ever on screen. Written
+     out, the section reads heading → value 1 → value 2 → band → value 3, which
+     is the frame's order and the flow document; the grid lifts the band to the
+     first row only when held. */
+  [data-ab="how-we-work"][data-ab-held] [data-ab-stage] {
+    grid-template-rows: auto auto 1fr;
+  }
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-band] {
+    grid-row: 1;
+    grid-column: 1;
+    margin: 0;
+  }
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-head] {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-value] {
+    grid-row: 3;
+    grid-column: 1;
+    min-height: 0;
+  }
+  /* The foot is the air before §06's crest in flow. Held, the screen's own
+     height is the air and it would only push the values out of the cell. */
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-foot] {
+    display: none;
+  }
+
+  /* THE PHOTOGRAPH OPENS FROM THE TOP.
+
+       --ab5-fold   1 = the band closed, 0 = the band at full height
+
+     It runs 1 → 0 ONCE and stays: the picture is the rest scene the last value
+     arrives out of, so nothing gives the height back. The frame's clip opens
+     downward and the heading and the value cell travel into the space.
+
+     ⚠ AND THE PLANE IS NOT IN THAT LIST. §02's road counter-travels inside its
+     frame so a chosen edge stays in view; this one must not move at all. The
+     layer is annotated "P1 full-bleed hold: the ground and the type move around
+     it, the image plane NEVER does", and the photograph is `frame` grade — the
+     notes record four people cropped to hands, one of them a child. What opens
+     is the frame; what is revealed was always there.
+
+     34svh held, against the flow build's 40/56: the band, its caption, the rule
+     and three lines of RECIPROCITY all have to stand on one screen together. */
+  [data-ab="how-we-work"][data-ab-held] [data-ab-stage] {
+    --ab5-fold: 1;
+    --ab5-band-h: 34svh;
+  }
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-frame] {
+    height: var(--ab5-band-h);
+    clip-path: inset(0 0 calc(var(--ab5-fold) * var(--ab5-band-h)) 0);
+  }
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-caption],
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-head],
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-value] {
+    transform: translate3d(
+      0,
+      calc(var(--ab5-fold) * var(--ab5-band-h) * -1),
+      0
+    );
+  }
+  /* The caption belongs to the picture, so it is only there when the picture
+     is — derived from the same number rather than given its own tween, the
+     same correction §02's caption needed. */
+  [data-ab="how-we-work"][data-ab-held] [data-ab5-caption] {
+    opacity: calc(1 - var(--ab5-fold));
+  }
+
 }
 
 /* ---------------------------------------------------------------------------

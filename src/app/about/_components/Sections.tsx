@@ -1063,12 +1063,32 @@ export function WhatWeDo() {
    ------------------------------------------------------------------------- */
 
 /**
- * ⚠ THE HEADLINE SLOT IS DELIBERATELY EMPTY. Every other section on this page
- * lifts its headline out of the draft's opening sentence; this section has no
- * opening sentence, so the slot renders the absence as a bracketed marker
- * rather than being filled with something invented or quietly closed up.
- * `docs/design/lofi-spec.md:491-495` is the rule; this is the exception it
- * names.
+ * ⚠ THE INTERIORS PASS IS BUILT (12 September 2026, user direction). This was
+ * three values stacked down the page with a photograph before the third; it is
+ * now ONE held screen. "How we work" stands for the whole section, each value
+ * is read on its own and clears, the photograph opens from the top and pushes
+ * what is left down, and RECIPROCITY is read beneath it. The beats are
+ * `theValues` in src/lib/motion/recipes-about.ts; the held layout is
+ * ./about.css.
+ *
+ * ⚠ §05 HAS NO REFERENCE BOARD, unlike §02, §03 and §04. The page frame
+ * (Figma 2653:19672) gives the composition and the constraints; the sequence
+ * is the user's own. Where the two could disagree the frame won — see the
+ * plane note below.
+ *
+ * ⚠ KEPT QUIET ON PURPOSE. The ledger scores this section ⚡2 with "rest
+ * after": it is the page's breather between §04 and §06, both ⚡4. It is held,
+ * but its beats are `settle` and a fade and nothing else — no overshoot, no
+ * ground ramp, no contraction. §03b's Breath is still the page's hard rest.
+ *
+ * ⚠ THE IMAGE PLANE NEVER MOVES, and this is the one line where this band
+ * differs from §02's road. The frame's own layer note reads "P1 full-bleed
+ * hold: the ground and the type move around it, the image plane NEVER does",
+ * and the photograph is `frame` grade — the notes record at least four people
+ * cropped to hands, one of them a child, and no faces at all. So the band's
+ * CLIP opens and the column travels; the picture that was always there is
+ * uncovered and never translated. §02's road counter-travels inside its frame
+ * and copying that here would be wrong.
  *
  * Each value arrives as a lede and then a conclusion set at 44 — the sentence
  * that actually constrains a decision, landing on its own after a beat. The
@@ -1076,94 +1096,130 @@ export function WhatWeDo() {
  *
  * ⚠ R22 — the draft calls reciprocity the Ngapartji-Ngapartji principle, which
  * is Western Desert language and not Iningai. The draft raises it against
- * itself and the note renders; it is Suzanne's to resolve.
+ * itself; it is Suzanne's to resolve. (The editorial notes stopped rendering
+ * on 11 September 2026, so this comment is the record.)
  *
- * The band is a rest scene, full bleed, sitting between the second value and
- * RECIPROCITY. `frame` grade: the notes record at least four people cropped to
- * hands and one of them a child, and no faces at all in the frame.
+ * ⚠ NO `overflow-hidden` ON THIS SECTION. It carries no wave of its own — seam
+ * 05 → 06's navy crest belongs to §06 — so the clip may be `overflow-clip`,
+ * which the artist's ring needs; `hidden` would make the section a scroll
+ * container and the sticky screen inside it would never stick. Same pair of
+ * reasons as §03; see the head of ./about.css.
  */
 export function HowWeWork() {
+  /* One value, rendered three times. Pulled out of the map so the photograph
+     can be a SIBLING of the values rather than a child of the third — the flow
+     order is unchanged (heading, value 1, value 2, the band, value 3, which is
+     the frame's), and held, the band can be lifted to its own grid row. */
+  const renderValue = (value: (typeof howWeWork.values)[number], i: number) => {
+    const parts = sentences(value.body);
+    const conclusion = parts[parts.length - 1];
+    const lede = parts.slice(0, -1).join(" ");
+
+    return (
+      <div
+        key={value.title}
+        data-ab5-value={i}
+        className={`${COLUMN} relative pt-12 lg:pt-16`}
+      >
+        {/* The thread, one line again. The FIRST value's rule and title are the
+            landing of seam 04 → 05 — §04's contracting loop hands off to them,
+            and `theLoop` says so. Neither hook may be renamed without changing
+            that recipe too. */}
+        <div
+          aria-hidden
+          data-ab5-rule
+          data-ab-rule={i === 0 ? "value" : undefined}
+          className="h-[2px] w-full bg-gold/55"
+        />
+        <p
+          data-ab5-label
+          data-ab-eyebrow={i === 0 ? "" : undefined}
+          className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold"
+        >
+          {value.title}
+        </p>
+        <p
+          data-ab5-lede
+          className="mt-4 max-w-[820px] text-lg leading-[1.5] font-medium text-canvas/86 sm:text-2xl"
+        >
+          {lede}
+        </p>
+        <p
+          data-ab5-conclusion
+          className="headline mt-8 max-w-[1000px] text-2xl leading-[1.23] sm:text-[2.75rem]"
+        >
+          {conclusion}
+        </p>
+      </div>
+    );
+  };
+
   return (
     <section
       data-ab="how-we-work"
-      className="relative overflow-hidden bg-roasted text-canvas"
+      className="relative overflow-clip bg-roasted text-canvas"
     >
       <RingArtwork
         piece="a"
         className="-left-56 top-[34%] w-[47.5rem] -rotate-11 opacity-[0.07]"
       />
 
-      <div className={`${COLUMN} relative pt-16 lg:pt-24`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
-        >
-          {howWeWork.title}
-        </p>
-      </div>
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid; in flow it adds nothing and the children below stack in the
+          order they are written, which is the frame's order and the document
+          this replaces. Held, the grid lifts the band to the first row so it
+          can arrive OVER the heading and push it down, exactly as §02 lifts its
+          road. Nothing is reordered in the DOM. */}
+      <div data-ab-stage>
+        <div data-ab5-head className={`${COLUMN} relative pt-16 lg:pt-24`}>
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+          >
+            {howWeWork.title}
+          </p>
+        </div>
 
-      {howWeWork.values.map((value, i) => {
-        const parts = sentences(value.body);
-        const conclusion = parts[parts.length - 1];
-        const lede = parts.slice(0, -1).join(" ");
+        {howWeWork.values.slice(0, 2).map((value, i) => renderValue(value, i))}
 
-        return (
-          <div key={value.title}>
-            {/* The band lands before the third value, not after the second —
-                it is the rest scene RECIPROCITY arrives out of. */}
-            {i === 2 ? (
-              <figure className="relative mt-16 mb-4 lg:mt-16">
-                <div
-                  data-motion={RECIPROCITY?.grade ?? "frame"}
-                  className="relative h-[40svh] w-full overflow-hidden lg:h-[56svh]"
-                >
-                  <MediaOrField
-                    src={RECIPROCITY?.src ?? null}
-                    alt="Ochre-marked adult palms held out over a grinding stone toward a child's"
-                    sizes="(min-width: 1024px) 100vw, 260vw"
-                    fieldClass="bg-charcoal/40"
-                  />
-                </div>
-                <figcaption
-                  className={`${COLUMN} mt-6 text-base leading-[1.5] text-canvas/75`}
-                >
-                  Ochre, prepared by hand.
-                </figcaption>
-              </figure>
-            ) : null}
-
-            <div className={`${COLUMN} relative pt-12 lg:pt-16`}>
-              {/* The thread, one line again. The FIRST value's rule and title
-                  are the landing of seam 04 → 05 — the frame's "bullet of
-                  COUNTRY FIRST" is not built as an element, so the contracted
-                  ring hands off to this rule and eyebrow instead. */}
-              <div
-                aria-hidden
-                data-ab-rule={i === 0 ? "value" : undefined}
-                className="h-[2px] w-full bg-gold/55"
+        {/* The band lands before the third value, not after the second — it is
+            the rest scene RECIPROCITY arrives out of. */}
+        <figure data-ab5-band className="relative mt-16 mb-4 lg:mt-16">
+          <div
+            data-ab5-frame
+            className="relative h-[40svh] w-full overflow-hidden lg:h-[56svh]"
+          >
+            {/* ⚠ NO TRANSFORM EVER REACHES THIS PLANE — see the head of the
+                component. The frame opens around a picture that does not move. */}
+            <div
+              data-ab5-plane
+              data-motion={RECIPROCITY?.grade ?? "frame"}
+              className="absolute inset-0"
+            >
+              <MediaOrField
+                src={RECIPROCITY?.src ?? null}
+                alt="Ochre-marked adult palms held out over a grinding stone toward a child's"
+                sizes="(min-width: 1024px) 100vw, 260vw"
+                fieldClass="bg-charcoal/40"
               />
-              <p
-                data-ab-eyebrow={i === 0 ? "" : undefined}
-                className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold"
-              >
-                {value.title}
-              </p>
-              <p className="mt-4 max-w-[820px] text-lg leading-[1.5] font-medium text-canvas/86 sm:text-2xl">
-                {lede}
-              </p>
-              <p className="headline mt-8 max-w-[1000px] text-2xl leading-[1.23] sm:text-[2.75rem]">
-                {conclusion}
-              </p>
             </div>
           </div>
-        );
-      })}
+          <figcaption
+            data-ab5-caption
+            className={`${COLUMN} mt-6 text-base leading-[1.5] text-canvas/75`}
+          >
+            Ochre, prepared by hand.
+          </figcaption>
+        </figure>
 
-      {/* §04's foot. This was the editorial note's container; the notes came off
-          the page on 11 September 2026 (user direction) and the padding stays,
-          because it is the air between RECIPROCITY and seam 05 -> 06's navy
-          crest, which is pulled up above §06's own box. */}
-      <div aria-hidden className={`${COLUMN} pt-10 pb-16 lg:pt-20 lg:pb-24`} />
+        {renderValue(howWeWork.values[2], 2)}
+
+        {/* The foot. This was the editorial note's container; the notes came off
+            the page on 11 September 2026 (user direction) and the padding stays,
+            because it is the air between RECIPROCITY and seam 05 → 06's navy
+            crest, which is pulled up above §06's own box. */}
+        <div aria-hidden data-ab5-foot className={`${COLUMN} pt-10 pb-16 lg:pt-20 lg:pb-24`} />
+      </div>
     </section>
   );
 }

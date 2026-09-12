@@ -14,7 +14,7 @@ import {
   partnersDots,
   peopleWave,
   theQuestion,
-  valuesRelay,
+  theValues,
 } from "@/lib/motion/recipes-about";
 
 /**
@@ -23,12 +23,13 @@ import {
  * THE SEAMS, AND THE PAGE'S TWO HELD SCREENS. This host wires the ten section
  * joins of Figma `REF · SCORE · 05 ABOUT` (2642:19666), the X4 baseline
  * arrivals, and — from 12 September 2026, user direction — the interiors of
- * §02 (`theRegister`), §03 (`theQuestion`) and §04 (`theLoop`). Group G's eight
- * waypoints and the remaining section interiors are still unbuilt. Renders
- * nothing.
+ * §02 (`theRegister`), §03 (`theQuestion`), §04 (`theLoop`) and §05
+ * (`theValues`). Group G's eight waypoints and the remaining section interiors
+ * are still unbuilt. Renders nothing.
  *
- * ⚠ THREE HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of
- * the eight the deck already spends. Both were user directions and both are
+ * ⚠ FOUR HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of the
+ * eight the deck already spends. §05 is held QUIETLY — it is the ledger's ⚡2
+ * rest and its beats are `settle` and a fade only. Both were user directions and both are
  * flagged for design sign-off in scenes.md. Neither is a GSAP pin — they are
  * sticky spans in about.css, so they do not fight the deck's own pins.
  *
@@ -42,7 +43,8 @@ import {
  *   §03b breath       none         55vh   ⚡1   the hold
  *   §04 what-we-do    media       300vh   ⚡4   HELD — each clause builds its
  *                                                card, the loop closes
- *   §05 how-we-work   type        249vh   ⚡2
+ *   §05 how-we-work   type        300vh   ⚡2   HELD — one value at a time,
+ *                                                then the photograph opens
  *   §06 who-decides   TRANSITION  245vh   ⚡4   navy wave in · overlap out
  *   §07 the-people    media       145vh   ⚡3
  *   §08 partners      type        175vh   ⚡2
@@ -130,7 +132,10 @@ export function AboutMotion() {
       // the same way §02's and §03's are: the section's 300vh less the one
       // viewport its sticky screen is held for.
       wire(find("what-we-do"), (el) => theLoop(el, 200));
-      wire(find("how-we-work"), (el) => valuesRelay(el, 249));
+      // §05 is the page's fourth held screen — three values and a held
+      // photograph. Quiet by design: it is the ledger's ⚡2 rest between two
+      // ⚡4 sections and holding it must not turn it into a fifth spectacle.
+      wire(find("how-we-work"), (el) => theValues(el, 200));
       wire(find("who-decides"), (el) => boardHandoff(el, 245));
       wire(find("the-people"), (el) => peopleWave(el, 145));
       wire(find("partners"), (el) => partnersDots(el, 175));

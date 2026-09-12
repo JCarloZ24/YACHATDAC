@@ -1078,15 +1078,16 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 
 ## About — verb *answers* — 2053vh, 11 sections
 
-> **BUILT — seam pass, 8 Sep 2026; §02, §03 and §04's interiors, 12 Sep 2026.**
+> **BUILT — seam pass, 8 Sep 2026; §02–§05's interiors, 12 Sep 2026.**
 > The ten seams of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines
 > are live: `src/app/about/_components/Motion.tsx` hosts,
 > `src/lib/motion/recipes-about.ts` holds the recipes. **§02, §03 and §04 are
 > now built too** — §02's register writes itself (`theRegister`), §03's question
-> is asked on ground that goes out under it (`theQuestion`), and §04's loop
-> closes (`theLoop`), all three as held screens with their layout in
-> `src/app/about/_components/about.css`. The remaining interiors and Group G are
-> still unbuilt; Group G stays ▲ Leonard Mickelo.
+> is asked on ground that goes out under it (`theQuestion`), §04's loop closes
+> (`theLoop`) and §05's values are read one at a time under a photograph that
+> opens from the top (`theValues`), all four as held screens with their layout
+> in `src/app/about/_components/about.css`. The remaining interiors and Group G
+> are still unbuilt; Group G stays ▲ Leonard Mickelo.
 
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
 1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
@@ -1099,7 +1100,7 @@ against 235vh drawn — the same convention as Living Work §02 and The Record �
 | 03 | II | **THE QUESTION** — the ground takes the picture and the question is asked on nothing | 5 | 235 | **type** | **P9** | ✓ pinned 300 |
 | 03b | II | **BREATH** — held, no caption, no words | 1 | 55 | **none** | **P8** | ✓✓ |
 | 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 300 | **media** | P4 | ✓ held 300 |
-| 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 249 | **type** | P1 | ✓ |
+| 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 300 | **type** | P1 | ✓ held 300 |
 | 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 245 | **transition** | — | — |
 | 07 | IV | The people — the frames dance, the type holds | 3 | 145 | **media** | P6 | — |
 | 08 | IV | Partners — names, not logos | 2 | 175 | **type** | — | ✓ |
@@ -1183,10 +1184,11 @@ throws that reasoning away, so the held §02 declares **type**, `decode` is its 
 and the road's `plateParallax` is gone: it is LOUD media and `assertChannel` would have thrown.
 `roadScreen` is retired into `theRegister`.
 
-⚠ **THE PAGE NOW SPENDS THREE HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
-deck already spends. All three are user directions; none is a GSAP pin — they are CSS sticky
-spans, so they do not fight the deck's own pins — and all three are flagged here for design
-sign-off alongside the deck's own deviation.
+⚠ **THE PAGE NOW SPENDS FOUR HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
+deck already spends. All four are user directions; none is a GSAP pin — they are CSS sticky spans,
+so they do not fight the deck's own pins — and all four are flagged here for design sign-off
+alongside the deck's own deviation. §05 is the one to look at hardest: it was the page's scored
+breather, and it is held quietly to preserve as much of that as holding allows.
 
 **§04 is the loop closing — BUILT 12 September 2026.** Built to `REF · 05 ABOUT §04 THE LOOP —
 each clause builds the card it names` (Figma `2695:21396`), six frames whose scroll percentages are
@@ -1218,6 +1220,33 @@ COUNTRY FIRST behind an invisible cut.
 which is what the decision that removed the diamond was about ("the only four-card row on the site
 laid out that way"). `CardRail` itself is untouched, so The Record §07, /partnerships §06 and the
 shared contact doors are unaffected.
+
+**§05 is three values and a held photograph — BUILT 12 September 2026.** The only one of the four
+held screens with NO reference board: the page frame (`2653:19672`) gives the composition and the
+constraints, and the sequence is the user's. "How we work" stands for the whole section; each value
+is read on its own — the thread, then whose it is, then what it says, then the sentence that
+actually constrains a decision — and clears. After the second, the photograph opens from the top,
+pushes the heading and the column down into the space it takes, and RECIPROCITY is read beneath
+it. The picture stays: it is the rest scene that value arrives out of.
+
+⚠ **THE IMAGE PLANE IS NEVER TRANSFORMED, and that is a grade rule rather than a preference.** The
+band's layer is annotated *"P1 full-bleed hold: the ground and the type move around it, the image
+plane NEVER does"*, the photograph is `frame` grade, and the photo notes record four people cropped
+to hands, one of them a child. §02's road counter-travels its plane so a chosen edge stays in
+view; copying that here would be wrong. What opens is the frame; what is revealed was always
+there. Verified by sampling the plane's transform across the whole read — identity throughout.
+
+**Held, but deliberately quiet.** This section is scored ⚡2 with "rest after": it is the page's
+breather between §04 and §06, both ⚡4. It is held on user direction, and its beats are `settle`
+and a fade and nothing else — no overshoot, no ground ramp, no contraction — with a real rest
+across the last third. §03b's Breath is still the page's hard rest.
+
+⚠ **A TRAILING REST HAS TO HOLD THE CLOCK OPEN.** A scrub maps the reader's 0→1 onto
+0→`tl.duration()`, and the duration is wherever the last tween ends — so a genuinely empty final
+stretch shortens the clock and plays every earlier beat late. §02, §03 and §04 all end ON their
+last beat and normalise themselves; §05 is the first section scored with a rest AFTER its last
+beat, so the rest is declared as an inert tween that holds the duration at 1.0 and touches
+nothing. Worth knowing before the next section that wants to end on stillness.
 
 **Group G is back in build here, and only here.** The traveller and the page's thread are the same
 object: the question travels down the page and settles at each thing it measures. `G1` travel with
