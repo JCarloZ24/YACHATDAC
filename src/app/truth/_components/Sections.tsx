@@ -1330,8 +1330,15 @@ function EntryPlate({
         {/* The crest that introduces this plate — below Ahead on TODAY, below
             TODAY's record on the deed (client direction, 11 September 2026).
             Egg-white over the photograph, which is where it reads. */}
-        <SeamWave hook={id === "deed" ? "deed-wave" : "plate-wave"} />
-        {/* …and the deed plate also hands ON, into 2022 below it. */}
+        {/* ⛔ NO CREST ON THE 2026 PLATE'S HEAD (client direction, 12 September
+            2026). TODAY's plate takes one — it is the seam below Ahead — but
+            "2026 · Bought back" opens clean. The record above it already ends
+            on `today-wave`, so a second crest a screen later was two dividers
+            in a row with one screen between them.
+
+            The deed plate still hands ON: its foot carries the crest into
+            2022, which is the seam that was asked for. */}
+        {id === "deed" ? null : <SeamWave hook="plate-wave" />}
         {id === "deed" ? <SeamWave hook="boughtback-wave" edge="foot" /> : null}
         <div
           data-v2-plate
