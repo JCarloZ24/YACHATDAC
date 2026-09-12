@@ -8,7 +8,9 @@ separate route/article covers described below.
 | --- | --- | --- | --- | --- |
 | **the page is ready**, every public route | One charcoal cover shows the supplied wordmark and dot sweep, then “You're viewing” and the destination name. Runs on link navigation, browser history, direct arrival, refresh and hard refresh. Waits for fonts, opening image decoding, video frame readiness, the motion build and stable layout; lower-page lazy media loads as needed. Entrances wait until the cover clears. | 200ms dim on navigation; readiness-paced count; 700ms name dwell; 260ms fade out. 12s readiness ceiling, Escape/Tab release and CSS backstop. Reduced motion retains a static readiness cover without animated transitions. | August, 11 September 2026 | `RouteLoader`, `PageLoader`; owned CSS transition, no cross-route GSAP timeline |
 
-*Last updated: 11 September 2026*
+*Last updated: 13 September 2026*
+
+SCR-10 clarification, 13 September 2026: the early Truth reveal shows only the dotted line. The marker artwork and its first year fade in together over 0.4 units (sine.inOut) at `wonderAt + 2.3`, when the dated sequence starts; reverse scroll hides both again while the line remains visible in the introduction.
 
 | Our People — single canvas, user direction 11 September 2026 | Behaviour | Timing | Reference | Effect |
 | --- | --- | --- | --- | --- |
@@ -374,7 +376,7 @@ AMB-05 final scope correction, 9 September 2026: user requests all vegetation to
 | **the landscape introduces Truth** | SCR-09: after Wonder holds, its copy rises away; the same two sequence layers travel on to Truth's frame (sky 600 → 1422, light 510 → 464, black 0.2 → 0.25), so the saturated blue is a later hour of one day rather than a second composition. Truth, Iningai Nation and the first existing subject-detail paragraph rise into a centred upper block. | homeHeroDissolve 3.4-4.2; hold to 4.6; total pin 552vh; reversible scrub 0.8s | user screenshot 9 September 2026 | quiet type over held landscape with AMB-05 breeze | `homeHeroDissolve` |
 
 
-| **Country carries the years** | SCR-10: Home Truth continues on the same canvas. Figma sky/light layers travel through their measured offsets; the supplied dotted path enters, year marker follows its seven anchors, prose crossfades in stillness. Reverse scroll restores every state. | 120vh per timeline unit; 0.4-unit transitions, 0.6-unit reading holds; final 0.9-unit hold; reduced motion uses static Truth | user screenshots and Figma 3371:45208-46472, 9 September 2026 | transition leads; quiet type, existing AMB-05 breeze | `homeHeroDissolve` |
+| **Country carries the years** | SCR-10: Home Truth continues on the same canvas. The supplied dotted path fades in with the Iningai Nation introduction, without horizontal travel; Figma sky/light layers then travel through their measured offsets, year marker follows its seven anchors, prose crossfades in stillness. Reverse scroll restores every state. | Path opacity 0 → 1 over 0.6 units, sine.inOut, from wonderAt + 1.3 alongside Truth; 80vh per timeline unit; final 0.9-unit hold; reduced motion uses static Truth | user screenshots and Figma 3371:45208-46472, 9 September 2026; earlier fade requested 13 September 2026 | transition leads; quiet type, existing AMB-05 breeze | `homeHeroDissolve` |
 
 
 | **the painting speaks after opening** (/homepagev2 only) | SCR-09 refinement: finish the painting reveal at 0.95 before introducing its three text blocks, in order, with slow opacity fades. Hold the complete copy before fading it out and entering the portal. | text at 1.08/1.62/2.18, durations 0.50/0.50/0.55; clear at 3.03; portal at 3.18; 120vh per unit, reversible scrub | user direction 9 September 2026; left the homepage 10 September 2026 with the rest of the painting opening | media first, quiet type second | `homeV2HeroDissolve` |

@@ -120,7 +120,8 @@ body:has([data-hero-phase="black"]) [data-home-thread] { visibility: hidden; }
 .home-truth-panel:not(:first-child), .home-truth-timeline { opacity: 0; visibility: hidden; }
 .home-truth-timeline { --text-h1: clamp(2rem, 4.444vw, 4rem); }
 .home-truth-path { position: absolute; left: .625%; top: 81.02%; width: 123.472%; height: 5%; max-width: none; }
-.home-truth-marker { position: absolute; inset: 0; }
+/* SCR-10, 13 September 2026: marker and date arrive after the line. */
+.home-truth-marker { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
 .home-truth-marker-art { position: absolute; width: 3.333%; height: 10.433%; left: -1.666%; bottom: 97.55%; }
 .home-truth-years { position: absolute; bottom: 110.5%; left: -10%; width: 20%; display: grid; text-align: center; }
 .home-truth-years > p { grid-area: 1 / 1; }

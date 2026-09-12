@@ -157,8 +157,15 @@ export function registerHome(): void {
         ? (730 / 901 + (y - 730) * root.clientWidth / 1440 / root.clientHeight) * 100
         : y / 9.01;
       timeline.set(marker, { xPercent: homeTruthScenes[0].x / 14.4, yPercent: () => markerY(homeTruthScenes[0].y) }, 0);
+      // SCR-10 / "Country carries the years", user direction 13 September
+      // 2026: orient the reader during Truth's introduction, with a quiet
+      // fade in place alongside the heading rather than a later arrival.
       timeline.fromTo(root.querySelector("[data-truth-timeline]"),
-        { autoAlpha: 0, xPercent: 100 }, { autoAlpha: 1, xPercent: 0, duration: 0.4, ease: "sine.inOut" }, wonderAt + 2.3);
+        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "sine.inOut" }, wonderAt + 1.3);
+      // SCR-10, 13 September 2026: only the line introduces the chronology;
+      // the marker and its date wait until after the opening hold.
+      timeline.fromTo(marker,
+        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "sine.inOut" }, wonderAt + 2.3);
       homeTruthScenes.forEach((scene, index) => {
         const at = wonderAt + 2.3 + index;
         timeline.to(config.state, { sky: scene.sky, light: scene.light,
