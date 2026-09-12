@@ -249,28 +249,63 @@ export function AboutHero() {
 }
 
 /* -------------------------------------------------------------------------
-   02 · What we are — the name, the road, and the register · 299vh
+   02 · What we are — the name, the road, and the register · 300vh held
    ------------------------------------------------------------------------- */
 
 /**
- * The sentence says most people cannot say the corporation's legal name, so
- * the frame sets the long name at 64 and holds it at 0.3 while "Most people
- * say YACHATDAC." lands at 96 underneath. The type is making the point the
- * copy makes, which is why both halves come out of one authored string rather
- * than being two entries in the content module.
+ * ⚠ THE REGISTER PASS IS BUILT (12 September 2026, user direction). This was
+ * three passive screens read by scrolling past them; it is now ONE held screen
+ * running the sequence Figma `2632:19655` has specified all along — `REF ·
+ * 05 ABOUT §02 THE REGISTER — the facts arrive one at a time · 6 FRAMES`. The
+ * beats are `theRegister` in src/lib/motion/recipes-about.ts; the held layout
+ * is ./about.css, which §03 already uses. Read both before changing markup.
  *
- * ⚠ R15 — that long name is exactly what is unconfirmed. The logo and the
- * published research disagree on Yambangku / Yumbangku, and ICN and ABN are
- * blank. The draft's own note renders under the register rather than being
- * dropped, because a register that lists what is confirmed should say what is
- * not.
+ * THE BOARD'S ARGUMENT, because it is the reason the section exists in this
+ * shape: "The lo-fi draws four fact cards side by side, which means the reader
+ * meets nine pieces of information at once and reads none of them. Here each
+ * one arrives on its own, at size, and folds down into the register as the
+ * next one comes up. Nothing is lost — the reader met every fact singly and
+ * the record is still a readable index at the end."
  *
- * ⚠ CR10 is held on the third paragraph — "bought back for our people" is the
- * client's phrase about their own history and is not edited here.
+ * HOW THE SEQUENCE READS. The legal name arrives as noise and resolves into
+ * itself, then dims as the short name settles under it — which is the copy's
+ * own joke, since the draft sets the full name and then says most people say
+ * YACHATDAC. The two paragraphs settle line by line and the screen clears to a
+ * single dimmed recap. Then the road opens full bleed at the top of the
+ * screen, the ochre thread draws, and each of the four facts takes the screen
+ * ALONE at heading scale before folding down into the register — which is the
+ * table below, arriving one row at a time. The road gives up its height to the
+ * table as it fills.
  *
- * THE ROAD RUNS FULL BLEED THROUGH THE SECTION. It is a screen of its own, not
- * an image on the side: 1440 wide between the paragraphs and the register,
- * with a caption that names the way in rather than describing the picture.
+ * ⚠ THE BOARD SAYS "NO PIN, NO SCRUB" AND IS OVERRULED. Its own note reads
+ * "230vh, and deliberately NOT pinned … the scroll is never taken away, so a
+ * researcher can leave at any point and the register still reads". Held on
+ * user direction, 12 September 2026. The objection is answered rather than
+ * ignored: below `deck:` (1024 × 820), under reduced motion and with
+ * JavaScript off none of this applies and the section is exactly the document
+ * it was — the register the note is protecting. That is also the second held
+ * screen on a page the grammar budgets one pin for; flagged for sign-off in
+ * scenes.md alongside the deck's own deviation.
+ *
+ * ⚠ R15's NOTE IS IN BOARD FRAME 06 AND IS NOT BUILT. The editorial notes came
+ * off /about on 11 September 2026; `whatWeAre.pending` and STATUS.md are the
+ * record instead. The board predates that.
+ *
+ * ⚠ NO CLIP OF ANY KIND ON THIS SECTION — not `overflow-hidden`, and not
+ * `overflow-clip` either. TWO separate reasons, and conflating them deleted
+ * the seam wave once already (12 September 2026):
+ *
+ *   · the Wave / Divider below is seated `overhang`, which pulls it entirely
+ *     ABOVE this section's own box so it lands on the hero photograph. ANY
+ *     overflow clipping removes it — `clip` no less than `hidden`, since both
+ *     clip; `clip` only differs in not creating a scroll container.
+ *   · `overflow-hidden` would additionally make the section a scroll container,
+ *     and `position: sticky` inside it would then never stick.
+ *
+ * §03 takes `overflow-clip` because it has rings to clip and no overhanging
+ * wave. This section has the opposite pair, so the ring is clipped on its own
+ * layer instead — it needs it, being 1000px at left-54% — and the section
+ * itself clips nothing.
  */
 export function WhatWeAre() {
   const [legalName, shortName] = (() => {
@@ -279,117 +314,242 @@ export function WhatWeAre() {
     return [first.slice(0, cut + 1), first.slice(cut + 2)];
   })();
 
+  /**
+   * The recap — what has been read, held at 0.28 while the facts take the
+   * screen (board frames 04–06).
+   *
+   * DERIVED, NOT AUTHORED. The board draws a line that is not in the draft, so
+   * it is composed here from strings that are: the short name, and the first
+   * sentence of the last paragraph. D5 keeps copy in `src/content/about.ts`
+   * and this adds nothing to it — the same move the legal-name split above
+   * makes, and what `sentences()` exists for. A reviewer still reads it as a
+   * sentence, so it is flagged rather than buried.
+   */
+  const recap = `${shortName} · ${sentences(whatWeAre.body[2])[0]}`;
+
   return (
     <section data-ab="what-we-are" className="relative bg-canvas text-charcoal">
-      {/* ⚠ NO `overflow-hidden` ON THIS SECTION. The wave is pulled entirely
-          above the section's own box so that it lands on the hero photograph
-          below it — a clip here deletes it outright. The artwork is clipped on
-          its own layer instead, which it needs (ring-b is 1000px at left-54%
-          and would otherwise scroll the page sideways). */}
       {/* Seam 01 → 02 · Wave / Divider · OFF-WHITE. "The cliff's horizontal
           banding becomes the register's rules." The Guide's departure (G1,
           ▲ Leonard Mickelo) would leave from here; not built. */}
       <WaveDivider ground="var(--color-canvas)" hook="wave" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          tone="roasted"
-          className="top-[14%] left-[54%] w-[62.5rem] rotate-7 opacity-[0.08]"
-        />
-      </div>
 
-      <div className={`${COLUMN} relative pt-16 lg:pt-28`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
-        >
-          {whatWeAre.title}
-        </p>
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid; in flow it adds nothing and the children below simply stack in
+          the order they are written, which is the document this replaces.
 
-        {/* The long name, held back so the short one can land. */}
-        <p
-          data-arrive
-          className="headline mt-8 max-w-[1240px] text-4xl leading-[1.2] text-evergreen/30 sm:text-5xl lg:text-[3.5rem]"
-        >
-          {legalName}
-        </p>
-        <p
-          data-arrive
-          className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-6xl lg:text-[5rem]"
-        >
-          {shortName}
-        </p>
+          ⚠ THE DOM ORDER IS THE FLOW ORDER, AND THE HELD ORDER IS THE GRID'S.
+          Written out, this reads heading → the name → the road → the register,
+          which is what the frame draws and what the fallback has to be. Held,
+          the road is lifted to the first grid row so it can come in OVER the
+          heading and push it down; see about.css. Nothing is reordered in the
+          DOM to achieve that, so the reading order and the tab order are the
+          frame's in both builds. */}
+      <div data-ab-stage>
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <RingArtwork
+            piece="b"
+            tone="roasted"
+            className="top-[14%] left-[54%] w-[62.5rem] rotate-7 opacity-[0.08]"
+          />
+        </div>
 
-        <p className="mt-16 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
-          {whatWeAre.body[1]}
-        </p>
-        <p className="mt-8 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
-          {whatWeAre.body[2]}
-        </p>
-      </div>
+        {/* THE ONE HEADING, and it never leaves (user direction, 12 September
+            2026: "What we are header retains"). It is the fixed point the
+            whole section turns around — the name resolves under it, the copy
+            clears from under it, the road arrives over it and pushes it down,
+            and the register writes itself under it.
 
-      {/* The road. Full bleed — a screen, not an inset, and its OWN screen in
-          the ledger (scenes.md:358: "§02 is decode → the road → register"), so
-          it carries its own motion root and its own loud channel (media). The
-          plane is oversized past its clip so the parallax travel never exposes
-          ground; `movable()` holds it still if the photo is `frame` grade. */}
-      <figure data-ab="road" className="relative mt-16">
-        <div className="relative h-[44svh] w-full overflow-hidden lg:h-[62svh]">
-          <div
-            data-media
-            data-plane="mid"
-            data-motion={ROAD?.grade ?? "full"}
-            className="absolute inset-x-0 -inset-y-[8%]"
+            ⚠ ITS TRAVEL GOES ON THE WRAPPER. The heading itself must stay free
+            of inline transforms or the stylesheet's travel loses to them —
+            the same collision the register index hit. Nothing animates the
+            wrapper; nothing but the stylesheet writes its transform. */}
+        <div data-ab2-headwrap className={`${COLUMN} relative pt-16 lg:pt-28`}>
+          <p
+            data-ab-eyebrow
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] sm:text-2xl"
           >
-            <MediaOrField
-              src={ROAD?.src ?? null}
-              /* The vehicle is named because the crop below brings it into frame;
-                 it was entirely cut by the old centred crop. `kit.ts` has recorded
-                 it as the subject all along ("one vehicle at the end — no people"). */
-              alt="An aerial view down a sandy two-wheel track through low bushland, a single vehicle stopped on it"
-              sizes="(min-width: 1024px) 100vw, 260vw"
-              /* The plane is 2.70:1 and the photograph 1.78:1, so `object-cover`
-                 discards ~178px at each edge, and the centred default cut the near
-                 end of the track — including the vehicle on it, which is the thing
-                 that gives the aerial its scale. Anchored to the bottom on user
-                 direction, 11 September 2026. This moves the crop INSIDE the plane
-                 only: the plane's own 8% overhang, and so the parallax, is
-                 untouched, and ~48px of the photograph's true foot still sits
-                 below the clip so the travel never exposes ground. */
-              className="object-cover object-bottom"
-              fieldClass="bg-roasted/40"
-            />
+            {whatWeAre.title}
+          </p>
+        </div>
+
+        {/* ---- the name ---------------------------------------------------
+            Clears whole when the road arrives. Faded as a BLOCK rather than
+            line by line: its three children each already own a split, and a
+            second split beat on any of them would orphan the first one's line
+            nodes — see the note at `freshSplit`. */}
+        <div data-ab2-block="name" className={`${COLUMN} relative pt-8 lg:pt-10`}>
+          {/* THE NAME, UNRESOLVED. The run this decodes is `aria-hidden` and
+              the real string is the paragraph's `aria-label`, so assistive
+              tech never reads the scramble — the contract SplitText's
+              `aria: "auto"` gives every other split on this page. With
+              JavaScript off the span simply renders the name. */}
+          <p
+            aria-label={legalName}
+            className="headline max-w-[1240px] text-4xl leading-[1.2] text-evergreen/30 sm:text-5xl lg:text-[3.5rem]"
+          >
+            <span data-ab2-decode aria-hidden="true">
+              {legalName}
+            </span>
+          </p>
+          <p
+            data-ab2-short
+            className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-6xl lg:text-[5rem]"
+          >
+            {shortName}
+          </p>
+
+          <p
+            data-ab2-body
+            className="mt-16 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+          >
+            {whatWeAre.body[1]}
+          </p>
+          <p
+            data-ab2-body
+            className="mt-8 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+          >
+            {whatWeAre.body[2]}
+          </p>
+        </div>
+
+        {/* ---- the road ---------------------------------------------------
+            ⚠ ONE VARIABLE RUNS THIS BOTH WAYS. `--ab2-fold` is 1 when the band
+            is closed and 0 when it stands at full height, and it does the
+            arrival and the collapse with the same three tweens: the frame's
+            clip, the plane inside it, and the travel of everything below.
+
+            Arriving, it runs 1 → 0: the band opens downward from its own top
+            edge while the heading and the copy under it travel DOWN out of the
+            way, so the picture reads as sliding in over the heading and
+            pushing it down (user direction, 12 September 2026). Collapsing, it
+            runs 0 → 1 across the four register rows and everything travels
+            back up into the space. The plane counter-travels throughout, which
+            is what keeps the BOTTOM of the photograph — and the vehicle on the
+            track — in frame the whole way. Height is never animated. */}
+        <figure data-ab-road className="relative">
+          <div data-ab2-band className="relative h-[44svh] w-full overflow-hidden lg:h-[52svh]">
+            <div
+              data-media
+              data-ab2-plane
+              data-motion={ROAD?.grade ?? "full"}
+              className="absolute inset-0"
+            >
+              <MediaOrField
+                src={ROAD?.src ?? null}
+                /* The vehicle is named because the crop brings it into frame;
+                   `kit.ts` has recorded it as the subject all along ("one
+                   vehicle at the end — no people"). */
+                alt="An aerial view down a sandy two-wheel track through low bushland, a single vehicle stopped on it"
+                sizes="(min-width: 1024px) 100vw, 260vw"
+                /* The plane is 2.70:1 and the photograph 1.78:1, so
+                   `object-cover` discards ~178px at each edge, and the centred
+                   default cut the near end of the track — including the
+                   vehicle, which is the thing that gives the aerial its scale.
+                   Anchored to the bottom on user direction, 11 September 2026,
+                   and the fold above is built to keep that end visible. */
+                className="object-cover object-bottom"
+                fieldClass="bg-roasted/40"
+              />
+            </div>
+          </div>
+          <figcaption
+            data-ab2-caption
+            className={`${COLUMN} mt-4 text-base leading-[1.5] text-roasted`}
+          >
+            The way in. Turraburra is 120km north of Barcaldine.
+          </figcaption>
+        </figure>
+
+        {/* ---- the register ----------------------------------------------- */}
+        <div
+          data-ab2-block="register"
+          className={`${COLUMN} relative pt-6 pb-16 lg:pt-8 lg:pb-28`}
+        >
+          {/* What has been read. Derived — see `recap` above. */}
+          <p
+            data-ab2-recap
+            className="max-w-[1240px] text-base leading-[1.5] text-charcoal/28 sm:text-lg"
+          >
+            {recap}
+          </p>
+
+          {/* The thread enters. Ochre reads 2.30:1 on canvas, so on this
+              ground it is a line and never a word. */}
+          <div aria-hidden data-ab2-rule className="mt-8 h-[3px] w-full bg-ochre" />
+
+          {/* ⚠ THE CLOSING TRAVEL GOES ON THIS WRAPPER, NOT ON ITS CHILDREN.
+              The register closes over the presenter's reserved height with a
+              CSS transform, and the head inside it takes a GSAP arrival that
+              writes `transform` INLINE — inline beats a stylesheet, so the
+              head stood still while the table slid up underneath it and the
+              two collided (caught on screen, 12 September 2026). A wrapper no
+              tween touches keeps one writer per property. */}
+          {/* THE REGISTER, AND THE ONE FACT CURRENTLY AT SIZE.
+
+              ⚠ THE TABLE APPENDS (user direction, 12 September 2026). The fact
+              being read is not a block sitting ABOVE the table — it stands in
+              its OWN ROW'S PLACE, at heading scale, directly under the rows
+              that have already settled, and then collapses into that row. The
+              next fact appears in the slot below it. What the reader sees is a
+              table writing itself one line at a time, which is the board's
+              "folds down into the register as the next one comes up" read
+              literally rather than as a hand-off between two places.
+
+              The presenter is positioned ABSOLUTELY against this wrapper and
+              travelled to each row's own offset, which is why the wrapper is
+              the positioning context. Absolute also means it costs no layout:
+              the rows beneath are present and merely invisible, so nothing
+              reflows as the facts advance and the table is measured once. */}
+          <div data-ab2-index className="relative">
+            <p
+              data-ab2-register-head
+              className="eyebrow mt-5 text-xs tracking-[0.08em] text-roasted/70"
+            >
+              Registered with
+            </p>
+
+            <dl data-ab2-register className="mt-8 border-t border-charcoal/14">
+              {whatWeAre.facts.map((fact) => (
+                <div
+                  key={fact.label}
+                  data-ab2-row
+                  className="grid gap-2 border-b border-charcoal/14 py-7 lg:grid-cols-[300px_1fr] lg:gap-10"
+                >
+                  <dt className="eyebrow text-xs tracking-[0.08em] text-burnt">
+                    {fact.label}
+                  </dt>
+                  <dd className="headline text-xl leading-[1.19] text-evergreen sm:text-[2rem]">
+                    {fact.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            {/* A SECOND rendering of copy the table already carries, so it is
+                hidden from the accessibility tree exactly as §04's connectors
+                are: a reader using a screen reader meets each fact once, in the
+                table. Absent entirely in flow, where the table alone is the
+                section. `pt-7` matches the row's own top padding so the big
+                value seats on the same baseline the small one will. */}
+            <div data-ab2-presenter aria-hidden className="absolute inset-x-0 top-0">
+              {whatWeAre.facts.map((fact) => (
+                <div
+                  key={fact.label}
+                  data-ab2-fact
+                  className="absolute inset-x-0 top-0 pt-7"
+                >
+                  <p className="eyebrow text-xs tracking-[0.08em] text-burnt">
+                    {fact.label}
+                  </p>
+                  <p className="headline mt-3 max-w-[1100px] text-3xl leading-[1.15] text-evergreen sm:text-[2.5rem]">
+                    {fact.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-        <figcaption className={`${COLUMN} mt-6 text-base leading-[1.5] text-roasted`}>
-          The way in. Turraburra is 120km north of Barcaldine.
-        </figcaption>
-      </figure>
-
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
-        {/* The thread enters. Ochre reads 2.30:1 on canvas, so on this ground
-            it is a line and never a word. */}
-        <div aria-hidden className="h-[3px] w-full bg-ochre" />
-
-        <p className="eyebrow mt-5 text-xs tracking-[0.08em] text-roasted/70">
-          Registered with
-        </p>
-
-        <dl className="mt-8 border-t border-charcoal/14">
-          {whatWeAre.facts.map((fact) => (
-            <div
-              key={fact.label}
-              className="grid gap-2 border-b border-charcoal/14 py-7 lg:grid-cols-[300px_1fr] lg:gap-10"
-            >
-              <dt className="eyebrow text-xs tracking-[0.08em] text-burnt">
-                {fact.label}
-              </dt>
-              <dd className="headline text-xl leading-[1.19] text-evergreen sm:text-[2rem]">
-                {fact.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
       </div>
 
       {/* The seam. This rule runs past the column and becomes §03's.
@@ -472,18 +632,6 @@ export function WhyWeExist() {
           one-cell grid; in flow it adds nothing and the two screens below
           simply stack, which is the build this replaced. */}
       <div data-ab-stage>
-        {/* Placed on the stage rather than the section so the rising front,
-            which is a layer of the claims screen, passes over them. Static at
-            30%, as the frame draws them. */}
-        <RingArtwork
-          piece="b"
-          className="top-[4%] left-[64%] w-[56.25rem] opacity-30"
-        />
-        <RingArtwork
-          piece="a"
-          className="-left-48 top-[54%] w-[40rem] opacity-30"
-        />
-
         {/* ---- the claims screen ------------------------------------------
             THE CLAIMS ARE READ ON COUNTRY. The photograph fills exactly this
             block and no more — held, it is the screen; in flow it is a full
@@ -539,9 +687,38 @@ export function WhyWeExist() {
           />
 
           {/* THE GROUND GOING OUT, held build only. One rising front, driven
-              by a single custom property. Above the plate and the rings so it
-              takes them; below the column so the type is never under it. */}
+              by a single custom property. Above the plate so it takes the
+              photograph; below the column so the type is never under it. */}
           <div aria-hidden data-ab-ground className="absolute inset-0" />
+
+          {/* THE ARTIST'S RINGS, static at 30% as the frame draws them.
+
+              ⚠ ABOVE THE FRONT, NOT BELOW IT, AND THE ASSET DECIDES THAT.
+              `RingArtwork` ships in Ground/Off-White — its own comment says
+              "invisible ON canvas" — so on the light half of this section
+              there is nothing to see whichever side of the front they sit.
+              They are ground for the DARK state: as the front rises past them
+              they emerge out of it, which is the reading asked for on
+              12 September 2026 ("a background for when the colour turns
+              dark"). Under the front they were simply never visible at all,
+              and before that, on the stage, they sat beneath a screen painting
+              an opaque canvas ground.
+
+              ⚠ AND THIS RUNS AGAINST THE BARE-GROUND NOTE at the head of the
+              section, which says the question is asked on charcoal with
+              nothing behind it. Held as ONE screen the question is centred,
+              and ring B is 900px tall — there is no "high and low, clear of
+              the question's band" left to place them in. Flagged rather than
+              settled: if the bare ground wins, these come out of the held
+              build entirely and stay in the flow one. */}
+          <RingArtwork
+            piece="b"
+            className="top-[4%] left-[64%] w-[56.25rem] opacity-30"
+          />
+          <RingArtwork
+            piece="a"
+            className="-left-48 top-[54%] w-[40rem] opacity-30"
+          />
 
           <div className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-24 lg:pb-[22svh]`}>
             <p
@@ -863,13 +1040,6 @@ export function HowWeWork() {
           className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
         >
           {howWeWork.title}
-        </p>
-        {/* The absence, marked. Not a headline, and not nothing. */}
-        <p
-          data-placeholder="no-headline"
-          className="mt-4 max-w-[900px] text-base leading-[1.5] text-canvas/42"
-        >
-          [ no headline — the draft gives this section no opening sentence ]
         </p>
       </div>
 

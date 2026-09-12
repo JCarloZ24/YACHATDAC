@@ -65,7 +65,14 @@
      deck spends holding before it plays — and by then the sequence has ended
      on charcoal and the Breath covering it is charcoal too. Canvas there was a
      bright band sliding up under a black screen. */
-  [data-ab-held] {
+  /* ⚠ SCOPED TO §03 BY NAME. `data-ab-held` is the shared flag both held
+     sections set, so an unqualified ground rule here paints §02 as well —
+     which it did: §02's register arrived as evergreen type on charcoal,
+     invisible (caught on screen, 12 September 2026). Anything in this file
+     that is about one section's ground, artwork or copy must name that
+     section; only the machinery — the height, the sticky screen, the shared
+     cell — may be written against the bare flag. */
+  [data-ab="why-we-exist"][data-ab-held] {
     background-image: none;
     background-color: var(--color-charcoal);
   }
@@ -113,7 +120,162 @@
   [data-ab-held] [data-ab-ground] {
     display: block;
   }
+
+  /* -------------------------------------------------------------------------
+     §02 — "What we are", the register writes itself.
+
+     Figma 2632:19655, the six-frame reference board. Same machinery as §03
+     above and deliberately the same hooks, so the page has one held-screen
+     idiom rather than two: `data-ab-stage` is the sticky screen.
+     ------------------------------------------------------------------------- */
+
+  /* THE HELD ORDER IS THE GRID'S, NOT THE DOM'S. Written out, the section
+     reads heading → the name → the road → the register, which is what the
+     frame draws and what the flow fallback has to be. Held, the road is
+     lifted to the FIRST row so it can arrive over the heading and push it
+     down, and the two copy blocks share the last row so the register replaces
+     the name in place. Nothing moves in the DOM, so reading order and tab
+     order are the frame's in both builds.
+
+     `auto auto 1fr`: the road takes its own height, the heading takes its own,
+     and the blocks take what is left. */
+  /* ⚠ SCOPED TO §02 BY NAME. `data-ab-stage` is the hook BOTH held sections
+     use, so a grid rule written against the bare flag reaches §03's stage too —
+     and it did: §03 is a one-cell grid with its two screens stacked in it, and
+     three rows turned its claims screen into an auto-height box of 685px
+     inside a 900px stage, with a phantom third row eating the remaining 215.
+     The photograph stopped short of the foot of the screen and the ground
+     showed under it (reported and measured, 12 September 2026).
+     
+     Same law as the ground rule above: only the machinery — the height, the
+     stickiness — may be written against the bare flag. Anything about how one
+     section is laid out names that section. */
+  [data-ab="what-we-are"][data-ab-held] [data-ab-stage] {
+    grid-template-rows: auto auto 1fr;
+  }
+  [data-ab="what-we-are"][data-ab-held] [data-ab-road] {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  [data-ab-held] [data-ab2-headwrap] {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  [data-ab-held] [data-ab2-block] {
+    grid-row: 3;
+    grid-column: 1;
+    min-height: 0;
+  }
+
+  /* THE ROAD ARRIVES AND LEAVES ON ONE NUMBER.
+
+       --ab2-fold   1 = the band closed, 0 = the band at full height
+
+     It runs 1 → 0 as the road slides in over the heading, and 0 → 1 again
+     across the four register rows. Three things move together and must not
+     drift apart, which is why it is one custom property and not three tweens:
+
+       · the frame CLIPS from the bottom, so the band opens downward from its
+         own top edge and closes back up into it;
+       · the plane inside COUNTER-TRAVELS, so the photograph's bottom edge
+         rides with the moving edge and the visible strip is always the bottom
+         of the picture — the vehicle on the track never leaves frame;
+       · everything below the band TRAVELS, so the heading and the copy are
+         pushed down as it arrives and pulled back up as it goes.
+
+     Height is never animated; the grammar allows transform, opacity and
+     clip-path only. The band starts CLOSED because the section opens on the
+     name, not on the photograph. */
+  [data-ab="what-we-are"][data-ab-held] [data-ab-stage] {
+    --ab2-fold: 1;
+    /* ⚠ THE HELD BAND IS SHORTER THAN THE FLOW ONE, and the number lives here
+       ONLY. The board's register frames carry no image at all, so the facts
+       have the whole screen; with a band over them the height has to be paid
+       for out of the same 100svh. At the flow build's 52svh the first fact was
+       pushed to the bottom edge with its value half off-screen (caught on
+       screen, 12 September 2026). 38svh leaves the fact at size, its label and
+       two folded rows on one screen — which is the board's frame 05 — and sits
+       inside the 20–40% the road was asked for.
+
+       The band READS its height from this, rather than carrying its own class,
+       so the height and the distance everything travels cannot disagree. */
+    --ab2-band-h: 38svh;
+  }
+  [data-ab-held] [data-ab2-band] {
+    height: var(--ab2-band-h);
+    clip-path: inset(0 0 calc(var(--ab2-fold) * var(--ab2-band-h)) 0);
+  }
+
+  /* The heading's own top padding is the flow build's, where it opens the
+     section. Held, it is paid for twice — once at the top of the screen and
+     again every time the road pushes it down — so it comes back to something
+     the screen can afford. */
+  [data-ab-held] [data-ab2-headwrap] {
+    padding-top: 3.5rem;
+  }
+  /* The caption belongs to the picture, so it is only there when the picture
+     is. Derived from the same number rather than given its own tween: closed,
+     the band clips to nothing but its caption still had layout, and it sat at
+     the top of the screen above the heading with no photograph over it — at
+     the section's first frame and again at its last (caught on screen,
+     12 September 2026). `1 - fold` makes it exact in both directions and
+     leaves nothing to keep in sync. */
+  [data-ab-held] [data-ab2-caption] {
+    opacity: calc(1 - var(--ab2-fold));
+  }
+
+  [data-ab-held] [data-ab2-plane],
+  [data-ab-held] [data-ab2-caption],
+  [data-ab-held] [data-ab2-headwrap],
+  [data-ab-held] [data-ab2-block] {
+    transform: translate3d(
+      0,
+      calc(var(--ab2-fold) * var(--ab2-band-h) * -1),
+      0
+    );
+  }
+
+  /* THE PRESENTER COSTS NO LAYOUT. It is absolutely positioned against the
+     register wrapper and travelled to each row's own offset, so the fact at
+     size stands in the place its row will occupy and collapses into it. The
+     rows beneath are present and invisible, which is what makes the geometry
+     stable enough to measure once.
+
+     It used to sit in flow ABOVE the table, reserving a fixed height that then
+     had to be given back when the last fact folded. Both the reservation and
+     the giving-back are gone with it: nothing under the table moves any more,
+     because the table never changes height. */
+
+  /* The elements that exist only for the held build — see the base rule below
+     for why the `display: none` half of each pair is not in here. */
+  [data-ab-held] [data-ab2-presenter],
+  [data-ab-held] [data-ab2-recap] {
+    display: block;
+  }
 }
+
+/* ---------------------------------------------------------------------------
+   THREE ELEMENTS BELONG TO THE HELD BUILD AND MUST NOT EXIST WITHOUT IT.
+
+   The presenter is a SECOND rendering of the four facts, and the recap is a
+   derived line that only means anything once the copy it summarises has left
+   the screen. Neither belongs to the plain document.
+
+   ⚠ THESE RULES LIVE OUTSIDE THE MEDIA QUERY ON PURPOSE. Inside it they only
+   applied on a window big enough to hold a screen — so below 1024 × 820, under
+   reduced motion and with JavaScript off, the fallback rendered an invented
+   recap sentence and every fact twice (measured at 1280 × 800, 12 September
+   2026: 8 fact blocks where the document has 4). The fallback has to be the
+   plain document, and the plain document is one heading and one table. A rule
+   that hides a held-build element is unconditional; only the rule that REVEALS
+   it is gated.
+   --------------------------------------------------------------------------- */
+[data-ab2-presenter],
+[data-ab2-recap] {
+  display: none;
+}
+
+
 
 /* ---------------------------------------------------------------------------
    THE RISING FRONT — "the ground goes out UNDER it".

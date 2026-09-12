@@ -10,27 +10,32 @@ import {
   doorsAssembly,
   heroQuiet,
   loopAndRing,
-  nameAndRule,
+  theRegister,
   partnersDots,
   peopleWave,
   theQuestion,
-  roadScreen,
   valuesRelay,
 } from "@/lib/motion/recipes-about";
 
 /**
  * /about — the page's motion script. Verb: ANSWERS.
  *
- * THE SEAM PASS ONLY. This host wires the ten section joins of Figma
- * `REF · SCORE · 05 ABOUT` (2642:19666) plus the X4 baseline arrivals — the
- * section interiors (§03's 300vh pin, IMG-03, the animated ground ramp, the
- * line-mask settle, Group G's eight waypoints) are the next pass, ledgered at
- * docs/motion/scenes.md:331-390. Renders nothing.
+ * THE SEAMS, AND THE PAGE'S TWO HELD SCREENS. This host wires the ten section
+ * joins of Figma `REF · SCORE · 05 ABOUT` (2642:19666), the X4 baseline
+ * arrivals, and — from 12 September 2026, user direction — the interiors of
+ * §02 (`theRegister`) and §03 (`theQuestion`). Group G's eight waypoints and
+ * the remaining section interiors are still unbuilt. Renders nothing.
+ *
+ * ⚠ TWO HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of the
+ * eight the deck already spends. Both were user directions and both are
+ * flagged for design sign-off in scenes.md. Neither is a GSAP pin — they are
+ * sticky spans in about.css, so they do not fight the deck's own pins.
  *
  * THE SCENE LEDGER, so the pacing is readable here as well as in the docs:
  *
  *   §01 hero          media       110vh   ⚡4   (baseline only this pass)
- *   §02 what-we-are   type        299vh   ⚡3   three screens: decode · road · register
+ *   §02 what-we-are   type        300vh   ⚡3   HELD — the name resolves, the
+ *                                                facts arrive one at a time
  *   §03 why-we-exist  type        300vh   ⚡5   HELD — the claims leave, the
  *                                                ground goes out, the question
  *   §03b breath       none         55vh   ⚡1   the hold
@@ -107,8 +112,12 @@ export function AboutMotion() {
       if (pairs.length) unregister.push(register(coverSeams(pairs)));
 
       wire(find("hero"), (el) => heroQuiet(el, 110));
-      wire(find("what-we-are"), (el) => nameAndRule(el, 299));
-      wire(find("road"), (el) => roadScreen(el, 62));
+      // §02 is the page's other held screen — the register writes itself.
+      // 200 is derived the same way §03's is: the section's 300vh less the one
+      // viewport its sticky screen is held for. `roadScreen` is gone; the road
+      // is a beat inside this sequence now, and its parallax with it (F7 —
+      // see the note at `theRegister`).
+      wire(find("what-we-are"), (el) => theRegister(el, 200));
       // §03 is the page's one held screen. 200 is derived, not chosen — the
       // section's 300vh less the one viewport its sticky screen is held for.
       // The deck's BUFFER does NOT come off it; see the arithmetic and the

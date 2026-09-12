@@ -108,6 +108,35 @@ const lineBeat = (duration: number) => ({
 });
 
 /**
+ * X4's quiet arrival — 16px and a fade — written as a `fromTo` on a timeline.
+ *
+ * ⚠ NOT `arrive`, and the reason is subtle enough to be worth writing down:
+ * `arrive` is a `gsap.from`, so its END state is whatever the element reads at
+ * the moment the tween is BUILT. Everything a held screen brings on is
+ * pre-hidden in `build` so nothing can flash before the timeline first
+ * renders — and a `from` off a hidden element animates 0 → 0, so the element
+ * simply never appears. That is not theoretical: it is how §03's attribution
+ * and tagline shipped silently broken until they were measured in a browser
+ * (12 September 2026). Declaring both endpoints also keeps `autoAlpha`'s
+ * visibility flip inside the tween rather than stranded in a `set`.
+ *
+ * Same 16px travel and the same curve the X4 row specifies, so it is that row
+ * and not a new one.
+ */
+const quietly = (
+  tl: gsap.core.Timeline,
+  el: HTMLElement,
+  at: number,
+  duration = 0.035,
+) =>
+  tl.fromTo(
+    el,
+    { autoAlpha: 0, y: 16 },
+    { autoAlpha: 1, y: 0, duration, ease: EASE.country },
+    at,
+  );
+
+/**
  * The pinned hand-offs — the five wave seams as holds.
  *
  * The outgoing section pins (no spacer) the moment its foot meets the
@@ -730,81 +759,280 @@ export function heroQuiet(root: HTMLElement, span = 110): MotionModule {
 }
 
 /* -------------------------------------------------------------------------
-   §02 — nameAndRule · seams 01 → 02 and 02 → 03
+   §02 — theRegister · the page's second held screen
    ------------------------------------------------------------------------- */
 
 /**
- * Markup:
- *   [data-seam="wave"]          the off-white wave — static, rides coverSeams
- *   [data-ab-rule="seam-out"]   the bottom rule that extends into §03's
- *   [data-arrive]               the name block
- */
-export function nameAndRule(root: HTMLElement, span = 299): MotionModule {
-  return composition("nameAndRule", root, {
-    channel: "none",
-    span,
-    uses: ["arrive"],
-    build: () => {
-      // 02 → 03 · "ground sweep, scrubbed — the last fact rule extends and
-      // becomes the quote rule." The extension happens at reading pace, as the
-      // section's foot crosses the viewport; scrolling back retracts it.
-      const rule = q(root, '[data-ab-rule="seam-out"]');
-      if (rule) {
-        gsap.fromTo(
-          rule,
-          { scaleX: 0, transformOrigin: "left center" },
-          {
-            scaleX: 1,
-            ease: EASE.machine,
-            scrollTrigger: {
-              trigger: root,
-              start: "bottom 85%",
-              end: "bottom 35%",
-              scrub: SCRUB.light,
-              invalidateOnRefresh: true,
-            },
-          },
-        );
-      }
-    },
-    enter: arrivals,
-    cut: clearAll,
-  });
-}
-
-/* -------------------------------------------------------------------------
-   §02's road — its own screen, and the page's one media-loud scrub
-   ------------------------------------------------------------------------- */
-
-/**
- * The ledger rules §02 three screens — "decode (type) → the road (media) →
- * register (type, quiet)" (scenes.md:358) — so the road declares its own
- * channel and F7 is satisfied per screen, exactly as the law is written.
+ * ⚑ THE REGISTER PASS (12 September 2026, user direction). Built to Figma
+ * `2632:19655` — `REF · 05 ABOUT §02 THE REGISTER — the facts arrive one at a
+ * time · 6 FRAMES`, whose six states and scroll percentages are this beat
+ * sheet. Supersedes `nameAndRule` and `roadScreen`, which were the seam pass's
+ * placeholders for it.
+ *
+ * Grammar rows: "what endures, the name resolves" (`decode`), "what endures"
+ * (`settle`), "the page holding its ground, the interior scrub without a read
+ * clock", "accumulating" (the register building, X3).
+ *
+ * THE BOARD'S SIX STATES, and where each lands on this clock:
+ *
+ *   01  THE NAME, UNRESOLVED            0%    decode begins
+ *   02  THE NAME LANDS, AND COLLAPSES  18%    resolves · long name to 0.28 ·
+ *                                             settle on the short name
+ *   03  THE BODY, LINE BY LINE         34%    settle, 90ms line stagger
+ *   04  ONE FACT, ALONE                52%    rule draws · fact 1 at size
+ *   05  THE FACTS ADVANCE              72%    fact 3 at size, 1–2 folded
+ *   06  THE REGISTER STANDS           100%    all folded, section static
+ *
+ * ⚠ THE BOARD SAYS "NO PIN, NO SCRUB" AND IS OVERRULED — see the section's own
+ * comment in Sections.tsx for the reasoning and for what answers the note's
+ * objection. This is the page's SECOND held screen against a one-pin budget;
+ * flagged in scenes.md beside the deck's own deviation.
+ *
+ * ⚠ F7, AND IT DECIDES THE BUILD. The ledger satisfied the loud-channel law on
+ * this section PER SCREEN — "decode (type) → the road (media) → the register
+ * (type, quiet)" (scenes.md). Folding three screens into one throws that
+ * reasoning away: one screen gets one loud channel. So this declares **type**,
+ * `decode` is the one loud moment, and the road's `plateParallax` is GONE —
+ * it is LOUD media and `assertChannel` would (correctly) throw. The road
+ * arrives and folds on opacity and clip-path, which are in no LOUD list.
+ *
+ * ⚠ NOTHING ELSE MAY WRITE `clip-path` ON THE BAND. The fold owns it, through
+ * `--ab2-fold`. `frameOpen` was the obvious way to open the road and is not
+ * used for exactly this reason — two writers on one property, and the last
+ * frame to run wins.
+ *
+ * Span: 300 − 100 = 200, the same derivation as `theQuestion`, and the deck's
+ * BUFFER does not come off it. See the arithmetic written out there.
  *
  * Markup:
- *   [data-media][data-plane="mid"]  the oversized plane inside the clip;
- *                                   `movable()` holds `frame`-graded photos
+ *   [data-ab-eyebrow]              THE heading — never leaves, never moves
+ *                                  except with the road
+ *   [data-ab2-headwrap]            its wrapper; the stylesheet's travel only
+ *   [data-ab2-decode]              the legal name's aria-hidden run
+ *   [data-ab2-short]               "Most people say YACHATDAC."
+ *   [data-ab2-body] ×2             the two paragraphs
+ *   [data-ab2-band] [data-ab2-plane]  the road, and the plane inside it
+ *   [data-ab2-under] [data-ab2-caption]  everything that travels with the fold
+ *   [data-ab2-rule]                the thread entering
+ *   [data-ab2-fact] ×4             the presenter — one fact at size
+ *   [data-ab2-row] ×4              the register rows, folding in
  */
-export function roadScreen(root: HTMLElement, span = 62): MotionModule {
-  return composition("roadScreen", root, {
-    channel: "media",
+export function theRegister(root: HTMLElement, span = 200): MotionModule {
+  return composition("theRegister", root, {
+    channel: "type",
     span,
-    uses: ["plateParallax"],
-    build: () => {
-      const media = qa(root, "[data-media]");
-      if (!media.length) return;
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: root,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: SCRUB.normal,
-          invalidateOnRefresh: true,
-        },
+    minWidth: "1024px",
+    minHeight: "820px",
+    uses: ["decode", "settle"],
+    build: (tl) => {
+      const stage = q(root, "[data-ab-stage]");
+      const nameBlock = q(root, '[data-ab2-block="name"]');
+      const registerBlock = q(root, '[data-ab2-block="register"]');
+      const legal = q(root, "[data-ab2-decode]");
+      const short = q(root, "[data-ab2-short]");
+      const bodies = qa(root, "[data-ab2-body]");
+      const rule = q(root, "[data-ab2-rule]");
+      const facts = qa(root, "[data-ab2-fact]");
+      const rows = qa(root, "[data-ab2-row]");
+      const head = q(root, "[data-ab2-register-head]");
+      const recap = q(root, "[data-ab2-recap]");
+
+      root.dataset.abHeld = "true";
+
+      // Rest state is the finished document, so everything the sequence brings
+      // on is hidden here rather than in the markup — hiding it in CSS would
+      // hide it for JavaScript-off too.
+      // ⚠ A MASK IS NOT A HIDING PLACE. Everything that arrives here is hidden
+      // with `autoAlpha` on the ELEMENT, including the copy that then settles
+      // line by line — the split's own from-state is not trusted to hold it.
+      //
+      // `settle` splits with `autoSplit: true`, so SplitText re-splits when a
+      // font lands or the box is re-measured, and a re-split makes NEW line
+      // nodes while the tween keeps the old ones. The from-state goes with
+      // them: measured on first load, each paragraph's first line was still
+      // masked and lines 2–4 stood in plain sight, before their beat and
+      // underneath the name that had not resolved yet (reported 12 September
+      // 2026). It is the same orphaning `freshSplit` is annotated for.
+      //
+      // So the element is hidden, its beat flips it visible, and the mask only
+      // has to do the part it is good at — the rise.
+      gsap.set(
+        [registerBlock, short, ...bodies, ...facts, ...rows].filter(Boolean),
+        { autoAlpha: 0 },
+      );
+      if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
+      if (legal) gsap.set(legal.parentElement, { opacity: 1 });
+
+      // ---- 01 → 02 · the name ------------------------------------------
+      // The decode runs first and alone; nothing else is on the screen, which
+      // is the board's own frame 01.
+      if (legal) tl.decode(legal, { duration: 0.18 }, 0);
+
+      // It resolves, and dims as the short name lands under it — "two lines,
+      // one gesture: this is what we are called, and this is what you will
+      // call us". 0.28 is the board's number and the same value the recap and
+      // every read-already line on this screen use.
+      if (legal?.parentElement) {
+        tl.to(
+          legal.parentElement,
+          { opacity: 0.28, duration: 0.08, ease: EASE.country },
+          0.18,
+        );
+      }
+      if (short) {
+        tl.set(short, { autoAlpha: 1 }, 0.18);
+        tl.settle(short, lineBeat(0.12), 0.18);
+      }
+
+      // ---- 03 · the body, line by line ----------------------------------
+      bodies.forEach((body, i) => {
+        const at = 0.30 + i * 0.05;
+        tl.set(body, { autoAlpha: 1 }, at);
+        tl.settle(body, lineBeat(0.12), at);
       });
-      tl.plateParallax(media, { duration: 1 }, 0);
+
+      // ---- the turn -----------------------------------------------------
+      // THE HEADING RETAINS; EVERYTHING UNDER IT GOES (user direction,
+      // 12 September 2026). The name block clears whole rather than line by
+      // line: its three children each already own a split, and a second split
+      // beat on any of them would orphan the first one's line nodes — the trap
+      // annotated at `freshSplit`. Nothing is lost by clearing it, because the
+      // derived recap carries what was read at 0.28, which is the board's
+      // "read already".
+      if (nameBlock) {
+        tl.to(
+          nameBlock,
+          { autoAlpha: 0, duration: 0.07, ease: EASE.country },
+          0.48,
+        );
+      }
+
+      // THEN THE ROAD SLIDES IN OVER THE HEADING AND PUSHES IT DOWN. One
+      // number does it — see the note in about.css. 1 → 0 opens the band
+      // downward from its own top edge while the heading and the block below
+      // travel down out of its way; the same number runs back 0 → 1 across the
+      // four rows below, so the arrival and the collapse are the same gesture
+      // read in two directions rather than two effects that have to agree.
+      if (stage) {
+        tl.to(
+          stage,
+          { "--ab2-fold": 0, duration: 0.09, ease: EASE.country },
+          0.56,
+        );
+      }
+
+      // The register takes the name's place, under a heading that never moved.
+      if (registerBlock) {
+        tl.to(
+          registerBlock,
+          { autoAlpha: 1, duration: 0.05, ease: EASE.country },
+          0.62,
+        );
+      }
+      if (recap) quietly(tl, recap, 0.63);
+
+      // ---- 04 · the thread enters ---------------------------------------
+      if (rule) {
+        tl.to(rule, { scaleX: 1, duration: 0.04, ease: EASE.country }, 0.65);
+      }
+      if (head) quietly(tl, head, 0.66);
+
+      // ---- 04 → 06 · the facts arrive one at a time ----------------------
+      // The mechanism the whole section exists for. Each fact takes the screen
+      // ALONE at heading scale, then folds down into its register row as the
+      // next one comes up — so the reader is always looking at exactly one
+      // fact, and by the end all four stand as an index that can be scanned
+      // and linked to. "Nothing is lost."
+      //
+      // The presenter is a SECOND rendering of the row's own copy, not a moved
+      // element: Flip would be the obvious tool and `handoff`/`escape` are
+      // both LOUD transition, which this screen may not spend (see F7 above).
+      // Scaling and travelling the presenter into place costs nothing and does
+      // not distort the face the way a Flip on type does.
+      // Each fact stands where ITS OWN ROW will be. Measured once, from the
+      // rows themselves: they are all present in the document and only their
+      // opacity changes, so these offsets never move while the sequence runs.
+      // `offsetTop` is relative to the register wrapper, which is the
+      // presenter's positioning context.
+      const rowTop = rows.map((row) => row.offsetTop);
+
+      const FACT_AT = 0.68;
+      const FACT_STEP = 0.07;
+      facts.forEach((fact, i) => {
+        const at = FACT_AT + i * FACT_STEP;
+        const folds = at + 0.045;
+        const top = rowTop[i] ?? 0;
+
+        // Arrives in its row's place, one row below the last that settled.
+        tl.fromTo(
+          fact,
+          { autoAlpha: 0, y: top + 18 },
+          { autoAlpha: 1, y: top, duration: 0.035, ease: EASE.country },
+          at,
+        );
+
+        // Collapses INTO that row rather than handing over to one elsewhere:
+        // it shrinks toward the register's own scale, from the row's top-left,
+        // and the row underneath takes its place at the same instant. Scaling
+        // from `left top` is what makes the two read as one object changing
+        // size rather than two crossfading. Transform and opacity only.
+        tl.to(
+          fact,
+          {
+            autoAlpha: 0,
+            scale: 0.62,
+            transformOrigin: "left top",
+            duration: 0.038,
+            ease: EASE.country,
+          },
+          folds,
+        );
+        if (rows[i]) {
+          tl.fromTo(
+            rows[i],
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 0.038, ease: EASE.country },
+            folds + 0.008,
+          );
+        }
+
+        // The road gives up a quarter of its height per row. One property, so
+        // the clip, the plane and the column beneath cannot drift apart — see
+        // the note in about.css.
+        if (stage) {
+          tl.to(
+            stage,
+            {
+              "--ab2-fold": (i + 1) / facts.length,
+              duration: 0.045,
+              ease: "none",
+            },
+            folds + 0.012,
+          );
+        }
+      });
+
     },
-    cut: clearAll,
+    // ⚠ NO ENTRY ARRIVAL, DELIBERATELY. The heading is the one thing on this
+    // section that never moves, and its travel when the road arrives is a
+    // STYLESHEET transform on its wrapper. An `arrive` would write `transform`
+    // inline on the heading and inline beats a stylesheet — the same collision
+    // the register index hit. Nothing here needs an entrance: the section
+    // opens on the heading already in place, which is the board's frame 01.
+    enter: undefined,
+    cut: (el) => {
+      delete el.dataset.abHeld;
+      // ⚠ `clearAll` CLEARS STYLES, NOT TEXT. Every other cut on this page is
+      // whole because motion here is transform and opacity; the decode is the
+      // one effect that rewrites content, so the reduced-motion and
+      // too-small-window branches have to put the name back themselves or a
+      // resize across the breakpoint can strand a reader on scrambled copy.
+      const decoded = el.querySelector<HTMLElement>("[data-ab2-decode]");
+      if (decoded?.dataset.decodeText) {
+        decoded.textContent = decoded.dataset.decodeText;
+      }
+      clearAll(el);
+    },
   });
 }
 
@@ -1034,23 +1262,9 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       // After the settle has landed, never with it — naming the source while
       // the question is still arriving puts the citation ahead of the claim.
       //
-      // ⚠ NOT `arrive`, and the reason is subtle enough to be worth writing
-      // down: `arrive` is a `gsap.from`, so its END state is whatever the
-      // element reads at the moment the tween is BUILT — and both of these are
-      // pre-hidden a few lines above, so nothing can flash before the timeline
-      // first renders. A `from` off a hidden element animates 0 → 0 and the
-      // attribution simply never appears (measured, 12 September 2026). Both
-      // endpoints are declared instead, which also keeps `autoAlpha`'s
-      // visibility flip inside the tween rather than stranded in the `set`.
-      // Same 16px and the same curve the X4 row specifies.
-      const quietly = (el: HTMLElement, at: number, duration = 0.035) =>
-        tl.fromTo(
-          el,
-          { autoAlpha: 0, y: 16 },
-          { autoAlpha: 1, y: 0, duration, ease: EASE.country },
-          at,
-        );
-      if (attribution) quietly(attribution, 0.93);
+      // `quietly` is X4's arrival written as a fromTo — see the helper for why
+      // it cannot be `arrive` here.
+      if (attribution) quietly(tl, attribution, 0.93);
       // ⚠ THE LAST BEAT ENDS AT EXACTLY 1.0, and that is load-bearing rather
       // than tidy. A timeline's position parameter is a TIME, and a scrub maps
       // the reader's 0→1 onto 0→`tl.duration()` — so while the longest beat
@@ -1058,7 +1272,7 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       // the beat sheet quietly meant something other than it said. Normalised,
       // a position in this function IS the fraction of the read it looks like.
       // Anything added after this has to keep that true.
-      if (tagline) quietly(tagline, 0.965);
+      if (tagline) quietly(tl, tagline, 0.965);
     },
     // The eyebrow only. The claims are the sequence's now, and the answer
     // screen is brought on by it — a baseline arrival on either would fight

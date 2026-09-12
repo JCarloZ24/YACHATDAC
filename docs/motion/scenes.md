@@ -1078,13 +1078,15 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 
 ## About — verb *answers* — 2053vh, 11 sections
 
-> **BUILT — seam pass, 8 Sep 2026; §03's interior, 12 Sep 2026.** The ten seams
-> of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines are live:
-> `src/app/about/_components/Motion.tsx` hosts, `src/lib/motion/recipes-about.ts`
-> holds the recipes. **§03 is now built too** — the 300vh hold, IMG-03, the
-> rising ground and the line-mask settle, in `theQuestion`, with the held layout
-> in `src/app/about/_components/about.css`. The remaining interiors and Group G
-> are still unbuilt; Group G stays ▲ Leonard Mickelo.
+> **BUILT — seam pass, 8 Sep 2026; §02 and §03's interiors, 12 Sep 2026.** The
+> ten seams of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines are
+> live: `src/app/about/_components/Motion.tsx` hosts,
+> `src/lib/motion/recipes-about.ts` holds the recipes. **§02 and §03 are now
+> built too** — §02's register writes itself (`theRegister`) and §03's question
+> is asked on ground that goes out under it (`theQuestion`), both as held
+> screens with their layout in `src/app/about/_components/about.css`. The
+> remaining interiors and Group G are still unbuilt; Group G stays ▲ Leonard
+> Mickelo.
 
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
 1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
@@ -1093,7 +1095,7 @@ against 235vh drawn — the same convention as Living Work §02 and The Record �
 | # | Act | What it says | ⚡ | vh | Loud channel | Plate | Rest after? |
 |---|---|---|---|---|---|---|---|
 | 01 | I | About YACHATDAC — figures under the escarpment, people as scale | 4 | 110 | **media** | P1 | — |
-| 02 | I | What we are — the name decodes, the road runs through, the register writes itself | 3 | 299 | **type** | P3 | — |
+| 02 | I | What we are — the name decodes, the road runs through, the register writes itself | 3 | 300 | **type** | P3 | ✓ held 300 |
 | 03 | II | **THE QUESTION** — the ground takes the picture and the question is asked on nothing | 5 | 235 | **type** | **P9** | ✓ pinned 300 |
 | 03b | II | **BREATH** — held, no caption, no words | 1 | 55 | **none** | **P8** | ✓✓ |
 | 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 265 | **media** | P4 | — |
@@ -1111,13 +1113,17 @@ two and §03b drops to `none` immediately after. The 4–5 run is §03 (⚡5) in
 heaviest scene on the page gets the longest hold, which is the rule working rather than being
 survived.
 
-**§02 and §05 each carry a full-bleed band as a screen of their own.** At 299vh and 249vh these
-are three-screen sections, and the loud-channel law is per screen: §02 is decode (type) → the
-road (media) → register (type, quiet), and §05 is two values (type) → ochre held (media, at rest)
-→ the third value. Both replaced a blob-masked plate floating on the right, which read as an
-image on the side rather than as part of the page.
+**§05 carries a full-bleed band as a screen of its own.** At 249vh it is a three-screen section
+and the loud-channel law is per screen: two values (type) → ochre held (media, at rest) → the
+third value. It replaced a blob-masked plate floating on the right, which read as an image on the
+side rather than as part of the page.
 
-**§03 is the page's argument and the only pin — BUILT 12 September 2026.** The ground ramps
+§02 was the same shape and **is not any more.** Held as one screen from 12 September 2026 it gets
+ONE loud channel like any other screen — which is what took the road's parallax out, since
+`plateParallax` is LOUD media and the screen spends its loud channel on the name's decode. Its
+entry below has the reasoning.
+
+**§03 is the page's argument — BUILT 12 September 2026.** The ground ramps
 canvas → evergreen → charcoal across the pin; the photograph is taken by the ground (`IMG-03`,
 released under F9); both claims **leave** the screen rather than dimming in place; and the
 question settles by line mask on bare charcoal with nothing behind it. That bare ground is the one
@@ -1145,6 +1151,42 @@ top-to-foot span, which is exactly how long that screen is held: `height − vie
 the 300. The deck's `BUFFER` does **not** come off it; the gate opens `BUFFER` late and the read
 mark takes it back off, so the two cancel. Below `deck:`'s 1024 × 820, under reduced motion and
 with JavaScript off, none of it applies and the section is the two stacked screens it always was.
+
+**§02 is the register writing itself — BUILT 12 September 2026.** Built to
+`REF · 05 ABOUT §02 THE REGISTER — the facts arrive one at a time` (Figma
+`2632:19655`), six frames whose scroll percentages are the beat sheet. The board's
+own argument for the shape: *"The lo-fi draws four fact cards side by side, which means the
+reader meets nine pieces of information at once and reads none of them. Here each one arrives on
+its own, at size, and folds down into the register as the next one comes up. Nothing is lost."*
+
+The legal name arrives as noise and resolves into itself (`decode`, ENT-07 released under F9),
+then dims to 0.28 as the short name settles under it — the copy's own joke, since the draft sets
+the full name and then says most people say YACHATDAC. The paragraphs settle line by line, the
+screen clears to a derived one-line recap, and then each of the four facts takes the screen ALONE
+at heading scale before folding into the register below it. The road opens full bleed at the head
+of that screen, **above** the heading (user direction), and gives up its height to the table as
+each row lands — clip from the bottom with the plane counter-travelling, so the picture's bottom
+edge and the vehicle on the track stay in frame.
+
+Three departures from the board, all user directions of 12 September 2026. **It is held**: the
+board says *"230vh, and deliberately NOT pinned … no pin, no scrub"*, reasoning that a researcher
+must be able to leave at any point — answered rather than ignored, because below `deck:`, under
+reduced motion and with JavaScript off the section is exactly the register the note protects.
+**The recap line is derived**, not authored: composed in the component from the short name and the
+first sentence of the last paragraph, so nothing new enters `src/content/about.ts` (D5). **The
+road collapses**, where the board's register frames carry no image at all. R15's pink note in
+board frame 06 is NOT built — the editorial notes came off /about on 11 September 2026.
+
+⚠ **F7 DECIDED THE BUILD.** The ledger satisfied the loud-channel law on this section per screen —
+decode (type) → the road (media) → the register (type, quiet). Folding three screens into one
+throws that reasoning away, so the held §02 declares **type**, `decode` is its one loud moment,
+and the road's `plateParallax` is gone: it is LOUD media and `assertChannel` would have thrown.
+`roadScreen` is retired into `theRegister`.
+
+⚠ **THE PAGE NOW SPENDS TWO HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the deck
+already spends. Both are user directions; neither is a GSAP pin — they are CSS sticky spans, so
+they do not fight the deck's own pins — and both are flagged here for design sign-off alongside
+the deck's own deviation.
 
 **Group G is back in build here, and only here.** The traveller and the page's thread are the same
 object: the question travels down the page and settles at each thing it measures. `G1` travel with

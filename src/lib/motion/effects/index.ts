@@ -153,6 +153,7 @@ export type EffectName =
   | "handprintPortal"
   // type at scale
   | "aperture"
+  | "decode"
   | "knockout"
   | "ghostType"
   | "velocityDrift"

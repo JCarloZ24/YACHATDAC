@@ -161,7 +161,7 @@ export type CompositionSpec = {
  */
 const LOUD: Record<Exclude<LoudChannel, "none">, string[]> = {
   media: ["breakOut", "bleed", "plateParallax", "mosaic", "aperture"],
-  type: ["aperture", "ghostType", "knockout", "display"],
+  type: ["aperture", "ghostType", "knockout", "display", "decode"],
   transition: ["groundRamp", "overlap", "handoff", "escape"],
 };
 
@@ -356,5 +356,44 @@ export function composition(
  * property rather than two features.
  */
 export function clearAll(root: HTMLElement): void {
-  gsap.set(root.querySelectorAll("*"), { clearProps: "all" });
+  gsap.set(root.querySelectorAll("*"), { clearProps: CLEARABLE });
 }
+
+/**
+ * What the cut is allowed to clear, and why it is a list rather than `"all"`.
+ *
+ * ⚠ `clearProps: "all"` DOES NOT MEAN "everything GSAP set" — it means every
+ * inline style on the element, including ones the application wrote and needs.
+ * `next/image` with `fill` positions itself entirely through an inline style
+ * attribute (`position:absolute;height:100%;width:100%;inset:0`), so a cut
+ * running over a section that contains one left the image with NO style
+ * attribute at all: `position: static`, height 0, gone. Measured 12 September
+ * 2026 on /about §03 at 1179 × 643, where the photograph collapsed and the
+ * section's gradient showed through the hole.
+ *
+ * The bug was latent for as long as the cut only ran under reduced motion. It
+ * surfaced when compositions started declaring `minWidth`/`minHeight`, because
+ * that made the cut the ordinary path for any window too small to hold a
+ * screen — which is a great many of them.
+ *
+ * So the cut clears exactly what the motion system is permitted to write.
+ * CLAUDE.md states that budget: "Per-frame work is transform, opacity,
+ * clip-path and CSS custom properties only." `visibility` is here because
+ * `autoAlpha` writes it, and the independent transform properties are here
+ * because GSAP writes those separately from the `transform` shorthand.
+ *
+ * Custom properties are deliberately NOT cleared and do not need to be: every
+ * rule that reads one is gated on a flag the recipe's own `cut` removes, so a
+ * value left inline is inert. Clearing them by name would put page-specific
+ * knowledge in a helper four pages share.
+ */
+const CLEARABLE = [
+  "transform",
+  "translate",
+  "rotate",
+  "scale",
+  "opacity",
+  "visibility",
+  "clipPath",
+  "willChange",
+].join(",");
