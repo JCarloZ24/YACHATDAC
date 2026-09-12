@@ -2328,36 +2328,176 @@ const GAIN = 1.3;
 type Setter = (value: number) => void;
 
 /* -------------------------------------------------------------------------
-   §08 — partnersDots · seam 07 → 08
+   §08 — thePartners · type ⚡2 · seam 07 → 08, and the register filling
    ------------------------------------------------------------------------- */
 
 /**
- * "Dots / Rule only, no ground change — the rule, and nothing else." Each
- * group's dotted rule draws itself on as it reaches the reader; clip-path is
- * on the allowed per-frame list, and the rules are the section's whole seam.
+ * "Dots / Rule only, no ground change — the rule, and nothing else", and then
+ * the register fills a column at a time.
+ *
+ * Grammar row: "accumulating, the register fills a column at a time". User
+ * direction, 12 September 2026, replacing `partnersDots`' three independent
+ * per-rule viewport triggers.
+ *
+ * The three groups arrive TOGETHER — rule and title — and then the names fill
+ * in by ROUND: the first partner of every group, then the second of every
+ * group, and so on. The three lists advance in step rather than one completing
+ * before the next begins, because the section's claim is three kinds of partner
+ * held at the same time and a register that filled one column to the bottom
+ * first would say the opposite. The groups are 4, 3 and 2 long, so there are
+ * four rounds and the shorter groups simply stop.
+ *
+ * ⚠ THIS IS THE ONE INTERIOR ON THE PAGE THAT SCROLLS WHILE IT PLAYS. §02–§07
+ * are held screens; §08 is not, and deliberately (user decision, 12 September
+ * 2026): its names are 30px type and nothing in the section is sized in `svh`,
+ * so holding it would have meant shrinking the frame's own type to clear the
+ * 820px floor the other six are built to. Nothing here needs a still stage —
+ * all three groups are on screen together and the names simply fill in.
+ *
+ * ⚠ AND THAT IS WHY THE TIMELINE IS HAND-ROLLED ON THE BLOCK. `composition()`'s
+ * own timeline runs `trigger: root, start: "top top"`, which on an unpinned
+ * 175vh section is still running long after the groups have left the top of the
+ * screen — the last round would play to nobody. Triggering on the block's own
+ * passage bounds the scrub to the window in which a reader can actually see it,
+ * at every viewport height. Same precedent as the seams in this file, which are
+ * hand-rolled inside `build` for the same structural reason.
+ *
+ * ⚠ A SEPARATOR BELONGS TO THE ROUND THAT BRINGS THE NAME AFTER IT. The middot
+ * lives inside the item it follows, so revealing it with its own name shows
+ * "QUT ·" pointing at nothing for a whole round. Sections.tsx stamps it with
+ * `n + 1`; this reads the number and never has to know the rule.
  *
  * Markup:
- *   [data-artwork="dots-rule"]  each group's dotted rule (DottedRule stamps it)
+ *   [data-ab8-groups]           the block the scrub is anchored on
+ *   [data-artwork="dots-rule"]  each group's rule — clip-drawn, all together
+ *   [data-ab8-title]            each group's name
+ *   [data-ab8-name]             a partner, carrying `data-ab8-round`
+ *   [data-ab8-sep]              the middot, carrying the NEXT round's number
  *   [data-arrive]               the header block
  */
-export function partnersDots(root: HTMLElement, span = 175): MotionModule {
-  return composition("partnersDots", root, {
-    channel: "none",
+export function thePartners(root: HTMLElement, span = 200): MotionModule {
+  return composition("thePartners", root, {
+    // The ledger's ⚡2 — the page's quiet type screen. Nothing in the LOUD table
+    // is used, so the assertion passes and this stays as quiet as it is scored.
+    // (`partnersDots` declared "none", which contradicted the ledger row.)
+    channel: "type",
     span,
-    uses: ["arrive"],
-    build: () => {
-      qa(root, '[data-artwork="dots-rule"]').forEach((rule) => {
-        gsap.set(rule, { clipPath: "inset(0% 100% 0% 0%)" });
-        gsap.to(rule, {
-          clipPath: "inset(0% 0% 0% 0%)",
-          duration: DUR.large,
-          ease: EASE.country,
-          scrollTrigger: { trigger: rule, start: "top 85%", once: true },
-        });
+    /* ⚠ 1280, NOT `HELD`'s 1024, AND THIS IS THE ONE SECTION THAT NEEDS ITS OWN
+       FLOOR. Nothing in §08 is sized in `svh` — the names are 30px and the
+       heading 3.5rem — so its height is a function of WIDTH, not of the window.
+       Measured: the column is 803px at 1440, 920 at 1280 and 1056 at 1024,
+       because the heading goes from two lines to three and every group's list
+       wraps to two. Tightened it stands at 1280 and at 1440; at 1024 it does not
+       stand on any laptop screen, and the only ways to make it would be to
+       shrink the frame's own type or to drop copy. Below 1280 this is the
+       complete flow document, the same fallback the other six take below theirs.
+       about.css carries the identical pair and says so. */
+    minWidth: "1280px",
+    minHeight: "820px",
+    uses: ["settle", "arrive"],
+    build: (tl) => {
+      const claim = q(root, "[data-ab8-claim]");
+      const lede = q(root, "[data-ab8-lede]");
+      const cta = q(root, "[data-ab8-cta]");
+      const rules = qa(root, '[data-artwork="dots-rule"]');
+      const titles = qa(root, "[data-ab8-title]");
+      const marks = qa(root, "[data-ab8-name], [data-ab8-sep]");
+      if (!marks.length) return;
+
+      root.dataset.abHeld = "true";
+
+      // Rest state is the finished register, so everything the rounds bring on
+      // is hidden here rather than in the markup — the flow document, the
+      // reduced-motion cut and the JavaScript-off page are all complete.
+      //
+      // ⚠ THE TITLES TAKE THE SAME CLIP AS THE RULES, not a fade. "Both lines
+      // and text should be synced as it reveal" (user, 12 September 2026): a
+      // rule that wipes left to right beside a title that fades in place are two
+      // different gestures happening at the same time, which is not the same
+      // thing as one gesture. Given the same `clip-path` inset, the same start
+      // and the same duration, the line and its name wipe on together as one
+      // edge travelling across both.
+      gsap.set([...rules, ...titles], { clipPath: "inset(0% 100% 0% 0%)" });
+      gsap.set(marks, { autoAlpha: 0 });
+      gsap.set([claim, lede, cta].filter(Boolean) as HTMLElement[], {
+        autoAlpha: 0,
       });
+
+      const rounds = marks.reduce(
+        (n, el) => Math.max(n, Number(el.dataset.ab8Round ?? 0) + 1),
+        0,
+      );
+
+      // ---- the header, in reading order ---------------------------------
+      if (claim) {
+        tl.set(claim, { autoAlpha: 1 }, 0.02);
+        tl.settle(claim, lineBeat(0.055), 0.02);
+      }
+      if (lede) {
+        tl.set(lede, { autoAlpha: 1 }, 0.1);
+        tl.settle(lede, lineBeat(0.05), 0.1);
+      }
+
+      // ---- the groups arrive, together ----------------------------------
+      /* "Research, government and land, and industry and community all appears
+         at once" — so all six elements share one tween: three rules and three
+         titles, same start, same duration, same curve, no stagger anywhere.
+         Every line grows with every other and each name grows with its own line.
+
+         ⚠ .16 OF THE READ, WHICH IS ~290px — MORE THAN TWICE THE FIRST CUT.
+         That one drew the rules over .12 and faded the titles over .04 on an
+         unheld section, so on screen it was a flicker ("too fast, slow it
+         down", 12 September 2026). Held, there is room for the wipe to be read
+         as a wipe. */
+      tl.to(
+        [...rules, ...titles],
+        { clipPath: "inset(0% 0% 0% 0%)", duration: 0.16, ease: EASE.country },
+        0.18,
+      );
+
+      // ---- the rounds ----------------------------------------------------
+      // Every element carrying round n comes on together, whichever group it
+      // belongs to. Written against the data attribute rather than against the
+      // group arrays so adding a partner in src/content/about.ts needs no
+      // change here — the round count is derived above.
+      // ⚠ .09 AND .12 APART, roughly double the first cut's .05 and its .18 of
+      // an unheld read. On a 200vh read that is ~160px for a round to arrive and
+      // ~216px between rounds — a wheel notch or two apiece, on a screen that is
+      // not itself moving.
+      const ROUND_AT = 0.38;
+      const ROUND_EVERY = 0.12;
+      for (let n = 0; n < rounds; n += 1) {
+        const set = marks.filter((el) => Number(el.dataset.ab8Round) === n);
+        if (!set.length) continue;
+        tl.fromTo(
+          set,
+          { autoAlpha: 0, y: 12 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.09,
+            ease: EASE.country,
+          },
+          ROUND_AT + n * ROUND_EVERY,
+        );
+      }
+
+      if (cta) quietly(tl, cta, 0.86, 0.04);
+
+      /* ⚠ A TRAILING REST HAS TO HOLD THE CLOCK OPEN, or it is not a rest at
+         all — it is every earlier beat played late. A scrub maps the reader's
+         0 → 1 onto 0 → `tl.duration()`, and the duration is wherever the LAST
+         tween ends; §05 was measured playing its beats at .93 of the read
+         before this was understood (12 September 2026). The last round here
+         lands at .76 + .05 and the register is then simply readable, which is
+         the point of a register. */
+      tl.to({}, { duration: 0.1 }, 0.9);
     },
     enter: arrivals,
-    cut: clearAll,
+    cut: (el) => {
+      delete el.dataset.abHeld;
+      clearAll(el);
+    },
   });
 }
 

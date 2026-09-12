@@ -728,6 +728,73 @@
     white-space: nowrap;
   }
 
+  /* -------------------------------------------------------------------------
+     §08 — "Partners", the register fills a column at a time.
+
+     Grammar row: "accumulating, the register fills a column at a time". Held on
+     user direction of 12 September 2026, after the unheld cut was watched
+     scrolling away mid-sequence: "make it still/pinned until everything is
+     done".
+
+     ⚠ NO GROUND RULE HERE. The section's own evergreen is what the artist's
+     rings are painted on and the stage sits over them, so anything opaque on the
+     stage deletes them — the mistake §03's canvas screen made, and the reason
+     §06 and §07 both carry this same note.
+     ------------------------------------------------------------------------- */
+
+  /* ⚠ SCOPED TO §08 BY NAME, like every other section-shaped rule in this file:
+     `data-ab-stage` is the hook all seven held sections use. */
+  [data-ab="partners"][data-ab-held] [data-ab-stage] {
+    grid-template-rows: auto;
+    align-content: center;
+  }
+
+  /* IT ALL HAS TO FIT 100svh AT 820px TALL, and §08 is the tightest section on
+     the page because nothing in it is sized in `svh` — the names are 30px type
+     and the heading is 3.5rem. The flow column measures 984px before padding,
+     which does not stand on the shortest window the hold applies to.
+
+     The type is NOT touched. The spacing is, on the same user direction ("we can
+     lessen the padding/spacing as long as it feels right"). Every gap comes in,
+     the foot padding goes entirely because the screen's own height is the air,
+     and the column measures 779px at 1280 and 662 at 1440 — both standing on the
+     820px floor. The small numbers are label-to-list gaps, where 8px under a
+     rule or under an eyebrow is ordinary typographic tightness rather than a
+     squeeze; the 1.5rem between groups is carried by the rule that divides them.
+
+     ⚠ AND THIS SECTION'S FLOOR IS 1280 WIDE, NOT 1024 LIKE THE OTHER SIX.
+     Measured across the range: the column is 803px at 1440, 920 at 1280 and
+     **1056 at 1024**, because the heading goes from two lines to three and every
+     group's list wraps to two. At 1024 the register does not stand on ANY laptop
+     screen, tightened or not, and the only ways to make it would be to shrink
+     the frame's own type or to drop copy. So below 1280 §08 is the complete flow
+     document, the same fallback the other six take below their own bounds. The
+     module declares the identical pair; see `thePartners`. */
+  [data-ab="partners"][data-ab-held] [data-ab8-column] {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  [data-ab="partners"][data-ab-held] [data-ab8-claim] {
+    margin-top: 0.5rem;
+  }
+  [data-ab="partners"][data-ab-held] [data-ab8-lede] {
+    margin-top: 0.75rem;
+  }
+  [data-ab="partners"][data-ab-held] [data-ab8-groups] {
+    margin-top: 1rem;
+  }
+  [data-ab="partners"][data-ab-held] [data-ab8-group] + [data-ab8-group] {
+    margin-top: 1.5rem;
+  }
+  [data-ab="partners"][data-ab-held] [data-ab8-title] {
+    margin-top: 0.5rem;
+  }
+  [data-ab="partners"][data-ab-held] [data-ab8-list] {
+    margin-top: 0.5rem;
+  }
+  [data-ab="partners"][data-ab-held] [data-ab8-cta] {
+    margin-top: 0.75rem;
+  }
 }
 
 /* ---------------------------------------------------------------------------

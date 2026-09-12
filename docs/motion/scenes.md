@@ -1090,8 +1090,10 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 > walks one face at a time (`theRoster`) — all six as held screens with their
 > layout in `src/app/about/_components/about.css`. §06's seam lift is its own
 > bounds-free composition (`boardLift`), because `overlap` must not be withheld
-> on the windows where the hold is. §01, §03b and §08 – §11 interiors and Group G
-> are still unbuilt; Group G stays ▲ Leonard Mickelo.
+> on the windows where the hold is. **§08 is built and held too**
+> (`thePartners`) — the register fills a column at a time. §01, §03b and
+> §09 – §11 interiors and Group G are still unbuilt; Group G stays
+> ▲ Leonard Mickelo.
 
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
 1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
@@ -1107,7 +1109,7 @@ against 235vh drawn — the same convention as Living Work §02 and The Record �
 | 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 300 | **type** | P1 | ✓ held 300 |
 | 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 300 | **transition** | — | ✓ held 300 |
 | 07 | IV | The people — the roster, one face at a time | 3 | 300 | **media** | P6 | ✓ held 300 |
-| 08 | IV | Partners — names, not logos | 2 | 175 | **type** | — | ✓ |
+| 08 | IV | Partners — names, not logos; the register fills a column at a time | 2 | 300 | **type** | — | ✓ held 300 |
 | 09 | V | Get in touch — four doors, and ochre speaks once | 3 | 140 | **transition** | — | — |
 | 10 | V | Footer — Acknowledgement, then the traveller departs | 1 | 135 | **none** | — | — |
 
@@ -1188,10 +1190,11 @@ throws that reasoning away, so the held §02 declares **type**, `decode` is its 
 and the road's `plateParallax` is gone: it is LOUD media and `assertChannel` would have thrown.
 `roadScreen` is retired into `theRegister`.
 
-⚠ **THE PAGE NOW SPENDS SIX HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
-deck already spends. All six are user directions; none is a GSAP pin — they are CSS sticky spans,
-so they do not fight the deck's own pins — and all six are flagged here for design sign-off
-alongside the deck's own deviation. §05 is the one to look at hardest: it was the page's scored
+⚠ **THE PAGE NOW SPENDS SEVEN HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
+deck already spends — §02 through §08, every interior on the page that has been built. All seven
+are user directions; none is a GSAP pin — they are CSS sticky spans, so they do not fight the
+deck's own pins — and all seven are flagged here for design sign-off alongside the deck's own
+deviation. §05 is the one to look at hardest: it was the page's scored
 breather, and it is held quietly to preserve as much of that as holding allows. §06 grew 245vh →
 300vh with its hold, which moved the three seams below it; they were re-measured and still land.
 
@@ -1347,6 +1350,57 @@ Advisory Group, and the marker comes off only when a cleared photograph of him r
 photograph exists" stood for "three generations of families"; those people are named on
 /our-people under *The ones who got us here*, and a rail of faces is the wrong object to hang an
 absence off. One block if design wants it back.
+
+**§08 is the register filling a column at a time — BUILT 12 September 2026.** User direction. The
+three groups arrive together, rule and title, and then the names fill in by ROUND: the first
+partner of every group, then the second of every group, and so on, so the three lists advance in
+step. That is the section's own claim — three kinds of partner held at the same time, not a ranked
+list — and a register that filled one column to the bottom first would say the opposite. The groups
+are 4, 3 and 2 long, so there are four rounds and the shorter groups simply stop.
+
+**It took three cuts to get the span right, and the first two are worth recording.**
+
+⚠ **A DECK SLIDE'S CONTENT ONLY TRAVELS `height − one viewport`.** The first cut anchored the
+rounds on the groups block's own passage — `top 80%` → `bottom 30%`, about 1050px — reasoning that
+this kept every round on screen. It does not work on a deck: `coverSeams` pins the section the
+moment its foot meets the viewport's, so nothing inside it can travel further than that however the
+trigger is written, and the rest of the range is never scrolled through. Measured on a continuous
+scroll, the block stalled 150px from the top and **round four never arrived at all**. Stepping
+scroll positions looked fine; only a continuous scroll showed it.
+
+⚠ **AND THEN IT HAD TO BE HELD.** The second cut gave the section 200vh and let the column travel
+through it, on the reasoning that holding would mean shrinking the frame's 30px names to clear the
+820px floor. The user watched that scroll away mid-sequence — *"the screen scrolls down and goes off
+screen before everything finishes"* — and allowed the spacing to come in instead: *"we can lessen
+the padding/spacing as long as it feels right."* Every gap halves, the column goes from 984px to
+779 at 1280 and 662 at 1440, and **the type is untouched**. §08 is a sticky span like §02 – §07 and
+the register fills on a screen that is not moving.
+
+⚠ **ITS FLOOR IS 1280 WIDE, NOT 1024 LIKE THE OTHER SIX**, and that is the one place this section
+is genuinely different: nothing in it is sized in `svh`, so its height is a function of WIDTH.
+Measured across the range, the column is 803px at 1440, 920 at 1280 and **1056 at 1024**, where the
+heading goes from two lines to three and every group's list wraps to two. At 1024 the register does
+not stand on any laptop screen, tightened or not, and the only ways to make it would be to shrink
+the frame's own type or to drop copy. Below 1280 §08 is the complete flow document — the same
+fallback the other six take below their own bounds.
+
+**The rules and the titles share one clip tween.** A rule wiping left to right beside a title
+fading in place is two gestures happening at the same time, which is not the same thing as one
+gesture (*"both lines and text should be synced as it reveal"*). Given the same `clip-path` inset,
+the same start and the same duration, one edge travels across the line and its name together. It
+also runs at roughly double the first cut's pace, which read as a flicker.
+
+⚠ **A SEPARATOR BELONGS TO THE ROUND THAT BRINGS THE NAME AFTER IT.** The middot sits inside the
+item it follows — a leading one orphans at a line start, and each name has to wrap as a unit — so
+revealing it with its own name shows "QUT ·" pointing at nothing for a whole round. It is held back
+one round, and no fraction of the scrub ever leaves a visible separator as the last visible thing in
+its list.
+
+**`[ add ]` is gone**, on the same direction, and the trailing separator that existed only to divide
+it from the last name went with it. The incompleteness has NOT gone: `partners.pending` in
+`src/content/about.ts` still reads *"Confirm the current list, get approved logo files, and check
+whether each partnership is active"*, which is where a reviewer reads it. What changed is that a
+visitor no longer sees the gap drawn. One list item if design wants it back.
 
 **§07 is the roster, one face at a time — BUILT 12 September 2026.** User direction, replacing the
 static three-column row of two portraits and one drawn absence. The header arrives in reading

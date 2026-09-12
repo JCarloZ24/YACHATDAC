@@ -1805,9 +1805,22 @@ export function ThePeople() {
  * page's headline convention. What is left of the paragraph is the lede, in
  * the order the frame sets it.
  *
- * The third group's `[ add ]` is the frame's own marker: the draft lists two
- * names in a group the pending note says is incomplete, so the gap is drawn
- * rather than closed up.
+ * ⚠ THE `[ add ]` MARKER IS GONE — 12 September 2026, user direction. It was
+ * the frame's own marker for a group the draft's pending note calls incomplete,
+ * and the gap was drawn rather than closed up. The incompleteness has NOT gone
+ * with it: `partners.pending` in src/content/about.ts still reads "Confirm the
+ * current list, get approved logo files, and check whether each partnership is
+ * active", which is where a reviewer reads it. What changed is that a visitor no
+ * longer sees the gap drawn. One list item if design wants it back.
+ *
+ * ⚠ AND THE TRAILING SEPARATOR WENT WITH IT. The last group's last name used to
+ * carry a middot purely so it could be divided from `[ add ]`; left in, it is a
+ * middot after "Lake Eyre Basin Rangers" pointing at nothing.
+ *
+ * ⚠ THE NAMES FILL IN BY ROUND. `thePartners` reveals the first name of every
+ * group, then the second of every group, and so on, so the three lists advance
+ * in step — three kinds of partner held at the same time, not a ranked list.
+ * `data-ab8-round` is the number each element answers to.
  */
 export function Partners() {
   const [opening, claimSentence] = sentences(partners.body);
@@ -1819,48 +1832,93 @@ export function Partners() {
     // nothing else": each group's dotted rule draws itself on; no wave, and
     // this section KEEPS its clip. The thread becoming the artist's dotted
     // rule is the Guide's reading (▲ Leonard Mickelo); not built.
+    //
+    // ⚠ HELD, AFTER ALL — 12 September 2026, user direction, having watched the
+    // unheld cut: "the screen scrolls down and goes off screen before everything
+    // finishes." The first build gave the section 200vh and let the column
+    // travel through it, because holding it looked like it would mean shrinking
+    // the frame's 30px names to clear the 820px floor. It does not: the same
+    // direction allows the SPACING to come in instead ("we can lessen the
+    // padding/spacing as long as it feels right"), and tightening the gaps takes
+    // the column from 984px to about 776px, which stands on the shortest window
+    // the hold applies to with the type untouched. So §08 joins §02 – §07 as a
+    // sticky span and the register fills on a screen that is not moving.
+    //
+    // ⚠ `overflow-clip`, NOT `overflow-hidden`. An ancestor with
+    // `overflow: hidden` becomes a scroll container and `position: sticky` then
+    // resolves against a box that does not scroll — the screen simply never
+    // sticks. `clip` clips the rings just as well without establishing one. This
+    // section carries no wave of its own (seam 08 → 09's charcoal crest belongs
+    // to §09), so there is nothing overhanging for the clip to eat.
     <section
       id="partners"
       data-ab="partners"
-      className="relative scroll-mt-28 overflow-hidden bg-evergreen text-canvas"
+      className="relative scroll-mt-28 overflow-clip bg-evergreen text-canvas"
     >
-      <RingArtwork
-        piece="b"
-        className="top-[6%] left-[64%] w-[56.25rem] opacity-8"
-      />
-      <RingArtwork
-        piece="a"
-        className="-left-48 top-[54%] w-[40rem] opacity-7"
-      />
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid. ⚠ It paints nothing — the section's evergreen is what the rings
+          are drawn on, and a ground here would delete them, which is the mistake
+          §03's canvas screen made and §06 and §07 were both built around. */}
+      <div data-ab-stage className="relative">
+        {/* The rings live INSIDE the stage, as §02's, §06's and §07's do. Left
+            outside, they are `absolute inset-0` of a 300vh section and neither
+            is ever on the held screen. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+        >
+          <RingArtwork
+            piece="b"
+            className="top-[6%] left-[64%] w-[56.25rem] opacity-8"
+          />
+          <RingArtwork
+            piece="a"
+            className="-left-48 top-[54%] w-[40rem] opacity-7"
+          />
+        </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+        <div
+          data-ab8-column
+          className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}
         >
-          {partners.title}
-        </p>
-        <h2
-          data-arrive
-          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
-        >
-          {`${claim}.`}
-        </h2>
-        <p
-          data-arrive
-          className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl"
-        >
-          {lede}
-        </p>
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+          >
+            {partners.title}
+          </p>
+          <h2
+            data-ab8-claim
+            className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
+          >
+            {`${claim}.`}
+          </h2>
+          <p
+            data-ab8-lede
+            className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl"
+          >
+            {lede}
+          </p>
 
-        <div className="mt-16">
-          {partners.groups.map((group, i) => (
-            <div key={group.title} className={i === 0 ? "" : "mt-16"}>
-              <DottedRule tone="gold" className="opacity-85" />
-              <p className="eyebrow mt-6 text-xs tracking-[0.08em] text-gold">
-                {group.title}
-              </p>
-              {/* Names as list items, not one joined string.
+          {/* ⚠ THE ROUNDS ARE ANCHORED ON THIS BLOCK, NOT ON THE SECTION — see
+            `thePartners`. §08 is the one interior on this page that scrolls
+            while it plays, so a scrub bound to the section's top would still be
+            running long after these three groups had left the screen. */}
+          <div data-ab8-groups className="mt-16">
+            {partners.groups.map((group, i) => (
+              <div
+                key={group.title}
+                data-ab8-group
+                className={i === 0 ? "" : "mt-16"}
+              >
+                <DottedRule tone="gold" className="opacity-85" />
+                <p
+                  data-ab8-title
+                  className="eyebrow mt-6 text-xs tracking-[0.08em] text-gold"
+                >
+                  {group.title}
+                </p>
+                {/* Names as list items, not one joined string.
                   `names.join("   ·   ")` set at 30px reads as a single line of
                   names in a 1240px column and as a run-on sentence in a 327px
                   one: the middots orphan at line ends and nothing distinguishes
@@ -1869,41 +1927,51 @@ export function Partners() {
                   separator trails its name (never leads the next) so it can
                   never start a line. The separator is decorative — the list
                   semantics carry the meaning for a screen reader. */}
-              <ul className="mt-5 flex max-w-[1240px] flex-wrap items-baseline gap-y-1">
-                {group.names.map((name, n) => (
-                  <li
-                    key={name}
-                    className="headline text-xl leading-[1.53] text-canvas/95 sm:text-[1.875rem]"
-                  >
-                    {name}
-                    {n < group.names.length - 1 ||
-                    i === partners.groups.length - 1 ? (
-                      <span aria-hidden className="mx-3 text-canvas/40 sm:mx-5">
-                        ·
-                      </span>
-                    ) : null}
-                  </li>
-                ))}
-                {/* The list is short and the draft says so. */}
-                {i === partners.groups.length - 1 ? (
-                  <li
-                    data-placeholder="add-partner"
-                    className="headline text-xl leading-[1.53] text-canvas/45 sm:text-[1.875rem]"
-                  >
-                    [ add ]
-                  </li>
-                ) : null}
-              </ul>
-            </div>
-          ))}
-        </div>
+                <ul
+                  data-ab8-list
+                  className="mt-5 flex max-w-[1240px] flex-wrap items-baseline gap-y-1"
+                >
+                  {group.names.map((name, n) => (
+                    <li
+                      key={name}
+                      data-ab8-name
+                      data-ab8-round={n}
+                      className="headline text-xl leading-[1.53] text-canvas/95 sm:text-[1.875rem]"
+                    >
+                      {name}
+                      {/* ⚠ THE SEPARATOR IS REVEALED WITH THE NAME AFTER IT, which
+                        is why it carries the NEXT round's number rather than its
+                        own. It sits inside the item it follows — a leading
+                        middot orphans at a line start, and each name has to wrap
+                        as a unit (see the note above) — so revealing it with its
+                        own name would show "QUT ·" pointing at nothing for a
+                        whole round. Grammar row: "accumulating, the register
+                        fills a column at a time". */}
+                      {n < group.names.length - 1 ? (
+                        <span
+                          aria-hidden
+                          data-ab8-sep
+                          data-ab8-round={n + 1}
+                          className="mx-3 text-canvas/40 sm:mx-5"
+                        >
+                          ·
+                        </span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
 
-        <a
-          href={partners.cta.href}
-          className="eyebrow mt-20 block text-xs tracking-[0.08em] text-gold"
-        >
-          {partners.cta.label} →
-        </a>
+          <a
+            href={partners.cta.href}
+            data-ab8-cta
+            className="eyebrow mt-20 block text-xs tracking-[0.08em] text-gold"
+          >
+            {partners.cta.label} →
+          </a>
+        </div>
       </div>
     </section>
   );
