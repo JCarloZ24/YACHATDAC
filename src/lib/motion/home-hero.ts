@@ -10,6 +10,7 @@ import { prefersReduced, type MotionModule } from "@/lib/motion-controller";
 import { HOME_SCENE } from "./effects/home";
 import { registerYachatdacEffects } from "./effects";
 import { createLandMaterial } from "./home-land";
+import { createSunUpdater } from "./home-sun";
 import { HOME_PORTAL } from "@/content/kit";
 import { awaitEntry, routeEntryPending } from "./route-entry";
 
@@ -231,6 +232,8 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         const dark = new Color(tokens.getPropertyValue("--color-charcoal").trim());
         geometry = new PlaneGeometry(1, 1);
         const land = createLandMaterial();
+        const updateSun = createSunUpdater(land);
+        let viewportAspect = 1;
         // What sits behind the land once the lift takes it up, and what shows
         // anywhere the plate is not yet opaque: charcoal, from the token.
         (land.uniforms.beyond.value as Color).copy(dark);
@@ -278,6 +281,9 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           land.uniforms.lightOffset.value = exit.light;
           land.uniforms.lightHeight.value = exit.lightHeight;
           land.uniforms.shade.value = exit.shade;
+          // "Country carries the day", 13 September 2026: one reading clock
+          // also owns the sun; the breeze never advances its time of day.
+          updateSun(exit.sky, viewportAspect);
           // Where the cover crop's window sits in the photograph. Recomputed
           // per frame rather than on resize because the push-in moves it: the
           // crop half-height comes from the current viewport, so this stays
@@ -339,6 +345,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           // trimmed, and LANDSCAPE_BOTTOM_BIAS decides where the vertical trim
           // comes off. Layout is read here and nowhere else.
           const aspect = width / height;
+          viewportAspect = aspect;
           const landscapeAspect = HOME_PORTAL.width / HOME_PORTAL.height;
           (land.uniforms.landscapeCrop.value as Vector2).set(
             Math.min(1, aspect / landscapeAspect), Math.min(1, landscapeAspect / aspect),

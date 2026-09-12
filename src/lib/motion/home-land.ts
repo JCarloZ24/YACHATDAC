@@ -1,4 +1,5 @@
-import { Color, ShaderMaterial, Texture, Vector2 } from "three";
+import { Color, ShaderMaterial, Texture, Vector2, Vector3, Vector4 } from "three";
+import { solarAtmosphere } from "./home-sun";
 
 /**
  * The homepage's land plate — a clip-space full-screen quad carrying the
@@ -23,6 +24,10 @@ import { Color, ShaderMaterial, Texture, Vector2 } from "three";
  * sky sequence, land, the frame's black, the light layer soft-lit through the
  * land. There is no longer a separate daylight path, and no `truth` mix: the
  * Truth sequence is simply further along the same day. See HOME_SCENE.
+ *
+ * 13 September 2026, "Country carries the day": the same clock now drives
+ * generated solar scattering and exposure in daylight. The supplied night
+ * sequence remains; the actual land alpha holds the sun behind the trees.
  */
 export function createLandMaterial(): ShaderMaterial {
   return new ShaderMaterial({
@@ -42,6 +47,15 @@ export function createLandMaterial(): ShaderMaterial {
       shade: { value: 0.4 },
       belonging: { value: 0 },
       breezePhase: { value: 0 },
+      sunDirection: { value: new Vector3(0, -1, 1).normalize() },
+      sunEnergy: { value: 0 },
+      sunDisc: { value: new Vector4(0.011625, 1, 0.00008, 0) },
+      sunTransmission: { value: 1 },
+      solarNight: { value: 0 },
+      solarReadShade: { value: 0 },
+      solarDaylight: { value: 0 },
+      solarWarmth: { value: 0 },
+      solarAspect: { value: 1 },
       // Nothing paints until the photograph is decoded: this is the plate's
       // alpha, so an undecoded texture shows the DOM still rather than a
       // sheet of smeared first-row pixels.
@@ -149,6 +163,7 @@ export function createLandMaterial(): ShaderMaterial {
           vec3(0.0012, 0.0038, 0.010), clamp(uv.y, 0.0, 1.0));
         return night + vec3(0.78, 0.88, 1.0) * point * selected * brightness * twinkle;
       }
+      ${solarAtmosphere}
       void main() {
         // 9 September 2026, user direction: The Invitation lifts the whole
         // land scene up the screen and leaves charcoal behind it, the way a
@@ -250,6 +265,11 @@ export function createLandMaterial(): ShaderMaterial {
         // Terrain compositing below keeps every star behind the treeline.
         skyBand = mix(skyBand, nightStars(vec2(landscapeUv.x, 1.0 - landscapeUv.y)), belonging);
         skyBand += vec3(0.72, 0.86, 1.0) * shootingStar(sUv) * smoothstep(0.9, 1.0, belonging);
+        // SCR-10 solar amendment, 13 September 2026. Row 450 of the 1500px
+        // plate is the opaque horizon; the branches above it keep their alpha.
+        float horizon = (0.70 - landscapeAnchor) * landscapeZoom / landscapeCrop.y + 0.5;
+        float discHighlight;
+        vec3 atmosphere = solarSky(sUv, horizon, discHighlight);
         // The frame stack in display RGB: sky, the transparent land over it,
         // the frame's full-scene black, then the light layer soft-lit through
         // the land's own alpha. The shade uniform is that black -- 0.4 through
@@ -258,6 +278,22 @@ export function createLandMaterial(): ShaderMaterial {
         vec3 light = sRGBTransferOETF(texture2D(lightMap, vec2(landscapeUv.x, 1.0 - (lightOffset + sceneRow) / lightHeight))).rgb;
         vec3 view = sRGBTransferEOTF(vec4(mix(base,
           softLight(base, light), terrain.a), 1.0)).rgb;
+        // Daylight no longer inherits the sequence's magenta/orange soft-light
+        // wash. Atmosphere and land are exposed together, in linear light.
+        vec3 sunlit = mix(atmosphere, solarTerrain(terrain.rgb, landscapeUv), terrain.a);
+        view = mix(sunlit, view, solarNight);
+        // The existing media-scrim exception: protect cream Truth copy when
+        // the low sun reaches the phone's upper reading band. This travels
+        // with the scene and clears into night; it never changes the text.
+        // Preserve the disc's bright core: a uniform scrim turned the high
+        // sun into a grey, moon-like circle. Trees still occlude the highlight.
+        float solarHighlight = discHighlight * (1.0 - terrain.a) * (1.0 - solarNight);
+        // In a tall crop the setting disc crosses the body copy. Keep the
+        // reading scrim there; restore its highlight once the sun is higher.
+        float highlightRoom = max(smoothstep(0.7, 1.2, solarAspect),
+          smoothstep(0.85, 0.98, solarDaylight));
+        view *= 1.0 - solarReadShade * 0.68 * smoothstep(0.3, 0.72, sUv.y)
+          * (1.0 - solarHighlight * highlightRoom * 0.9);
         // What the lift uncovers. Opaque, so it covers the renderer's own
         // clear colour. The hand-off is a fade across the lower part of the
         // blurred band, never a step: below the edge there is only charcoal,

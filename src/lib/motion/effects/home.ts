@@ -41,7 +41,9 @@ const LANDSCAPE_INVITATION_ZOOM = 1.32;
  * travels with the offset. `shade` is the frame's full-scene black.
  *
  * These are measurements, not taste: change one only by re-reading its node.
- * Taste lives in the timing below.
+ * Taste lives in the timing below. Solar amendment, 13 September 2026:
+ * "Country carries the day" derives the sun/atmosphere from this same sky
+ * clock in home-sun.ts; these offsets now also drive generated lighting.
  */
 export const HOME_SCENE = {
   night: { sky: 0, light: 0, lightHeight: 8028, shade: 0.4 },
