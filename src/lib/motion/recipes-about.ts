@@ -1289,42 +1289,319 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
 }
 
 /* -------------------------------------------------------------------------
-   §04 — loopAndRing · seams 03b → 04 and 04 → 05
+   §04 — theLoop · the page's third held screen
    ------------------------------------------------------------------------- */
 
 /**
+ * ⚑ THE LOOP CLOSES (12 September 2026, user direction). Built to Figma
+ * `2695:21396` — `REF · 05 ABOUT §04 THE LOOP — each clause builds the card it
+ * names · 6 FRAMES`. Supersedes `loopAndRing`, which was the seam pass's one
+ * tween on the ring.
+ *
+ * Grammar row: "accumulating, the loop closes".
+ *
+ * THE SECTION'S CLAIM IS THAT FOUR THINGS HOLD EACH OTHER UP, and this draws
+ * it rather than asserting it. The lede is a chain of three clauses; each
+ * arrives at reading size, folds down onto its place on the artist's spiral,
+ * and the card that clause names seats there on a short overshoot. The fourth
+ * position is drawn and left empty, because the draft has three clauses and a
+ * fourth would be invented. When all four stand the loop is closed — the only
+ * state in which the claim is true — and it holds there before contracting
+ * into §05's first bullet.
+ *
+ * ⚠ ONE CARD IS WHOLE AT A TIME. A card carries a photograph, a title, a body
+ * and a label, and at the scale four fit on the spiral the body lands near 8px.
+ * So a card arrives WHOLE and centred, is read, and then becomes a compact
+ * version of itself — photograph and title only, which is exactly what the
+ * board seats on the ring — as the next one arrives. It is never rendered
+ * twice for this: a second copy of a link is a second tab stop, and
+ * `aria-hidden` does not take an element out of the tab order.
+ *
+ * ⚠ ONE WRITER FOR EVERY SLOT TRANSFORM. Each card is moved by TWO things —
+ * its own seating, and the turn of the whole loop — and two tweens writing
+ * `x`/`y` to one element is the last frame to run winning. So the tweens move
+ * a plain state object and a single `onUpdate` computes every slot's position
+ * from it. Same reason the band in §02 is one custom property rather than
+ * three tweens.
+ *
+ * ⚠ POSITION-SCRUBBED, NOT VELOCITY-DRIVEN. The board asks for the turn to
+ * take the reader's scroll velocity and be parkable mid-turn (IMG-01, released
+ * by F9). Bound to scroll position instead, on user direction, so the section
+ * retraces exactly on the way back — the contract §02 and §03 keep. The
+ * velocity pattern lives in `src/lib/motion/orbit.ts` if this is revisited; it
+ * is a `/v2` sketch and must not be extended.
+ *
+ * ⚠ NEVER ON THE CARD PHOTOGRAPHS. The board is explicit: the turn applies to
+ * the ring and its connectors, "never on the photographs inside the cards,
+ * which are frame grade". Nothing here touches a plate — a card's slot travels
+ * and the photograph rides it without a transform of its own.
+ *
+ * Span 300 − 100 = 200; the deck's BUFFER does not come off it. See the
+ * arithmetic written out at `theQuestion`.
+ *
  * Markup:
- *   [data-seam="wave"]        the off-white wave — static, rides coverSeams
- *   [data-artwork="ring-b"]   the closed ring that contracts toward §05
- *   [data-arrive]             the header block and the card rail
+ *   [data-ab4-head]              eyebrow + headline, hold then leave
+ *   [data-ab4-clause] ×3         read at size, then folded onto the loop
+ *   [data-ab4-loop]              the positioning context the diamond is measured in
+ *   [data-ab4-ring]              the spiral
+ *   [data-ab4-slot] ×4           the cards
+ *   [data-ab4-card-body]         what a card gives up when it compacts
+ *   [data-ab4-ground]            the rising roasted front
  */
-export function loopAndRing(root: HTMLElement, span = 265): MotionModule {
-  return composition("loopAndRing", root, {
-    channel: "none",
+export function theLoop(root: HTMLElement, span = 200): MotionModule {
+  return composition("theLoop", root, {
+    channel: "media",
     span,
-    uses: ["arrive"],
-    build: () => {
-      // 04 → 05 · "ring contracts, transform-only scrub — the closed ring
-      // becomes the bullet of COUNTRY FIRST." Scale and a small drop as the
-      // section leaves; §05's first value rule receives it (valuesRelay).
-      const ring = q(root, '[data-artwork="ring-b"]');
-      if (ring) {
-        gsap.to(ring, {
-          scale: 0.72,
-          yPercent: 8,
-          ease: EASE.machine,
-          scrollTrigger: {
-            trigger: root,
-            start: "bottom 70%",
-            end: "bottom 20%",
-            scrub: SCRUB.normal,
-            invalidateOnRefresh: true,
-          },
+    minWidth: "1024px",
+    minHeight: "820px",
+    uses: ["settle", "arrive"],
+    build: (tl) => {
+      const head = q(root, "[data-ab4-head]");
+      const loop = q(root, "[data-ab4-loop]");
+      const ring = q(root, "[data-ab4-ring]");
+      const ground = q(root, "[data-ab4-ground]");
+      const clauses = qa(root, "[data-ab4-clause]");
+      const slots = qa(root, "[data-ab4-slot]");
+      const bodies = qa(root, "[data-ab4-card-body]");
+      if (!loop || !slots.length) return;
+
+      root.dataset.abHeld = "true";
+
+      // ---- the figure, measured ---------------------------------------
+      // Derived from the room the loop actually has rather than from the
+      // frame's pixels, so the diamond holds at every size the held build is
+      // allowed at. The board's proportions are kept: its ring is 172 wide by
+      // 260 tall, so the horizontal radius is two thirds of the vertical.
+      const SEAT = 0.5; // the board's slot card is 152 against the rail's 298
+      const CLAUSE_SEAT = 0.55; // a connector is a label, not a paragraph
+      // How much of a card is kept when it compacts. The body and the label go,
+      // and the card's foot closes behind them — but not so far that it eats
+      // the title, which is the half of the card that has to survive. Measured
+      // against a two-line title at seat scale.
+      const KEEP = 0.7;
+      const loopBox = loop.getBoundingClientRect();
+      const box = loopBox;
+      const card = slots[0].getBoundingClientRect();
+      const ry = Math.max(
+        120,
+        (box.height - card.height * SEAT) / 2 - 10,
+      );
+      const rx = Math.min(
+        (box.width - card.width * SEAT) / 2 - 10,
+        ry * 0.66,
+      );
+
+      // Top, right, bottom, left — the order the cards are authored in and the
+      // order the clauses name them.
+      const base = [0, 1, 2, 3].map((i) => (i * Math.PI) / 2);
+
+      const state = { seat: [0, 0, 0, 0], orbit: 0 };
+      // Three numbers, not three transform properties — see the note on the
+      // slot in about.css. Custom properties compose; three `quickSetter`s on
+      // one element's transform do not.
+      const setters = slots.map((slot) => ({
+        x: gsap.quickSetter(slot, "--ab4-x") as (v: number) => void,
+        y: gsap.quickSetter(slot, "--ab4-y") as (v: number) => void,
+        s: gsap.quickSetter(slot, "--ab4-s") as (v: number) => void,
+      }));
+
+      // THE ONE WRITER. A card at `seat = 0` is whole and centred on the loop;
+      // at `seat = 1` it is compact and standing on the ring at its own angle,
+      // which the turn then carries round. Everything in between is the card
+      // travelling out to its place.
+      const paint = () => {
+        slots.forEach((_, i) => {
+          const seated = state.seat[i];
+          const angle = base[i] + state.orbit;
+          setters[i].x(Math.sin(angle) * rx * seated);
+          setters[i].y(-Math.cos(angle) * ry * seated);
+          setters[i].s(1 - (1 - SEAT) * seated);
         });
+      };
+      gsap.set(slots, { autoAlpha: 0 });
+      paint();
+
+      // ---- the head ----------------------------------------------------
+      if (head) tl.set(head, { autoAlpha: 1 }, 0);
+
+      // ---- clause N builds card N --------------------------------------
+      // Three clauses, four cards. The fourth arrives on the empty position
+      // with no clause of its own — the loop closing rather than a new claim.
+      // One pass per card, and the order inside a pass is the whole point:
+      // the clause is READ, its card arrives WHOLE and is read, the card
+      // compacts onto the ring, and only then does the clause fold after it.
+      //
+      // ⚠ THE FOLD COMES LAST, and it has to. A folded clause sits on the
+      // clearing ellipse, which is sized for a COMPACT card — fold it while
+      // its card is still at full size and the label lands on top of the
+      // photograph it belongs to (caught on screen, 12 September 2026).
+      const CLAUSE_AT = 0.12;
+      const STEP = 0.17;
+      const CARD_IN = 0.025; // after its clause
+      // ⚠ THE GAP BETWEEN THESE TWO IS THE READ, and it is the point of the
+      // whole card existing. A card arrives with its photograph, its title and
+      // its description, and the reader is given ~18vh of held scroll to take
+      // that in before it is put away on the ring. Closing this up turns the
+      // whole state into a flicker and there is no reason to have shown the
+      // description at all (user direction, 12 September 2026).
+      const CARD_SEAT = 0.115; // ~18vh later — the whole card's dwell
+      const CLAUSE_FOLD = 0.175; // last, once its card is compact
+
+      clauses.forEach((clause, i) => {
+        const at = CLAUSE_AT + i * STEP;
+        gsap.set(clause, { autoAlpha: 0 });
+        tl.set(clause, { autoAlpha: 1 }, at);
+        tl.settle(clause, lineBeat(0.06), at);
+
+        // It folds onto its place BETWEEN the card it names and the next —
+        // the sentence the reader has just finished becoming the thing that
+        // physically holds the cards together. The element that was read is
+        // the one that folds; nothing is set twice.
+        //
+        // ⚠ THE TARGET IS TWO BOXES APART, so it is computed from both. Every
+        // clause is absolute at the same origin — the top-left of the
+        // paragraph they came out of — which is right for reading them one at
+        // a time and useless as a destination. The delta from that origin to a
+        // point on the loop has to cross from the paragraph's coordinate space
+        // into the loop's. Getting this wrong stacked all three on the left of
+        // the screen, on top of each other and unreadable (12 September 2026).
+        // ⚠ ON AN ELLIPSE THAT CLEARS THE CARDS, not on the ring itself. The
+        // midpoint between two cards looks like the obvious place and is not:
+        // a seated card is half its own width either side of its point, so a
+        // label at the ring's own radius lands underneath one. Measured, the
+        // three ran into each other and into the cards (12 September 2026).
+        // The clearing ellipse is the ring plus half a seated card plus air.
+        const mid = base[i] + Math.PI / 4;
+        const clauseRx = rx + (card.width * SEAT) / 2 + 36;
+        const clauseRy = Math.min(ry + 110, loopBox.height / 2 - 30);
+        const target = {
+          x: loopBox.left + loopBox.width / 2 + Math.sin(mid) * clauseRx,
+          y: loopBox.top + loopBox.height / 2 - Math.cos(mid) * clauseRy,
+        };
+        const from = clause.getBoundingClientRect();
+        tl.to(
+          clause,
+          {
+            // Centred on its point rather than hung off its corner: the
+            // measured box is the unscaled one, so half of it is scaled too.
+            x: target.x - from.left - (from.width * CLAUSE_SEAT) / 2,
+            y: target.y - from.top - (from.height * CLAUSE_SEAT) / 2,
+            scale: CLAUSE_SEAT,
+            autoAlpha: 0.72,
+            duration: 0.05,
+            ease: EASE.country,
+          },
+          at + CLAUSE_FOLD,
+        );
+      });
+
+      // ---- the cards ----------------------------------------------------
+      // Whole, read, then compact. `catch` is the site's first overshoot and
+      // the F9 ledger budgets it exactly here and at §09's doors — "a thing
+      // that holds has to catch".
+      slots.forEach((slot, i) => {
+        const base4 = CLAUSE_AT + i * STEP;
+        const arrives = base4 + CARD_IN;
+        const seats = base4 + CARD_SEAT;
+
+        tl.to(slot, { autoAlpha: 1, duration: 0.02, ease: "none" }, arrives);
+        tl.to(
+          state.seat,
+          { [i]: 1, duration: 0.07, ease: EASE.catch, onUpdate: paint },
+          seats,
+        );
+        if (bodies[i]) {
+          tl.to(
+            bodies[i],
+            { autoAlpha: 0, duration: 0.04, ease: EASE.country },
+            seats,
+          );
+        }
+        // The card's foot closes with its body so the compact card is tight
+        // rather than a whole card with a hole in it.
+        tl.fromTo(
+          slot,
+          { clipPath: "inset(0% 0% 0% 0% round 1.5rem)" },
+          {
+            // `round` keeps the card's own 1.5rem corner on the new foot.
+            // A plain inset cuts a straight edge and the compact card ends in
+            // two square corners against three round ones (reported
+            // 12 September 2026).
+            clipPath: `inset(0% 0% ${Math.round((1 - KEEP) * 100)}% 0% round 1.5rem)`,
+            duration: 0.05,
+            ease: EASE.country,
+          },
+          seats,
+        );
+      });
+
+      // ---- the turn -----------------------------------------------------
+      // One quarter per card, so each new card arrives at the top of the loop
+      // and the one before it has moved round to make room.
+      tl.to(
+        state,
+        {
+          orbit: Math.PI * 2,
+          duration: 0.56,
+          ease: "none",
+          onUpdate: paint,
+        },
+        CLAUSE_AT + CARD_SEAT,
+      );
+
+      // ---- the hold -----------------------------------------------------
+      // .80 → .86 is deliberately empty. All four standing, the ring out of
+      // its skew: the only state in which the section's claim is true, and the
+      // one moment the screen is allowed to stop.
+
+      // ---- it contracts --------------------------------------------------
+      // Transform-only, NOT C2 — Living Work's aperture already spent it. The
+      // cards are not faded out; they are pulled inward with the ring, so the
+      // closed loop is what becomes §05's first bullet.
+      if (ground) {
+        tl.fromTo(
+          ground,
+          { "--ab4-front": "130%" },
+          { "--ab4-front": "-30%", duration: 0.14, ease: "none" },
+          0.86,
+        );
       }
+      // ⚠ IT CONTRACTS ON THE SPOT, AND IT FADES (user direction, 12 September
+      // 2026). Two departures from the board, which contracts the loop toward
+      // §05's bullet at the top of the next section and says in as many words
+      // that "the cards are not faded out — they are pulled inward with it".
+      //
+      // Travelling it to a corner read as the loop escaping off the screen
+      // rather than closing, and a closed loop still standing at full strength
+      // when the ground has already gone roasted reads as left behind rather
+      // than handed over. So it shrinks about its own centre and goes with the
+      // clauses, on the same curve — the screen empties into §05's ground
+      // instead of posting something into it.
+      tl.to(
+        loop,
+        {
+          scale: 0.16,
+          autoAlpha: 0,
+          transformOrigin: "center center",
+          duration: 0.14,
+          ease: EASE.country,
+        },
+        0.86,
+      );
+      if (head) {
+        tl.to(
+          head,
+          { autoAlpha: 0, duration: 0.08, ease: EASE.country },
+          0.88,
+        );
+      }
+      if (ring) tl.to(ring, { rotate: 24, duration: 0.14, ease: "none" }, 0.86);
     },
-    enter: arrivals,
-    cut: clearAll,
+    enter: undefined,
+    cut: (el) => {
+      delete el.dataset.abHeld;
+      clearAll(el);
+    },
   });
 }
 

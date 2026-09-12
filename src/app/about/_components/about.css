@@ -252,6 +252,154 @@
   [data-ab-held] [data-ab2-recap] {
     display: block;
   }
+  /* -------------------------------------------------------------------------
+     §04 — "What we do", the loop closes.
+
+     Figma 2695:21396, the six-frame reference board. Third held screen on the
+     page, same machinery: `data-ab-stage` is the sticky screen and everything
+     here is SCOPED BY SECTION NAME, because `data-ab-held` is shared and two
+     §02 rules have already leaked onto §03 through it.
+     ------------------------------------------------------------------------- */
+
+  /* The head keeps its own height; the loop takes what is left and is the
+     positioning context the diamond is measured against. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab-stage] {
+    grid-template-rows: auto 1fr;
+  }
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-head] {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-loop] {
+    grid-row: 2;
+    grid-column: 1;
+    position: relative;
+    min-height: 0;
+  }
+
+  /* THE CLAUSES COME OUT OF THE PARAGRAPH. In flow they are inline spans and
+     the sentence reads as one; held, each is taken out of the line so it can
+     be read at size and then folded onto its place on the spiral. Position is
+     the recipe's — measured against the loop, so it survives any viewport the
+     held build is allowed at. Only the box is declared here. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-chain] {
+    /* The clauses are absolute against THIS, not against the section: the
+       paragraph already sits at the column, so a clause taken out of the line
+       starts exactly where the reader was reading it. Transforms are not
+       clipped by a containing block, so it can still travel down onto the
+       loop from here. The paragraph collapses to nothing once all three are
+       out of flow, which is what gives the loop its room. */
+    position: relative;
+  }
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-clause] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    /* Wide enough to read as a sentence where it is read, narrow enough to sit
+       between two cards once it has folded — at seat scale this is about 141px
+       across, against roughly 190 of clear air between neighbours. */
+    max-width: 16rem;
+    transform-origin: left top;
+    will-change: transform;
+  }
+
+  /* THE SPIRAL IS THE LOOP'S OWN STRUCTURE when held, not the section's ground
+     artwork, so it is centred on the diamond and sized to it rather than
+     bleeding off the right of the section. A shade less faint than the ground
+     version too: at 9% behind a row of cards it is texture, and here it is the
+     thing the four are standing on. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-ring] > div {
+    top: 50%;
+    left: 50%;
+    width: 36rem;
+    /* ⚠ NOT GROUND-ARTWORK OPACITY. Behind a row of cards the rings sit at
+       7–9% and read as texture; here the ring is the thing four cards are
+       STANDING ON, and the section's claim is unreadable if the reader cannot
+       see what holds them. Raised twice on report (12 September 2026): 16% and
+       then 30% were both still effectively invisible — roasted on off-white is
+       a low-contrast pair, and the artwork is fine dots rather than solid
+       shape, so it loses far more than a flat fill would at the same value.
+       The board's own 22% is measured against its dark board ground, not
+       against canvas. */
+    opacity: 0.55;
+    /* ⚠ ONE ROTATION, NOT TWO. Tailwind's `-rotate-6` is the INDEPENDENT
+       `rotate` property, which composes with `transform` rather than being
+       replaced by it — left alone the ring turned twice and drifted off the
+       centre it is supposed to share with the diamond. */
+    rotate: none;
+    transform: translate(-50%, -50%) rotate(-6deg);
+  }
+
+  /* THE DIAMOND. Each card leaves the row and is placed on the loop; absolute
+     takes it out of `CardRail`'s grid without touching `CardRail`, so the row
+     it renders everywhere else is untouched. 18.625rem is the desktop rail
+     card's own width, so a card at rest here is the size it is on every other
+     four-card row on the site — it is only ever SCALED from that. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-slot] {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18.625rem;
+    height: auto;
+    transform-origin: center center;
+    will-change: transform;
+    /* ⚠ THE TRANSFORM IS COMPOSED HERE AND WRITTEN AS THREE NUMBERS, not as
+       three GSAP transform properties. A card is moved by two things — its own
+       seating and the turn of the whole loop — and three `quickSetter`s on one
+       element's transform do not compose: measured, `x` and `y` applied and
+       `scale` silently stayed at 1 for the whole sequence (12 September 2026).
+       Custom properties have no such cache, and it also means no tween ever
+       writes `transform` to a slot, so nothing can be clobbered by a later
+       one. `translate(-50%,-50%)` before the scale centres the card on its
+       point whatever size it is. */
+    --ab4-x: 0;
+    --ab4-y: 0;
+    --ab4-s: 1;
+    transform: translate(calc(var(--ab4-x) * 1px), calc(var(--ab4-y) * 1px))
+      translate(-50%, -50%) scale(var(--ab4-s));
+  }
+
+  /* What a card gives up when it compacts: the body and the verb-led label.
+     The card's foot is clipped with it so the compact card is tight rather
+     than a whole card with a hole in it — both driven by the recipe. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-slot] > a {
+    min-height: 0;
+  }
+
+  /* The ring is the loop's own structure when held, not the section's ground
+     artwork, so it is measured and turned with the slots. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-ring] {
+    overflow: visible;
+  }
+
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-ground] {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   §04's GROUND, ARRIVING ROASTED.
+
+   §04 → §05 is the one seam on this page the score gives no wave — "ring
+   contracts, transform-only" — so the join is made by §04 arriving on §05's
+   own ground before the seam plays. The same rising front §03 uses, in
+   roasted, and the same reason for one custom property rather than three
+   tweens: the front's position is read by a gradient whose stops are `calc()`
+   offsets from it, so the per-frame write is a single CSS variable.
+
+   Hidden until the module claims the section, like every other held-build
+   element in this file.
+   --------------------------------------------------------------------------- */
+[data-ab4-ground] {
+  display: none;
+  --ab4-front: 130%;
+  background-image: linear-gradient(
+    180deg,
+    transparent calc(var(--ab4-front) - 24%),
+    var(--color-roasted) calc(var(--ab4-front) + 14%),
+    var(--color-roasted) 300%
+  );
 }
 
 /* ---------------------------------------------------------------------------

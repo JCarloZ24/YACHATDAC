@@ -886,9 +886,27 @@ const AREA_GROUNDS = [
 export function WhatWeDo() {
   /* `whatWeDo.title` is the eyebrow; the headline is the lede's own opening
      sentence, lifted out of the paragraph that follows — the page's headline
-     convention. What is left of the lede is the chain, rendered whole. */
+     convention. What is left of the lede is the chain. */
   const [headline, ...chain] = sentences(whatWeDo.lede);
   const lede = chain.join(" ");
+
+  /**
+   * The chain, split into its clauses WITH their punctuation kept.
+   *
+   * The draft's sentence is three clauses joined by semicolons, and the board
+   * sets each one on the spiral beside the card it names. Splitting on the
+   * semicolon and putting the separator back means the paragraph below renders
+   * character-for-character as it always did — one sentence, not three — while
+   * each clause is still an element the sequence can move. D5 holds: nothing is
+   * retyped here and nothing new enters `src/content/about.ts`.
+   *
+   * Three clauses, four cards. The fourth position is drawn and left empty,
+   * because the draft has three clauses and a fourth would be invented.
+   */
+  const clauses = lede
+    .split(";")
+    .map((part, i, all) => (i < all.length - 1 ? `${part.trim()}; ` : part.trim()))
+    .filter(Boolean);
 
   return (
     <section data-ab="what-we-do" className="relative bg-canvas text-charcoal">
@@ -898,100 +916,141 @@ export function WhatWeDo() {
           becomes the loop's baseline." The trail re-entering and forking into
           four is the Guide's (▲ Leonard Mickelo); not built. */}
       <WaveDivider ground="var(--color-canvas)" hook="wave" />
-      {/* Seam 04 → 05 rides this ring: "ring contracts, transform-only scrub —
-          the closed ring becomes the bullet of COUNTRY FIRST. Not C2 — Living
-          Work's aperture already spent it." Motion.tsx scrubs the ring's scale
-          as the section leaves; §05's first value rule receives it. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          tone="roasted"
-          className="top-[26%] left-[52%] w-[62.5rem] -rotate-6 opacity-[0.09]"
-        />
-      </div>
 
-      <div className={`${COLUMN} relative pt-16 lg:pt-24`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
-        >
-          {whatWeDo.title}
-        </p>
-        <h2
-          data-arrive
-          className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
-        >
-          {headline}
-        </h2>
-        <p
-          data-arrive
-          className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
-        >
-          {lede}
-        </p>
-      </div>
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          one, and in flow it adds nothing: the head, the lede and the card rail
+          below simply stack, which is the document this replaces. */}
+      <div data-ab-stage>
+        {/* THE GROUND GOING ROASTED, held build only. §04 → §05 is the one seam
+            on this page with no wave — the score gives it "ring contracts,
+            transform-only" — so the join is made by arriving on §05's own
+            ground before the seam plays. A rising front, the same single
+            custom property §03's uses. */}
+        <div aria-hidden data-ab4-ground className="absolute inset-0" />
 
-      <div className={`${COLUMN} relative pt-10 pb-16 lg:pt-20 lg:pb-24`}>
-        {/* ONE ROW OF FOUR — the house pattern, and the same grid The Record
-            §07, /partnerships §06 and the shared ContactDoors all use:
-            `gap-4 sm:grid-cols-2 lg:grid-cols-4`. Two-up on tablet, and a
-            swipe rail on a phone — `CardRail` supplies the row and leaves the
-            grid from 640 up exactly as it was.
+        <div data-ab4-head className={`${COLUMN} relative pt-16 lg:pt-24`}>
+          <p
+            data-arrive
+            data-ab4-eyebrow
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+          >
+            {whatWeDo.title}
+          </p>
+          <h2
+            data-arrive
+            data-ab4-headline
+            className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+          >
+            {headline}
+          </h2>
+          {/* ONE PARAGRAPH, THREE MOVING PARTS. In flow these spans are inline
+              and the sentence reads exactly as it always has. Held, each
+              becomes the clause that is read at size and then folds onto its
+              place on the spiral — the same element, moved, never a second
+              copy of copy already on the page. */}
+          <p
+            data-arrive
+            data-ab4-chain
+            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+          >
+            {clauses.map((clause, i) => (
+              <span key={i} data-ab4-clause={i}>
+                {clause}
+              </span>
+            ))}
+          </p>
+        </div>
 
-            It replaces a diamond arrangement that set the four around the
-            artist's spiral with the lede's clauses as connectors between them.
-            That was the frame's composition, and it was the only four-card row
-            on the site laid out that way — a reader arriving from The Record or
-            Partnerships met a different object doing the same job. The spiral
-            stays as ground artwork; the chain it carried is the lede directly
-            above, stated in full, which is where the argument actually lives.
+        {/* ---- the loop ---------------------------------------------------
+            ⚠ THE DIAMOND IS THE HELD BUILD'S, AND THE RAIL IS THE DOCUMENT'S.
+            A diamond of four around the artist's spiral is the frame's
+            composition, and it was taken out of the resting page on purpose:
+            it was the only four-card row on the site laid out that way, so a
+            reader arriving from The Record or /partnerships met a different
+            object doing the same job. That objection is about the DOCUMENT,
+            which has not changed — below `deck:`, under reduced motion and
+            with JavaScript off this is `CardRail`'s row exactly as before. The
+            diamond exists only while the screen is held, as choreography.
 
-            The card itself is unchanged: it is `04 · The Record` §02's recipe —
-            coloured ground, full-width image band, 35% scrim, one motif, then
-            title, body and a verb-led label at the foot. */}
-        {/* The four seating with `catch` overshoot (scenes.md:381) is the
-            interiors pass — the rail arrives as one quiet unit until then. */}
-        <div data-arrive>
+            ⚠ `CardRail` IS NOT MODIFIED. It already wraps each child in a cell
+            that goes `display: contents` from 640 up, so the slot below is the
+            grid item there and the desktop row is what it was. The Record §07,
+            /partnerships §06 and ContactDoors are untouched. */}
+        <div data-ab4-loop className={`${COLUMN} relative pt-10 pb-16 lg:pt-20 lg:pb-24`}>
+          {/* The spiral the four sit on. Ground artwork in flow, the loop's own
+              structure when held — which is why it moves out of the section's
+              artwork layer and into the stage here.
+
+              Seam 04 → 05 rides it: "the closed ring becomes the bullet of
+              COUNTRY FIRST. Not C2 — Living Work's aperture already spent it."
+              §05's first value rule receives it. */}
+          <div aria-hidden data-ab4-ring className="pointer-events-none absolute inset-0 overflow-hidden">
+            <RingArtwork
+              piece="b"
+              tone="roasted"
+              className="top-[26%] left-[52%] w-[62.5rem] -rotate-6 opacity-[0.09]"
+            />
+          </div>
+
+          {/* The fourth position on the loop. Drawn and empty by design — the
+              draft's sentence has three clauses, and a fourth would be
+              invented. It carries no mark of its own: what closes the loop
+              visually is the spiral, not a connector rule. */}
+          <div aria-hidden data-ab4-connector="empty" className="pointer-events-none absolute" />
+
           <CardRail columns="sm:grid-cols-2 lg:grid-cols-4">
-          {whatWeDo.areas.map((area, i) => {
-            const photo = photoById(AREA_PHOTOS[i]);
-            return (
-              <a
-                key={area.title}
-                href={area.cta.href}
-                className={`relative flex flex-col overflow-hidden rounded-3xl lg:min-h-[28.75rem] ${AREA_GROUNDS[i]} text-canvas`}
-              >
-                <div className="relative aspect-[380/232] w-full shrink-0 overflow-hidden">
-                  <div data-motion={photo?.grade ?? "full"} className="absolute inset-0">
-                    <MediaOrField
-                      src={photo?.src ?? null}
-                      alt={photo?.subject ?? ""}
-                      sizes="(min-width: 1024px) 298px, (min-width: 640px) 50vw, 78vw"
-                      fieldClass="bg-canvas/6"
-                    />
-                  </div>
-                  <span aria-hidden className="absolute inset-0 bg-black/35" />
-                  <SeamGlyph
-                    motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
-                    className="right-4 bottom-4 w-10"
-                  />
-                </div>
+            {whatWeDo.areas.map((area, i) => {
+              const photo = photoById(AREA_PHOTOS[i]);
+              return (
+                /* The slot is the grid item from 640 up (CardRail's own cell is
+                   `contents` there) and the thing the loop moves when held. In
+                   flow it is a plain box and the card fills it. */
+                <div key={area.title} data-ab4-slot={i} className="h-full">
+                  <a
+                    href={area.cta.href}
+                    className={`relative flex h-full flex-col overflow-hidden rounded-3xl lg:min-h-[28.75rem] ${AREA_GROUNDS[i]} text-canvas`}
+                  >
+                    <div className="relative aspect-[380/232] w-full shrink-0 overflow-hidden">
+                      <div data-motion={photo?.grade ?? "full"} className="absolute inset-0">
+                        <MediaOrField
+                          src={photo?.src ?? null}
+                          alt={photo?.subject ?? ""}
+                          sizes="(min-width: 1024px) 298px, (min-width: 640px) 50vw, 78vw"
+                          fieldClass="bg-canvas/6"
+                        />
+                      </div>
+                      <span aria-hidden className="absolute inset-0 bg-black/35" />
+                      <SeamGlyph
+                        motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
+                        className="right-4 bottom-4 w-10"
+                      />
+                    </div>
 
-                <div className="flex flex-1 flex-col px-6 pt-6 pb-7">
-                  <h3 className="headline text-2xl leading-[1.2] sm:text-[1.75rem]">
-                    {area.title}
-                  </h3>
-                  <p className="mt-3.5 text-[0.9375rem] leading-[1.5] text-canvas/86">
-                    {area.body}
-                  </p>
-                  {/* Verb-led. Never a route path. */}
-                  <p className="eyebrow mt-auto pt-6 text-xs tracking-[0.08em] text-gold">
-                    {area.cta.label} →
-                  </p>
+                    <div className="flex flex-1 flex-col px-6 pt-6 pb-7">
+                      <h3 className="headline text-2xl leading-[1.2] sm:text-[1.75rem]">
+                        {area.title}
+                      </h3>
+                      {/* THE BODY AND THE LABEL ARE WHAT A CARD GIVES UP when
+                          it compacts onto the loop. At the scale four cards
+                          fit on the spiral this copy lands near 8px and is
+                          unreadable, so a card is read WHOLE and then keeps
+                          only its photograph and its title — which is exactly
+                          what the board seats on the ring. Grouped so one
+                          opacity carries both; never hidden in the document. */}
+                      <div data-ab4-card-body className="flex flex-1 flex-col">
+                        <p className="mt-3.5 text-[0.9375rem] leading-[1.5] text-canvas/86">
+                          {area.body}
+                        </p>
+                        {/* Verb-led. Never a route path. */}
+                        <p className="eyebrow mt-auto pt-6 text-xs tracking-[0.08em] text-gold">
+                          {area.cta.label} →
+                        </p>
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            );
-          })}
+              );
+            })}
           </CardRail>
         </div>
       </div>

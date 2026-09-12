@@ -1078,15 +1078,15 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 
 ## About — verb *answers* — 2053vh, 11 sections
 
-> **BUILT — seam pass, 8 Sep 2026; §02 and §03's interiors, 12 Sep 2026.** The
-> ten seams of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines are
-> live: `src/app/about/_components/Motion.tsx` hosts,
-> `src/lib/motion/recipes-about.ts` holds the recipes. **§02 and §03 are now
-> built too** — §02's register writes itself (`theRegister`) and §03's question
-> is asked on ground that goes out under it (`theQuestion`), both as held
-> screens with their layout in `src/app/about/_components/about.css`. The
-> remaining interiors and Group G are still unbuilt; Group G stays ▲ Leonard
-> Mickelo.
+> **BUILT — seam pass, 8 Sep 2026; §02, §03 and §04's interiors, 12 Sep 2026.**
+> The ten seams of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines
+> are live: `src/app/about/_components/Motion.tsx` hosts,
+> `src/lib/motion/recipes-about.ts` holds the recipes. **§02, §03 and §04 are
+> now built too** — §02's register writes itself (`theRegister`), §03's question
+> is asked on ground that goes out under it (`theQuestion`), and §04's loop
+> closes (`theLoop`), all three as held screens with their layout in
+> `src/app/about/_components/about.css`. The remaining interiors and Group G are
+> still unbuilt; Group G stays ▲ Leonard Mickelo.
 
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
 1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
@@ -1098,7 +1098,7 @@ against 235vh drawn — the same convention as Living Work §02 and The Record �
 | 02 | I | What we are — the name decodes, the road runs through, the register writes itself | 3 | 300 | **type** | P3 | ✓ held 300 |
 | 03 | II | **THE QUESTION** — the ground takes the picture and the question is asked on nothing | 5 | 235 | **type** | **P9** | ✓ pinned 300 |
 | 03b | II | **BREATH** — held, no caption, no words | 1 | 55 | **none** | **P8** | ✓✓ |
-| 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 265 | **media** | P4 | — |
+| 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 300 | **media** | P4 | ✓ held 300 |
 | 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 249 | **type** | P1 | ✓ |
 | 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 245 | **transition** | — | — |
 | 07 | IV | The people — the frames dance, the type holds | 3 | 145 | **media** | P6 | — |
@@ -1183,10 +1183,41 @@ throws that reasoning away, so the held §02 declares **type**, `decode` is its 
 and the road's `plateParallax` is gone: it is LOUD media and `assertChannel` would have thrown.
 `roadScreen` is retired into `theRegister`.
 
-⚠ **THE PAGE NOW SPENDS TWO HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the deck
-already spends. Both are user directions; neither is a GSAP pin — they are CSS sticky spans, so
-they do not fight the deck's own pins — and both are flagged here for design sign-off alongside
-the deck's own deviation.
+⚠ **THE PAGE NOW SPENDS THREE HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
+deck already spends. All three are user directions; none is a GSAP pin — they are CSS sticky
+spans, so they do not fight the deck's own pins — and all three are flagged here for design
+sign-off alongside the deck's own deviation.
+
+**§04 is the loop closing — BUILT 12 September 2026.** Built to `REF · 05 ABOUT §04 THE LOOP —
+each clause builds the card it names` (Figma `2695:21396`), six frames whose scroll percentages are
+the beat sheet. The section's claim is that four things hold each other up, and it draws it: the
+lede is a chain of three clauses, each arrives at reading size, the card it names arrives WHOLE
+beneath it, and once that card has been read it compacts onto the artist's spiral and the clause
+folds down beside it. The fourth position is drawn and left empty — the draft's sentence has three
+clauses and a fourth would be invented. All four standing is the only state in which the claim is
+true, and the section holds there before contracting into §05's first bullet.
+
+**One card is whole at a time, and that is the layout's doing rather than a preference.** A card
+carries a photograph, a title, a body and a label; at the scale four fit on the spiral the body
+lands near 8px. So a card is read whole for about 18vh of held scroll and then keeps only its
+photograph and its title — which is exactly what the board seats on the ring — as the next
+arrives. It is never rendered twice for this: a second copy of a link is a second tab stop, and
+`aria-hidden` does not take an element out of the tab order. The clause is not duplicated either;
+the element that was read is the one that folds.
+
+Three departures, all user directions of 12 September 2026. **It is held**, where the board says
+"265vh, not pinned" — the same objection §02's board raises and the same answer, that the flow
+build is the unpinned document the note protects. **The turn is position-scrubbed**, where the
+board asks for scroll velocity and a loop parkable mid-turn (IMG-01, released by F9); bound to
+position instead so the section retraces exactly, which is the contract the other two held screens
+keep. **§05's copy is not previewed inside §04**, where board frame 06 draws it arriving: §04 →
+§05 is a gated deck seam, so §04 ramps its ground to roasted and §05's own `valuesRelay` delivers
+COUNTRY FIRST behind an invisible cut.
+
+⚠ **THE DIAMOND IS THE HELD BUILD'S ONLY.** The resting document is `CardRail`'s row, unchanged —
+which is what the decision that removed the diamond was about ("the only four-card row on the site
+laid out that way"). `CardRail` itself is untouched, so The Record §07, /partnerships §06 and the
+shared contact doors are unaffected.
 
 **Group G is back in build here, and only here.** The traveller and the page's thread are the same
 object: the question travels down the page and settles at each thing it measures. `G1` travel with

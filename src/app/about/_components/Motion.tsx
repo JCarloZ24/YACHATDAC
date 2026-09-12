@@ -9,7 +9,7 @@ import {
   coverSeams,
   doorsAssembly,
   heroQuiet,
-  loopAndRing,
+  theLoop,
   theRegister,
   partnersDots,
   peopleWave,
@@ -23,11 +23,12 @@ import {
  * THE SEAMS, AND THE PAGE'S TWO HELD SCREENS. This host wires the ten section
  * joins of Figma `REF · SCORE · 05 ABOUT` (2642:19666), the X4 baseline
  * arrivals, and — from 12 September 2026, user direction — the interiors of
- * §02 (`theRegister`) and §03 (`theQuestion`). Group G's eight waypoints and
- * the remaining section interiors are still unbuilt. Renders nothing.
+ * §02 (`theRegister`), §03 (`theQuestion`) and §04 (`theLoop`). Group G's eight
+ * waypoints and the remaining section interiors are still unbuilt. Renders
+ * nothing.
  *
- * ⚠ TWO HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of the
- * eight the deck already spends. Both were user directions and both are
+ * ⚠ THREE HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of
+ * the eight the deck already spends. Both were user directions and both are
  * flagged for design sign-off in scenes.md. Neither is a GSAP pin — they are
  * sticky spans in about.css, so they do not fight the deck's own pins.
  *
@@ -39,7 +40,8 @@ import {
  *   §03 why-we-exist  type        300vh   ⚡5   HELD — the claims leave, the
  *                                                ground goes out, the question
  *   §03b breath       none         55vh   ⚡1   the hold
- *   §04 what-we-do    media       265vh   ⚡4
+ *   §04 what-we-do    media       300vh   ⚡4   HELD — each clause builds its
+ *                                                card, the loop closes
  *   §05 how-we-work   type        249vh   ⚡2
  *   §06 who-decides   TRANSITION  245vh   ⚡4   navy wave in · overlap out
  *   §07 the-people    media       145vh   ⚡3
@@ -124,7 +126,10 @@ export function AboutMotion() {
       // measurement at `theQuestion`.
       wire(find("why-we-exist"), (el) => theQuestion(el, 200));
       wire(find("breath"), (el) => breath(el, 55));
-      wire(find("what-we-do"), (el) => loopAndRing(el, 265));
+      // §04 is the page's third held screen — the loop closes. 200 is derived
+      // the same way §02's and §03's are: the section's 300vh less the one
+      // viewport its sticky screen is held for.
+      wire(find("what-we-do"), (el) => theLoop(el, 200));
       wire(find("how-we-work"), (el) => valuesRelay(el, 249));
       wire(find("who-decides"), (el) => boardHandoff(el, 245));
       wire(find("the-people"), (el) => peopleWave(el, 145));
