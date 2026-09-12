@@ -306,7 +306,13 @@ export const truthEntryMedia: Record<string, MediaSlot[]> = {
    * from the Research & discovery strip. Open work/country material,
    * square crops, deliberately unglamorous — this is evidence.
    */
-  opportunities: [1, 2, 3, 4, 5, 6].map((n) => ({
+  /* FIVE, NOT SIX (client direction, 11 September 2026). truth-openresearch6
+     became Suzanne's portrait on the count's opening screen in the photo pass,
+     and the strip was showing the same photograph again two screens later.
+     Dropping it here rather than moving the portrait: the portrait is the slot
+     that needed a specific face, the strip is a field of evidence and reads the
+     same at five. */
+  opportunities: [1, 2, 3, 4, 5].map((n) => ({
     id: `open-research-${n}`,
     bucket: "work" as const,
     expects: "Open research on Turraburra — the openresearch batch",

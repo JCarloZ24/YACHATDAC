@@ -305,8 +305,20 @@ export function createGatedDeck({
                   const travel = track
                     ? Math.max(0, track.scrollHeight - slide.clientHeight)
                     : 0;
+                  /* ⚠ A COVER IS VIEWPORT-SCALE. `lead > 0` was the first cut
+                     of this test and it was wrong: EVERY EntryBlock puts its
+                     `entryLayout` on its own deck track, and that carries
+                     `py-10` — 40px of reading padding, not a cover. On a slide
+                     whose track is only a little taller than the viewport
+                     `travel` is small, so 40/travel landed late in the read and
+                     the era label waited almost to the end of the section
+                     instead of arriving in it (reported on "Before people",
+                     11 September 2026). What the plates actually lead with is
+                     `pt-[100svh]` — one whole slide — so the test is against
+                     the slide, not against zero. */
+                  const isCover = lead >= slide.clientHeight * 0.5;
                   coverFractions[index] =
-                    lead > 0 && travel > 0 ? clamp01(lead / travel) : 0;
+                    isCover && travel > 0 ? clamp01(lead / travel) : 0;
                 });
               };
               prepareRunways();

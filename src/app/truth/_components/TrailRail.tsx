@@ -449,7 +449,7 @@ export function TruthTrailRail() {
             className="absolute top-0 -translate-y-1/2 overflow-hidden"
             style={{ left: LABEL_X, width: labelWidth }}
           >
-            <p data-truth-trail-label className="eyebrow text-xl text-burnt-deep" />
+            <p data-truth-trail-label className="eyebrow text-xl text-ochre-deep" />
             <p
               data-truth-trail-sub
               className="mt-1 text-sm font-normal uppercase leading-relaxed text-charcoal"
