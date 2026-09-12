@@ -430,7 +430,13 @@ export function WhatWeAre() {
               JavaScript off the span simply renders the name. */}
           <p
             aria-label={legalName}
-            className="headline max-w-[1240px] text-4xl leading-[1.2] text-evergreen/30 sm:text-5xl lg:text-[3.5rem]"
+            /* ⚠ FULL-STRENGTH EVERGREEN, AND THE DIM LIVES IN ONE PLACE.
+               This carried `text-evergreen/30` AND took `opacity: 0.28` from
+               `theRegister` as the short name landed — two dimmers compounding
+               to 0.084, which is very nearly invisible on canvas and is why the
+               name could not be read (user, 13 September 2026). The class is
+               full strength now and the recipe is the only thing that dims it. */
+            className="headline max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
           >
             <span data-ab2-decode aria-hidden="true">
               {legalName}
@@ -511,9 +517,15 @@ export function WhatWeAre() {
           className={`${COLUMN} relative pt-6 pb-16 lg:pt-8 lg:pb-28`}
         >
           {/* What has been read. Derived — see `recap` above. */}
+          {/* ⚠ 70%, NOT THE BOARD'S 28. The board uses 0.28 for "read
+              already" and this line is read-already by definition — but 0.28
+              charcoal on canvas is about 2:1 against the background, which
+              fails AA for body text and was reported as unreadable (user,
+              13 September 2026). 70% is ~7:1 and still plainly secondary
+              beside the register below it. */}
           <p
             data-ab2-recap
-            className="max-w-[1240px] text-base leading-[1.5] text-charcoal/28 sm:text-lg"
+            className="max-w-[1240px] text-base leading-[1.5] text-charcoal/70 sm:text-lg"
           >
             {recap}
           </p>
@@ -560,7 +572,10 @@ export function WhatWeAre() {
                   data-ab2-row
                   className="grid gap-2 border-b border-charcoal/14 py-7 lg:grid-cols-[300px_1fr] lg:gap-10"
                 >
-                  <dt className="eyebrow text-xs tracking-[0.08em] text-burnt">
+                  {/* `text-sm`, not `text-xs`: 12px under a 32px value read as
+                      fine print rather than as the label of the row (user,
+                      13 September 2026). */}
+                  <dt className="eyebrow text-sm tracking-[0.08em] text-burnt">
                     {fact.label}
                   </dt>
                   <dd className="headline text-xl leading-[1.19] text-evergreen sm:text-[2rem]">
@@ -1310,8 +1325,15 @@ const BEATS = [
   "Annual general meeting",
   "2031 · the review",
 ] as const;
-/** The frame's marker positions, as fractions of the 1240 column. */
-const BEAT_X = ["lg:left-0", "lg:left-[33.9%]", "lg:left-[73.4%]"] as const;
+/**
+ * The frame's marker positions, as fractions of the column.
+ *
+ * ⚠ UNPREFIXED SINCE 13 SEPTEMBER 2026. These were `lg:` only, because below
+ * that the beats stacked in a column beneath the thread; the phone cut is now a
+ * miniature of the same composition, so the fractions apply at every width and
+ * only the label type changes.
+ */
+const BEAT_X = ["left-0", "left-[33.9%]", "left-[73.4%]"] as const;
 /**
  * Where the thread STOPS: on the last beat, not at the column's edge.
  *
@@ -1324,8 +1346,11 @@ const BEAT_X = ["lg:left-0", "lg:left-[33.9%]", "lg:left-[73.4%]"] as const;
  *
  * ⚠ Tied by hand to the last entry of BEAT_X — Tailwind cannot see a computed
  * class, so neither of these can be derived from the other. Move one, move both.
+ *
+ * ⚠ Unprefixed since 13 September 2026, with BEAT_X and for the same reason:
+ * the thread stops on 2031 at every width now, not only above `lg`.
  */
-const THREAD_W = "lg:w-[calc(73.4%+9px)]";
+const THREAD_W = "w-[calc(73.4%+9px)]";
 
 export function WhoDecides() {
   const claim = sentences(whoDecides.body[0]);
@@ -1484,34 +1509,81 @@ export function WhoDecides() {
                 three of them as dividers between partner groups. This is the thread:
                 ochre, wavy, and drawn. Two dotted things on one page doing two
                 different jobs — do not reconcile them into one. */}
+            {/* ⚠ THE SAME WIDTH RULE AT EVERY SIZE, since 13 September 2026.
+                It used to run full width below `lg` because the beats stacked
+                in a column underneath and there was no last beat to stop on;
+                now there is one at every width, so the thread ends on 2031
+                here as it does on a desktop. */}
             <div
               aria-hidden
               data-ab-rule="timeline"
-              /* Full width below `lg`, where the beats stack underneath it in their
-                 own column and there is no last beat to stop on. */
-              className={`thread-dots h-5 w-full ${THREAD_W}`}
+              className={`thread-dots h-5 ${THREAD_W}`}
             />
-            <div className="mt-6 flex flex-col gap-5 lg:mt-0 lg:block lg:h-16">
+            {/* ⚠ A MINIATURE OF THE DESKTOP TIMELINE, NOT A LIST — user
+                direction, 13 September 2026. Below `lg` this was a flex column:
+                a horizontal thread with its three dots stacked beneath it in a
+                vertical list, which is what read as "not aligning, staggered".
+                The dots are positioned at every width now, on the same
+                fractions of the column, so the composition is identical and
+                only its scale changes. */}
+            {/* ⚠ NOT `relative`, AND THAT IS THE WHOLE ALIGNMENT. The beats
+                below are `absolute top-0`, and top 0 has to mean THE THREAD'S
+                own top — the wrapper above holds both the thread and this row.
+                Positioning this row made top 0 mean the row's top instead,
+                which is 20px lower, so every dot sat under the line rather than
+                on it (reported with a screenshot, 13 September 2026). The row
+                is a plain block that only reserves the height the labels need. */}
+            <div className="block h-24 lg:h-16">
               {BEATS.map((beat, i) => (
-                <div key={beat} className={`lg:absolute lg:top-0 ${BEAT_X[i]}`}>
+                <div key={beat} className={`absolute top-0 ${BEAT_X[i]}`}>
                   <span
                     aria-hidden
                     data-ab-beat
-                    /* ⚠ `lg:top-0` is measured from `div.relative.mt-32` — the
-                       wrapper that holds the THREAD as well as this row — so top 0
-                       is the thread's own top, NOT the top of the row this span
-                       sits in. The wave's midline is 10px down from there and the
-                       dot's centre is 9px down from its own top, so +1px lands the
-                       18px dot exactly on the line. (The old 2px rule needed -10px
-                       because a 2px bar has no midline worth the name; carrying
-                       that sign over put the beats 20px into the air.) Below `lg`
-                       the beats stack in their own column and -10px is only an
-                       optical nudge. */
-                    className="block h-[18px] w-[18px] -translate-y-[10px] rounded-full bg-ochre lg:translate-y-[1px]"
+                    /* ⚠ `top-0` is measured from `div.relative` — the wrapper
+                       that holds the THREAD as well as this row — so top 0 is
+                       the thread's own top, NOT the top of the row this span
+                       sits in. The wave's midline is 10px down from there and
+                       the dot's centre is 9px down from its own top, so +1px
+                       lands the 18px dot exactly on the line. (The old 2px rule
+                       needed -10px because a 2px bar has no midline worth the
+                       name; carrying that sign over put the beats 20px into the
+                       air.) The `lg:` split is gone with the stacked cut: the
+                       dot sits on the midline at every width now, because the
+                       thread is above it at every width. */
+                    className="block h-[18px] w-[18px] translate-y-[1px] rounded-full bg-ochre"
                   />
+                  {/* ⚠ FIXED-WIDTH COLUMNS, AND THE LAST ONE ENDS AT THE
+                      COLUMN EDGE. At 375 the dots land at 0, 111 and 240 in a
+                      327px column, and "Annual general meeting" set at 10px is
+                      about 154px wide — it would run under the third dot and
+                      the third label would overflow the page. Each label gets
+                      its own narrow column and wraps inside it; the last is
+                      right-aligned and pulled back so it finishes on the
+                      thread's end rather than past the gutter.
+
+                      Measured at 375: the dots land at 24, 135 and 264 in a
+                      327px column, so an 88px box on the last one would finish
+                      at 352 — a pixel past the gutter — and a full
+                      right-anchoring pulled it back to 194, straight under the
+                      second label. 80px and a nudge clears both ends at 375 and
+                      at 320.
+
+                      ⚠ THE WORDS ARE NOT ABBREVIATED. "AGM" is not what the
+                      draft says, and D5 puts the draft in charge of the copy —
+                      so the type gets smaller and wraps, and the words stay. */}
                   <p
                     data-ab6-beat-label
-                    className="eyebrow mt-2 text-xs tracking-[0.08em] text-ochre"
+                    /* ⚠ THE WIDTH IS EXCLUSIVE, NOT STACKED. `w-22 … w-20`
+                       in one string does not make the last one narrower:
+                       Tailwind orders width utilities by scale in the
+                       stylesheet, so `w-22` wins wherever both are present
+                       whatever the class order says, and the last label
+                       measured 88px and overflowed a 320px screen. */
+                    className={`eyebrow mt-2 text-[0.5625rem] leading-[1.5] tracking-[0.08em] text-ochre lg:w-auto lg:text-xs ${
+                      i === BEATS.length - 1
+                        ? "w-20 -translate-x-2 lg:translate-x-0"
+                        : "w-22"
+                    }`}
                   >
                     {beat}
                   </p>
@@ -1685,6 +1757,32 @@ export function ThePeople() {
             arrives at 2.3× the size of every other label on the page. The plate
             grows from `bottom center` so the name never moves either. */}
         <div data-ab7-rail className={`${COLUMN} relative mt-16`}>
+          {/* ⚠ A SWIPE RAIL BELOW `lg`, A WALKED ROW ABOVE IT — user direction,
+              13 September 2026. Stacked, two portraits measured 984px on a
+              phone and the roster is built to grow: every face added another
+              ~500px of column. Here the frames run horizontally, one to a
+              screen with the next peeking, on native scroll-snap.
+
+              ⚠ NO DOTS AND NO JAVASCRIPT. `CardRail`'s own comment records the
+              decision: "The peek was chosen over dots on 2026-09-05 (Ivy)
+              because it needs no JavaScript; that is still right for the pages
+              that are static by decision." /about is static by decision.
+
+              ⚠ AND NOT THROUGH `CardRail` EITHER, which turns into a grid at
+              `sm` — that breakpoint is hardcoded in the component, and §07's
+              held rail does not take over until `lg`, so 640–1023 would stack
+              again. Widening `CardRail` would reach /about §04, /partnerships,
+              /our-people and /wonder. These are the same handful of classes,
+              local, and `lg:` hands the frames back to about.css.
+
+              ⚠ UNPOSITIONED, deliberately: the held layout makes each frame
+              `position: absolute`, and their offset parent has to stay the
+              RAIL. A `relative` here would re-parent every frame's travel to a
+              box that is 100% wide instead of the column. */}
+          <div
+            data-ab7-track
+            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-6 scroll-px-6 sm:-mx-10 sm:px-10 sm:scroll-px-10 lg:mx-0 lg:block lg:snap-none lg:overflow-visible lg:px-0"
+          >
           {PEOPLE_FRAMES.map((frame, i) => {
             const photo = photoById(frame.photo);
             const person = personOf(frame.person);
@@ -1693,7 +1791,7 @@ export function ThePeople() {
                 key={frame.photo}
                 data-ab7-frame
                 data-ab7-index={i}
-                className="mt-10 flex flex-col items-center first:mt-0"
+                className="flex w-[78vw] shrink-0 snap-start flex-col items-center lg:mt-10 lg:w-auto lg:shrink lg:first:mt-0"
               >
                 <div
                   data-ab7-plate
@@ -1772,6 +1870,7 @@ export function ThePeople() {
               </div>
             );
           })}
+          </div>
         </div>
 
         <div data-ab7-foot className={`${COLUMN} relative pb-16 lg:pb-24`}>

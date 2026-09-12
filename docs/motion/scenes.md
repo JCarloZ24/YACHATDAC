@@ -1435,6 +1435,48 @@ in `site.ts` (D12). **Arrow keys were never broken** — ArrowDown 40px, PageDow
 ArrowUp reversing, and `coverSeams`' keyboard escape firing at a seam — measured before and after,
 and recorded here so it is not re-investigated.
 
+**THE TWO MOBILE CUTS — 13 September 2026, user direction.**
+
+**§06's timeline is a miniature of the desktop one, not a list.** Below `lg` the thread drew full
+width and the three beats stacked in a column beneath it — a horizontal line with its dots in a
+vertical list under it, which is what read as "not aligning, staggered". `BEAT_X` and `THREAD_W`
+lost their `lg:` prefixes, so the dots sit on the thread at the same fractions and the thread still
+stops on 2031 at every width. ⚠ The labels are the whole difficulty: at 375 the dots land at 24,
+135 and 264 in a 327px column and "Annual general meeting" at 10px is ~154px wide. Each label gets
+a narrow column and wraps inside it, the last narrower still and nudged so it finishes on the
+thread's end. **The words are not abbreviated** — "AGM" is not what the draft says, and D5 puts the
+draft in charge of the copy. Verified at 375 and 320: no overlap, no overflow.
+
+**§07's portraits are a swipe rail below `lg`.** Stacked, two measured 984px and the roster is
+built to grow — every face added ~500px of column. They now run horizontally, one to a screen with
+the next peeking, on native scroll-snap: 984px → 426px, and the height no longer moves with the
+roster. ⚠ **No dots and no JavaScript** — `CardRail`'s own comment records that decision for the
+pages that are static by decision, and /about is one. ⚠ **And not through `CardRail`**, which turns
+into a grid at a hardcoded `sm` while §07's held rail does not take over until `lg`, so 640–1023
+would stack again; widening it would reach /about §04, /partnerships, /our-people and /wonder.
+
+**LEGIBILITY AND ONE ALIGNMENT BUG — 13 September 2026, user direction.**
+
+⚠ **§02's LEGAL NAME WAS DIMMED TWICE.** The paragraph carried `text-evergreen/30` in the markup
+AND took `opacity: 0.28` from `theRegister` as the short name landed under it, so the two
+compounded to **0.084** — very nearly invisible on canvas. The class dimmer is gone, the recipe is
+the only thing that dims it, and the value is 0.45. The board's "read already" is 0.28; this is a
+deliberate deviation on user direction, and worth knowing the next time a value from the board is
+put on an element that a recipe also animates.
+
+**§02's recap runs at 70%, not the board's 28.** That line is read-already by definition, but 28%
+charcoal on canvas is about 2:1 against the ground and fails AA for body text. 70% is ~7:1 and
+still plainly secondary to the register beneath it. **The register's labels are `text-sm`**, not
+`text-xs`: 12px under a 32px value read as fine print rather than as the row's label.
+
+⚠ **§06's BEATS SAT UNDER THE THREAD, NOT ON IT** — reported with a screenshot, and introduced by
+the mobile pass earlier the same day. The beats are `absolute top-0`, and top 0 has to mean the
+THREAD's own top, because the wrapper above holds the thread and the beat row together. Making the
+beat row `relative` so it could host them moved that origin 20px down. The row is a plain block
+again and the dots' centres measure exactly on the wave's midline at 1440 and at 375, with the last
+dot landing on the thread's end. The original comment in `Sections.tsx` had said this in as many
+words; it now says it twice.
+
 **§07 is the roster, one face at a time — BUILT 12 September 2026.** User direction, replacing the
 static three-column row of two portraits and one drawn absence. The header arrives in reading
 order and stands; underneath it the portraits are one row and the reader's scroll walks a FOCUS

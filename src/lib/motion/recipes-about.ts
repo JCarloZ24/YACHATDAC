@@ -845,7 +845,7 @@ export function heroQuiet(root: HTMLElement, span = 110): MotionModule {
  * THE BOARD'S SIX STATES, and where each lands on this clock:
  *
  *   01  THE NAME, UNRESOLVED            0%    decode begins
- *   02  THE NAME LANDS, AND COLLAPSES  18%    resolves · long name to 0.28 ·
+ *   02  THE NAME LANDS, AND COLLAPSES  18%    resolves · long name to 0.45 ·
  *                                             settle on the short name
  *   03  THE BODY, LINE BY LINE         34%    settle, 90ms line stagger
  *   04  ONE FACT, ALONE                52%    rule draws · fact 1 at size
@@ -938,12 +938,18 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
 
       // It resolves, and dims as the short name lands under it — "two lines,
       // one gesture: this is what we are called, and this is what you will
-      // call us". 0.28 is the board's number and the same value the recap and
-      // every read-already line on this screen use.
+      // call us".
+      //
+      // ⚠ 0.45, NOT THE BOARD'S 0.28, and the markup no longer dims it as well.
+      // The paragraph carried `text-evergreen/30` on top of this, so the two
+      // compounded to 0.084 and the legal name was very nearly invisible — the
+      // reported defect (user, 13 September 2026). Removing the class dimmer
+      // was most of the fix; 0.45 is the rest of it, on the same direction. The
+      // dim now lives in exactly one place, which is this line.
       if (legal?.parentElement) {
         tl.to(
           legal.parentElement,
-          { opacity: 0.28, duration: 0.08, ease: EASE.country },
+          { opacity: 0.45, duration: 0.08, ease: EASE.country },
           0.18,
         );
       }
