@@ -1402,6 +1402,39 @@ it from the last name went with it. The incompleteness has NOT gone: `partners.p
 whether each partnership is active"*, which is where a reviewer reads it. What changed is that a
 visitor no longer sees the gap drawn. One list item if design wants it back.
 
+**THE ACCESSIBILITY PASS — 13 September 2026.** The held screens took something away quietly, and
+this is the record of what and how it was given back.
+
+⚠ **SEVEN OF THE PAGE'S ELEVEN FOCUSABLE ELEMENTS WERE UNREACHABLE.** Measured by driving a
+browser at scroll 0: §04's four area cards, §06's governance link, §07's *meet the people* and
+§08's *partner with us*. A keyboard user tabbing from the top reached the four footer links and
+nothing else. The cause is `autoAlpha`, which every held screen uses to pre-hide its content so
+nothing flashes before the timeline first renders: it sets `visibility: hidden`, which takes an
+element out of the tab order AND out of the accessibility tree — and `visibility` **inherits**, so
+§04's cards were hidden through their slot wrapper and §06's link through the whole calendar part.
+
+The fix is `hideReachable` in `recipes-about.ts` — opacity plus `pointer-events: none` — used
+wherever the thing being hidden is focusable or contains something focusable. Opacity keeps the
+element in both trees; the pointer half matters just as much, because a transparent link still
+takes clicks and §04's cards sit on top of one another on the ring. Everything that is not
+focusable keeps `autoAlpha`: it is the better hide, and a screen reader reading a paragraph
+mid-clear is worse than silence.
+
+`revealOnFocus` in `compose.ts` then does the other half: focus is treated as a request to be
+somewhere, so when it lands on something a section is hiding, the page scrolls to where that
+element is revealed. ⚠ **It cannot just jump to the end of the read** — right for §06, §07 and §08,
+whose registers are complete at 1.0, but §04's cards have *contracted* by then, so its four links
+would still be invisible at the very position meant to reveal them. It samples the section's own
+timeline for the first progress at which the element is actually visible. Verified by walking Tab
+from a cold load: sixteen stops, every one on screen at full opacity, the page scrolling to each.
+
+**And the site had no skip mechanism at all**, which MOTION-SYSTEM.md has required of a
+scroll-jacked page since the brief. *Skip to content* is now the first focusable element in the
+shared layout on all eleven routes; /about adds *Skip the scroll sequence* past the deck. Copy is
+in `site.ts` (D12). **Arrow keys were never broken** — ArrowDown 40px, PageDown ~790, Space ~830,
+ArrowUp reversing, and `coverSeams`' keyboard escape firing at a seam — measured before and after,
+and recorded here so it is not re-investigated.
+
 **§07 is the roster, one face at a time — BUILT 12 September 2026.** User direction, replacing the
 static three-column row of two portraits and one drawn absence. The header arrives in reading
 order and stands; underneath it the portraits are one row and the reader's scroll walks a FOCUS

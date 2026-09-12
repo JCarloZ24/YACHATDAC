@@ -406,6 +406,25 @@ Deliberately small. Every library is a decision you have to defend later.
 - Scroll-jacking (`SCR-02` `SCR-04`) must not trap keyboard or screen-reader users. Provide a skip mechanism.
 - No flashing above 3Hz.
 
+**Where those last three live, since 13 September 2026.** They were rules without an
+implementation until /about's held screens made the cost visible, and all three are now built:
+
+- **The skip mechanism.** `skipLinks` in `src/content/site.ts`; *Skip to content* is the first
+  focusable element in `src/app/layout.tsx` on every route, targeting `#content` on `<main>`.
+  /about adds *Skip the scroll sequence* in its own `page.tsx`, jumping past the deck to
+  `#contact` — eleven sections, seven of them held, about 23,700px, roughly 29 PageDowns.
+- **Focus never animated out of view.** `revealOnFocus` in `src/lib/motion/compose.ts`, attached to
+  every composition. When focus lands on something a held screen is hiding, it samples that
+  section's own timeline for the first progress at which the element is visible and scrolls there.
+- **⚠ AND THE RULE THAT MAKES BOTH POSSIBLE: `autoAlpha` IS WRONG ON ANYTHING FOCUSABLE.**
+  `visibility: hidden` removes an element from the tab order AND the accessibility tree, and
+  `visibility` inherits — so hiding a wrapper hides every link inside it. Measured on /about at
+  scroll 0, seven of eleven focusable elements were unreachable and a keyboard user tabbing from
+  the top reached the four footer links and nothing else. Use `hideReachable`
+  (`recipes-about.ts`) — opacity plus `pointer-events: none`, so the element stays in both trees
+  and a transparent link cannot still be clicked. Everything that is not focusable keeps
+  `autoAlpha`; it is the better hide.
+
 **Restraint**
 
 The references are 10–30 second showreels. A real site is used for minutes. Pick **one signature moment** — a `LAY-01` morph, or a `SCR-11` zoom-through, or an `IMG-01` carousel — and let everything else stay quiet. Motion applied evenly across a page cancels itself out and reads as generated. The reference sites are memorable because they each do one thing you haven't seen, not six things you have.

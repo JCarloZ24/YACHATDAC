@@ -38,6 +38,7 @@ import {
   revertSplits,
   type EffectName,
 } from "@/lib/motion/effects";
+import { clampScrollTo } from "@/lib/motion/smooth-scroll";
 import { SCRUB } from "@/lib/motion/tokens";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -295,7 +296,10 @@ export function composition(
 
       assertChannel(name, spec, spec.uses);
 
+      const detachFocus = revealOnFocus(root, tl);
+
       return () => {
+        detachFocus();
         tl.kill();
         entryTrigger?.kill();
         entryTl?.kill();
@@ -357,6 +361,88 @@ export function composition(
  */
 export function clearAll(root: HTMLElement): void {
   gsap.set(root.querySelectorAll("*"), { clearProps: CLEARABLE });
+}
+
+/**
+ * Keyboard focus must never land on something the reader cannot see.
+ *
+ * ⚠ THIS IS A FIX FOR A REGRESSION THE HELD SCREENS INTRODUCED, and the
+ * measurement is worth keeping. Every held screen pre-hides its content with
+ * `autoAlpha` so nothing can flash before the timeline first renders — and
+ * `visibility: hidden` takes an element out of the tab order entirely. Driven
+ * in a browser on /about at scroll 0, SEVEN of the page's eleven focusable
+ * elements were unreachable: §04's four area cards, §06's governance link,
+ * §07's "meet the people" and §08's "partner with us". A keyboard user tabbing
+ * from the top reached the four footer links and nothing else
+ * (13 September 2026). MOTION-SYSTEM.md: "Keyboard focus visible and never
+ * animated out of view."
+ *
+ * So focus is treated as a request to be somewhere: when it lands on something
+ * this section is currently hiding, the page scrolls to the read position where
+ * that element is revealed, and the reader sees what they have tabbed to.
+ *
+ * ⚠ IT CANNOT JUST JUMP TO THE END OF THE READ. That would be right for §06,
+ * §07 and §08, whose registers are complete at 1.0 — but §04's cards have
+ * CONTRACTED by then, so its four links would still be invisible at the very
+ * position meant to reveal them. The section's own timeline is sampled instead:
+ * the first progress at which the element is actually visible is the one to
+ * scroll to. No per-section table, and it stays correct when a beat sheet moves.
+ *
+ * Sampling renders the timeline, so progress is restored before returning and
+ * the whole walk happens inside one synchronous event — the browser paints once,
+ * after it, and the reader sees no flicker.
+ *
+ * `clampScrollTo` rather than `window.scrollTo`: the deck clamps scroll at a
+ * gate and a raw jump fights it.
+ */
+function revealOnFocus(root: HTMLElement, tl: gsap.core.Timeline): () => void {
+  const onFocusIn = (event: FocusEvent) => {
+    const el = event.target as HTMLElement | null;
+    if (!el || !root.contains(el) || shown(el, root)) return;
+    const st = tl.scrollTrigger;
+    if (!st) return;
+
+    const was = tl.progress();
+    let at: number | null = null;
+    for (let i = 0; i <= FOCUS_STEPS; i += 1) {
+      tl.progress(i / FOCUS_STEPS, true);
+      if (shown(el, root)) {
+        at = i / FOCUS_STEPS;
+        break;
+      }
+    }
+    tl.progress(was, true);
+    if (at === null) return;
+
+    clampScrollTo(st.start + at * (st.end - st.start));
+  };
+
+  root.addEventListener("focusin", onFocusIn);
+  return () => root.removeEventListener("focusin", onFocusIn);
+}
+
+/**
+ * 20 is enough to land on the right beat and cheap enough to do on a keypress:
+ * on a 200vh read each step is 10vh, and every beat on this page is longer than
+ * that. Style is read once per step, only while a reader is actually tabbing.
+ */
+const FOCUS_STEPS = 20;
+
+/** Visible to a reader — and to the tab order — all the way up to the root. */
+function shown(el: HTMLElement, root: HTMLElement): boolean {
+  let node: HTMLElement | null = el;
+  while (node && node !== root.parentElement) {
+    const cs = getComputedStyle(node);
+    if (
+      cs.visibility === "hidden" ||
+      cs.display === "none" ||
+      Number(cs.opacity) < 0.05
+    ) {
+      return false;
+    }
+    node = node.parentElement;
+  }
+  return true;
 }
 
 /**

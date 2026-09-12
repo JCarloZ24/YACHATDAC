@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
 import { aboutHero } from "@/content/about";
+import { skipLinks } from "@/content/site";
 import {
   AboutHero,
   Breath,
@@ -71,6 +72,19 @@ export default function AboutPage() {
       {/* Dev-only scroll readout for tuning the seams; renders nothing in
           production. */}
       {process.env.NODE_ENV !== "production" ? <DebugRail /> : null}
+      {/* ⚠ THE DECK'S OWN ESCAPE, and this page needs one where the static
+          routes do not: eleven sections, seven of them held screens, about
+          23,700px — roughly 29 PageDowns end to end. The layout's "skip to
+          content" lands a reader at the top of THIS; this one lands them past
+          it, at §09's #contact. `sr-only` until focused, so it changes nothing
+          visually. MOTION-SYSTEM.md: a page that jacks scroll must not trap a
+          keyboard or screen-reader user, and must provide a skip mechanism. */}
+      <a
+        href="#contact"
+        className="eyebrow sr-only rounded-xs bg-charcoal px-4 py-2 text-xs tracking-[0.08em] text-canvas focus:not-sr-only focus:fixed focus:top-16 focus:left-4 focus:z-100"
+      >
+        {skipLinks.sequence}
+      </a>
       <AboutHero />
       <WhatWeAre />
       <WhyWeExist />

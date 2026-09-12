@@ -128,6 +128,31 @@ const lineBeat = (duration: number) => ({
  * Same 16px travel and the same curve the X4 row specifies, so it is that row
  * and not a new one.
  */
+/**
+ * Pre-hide something a KEYBOARD CAN STILL REACH.
+ *
+ * ⚠ `autoAlpha` IS WRONG ON ANYTHING FOCUSABLE, and this is a fix for a
+ * regression the held screens introduced. `autoAlpha: 0` sets
+ * `visibility: hidden`, which takes an element out of the tab order AND out of
+ * the accessibility tree — and `visibility` INHERITS, so hiding a wrapper hides
+ * every link inside it. Measured on /about at scroll 0: seven of the page's
+ * eleven focusable elements were unreachable — §04's four area cards (hidden
+ * through their slot), §06's governance link, §07's "meet the people" and §08's
+ * "partner with us". A keyboard user tabbing from the top reached the four
+ * footer links and nothing else (13 September 2026).
+ *
+ * Opacity alone keeps the element in both trees, so Tab finds it and
+ * `revealOnFocus` in compose.ts scrolls the page to where it is visible. The
+ * pointer half matters just as much: a transparent link still takes clicks, and
+ * §04's cards sit on top of one another on the ring, so without it a reader
+ * could click a card they cannot see.
+ *
+ * Everything NOT focusable keeps `autoAlpha` — it is the better hide, and a
+ * screen reader reading a paragraph that is mid-clear is worse than silence.
+ */
+const hideReachable = (els: HTMLElement | HTMLElement[]) =>
+  gsap.set(els, { opacity: 0, pointerEvents: "none" });
+
 const quietly = (
   tl: gsap.core.Timeline,
   el: HTMLElement,
@@ -136,8 +161,30 @@ const quietly = (
 ) =>
   tl.fromTo(
     el,
-    { autoAlpha: 0, y: 16 },
-    { autoAlpha: 1, y: 0, duration, ease: EASE.country },
+    { opacity: 0, y: 16, pointerEvents: "none" },
+    {
+      opacity: 1,
+      y: 0,
+      pointerEvents: "auto",
+      /* ⚠ `visibility` IS RESTORED HERE AND NOT LEFT TO THE CALLER, which is a
+         fix for a regression this helper caused. It used to animate `autoAlpha`
+         and therefore un-hid both halves; when it moved to opacity (so the
+         links it brings on stay in the tab order — see `hideReachable`) it
+         stopped restoring visibility, and anything a recipe had pre-hidden with
+         `autoAlpha: 0` was left at `opacity: 1; visibility: hidden` — present,
+         correct, and permanently invisible. Three elements shipped like that
+         and were reported: §03's attribution and its tagline, and §06's 2031
+         (13 September 2026).
+         Setting it in the `to` only means the helper no longer depends on how
+         its caller chose to hide the element: pre-hidden with `autoAlpha` it is
+         un-hidden here, pre-hidden with `hideReachable` this is a no-op and the
+         element stays focusable at rest. `visibility` is not interpolable, so
+         GSAP applies it as the tween starts and restores it on the way back —
+         which is `autoAlpha`'s own behaviour, and what these beats had. */
+      visibility: "visible",
+      duration,
+      ease: EASE.country,
+    },
     at,
   );
 
@@ -1437,7 +1484,7 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
           setters[i].s(1 - (1 - SEAT) * seated);
         });
       };
-      gsap.set(slots, { autoAlpha: 0 });
+      hideReachable(slots);
       paint();
 
       // ---- the head ----------------------------------------------------
@@ -1523,7 +1570,11 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
         const arrives = base4 + CARD_IN;
         const seats = base4 + CARD_SEAT;
 
-        tl.to(slot, { autoAlpha: 1, duration: 0.02, ease: "none" }, arrives);
+        tl.to(
+          slot,
+          { opacity: 1, pointerEvents: "auto", duration: 0.02, ease: "none" },
+          arrives,
+        );
         tl.to(
           state.seat,
           { [i]: 1, duration: 0.07, ease: EASE.catch, onUpdate: paint },
@@ -1900,10 +1951,11 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
       // ⚠ THE WRAPPER, NOT THE SENTENCE, for the Elder Advisory Group line: its
       // two ghosts are siblings of the paragraph, so hiding the paragraph alone
       // leaves two coloured ghosts of a sentence that is not there.
-      const hidden = [heading, ...facts, unsettled, date, body, cta].filter(
+      const hidden = [heading, ...facts, unsettled, date, body].filter(
         Boolean,
       ) as HTMLElement[];
       gsap.set(hidden, { autoAlpha: 0 });
+      if (cta) hideReachable(cta);
       gsap.set([factRule, hairline].filter(Boolean) as HTMLElement[], {
         scaleX: 0,
         transformOrigin: "left center",
@@ -1923,7 +1975,11 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
          read `scale: 0` on exactly the dots that were on the screen (12 September
          2026). A `set` inside a scrubbed timeline DOES reverse, so gating the
          part puts the played beats behind something that does. */
-      gsap.set(calendarPart, { autoAlpha: 0 });
+      // ⚠ OPACITY, NOT `autoAlpha`, because the governance link lives in
+      // here: `visibility` inherits, so gating this part with it took the one
+      // focusable element in §06 out of the tab order along with the dots. See
+      // `hideReachable`.
+      hideReachable(calendarPart);
 
       /* ---- part 1 · the claim ------------------------------------------
          Read in the order the eye takes it: what the board holds, then how it
@@ -1975,7 +2031,7 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
       const DRAW_AT = 0.52;
       const DRAW_FOR = 0.2;
       // Part 1 is gone by .49; the gate opens on the bare screen between them.
-      tl.set(calendarPart, { autoAlpha: 1 }, 0.5);
+      tl.set(calendarPart, { opacity: 1, pointerEvents: "auto" }, 0.5);
       tl.to(
         rule,
         { clipPath: "inset(0 0% 0 0)", duration: DRAW_FOR, ease: EASE.machine },
@@ -2212,9 +2268,10 @@ export function theRoster(root: HTMLElement, span = 200): MotionModule {
       // on is hidden here rather than in the markup. A mask is not a hiding
       // place — `settle` splits with `autoSplit` and a re-split orphans the
       // tween's line nodes, annotated at `freshSplit`, bitten twice.
-      const hidden = [claim, body, cta].filter(Boolean) as HTMLElement[];
+      const hidden = [claim, body].filter(Boolean) as HTMLElement[];
       gsap.set(hidden, { autoAlpha: 0 });
       gsap.set(frames, { autoAlpha: 0 });
+      if (cta) hideReachable(cta);
 
       // ---- the header, in reading order ---------------------------------
       if (claim) {
@@ -2419,9 +2476,10 @@ export function thePartners(root: HTMLElement, span = 200): MotionModule {
       // edge travelling across both.
       gsap.set([...rules, ...titles], { clipPath: "inset(0% 100% 0% 0%)" });
       gsap.set(marks, { autoAlpha: 0 });
-      gsap.set([claim, lede, cta].filter(Boolean) as HTMLElement[], {
+      gsap.set([claim, lede].filter(Boolean) as HTMLElement[], {
         autoAlpha: 0,
       });
+      if (cta) hideReachable(cta);
 
       const rounds = marks.reduce(
         (n, el) => Math.max(n, Number(el.dataset.ab8Round ?? 0) + 1),
