@@ -13,7 +13,7 @@ import {
   theLoop,
   theRegister,
   partnersDots,
-  peopleWave,
+  theRoster,
   theQuestion,
   theValues,
 } from "@/lib/motion/recipes-about";
@@ -21,18 +21,18 @@ import {
 /**
  * /about — the page's motion script. Verb: ANSWERS.
  *
- * THE SEAMS, AND THE PAGE'S FIVE HELD SCREENS. This host wires the ten section
+ * THE SEAMS, AND THE PAGE'S SIX HELD SCREENS. This host wires the ten section
  * joins of Figma `REF · SCORE · 05 ABOUT` (2642:19666), the X4 baseline
  * arrivals, and — from 12 September 2026, user direction — the interiors of
- * §02 (`theRegister`), §03 (`theQuestion`), §04 (`theLoop`), §05 (`theValues`)
- * and §06 (`theCalendar`). Group G's eight waypoints and the remaining section
- * interiors are still unbuilt. Renders nothing.
+ * §02 (`theRegister`), §03 (`theQuestion`), §04 (`theLoop`), §05 (`theValues`),
+ * §06 (`theCalendar`) and §07 (`theRoster`). Group G's eight waypoints and the
+ * remaining section interiors are still unbuilt. Renders nothing.
  *
- * ⚠ FIVE HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of the
+ * ⚠ SIX HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of the
  * eight the deck already spends. §05 is held QUIETLY — it is the ledger's ⚡2
  * rest and its beats are `settle` and a fade only — and §06's interior declares
  * no loud channel at all, because that section spends its ⚡4 at its edges. All
- * five were user directions and all are flagged for design sign-off in
+ * six were user directions and all are flagged for design sign-off in
  * scenes.md. None is a GSAP pin — they are sticky spans in about.css, so they do
  * not fight the deck's own pins.
  *
@@ -51,7 +51,8 @@ import {
  *   §06 who-decides   TRANSITION  300vh   ⚡4   HELD — the claim clears, the
  *                                                calendar takes its place;
  *                                                navy wave in · overlap out
- *   §07 the-people    media       145vh   ⚡3
+ *   §07 the-people    media       300vh   ⚡3   HELD — the roster, one face
+ *                                                at a time
  *   §08 partners      type        175vh   ⚡2
  *   §09 get-in-touch  TRANSITION  140vh   ⚡3   charcoal wave in · the doors
  *   §10 footer        none        135vh   ⚡1
@@ -154,7 +155,15 @@ export function AboutMotion() {
       // its ledger row gives it (`theCalendar` declares none).
       wire(find("who-decides"), (el) => theCalendar(el, 200));
       wire(find("who-decides"), (el) => boardLift(el, 245));
-      wire(find("the-people"), (el) => peopleWave(el, 145));
+      // §07 is the page's sixth held screen — the roster, one face at a time.
+      // 200 is derived the same way the other five are. The rail divides this
+      // read between however many people are on it, so adding a face costs no
+      // scroll; past about six, grow this number rather than the beats.
+      wire(find("the-people"), (el) => theRoster(el, 200));
+      // §08 is built but is NOT a held screen — the one interior on this page
+      // that scrolls while it plays. Its names are 30px type and nothing in it
+      // is sized in svh, so holding it would have meant shrinking the frame's
+      // own type to clear the 820px floor (user decision, 12 September 2026).
       wire(find("partners"), (el) => partnersDots(el, 175));
       wire(find("get-in-touch"), (el) => doorsAssembly(el, 140));
 

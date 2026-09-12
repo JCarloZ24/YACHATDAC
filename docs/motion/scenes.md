@@ -1078,18 +1078,19 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 
 ## About — verb *answers* — 2053vh, 11 sections
 
-> **BUILT — seam pass, 8 Sep 2026; §02–§06's interiors, 12 Sep 2026.**
+> **BUILT — seam pass, 8 Sep 2026; §02–§07's interiors, 12 Sep 2026.**
 > The ten seams of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines
 > are live: `src/app/about/_components/Motion.tsx` hosts,
-> `src/lib/motion/recipes-about.ts` holds the recipes. **§02 – §06 are now built
+> `src/lib/motion/recipes-about.ts` holds the recipes. **§02 – §07 are now built
 > too** — §02's register writes itself (`theRegister`), §03's question is asked
 > on ground that goes out under it (`theQuestion`), §04's loop closes
 > (`theLoop`), §05's values are read one at a time under a photograph that opens
-> from the top (`theValues`), and §06's claim clears so the governance calendar
-> can take its place (`theCalendar`) — all five as held screens with their
+> from the top (`theValues`), §06's claim clears so the governance calendar can
+> take its place (`theCalendar`), and §07's portraits become a roster the reader
+> walks one face at a time (`theRoster`) — all six as held screens with their
 > layout in `src/app/about/_components/about.css`. §06's seam lift is its own
 > bounds-free composition (`boardLift`), because `overlap` must not be withheld
-> on the windows where the hold is. §01, §03b and §07 – §11 interiors and Group G
+> on the windows where the hold is. §01, §03b and §08 – §11 interiors and Group G
 > are still unbuilt; Group G stays ▲ Leonard Mickelo.
 
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
@@ -1105,7 +1106,7 @@ against 235vh drawn — the same convention as Living Work §02 and The Record �
 | 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 300 | **media** | P4 | ✓ held 300 |
 | 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 300 | **type** | P1 | ✓ held 300 |
 | 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 300 | **transition** | — | ✓ held 300 |
-| 07 | IV | The people — the frames dance, the type holds | 3 | 145 | **media** | P6 | — |
+| 07 | IV | The people — the roster, one face at a time | 3 | 300 | **media** | P6 | ✓ held 300 |
 | 08 | IV | Partners — names, not logos | 2 | 175 | **type** | — | ✓ |
 | 09 | V | Get in touch — four doors, and ochre speaks once | 3 | 140 | **transition** | — | — |
 | 10 | V | Footer — Acknowledgement, then the traveller departs | 1 | 135 | **none** | — | — |
@@ -1187,9 +1188,9 @@ throws that reasoning away, so the held §02 declares **type**, `decode` is its 
 and the road's `plateParallax` is gone: it is LOUD media and `assertChannel` would have thrown.
 `roadScreen` is retired into `theRegister`.
 
-⚠ **THE PAGE NOW SPENDS FIVE HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
-deck already spends. All five are user directions; none is a GSAP pin — they are CSS sticky spans,
-so they do not fight the deck's own pins — and all five are flagged here for design sign-off
+⚠ **THE PAGE NOW SPENDS SIX HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
+deck already spends. All six are user directions; none is a GSAP pin — they are CSS sticky spans,
+so they do not fight the deck's own pins — and all six are flagged here for design sign-off
 alongside the deck's own deviation. §05 is the one to look at hardest: it was the page's scored
 breather, and it is held quietly to preserve as much of that as holding allows. §06 grew 245vh →
 300vh with its hold, which moved the three seams below it; they were re-measured and still land.
@@ -1300,6 +1301,91 @@ the time the board recedes, §07's wave has already passed over it. The arithmet
 and after the hold (the offset is height-independent), so this is inherited rather than introduced,
 and it is left alone here rather than changed under cover of an unrelated pass. Worth a seam fix of
 its own.
+
+**§07 is the roster, one face at a time — BUILT 12 September 2026.** User direction, replacing the
+static three-column row of two photographs and one drawn absence. The header arrives in reading
+order and stands; underneath it the portraits are a rail the reader's scroll walks, the frame the
+focus is on grown to full size and named, the ones either side waiting small and unnamed. `focus`
+is a real number and every scale falls off smoothly from it, so the rail retraces exactly on the
+way back — no snap, no index, and nothing that needs the played-once guard §06's dots did.
+
+**The roster is a list, not a composition.** `PEOPLE_FRAMES` in `Sections.tsx` pairs a photograph
+with a person, and `personOf` resolves the name against `suzanneProfile`, `team.people` and
+`governance.people` in `src/content/our-people.ts` — so somebody who is not on /our-people cannot
+appear here, and a name corrected there is corrected here in the same edit. Adding a face is one
+line plus a kit row; the rail divides its own window by the roster length and costs the page no
+scroll. Verified by adding a third frame, measuring, and taking it out again. **Note what this
+also means: the rail can only grow as /our-people gains names, and today only two people on that
+page have one.**
+
+⚠ **THE PLATES GROW FROM THEIR OWN BOTTOM EDGE AND KEEP THEIR ASPECT.** These are `frame`-grade
+portraits of identifiable people, so no transform reaches an image plane and no frame is ever
+re-proportioned — a plate that changed aspect as it grew would re-crop the picture, which on a
+portrait means the crop travelling across somebody's face. Verified by sampling every plane's
+transform across the whole read (identity throughout) and every plate's aspect (0.75 throughout).
+
+⚠ **ONE PROPERTY PER ELEMENT, AND THE TRANSFORMS ARE COMPOSED IN CSS.** The frame takes the
+travel, the plate takes the scale, the label takes the opacity. The first cut seated the frames
+with GSAP's `y`, which writes an inline `transform` that REPLACES the stylesheet's rather than
+merging with it: every frame's travel froze at whatever `--ab7-x` held when the tween first
+rendered, and the whole rail scaled in place without moving. The scales measured perfectly the
+whole time — this only showed up in a screenshot. The rise is a custom property now. §04 states
+the same law from the other side and it has now cost this page twice.
+
+⚠ **§07's SECOND FRAME NOW CARRIES A NAME (user decision, 12 September 2026).** It reads "Graham
+Ambridge" over a photograph `kit.ts` records as the same man as `op-card-01` — and `kit.ts` states
+in as many words that `op-card-01` is NOT Graham Ambridge, that no photograph of him exists in any
+batch, and that this frame's own consent is UNRESOLVED. The decision was taken with that note in
+front of the user. What makes the label a label and not a claim is the **⟡ Stand-in marker**
+rendered with it, which is the contract /our-people's one named card already runs, so the two
+pages now agree instead of contradicting each other. The old `⚠ Consent unresolved` badge was
+replaced by that marker, not deleted, and the marker is counter-scaled so it is exactly as legible
+when the face is small as when it is large. **This is the item to put in front of the Elder
+Advisory Group, and the marker comes off only when a cleared photograph of him replaces the file.**
+
+**The drawn absence is gone**, on the same direction. A dashed slot reading "no archival
+photograph exists" stood for "three generations of families"; those people are named on
+/our-people under *The ones who got us here*, and a rail of faces is the wrong object to hang an
+absence off. One block if design wants it back.
+
+**§07 is the roster, one face at a time — BUILT 12 September 2026.** User direction, replacing the
+static three-column row of two portraits and one drawn absence. The header arrives in reading
+order and stands; underneath it the portraits are one row and the reader's scroll walks a FOCUS
+along it, so the frame the focus is on grows to full size and carries a legible name while the
+others wait small and unnamed. Continuous, not stepped — `focus` is a real number and every scale
+falls off smoothly from it, so the rail retraces exactly on the way back.
+
+**The roster is a list, and the names come from /our-people.** `PEOPLE_FRAMES` in Sections.tsx
+pairs a photograph with a person; `personOf` resolves that person against `suzanneProfile`,
+`team.people` and `governance.people` in `src/content/our-people.ts`. Adding a face is one entry
+plus a kit row, and the rail divides its own window by however many there are — verified on screen
+with a third frame, which re-paced itself and still fitted 100svh. **It also means the roster can
+only grow as /our-people gains names**: everyone else on that page is `name: null` today, which is
+the right constraint rather than an obstacle. Past about six faces the section's span should grow
+rather than the beats shrinking; the number is at `theRoster` and in Motion.tsx.
+
+⚠ **A NAMED FRAME OVER A STAND-IN PHOTOGRAPH — the thing to raise at presentation.** The second
+frame reads "Graham Ambridge" over `about-people-02`, which kit.ts records as the same man as
+`op-card-01`, states is NOT Graham Ambridge, and whose own consent is UNRESOLVED. The name was
+asked for with that note in front of the user (12 September 2026). What makes it a label and not a
+claim is the `⟡ Stand-in` marker rendered with it — the same contract /our-people's one named card
+already runs, so the two pages now agree. The marker is counter-scaled so it is exactly as legible
+on a small frame as on a large one: it must not be least readable at the moment the face is least
+identifiable. **It comes off when a cleared photograph of him exists and not before.**
+
+**Two corrections came out of driving it.** GSAP's `y` on the seat-in tween wrote an inline
+`transform` that replaced the stylesheet's, so every frame's travel silently froze at its build-
+time position and the rail scaled in place without moving — the numbers read perfect scales
+throughout, and only the screen showed it. The rise is a custom property now, and §04's law holds:
+one property per element, transforms composed in CSS. Separately, a `1fr` middle grid row shorter
+than the rail's fixed height overflowed both ways, putting the header off the top and the link off
+the bottom; three auto rows with `align-content: center` is the fix, and the rail's rest height is
+17svh rather than 20 so the 820px floor has real air rather than three pixels.
+
+**The drawn absence is gone**, on the same direction. A dashed slot reading "no archival
+photograph exists" stood for "three generations of families"; those people are named on
+/our-people under *The ones who got us here*, and a rail of faces is the wrong object to hang an
+absence off. If design wants it back it is one block.
 
 **Group G is back in build here, and only here.** The traveller and the page's thread are the same
 object: the question travels down the page and settles at each thing it measures. `G1` travel with

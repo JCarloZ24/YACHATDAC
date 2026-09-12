@@ -7,12 +7,12 @@
  * the ten seams` (2642:19666). This module animates the joins between the
  * eleven sections and the X4 baseline arrivals.
  *
- * ⚠ FIVE SECTION INTERIORS ARE NOW HERE TOO (12 September 2026, user
+ * ⚠ SIX SECTION INTERIORS ARE NOW HERE TOO (12 September 2026, user
  * direction, in this order) — `theRegister` (§02), `theQuestion` (§03),
- * `theLoop` (§04), `theValues` (§05) and `theCalendar` (§06). Each is a 300vh
- * CSS sticky span, not a GSAP pin, sharing `HELD`'s bounds and about.css's
- * layout; each is documented at length at its own recipe rather than here.
- * §01, §03b and §07 – §11 remain seams only.
+ * `theLoop` (§04), `theValues` (§05), `theCalendar` (§06) and `theRoster`
+ * (§07). Each is a 300vh CSS sticky span, not a GSAP pin, sharing `HELD`'s
+ * bounds and about.css's layout; each is documented at length at its own recipe
+ * rather than here. §01, §03b and §08 – §11 remain seams only.
  *
  * THE SCORE'S SEAM LADDER, and where each lives:
  *
@@ -22,7 +22,7 @@
  *   03b → 04  Wave / Divider · OFF-WHITE          coverSeams
  *   04 → 05   ring contracts, transform-only      coverSeams + loopAndRing (ring out) + valuesRelay
  *   05 → 06   Wave / Divider · NAVY               coverSeams
- *   06 → 07   Wave / Divider · OFF-WHITE + lift   coverSeams + boardLift (overlap out)
+ *   06 → 07   Wave / Divider · OFF-WHITE + lift   coverSeams + boardLift (overlap out) + theRoster
  *   07 → 08   Dots / Rule only, no ground change  coverSeams + partnersDots
  *   08 → 09   Wave / Divider · CHARCOAL + doors   coverSeams + doorsAssembly
  *   09 → 10   continuous charcoal                 no code, deliberately
@@ -2139,31 +2139,193 @@ export function boardLift(root: HTMLElement, span = 245): MotionModule {
 }
 
 /* -------------------------------------------------------------------------
-   §07 — peopleWave · seam 06 → 07's incoming half
+   §07 — theRoster · 300vh / 200 read · seam 06 → 07's incoming half
    ------------------------------------------------------------------------- */
 
 /**
- * The off-white wave rides over §06's receding board. The scored carry —
- * "2031's endpoint becomes §07's first caption rule" — has no caption rule in
- * the markup, so it lands on the wave and the eyebrow's arrival;
- * `data-ab-rule="caption"` is reserved in Sections.tsx if design adds one.
+ * "The people", held, with the portraits walked one face at a time.
+ *
+ * Grammar rows: "the page holding its ground, the interior scrub without a read
+ * clock", "the world opening, one face at a time". User direction, 12 September
+ * 2026, replacing the static three-column row.
+ *
+ * The header arrives in reading order and then STANDS for the whole section,
+ * like §05's and §06's. Underneath it the roster is one row: the reader's
+ * scroll walks a FOCUS along it, the frame it is on grows to full size and
+ * carries a legible name, and the ones either side wait small and unnamed.
+ *
+ * ⚠ CONTINUOUS, NOT STEPPED. There is no snap and no index: `focus` is a real
+ * number and every frame's scale falls off smoothly from it, so the rail
+ * retraces exactly on the way back — the contract the five held screens before
+ * this one keep, and the reason none of them needed a played-once guard the way
+ * §06's dots did.
+ *
+ * ⚠ THE GEOMETRY IS IN CSS, IN svh. This writes two unitless numbers per frame
+ * and measures nothing: `--ab7-x` (how many pitches from the focus) and
+ * `--ab7-s` (the plate's scale), plus `--ab7-o` on the label. A rail that read
+ * `offsetWidth` every tick would be a layout read per frame per frame, for a
+ * number that only changes when the window does.
+ *
+ * ⚠ THE TRAVEL AND THE SCALE ARE ON DIFFERENT ELEMENTS ON PURPOSE. §04 proved
+ * that three `quickSetter`s on one element's transform do not compose — `scale`
+ * silently stayed at 1 for its whole sequence. Here the frame takes the travel,
+ * the plate takes the scale and the label takes the opacity, so each element
+ * has exactly one property and nothing can be clobbered. It is also what keeps
+ * the name from arriving at 2.3× the size of every other label on the page.
+ *
+ * ⚠ THE SEAM NEEDS NO CODE. 06 → 07's off-white wave is statically seated on
+ * this section's crest and rides `coverSeams`; `peopleWave`, which this
+ * replaces, had an empty build for exactly that reason. The scored carry —
+ * "2031's endpoint becomes §07's first caption rule" — still has no caption
+ * rule in the markup, so it lands on the wave and the eyebrow's arrival.
  *
  * Markup:
- *   [data-seam="wave"]  the off-white wave — static, rides coverSeams
- *   [data-arrive]       the header block
+ *   [data-ab-stage]        the sticky screen — paints nothing, or the rings go
+ *   [data-ab7-head]        eyebrow (`data-arrive`), claim, body — stands
+ *   [data-ab7-frame] ×n    one per person; takes the travel
+ *   [data-ab7-plate]         the picture; takes the scale
+ *   [data-ab7-label]         the name; takes the opacity
+ *   [data-ab7-cta]         "Meet the people"
  */
-export function peopleWave(root: HTMLElement, span = 145): MotionModule {
-  return composition("peopleWave", root, {
-    channel: "none",
+export function theRoster(root: HTMLElement, span = 200): MotionModule {
+  return composition("theRoster", root, {
+    // The ledger's ⚡3 for this section. Nothing in the LOUD table is used —
+    // the rail is hand-rolled, as §04's orbit is — so the assertion passes and
+    // the declaration is a statement of where this screen spends itself.
+    channel: "media",
     span,
-    uses: ["arrive"],
-    build: () => {
-      /* The wave rides the 06 → 07 cover pin; nothing scrubs here yet. */
+    ...HELD,
+    uses: ["settle", "arrive"],
+    build: (tl) => {
+      const claim = q(root, "[data-ab7-claim]");
+      const body = q(root, "[data-ab7-body]");
+      const frames = qa(root, "[data-ab7-frame]");
+      const cta = q(root, "[data-ab7-cta]");
+      if (!frames.length) return;
+
+      root.dataset.abHeld = "true";
+
+      const plates = frames.map((f) => q(f, "[data-ab7-plate]"));
+      const labels = frames.map((f) => q(f, "[data-ab7-label]"));
+
+      // Rest state is the finished document, so everything the sequence brings
+      // on is hidden here rather than in the markup. A mask is not a hiding
+      // place — `settle` splits with `autoSplit` and a re-split orphans the
+      // tween's line nodes, annotated at `freshSplit`, bitten twice.
+      const hidden = [claim, body, cta].filter(Boolean) as HTMLElement[];
+      gsap.set(hidden, { autoAlpha: 0 });
+      gsap.set(frames, { autoAlpha: 0 });
+
+      // ---- the header, in reading order ---------------------------------
+      if (claim) {
+        tl.set(claim, { autoAlpha: 1 }, 0.03);
+        tl.settle(claim, lineBeat(0.055), 0.03);
+      }
+      if (body) {
+        tl.set(body, { autoAlpha: 1 }, 0.13);
+        tl.settle(body, lineBeat(0.05), 0.13);
+      }
+
+      // ---- the rail seats ------------------------------------------------
+      // The frames arrive where the walk will find them: the first already in
+      // focus, the rest already waiting beside it, so the walk begins on a row
+      // that is standing rather than on one still assembling itself.
+      /* ⚠ THE RISE IS A CUSTOM PROPERTY, NOT `y`, AND THAT IS NOT A STYLE
+         CHOICE. A frame's horizontal place on the rail is a `transform` written
+         by the STYLESHEET from `--ab7-x`; GSAP's `y` writes an inline
+         `transform` of its own, which does not merge with it — it replaces it.
+         Measured: with `y` here, every frame's travel silently froze at
+         whatever `--ab7-x` held when the tween first rendered, and the whole
+         rail scaled in place without ever moving (12 September 2026). The
+         scales looked perfect in the numbers, which is why this only showed up
+         on screen. §04 states the same law from the other side: "no tween ever
+         writes `transform` to a slot, so nothing can be clobbered by a later
+         one." One property per element, and transforms are composed in CSS. */
+      tl.fromTo(
+        frames,
+        { autoAlpha: 0, "--ab7-in": 24 },
+        {
+          autoAlpha: 1,
+          "--ab7-in": 0,
+          duration: 0.05,
+          ease: EASE.country,
+          stagger: 0.02,
+        },
+        0.24,
+      );
+
+      // ---- the walk ------------------------------------------------------
+      /* `focus` runs 0 → frames.length − 1 across this window, so the window is
+         divided by the roster and adding a face costs every other face a little
+         of its beat rather than costing the page any scroll.
+         ⚠ PAST ABOUT SIX FACES, GROW THE SPAN INSTEAD. At two the beat is a
+         comfortable .28 of the read; at six it is .09, which is about as brisk
+         as a portrait can be looked at. This is the number to change, and the
+         `span` argument in Motion.tsx is the other half of it. */
+      const RAIL_AT = 0.3;
+      const RAIL_FOR = 0.56;
+      const last = frames.length - 1;
+
+      const x = frames.map((f) => gsap.quickSetter(f, "--ab7-x") as Setter);
+      const s = plates.map((p) =>
+        p ? (gsap.quickSetter(p, "--ab7-s") as Setter) : null,
+      );
+      const o = labels.map((l) =>
+        l ? (gsap.quickSetter(l, "--ab7-o") as Setter) : null,
+      );
+
+      const walk = (focus: number) => {
+        frames.forEach((_, i) => {
+          const d = Math.abs(i - focus);
+          // Smoothstep over one pitch either side: flat at the extremes, so a
+          // frame neither snaps into focus nor creeps out of it.
+          const near = d >= 1 ? 0 : (1 - d) * (1 - d) * (3 - 2 * (1 - d));
+          x[i](i - focus);
+          s[i]?.(1 + GAIN * near);
+          o[i]?.(near);
+        });
+      };
+      walk(0);
+
+      // One tween on a plain object, so the walk is a single scrubbed value and
+      // the per-frame numbers are derived from it rather than tweened
+      // separately — n frames cannot drift out of step with each other if there
+      // is only one clock.
+      const cursor = { focus: 0 };
+      tl.to(
+        cursor,
+        {
+          focus: last,
+          duration: RAIL_FOR,
+          ease: "none",
+          onUpdate: () => walk(cursor.focus),
+        },
+        RAIL_AT,
+      );
+
+      if (cta) quietly(tl, cta, 0.88, 0.03);
+
+      /* ⚠ A TRAILING REST HAS TO HOLD THE CLOCK OPEN, or it is not a rest at
+         all — it is every earlier beat played late. A scrub maps the reader's
+         0 → 1 onto 0 → `tl.duration()`, and the duration is wherever the LAST
+         tween ends; §05 was measured playing its beats at .93 of the read
+         before this was understood (12 September 2026). An inert tween occupies
+         the last stretch, holds the duration at 1.0 and touches nothing. */
+      tl.to({}, { duration: 0.09 }, 0.91);
     },
+    // The eyebrow only, and it never leaves.
     enter: arrivals,
-    cut: clearAll,
+    cut: (el) => {
+      delete el.dataset.abHeld;
+      clearAll(el);
+    },
   });
 }
+
+/** How much bigger the focused plate is. Mirrors `--ab7-gain` in about.css. */
+const GAIN = 1.3;
+
+type Setter = (value: number) => void;
 
 /* -------------------------------------------------------------------------
    §08 — partnersDots · seam 07 → 08

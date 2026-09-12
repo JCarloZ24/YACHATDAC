@@ -9,6 +9,7 @@ import {
   whoDecides,
   whyWeExist,
 } from "@/content/about";
+import { governance, suzanneProfile, team } from "@/content/our-people";
 import { contactRoutes } from "@/content/contact";
 import { ContactDetails } from "@/components/sections/ContactDetails";
 import { ContactDoors } from "@/components/sections/ContactDoors";
@@ -145,8 +146,51 @@ const ROAD = photoById("about-road");
 const QUESTION = photoById("country-wide");
 const BREATH = photoById("about-breath");
 const RECIPROCITY = photoById("about-reciprocity");
-const PEOPLE_A = photoById("about-suzanne");
-const PEOPLE_B = photoById("about-people-02");
+/**
+ * §07's ROSTER — one line per face, and the names come from /our-people.
+ *
+ * ⚠ ADDING SOMEBODY IS ONE ENTRY HERE plus a row in kit.ts. The rail divides
+ * its own window by however many entries there are, so nothing else moves.
+ * Past about six the section's span should grow rather than the beats getting
+ * shorter — see `theRoster`, where that number lives.
+ *
+ * ⚠ THE NAME IS NOT TYPED HERE, IT IS LOOKED UP. `personOf` resolves each
+ * entry against `suzanneProfile`, `team.people` and `governance.people` in
+ * src/content/our-people.ts, so a person who is not on /our-people cannot
+ * appear on this rail, and a name or role corrected there is corrected here in
+ * the same edit. That is the whole of "based out of /our-people" (user
+ * direction, 12 September 2026).
+ *
+ * Photographs and their alt text are PRESENTATION and live here rather than in
+ * the content module — the same split /our-people makes for its own cards.
+ */
+const PEOPLE_FRAMES = [
+  {
+    person: "Suzanne Thompson",
+    photo: "about-suzanne",
+    alt: thePeople.suzannePortraitAlt,
+  },
+  {
+    /* ⚠ STAND-IN, AND THE MARKER IS WHY THE NAME IS ALLOWED TO BE HERE.
+       kit.ts records this frame as "⚠ Same man as op-card-01 — ⚠ CONSENT
+       UNRESOLVED", and states in as many words that op-card-01 is NOT Graham
+       Ambridge and that no photograph of him exists in any batch. The name
+       goes on the frame by user direction of 12 September 2026; what makes
+       that a label rather than a claim is the ⟡ Stand-in marker rendered with
+       it, which is the same contract /our-people's one named card already
+       runs. The marker comes off when his photograph arrives and not before.
+       The alt below says what is in the picture and names nobody. */
+    person: "Graham Ambridge",
+    photo: "about-people-02",
+    alt: "A man standing full length under a rock arch on Country.",
+    standIn: true,
+  },
+] as const;
+
+/** Every person /our-people knows about, in one place to look through. */
+const OUR_PEOPLE = [suzanneProfile, ...team.people, ...governance.people];
+
+const personOf = (name: string) => OUR_PEOPLE.find((p) => p.name === name);
 
 /* -------------------------------------------------------------------------
    01 · Hero — the escarpment, and three figures for scale · 110vh
@@ -1261,7 +1305,11 @@ export function HowWeWork() {
  * stated and held, never counted up to. It is the date this page is
  * accountable to, and it is where the thread has been going.
  */
-const BEATS = ["Quarterly", "Annual general meeting", "2031 · the review"] as const;
+const BEATS = [
+  "Quarterly",
+  "Annual general meeting",
+  "2031 · the review",
+] as const;
 /** The frame's marker positions, as fractions of the 1240 column. */
 const BEAT_X = ["lg:left-0", "lg:left-[33.9%]", "lg:left-[73.4%]"] as const;
 /**
@@ -1504,25 +1552,44 @@ export function WhoDecides() {
 }
 
 /* -------------------------------------------------------------------------
-   07 · The people — two frames and one absence · 145vh
+   07 · The people — the roster, one face at a time · 300vh held
    ------------------------------------------------------------------------- */
 
 /**
- * R24 / user revision, 11 September 2026: the large frame now shows Suzanne,
- * using the already identified 378A7604_1.40.2 profile photograph. Its origin
- * and requested use are recorded under `about-suzanne` in kit.ts. The image
- * plane holds still. The second portrait remains an unnamed stand-in until
- * the correct team photographs arrive, with its consent marker visible.
+ * ⚠ A HELD SCREEN AND A ROSTER — 12 September 2026, user direction, and it
+ * supersedes the static three-column row this section used to draw. The header
+ * arrives and stands; the portraits become a rail the reader walks with their
+ * scroll, one face whole at a time. Grammar row: "the world opening, one face
+ * at a time". The roster, and how to add to it, is `PEOPLE_FRAMES` at the head
+ * of this file; the choreography is `theRoster`.
  *
- * ⚠ THE THIRD SLOT DRAWS ITS OWN ABSENCE. Neither batch holds archival
- * material of any kind, and three generations of families is written here, not
- * shown. The marker renders and the row does not shorten — a shortened row
- * would say there were only ever two things to show.
+ * R24 / user revision, 11 September 2026: the first frame shows Suzanne, using
+ * the already identified 378A7604_1.40.2 profile photograph. Its origin and
+ * requested use are recorded under `about-suzanne` in kit.ts. No transform
+ * reaches any image plane here — both photographs are `frame` grade, the plates
+ * scale uniformly and keep their aspect, and the picture is never re-cropped.
+ *
+ * ⚠ THE SECOND FRAME NOW CARRIES A NAME, AND A MARKER WITH IT (12 September
+ * 2026, user decision, taken with the kit note in front of them). kit.ts states
+ * that op-card-01 is NOT Graham Ambridge and that no photograph of him exists
+ * in any batch, and records this frame's own consent as unresolved. What the
+ * user asked for was the name; what makes the name a label rather than a claim
+ * is the ⟡ Stand-in marker rendered beside it — the same contract /our-people's
+ * one named card runs. **The marker is not cosmetic and does not come off until
+ * his photograph does arrive.** The old `⚠ Consent unresolved` badge is replaced
+ * by it rather than deleted, and kit.ts carries the decision.
+ *
+ * ⚠ THE DRAWN ABSENCE IS GONE, on the same direction. A dashed slot reading
+ * "no archival photograph exists" stood for "three generations of families"
+ * and does not belong in a rail of faces; those people are named on
+ * /our-people under *The ones who got us here*. If design wants it back it is
+ * one block, and this comment is the reasoning it used to carry.
  *
  * ⚠ NO CAPTION. The frame carries a sentence here explaining that frames are
  * captioned by what they show rather than by who the person is. That is a
  * design note about the page, not something a visitor came to read, and it is
- * stripped. The consent markers say the same thing by being there.
+ * stripped — and it is now also untrue of this section, which captions each
+ * frame with exactly who the person is.
  *
  * ⚠ THE WAVE HERE IS THE SCORE'S. An earlier reading — a wave only where a
  * full-bleed PHOTOGRAPH hands off to a ground, every ground-to-ground seam cut
@@ -1537,111 +1604,185 @@ export function WhoDecides() {
  * and the eyebrow's arrival.
  */
 export function ThePeople() {
+  const [claim, ...rest] = sentences(thePeople.body);
+
   return (
     <section data-ab="the-people" className="relative bg-canvas text-charcoal">
       {/* ⚠ NO `overflow-hidden` ON THIS SECTION — it carries seam 06 → 07's
-          off-white wave, pulled above its own box onto §06's navy foot. The
-          rings and the dots-wave (120% wide) re-clip on their own layer. */}
+          off-white wave, pulled above its own box onto §06's navy foot. A clip
+          here deletes it, and it stays OUTSIDE the stage below for the same
+          reason: the stage is the held screen and the held screen clips. */}
       <WaveDivider ground="var(--color-canvas)" hook="wave" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          className="top-[7%] left-[64%] w-[56.25rem] opacity-30"
-        />
-        <RingArtwork
-          piece="a"
-          tone="roasted"
-          className="-left-48 top-[54%] w-[40rem] opacity-30"
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-        <img
+
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid; in flow it contributes nothing and the three blocks below stack
+          in the order they are written, which is the document this replaces.
+
+          ⚠ THE STAGE PAINTS NOTHING. The section's canvas is what the rings and
+          the dots-wave are drawn on, so a ground here hides them — the mistake
+          §03's canvas screen made and §06 had to be built around. */}
+      <div data-ab-stage className="relative">
+        {/* The artwork lives INSIDE the stage, as §02's and §06's do. Left
+            outside, it is `absolute inset-0` of a 300vh section, so `top-[7%]`
+            is 21vh down and `top-[54%]` is 162vh down and neither is ever on
+            the held screen. Inside, it resolves against the sticky screen when
+            it is sticky and against the section when it is not. */}
+        <div
           aria-hidden
-          src="/artwork/dots-wave.svg"
-          alt=""
-          className="pointer-events-none absolute -left-20 bottom-8 w-[120%] opacity-[0.09]"
-        />
-      </div>
-
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-28 lg:pb-24`}>
-        {/* Reserved: data-ab-rule="caption" — §07's first caption rule, the
-            seam's scored carry target, if design adds the element. */}
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
         >
-          {thePeople.title}
-        </p>
-        <h2
-          data-arrive
-          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
-        >
-          {sentences(thePeople.body)[0]}
-        </h2>
-        <p
-          data-arrive
-          className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
-        >
-          {sentences(thePeople.body).slice(1).join(" ")}
-        </p>
-
-        {/* 560 · 370 · 250 on 30px gutters is exactly the frame's 1240 column,
-            so the three run as proportions of whatever column they get rather
-            than as fixed widths. As fixed widths they needed 1440px and the
-            section's overflow-hidden was clipping the third slot at every
-            viewport. The vertical offsets are the frame's: +60, +110. */}
-        <div className="mt-16 flex flex-col gap-8 lg:grid lg:grid-cols-[560fr_370fr_250fr] lg:items-start lg:gap-[1.875rem]">
-          {[
-            { photo: PEOPLE_A, alt: thePeople.suzannePortraitAlt, pending: false },
-            { photo: PEOPLE_B, alt: "", pending: true },
-          ].map(({ photo, alt, pending }, i) => (
-            <div
-              key={photo?.id ?? i}
-              className={`relative w-full overflow-hidden rounded-sm ${
-                i === 0 ? "aspect-square" : "aspect-[370/500] lg:mt-[3.75rem]"
-              }`}
-            >
-              <div data-motion={photo?.grade ?? "frame"} className="absolute inset-0">
-                <MediaOrField
-                  src={photo?.src ?? null}
-                  alt={alt}
-                  sizes="(min-width: 1024px) 560px, 100vw"
-                  // X6 clears inline motion styles, including Next's fill
-                  // positioning; utilities preserve the portrait crop in that cut.
-                  className="absolute inset-0 h-full w-full object-cover"
-                  fieldClass="bg-evergreen/40"
-                />
-              </div>
-              {pending && (
-                <p
-                  data-placeholder="consent-unresolved"
-                  className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
-                >
-                  ⚠ Consent unresolved
-                </p>
-              )}
-            </div>
-          ))}
-
-          {/* The absence, drawn. It is the same height as a photograph and it
-              does not collapse. */}
-          <div
-            data-placeholder="no-archival-photograph"
-            role="img"
-            aria-label="No archival photograph exists for this slot"
-            className="flex aspect-[16/10] w-full items-end rounded-sm border-[1.5px] border-dashed border-oxide/60 p-5 lg:mt-[6.875rem] lg:aspect-[250/410]"
-          >
-            <p className="eyebrow text-[10px] leading-[1.6] tracking-[0.08em] text-oxide">
-              ⟡ No archival photograph exists
-            </p>
-          </div>
+          <RingArtwork
+            piece="b"
+            className="top-[7%] left-[64%] w-[56.25rem] opacity-30"
+          />
+          <RingArtwork
+            piece="a"
+            tone="roasted"
+            className="-left-48 top-[54%] w-[40rem] opacity-30"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+          <img
+            aria-hidden
+            src="/artwork/dots-wave.svg"
+            alt=""
+            className="pointer-events-none absolute -left-20 bottom-8 w-[120%] opacity-[0.09]"
+          />
         </div>
 
-        <a
-          href={thePeople.cta.href}
-          className="eyebrow mt-20 block text-xs tracking-[0.08em] text-burnt"
-        >
-          {thePeople.cta.label} →
-        </a>
+        {/* ---- the header, which stands ------------------------------------
+            Reserved: data-ab-rule="caption" — §07's first caption rule, the
+            seam's scored carry target, if design adds the element. */}
+        <div data-ab7-head className={`${COLUMN} relative pt-16 lg:pt-28`}>
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+          >
+            {thePeople.title}
+          </p>
+          <h2
+            data-ab7-claim
+            className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+          >
+            {claim}
+          </h2>
+          <p
+            data-ab7-body
+            className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+          >
+            {rest.join(" ")}
+          </p>
+        </div>
+
+        {/* ---- the rail ----------------------------------------------------
+            One face whole at a time. Held, every frame is lifted onto one row
+            and driven from the section's read — see `theRoster`. In flow this
+            is an ordinary column of portraits, each with its name under it and
+            its marker on it, which is the document at every width the hold does
+            not apply to.
+
+            ⚠ THE PLATE AND THE LABEL ARE SEPARATE ELEMENTS, and that is the
+            layout. Only the plate scales; the name under it must not, or it
+            arrives at 2.3× the size of every other label on the page. The plate
+            grows from `bottom center` so the name never moves either. */}
+        <div data-ab7-rail className={`${COLUMN} relative mt-16`}>
+          {PEOPLE_FRAMES.map((frame, i) => {
+            const photo = photoById(frame.photo);
+            const person = personOf(frame.person);
+            return (
+              <div
+                key={frame.photo}
+                data-ab7-frame
+                data-ab7-index={i}
+                className="mt-10 flex flex-col items-center first:mt-0"
+              >
+                <div
+                  data-ab7-plate
+                  className="relative aspect-[3/4] w-full max-w-[22rem] overflow-hidden rounded-sm"
+                >
+                  <div
+                    data-motion={photo?.grade ?? "frame"}
+                    className="absolute inset-0"
+                  >
+                    <MediaOrField
+                      src={photo?.src ?? null}
+                      alt={frame.alt}
+                      /* ⚠ `sizes` MUST DESCRIBE THE PLATE AT FULL FOCUS, NOT AT
+                         REST, AND THAT IS NOT AN OPTIMISATION — IT IS WHY THE
+                         PICTURE IS SHARP. A `transform: scale()` is invisible to
+                         the browser's image selection: it sizes the request from
+                         the LAYOUT box, which here is the resting plate, and then
+                         CSS paints that image 2.3× larger at focus. The first cut
+                         also wrote `36vh`, which resolved to 324px on a 900px
+                         window, so both portraits were fetched at 324 and
+                         upscaled past 2× on screen — reported as "why is the
+                         second image blurry", and it was both of them
+                         (12 September 2026).
+
+                         ⚠ AND THE BINDING DIMENSION IS HEIGHT, NOT WIDTH. Both
+                         masters are landscape at about 1.9:1 and the plate is a
+                         3/4 portrait, so `object-cover` crops away most of the
+                         width and it is the source's HEIGHT that has to reach
+                         the plate's. A focused plate is ≈352px tall on a 900px
+                         window, so the source needs ≈352 × 1.9 ≈ 670px of width
+                         before it stops being upscaled — a `sizes` of 420 picked
+                         the 640 variant, which is only 336px tall, and the
+                         portrait was still stretched. 720 picks 750, which is
+                         393 tall, and leaves the browser room to go up again for
+                         a 2× display.
+
+                         It is ~60% more image than the painted box needs, and
+                         that is the tax for cropping a landscape master into a
+                         portrait frame. The real fix is a portrait derivative
+                         per face; until those exist this is the honest number.
+                         Raise it if `--ab7-gain` or `--ab7-rest` goes up. */
+                      sizes="(min-width: 1024px) 720px, 100vw"
+                      // X6 clears inline motion styles, including Next's fill
+                      // positioning; utilities preserve the crop in that cut.
+                      className="absolute inset-0 h-full w-full object-cover"
+                      fieldClass="bg-evergreen/40"
+                    />
+                  </div>
+                  {"standIn" in frame && frame.standIn && (
+                    /* ⚠ COUNTER-SCALED, so it is exactly as legible when the
+                       face is small as when it is large. A marker that shrank
+                       with the plate would be least readable at the moment the
+                       photograph is least identifiable, which is backwards.
+                       `--ab7-s` is the plate's own scale, inherited. */
+                    <p
+                      data-ab7-marker
+                      data-placeholder="stand-in"
+                      className="eyebrow absolute top-3 left-3 rounded-xs bg-charcoal/70 px-2 py-1 text-[10px] text-canvas"
+                    >
+                      ⟡ Stand-in
+                    </p>
+                  )}
+                </div>
+                {/* Larger than the page's other eyebrows on purpose (user
+                    direction, 12 September 2026): every other use of this
+                    utility is a label ABOUT something, and this one is a
+                    person's name. It is the only thing on the rail that says
+                    who the reader is looking at, so it is set to read as a
+                    caption rather than as furniture. */}
+                <p
+                  data-ab7-label
+                  className="eyebrow mt-4 text-sm tracking-[0.08em] text-burnt sm:text-base"
+                >
+                  {person?.name ?? frame.person}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div data-ab7-foot className={`${COLUMN} relative pb-16 lg:pb-24`}>
+          <a
+            href={thePeople.cta.href}
+            data-ab7-cta
+            className="eyebrow mt-20 block text-xs tracking-[0.08em] text-burnt"
+          >
+            {thePeople.cta.label} →
+          </a>
+        </div>
       </div>
     </section>
   );

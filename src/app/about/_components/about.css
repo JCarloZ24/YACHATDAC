@@ -565,6 +565,169 @@
   [data-ab6-unsettled] [data-ab6-ghost="turquoise"] {
     animation: ab6-drift-turquoise 2.6s ease-in-out infinite alternate-reverse;
   }
+
+  /* -------------------------------------------------------------------------
+     §07 — "The people", the roster, one face at a time.
+
+     Grammar row: "the world opening, one face at a time". Same machinery as the
+     five screens above and deliberately the same hooks.
+
+     THE HELD ORDER IS THE GRID'S, NOT THE DOM'S — except here it is also the
+     DOM's: header, rail, link, in that order in both builds. What the hold
+     changes is the RAIL, which stops being a column of portraits and becomes
+     one row with the frames stacked on a single line and walked by the read.
+
+     ⚠ NO GROUND RULE HERE. The section's own canvas is what the rings and the
+     dots-wave are painted on and the stage sits over them, so anything opaque
+     on the stage deletes the artwork. §03 learned this by doing it and §06 had
+     to be built around it.
+     ------------------------------------------------------------------------- */
+
+  /* ⚠ SCOPED TO §07 BY NAME, like every other section-shaped rule in this file:
+     `data-ab-stage` is the hook all six held sections use. */
+  /* Three auto rows and the block centred, NOT a `1fr` middle: the rail has a
+     fixed height, so a `1fr` row shorter than it simply overflows, and the head
+     goes off the top of the screen while the link goes off the bottom
+     (measured, 12 September 2026). Auto rows plus `align-content: center` puts
+     the whole block in the middle of whatever is left. */
+  [data-ab="the-people"][data-ab-held] [data-ab-stage] {
+    grid-template-rows: auto auto auto;
+    align-content: center;
+  }
+  [data-ab="the-people"][data-ab-held] [data-ab7-head] {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  [data-ab="the-people"][data-ab-held] [data-ab7-rail] {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  [data-ab="the-people"][data-ab-held] [data-ab7-foot] {
+    grid-row: 3;
+    grid-column: 1;
+  }
+
+  /* It all has to fit 100svh at 820px tall, which is the floor the `hold:`
+     query itself sets. The flow gaps put the link off the foot; these are the
+     same tightening §06 needed, and nothing else changes — no scaling, no
+     scrolling inside the screen. */
+  /* 3svh, not 4: the name labels went up to 16px on user direction of
+     12 September 2026 and the block grew with them — at 4 the link sat exactly
+     on the 820px floor, which is not a fit. */
+  [data-ab="the-people"][data-ab-held] [data-ab7-head] {
+    padding-top: 3svh;
+  }
+  [data-ab="the-people"][data-ab-held] [data-ab7-claim] {
+    margin-top: 1rem;
+  }
+  [data-ab="the-people"][data-ab-held] [data-ab7-body] {
+    margin-top: 1.5rem;
+  }
+  [data-ab="the-people"][data-ab-held] [data-ab7-rail] {
+    margin-top: 1.75rem;
+  }
+  [data-ab="the-people"][data-ab-held] [data-ab7-cta] {
+    margin-top: 1.25rem;
+  }
+  [data-ab="the-people"][data-ab-held] [data-ab7-foot] {
+    padding-bottom: 0;
+  }
+
+  /* THE RAIL.
+
+     ALL THE GEOMETRY IS HERE, IN svh, AND THE MODULE WRITES TWO UNITLESS
+     NUMBERS PER FRAME — `--ab7-x`, how many pitches this frame is from the
+     focus, and `--ab7-s`, its plate's scale. Nothing is measured per frame and
+     nothing is measured per frame-of-animation: a rail that read `offsetWidth`
+     every scrub tick would be a layout read three times a frame for a number
+     that only changes when the window does.
+
+       --ab7-rest    a plate's height at rest; 3/4 gives its width, 15svh
+       --ab7-gain    how much bigger the focused plate is; 1.3 → ×2.3
+       --ab7-pitch   centre-to-centre between frames
+
+     ⚠ PITCH IS 24 AND THAT IS ARITHMETIC, NOT TASTE. A focused plate is
+     12.75 × 2.3 = 29.3svh wide, so it reaches 14.66 either side of its centre;
+     a resting neighbour reaches 6.38. At a pitch of 24 that leaves 2.96svh of
+     daylight between them. Anything under 21.1 and the focused face overlaps
+     the one waiting beside it, which would need a z-index that changes as the
+     focus moves — solved here by not creating the problem.
+
+     ⚠ AND THE REST HEIGHT IS 17, NOT 20, FOR THE 820px FLOOR. At 20 the head,
+     the rail and the link measured 848 against an 820 viewport and the link sat
+     below it; at 18 they fit with three pixels to spare top and bottom, which
+     is not a fit, it is a coincidence waiting for a font metric to change.
+     Everything on this screen is sized in svh so the whole block scales with
+     the window, and 17 is what gives the shortest window the hold applies to
+     some actual air. */
+  [data-ab="the-people"][data-ab-held] [data-ab7-rail] {
+    --ab7-rest: 17svh;
+    --ab7-gain: 1.3;
+    --ab7-pitch: 24svh;
+    position: relative;
+    /* Tall enough for the focused plate plus the name under it. The row does
+       not resize as the focus moves — the plates grow into space that is always
+       reserved, so nothing below them ever shifts. */
+    height: calc(var(--ab7-rest) * (1 + var(--ab7-gain)) + 2.75rem);
+  }
+
+  /* Every frame stands on the same baseline at the centre of the rail and is
+     pushed sideways by how far it is from the focus. `translateX(-50%)` after
+     the travel centres it on its own point whatever it measures. */
+  [data-ab="the-people"][data-ab-held] [data-ab7-frame] {
+    --ab7-x: 0;
+    /* The seat-in rise. It is a property and not GSAP's `y` because `y` writes
+       an inline transform that REPLACES this one — see the note at `theRoster`,
+       where that cost the rail its entire travel. */
+    --ab7-in: 0;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-top: 0;
+    width: auto;
+    will-change: transform;
+    transform: translateX(calc(var(--ab7-x) * var(--ab7-pitch)))
+      translateY(calc(var(--ab7-in) * 1px)) translateX(-50%);
+  }
+
+  /* ⚠ `bottom center`, AND THAT IS THE WHOLE REASON THE NAME HOLDS STILL. A
+     plate scaled about its middle would push its own bottom edge down into the
+     label as it grew and pull it back up as it shrank, so every name on the
+     rail would bob. Growing from the baseline the labels sit on, nothing below
+     a plate ever moves.
+
+     ⚠ AND THE ASPECT IS FIXED. These are `frame`-grade portraits of
+     identifiable people: a plate that changed proportion as it grew would
+     re-crop the picture, which on a portrait means the crop travelling across
+     somebody's face. It scales uniformly or not at all. */
+  [data-ab="the-people"][data-ab-held] [data-ab7-plate] {
+    --ab7-s: 1;
+    height: var(--ab7-rest);
+    width: auto;
+    max-width: none;
+    transform-origin: bottom center;
+    transform: scale(var(--ab7-s));
+    will-change: transform;
+  }
+
+  /* Counter-scaled, so the marker is exactly as legible when the face is small
+     as when it is large — a marker that shrank with the plate would be least
+     readable at the moment the photograph is least identifiable. */
+  [data-ab="the-people"][data-ab-held] [data-ab7-marker] {
+    transform-origin: top left;
+    transform: scale(calc(1 / var(--ab7-s)));
+  }
+
+  /* The name belongs to the face, so it is only legible while that face is the
+     one being read — derived from the frame's own focus rather than given its
+     own tween, the same correction §02's and §05's captions both needed. */
+  [data-ab="the-people"][data-ab-held] [data-ab7-label] {
+    --ab7-o: 0;
+    margin-top: 0.75rem;
+    opacity: var(--ab7-o);
+    white-space: nowrap;
+  }
+
 }
 
 /* ---------------------------------------------------------------------------
