@@ -1078,15 +1078,18 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 
 ## About — verb *answers* — 2053vh, 11 sections
 
-> **BUILT — seam pass, 8 Sep 2026; §02–§05's interiors, 12 Sep 2026.**
+> **BUILT — seam pass, 8 Sep 2026; §02–§06's interiors, 12 Sep 2026.**
 > The ten seams of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines
 > are live: `src/app/about/_components/Motion.tsx` hosts,
-> `src/lib/motion/recipes-about.ts` holds the recipes. **§02, §03 and §04 are
-> now built too** — §02's register writes itself (`theRegister`), §03's question
-> is asked on ground that goes out under it (`theQuestion`), §04's loop closes
-> (`theLoop`) and §05's values are read one at a time under a photograph that
-> opens from the top (`theValues`), all four as held screens with their layout
-> in `src/app/about/_components/about.css`. The remaining interiors and Group G
+> `src/lib/motion/recipes-about.ts` holds the recipes. **§02 – §06 are now built
+> too** — §02's register writes itself (`theRegister`), §03's question is asked
+> on ground that goes out under it (`theQuestion`), §04's loop closes
+> (`theLoop`), §05's values are read one at a time under a photograph that opens
+> from the top (`theValues`), and §06's claim clears so the governance calendar
+> can take its place (`theCalendar`) — all five as held screens with their
+> layout in `src/app/about/_components/about.css`. §06's seam lift is its own
+> bounds-free composition (`boardLift`), because `overlap` must not be withheld
+> on the windows where the hold is. §01, §03b and §07 – §11 interiors and Group G
 > are still unbuilt; Group G stays ▲ Leonard Mickelo.
 
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
@@ -1101,7 +1104,7 @@ against 235vh drawn — the same convention as Living Work §02 and The Record �
 | 03b | II | **BREATH** — held, no caption, no words | 1 | 55 | **none** | **P8** | ✓✓ |
 | 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 300 | **media** | P4 | ✓ held 300 |
 | 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 300 | **type** | P1 | ✓ held 300 |
-| 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 245 | **transition** | — | — |
+| 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 300 | **transition** | — | ✓ held 300 |
 | 07 | IV | The people — the frames dance, the type holds | 3 | 145 | **media** | P6 | — |
 | 08 | IV | Partners — names, not logos | 2 | 175 | **type** | — | ✓ |
 | 09 | V | Get in touch — four doors, and ochre speaks once | 3 | 140 | **transition** | — | — |
@@ -1184,11 +1187,12 @@ throws that reasoning away, so the held §02 declares **type**, `decode` is its 
 and the road's `plateParallax` is gone: it is LOUD media and `assertChannel` would have thrown.
 `roadScreen` is retired into `theRegister`.
 
-⚠ **THE PAGE NOW SPENDS FOUR HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
-deck already spends. All four are user directions; none is a GSAP pin — they are CSS sticky spans,
-so they do not fight the deck's own pins — and all four are flagged here for design sign-off
+⚠ **THE PAGE NOW SPENDS FIVE HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
+deck already spends. All five are user directions; none is a GSAP pin — they are CSS sticky spans,
+so they do not fight the deck's own pins — and all five are flagged here for design sign-off
 alongside the deck's own deviation. §05 is the one to look at hardest: it was the page's scored
-breather, and it is held quietly to preserve as much of that as holding allows.
+breather, and it is held quietly to preserve as much of that as holding allows. §06 grew 245vh →
+300vh with its hold, which moved the three seams below it; they were re-measured and still land.
 
 **§04 is the loop closing — BUILT 12 September 2026.** Built to `REF · 05 ABOUT §04 THE LOOP —
 each clause builds the card it names` (Figma `2695:21396`), six frames whose scroll percentages are
@@ -1247,6 +1251,55 @@ stretch shortens the clock and plays every earlier beat late. §02, §03 and §0
 last beat and normalise themselves; §05 is the first section scored with a rest AFTER its last
 beat, so the rest is declared as an inert tween that holds the duration at 1.0 and touches
 nothing. Worth knowing before the next section that wants to end on stillness.
+
+**§06 is the board and the calendar, on one screen — BUILT 12 September 2026.** Built to
+`REF · 05 ABOUT §06` (Figma `2707:21402`), five frames. The user's direction was to hold it and
+split it in two under a persistent header: part 1 is the claim — what the board is, how it is made
+up, when it sits, and the Elder Advisory Group — and it CLEARS; part 2 is the calendar — the dated
+thread, 2031, and the governance documents. The two parts share one grid cell, so the calendar
+replaces the claim in place rather than following it down the page.
+
+**The thread was re-bound, not rewritten.** Its clip-draw and its three seating dots were triggered
+from the THREAD's own viewport crossings (`top 80%` → `top 45%`; `top 65% once`). Inside a sticky
+screen the thread never crosses anything — it is parked on the held screen for the whole section —
+so both resolved at a moment the reader could not see. Both now run off the section's read clock,
+with the draw's clip, curve and pace unchanged. Two corrections came out of driving it rather than
+reading it: the dots were seating on a fixed 0.18 stagger and so arrived at 15% drawn, and now each
+seats as the line reaches its own position; and they **retreat with the line** on the way back,
+because "played once, never scrubbed" was written for a thread that scrolled away and a dot left
+sitting 73% along a line no longer under it reads as a fault. The pop still runs on its own clock in
+both directions, so the overshoot is never dragged and cannot jitter.
+
+⚠ **§06 CARRIES THE SITE'S ONE USE OF IMG-04** — the chromatic split, released by F9. The Elder
+Advisory Group sentence is the only future-tense claim on the page and the only thing on it that has
+not happened, so it is the only line that does not settle: two ghost copies, oxide and turquoise,
+held a couple of pixels off it and drifting about a pixel on a cycle with no end state. A tense
+marker, not a texture. **It has a removal condition and the condition is the point** — when the
+group sits, the sentence loses `data-ab6-unsettled` and the copy loses its future tense. Written as
+CSS rather than a registered effect because an unresolving loop cannot live in a scrubbed timeline;
+the grammar row ("what has not happened yet") carries the full reasoning. **This is the item to put
+in front of the Elder Advisory Group at presentation** — a moving artefact on the sentence
+describing their own authority is theirs to accept or refuse, and it comes off with one attribute.
+
+**The board's travelling marker is NOT built** (user decision, 12 September 2026): the frame asks
+for a marker whose position on the dated rule IS the reader's scroll position, "travelling the
+governance calendar". If design wants it, it is an addition to `theCalendar` rather than a rework —
+the read clock it would derive from is already there.
+
+⚠ **§06's LOUD CHANNEL IS SPENT AT ITS EDGES.** The section is ⚡4 in `transition` and spends it on
+the navy wave in and `overlap` out, so `theCalendar` declares `channel: "none"` and `assertChannel`
+holds the interior to it. The lift lives in a separate bounds-free composition (`boardLift`) because
+a composition declaring the held bounds builds the CUT below them, and §07's wave is scored to ride
+over a board that is receding. The cost, stated: the thread's draw and the dots' catch no longer
+happen below 1024px — `clearAll` leaves the thread drawn and the dots seated, so the document is
+complete, exactly as §02 – §05 are.
+
+⚠ **THE 06 → 07 LIFT FIRES AFTER THE COVER, NOT DURING IT.** `bottom 60%` → `bottom 8%` sits 360px
+later in the scroll than the deck's cover pin for that seam, which starts at `bottom 100%` — so by
+the time the board recedes, §07's wave has already passed over it. The arithmetic is the same before
+and after the hold (the offset is height-independent), so this is inherited rather than introduced,
+and it is left alone here rather than changed under cover of an unrelated pass. Worth a seam fix of
+its own.
 
 **Group G is back in build here, and only here.** The traveller and the page's thread are the same
 object: the question travels down the page and settles at each thing it measures. `G1` travel with

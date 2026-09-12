@@ -5,10 +5,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { register, start, stop, watchVisibility } from "@/lib/motion-controller";
 import { breath } from "@/lib/motion/recipes";
 import {
-  boardHandoff,
+  boardLift,
   coverSeams,
   doorsAssembly,
   heroQuiet,
+  theCalendar,
   theLoop,
   theRegister,
   partnersDots,
@@ -20,18 +21,20 @@ import {
 /**
  * /about — the page's motion script. Verb: ANSWERS.
  *
- * THE SEAMS, AND THE PAGE'S TWO HELD SCREENS. This host wires the ten section
+ * THE SEAMS, AND THE PAGE'S FIVE HELD SCREENS. This host wires the ten section
  * joins of Figma `REF · SCORE · 05 ABOUT` (2642:19666), the X4 baseline
  * arrivals, and — from 12 September 2026, user direction — the interiors of
- * §02 (`theRegister`), §03 (`theQuestion`), §04 (`theLoop`) and §05
- * (`theValues`). Group G's eight waypoints and the remaining section interiors
- * are still unbuilt. Renders nothing.
+ * §02 (`theRegister`), §03 (`theQuestion`), §04 (`theLoop`), §05 (`theValues`)
+ * and §06 (`theCalendar`). Group G's eight waypoints and the remaining section
+ * interiors are still unbuilt. Renders nothing.
  *
- * ⚠ FOUR HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of the
+ * ⚠ FIVE HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of the
  * eight the deck already spends. §05 is held QUIETLY — it is the ledger's ⚡2
- * rest and its beats are `settle` and a fade only. Both were user directions and both are
- * flagged for design sign-off in scenes.md. Neither is a GSAP pin — they are
- * sticky spans in about.css, so they do not fight the deck's own pins.
+ * rest and its beats are `settle` and a fade only — and §06's interior declares
+ * no loud channel at all, because that section spends its ⚡4 at its edges. All
+ * five were user directions and all are flagged for design sign-off in
+ * scenes.md. None is a GSAP pin — they are sticky spans in about.css, so they do
+ * not fight the deck's own pins.
  *
  * THE SCENE LEDGER, so the pacing is readable here as well as in the docs:
  *
@@ -45,7 +48,9 @@ import {
  *                                                card, the loop closes
  *   §05 how-we-work   type        300vh   ⚡2   HELD — one value at a time,
  *                                                then the photograph opens
- *   §06 who-decides   TRANSITION  245vh   ⚡4   navy wave in · overlap out
+ *   §06 who-decides   TRANSITION  300vh   ⚡4   HELD — the claim clears, the
+ *                                                calendar takes its place;
+ *                                                navy wave in · overlap out
  *   §07 the-people    media       145vh   ⚡3
  *   §08 partners      type        175vh   ⚡2
  *   §09 get-in-touch  TRANSITION  140vh   ⚡3   charcoal wave in · the doors
@@ -136,7 +141,19 @@ export function AboutMotion() {
       // photograph. Quiet by design: it is the ledger's ⚡2 rest between two
       // ⚡4 sections and holding it must not turn it into a fifth spectacle.
       wire(find("how-we-work"), (el) => theValues(el, 200));
-      wire(find("who-decides"), (el) => boardHandoff(el, 245));
+      // §06 is the page's fifth held screen — "Who decides", two parts under
+      // one persistent header, 200 derived the same way the other four are.
+      //
+      // ⚠ TWO MODULES ON ONE SECTION, and the split is load-bearing. A
+      // composition that declares the held bounds builds the CUT below them, so
+      // everything in `theCalendar` is withheld on a phone, on a short window
+      // and under reduced motion — which is right for its interior and wrong for
+      // its seam. `overlap` cannot be withheld: §07's wave is scored to ride
+      // over a board that is RECEDING. So the lift is its own bounds-free
+      // composition, and it is also where §06 spends the loud transition channel
+      // its ledger row gives it (`theCalendar` declares none).
+      wire(find("who-decides"), (el) => theCalendar(el, 200));
+      wire(find("who-decides"), (el) => boardLift(el, 245));
       wire(find("the-people"), (el) => peopleWave(el, 145));
       wire(find("partners"), (el) => partnersDots(el, 175));
       wire(find("get-in-touch"), (el) => doorsAssembly(el, 140));

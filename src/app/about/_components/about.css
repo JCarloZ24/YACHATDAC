@@ -454,6 +454,117 @@
     opacity: calc(1 - var(--ab5-fold));
   }
 
+  /* -------------------------------------------------------------------------
+     §06 — "Who decides", two parts under one header.
+
+     Figma 2707:21402, the five-frame reference board. Grammar rows: "the page
+     holding its ground, the interior scrub without a read clock", "the screen
+     clears", "what has not happened yet". Same machinery as the four screens
+     above and deliberately the same hooks.
+
+     THE HELD ORDER IS THE GRID'S, NOT THE DOM'S. Written out, the section reads
+     eyebrow → claim → calendar, which is the document. Held, the eyebrow takes
+     the first row and stands there, and the two parts SHARE the second so the
+     calendar replaces the claim in place — the reader's eye never travels down
+     the page to find the other half of the answer.
+
+     ⚠ NO GROUND RULE HERE, AND THAT IS THE POINT. The section's own midnight is
+     what the artist's rings are painted on and the stage sits over them, so
+     anything opaque on the stage deletes them. §03 learned this by doing it.
+     ------------------------------------------------------------------------- */
+
+  /* ⚠ SCOPED TO §06 BY NAME, like every other section-shaped rule in this
+     file: `data-ab-stage` is the hook all five held sections use. */
+  [data-ab="who-decides"][data-ab-held] [data-ab-stage] {
+    grid-template-rows: auto 1fr;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab6-head] {
+    grid-row: 1;
+    grid-column: 1;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab6-part] {
+    grid-row: 2;
+    grid-column: 1;
+    min-height: 0;
+    /* Each part stands in the middle of what is left rather than at its top, so
+       the short part (the calendar) does not sit under a screen of air. */
+    align-self: center;
+  }
+
+  /* IT ALL HAS TO FIT 100svh AT 820px TALL, which is the floor the `hold:`
+     query itself sets. With the flow gaps part 1 measures ~832px before its
+     padding and the last line of the Elder Advisory Group sentence is below the
+     fold; part 2 pushes the governance link off the foot. The gaps tighten and
+     nothing else changes — no scaling, no scrolling inside the screen. Measured
+     at 1280 × 820 and 1440 × 900. */
+  [data-ab="who-decides"][data-ab-held] [data-ab6-claim] {
+    margin-top: 1rem;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab6-fact] {
+    margin-top: 1.75rem;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab6-rule] {
+    margin-top: 2.25rem;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab6-unsettled] {
+    margin-top: 1.5rem;
+  }
+  /* The calendar part starts ON the thread: in flow the `mt-32` is the air
+     between the Elder Advisory Group sentence and the dated rule, and held
+     there is no sentence above it to be clear of. */
+  [data-ab="who-decides"][data-ab-held] [data-ab6-thread] {
+    margin-top: 0;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab-date] {
+    margin-top: 2.5rem;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab6-body] {
+    margin-top: 1.75rem;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab6-hairline] {
+    margin-top: 2.5rem;
+  }
+  [data-ab="who-decides"][data-ab-held] [data-ab6-cta] {
+    margin-top: 1.5rem;
+  }
+  /* The stage's own height is the air at the foot; the part's padding would only
+     push the link up out of the cell it is centred in. */
+  [data-ab="who-decides"][data-ab-held] [data-ab6-part="calendar"] {
+    padding-bottom: 0;
+  }
+
+  /* THE SENTENCE THAT DOES NOT RESOLVE — the drift.
+
+     Grammar row: "what has not happened yet" · IMG-04, released by F9, spent
+     here and nowhere else on the site · Figma 2707:21402 frame 03.
+
+     ⚠ THIS IS CSS AND NOT A REGISTERED EFFECT, and the reason is mechanical.
+     CLAUDE.md's order is row → effect → `EffectName`, and it is deviated from
+     here on purpose: the marker has NO END STATE — it is unresolved because the
+     Elder Advisory Group is not sitting — and an unresolving loop cannot live in
+     a scrubbed timeline, because a scrub freezes it at whatever frame the reader
+     stopped on. A standalone GSAP tween would work and would then outlive the
+     composition, whose teardown kills its own timeline and nothing else. A
+     `@keyframes` pair inside this block costs no lifecycle, cannot leak, and is
+     absent under `prefers-reduced-motion: reduce` for free, because this whole
+     block is. Same class of thing as `thread-dots` in globals.css.
+
+     The static offset below is painted in EVERY build, so the tense marker is
+     not a desktop-only luxury; only the drift is held back to the held screen.
+
+     ⚠ Removal condition is in Sections.tsx, on `data-ab6-unsettled`. */
+  /* ⚠ ONE KEYFRAME SET PER GHOST, not one set and a reversed direction. The
+     offsets are the split — the two ghosts sit on OPPOSITE sides of the
+     sentence — so a shared `from`/`to` walks both to the same place and the
+     split closes, which is the one thing this effect must never do. */
+  [data-ab6-unsettled] [data-ab6-ghost="oxide"] {
+    animation: ab6-drift-oxide 2.6s ease-in-out infinite alternate;
+  }
+  /* Reversed, so the two are never in phase and the gap between them breathes
+     rather than the pair sliding about together. */
+  [data-ab6-unsettled] [data-ab6-ghost="turquoise"] {
+    animation: ab6-drift-turquoise 2.6s ease-in-out infinite alternate-reverse;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -561,4 +672,54 @@
 [data-ab="what-we-are"] [data-ab-eyebrow],
 [data-ab="why-we-exist"] [data-ab-eyebrow] {
   color: var(--color-burnt-deep);
+}
+
+/* ---------------------------------------------------------------------------
+   §06's TENSE MARKER, in every build.
+
+   The two ghost copies of the Elder Advisory Group sentence, held a couple of
+   pixels off it. Static here; the drift that keeps them from ever landing is in
+   the held block above, because it is motion and this is not.
+
+   Grammar row: "what has not happened yet". 0.5 opacity on oxide and turquoise
+   over midnight is a hairline of colour at the edges of the letterforms, not a
+   second readable sentence — the sentence itself is `canvas/95` on top of them.
+   --------------------------------------------------------------------------- */
+
+/* ⚠ THE TWO OPACITIES ARE NOT THE SAME NUMBER, and they cannot be. Oxide
+   (#af231c) is a dark red and turquoise (#32b0ae) is a bright cyan, and the
+   ground is midnight — at a matched 0.5 the turquoise reads as a glow down one
+   side and the oxide reads as nothing at all, which is not a chromatic split,
+   it is a coloured shadow (screenshot, 12 September 2026). Balanced by eye
+   against the ground so the sentence sits BETWEEN two ghosts rather than in
+   front of one.
+
+   `will-change` is deliberately absent: two ghosts on one paragraph do not need
+   their own composited layers, and the drift is a 1px transform. */
+[data-ab6-unsettled] [data-ab6-ghost="oxide"] {
+  opacity: 0.8;
+  transform: translate3d(-2px, -1px, 0);
+}
+[data-ab6-unsettled] [data-ab6-ghost="turquoise"] {
+  opacity: 0.28;
+  transform: translate3d(2px, 1px, 0);
+}
+
+/* About a pixel, and no end state — the `to` is not where it is going, it is
+   the far end of a cycle it never leaves. */
+@keyframes ab6-drift-oxide {
+  from {
+    transform: translate3d(-2px, -1px, 0);
+  }
+  to {
+    transform: translate3d(-3px, -2px, 0);
+  }
+}
+@keyframes ab6-drift-turquoise {
+  from {
+    transform: translate3d(2px, 1px, 0);
+  }
+  to {
+    transform: translate3d(3px, 2px, 0);
+  }
 }

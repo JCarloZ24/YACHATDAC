@@ -7,11 +7,12 @@
  * the ten seams` (2642:19666). This module animates the joins between the
  * eleven sections and the X4 baseline arrivals.
  *
- * ⚠ §03's INTERIOR IS NOW HERE TOO (12 September 2026, user direction) — the
- * 300vh hold, IMG-03, the rising ground and the line-mask settle, all in
- * `theQuestion`. It is the only section interior in this file and the only
- * hold on the page that is not a seam, so it is documented at length at its
- * own recipe rather than here. Every other section interior remains unbuilt.
+ * ⚠ FIVE SECTION INTERIORS ARE NOW HERE TOO (12 September 2026, user
+ * direction, in this order) — `theRegister` (§02), `theQuestion` (§03),
+ * `theLoop` (§04), `theValues` (§05) and `theCalendar` (§06). Each is a 300vh
+ * CSS sticky span, not a GSAP pin, sharing `HELD`'s bounds and about.css's
+ * layout; each is documented at length at its own recipe rather than here.
+ * §01, §03b and §07 – §11 remain seams only.
  *
  * THE SCORE'S SEAM LADDER, and where each lives:
  *
@@ -21,7 +22,7 @@
  *   03b → 04  Wave / Divider · OFF-WHITE          coverSeams
  *   04 → 05   ring contracts, transform-only      coverSeams + loopAndRing (ring out) + valuesRelay
  *   05 → 06   Wave / Divider · NAVY               coverSeams
- *   06 → 07   Wave / Divider · OFF-WHITE + lift   coverSeams + boardHandoff (overlap out)
+ *   06 → 07   Wave / Divider · OFF-WHITE + lift   coverSeams + boardLift (overlap out)
  *   07 → 08   Dots / Rule only, no ground change  coverSeams + partnersDots
  *   08 → 09   Wave / Divider · CHARCOAL + doors   coverSeams + doorsAssembly
  *   09 → 10   continuous charcoal                 no code, deliberately
@@ -54,6 +55,10 @@
  * `transition` on this page, and `overlap` — the one LOUD-table effect used —
  * belongs to §06. `waveHandoff` is furniture (quiet by the LOUD list's own
  * comment) and the hand-rolled rule/clip/ring tweens take no screen.
+ * ⚠ §06 spends its channel at its EDGES — the navy wave in, `boardLift` out —
+ * so `theCalendar`, its whole interior, declares `channel: "none"` and the
+ * assertion holds it to it. The five held screens are otherwise quiet by
+ * construction: `settle`, `arrive` and hand-rolled clips and folds.
  *
  * GROUP G (the traveller) IS NOT HERE. Every Guide placement is ▲ Leonard
  * Mickelo's to approve; the sections carry named comments where its legs would
@@ -135,6 +140,23 @@ const quietly = (
     { autoAlpha: 1, y: 0, duration, ease: EASE.country },
     at,
   );
+
+/**
+ * The bounds every held screen on this page shares.
+ *
+ * `hold:`'s query from globals.css and the media query about.css is written
+ * against, as a pair a composition can spread. It was written out four times
+ * before §06 made it five, and the numbers have to agree with the stylesheet
+ * exactly: a held layout with no motion, or motion with no held layout, is
+ * worse than neither. One place to change, and `about.css`'s header says the
+ * same thing from the other side.
+ *
+ * ⚠ DECLARING THESE MEANS THE CUT BELOW THEM. `composition()` builds the
+ * complement branch as `spec.cut` (compose.ts), so a section that also owns
+ * something which must never be withheld — §06's seam lift — cannot put that
+ * something in a composition carrying these. See `boardLift`.
+ */
+const HELD = { minWidth: "1024px", minHeight: "820px" } as const;
 
 /**
  * The pinned hand-offs — the five wave seams as holds.
@@ -821,8 +843,7 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
   return composition("theRegister", root, {
     channel: "type",
     span,
-    minWidth: "1024px",
-    minHeight: "820px",
+    ...HELD,
     uses: ["decode", "settle"],
     build: (tl) => {
       const stage = q(root, "[data-ab-stage]");
@@ -1105,8 +1126,7 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
   return composition("theQuestion", root, {
     channel: "type",
     span,
-    minWidth: "1024px",
-    minHeight: "820px",
+    ...HELD,
     uses: ["settle", "vacate", "arrive", "dissolve"],
     build: (tl) => {
       const eyebrow = q(root, "[data-ab-eyebrow]");
@@ -1352,8 +1372,7 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
   return composition("theLoop", root, {
     channel: "media",
     span,
-    minWidth: "1024px",
-    minHeight: "820px",
+    ...HELD,
     uses: ["settle", "arrive"],
     build: (tl) => {
       const head = q(root, "[data-ab4-head]");
@@ -1666,8 +1685,7 @@ export function theValues(root: HTMLElement, span = 200): MotionModule {
   return composition("theValues", root, {
     channel: "type",
     span,
-    minWidth: "1024px",
-    minHeight: "820px",
+    ...HELD,
     uses: ["settle", "arrive"],
     build: (tl) => {
       const stage = q(root, "[data-ab-stage]");
@@ -1786,89 +1804,336 @@ export function theValues(root: HTMLElement, span = 200): MotionModule {
 }
 
 /* -------------------------------------------------------------------------
-   §06 — boardHandoff · transition ⚡4 · seams 05 → 06 and 06 → 07
+   §06 — theCalendar (the held screen) + boardLift (the seam) · 300vh / 200 read
    ------------------------------------------------------------------------- */
 
 /**
- * The page's one loud transition composition. Grammar rows: "a change of
- * ground", divider cut (the navy wave) and overlap cut (the board receding
- * under §07's wave — the score's "the Guide goes quiet and waits at the
- * edge", built without the Guide).
+ * "Who decides", held as one screen with two parts under one header.
+ *
+ * Figma 2707:21402, the five-frame reference board. Grammar rows: "the page
+ * holding its ground, the interior scrub without a read clock", "the screen
+ * clears", "what has not happened yet", and the transition row's divider cut
+ * for the seams either side.
+ *
+ * THE SHAPE, on user direction of 12 September 2026: "same protocol for this
+ * section, sequential animations, just separate the two parts."
+ *
+ *   "Who decides"          the persistent header — settles once, never leaves
+ *   part 1 · the claim     what the board is, through the Elder Advisory Group
+ *   part 1 clears
+ *   part 2 · the calendar  the thread, 2031, and the governance documents
+ *
+ * The two parts share one grid cell (about.css), so the calendar REPLACES the
+ * claim rather than following it down the page. The reader's eye never travels
+ * to find the other half of the answer, which is the same discipline §02's
+ * register and §04's loop keep.
+ *
+ * ⚠ THE RINGS STAY IN THE BACKGROUND, and that is a markup fact rather than a
+ * motion one: the ring layer moved INSIDE the stage (Sections.tsx) and the stage
+ * paints no ground. Both were asked for by name. Nothing here touches them.
+ *
+ * ⚠ THE THREAD AND ITS BEATS ARE RE-BOUND, NOT REWRITTEN. They were triggered
+ * from the THREAD's own viewport crossings — `top 80%` → `top 45%` scrubbed for
+ * the draw, `top 65% once` for the dots. Inside a sticky screen the thread never
+ * crosses anything: it is parked on the held screen for the whole section, so
+ * both triggers resolve at a moment the reader cannot see. Both move onto the
+ * section's read clock. The draw keeps its clip, its `machine` curve and its
+ * reading pace; the dots keep their catch and their 0.18 stagger. "Retain the
+ * animation and scroll-effect" (user, 12 September 2026) — the animation is the
+ * same animation; only what fires it changed.
+ *
+ * ⚠ THE DOTS ARE PLAYED, NEVER SCRUBBED. `catch` is an overshoot, and an
+ * overshoot dragged back and forth reads as a wobble rather than as a catch —
+ * which is why the original wrote them on a `once: true` trigger. They stay
+ * played-once here, fired from the read with a guard, and a scrub back leaves
+ * them seated.
  *
  * Markup:
- *   [data-seam="wave"]          the navy wave — static, rides coverSeams
- *   [data-ab-rule="timeline"]   the thread acquiring its date — the dotted
- *                               wave, clip-drawn, scrubbed
- *   [data-ab-beat]              the three dots, seating as the draw arrives
- *   [data-ab-lift]              the column that lifts and dims at the foot
- *   [data-ab-date]              2031 — reserved, unanimated (never counted up)
+ *   [data-ab-stage] [data-ab-lift]  the sticky screen; also what the seam lifts
+ *   [data-ab6-head] [data-arrive]   the persistent eyebrow
+ *   [data-ab6-part="claim"]         h2, two facts, the ochre rule, the future
+ *   [data-ab6-unsettled]            the sentence that does not resolve (CSS)
+ *   [data-ab6-part="calendar"]      the thread, 2031, the body, the link
+ *   [data-ab-rule="timeline"]       the dotted wave, clip-drawn
+ *   [data-ab-beat] [data-ab6-beat-label]   the three dots and their names
+ *   [data-ab-date]                  2031 — stated and held, never counted
  */
-export function boardHandoff(root: HTMLElement, span = 245): MotionModule {
-  return composition("boardHandoff", root, {
+export function theCalendar(root: HTMLElement, span = 200): MotionModule {
+  return composition("theCalendar", root, {
+    /* ⚠ "none" IS THE TRUE DECLARATION AND THE ONE WORTH ASSERTING. §06 is
+       scored ⚡4 in TRANSITION, and it spends that channel entirely at its
+       edges — the navy wave riding in on `coverSeams`, and `overlap` lifting the
+       board out in `boardLift` below. The interior therefore has to spend
+       nothing, and declaring "none" makes `assertChannel` say so: any loud
+       effect added here throws, whichever channel it belongs to. */
+    channel: "none",
+    span,
+    ...HELD,
+    uses: ["settle", "arrive"],
+    build: (tl) => {
+      const claimPart = q(root, '[data-ab6-part="claim"]');
+      const calendarPart = q(root, '[data-ab6-part="calendar"]');
+      const rule = q(root, '[data-ab-rule="timeline"]');
+      if (!claimPart || !calendarPart || !rule) return;
+
+      root.dataset.abHeld = "true";
+
+      const heading = q(claimPart, "[data-ab6-claim]");
+      const facts = qa(claimPart, "[data-ab6-fact]");
+      const factRule = q(claimPart, "[data-ab6-rule]");
+      const unsettled = q(claimPart, "[data-ab6-unsettled]");
+      const future = q(claimPart, "[data-ab6-future]");
+
+      const beats = qa(root, "[data-ab-beat]");
+      const labels = qa(root, "[data-ab6-beat-label]");
+      const date = q(root, "[data-ab-date]");
+      const body = q(root, "[data-ab6-body]");
+      const hairline = q(root, "[data-ab6-hairline]");
+      const cta = q(root, "[data-ab6-cta]");
+
+      // Rest state is the finished document, so everything the sequence brings
+      // on is hidden HERE rather than in the markup. A mask is not a hiding
+      // place — `settle` splits with `autoSplit` and a re-split orphans the
+      // tween's line nodes (annotated at `freshSplit`; it has bitten twice). The
+      // element is hidden with `autoAlpha`; the mask only does the rise.
+      //
+      // ⚠ THE WRAPPER, NOT THE SENTENCE, for the Elder Advisory Group line: its
+      // two ghosts are siblings of the paragraph, so hiding the paragraph alone
+      // leaves two coloured ghosts of a sentence that is not there.
+      const hidden = [heading, ...facts, unsettled, date, body, cta].filter(
+        Boolean,
+      ) as HTMLElement[];
+      gsap.set(hidden, { autoAlpha: 0 });
+      gsap.set([factRule, hairline].filter(Boolean) as HTMLElement[], {
+        scaleX: 0,
+        transformOrigin: "left center",
+      });
+      gsap.set(rule, { clipPath: "inset(0 100% 0 0)" });
+      if (beats.length) gsap.set(beats, { scale: 0 });
+      if (labels.length) gsap.set(labels, { autoAlpha: 0 });
+
+      /* ⚠ THE WHOLE CALENDAR IS GATED, NOT JUST ITS PIECES, and this is a fix
+         rather than tidiness. The dots and their names are PLAYED (below) —
+         deliberately, because an overshoot dragged backwards reads as a wobble —
+         so they do not reverse when the reader scrolls back up. Everything else
+         in part 2 is scrubbed and does, and the two parts share one grid cell.
+         Without this the reader scrolls back to the claim and finds three ochre
+         dots and "QUARTERLY / ANNUAL GENERAL MEETING / 2031 · THE REVIEW" sitting
+         across the headline. Caught in a screenshot, not in the numbers, which
+         read `scale: 0` on exactly the dots that were on the screen (12 September
+         2026). A `set` inside a scrubbed timeline DOES reverse, so gating the
+         part puts the played beats behind something that does. */
+      gsap.set(calendarPart, { autoAlpha: 0 });
+
+      /* ---- part 1 · the claim ------------------------------------------
+         Read in the order the eye takes it: what the board holds, then how it
+         is made up, then when it sits, then the rule, then the one sentence on
+         this page about something that has not happened yet.
+
+         ⚠ EVERY BEAT'S END IS `duration × (1 + 0.11 × (lines − 1))` — see
+         `lineBeat`. The sheet below is laid out against those ends, not against
+         the durations, and the whole of part 1 has to be off the screen before
+         the thread starts to draw. */
+      if (heading) {
+        tl.set(heading, { autoAlpha: 1 }, 0.03);
+        tl.settle(heading, lineBeat(0.055), 0.03);
+      }
+      facts.forEach((fact, i) => {
+        const at = [0.11, 0.18][i] ?? 0.18;
+        tl.set(fact, { autoAlpha: 1 }, at);
+        tl.settle(fact, lineBeat(0.045), at);
+      });
+      if (factRule) {
+        tl.to(factRule, { scaleX: 1, duration: 0.035, ease: EASE.country }, 0.25);
+      }
+      if (unsettled && future) {
+        tl.set(unsettled, { autoAlpha: 1 }, 0.29);
+        tl.settle(future, lineBeat(0.05), 0.29);
+      }
+
+      /* ---- part 1 clears -------------------------------------------------
+         Grammar row: "the screen clears". `vacate`'s direction and its reason —
+         what has been answered leaves through the top and does not come back —
+         at BLOCK scale rather than per line, and deliberately not the effect
+         itself: every element in here has already taken a `settle` split, and a
+         second `freshSplit` on the same element in the same timeline reverts the
+         first and orphans its line nodes. §05's values clear the same way for
+         the same reason. */
+      tl.to(
+        claimPart,
+        { autoAlpha: 0, y: -40, duration: 0.06, ease: EASE.country },
+        0.43,
+      );
+
+      /* ---- part 2 · the thread acquires a date ---------------------------
+         Clip, do not scale. Since 11 September 2026 the thread is the dotted
+         wave (`thread-dots`), not a 2px bar, and `scaleX` would stretch every
+         dot into a growing ellipse as the rule drew. A `clip-path` inset is the
+         same edge travelling across held geometry that Wonder's itinerary rule
+         uses, and it leaves the dots their own shape. Pace and curve unchanged
+         from the viewport-triggered original. */
+      const DRAW_AT = 0.52;
+      const DRAW_FOR = 0.2;
+      // Part 1 is gone by .49; the gate opens on the bare screen between them.
+      tl.set(calendarPart, { autoAlpha: 1 }, 0.5);
+      tl.to(
+        rule,
+        { clipPath: "inset(0 0% 0 0)", duration: DRAW_FOR, ease: EASE.machine },
+        DRAW_AT,
+      );
+
+      if (date) quietly(tl, date, 0.73, 0.035);
+      if (body) {
+        tl.set(body, { autoAlpha: 1 }, 0.76);
+        tl.settle(body, lineBeat(0.05), 0.76);
+      }
+      if (hairline) {
+        tl.to(hairline, { scaleX: 1, duration: 0.03, ease: EASE.country }, 0.82);
+      }
+      if (cta) quietly(tl, cta, 0.84, 0.03);
+
+      /* ---- the dots, played once from the read clock ---------------------
+         F9: §06's beats and §09's doors are where this page spends its
+         overshoot. The three seat left to right with their names, on the same
+         `catch` they had on the viewport trigger — the dots are the only thing on
+         this page that pops, and they pop because a date the board is
+         accountable to arriving is worth a catch.
+
+         ⚠ EACH SEATS WHEN THE DRAW REACHES IT, not on a fixed stagger. The
+         original fired all three on one `stagger: 0.18` off a `once` trigger, so
+         the rhythm was the tween's and had nothing to do with where the line
+         had got to — which was invisible while the thread scrolled past, and is
+         not invisible on a held screen. `machine` is linear (tokens.ts), so the
+         clip's fraction at read-progress p is exactly `(p − DRAW_AT) / DRAW_FOR`
+         and each dot can be compared against its own position on the line. The
+         line stops on the third dot, so the third dot seats as the line lands.
+         Measured seating all three at 15% drawn before this (12 September 2026).
+
+         ⚠ FIRED FROM `onUpdate`, NOT FROM `tl.call()`, and that is the fix
+         rather than a preference. A scrub sets the timeline's progress in jumps,
+         and a flick can carry it straight over a callback's position without ever
+         firing it — which would leave the dots at `scale: 0` for the rest of the
+         read, on the one screen they are the subject of. Reading the progress
+         every frame cannot be jumped over.
+
+         ⚠ AND THEY RETREAT WITH THE LINE. "Played once, never scrubbed" came
+         from a `once: true` trigger on a thread that scrolled past — by the time
+         a reader came back the section was gone, so the dots never had to undo
+         anything. Held, the reader watches the line retract, and a dot left
+         sitting 73% along a line that is no longer under it reads as a rendering
+         fault rather than as a beat that has already happened (caught in a
+         screenshot at .62, not in the numbers, 12 September 2026). Each dot's pop
+         is its own paused timeline that plays and reverses with the draw. This is
+         still not a scrub: the pop runs on its own clock either way, so the
+         overshoot is never dragged back and forth and cannot jitter — the thing
+         the original comment was actually protecting. */
+      /* Each beat's centre as a fraction of THE THREAD'S OWN WIDTH — which is
+         what decides when the draw reaches it, and is not the same as its
+         fraction of the column.
+
+         ⚠ TIED BY HAND TO `BEAT_X` AND `THREAD_W` IN Sections.tsx, for the same
+         reason those two are tied to each other: Tailwind cannot see a computed
+         class, so none of the three can be derived from the others. Move one,
+         move all three. The thread stops ON the last beat (`73.4% + 9px` of the
+         1240 column), so the beats sit at 9/919, (0.339 × 1240 + 9)/919 and 1 —
+         the last dot seats exactly as the line finishes, which is the whole
+         point of the line stopping there. */
+      const BEAT_F = [0.01, 0.467, 1];
+      const pops = BEAT_F.map((_, i) => {
+        const pop = gsap.timeline({ paused: true });
+        if (beats[i]) {
+          pop.to(beats[i], { scale: 1, duration: DUR.small, ease: EASE.catch }, 0);
+        }
+        if (labels[i]) {
+          pop.to(
+            labels[i],
+            { autoAlpha: 1, duration: DUR.small, ease: EASE.country },
+            0,
+          );
+        }
+        return pop;
+      });
+      const shown = BEAT_F.map(() => false);
+      tl.eventCallback("onUpdate", () => {
+        const drawn = (tl.progress() - DRAW_AT) / DRAW_FOR;
+        BEAT_F.forEach((f, i) => {
+          const wanted = drawn >= f;
+          if (wanted === shown[i]) return;
+          shown[i] = wanted;
+          if (wanted) pops[i].play();
+          else pops[i].reverse();
+        });
+      });
+
+      /* ---- the rest ------------------------------------------------------
+         ⚠ A TRAILING REST HAS TO HOLD THE CLOCK OPEN, or it is not a rest at
+         all — it is every earlier beat played late. A scrub maps the reader's
+         0 → 1 onto 0 → `tl.duration()`, and the duration is wherever the LAST
+         tween happens to end; leave the final stretch genuinely empty and a beat
+         written at .86 plays at .86/.89 = .97 of the read. §05 was measured
+         doing exactly that, twice, before this was understood (12 September
+         2026). An inert tween on a throwaway object occupies the last stretch,
+         holds the duration at 1.0 and touches nothing.
+
+         The rest also has to be real here for a reason §05's did not: the
+         section hands over to §07's wave, and the governance link is the last
+         thing a reader is asked to notice on this page. */
+      tl.to({}, { duration: 0.13 }, 0.87);
+    },
+    // The eyebrow only, and it never leaves.
+    enter: arrivals,
+    cut: (el) => {
+      delete el.dataset.abHeld;
+      clearAll(el);
+    },
+  });
+}
+
+/**
+ * Seam 06 → 07 — the board recedes as the people's wave rides over it.
+ *
+ * ⚠ SEPARATE FROM `theCalendar`, AND NOT BY PREFERENCE. A composition that
+ * declares `minWidth`/`minHeight` builds the CUT below those bounds
+ * (compose.ts), so anything inside `theCalendar` is withheld on a phone, on a
+ * short window, and under reduced motion. `overlap` cannot be withheld: §07's
+ * off-white wave is scored to ride over a board that is receding, and a static
+ * board under a moving wave is a different seam. So the lift lives here, with no
+ * bounds, and this is where §06 spends the loud transition channel its ledger
+ * row gives it.
+ *
+ * The numbers are deliberately small — a movement at the join, not the page
+ * sliding around.
+ *
+ * ⚠ WHAT THIS COSTS BELOW 1024px: the thread's draw and the dots' catch now
+ * live on the held screen's read clock, so they do not happen at all in the flow
+ * build. `clearAll` leaves the thread fully drawn and the dots seated, so the
+ * document is complete and correct — it simply does not animate, exactly as
+ * §02 – §05 do not below the same bounds. Stated rather than discovered.
+ */
+export function boardLift(root: HTMLElement, span = 245): MotionModule {
+  return composition("boardLift", root, {
     channel: "transition",
     span,
-    uses: ["overlap", "arrive"],
+    uses: ["overlap"],
     build: () => {
-      // The thread acquires a date, at reading pace.
-      const rule = q(root, '[data-ab-rule="timeline"]');
-      if (rule) {
-        /* Clip, do not scale. Since 11 September 2026 the thread is the dotted
-           wave (`thread-dots`), not a 2px bar, and `scaleX` would stretch every
-           dot into a growing ellipse as the rule drew. A `clip-path` inset is
-           the same edge travelling across held geometry that Wonder's itinerary
-           rule uses, and it leaves the dots their own shape. Pace unchanged. */
-        gsap.fromTo(
-          rule,
-          { clipPath: "inset(0 100% 0 0)" },
-          {
-            clipPath: "inset(0 0% 0 0)",
-            ease: EASE.machine,
-            scrollTrigger: {
-              trigger: rule,
-              start: "top 80%",
-              end: "top 45%",
-              scrub: SCRUB.normal,
-              invalidateOnRefresh: true,
-            },
-          },
-        );
-      }
-
-      // The beats seat left to right as the draw reaches them — a short catch
-      // (F9: §06's beats and §09's doors are where this page spends its
-      // overshoot), played once, never scrubbed (overshoot on a scrub jitters).
-      const beats = qa(root, "[data-ab-beat]");
-      if (beats.length) {
-        gsap.set(beats, { scale: 0 });
-        const tl = gsap.timeline({
-          scrollTrigger: { trigger: rule ?? root, start: "top 65%", once: true },
-        });
-        tl.to(beats, {
-          scale: 1,
-          duration: DUR.small,
-          ease: EASE.catch,
-          stagger: 0.18,
-        });
-      }
-
-      // 06 → 07 · the board lifts and dims as the people's wave rides over
-      // it. `overlap`'s numbers are deliberately small — a movement at the
-      // join, not the page sliding around.
+      // Held, `[data-ab-lift]` is the sticky STAGE rather than a column inside
+      // it, because the stage is what stands at the section's foot when the deck
+      // reaches it — and the artist's rings ride inside the stage, so they
+      // recede with the board. In flow it is the same wrapper doing the same
+      // thing to the same content.
       const lift = q(root, "[data-ab-lift]");
-      if (lift) {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: root,
-            start: "bottom 60%",
-            end: "bottom 8%",
-            scrub: SCRUB.normal,
-            invalidateOnRefresh: true,
-          },
-        });
-        tl.overlap(lift, {});
-      }
+      if (!lift) return;
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: root,
+          start: "bottom 60%",
+          end: "bottom 8%",
+          scrub: SCRUB.normal,
+          invalidateOnRefresh: true,
+        },
+      });
+      tl.overlap(lift, {});
     },
-    enter: arrivals,
     cut: clearAll,
   });
 }

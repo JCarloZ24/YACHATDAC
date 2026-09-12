@@ -1274,122 +1274,217 @@ export function WhoDecides() {
       {/* ⚠ NO `overflow-hidden` ON THIS SECTION — it carries seam 05 → 06's
           navy wave ("three values become three board facts"), pulled entirely
           above the section's own box onto §05's roasted foot. A clip here
-          deletes it. The rings re-clip on their own layer, as §02 and §04. */}
+          deletes it, and it has to stay OUTSIDE the stage below for the same
+          reason: the stage is the held screen and the held screen clips. */}
       <WaveDivider ground="var(--color-midnight)" hook="wave" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          className="top-[8%] left-[55%] w-[56.25rem] rotate-9 opacity-15"
-        />
-        <RingArtwork
-          piece="a"
-          className="-left-64 top-[56%] w-[51.25rem] -rotate-13 opacity-[0.13]"
-        />
-      </div>
 
-      {/* Seam 06 → 07 lifts THIS wrapper (`overlap`, the page's one loud
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid; in flow it contributes nothing and the three blocks below stack
+          in the order they are written — the eyebrow, the claim, the calendar —
+          which is the document this replaces. Held, the eyebrow takes the first
+          row and STANDS there while the two parts share the second, so the
+          calendar replaces the claim in place rather than following it down the
+          page (user direction, 12 September 2026).
+
+          ⚠ THE STAGE PAINTS NOTHING. The section's midnight is what the rings
+          sit on, so a ground here hides them — which is exactly what §03's
+          canvas screen did to its own rings. The user asked for the rings to
+          stay in the background; this is the line that keeps them.
+
+          Seam 06 → 07 lifts THIS wrapper (`overlap`, the page's one loud
           transition effect): the board recedes and dims as the people's
-          off-white wave rides over it. */}
-      <div data-ab-lift className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
-        >
-          {whoDecides.title}
-        </p>
-        <h2
-          data-arrive
-          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
-        >
-          {claim[0]}
-        </h2>
+          off-white wave rides over it. The hook is on the stage rather than on
+          a column inside it because held, the stage IS what stands at the
+          section's foot — and the rings recede with the board, which is what
+          "the board recedes" asks for. */}
+      <div data-ab-stage data-ab-lift className="relative">
+        {/* The rings live INSIDE the stage, as §02's do. Left outside, they are
+            `absolute inset-0` of a 300vh section, so `top-[8%]` is 72vh down and
+            `top-[56%]` is 168vh down and neither is ever on the held screen.
+            Inside, they resolve against the sticky screen when it is sticky (a
+            sticky box is a positioned box) and against the section when it is
+            not, which is the right answer in each build and needs no rule. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <RingArtwork
+            piece="b"
+            className="top-[8%] left-[55%] w-[56.25rem] rotate-9 opacity-15"
+          />
+          <RingArtwork
+            piece="a"
+            className="-left-64 top-[56%] w-[51.25rem] -rotate-13 opacity-[0.13]"
+          />
+        </div>
 
-        {/* True, and not the point. */}
-        <p className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/45 sm:text-2xl">
-          {claim[1]}
-        </p>
-        <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/45 sm:text-2xl">
-          {claim[2]}
-        </p>
+        {/* The persistent header. It settles once on the way in and then holds
+            for the whole section — both parts below are read under it. */}
+        <div data-ab6-head className={`${COLUMN} relative pt-16 lg:pt-24`}>
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+          >
+            {whoDecides.title}
+          </p>
+        </div>
 
-        {/* The thread, before it acquires a date. */}
-        <div aria-hidden className="mt-16 h-[2px] w-[24rem] max-w-full bg-ochre" />
+        {/* ---- PART 1 · the claim ------------------------------------------
+            What the board is and how it is made up. Read, then cleared whole:
+            the calendar is not more of this, it is the other half of the
+            answer. */}
+        <div data-ab6-part="claim" className={`${COLUMN} relative`}>
+          <h2
+            data-ab6-claim
+            className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
+          >
+            {claim[0]}
+          </h2>
 
-        {/* ⚠ Future tense. It stays that way until the group is sitting. */}
-        <p className="mt-9 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/95 sm:text-2xl">
-          {whoDecides.body[1]}
-        </p>
+          {/* True, and not the point. */}
+          <p
+            data-ab6-fact
+            className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/45 sm:text-2xl"
+          >
+            {claim[1]}
+          </p>
+          <p
+            data-ab6-fact
+            className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/45 sm:text-2xl"
+          >
+            {claim[2]}
+          </p>
 
-        {/* The thread acquires a date. The rule draws scrubbed, at reading
-            pace, and each beat seats with a short catch as the draw reaches
-            it — the transition channel this section is loud in. */}
-        <div className="relative mt-32">
-          {/* The thread, drawn as a dotted wave rather than a bar (user direction,
-              11 September 2026) — /truth's strand geometry turned horizontal, see
-              `thread-dots` in globals.css. 20px tall because the wave has
-              amplitude, and it is its MIDLINE, not its top, that the beats below
-              have to sit on.
-
-              ⚠ NOT `DottedRule`, and the difference is deliberate. That component
-              is the artist's STRAIGHT supplied rule, gold, static, and §08 uses
-              three of them as dividers between partner groups. This is the thread:
-              ochre, wavy, and drawn. Two dotted things on one page doing two
-              different jobs — do not reconcile them into one. */}
+          {/* The thread, before it acquires a date. */}
           <div
             aria-hidden
-            data-ab-rule="timeline"
-            /* Full width below `lg`, where the beats stack underneath it in their
-               own column and there is no last beat to stop on. */
-            className={`thread-dots h-5 w-full ${THREAD_W}`}
+            data-ab6-rule
+            className="mt-16 h-[2px] w-[24rem] max-w-full bg-ochre"
           />
-          <div className="mt-6 flex flex-col gap-5 lg:mt-0 lg:block lg:h-16">
-            {BEATS.map((beat, i) => (
-              <div key={beat} className={`lg:absolute lg:top-0 ${BEAT_X[i]}`}>
-                <span
-                  aria-hidden
-                  data-ab-beat
-                  /* ⚠ `lg:top-0` is measured from `div.relative.mt-32` — the
-                     wrapper that holds the THREAD as well as this row — so top 0
-                     is the thread's own top, NOT the top of the row this span
-                     sits in. The wave's midline is 10px down from there and the
-                     dot's centre is 9px down from its own top, so +1px lands the
-                     18px dot exactly on the line. (The old 2px rule needed -10px
-                     because a 2px bar has no midline worth the name; carrying
-                     that sign over put the beats 20px into the air.) Below `lg`
-                     the beats stack in their own column and -10px is only an
-                     optical nudge. */
-                  className="block h-[18px] w-[18px] -translate-y-[10px] rounded-full bg-ochre lg:translate-y-[1px]"
-                />
-                <p className="eyebrow mt-2 text-xs tracking-[0.08em] text-ochre">
-                  {beat}
-                </p>
-              </div>
-            ))}
+
+          {/* ⚠ FUTURE TENSE, AND THE ONE LINE ON THIS PAGE THAT DOES NOT SETTLE.
+              Grammar row: "what has not happened yet" — IMG-04's chromatic split,
+              released by F9 and spent here and nowhere else on the site. Two ghost
+              copies of the sentence sit a couple of pixels behind it, one oxide and
+              one turquoise, and drift about a pixel on a cycle with no end state,
+              because the Elder Advisory Group is not sitting. A tense marker, not a
+              texture (Figma 2707:21402 frame 03, "the clause that will not resolve").
+
+              ⚠ ITS REMOVAL CONDITION. When the group sits: delete
+              `data-ab6-unsettled` here and take the future tense out of
+              `whoDecides.body[1]` in the draft and in src/content/about.ts. One
+              attribute and one sentence. Nothing else in the section knows about it.
+
+              ⚠ THE GHOSTS ARE SIBLINGS OF THE SENTENCE, NOT CHILDREN OF IT, and
+              that is structural rather than tidy: `settle` splits this paragraph
+              with SplitText, and ghost copies inside it would be split along with
+              it — three sets of lines animating as one, and the accessible name read
+              three times. They are `aria-hidden`, they come FIRST so the real
+              sentence paints over them, and the static paragraph is what gives the
+              wrapper its height. */}
+          <div data-ab6-unsettled className="relative mt-9 max-w-[940px]">
+            <span
+              aria-hidden
+              data-ab6-ghost="oxide"
+              className="absolute inset-0 text-lg leading-[1.5] font-medium text-oxide sm:text-2xl"
+            >
+              {whoDecides.body[1]}
+            </span>
+            <span
+              aria-hidden
+              data-ab6-ghost="turquoise"
+              className="absolute inset-0 text-lg leading-[1.5] font-medium text-turquoise sm:text-2xl"
+            >
+              {whoDecides.body[1]}
+            </span>
+            <p
+              data-ab6-future
+              className="relative text-lg leading-[1.5] font-medium text-canvas/95 sm:text-2xl"
+            >
+              {whoDecides.body[1]}
+            </p>
           </div>
         </div>
 
-        {/* Reserved for the interiors pass: 2031 is stated and held, never
-            counted up to. `data-ab-date` is the attachment point; nothing
-            animates it in the seam pass. */}
-        <p
-          data-ab-date
-          className="headline mt-16 text-6xl leading-[1.2] text-gold sm:text-8xl lg:mt-16 lg:text-[5rem]"
-        >
-          2031
-        </p>
-        <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl">
-          {whoDecides.body[2]}
-        </p>
+        {/* ---- PART 2 · the calendar ---------------------------------------
+            The thread acquires a date. The rule draws scrubbed, at reading
+            pace, and each beat seats with a short catch as the draw reaches it
+            — the transition channel this section is loud in.
 
-        <div aria-hidden className="mt-20 h-px w-full bg-canvas/20" />
-        {/* The frame renders this label in full. It names what is there, not
-            where the file is. */}
-        <a
-          href={whoDecides.cta.href}
-          className="eyebrow mt-11 block max-w-[1100px] text-xs tracking-[0.08em] text-gold"
-        >
-          {whoDecides.cta.label} →
-        </a>
+            ⚠ HELD, BOTH ARE DRIVEN FROM THE SECTION'S READ, NOT FROM THEIR OWN
+            VIEWPORT CROSSINGS. See `theCalendar` for why. */}
+        <div data-ab6-part="calendar" className={`${COLUMN} relative pb-16 lg:pb-28`}>
+          <div data-ab6-thread className="relative mt-32">
+            {/* The thread, drawn as a dotted wave rather than a bar (user direction,
+                11 September 2026) — /truth's strand geometry turned horizontal, see
+                `thread-dots` in globals.css. 20px tall because the wave has
+                amplitude, and it is its MIDLINE, not its top, that the beats below
+                have to sit on.
+
+                ⚠ NOT `DottedRule`, and the difference is deliberate. That component
+                is the artist's STRAIGHT supplied rule, gold, static, and §08 uses
+                three of them as dividers between partner groups. This is the thread:
+                ochre, wavy, and drawn. Two dotted things on one page doing two
+                different jobs — do not reconcile them into one. */}
+            <div
+              aria-hidden
+              data-ab-rule="timeline"
+              /* Full width below `lg`, where the beats stack underneath it in their
+                 own column and there is no last beat to stop on. */
+              className={`thread-dots h-5 w-full ${THREAD_W}`}
+            />
+            <div className="mt-6 flex flex-col gap-5 lg:mt-0 lg:block lg:h-16">
+              {BEATS.map((beat, i) => (
+                <div key={beat} className={`lg:absolute lg:top-0 ${BEAT_X[i]}`}>
+                  <span
+                    aria-hidden
+                    data-ab-beat
+                    /* ⚠ `lg:top-0` is measured from `div.relative.mt-32` — the
+                       wrapper that holds the THREAD as well as this row — so top 0
+                       is the thread's own top, NOT the top of the row this span
+                       sits in. The wave's midline is 10px down from there and the
+                       dot's centre is 9px down from its own top, so +1px lands the
+                       18px dot exactly on the line. (The old 2px rule needed -10px
+                       because a 2px bar has no midline worth the name; carrying
+                       that sign over put the beats 20px into the air.) Below `lg`
+                       the beats stack in their own column and -10px is only an
+                       optical nudge. */
+                    className="block h-[18px] w-[18px] -translate-y-[10px] rounded-full bg-ochre lg:translate-y-[1px]"
+                  />
+                  <p
+                    data-ab6-beat-label
+                    className="eyebrow mt-2 text-xs tracking-[0.08em] text-ochre"
+                  >
+                    {beat}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 2031 is STATED AND HELD, never counted up to — the grammar's ban on
+              a count-up over a date this page is accountable to. */}
+          <p
+            data-ab-date
+            className="headline mt-16 text-6xl leading-[1.2] text-gold sm:text-8xl lg:mt-16 lg:text-[5rem]"
+          >
+            2031
+          </p>
+          <p
+            data-ab6-body
+            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl"
+          >
+            {whoDecides.body[2]}
+          </p>
+
+          <div aria-hidden data-ab6-hairline className="mt-20 h-px w-full bg-canvas/20" />
+          {/* The frame renders this label in full. It names what is there, not
+              where the file is. */}
+          <a
+            href={whoDecides.cta.href}
+            data-ab6-cta
+            className="eyebrow mt-11 block max-w-[1100px] text-xs tracking-[0.08em] text-gold"
+          >
+            {whoDecides.cta.label} →
+          </a>
+        </div>
       </div>
     </section>
   );
