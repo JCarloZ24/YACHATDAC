@@ -459,17 +459,28 @@
   );
 }
 
-/* The header's ink. `--color-burnt-deep` rather than the `--color-burnt` the
-   flow build used: burnt is 2.91:1 on the off-white ground and has never
-   cleared 4.5:1 at this size, and burnt-deep is the same hue carried down to
-   6.31:1 — globals.css prescribes it for exactly this ground.
+/* The header's ink, on the two CANVAS sections that use this hook.
+   `--color-burnt-deep` rather than the `--color-burnt` the flow build used:
+   burnt is 2.91:1 on the off-white ground and has never cleared 4.5:1 at this
+   size, and burnt-deep is the same hue carried down to 6.31:1 — globals.css
+   prescribes it for exactly this ground.
 
-   It needs no crossover treatment any more. The header used to stand through
+   It needs no crossover treatment any more. §03's header used to stand through
    the whole sequence and its ink STEPPED to `--color-ochre` as the front passed
    it, because burnt-deep is a light-ground token ("it must NEVER be used on a
    dark ground", 2.83:1 on charcoal). Since 12 September 2026 the header leaves
    as the ground changes (user direction), so it is gone before the front
-   reaches it and only ever sits on canvas. */
-[data-ab-eyebrow] {
+   reaches it and only ever sits on canvas.
+
+   ⚠ SCOPED TO THOSE TWO BY NAME. `data-ab-eyebrow` is not a styling hook — it
+   is a SEAM hook, and §05's first value label carries it because §04's
+   contracting loop hands off to it. Unscoped, this rule painted "Country
+   first" burnt-deep on §05's ROASTED ground while the other two values stayed
+   gold (reported 12 September 2026). That is the third thing to leak through a
+   shared hook in this file, after §03's charcoal ground and its grid rows:
+   anything about how a section LOOKS names that section, and only the shared
+   machinery goes unqualified. */
+[data-ab="what-we-are"] [data-ab-eyebrow],
+[data-ab="why-we-exist"] [data-ab-eyebrow] {
   color: var(--color-burnt-deep);
 }
