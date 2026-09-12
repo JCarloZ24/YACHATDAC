@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 11 September 2026*
+*Last updated: 12 September 2026*
 
 The closing offer, 9 September 2026: deck slides 22 and 23 follow the line onto the same canvas, on user direction, and are the last thing the pinned hero does. From `offerAt` the headline alone fades (0.7 units) -- the spirals stay, which is what keeps the two panels reading as one screen -- `wayForward.body` takes the same middle band on opacity over 0.9 units from `offerAt + 0.6`, and four photographs arrive around it from `offerAt + 1.4`, rising 7% of canvas height over 0.9 units on a 0.18 stagger. A 1.3-unit hold ends the page before the pin releases into the footer ground. The plates are `frame` grade and hold still once placed; positions are percentages measured off the deck, which has no Figma node, so nothing there is a token being ignored. They are held for `lg` and above -- at 375 the four collide with the copy at any size worth showing, and the paragraph carries the beat alone. Rendering this paragraph surfaces the D16 flag rather than resolving it: it carries both "Indigenous traditions" and "First Nations" in three sentences, which FNAN asked to be checked on 24 August. The terminology sheet settles it, not an edit in the content module.
 
@@ -1078,11 +1078,13 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 
 ## About — verb *answers* — 2053vh, 11 sections
 
-> **BUILT — seam pass, 8 Sep 2026.** The ten seams of `REF · SCORE · 05 ABOUT`
-> (2642:19666) and the X4 baselines are live: `src/app/about/_components/Motion.tsx`
-> hosts, `src/lib/motion/recipes-about.ts` holds the recipes. The section
-> interiors below — §03's pin, IMG-03, the animated ramp, Group G — remain
-> unbuilt and come as one later pass. Group G stays ▲ Leonard Mickelo.
+> **BUILT — seam pass, 8 Sep 2026; §03's interior, 12 Sep 2026.** The ten seams
+> of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines are live:
+> `src/app/about/_components/Motion.tsx` hosts, `src/lib/motion/recipes-about.ts`
+> holds the recipes. **§03 is now built too** — the 300vh hold, IMG-03, the
+> rising ground and the line-mask settle, in `theQuestion`, with the held layout
+> in `src/app/about/_components/about.css`. The remaining interiors and Group G
+> are still unbuilt; Group G stays ▲ Leonard Mickelo.
 
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
 1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
@@ -1115,11 +1117,34 @@ road (media) → register (type, quiet), and §05 is two values (type) → ochre
 → the third value. Both replaced a blob-masked plate floating on the right, which read as an
 image on the side rather than as part of the page.
 
-**§03 is the page's argument and the only pin.** The ground ramps canvas → evergreen → charcoal
-across the pin; the photograph is taken by the ground in bands (`IMG-03`, released under F9); both
-claims **leave** the screen rather than dimming in place; and the question settles by line mask on
-bare charcoal with nothing behind it. That bare ground is the one place on this page a ground
-carries no artwork, and it is deliberate — see the no-bare-ground rule this page otherwise keeps.
+**§03 is the page's argument and the only pin — BUILT 12 September 2026.** The ground ramps
+canvas → evergreen → charcoal across the pin; the photograph is taken by the ground (`IMG-03`,
+released under F9); both claims **leave** the screen rather than dimming in place; and the
+question settles by line mask on bare charcoal with nothing behind it. That bare ground is the one
+place on this page a ground carries no artwork, and it is deliberate — see the no-bare-ground rule
+this page otherwise keeps.
+
+Three things about the build differ from the frame's notes and are recorded rather than
+reconciled. **The ground RISES**, from the foot of the held screen past its head — the frame's own
+name for the section is "the ground goes out under it", and the direction was confirmed by the
+user on 12 September 2026. **The heading is not persistent**: it holds through both claims and then
+leaves on the ground's first frame (user direction, same day), so the question is asked on a screen
+with nothing on it at all. And **the claims are not `dim`** — the frame annotates both as "undims
+(Y2)", but Y2 is "a person speaking" and the grammar holds its one non-testimony use to Truth §15B;
+these are the corporation's own sentences, so they arrive and leave on the type rows instead.
+
+The beats are **sequential, not layered**, and that is a constraint rather than a preference: the
+claims are dark ink and the rising front is evergreen into charcoal, so any overlap is dark on
+dark. Every claim is read on the photograph, the ground changes on an empty screen, and the
+question is read on charcoal.
+
+**The hold is CSS, not a second pin.** §03 is a slide in `coverSeams`' deck, which already pins the
+section at its foot, so the interior uses a sticky span — the section carries the pin's full height
+and one `position: sticky` screen inside it does the holding. The scrub binds to the section's own
+top-to-foot span, which is exactly how long that screen is held: `height − viewport`, or 200vh of
+the 300. The deck's `BUFFER` does **not** come off it; the gate opens `BUFFER` late and the read
+mark takes it back off, so the two cancel. Below `deck:`'s 1024 × 820, under reduced motion and
+with JavaScript off, none of it applies and the section is the two stacked screens it always was.
 
 **Group G is back in build here, and only here.** The traveller and the page's thread are the same
 object: the question travels down the page and settles at each thing it measures. `G1` travel with

@@ -1,19 +1,22 @@
 "use client";
 
 /**
- * /about — the ten seams. Verb: ANSWERS.
+ * /about — the ten seams, and §03's interior. Verb: ANSWERS.
  *
  * Built to Figma `REF · SCORE · 05 ABOUT — the ground ramp, the pacing, and
- * the ten seams` (2642:19666). This module is the SEAM PASS: it animates the
- * joins between the eleven sections and the X4 baseline arrivals, and nothing
- * inside a section. The interiors — §03's 300vh pin, IMG-03, the animated
- * ground ramp, the line-mask settle — are a later pass, ledgered at
- * `docs/motion/scenes.md:331-390`.
+ * the ten seams` (2642:19666). This module animates the joins between the
+ * eleven sections and the X4 baseline arrivals.
+ *
+ * ⚠ §03's INTERIOR IS NOW HERE TOO (12 September 2026, user direction) — the
+ * 300vh hold, IMG-03, the rising ground and the line-mask settle, all in
+ * `theQuestion`. It is the only section interior in this file and the only
+ * hold on the page that is not a seam, so it is documented at length at its
+ * own recipe rather than here. Every other section interior remains unbuilt.
  *
  * THE SCORE'S SEAM LADDER, and where each lives:
  *
  *   01 → 02   Wave / Divider · OFF-WHITE          coverSeams (gated slide)
- *   02 → 03   ground sweep, scrubbed              coverSeams + nameAndRule (rule out) + questionRule (echo)
+ *   02 → 03   ground sweep, scrubbed              coverSeams + nameAndRule (rule out) + theQuestion (echo)
  *   03 → 03b  HARD CUT — waveless, ruleless       coverSeams (charcoal covers charcoal)
  *   03b → 04  Wave / Divider · OFF-WHITE          coverSeams
  *   04 → 05   ring contracts, transform-only      coverSeams + loopAndRing (ring out) + valuesRelay
@@ -70,7 +73,7 @@ import {
   smoothScrollTo,
   unlockScroll,
 } from "@/lib/motion/smooth-scroll";
-import { DUR, EASE, SCRUB } from "@/lib/motion/tokens";
+import { DUR, EASE, SCRUB, STAGGER } from "@/lib/motion/tokens";
 import type { MotionModule } from "@/lib/motion-controller";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -79,6 +82,30 @@ const q = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
   root.querySelector<T>(sel);
 const qa = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
   Array.from(root.querySelectorAll<T>(sel));
+
+/**
+ * A line-split beat, sized for a SCRUB.
+ *
+ * ⚠ THE STAGGER HAS TO BE CARRIED ACROSS AS A RATIO, and forgetting that is a
+ * real defect rather than a nicety. The grammar sets the line stagger against
+ * the line's own duration — `STAGGER.line` 0.09s against `DUR.large` 0.82s,
+ * about 11% — and on a PLAYED timeline that ratio is what "90ms stagger" in
+ * the frame means. A scrubbed timeline's clock is scroll, not seconds, so a
+ * beat authored at duration 0.10 that keeps the 0.09 DEFAULT staggers its
+ * lines 90% of a line apart instead of 11%: the last line of a three-line
+ * settle then lands a quarter of the whole read after the first.
+ *
+ * That is what made §03's question still be arriving while its rule, its
+ * attribution and its tagline all came in on top of it (reported 12 September
+ * 2026 — "should be in sequential"). Every split beat on a scrub goes through
+ * here so the proportion is kept and the beat's END is `duration × (1 + 0.11 ×
+ * (lines − 1))`, which is the number the sheet has to be laid out against.
+ */
+const LINE_STAGGER = STAGGER.line / DUR.large;
+const lineBeat = (duration: number) => ({
+  duration,
+  stagger: duration * LINE_STAGGER,
+});
 
 /**
  * The pinned hand-offs — the five wave seams as holds.
@@ -679,20 +706,6 @@ export function coverSeams(
   };
 }
 
-/**
- * An ochre rule draws itself left to right, once, when it reaches the reader.
- * Set hollow eagerly so it never shows drawn-then-undrawn.
- */
-function ruleIn(rule: HTMLElement, start = "top 85%"): void {
-  gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
-  gsap.to(rule, {
-    scaleX: 1,
-    duration: DUR.large,
-    ease: EASE.country,
-    scrollTrigger: { trigger: rule, start, once: true },
-  });
-}
-
 /** The X4 baseline: the section's stamped copy arrives once, quietly. */
 function arrivals(tl: gsap.core.Timeline, root: HTMLElement): void {
   const els = qa(root, "[data-arrive]");
@@ -796,28 +809,268 @@ export function roadScreen(root: HTMLElement, span = 62): MotionModule {
 }
 
 /* -------------------------------------------------------------------------
-   §03 — questionRule · seam 02 → 03's echo, and nothing else yet
+   §03 — theQuestion · the page's one held screen
    ------------------------------------------------------------------------- */
 
 /**
- * The pin, the animated ramp, IMG-03 and the line-mask settle all belong to
- * the interiors pass; the static gradient carries the ground until then.
+ * ⚑ THE INTERIORS PASS (12 September 2026, user direction). Built to Figma
+ * 2653:19669, whose layer names are this beat sheet almost verbatim.
+ *
+ * Grammar rows: "the screen clears" (`vacate`), "a change of ground, the
+ * ground goes out under the question", "the page holding its ground, the
+ * interior scrub without a read clock", "what endures" (`settle`).
+ *
+ * ⚠ WHY THERE IS NO PIN HERE. §03 is a slide in `coverSeams`' deck, which
+ * already pins this very section at its foot — two ScrollTriggers pinning one
+ * node do not work. So the hold is LAYOUT: ./about.css gives the section the
+ * pin's full height and sticks one screen inside it, and this module only
+ * scrubs against the section's own top-to-foot span. The sticky screen
+ * releases exactly where the deck's pin engages, so the two abut instead of
+ * overlapping. Same shape /wonder §02 and §04 use.
+ *
+ * ⚠ THE SPAN IS DERIVED, NOT CHOSEN, and it is the one number a later height
+ * change silently breaks:
+ *
+ *     span = 300 (the section)  −  100 (the sticky screen)  =  200
+ *
+ * `composition` runs `start: "top top", end: "+=span%"`, and 200 is exactly how
+ * long the sticky screen is held: a sticky box stops being stuck when its foot
+ * reaches its container's foot, which here is `height − viewport`. So the scrub
+ * and the hold are the same interval by construction, and the sequence finishes
+ * on the frame the screen stops being held.
+ *
+ * ⚠ BUFFER DOES NOT COME OFF IT, which is the trap. `coverSeams` opens this
+ * seam's gate BUFFER **late** ("tall slides open their gate BUFFER late" — see
+ * the constant), at `bottom bottom-=BUFFER`, and then takes BUFFER back off to
+ * find the 100% read mark. The two cancel: the read mark lands exactly where
+ * the section's foot meets the viewport's, which is the same place the sticky
+ * hold ends. A first cut subtracted BUFFER anyway and ran 180, which finished
+ * the sequence 20vh early and left the last 20vh of the hold with the screen
+ * still stuck and nothing moving on it. Measured against the live deck,
+ * 12 September 2026: section top 3103, height 2700, viewport 900 — sticky
+ * released at 4903 (= 3103 + 2700 − 900) and the pin engaged at ~5083.
+ *
+ * ⚠ AND WHY IT DECLARES BOTH BOUNDS. `minWidth`/`minHeight` here are `hold:`'s
+ * thresholds from globals.css, which is the query ./about.css matches. The
+ * layout and the motion have to be withheld together: a held screen with no
+ * sequence shows one frozen claim for 200vh, and a sequence with no held
+ * screen animates type that is scrolling away underneath it.
+ *
+ * CHANNEL. §03 is loud in **type** (scenes.md), and it stays honest: `settle`
+ * and `vacate` are type at reading scale, `dissolve` takes no screen, and the
+ * ground is a MODULE ramp rather than `gsap.effects.groundRamp` — `groundRamp`
+ * is in compose.ts's LOUD.transition and declaring it here would (correctly)
+ * throw. Truth §13 makes the same move for the same reason; the grammar row
+ * reads "module ramp, `groundRamp` lineage".
  *
  * Markup:
- *   [data-ab-rule="quote"]  the thread's first appearance, under the question
- *   [data-arrive]           the claims block
+ *   [data-ab-eyebrow]       the header — holds, then leaves as the ground does
+ *   [data-ab-claim] ×2      the two claims: one replaces the other, both leave
+ *   [data-ab-ground]        the rising front (one custom property)
+ *   [data-ab-plate]         IMG-03 — "at rest it is already gone"
+ *   [data-ab-question]      D96, line masks, 90ms
+ *   [data-ab-rule="quote"]  the thread's first appearance
+ *   [data-ab-attribution]   arrives after the settle lands, never with it
+ *   [data-ab-tagline]       the last thing said before the Breath
  */
-export function questionRule(root: HTMLElement, span = 235): MotionModule {
-  return composition("questionRule", root, {
-    channel: "none",
+export function theQuestion(root: HTMLElement, span = 200): MotionModule {
+  return composition("theQuestion", root, {
+    channel: "type",
     span,
-    uses: ["arrive"],
-    build: () => {
+    minWidth: "1024px",
+    minHeight: "820px",
+    uses: ["settle", "vacate", "arrive", "dissolve"],
+    build: (tl) => {
+      const eyebrow = q(root, "[data-ab-eyebrow]");
+      const [claimA, claimB] = qa(root, "[data-ab-claim]");
+      const ground = q(root, "[data-ab-ground]");
+      const plate = q(root, "[data-ab-plate]");
+      const question = q(root, "[data-ab-question]");
       const rule = q(root, '[data-ab-rule="quote"]');
-      if (rule) ruleIn(rule, "top 82%");
+      const attribution = q(root, "[data-ab-attribution]");
+      const tagline = q(root, "[data-ab-tagline]");
+
+      // The flag ./about.css hangs the whole held layout off. Set here, in the
+      // branch that only exists when the reader wants motion and the window
+      // can hold a screen, so its absence is the fallback rather than a
+      // separate cut to maintain. `composition` reverts the matchMedia context
+      // on destroy but has never removed an attribute, so this one is taken
+      // off in `cut` as well as being absent from it.
+      root.dataset.abHeld = "true";
+
+      // Everything the sequence brings on starts off. Authored here rather
+      // than in the markup because the markup IS the finished document —
+      // hiding the question in CSS would hide it for JavaScript-off too.
+      if (claimB) gsap.set(claimB, { autoAlpha: 0 });
+      gsap.set([question, rule, attribution, tagline].filter(Boolean), {
+        autoAlpha: 0,
+      });
+      if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
+
+      // ---- the ground -------------------------------------------------
+      // LINEAR, one-for-one with scroll. The grammar row is explicit about
+      // why: eased, a ramp stands still through the first third and then
+      // lurches, which reads as broken rather than eased. 130% → −30% so the
+      // front is genuinely off-screen at both ends — see about.css.
+      //
+      // ⚠ IT STARTS AFTER THE SCREEN HAS CLEARED, and that ordering is the
+      // rule, not the taste. The claims are `text-charcoal` and the front is
+      // evergreen into charcoal, so any overlap is dark ink on dark ground: a
+      // first cut ran the ground from .27, under the claims, and at .58 claim
+      // 2's last line sat as an unreadable smudge on near-charcoal while still
+      // at half opacity. It looked like a rendering fault rather than an
+      // effect. The reader's own description has the same order — the claims,
+      // THEN the gradient, THEN the question — so the beats are sequential:
+      // every claim is read on the photograph, and the question is read on
+      // charcoal, and the ground changes in the gap between them with nothing
+      // on it. Front reaches the claims' band at ≈.71, by which time they and
+      // the header have been gone since ≈.60.
+      if (ground) {
+        tl.fromTo(
+          ground,
+          { "--ab-front": "130%" },
+          { "--ab-front": "-30%", duration: 0.18, ease: "none" },
+          0.58,
+        );
+      }
+
+      // IMG-03 is taken by the ground rather than fading on its own clock:
+      // it finishes just before the front clears the head of the screen, so
+      // "at rest it is already gone" is true of the plate and the ground at
+      // the same moment.
+      if (plate) {
+        tl.to(plate, { autoAlpha: 0, duration: 0.16, ease: "none" }, 0.58);
+      }
+
+      // ---- the header leaves with the ground ---------------------------
+      // ⚠ THE EYEBROW IS NOT PERSISTENT (user direction, 12 September 2026:
+      // "remove the header when it transitions background color"). It holds
+      // still through both claims — it is what they are measured against — and
+      // then goes as the ground changes under it, so the question is asked on a
+      // screen with nothing on it at all rather than under a standing label.
+      //
+      // It goes with claim 2, and both finish BEFORE the front arrives — see
+      // the ordering note on the ground above. That is also what retired the
+      // ink step this used to carry: burnt-deep is a light-ground token and
+      // could not have survived the crossing, and now nothing crosses.
+      // Starts ON the ground's first frame (.58) so the header goes AS the
+      // colour turns rather than before it, and finishes at .66 — still clear
+      // of .71, where the front reaches its band. Claim 2 has gone just ahead
+      // of it, so the screen empties content-first, label-last.
+      if (eyebrow) tl.vacate(eyebrow, lineBeat(0.08), 0.58);
+
+      // ---- the claims -------------------------------------------------
+      // Claim 1 is read, then leaves upward past the eyebrow; claim 2 takes
+      // its exact place, is read, and leaves the same way.
+      //
+      // ⚠ THE TWO NEVER OVERLAP, and they have to be sequenced rather than
+      // crossfaded to guarantee it. They share ONE grid cell (about.css) so
+      // that the second replaces the first where the reader is already
+      // looking — which also means any moment both carry ink is two
+      // paragraphs printed on top of each other. A first cut ran the exit and
+      // the entrance together from .08 and .16; measured, both stood at full
+      // opacity from .16 to .30, because a masked stagger keeps its LAST line
+      // opaque until the end.
+      //
+      // So claim 2 starts after claim 1 has finished, AND there is a deliberate
+      // .06 of clear air between them (.24 → .30). The gap is not padding: the
+      // scrub is `SCRUB.normal`, so what is painted trails the scroll by a few
+      // hundredths, and butting the two beats together put claim 1's last line
+      // at ~25% opacity underneath a fully-arrived claim 2 (measured, .28–.32).
+      // Anything that shortens this gap has to re-measure the handover.
+      if (claimA) tl.vacate(claimA, lineBeat(0.14), 0.06);
+      if (claimB) {
+        // ⚠ IT FADES, IT DOES NOT `settle`, AND THAT IS A CONSTRAINT AS WELL AS
+        // THE BRIEF. The brief first: the reader's own description of this beat
+        // is "fades in and text replaces the previous phrase", so a fade is
+        // what was asked for, and the frame only marks this element as leaving.
+        //
+        // The constraint is `freshSplit` (effects/shared.ts): it keeps ONE live
+        // SplitText per element and reverts the previous one before making a
+        // new one, so two split beats on the same element leave the first
+        // beat's tween holding line nodes that are no longer in the document.
+        // Claim 2 is the only element here that both arrives and leaves, and
+        // with `settle` + `vacate` its arrival silently did nothing — it popped
+        // in at full opacity while the exit worked perfectly (measured,
+        // 12 September 2026). Every other split beat on this timeline owns its
+        // element's only split: claim 1 and the header just leave, the question
+        // just arrives. Adding a second split beat to any of them reopens this.
+        tl.fromTo(
+          claimB,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.10, ease: EASE.country },
+          0.24,
+        );
+        // Read, then gone — leaving just as the rising front reaches its band,
+        // so the ground goes out from under the sentence as the sentence goes.
+        // The screen clears BEFORE the question, which is what "the question
+        // is asked on nothing" means (scenes.md:1122) and what the frame's own
+        // note on this element says.
+        tl.vacate(claimB, lineBeat(0.12), 0.48);
+      }
+
+      // ---- the answer -------------------------------------------------
+      // The ground is charcoal by now, so the cream question has its ratio
+      // from the first frame it is visible in.
+      // Held until the front is entirely past the head of the screen, so the
+      // cream question has its full ratio in the first frame it is visible in
+      // rather than landing on the tail of the evergreen crossing.
+      if (question) {
+        tl.set(question, { autoAlpha: 1 }, 0.76);
+        tl.settle(question, lineBeat(0.10), 0.76);
+      }
+
+      // The thread's first appearance, drawing left to right: scaleX from a
+      // left origin, as a beat on this timeline rather than on a viewport
+      // trigger of its own. A `top 82%` trigger inside a held screen is
+      // consumed while the slide is still behind the one covering it: the
+      // draw plays where nobody can see it and then nothing moves for the
+      // whole read. That failure is the grammar's "interior scrub" row.
+      if (rule) {
+        tl.set(rule, { autoAlpha: 1 }, 0.89);
+        tl.to(rule, { scaleX: 1, duration: 0.04, ease: EASE.country }, 0.89);
+      }
+
+      // After the settle has landed, never with it — naming the source while
+      // the question is still arriving puts the citation ahead of the claim.
+      //
+      // ⚠ NOT `arrive`, and the reason is subtle enough to be worth writing
+      // down: `arrive` is a `gsap.from`, so its END state is whatever the
+      // element reads at the moment the tween is BUILT — and both of these are
+      // pre-hidden a few lines above, so nothing can flash before the timeline
+      // first renders. A `from` off a hidden element animates 0 → 0 and the
+      // attribution simply never appears (measured, 12 September 2026). Both
+      // endpoints are declared instead, which also keeps `autoAlpha`'s
+      // visibility flip inside the tween rather than stranded in the `set`.
+      // Same 16px and the same curve the X4 row specifies.
+      const quietly = (el: HTMLElement, at: number, duration = 0.035) =>
+        tl.fromTo(
+          el,
+          { autoAlpha: 0, y: 16 },
+          { autoAlpha: 1, y: 0, duration, ease: EASE.country },
+          at,
+        );
+      if (attribution) quietly(attribution, 0.93);
+      // ⚠ THE LAST BEAT ENDS AT EXACTLY 1.0, and that is load-bearing rather
+      // than tidy. A timeline's position parameter is a TIME, and a scrub maps
+      // the reader's 0→1 onto 0→`tl.duration()` — so while the longest beat
+      // ended at 1.015, every number written here was read about 1.5% early and
+      // the beat sheet quietly meant something other than it said. Normalised,
+      // a position in this function IS the fraction of the read it looks like.
+      // Anything added after this has to keep that true.
+      if (tagline) quietly(tagline, 0.965);
     },
-    enter: arrivals,
-    cut: clearAll,
+    // The eyebrow only. The claims are the sequence's now, and the answer
+    // screen is brought on by it — a baseline arrival on either would fight
+    // the same opacity from a second trigger.
+    enter: (tl, el) => {
+      const eyebrow = q(el, "[data-ab-eyebrow]");
+      if (eyebrow) tl.arrive([eyebrow]);
+    },
+    cut: (el) => {
+      delete el.dataset.abHeld;
+      clearAll(el);
+    },
   });
 }
 

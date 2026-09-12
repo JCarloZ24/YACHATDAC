@@ -16,6 +16,7 @@ import {
 } from "./_components/Sections";
 import { AboutMotion } from "./_components/Motion";
 import { DebugRail } from "./_components/DebugRail";
+import "./_components/about.css";
 
 export const metadata: Metadata = {
   title: "About",
@@ -36,13 +37,16 @@ export const metadata: Metadata = {
  * Marc's styling and not rebuilt here; the page just declares the ground it
  * hands over on.
  *
- * ⚠ THE SEAM PASS IS MOUNTED. `<AboutMotion />` builds the ten
- * section-to-section seams of `REF · SCORE · 05 ABOUT` (Figma 2642:19666) and
- * the X4 baseline arrivals — and only those. The section interiors (§03's
- * 300vh pin, IMG-03, the line-mask settle, Group G's waypoints) remain
- * unbuilt, ledgered at docs/motion/scenes.md:331-390, and come as one pass,
- * not piecemeal. With JavaScript off the page still renders complete — rest
- * state is the finished state, and the reduced-motion cut is that same state.
+ * ⚠ THE SEAM PASS IS MOUNTED, AND SO IS §03'S INTERIOR. `<AboutMotion />`
+ * builds the ten section-to-section seams of `REF · SCORE · 05 ABOUT` (Figma
+ * 2642:19666), the X4 baseline arrivals, and — from 12 September 2026, user
+ * direction — §03's held screen: the claims leave, the ground goes out under
+ * them from the foot up, and the question is asked on bare charcoal
+ * (`theQuestion`, and the held layout in ./_components/about.css). Every other
+ * section interior (IMG-03's siblings, Group G's waypoints) remains unbuilt and
+ * ledgered at docs/motion/scenes.md. With JavaScript off the page still renders
+ * complete — rest state is the finished state, the reduced-motion cut is that
+ * same state, and §03 falls back to the two stacked screens it used to be.
  * See the header of ./_components/Sections.tsx before changing anything.
  *
  * `PageTransition` stays: it paints the page's own ground behind everything,

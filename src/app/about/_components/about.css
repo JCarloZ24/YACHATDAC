@@ -1,0 +1,165 @@
+/* ---------------------------------------------------------------------------
+   /about §03 — THE QUESTION, held as one screen.
+
+   Figma 2653:19669, "03 · Why we exist — ⚑ THE QUESTION · PINNED 300vh · the
+   ground goes out under it". Grammar rows: "the page holding its ground, the
+   interior scrub without a read clock", "a change of ground, the ground goes
+   out under the question", "the screen clears".
+
+   WHY THIS IS CSS AND NOT TAILWIND ON THE ELEMENTS. The whole of §03's held
+   layout hangs off ONE attribute, `data-ab-held`, which `theQuestion` writes
+   when it builds and removes when it reverts. Without the attribute this file
+   contributes nothing at all and the section is ordinary flow: two stacked
+   screens, every word on the page, which is exactly what it renders today.
+   That is the fallback for all four ways the hold can be withheld —
+   JavaScript off, prefers-reduced-motion, a window under 1024px, a window
+   under 820px tall — and it is one state rather than four, because it is the
+   absence of a state.
+
+   The same agreement `[data-people-ready]` makes in our-people.css and
+   `root.dataset.deckActive` makes in gated-deck.ts: the module owns the flag,
+   the stylesheet owns the layout, and neither guesses about the other. The
+   media query below is `hold:`'s from globals.css written out longhand for the
+   reason record.ts writes it out — the module gates on the identical query
+   (`minWidth`/`minHeight` on its composition), and a held layout with no
+   motion, or motion with no held layout, is worse than neither.
+
+   ⚠ THE SECTION CANNOT CARRY `overflow: hidden`. An ancestor with
+   `overflow: hidden` becomes a scroll container, and `position: sticky` then
+   resolves against a box that does not scroll — the screen simply never
+   sticks. The section uses `overflow-clip` instead, which clips the artist's
+   rings without establishing a scroll container. Verified in browser; this is
+   the one line in §03 that looks cosmetic and is structural.
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) and (min-height: 820px) {
+  /* 300vh held against 235vh drawn — scenes.md's own convention for this
+     section, and the number in the frame's name. One screen is spent being
+     read; the rest is the beats. */
+  [data-ab-held] {
+    height: 300vh;
+  }
+
+  /* THE HELD SCREEN. A single grid cell, so every layer below is stacked in
+     the same place rather than positioned absolutely — absolute layers would
+     overlap each other in the flow fallback, and the fallback has to stay a
+     readable document. */
+  [data-ab-held] [data-ab-stage] {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+    display: grid;
+    grid-template: 1fr / 1fr;
+  }
+
+  /* THE GROUND IS THE STAGE'S, NOT THE SECTION'S. In flow the section paints
+     the static ramp and the screens sit on it; held, the ground is the rising
+     front and nothing else, so the section's own gradient has to go — left on,
+     it scrolls up BEHIND the sticky screen and bleeds evergreen through the
+     semi-transparent plate and scrim, racing the front it is supposed to be
+     replaced by.
+
+     Charcoal rather than canvas, because the only time any of the section
+     shows next to the screen is after the sticky releases, in the 20vh the
+     deck spends holding before it plays — and by then the sequence has ended
+     on charcoal and the Breath covering it is charcoal too. Canvas there was a
+     bright band sliding up under a black screen. */
+  [data-ab-held] {
+    background-image: none;
+    background-color: var(--color-charcoal);
+  }
+
+  /* The two screens share that cell, and BOTH fill it — `align-self` is left
+     alone deliberately so each stretches to the stage's full height. Their
+     own layout does the placing: the claims screen puts its column at the top
+     with its own padding, and the answer screen centres with `justify-center`.
+     Sizing them to their content instead (`align-self: start`) left the claims
+     screen about half a viewport tall, so the photograph and the rising front
+     — both `absolute inset-0` of it — covered half the screen and the section
+     showed underneath. Caught on screen, not in the numbers. */
+  [data-ab-held] [data-ab-screen] {
+    grid-area: 1 / 1;
+    /* The flow build's `min-h-[100svh] lg:min-h-[130svh]` would otherwise make
+       the grid ROW taller than the stage and push the answer screen out of the
+       held viewport. Held, the screen IS the stage's height. */
+    min-height: 0;
+  }
+
+  /* The first screen carries the opening ground for both: canvas, with the
+     photograph and the legibility scrim over it, and the front rising through.
+     The answer screen is transparent and paints its type on top. */
+  [data-ab-held] [data-ab-screen="claims"] {
+    background-color: var(--color-canvas);
+  }
+
+  /* Claim 2 REPLACES claim 1 rather than following it, so the two share one
+     cell too and the reader's eye never moves down the page to find the
+     sentence that answered the one before it. */
+  [data-ab-held] [data-ab-claims] {
+    display: grid;
+    grid-template: 1fr / 1fr;
+  }
+  [data-ab-held] [data-ab-claim] {
+    grid-area: 1 / 1;
+    margin-top: 0;
+  }
+
+  /* The flow build's static coming-apart gradient is the thing the rising
+     front replaces. Both exist in the markup; exactly one is ever painted. */
+  [data-ab-held] [data-ab-scrim="flow"] {
+    display: none;
+  }
+  [data-ab-held] [data-ab-ground] {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   THE RISING FRONT — "the ground goes out UNDER it".
+
+   The dark comes up from the foot of the screen and climbs past its head, so
+   the light goes out of the bottom of the photograph first. Evergreen is the
+   leading edge, charcoal fills in behind it, and canvas is simply what the
+   front has not reached yet — which is why green is the CROSSING and never the
+   destination. Bottom-to-top by user direction, 12 September 2026.
+
+   ONE CUSTOM PROPERTY MOVES. `--ab-front` is the front's position in the
+   screen and every stop is a `calc()` offset from it, so the per-frame write
+   is a single CSS variable and never a rebuilt gradient string — the per-frame
+   budget in CLAUDE.md is transform, opacity, clip-path and custom properties.
+
+   The travel is 130% → −30%, not 100% → 0%. At 130% the softest stop
+   (`front − 26%`) is still at 104% and nothing has reached the screen; at
+   −30% the charcoal stop (`front + 22%`) is at −8% and the screen is solid.
+   Stopping at the obvious 100/0 would show green at the foot on arrival and
+   leave canvas at the head on departure.
+
+   Hidden until the module claims the section — see the flag note above.
+   --------------------------------------------------------------------------- */
+[data-ab-ground] {
+  display: none;
+  --ab-front: 130%;
+  background-image: linear-gradient(
+    180deg,
+    transparent calc(var(--ab-front) - 26%),
+    var(--color-evergreen) var(--ab-front),
+    var(--color-charcoal) calc(var(--ab-front) + 22%),
+    var(--color-charcoal) 300%
+  );
+}
+
+/* The header's ink. `--color-burnt-deep` rather than the `--color-burnt` the
+   flow build used: burnt is 2.91:1 on the off-white ground and has never
+   cleared 4.5:1 at this size, and burnt-deep is the same hue carried down to
+   6.31:1 — globals.css prescribes it for exactly this ground.
+
+   It needs no crossover treatment any more. The header used to stand through
+   the whole sequence and its ink STEPPED to `--color-ochre` as the front passed
+   it, because burnt-deep is a light-ground token ("it must NEVER be used on a
+   dark ground", 2.83:1 on charcoal). Since 12 September 2026 the header leaves
+   as the ground changes (user direction), so it is gone before the front
+   reaches it and only ever sits on canvas. */
+[data-ab-eyebrow] {
+  color: var(--color-burnt-deep);
+}

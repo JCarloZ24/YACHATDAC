@@ -72,6 +72,22 @@ export type CompositionSpec = {
    */
   minWidth?: string;
   /**
+   * Minimum viewport HEIGHT the composition is allowed to build at. Same
+   * contract as `minWidth` — below it the screen takes its `cut` — and a
+   * screen may declare either, both, or neither.
+   *
+   * It exists because a held screen is withheld by height as well as width.
+   * `globals.css`'s `deck:` and `hold:` variants both carry
+   * `(min-height: 820px)` for a stated reason: "a slide taller than its screen
+   * is a trap, because the snapping pulls the reader back to the top of the
+   * thing they were trying to see the bottom of". When the layout withholds
+   * the sticky screen on a short window, the motion has to stand down on the
+   * same query or it animates a held screen that is not held —
+   * `src/lib/motion/record.ts` writes the query out longhand for exactly this
+   * reason, and this is that agreement made declarable.
+   */
+  minHeight?: string;
+  /**
    * Minimum viewport width at which the screen is allowed to PIN. Below it the
    * composition still builds — same timeline, same entrance — it just does not
    * hold the section still.
@@ -212,10 +228,18 @@ export function composition(
     registerYachatdacEffects();
     mm = gsap.matchMedia();
 
-    // Three branches, not two, once a screen declares `minWidth`: full
-    // motion only when the reader wants it AND the window can carry it;
-    // otherwise the cut, whichever of the two reasons applies.
-    const wide = spec.minWidth ? ` and (min-width: ${spec.minWidth})` : "";
+    // Three branches, not two, once a screen declares `minWidth` or
+    // `minHeight`: full motion only when the reader wants it AND the window
+    // can carry it; otherwise the cut, whichever of the reasons applies.
+    //
+    // Width and height are ONE gate, not two: a screen is withheld by either,
+    // so the complement below negates the pair rather than each half. Negating
+    // them separately builds both branches on a window that fails only one.
+    const bounds = [
+      spec.minWidth ? `(min-width: ${spec.minWidth})` : null,
+      spec.minHeight ? `(min-height: ${spec.minHeight})` : null,
+    ].filter(Boolean) as string[];
+    const wide = bounds.length ? ` and ${bounds.join(" and ")}` : "";
 
     // The full branch, parameterised by whether it may pin — so a screen can
     // keep its choreography on a phone and give up only the pin.
@@ -300,13 +324,13 @@ export function composition(
       spec.cut(root);
     });
 
-    // Narrow and motion-willing: same cut, different reason.
-    // `not (min-width: X)` rather than a max-width, so the two branches are
-    // exactly complementary — a max-width of the same value would ALSO match
-    // at the boundary itself and both branches would build.
-    if (spec.minWidth) {
+    // Too small and motion-willing: same cut, different reason.
+    // `not (...)` rather than a max-width, so the two branches are exactly
+    // complementary — a max-width of the same value would ALSO match at the
+    // boundary itself and both branches would build.
+    if (bounds.length) {
       mm.add(
-        `(prefers-reduced-motion: no-preference) and (not (min-width: ${spec.minWidth}))`,
+        `(prefers-reduced-motion: no-preference) and (not (${bounds.join(" and ")}))`,
         () => {
           revertSplits(root);
           spec.cut(root);

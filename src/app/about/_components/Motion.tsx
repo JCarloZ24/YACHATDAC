@@ -13,7 +13,7 @@ import {
   nameAndRule,
   partnersDots,
   peopleWave,
-  questionRule,
+  theQuestion,
   roadScreen,
   valuesRelay,
 } from "@/lib/motion/recipes-about";
@@ -31,7 +31,8 @@ import {
  *
  *   §01 hero          media       110vh   ⚡4   (baseline only this pass)
  *   §02 what-we-are   type        299vh   ⚡3   three screens: decode · road · register
- *   §03 why-we-exist  type        235vh   ⚡5   (the pin is the interiors pass)
+ *   §03 why-we-exist  type        300vh   ⚡5   HELD — the claims leave, the
+ *                                                ground goes out, the question
  *   §03b breath       none         55vh   ⚡1   the hold
  *   §04 what-we-do    media       265vh   ⚡4
  *   §05 how-we-work   type        249vh   ⚡2
@@ -108,7 +109,11 @@ export function AboutMotion() {
       wire(find("hero"), (el) => heroQuiet(el, 110));
       wire(find("what-we-are"), (el) => nameAndRule(el, 299));
       wire(find("road"), (el) => roadScreen(el, 62));
-      wire(find("why-we-exist"), (el) => questionRule(el, 235));
+      // §03 is the page's one held screen. 200 is derived, not chosen — the
+      // section's 300vh less the one viewport its sticky screen is held for.
+      // The deck's BUFFER does NOT come off it; see the arithmetic and the
+      // measurement at `theQuestion`.
+      wire(find("why-we-exist"), (el) => theQuestion(el, 200));
       wire(find("breath"), (el) => breath(el, 55));
       wire(find("what-we-do"), (el) => loopAndRing(el, 265));
       wire(find("how-we-work"), (el) => valuesRelay(el, 249));

@@ -132,6 +132,7 @@ export type EffectName =
   | "homeHeroDissolve"
   // core — arrival, type, the rest
   | "settle"
+  | "vacate"
   | "display"
   | "waveClamp"
   | "brighten"

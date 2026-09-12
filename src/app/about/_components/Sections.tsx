@@ -407,133 +407,211 @@ export function WhatWeAre() {
 }
 
 /* -------------------------------------------------------------------------
-   03 · WHY WE EXIST — ⚑ the question · 235vh
+   03 · WHY WE EXIST — ⚑ the question · 300vh held against 235vh drawn
    ------------------------------------------------------------------------- */
 
 /**
  * The page's argument, and the section everything else is measured against.
  *
- * THE GROUND TAKES THE PHOTOGRAPH. A single ramp runs the whole section —
- * canvas at the top, evergreen at 40%, charcoal from 53% down — and the
- * photograph sits under a second gradient that resolves to solid charcoal
- * before the question arrives. So the two claims are read on Country, and the
- * question is asked on nothing.
+ * ⚠ THE INTERIORS PASS IS BUILT (12 September 2026, user direction). This was
+ * two stacked screens read one after the other; it is now ONE held screen and
+ * the frame's own sequence runs across it — Figma 2653:19669, "03 · Why we
+ * exist — ⚑ THE QUESTION · PINNED 300vh · the ground goes out under it". The
+ * beats are `theQuestion` in src/lib/motion/recipes-about.ts; the held layout
+ * is ./about.css. Read both before changing the markup, because the two are
+ * coupled through the `data-ab-*` hooks below and through one flag.
+ *
+ * HOW THE SEQUENCE READS. The first claim is read and then LEAVES upward past
+ * the heading; the second takes its exact place, is read, and leaves the same
+ * way. Underneath all of that the ground goes out from the foot up, taking the
+ * photograph with it — and the heading goes with the ground (user direction,
+ * 12 September 2026), so by the time the question is asked there is nothing on
+ * the screen at all. The question settles by line mask on bare charcoal, the
+ * ochre rule draws, the attribution arrives after it, and the tagline is the
+ * last thing said before the Breath.
+ *
+ * ⚠ REST STATE IS STILL THE FINISHED STATE, and it is the same document as
+ * before. Everything held is gated on ONE attribute that `theQuestion` writes
+ * (`data-ab-held`); without it this section is ordinary flow — two screens,
+ * every word present, the static ground ramp below doing the work the rising
+ * front does when held. That covers JavaScript off, prefers-reduced-motion,
+ * and a window too small or too short to hold a screen, as one state.
+ *
+ * ⚠ NO `overflow-hidden` ON THIS SECTION — it must be `overflow-clip`. Hidden
+ * makes the section a scroll container and `position: sticky` inside it then
+ * never sticks. See the note at the head of ./about.css.
  *
  * ⚠ THE ONE BARE GROUND ON THE PAGE, and it is deliberate. Every other section
  * carries the artist's rings behind it; here the question sits on charcoal
  * with nothing behind it at all, because anything behind it would be something
- * else to look at. The two rings the frame does place sit high and low, well
- * clear of the question's own band.
+ * else to look at. The rings are placed under the rising front rather than
+ * faded separately — the ground takes them the way it takes the photograph,
+ * which is one mechanism instead of two.
+ *
+ * THE CLAIMS ARE NOT TESTIMONY. The frame notes both of them as "undims (Y2)",
+ * and that is not built: Y2 is the `dim` row, "a person speaking", and the
+ * grammar's variants table holds its one non-testimony use to Truth §15B. These
+ * are the corporation's own sentences about itself, so they arrive and leave on
+ * the type rows instead. Raised rather than reconciled.
  *
  * The quote is the client's, from the Foreword to the Ten Year Strategic Plan,
- * and the attribution says so. It is never set as testimony and never split.
+ * and the attribution says so. It is never set as testimony and never split
+ * below the line.
  */
 export function WhyWeExist() {
   return (
     <section
       data-ab="why-we-exist"
-      className="relative overflow-hidden"
+      className="relative overflow-clip"
       style={{
         backgroundImage:
           "linear-gradient(180deg, #f6f6ec 0%, #f1f0e5 26%, #22372b 36%, #090e12 43%, #090e12 100%)",
       }}
     >
-      <RingArtwork
-        piece="b"
-        className="top-[4%] left-[64%] w-[56.25rem] opacity-30"
-      />
-      <RingArtwork
-        piece="a"
-        className="-left-48 top-[54%] w-[40rem] opacity-30"
-      />
-
-      {/* THE CLAIMS ARE READ ON COUNTRY. The photograph fills exactly this
-          block and no more — it is the intro's own background rather than a
-          percentage of the section, so however tall the copy runs it can never
-          reach the question below. That coupling is the whole point: the
-          picture belongs to the claims, and the question is asked on nothing.
-
-          ⚠ THE BLOCK IS A FULL SLIDE (user direction, 8 Sep). When the deck
-          seats this section, the arrival screen is the claims on a largely
-          CLEAR photograph — the coming-apart begins below the fold, so no
-          darkness shows at the bottom of the first viewport. Content-sized it
-          was 568px, which compressed the whole collapse into the arrival
-          screen; min-height makes the first beat the photograph's. */}
-      <div className="relative min-h-[100svh] lg:min-h-[130svh]">
-        <div data-motion={QUESTION?.grade ?? "full"} className="absolute inset-0 opacity-50">
-          <MediaOrField
-            src={QUESTION?.src ?? null}
-            alt="Open Country, wide — mulga running to the horizon"
-            sizes="(min-width: 1024px) 100vw, 260vw"
-            fieldClass="bg-evergreen/40"
-          />
-        </div>
-        {/* The coming-apart. Still resolves to solid charcoal before the block
-            ends — the ground takes the photograph before the question — but
-            the collapse now lives in the block's last fifth: light through
-            60%, evergreen at 82%, charcoal by 96%. On a 130svh block that
-            puts the first dark pixel below the arrival screen's fold. */}
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "linear-gradient(180deg, rgba(246,246,236,0.6) 0%, rgba(241,240,229,0.55) 60%, rgba(34,55,43,0.92) 82%, #090e12 96%, #090e12 100%)",
-          }}
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          one-cell grid; in flow it adds nothing and the two screens below
+          simply stack, which is the build this replaced. */}
+      <div data-ab-stage>
+        {/* Placed on the stage rather than the section so the rising front,
+            which is a layer of the claims screen, passes over them. Static at
+            30%, as the frame draws them. */}
+        <RingArtwork
+          piece="b"
+          className="top-[4%] left-[64%] w-[56.25rem] opacity-30"
+        />
+        <RingArtwork
+          piece="a"
+          className="-left-48 top-[54%] w-[40rem] opacity-30"
         />
 
-        <div className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-24 lg:pb-[22svh]`}>
-          <p
-            data-arrive
-            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+        {/* ---- the claims screen ------------------------------------------
+            THE CLAIMS ARE READ ON COUNTRY. The photograph fills exactly this
+            block and no more — held, it is the screen; in flow it is a full
+            slide of its own, and either way the question below can never
+            reach it. */}
+        <div
+          data-ab-screen="claims"
+          className="relative min-h-[100svh] lg:min-h-[130svh]"
+        >
+          <div
+            data-ab-plate
+            data-motion={QUESTION?.grade ?? "full"}
+            /* 70, not the flow build's 50. Held, this photograph is a whole
+               screen rather than the top of a tall block, and at 50 under the
+               scrim below it read as a tint of Country instead of Country. The
+               claims still clear their ratio — the scrim carries that, and it
+               was lightened to match. */
+            className="absolute inset-0 opacity-70"
           >
-            {whyWeExist.title}
-          </p>
-          <p
-            data-arrive
-            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
-          >
-            {whyWeExist.body[0]}
-          </p>
-          <p
-            data-arrive
-            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
-          >
-            {whyWeExist.body[1]}
-          </p>
-        </div>
-      </div>
+            <MediaOrField
+              src={QUESTION?.src ?? null}
+              alt="Open Country, wide — mulga running to the horizon"
+              sizes="(min-width: 1024px) 100vw, 260vw"
+              fieldClass="bg-evergreen/40"
+            />
+          </div>
 
-      {/* The screen has cleared. Nothing behind the question but ground.
-          A FULL BEAT (user direction, 8 Sep): the question holds a viewport
-          of bare charcoal to itself, centred, at the ramp's display size —
-          the page's argument at the scale ART-DIRECTION.md always meant for
-          it ("at full scale, on a pinned screen"). The line-mask settle and
-          the pin stay the interiors pass. */}
-      <div
-        className={`${COLUMN} relative flex min-h-[100svh] flex-col justify-center pb-16 lg:pb-28`}
-      >
-        <blockquote>
-          <p className="headline max-w-[1240px] text-4xl leading-[1.2] text-canvas sm:text-6xl lg:text-[6rem]">
-            {whyWeExist.quote}
-          </p>
-          {/* The question contracts into this. The thread starts here and runs
-              to §09, where it arrives. Seam 02 → 03's echo: the same ochre
-              line §02 extended, redrawn under the question. The question's own
-              line-mask settle is the interiors pass (scenes.md:367). */}
+          {/* The legibility scrim, and only that: constant, so the charcoal
+              claims clear their ratio on the photograph at every point of the
+              sequence. It used to carry the coming-apart as well; held, that
+              job belongs to the rising front. */}
           <div
             aria-hidden
-            data-ab-rule="quote"
-            className="mt-14 h-[3px] w-[26.5rem] max-w-full bg-ochre"
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(180deg, rgba(246,246,236,0.52) 0%, rgba(241,240,229,0.34) 100%)",
+            }}
           />
-          <footer className="mt-4 max-w-[900px] text-base leading-[1.5] text-canvas/72">
-            {whyWeExist.attribution}
-          </footer>
-        </blockquote>
 
-        <p className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl lg:mt-14">
-          {whyWeExist.tagline}
-        </p>
+          {/* THE COMING-APART, flow build only. Light through 60%, evergreen
+              at 82%, charcoal by 96% — so on a 130svh block the first dark
+              pixel is below the arrival screen's fold. Hidden the moment the
+              section is held, where the front below replaces it. */}
+          <div
+            aria-hidden
+            data-ab-scrim="flow"
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(180deg, rgba(246,246,236,0) 0%, rgba(241,240,229,0.15) 60%, rgba(34,55,43,0.92) 82%, #090e12 96%, #090e12 100%)",
+            }}
+          />
+
+          {/* THE GROUND GOING OUT, held build only. One rising front, driven
+              by a single custom property. Above the plate and the rings so it
+              takes them; below the column so the type is never under it. */}
+          <div aria-hidden data-ab-ground className="absolute inset-0" />
+
+          <div className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-24 lg:pb-[22svh]`}>
+            <p
+              data-arrive
+              data-ab-eyebrow
+              className="eyebrow text-base leading-[1.5] tracking-[0.08em] sm:text-2xl"
+            >
+              {whyWeExist.title}
+            </p>
+            {/* Both claims in one wrapper so the second can replace the first
+                in place when held. No `data-arrive` on either — they are
+                scrub-driven now, and the baseline arrival would fight the
+                sequence for the same opacity. */}
+            <div data-ab-claims className="mt-10">
+              <p
+                data-ab-claim
+                className="max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
+              >
+                {whyWeExist.body[0]}
+              </p>
+              <p
+                data-ab-claim
+                className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
+              >
+                {whyWeExist.body[1]}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ---- the answer screen ------------------------------------------
+            The screen has cleared. Nothing behind the question but ground, at
+            the ramp's display size — the page's argument at the scale
+            ART-DIRECTION.md always meant for it ("at full scale, on a pinned
+            screen"). */}
+        <div
+          data-ab-screen="answer"
+          className={`${COLUMN} relative flex min-h-[100svh] flex-col justify-center pb-16 lg:pb-28`}
+        >
+          <blockquote>
+            <p
+              data-ab-question
+              className="headline max-w-[1240px] text-4xl leading-[1.2] text-canvas sm:text-6xl lg:text-[6rem]"
+            >
+              {whyWeExist.quote}
+            </p>
+            {/* The question contracts into this. The thread starts here and
+                runs to §09, where it arrives. Seam 02 → 03's echo: the same
+                ochre line §02 extended, redrawn under the question, and it
+                draws left to right as the question lands. */}
+            <div
+              aria-hidden
+              data-ab-rule="quote"
+              className="mt-14 h-[3px] w-[26.5rem] max-w-full bg-ochre"
+            />
+            <footer
+              data-ab-attribution
+              className="mt-4 max-w-[900px] text-base leading-[1.5] text-canvas/72"
+            >
+              {whyWeExist.attribution}
+            </footer>
+          </blockquote>
+
+          <p
+            data-ab-tagline
+            className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl lg:mt-14"
+          >
+            {whyWeExist.tagline}
+          </p>
+        </div>
       </div>
     </section>
   );

@@ -53,6 +53,19 @@ export const first = (targets: object) =>
  * to miss. It bites immediately behind a replay button, and on any element
  * re-revealed after a route change. So splits are tracked and reverted before
  * re-splitting.
+ *
+ * ⚠ THE COROLLARY: ONE SPLIT BEAT PER ELEMENT, PER TIMELINE. Reverting the
+ * previous split destroys the line nodes it made, so a tween built against
+ * those nodes is left animating elements that are no longer in the document —
+ * silently, because nothing errors and the element simply sits at its rest
+ * state. Give one element two split effects (say `settle` in and `vacate` out)
+ * and the FIRST one stops working while the second looks perfect.
+ *
+ * Found on /about §03, 12 September 2026: claim 2 was the only element on that
+ * timeline that both arrives and leaves, and its arrival did nothing. If an
+ * element needs both, drive one of the two beats off something that does not
+ * split — a fade or a transform on the element itself — or author both against
+ * a single split you own.
  */
 const splits = new WeakMap<Element, SplitText>();
 
