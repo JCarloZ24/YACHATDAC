@@ -1330,9 +1330,9 @@ function EntryPlate({
         {/* The crest that introduces this plate — below Ahead on TODAY, below
             TODAY's record on the deed (client direction, 11 September 2026).
             Egg-white over the photograph, which is where it reads. */}
-        <LeadingCrest hook={id === "deed" ? "deed-wave" : "plate-wave"} retreats />
+        <SeamWave hook={id === "deed" ? "deed-wave" : "plate-wave"} />
         {/* …and the deed plate also hands ON, into 2022 below it. */}
-        {id === "deed" ? <TrailingCrest hook="boughtback-wave" /> : null}
+        {id === "deed" ? <SeamWave hook="boughtback-wave" edge="foot" /> : null}
         <div
           data-v2-plate
           data-motion={MOTION_GRADE[slot.bucket]}
@@ -2297,77 +2297,59 @@ export function GoldTrail({ variant = "wave" }: { variant?: "wave" | "trail" }) 
 }
 
 /**
- * The mirror of `LeadingCrest`, for a seam that runs DARK to LIGHT.
+ * A SEAM WAVE. One component for every divider Truth seats on a slide, because
+ * three different mechanisms in one page is what "inconsistent" means and that
+ * is fairly what this was called (client, 12 September 2026).
  *
- * Above 2022 the incoming surface is the page's own egg white and the outgoing
- * one is the deed plate's photograph — so a crest seated at the head of the
- * incoming section would again be canvas on canvas. It goes on the OUTGOING
- * plate's foot instead, where egg white rising out of a photograph is the thing
- * that reads. Inside that plate, not below it: the plate is the slide, and the
- * deck only rolls waves it finds inside one.
+ * THE SHAPE OF THE PROBLEM, stated once so the next reader does not rediscover
+ * it: almost every section on Truth shares ONE egg-white ground, so an
+ * egg-white divider only reads where it is drawn over a PHOTOGRAPH. That gives
+ * exactly two cases, and they are the same idea pointed in opposite
+ * directions —
+ *
+ *   `head`  a light section handing into a plate. The crest is drawn on the
+ *           plate's first screen, flipped so it rises into the ground above.
+ *   `foot`  a plate handing into a light section. The crest is drawn on the
+ *           plate's LAST screen, falling, so egg white rises out of the
+ *           photograph.
+ *
+ * Both are one box of the divider's own height, pushed down by exactly that
+ * height so the crest lands ON the plate rather than above the box — which is
+ * also what keeps it clear of the plate's `overflow-hidden`, and what puts it
+ * INSIDE the slide, the one place the deck will look for a wave to roll
+ * (`gate.over.querySelectorAll`).
+ *
+ * AND A CREST IS A TRANSITION, NOT FURNITURE. Both edges are timed in
+ * `bindTruthScenes` off the one `data-truth-seam-wave` attribute: a head crest
+ * is seated through the cover and gone six percent into the read, a foot crest
+ * is absent until three quarters through and then rises. Neither is ever parked
+ * on a photograph the reader is looking at, which is what the first cut of each
+ * of these did.
+ *
+ * ⚠ THE CSS REST STATE IS SEATED for both. Off the deck, below lg, with no
+ * JavaScript and under reduced motion there is no read clock to play, and a
+ * crest that rested off-screen would leave those four paths with a bare seam.
  */
-function TrailingCrest({ hook }: { hook: string }) {
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-10 sm:h-26"
-    >
-      <WaveDivider ground="var(--color-canvas)" hook={hook} />
-    </div>
-  );
-}
-
-/**
- * A `WaveDivider` seated at the HEAD of the section it introduces, drawn over
- * whatever that section opens with rather than above it.
- *
- * ⚠ WHY THE BOX. Two reasons, and either alone would be enough.
- *
- * `WaveDivider` seats itself with `top-0 -translate-y-[calc(100%-1px)]` — it
- * lives ENTIRELY ABOVE its own parent, which is right when the section above is
- * a different colour and wrong here twice over: Truth's sections are almost all
- * the one egg-white ground, so a canvas crest drawn above a canvas section is
- * canvas on canvas and draws nothing (measured on the floor seam, 12 September
- * 2026 — it shipped invisible), and the plates it needs to cut into are
- * `overflow-hidden`, which deletes anything living above their box. Giving the
- * box the divider's own height and pushing it down by exactly that height lands
- * the crest ON the section's first screen, where a light wave over a dark
- * photograph is the thing you can actually see.
- *
- * ⚠ AND IT MUST BE INSIDE THE SLIDE. The deck finds the waves it rolls with
- * `gate.over.querySelectorAll(...)` — `gate.over` is the NEXT SLIDE. A crest
- * seated on a runway is outside that subtree and silently never rolls, which is
- * the other half of what was wrong with the floor seam.
- */
-function LeadingCrest({
+function SeamWave({
   hook,
-  retreats = false,
+  edge = "head",
 }: {
   hook: string;
-  /**
-   * Withdraw off the top of the slide once the reader has arrived.
-   *
-   * A crest on an ordinary section scrolls away by itself. A crest on a PINNED
-   * slide does not — it sits on the photograph for the whole read, and on the
-   * ENTRY plates the photograph is the point: the TODAY plate opened with an
-   * egg-white band eating its sky and never gave it back (client, 12 September
-   * 2026). So on those, the crest marks the hand-off and then lifts clear,
-   * revealing the plate whole.
-   *
-   * The lift is authored in `bindTruthScenes`, not here, and the CSS rest
-   * state stays SEATED — off the deck, below lg, with no JavaScript and under
-   * reduced motion there is no read to play, and a crest that rested lifted
-   * would simply be a seam with no divider on all four.
-   */
-  retreats?: boolean;
+  edge?: "head" | "foot";
 }) {
   return (
     <div
       aria-hidden
-      {...(retreats ? { "data-truth-crest-retreats": true } : {})}
-      className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 translate-y-full sm:h-26"
+      data-truth-seam-wave={edge}
+      className={`pointer-events-none absolute inset-x-0 z-10 h-10 translate-y-full sm:h-26 ${
+        edge === "head" ? "top-0" : "bottom-0"
+      }`}
     >
-      <WaveDivider ground="var(--color-canvas)" flip hook={hook} />
+      <WaveDivider
+        ground="var(--color-canvas)"
+        flip={edge === "head"}
+        hook={hook}
+      />
     </div>
   );
 }
@@ -2464,7 +2446,7 @@ export function WattanuriBand() {
             It shipped on the RUNWAY first and was invisible: above the runway
             is the seabed section, which is the same egg-white ground, so the
             crest was canvas drawn on canvas. It belongs on the photograph. */}
-        <LeadingCrest hook="floor-wave" />
+        <SeamWave hook="floor-wave" />
         <RewindArrow />
         {/* ⚠ THE ONE MOVING THING IN A HELD BAND. The section is
             `data-v2-static`, which is an ANCESTOR test — `isHeld()` walks the
