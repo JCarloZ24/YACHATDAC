@@ -1144,9 +1144,22 @@ export function HowWeWork() {
         >
           {lede}
         </p>
+        {/* ⚠ 1060, NOT THE FRAME'S 1000, AND FOR THREE PIXELS. RECIPROCITY's
+            first line — "Everyone who comes here gives something back to" —
+            measures 1003px in Block Berthold at 44px, so at a 1000 measure it
+            overflows by 3 and "to" drops to a line of its own. `settle` splits
+            by line and bakes the boundary, so the result is not a clean re-wrap
+            but a three-line block: the baked first line re-wrapping inside its
+            own div, and the baked second line under it. Widening is the fix the
+            user asked for ("bring the last line next to 'to'... so overall it's
+            two lines", 12 September 2026) rather than letting it break after
+            "back", which would be two lines with "to" leading the second.
+            1060 keeps ~57px of slack for metric drift and stays well inside the
+            1240 column. The other two conclusions are unaffected — both are
+            still two lines at this measure (checked on screen). */}
         <p
           data-ab5-conclusion
-          className="headline mt-8 max-w-[1000px] text-2xl leading-[1.23] sm:text-[2.75rem]"
+          className="headline mt-8 max-w-[1060px] text-2xl leading-[1.23] sm:text-[2.75rem]"
         >
           {conclusion}
         </p>
