@@ -568,7 +568,14 @@ const nineteenFifties: Recipe = (timeline, slide) => {
   // evergreen is 11.71:1 on the opening egg white and 1.52:1 on the charcoal
   // this band walks to, so a heading that simply stayed green would be gone for
   // the whole second half of its own section.
-  const heading = query<HTMLElement>(band, "[data-descent-heading]");
+  /* `[data-descent-heading]` is NOT what this band's title is — the entry
+     title is a plain `<h3 class="headline …">` and the descent hook sits on
+     era headlines, of which this folded band has none. Targeting it found zero
+     elements and the step silently never ran (measured 12 September 2026: the
+     heading stayed evergreen straight into the charcoal, at 1.52:1, which is
+     the exact failure this step exists to prevent). Both the title and the
+     coda beneath it carry `inkHead`, so both are taken. */
+  const heading = query<HTMLElement>(band, ".headline, [data-descent-heading]");
   if (heading.length) {
     timeline.fromTo(
       heading,

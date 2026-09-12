@@ -1327,6 +1327,12 @@ function EntryPlate({
         className={`relative min-h-svh overflow-hidden ${hasDeckContent ? "" : "flex items-end"
           }`}
       >
+        {/* The crest that introduces this plate — below Ahead on TODAY, below
+            TODAY's record on the deed (client direction, 11 September 2026).
+            Egg-white over the photograph, which is where it reads. */}
+        <LeadingCrest hook={id === "deed" ? "deed-wave" : "plate-wave"} />
+        {/* …and the deed plate also hands ON, into 2022 below it. */}
+        {id === "deed" ? <TrailingCrest hook="boughtback-wave" /> : null}
         <div
           data-v2-plate
           data-motion={MOTION_GRADE[slot.bucket]}
@@ -2291,6 +2297,60 @@ export function GoldTrail({ variant = "wave" }: { variant?: "wave" | "trail" }) 
 }
 
 /**
+ * The mirror of `LeadingCrest`, for a seam that runs DARK to LIGHT.
+ *
+ * Above 2022 the incoming surface is the page's own egg white and the outgoing
+ * one is the deed plate's photograph — so a crest seated at the head of the
+ * incoming section would again be canvas on canvas. It goes on the OUTGOING
+ * plate's foot instead, where egg white rising out of a photograph is the thing
+ * that reads. Inside that plate, not below it: the plate is the slide, and the
+ * deck only rolls waves it finds inside one.
+ */
+function TrailingCrest({ hook }: { hook: string }) {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-10 sm:h-26"
+    >
+      <WaveDivider ground="var(--color-canvas)" hook={hook} />
+    </div>
+  );
+}
+
+/**
+ * A `WaveDivider` seated at the HEAD of the section it introduces, drawn over
+ * whatever that section opens with rather than above it.
+ *
+ * ⚠ WHY THE BOX. Two reasons, and either alone would be enough.
+ *
+ * `WaveDivider` seats itself with `top-0 -translate-y-[calc(100%-1px)]` — it
+ * lives ENTIRELY ABOVE its own parent, which is right when the section above is
+ * a different colour and wrong here twice over: Truth's sections are almost all
+ * the one egg-white ground, so a canvas crest drawn above a canvas section is
+ * canvas on canvas and draws nothing (measured on the floor seam, 12 September
+ * 2026 — it shipped invisible), and the plates it needs to cut into are
+ * `overflow-hidden`, which deletes anything living above their box. Giving the
+ * box the divider's own height and pushing it down by exactly that height lands
+ * the crest ON the section's first screen, where a light wave over a dark
+ * photograph is the thing you can actually see.
+ *
+ * ⚠ AND IT MUST BE INSIDE THE SLIDE. The deck finds the waves it rolls with
+ * `gate.over.querySelectorAll(...)` — `gate.over` is the NEXT SLIDE. A crest
+ * seated on a runway is outside that subtree and silently never rolls, which is
+ * the other half of what was wrong with the floor seam.
+ */
+function LeadingCrest({ hook }: { hook: string }) {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 translate-y-full sm:h-26"
+    >
+      <WaveDivider ground="var(--color-canvas)" flip hook={hook} />
+    </div>
+  );
+}
+
+/**
  * The landing mark for the mobile rewind cue — grammar row "the guide leading
  * the eye", Truth's rewind cue.
  *
@@ -2363,23 +2423,6 @@ export function WattanuriBand() {
   const { outgoing } = truthWattanuriMedia;
   return (
     <div data-truth-slide-runway className="relative">
-      {/* THE CREST INTO THE FLOOR (client direction, 11 September 2026).
-          Flipped, so it rises into the seabed above rather than falling into
-          this band — the egg-white ground dipping down over the closing
-          photograph. Canvas-filled because that is the ground it comes FROM;
-          every other divider on the page carries the colour it introduces,
-          and this one is the exception that proves the rule: it introduces a
-          photograph, which has no ground token to carry.
-
-          ⚠ SEATED ON THE RUNWAY, NOT INSIDE THE SECTION. The section below is
-          `overflow-hidden`, and a leading divider lives ENTIRELY above its own
-          box — inside, it would simply be clipped away. Same trap the 1840s
-          wave and About's seams both document.
-
-          The existing note in truth/page.tsx — "19 runs straight into 20: no
-          trail between" — is about the gold dot TRAIL, not a wave; nothing
-          there is being contradicted. */}
-      <WaveDivider ground="var(--color-canvas)" flip hook="floor-wave" />
       <section
         id={wattanuri.id}
         data-truth-slide
@@ -2393,6 +2436,13 @@ export function WattanuriBand() {
         tabIndex={-1}
         className="relative flex min-h-svh items-end overflow-hidden outline-none"
       >
+        {/* THE CREST INTO THE FLOOR — the upside-down egg-white wave closing
+            "Before people" (client direction, 11 September 2026).
+
+            It shipped on the RUNWAY first and was invisible: above the runway
+            is the seabed section, which is the same egg-white ground, so the
+            crest was canvas drawn on canvas. It belongs on the photograph. */}
+        <LeadingCrest hook="floor-wave" />
         <RewindArrow />
         {/* ⚠ THE ONE MOVING THING IN A HELD BAND. The section is
             `data-v2-static`, which is an ANCESTOR test — `isHeld()` walks the
