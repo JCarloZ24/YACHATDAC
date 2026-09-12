@@ -1330,16 +1330,6 @@ function EntryPlate({
         {/* The crest that introduces this plate — below Ahead on TODAY, below
             TODAY's record on the deed (client direction, 11 September 2026).
             Egg-white over the photograph, which is where it reads. */}
-        {/* ⛔ NO CREST ON THE 2026 PLATE'S HEAD (client direction, 12 September
-            2026). TODAY's plate takes one — it is the seam below Ahead — but
-            "2026 · Bought back" opens clean. The record above it already ends
-            on `today-wave`, so a second crest a screen later was two dividers
-            in a row with one screen between them.
-
-            The deed plate still hands ON: its foot carries the crest into
-            2022, which is the seam that was asked for. */}
-        {id === "deed" ? null : <SeamWave hook="plate-wave" />}
-        {id === "deed" ? <SeamWave hook="boughtback-wave" edge="foot" /> : null}
         <div
           data-v2-plate
           data-motion={MOTION_GRADE[slot.bucket]}
@@ -2304,82 +2294,6 @@ export function GoldTrail({ variant = "wave" }: { variant?: "wave" | "trail" }) 
 }
 
 /**
- * A SEAM WAVE. One component for every divider Truth seats on a slide, because
- * three different mechanisms in one page is what "inconsistent" means and that
- * is fairly what this was called (client, 12 September 2026).
- *
- * THE SHAPE OF THE PROBLEM, stated once so the next reader does not rediscover
- * it: almost every section on Truth shares ONE egg-white ground, so an
- * egg-white divider only reads where it is drawn over a PHOTOGRAPH. That gives
- * exactly two cases, and they are the same idea pointed in opposite
- * directions —
- *
- *   `head`  a light section handing into a plate. The crest is drawn on the
- *           plate's first screen, flipped so it rises into the ground above.
- *   `foot`  a plate handing into a light section. The crest is drawn on the
- *           plate's LAST screen, falling, so egg white rises out of the
- *           photograph.
- *
- * Both are one box of the divider's own height, pushed down by exactly that
- * height so the crest lands ON the plate rather than above the box — which is
- * also what keeps it clear of the plate's `overflow-hidden`, and what puts it
- * INSIDE the slide, the one place the deck will look for a wave to roll
- * (`gate.over.querySelectorAll`).
- *
- * AND A CREST IS A TRANSITION, NOT FURNITURE. Both edges are timed in
- * `bindTruthScenes` off the one `data-truth-seam-wave` attribute: a head crest
- * is seated through the cover and gone six percent into the read, a foot crest
- * is absent until three quarters through and then rises. Neither is ever parked
- * on a photograph the reader is looking at, which is what the first cut of each
- * of these did.
- *
- * ⚠ THE CSS REST STATE IS SEATED for both. Off the deck, below lg, with no
- * JavaScript and under reduced motion there is no read clock to play, and a
- * crest that rested off-screen would leave those four paths with a bare seam.
- */
-function SeamWave({
-  hook,
-  edge = "head",
-}: {
-  hook: string;
-  edge?: "head" | "foot";
-}) {
-  return (
-    <div
-      aria-hidden
-      data-truth-seam-wave={edge}
-      className={`pointer-events-none absolute inset-x-0 z-10 h-10 translate-y-full sm:h-26 ${
-        edge === "head" ? "top-0" : "bottom-0"
-      }`}
-    >
-      {/* ⚠ THE GROUND TRAVELS WITH THE CREST. Without this the head crest lifts
-          and REVEALS the plate above itself — egg white, then a widening strip
-          of dark photograph, then the crest, which is exactly the "big gap"
-          that was reported (12 September 2026) and which a still frame of the
-          settled page never shows, because it only exists mid-retreat.
-
-          The crest is the bottom edge of the ground it came from, so the
-          ground has to go with it. A screen of canvas above the crest, inside
-          the same box, moving on the same transform: whatever the crest
-          uncovers on its way up is the egg white it belongs to, and when the
-          box is fully lifted both are above the slide and clipped together.
-          `bottom-full` rather than a fixed offset so it stays welded to the
-          crest at either wave height. */}
-      {/* Offset by the divider's own seat (`-translate-y-[calc(100%-1px)]`),
-          not by the box: the crest is drawn ABOVE the box too, so a filler
-          hung off the box covers the crest and the seam goes straight —
-          measured, that is precisely what the first cut of this did. */}
-      <div className="absolute inset-x-0 bottom-full h-svh -translate-y-[calc(100%-1px)] bg-canvas" />
-      <WaveDivider
-        ground="var(--color-canvas)"
-        flip={edge === "head"}
-        hook={hook}
-      />
-    </div>
-  );
-}
-
-/**
  * The landing mark for the mobile rewind cue — grammar row "the guide leading
  * the eye", Truth's rewind cue.
  *
@@ -2465,13 +2379,6 @@ export function WattanuriBand() {
         tabIndex={-1}
         className="relative flex min-h-svh items-end overflow-hidden outline-none"
       >
-        {/* THE CREST INTO THE FLOOR — the upside-down egg-white wave closing
-            "Before people" (client direction, 11 September 2026).
-
-            It shipped on the RUNWAY first and was invisible: above the runway
-            is the seabed section, which is the same egg-white ground, so the
-            crest was canvas drawn on canvas. It belongs on the photograph. */}
-        <SeamWave hook="floor-wave" />
         <RewindArrow />
         {/* ⚠ THE ONE MOVING THING IN A HELD BAND. The section is
             `data-v2-static`, which is an ANCESTOR test — `isHeld()` walks the

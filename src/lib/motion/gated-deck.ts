@@ -192,9 +192,7 @@ export function createGatedDeck({
   railTraveller = "[data-truth-trail-traveller]",
   railGuide = "[data-truth-trail-guide]",
   firstRailAnchor = "[data-hero-cue]",
-  /* Every `WaveDivider` on an incoming slide, not one named hook — see the
-     note at the roll itself for why this is `[data-seam]` and not every wave. */
-  wave: waveSelector = "[data-seam]",
+  wave: waveSelector = '[data-seam="truth-wave"]',
   railHiddenSlides = '#break-escarpment, [data-truth-ground="count"]',
   railFadeOutSlide = "#art-gallery",
   railFadeInSlide = "#mitchell",
@@ -814,32 +812,11 @@ export function createGatedDeck({
                   }
                 }
                 const over = gate.over;
-                /* EVERY divider on the incoming slide, not just the first.
-                  Truth rolled exactly one crest — the hero seam — because this
-                  read `querySelector` against a single hard-coded hook, while
-                  About has always rolled all of its. Widened 11 September 2026
-                  (client: "make the wave animation the same as /about").
-
-                  ⚠ ONLY `WaveDivider` CAN ROLL, and that is why the selector is
-                  still `[data-seam]` rather than every wave on the page. The
-                  roll works by translating a THREE-TILE STRIP of the same path
-                  by `WAVE_ROLL`, which lands on an identical tile — the shape
-                  is authored to repeat. `HandoffWave` is a different, single
-                  crest on its own viewBox with no strip behind it; tiling it
-                  would mean guessing whether Marc's shape repeats seamlessly,
-                  and a guess that is wrong shows as a hard join across the full
-                  width of the page. Left still until that is settled with the
-                  artwork, not in code. */
-                const waves = over
-                  ? Array.from(
-                      over.querySelectorAll<SVGElement>(waveSelector),
-                    )
-                  : [];
-                waves.forEach((wave, waveIndex) => {
-                  const ink = wave.querySelector<SVGGElement>(
-                    "[data-wave-ink]",
-                  );
-                  if (!ink) return;
+                const wave = over?.querySelector<SVGElement>(waveSelector);
+                const ink = wave?.querySelector<SVGGElement>(
+                  "[data-wave-ink]",
+                );
+                if (wave && ink) {
                   // About pulls this same ink with buffer charge. Truth's
                   // pull is earned by the last 20vh of ordinary reading:
                   // ScrollTrigger brings the crest to full at 100%, then it
@@ -858,7 +835,7 @@ export function createGatedDeck({
                       ease: "none",
                       immediateRender: true,
                       scrollTrigger: {
-                        id: `${eventPrefix}-wave-${index}-${waveIndex}`,
+                        id: `${eventPrefix}-wave-${index}`,
                         trigger: runways[index],
                         start: () =>
                           Math.max(
@@ -873,7 +850,7 @@ export function createGatedDeck({
                       },
                     },
                   );
-                });
+                }
                 if (over) {
                   ScrollTrigger.create({
                     id: `${eventPrefix}-pin-${index}`,

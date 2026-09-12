@@ -939,41 +939,6 @@ export function bindTruthScenes(
          It lifts by exactly its own height, which puts it above the slide's top
          edge where `overflow-hidden` takes it, and it goes early — the reader
          has seen the hand-off by 18% of a read and wants the photograph. */
-      /* SEAM WAVES — one beat for every divider on the page, read off the one
-         attribute the component stamps (`SeamWave`, Sections.tsx).
-
-         Grammar: "a change of ground". A crest belongs to the TRANSITION, not
-         to the section it lands on. On an ordinary page it leaves by being
-         scrolled past; on a pinned slide nothing scrolls, so it has to be told
-         — and the first cut of each of these was simply parked on a photograph
-         for the whole read, which is what was reported (12 September 2026).
-
-           head  seated through the cover, which is when it is doing its work,
-                 and gone six percent into the read. It lifts by exactly its own
-                 height, which puts it above the slide's top edge where
-                 `overflow-hidden` takes it.
-           foot  the mirror: below the foot and clipped until three quarters
-                 through, then up, handing the slide on.
-
-         Both rest SEATED in CSS — see the note on the component. */
-      query<HTMLElement>(slide, "[data-truth-seam-wave]").forEach((crest) => {
-        if (crest.dataset.truthSeamWave === "foot") {
-          timeline.fromTo(
-            crest,
-            { yPercent: 100 },
-            { yPercent: 0, ease: "none", duration: 0.25 },
-            0.75,
-          );
-          return;
-        }
-        timeline.fromTo(
-          crest,
-          { yPercent: 0 },
-          { yPercent: -100, ease: "none", duration: 0.06 },
-          0,
-        );
-      });
-
       revealHeadings(timeline, slide, splits);
 
       const matched = RECIPES.filter(({ match }) =>
