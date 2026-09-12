@@ -2345,6 +2345,24 @@ function SeamWave({
         edge === "head" ? "top-0" : "bottom-0"
       }`}
     >
+      {/* ⚠ THE GROUND TRAVELS WITH THE CREST. Without this the head crest lifts
+          and REVEALS the plate above itself — egg white, then a widening strip
+          of dark photograph, then the crest, which is exactly the "big gap"
+          that was reported (12 September 2026) and which a still frame of the
+          settled page never shows, because it only exists mid-retreat.
+
+          The crest is the bottom edge of the ground it came from, so the
+          ground has to go with it. A screen of canvas above the crest, inside
+          the same box, moving on the same transform: whatever the crest
+          uncovers on its way up is the egg white it belongs to, and when the
+          box is fully lifted both are above the slide and clipped together.
+          `bottom-full` rather than a fixed offset so it stays welded to the
+          crest at either wave height. */}
+      {/* Offset by the divider's own seat (`-translate-y-[calc(100%-1px)]`),
+          not by the box: the crest is drawn ABOVE the box too, so a filler
+          hung off the box covers the crest and the seam goes straight —
+          measured, that is precisely what the first cut of this did. */}
+      <div className="absolute inset-x-0 bottom-full h-svh -translate-y-[calc(100%-1px)] bg-canvas" />
       <WaveDivider
         ground="var(--color-canvas)"
         flip={edge === "head"}
