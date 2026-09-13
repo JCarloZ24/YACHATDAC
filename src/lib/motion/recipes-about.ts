@@ -1969,7 +1969,7 @@ export function theValues(root: HTMLElement, span = 200): MotionModule {
  *   [data-ab-stage] [data-ab-lift]  the sticky screen; also what the seam lifts
  *   [data-ab6-head] [data-arrive]   the persistent eyebrow
  *   [data-ab6-part="claim"]         h2, two facts, the ochre rule, the future
- *   [data-ab6-unsettled]            the sentence that does not resolve (CSS)
+ *   [data-ab6-future]               the Elder Advisory Group sentence
  *   [data-ab6-part="calendar"]      the thread, 2031, the body, the link
  *   [data-ab-rule="timeline"]       the dotted wave, clip-drawn
  *   [data-ab-beat] [data-ab6-beat-label]   the three dots and their names
@@ -1998,7 +1998,6 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
       const heading = q(claimPart, "[data-ab6-claim]");
       const facts = qa(claimPart, "[data-ab6-fact]");
       const factRule = q(claimPart, "[data-ab6-rule]");
-      const unsettled = q(claimPart, "[data-ab6-unsettled]");
       const future = q(claimPart, "[data-ab6-future]");
 
       const beats = qa(root, "[data-ab-beat]");
@@ -2017,7 +2016,14 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
       // ⚠ THE WRAPPER, NOT THE SENTENCE, for the Elder Advisory Group line: its
       // two ghosts are siblings of the paragraph, so hiding the paragraph alone
       // leaves two coloured ghosts of a sentence that is not there.
-      const hidden = [heading, ...facts, unsettled, date, body].filter(
+      // ⚠ `future` IS THE PARAGRAPH ITSELF, and it has to be listed here by
+      // name. This used to hide `[data-ab6-unsettled]`, the wrapper the two
+      // chromatic ghosts lived in. When the ghosts came off on 13 September
+      // 2026 the wrapper went with them, `q()` returned null, and the sentence
+      // was left out of the pre-hide entirely — so it stood on the screen from
+      // the first frame instead of arriving on its beat (reported the same
+      // day). Removing a decoration took its hiding place with it.
+      const hidden = [heading, ...facts, future, date, body].filter(
         Boolean,
       ) as HTMLElement[];
       gsap.set(hidden, { autoAlpha: 0 });
@@ -2068,8 +2074,8 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
       if (factRule) {
         tl.to(factRule, { scaleX: 1, duration: 0.035, ease: EASE.country }, 0.25);
       }
-      if (unsettled && future) {
-        tl.set(unsettled, { autoAlpha: 1 }, 0.29);
+      if (future) {
+        tl.set(future, { autoAlpha: 1 }, 0.29);
         tl.settle(future, lineBeat(0.05), 0.29);
       }
 
