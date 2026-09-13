@@ -2244,6 +2244,7 @@ const WAVE_FILL: Record<string, string> = {
   evergreen: "fill-evergreen",
   charcoal: "fill-charcoal",
   midnight: "fill-midnight",
+  night: "fill-black",
 };
 
 /**
@@ -2570,7 +2571,7 @@ export function WattanuriBand() {
            adding a tab stop (truth-rewind.ts). */
         data-truth-rewind-target
         tabIndex={-1}
-        className="relative flex min-h-svh items-end overflow-hidden outline-none"
+        className="relative flex min-h-svh items-end outline-none"
       >
         <RewindArrow />
         {/* ⚠ THE ONE MOVING THING IN A HELD BAND. The section is
@@ -2585,6 +2586,14 @@ export function WattanuriBand() {
             `scale-105` is not decoration: a plane that travels needs somewhere
             to travel from, or the drift walks its own edge into frame. Every
             other moving plate on the page opens oversized for the same reason. */}
+        {/* The seam into the galaxy (user, 13 September 2026): a wave for the
+            TRANSITION only. Seated leading, over the outgoing beat, so it
+            shows while this slide covers the shelter and sits above the
+            viewport once the sky has landed. Filled black to meet the top of
+            the photograph. The clip moved off the section onto this wrapper
+            so the crest can overhang. */}
+        <HandoffWave to="night" placement="leading" />
+        <div aria-hidden className="absolute inset-0 overflow-hidden">
         <div
           data-truth-galaxy
           className="absolute inset-0 scale-105 overflow-hidden will-change-transform"
@@ -2606,6 +2615,7 @@ export function WattanuriBand() {
           aria-hidden
           className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.25] to-black/[0.68]"
         />
+        </div>
         {/* pb clears the footer's burnt crest (13.9vw), which rides the foot of
           this photograph — the page root is pulled up under it. */}
         <div data-truth-deck-viewport className="relative z-10">
