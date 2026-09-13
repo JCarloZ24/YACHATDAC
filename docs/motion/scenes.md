@@ -1469,6 +1469,88 @@ pages that are static by decision, and /about is one. ⚠ **And not through `Car
 into a grid at a hardcoded `sm` while §07's held rail does not take over until `lg`, so 640–1023
 would stack again; widening it would reach /about §04, /partnerships, /our-people and /wonder.
 
+**THE HOLD'S FLOOR COMES DOWN TO 640 — 13 September 2026, user direction.** Reported from a
+1366 x 768 laptop: the animations looked broken in Chrome and Firefox but worked in Orca's
+embedded browser. Nothing was broken. A browser on that display has about 640px of viewport once
+the OS bar, tab strip and omnibox are taken off, which is under the old 820px floor, so every held
+screen fell back and the page rendered as the static document. Orca's pane measures 918 and cleared
+it. Measured cliff: 1920 x 820 holds at 20,948px of document; 1920 x 819 falls back at 14,873.
+
+⚠ **THE FLOOR WAS NEVER CHOSEN FOR SEVEN HELD SCREENS.** It predates all of this work, in
+globals.css since 4 September, from when §03 was the only one. Falling below it used to cost one
+screen; it now costs the page's entire motion design, on a common laptop.
+
+**Five of the seven already fitted 640** once the floor moved — §02 at 470px, §04 at 489, §06 at
+624, and §03 and §05 adapt because their bands are sized in `svh`. Only §07 (696) and §08 (710)
+overflowed.
+
+⚠ **BUT THE TYPE STEP IS PAGE-WIDE, NOT A PATCH ON THE TWO THAT OVERFLOWED.** Shrinking only those
+left five section headings reading 96px, 56px, 56px, 40px, 40px at one viewport, which is not a
+compact layout, it is a typographic accident. One step down, all together, keeps the relationships
+the frames draw: the question stays the page's giant at 64px, the four section headings sit a rank
+below at 40, §02's short name stays above them, and body copy goes to 18px. Above the step nothing
+applies and the frames render exactly as drawn.
+
+⚠ **IT KEYS ON SHORT *OR* NARROW, because the step is about room and not about height.** §08
+measures 913px at 1024 wide with the frame's type and 626 with the step: a tall 1024 window has the
+height and still cannot hold it, because the heading wraps to three lines and every partner list
+wraps to two. Keying only on height left §08 needing its own 1280px width floor, so between 1024
+and 1279 six sections held and it alone did not. **That half-animated page is the outcome worth
+avoiding**, and with the step keyed on either dimension §08's own floor is gone and the page holds
+uniformly wherever the others do.
+
+⚠ **`hold:` IN globals.css IS UNCHANGED AT 820, DELIBERATELY.** It was lowered and then put back:
+`src/lib/motion/record.ts` matches that exact query by hand for /the-record, and the variant's own
+comment says the module and the layout must not disagree. A page-specific floor does not belong in a
+shared variable, so about.css owns /about's and `HELD` carries the identical pair.
+
+▲ **The type step is a deviation from the V2 tokens and needs design sign-off.** Spacing on these
+screens had already been tightened once and there was nothing left to take from it, so below the
+step the page is a size smaller. The alternative was showing a common laptop a different page from
+everyone else.
+
+Verified with no overflow at 1024 x 640, 1024 x 900, 1280 x 900, 1366 x 640, 1440 x 900 and
+1920 x 1080; the cliff is clean at 639 and at 1023; and at 1440 x 900 the document is still
+22,693px with the frames' own type, unchanged.
+
+**THREE FIXES FROM 1366 x 643 — 13 September 2026, user direction.** All three are in sections
+built before the compact step, and none of them was caused by it: §03's faults reproduce identically
+at 900 tall.
+
+**§02's name clears before the prose, not with it.** The two paragraphs used to live inside the name
+block and arrive at .30 while the name was still up, with the whole block clearing together at .48 —
+so a 643px screen carried the legal name, the short name and five lines of prose at once and the
+last line fell below the fold at y 616. ⚠ Clearing with `autoAlpha` alone would not have fixed it:
+a hidden element keeps its box, so the prose would still have started 265px down an empty screen.
+The prose is its own block sharing the name's grid cell now, the way §06's calendar replaces its
+claim, so it is read WHERE THE NAME WAS. The last line moved from y 616 to y 339. The name beats are
+untouched: `decode` is ENT-07, spent once on the site, and the draft's joke needs both lines read.
+
+**§03 clears its claims screen explicitly, and has no dead screens.** Nothing used to clear that
+screen — it sat at opacity 1 for the whole read and what hid the eyebrow was the rising front
+passing over it. That is timing, not layout: the eyebrow's box and the question's overlap inside the
+shared stage cell, so any viewport where the front had not reached the head of the screen when the
+question arrived would paint them on top of each other. It is cleared at .72 now and the collision
+is impossible at any size. Separately there were two stretches with nothing on screen — claim 1 gone
+and claim 2 not yet arrived around p≈.22, and the ground crossing an empty screen for about a fifth
+of the read. The handover is tightened (claim 1 leaves over .10 not .14, claim 2 arrives at .20 not
+.24, keeping .03 of clear air rather than a dead beat) and the crossing runs .14 not .18 with the
+question following it in at .72.
+
+⚠ **THREE DETECTORS LIED ABOUT §03, AND THE FALSE POSITIVES ARE WORTH RECORDING** so nobody re-runs
+them. `settle` masks lines rather than fading them, so a hidden line still reads `opacity: 1`. The
+eyebrow is covered by the rising ground rather than faded, so it reads `visibility: visible`
+throughout. And `elementFromPoint` hits the legibility scrim, which sits above the copy, so
+hit-testing reports an empty screen at every fraction. **Screenshots were the only honest instrument
+here.** The user's two symptoms were never reproduced from the outside; the fix removes the
+conditions that make them possible rather than chasing a repro.
+
+**§06's chromatic marker is gone.** It did not align at small sizes and the duotone is used nowhere
+else on the site. See the retired row in motion-grammar.md for what came off and, more importantly,
+what did not: the sentence keeps its future tense and kit.ts keeps its consent record. IMG-04 is now
+unspent on the site, which also settles the Elder Advisory Group question this section was carrying
+— the artefact on the sentence describing their own authority is simply no longer there.
+
 **LEGIBILITY AND ONE ALIGNMENT BUG — 13 September 2026, user direction.**
 
 ⚠ **§02's LEGAL NAME WAS DIMMED TWICE.** The paragraph carried `text-evergreen/30` in the markup

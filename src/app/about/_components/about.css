@@ -19,7 +19,15 @@
    The same agreement `[data-people-ready]` makes in our-people.css and
    `root.dataset.deckActive` makes in gated-deck.ts: the module owns the flag,
    the stylesheet owns the layout, and neither guesses about the other. The
-   media query below is `hold:`'s from globals.css written out longhand for the
+   ⚠ THE QUERY BELOW IS NO LONGER `hold:`'s, AND THAT IS DELIBERATE (13 September
+   2026). It was `hold:` written out longhand; /about's floor came down to 640
+   and `hold:`'s stayed at 820, because that variant is shared and
+   src/lib/motion/record.ts matches the 820 query by hand — the comment on the
+   variant says in as many words that the module and the layout must not
+   disagree. A page-specific floor does not belong in a shared variable, so this
+   file owns /about's and recipes-about.ts's `HELD` carries the identical pair.
+   The original note follows, and still describes the shape of the agreement:
+   the media query below was `hold:`'s from globals.css written out longhand for the
    reason record.ts writes it out — the module gates on the identical query
    (`minWidth`/`minHeight` on its composition), and a held layout with no
    motion, or motion with no held layout, is worse than neither.
@@ -32,7 +40,7 @@
    the one line in §03 that looks cosmetic and is structural.
    --------------------------------------------------------------------------- */
 
-@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) and (min-height: 820px) {
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) and (min-height: 640px) {
   /* 300vh held against 235vh drawn — scenes.md's own convention for this
      section, and the number in the frame's name. One screen is spent being
      read; the rest is the beats. */
@@ -506,7 +514,7 @@
   [data-ab="who-decides"][data-ab-held] [data-ab6-rule] {
     margin-top: 2.25rem;
   }
-  [data-ab="who-decides"][data-ab-held] [data-ab6-unsettled] {
+  [data-ab="who-decides"][data-ab-held] [data-ab6-future] {
     margin-top: 1.5rem;
   }
   /* The calendar part starts ON the thread: in flow the `mt-32` is the air
@@ -533,38 +541,6 @@
     padding-bottom: 0;
   }
 
-  /* THE SENTENCE THAT DOES NOT RESOLVE — the drift.
-
-     Grammar row: "what has not happened yet" · IMG-04, released by F9, spent
-     here and nowhere else on the site · Figma 2707:21402 frame 03.
-
-     ⚠ THIS IS CSS AND NOT A REGISTERED EFFECT, and the reason is mechanical.
-     CLAUDE.md's order is row → effect → `EffectName`, and it is deviated from
-     here on purpose: the marker has NO END STATE — it is unresolved because the
-     Elder Advisory Group is not sitting — and an unresolving loop cannot live in
-     a scrubbed timeline, because a scrub freezes it at whatever frame the reader
-     stopped on. A standalone GSAP tween would work and would then outlive the
-     composition, whose teardown kills its own timeline and nothing else. A
-     `@keyframes` pair inside this block costs no lifecycle, cannot leak, and is
-     absent under `prefers-reduced-motion: reduce` for free, because this whole
-     block is. Same class of thing as `thread-dots` in globals.css.
-
-     The static offset below is painted in EVERY build, so the tense marker is
-     not a desktop-only luxury; only the drift is held back to the held screen.
-
-     ⚠ Removal condition is in Sections.tsx, on `data-ab6-unsettled`. */
-  /* ⚠ ONE KEYFRAME SET PER GHOST, not one set and a reversed direction. The
-     offsets are the split — the two ghosts sit on OPPOSITE sides of the
-     sentence — so a shared `from`/`to` walks both to the same place and the
-     split closes, which is the one thing this effect must never do. */
-  [data-ab6-unsettled] [data-ab6-ghost="oxide"] {
-    animation: ab6-drift-oxide 2.6s ease-in-out infinite alternate;
-  }
-  /* Reversed, so the two are never in phase and the gap between them breathes
-     rather than the pair sliding about together. */
-  [data-ab6-unsettled] [data-ab6-ghost="turquoise"] {
-    animation: ab6-drift-turquoise 2.6s ease-in-out infinite alternate-reverse;
-  }
 
   /* -------------------------------------------------------------------------
      §07 — "The people", the roster, one face at a time.
@@ -795,6 +771,83 @@
   [data-ab="partners"][data-ab-held] [data-ab8-cta] {
     margin-top: 0.75rem;
   }
+
+  /* -------------------------------------------------------------------------
+     THE COMPACT CUT — short screens, 13 September 2026, user direction.
+
+     The hold's floor came down from 820px to 640 so a 1366 x 768 laptop sees the
+     page rather than the static fallback. A browser on that display has about
+     640px of viewport once the OS bar, tab strip and omnibox are taken off, and
+     1366 x 768 is a common machine. The floor was never chosen for seven held
+     screens: it predates this work in globals.css, from when §03 was the only
+     one, so it had never been measured against them.
+
+     Measured at 1366 x 640 with the floor lowered, five of the seven already
+     stood — §02 at 470px, §04 at 489, §06 at 624, and §03 and §05 adapt because
+     their bands are sized in `svh`. Only §07 (696) and §08 (710) overflowed.
+
+     ⚠ BUT THE STEP IS PAGE-WIDE, NOT JUST ON THE TWO THAT OVERFLOWED, and that
+     is the point of it. Shrinking only §07 and §08 left the page reading 96px,
+     56px, 56px, 40px, 40px across five section headings at one viewport, which
+     is not a compact layout, it is a typographic accident. One step down, all
+     together, keeps the relationships the frames draw: §03's question stays the
+     largest thing on the page, the section headings stay a rank below it, and
+     §02's short name stays above them.
+
+     ⚠ THIS IS A DEVIATION FROM THE V2 TYPE TOKENS AND NEEDS DESIGN SIGN-OFF.
+     Above 820 nothing here applies and the frames render exactly as drawn.
+     Below it the page is a size smaller so a common laptop is not shown a
+     different page from everyone else. Spacing was already tightened once on
+     these screens; there was nothing left to take from it.
+     ------------------------------------------------------------------------- */
+  /* ⚠ SHORT **OR** NARROW, because the step is about room, not about height.
+     §08 measures 913px at 1024 wide with the frame's type and 626 with this
+     step: a tall 1024 window has the height and still cannot hold it, because
+     the heading wraps to three lines and every partner list wraps to two. Keying
+     only on height left §08 with a 1280px width floor of its own, so between
+     1024 and 1279 six sections held and it alone did not — a half-animated page,
+     which is the one outcome worth avoiding. With this it holds everywhere the
+     others do and the floor comes back to 1024. */
+  @media (max-height: 819px), (max-width: 1279px) {
+    /* The question stays the page's one giant, a rank above everything else. */
+    [data-ab="why-we-exist"][data-ab-held] [data-ab-question] {
+      font-size: 4rem;
+    }
+    /* The name the page is about, still above the section headings. */
+    [data-ab="what-we-are"][data-ab-held] [data-ab2-short] {
+      font-size: 3.5rem;
+    }
+    /* The four section headings, together. */
+    [data-ab="what-we-do"][data-ab-held] [data-ab4-headline],
+    [data-ab="who-decides"][data-ab-held] [data-ab6-claim],
+    [data-ab="the-people"][data-ab-held] [data-ab7-claim],
+    [data-ab="partners"][data-ab-held] [data-ab8-claim] {
+      font-size: 2.5rem;
+      line-height: 1.15;
+    }
+    /* 2031 is a headline in its own right and steps with them. */
+    [data-ab="who-decides"][data-ab-held] [data-ab-date] {
+      font-size: 3.5rem;
+    }
+    /* Body copy, one step, everywhere it is set at the 24px reading size. */
+    [data-ab-held] [data-ab6-fact],
+    [data-ab-held] [data-ab6-future],
+    [data-ab-held] [data-ab6-body],
+    [data-ab-held] [data-ab7-body],
+    [data-ab-held] [data-ab8-lede],
+    [data-ab-held] [data-ab2-body],
+    [data-ab-held] [data-ab5-lede],
+    [data-ab-held] [data-ab-tagline],
+    [data-ab-held] [data-ab-claim],
+    [data-ab="what-we-do"][data-ab-held] [data-ab4-chain] {
+      font-size: 1.125rem;
+    }
+    /* §08's partner names are the section's body, set at heading scale. */
+    [data-ab="partners"][data-ab-held] [data-ab8-list] li {
+      font-size: 1.5rem;
+      line-height: 1.3;
+    }
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -902,54 +955,4 @@
 [data-ab="what-we-are"] [data-ab-eyebrow],
 [data-ab="why-we-exist"] [data-ab-eyebrow] {
   color: var(--color-burnt-deep);
-}
-
-/* ---------------------------------------------------------------------------
-   §06's TENSE MARKER, in every build.
-
-   The two ghost copies of the Elder Advisory Group sentence, held a couple of
-   pixels off it. Static here; the drift that keeps them from ever landing is in
-   the held block above, because it is motion and this is not.
-
-   Grammar row: "what has not happened yet". 0.5 opacity on oxide and turquoise
-   over midnight is a hairline of colour at the edges of the letterforms, not a
-   second readable sentence — the sentence itself is `canvas/95` on top of them.
-   --------------------------------------------------------------------------- */
-
-/* ⚠ THE TWO OPACITIES ARE NOT THE SAME NUMBER, and they cannot be. Oxide
-   (#af231c) is a dark red and turquoise (#32b0ae) is a bright cyan, and the
-   ground is midnight — at a matched 0.5 the turquoise reads as a glow down one
-   side and the oxide reads as nothing at all, which is not a chromatic split,
-   it is a coloured shadow (screenshot, 12 September 2026). Balanced by eye
-   against the ground so the sentence sits BETWEEN two ghosts rather than in
-   front of one.
-
-   `will-change` is deliberately absent: two ghosts on one paragraph do not need
-   their own composited layers, and the drift is a 1px transform. */
-[data-ab6-unsettled] [data-ab6-ghost="oxide"] {
-  opacity: 0.8;
-  transform: translate3d(-2px, -1px, 0);
-}
-[data-ab6-unsettled] [data-ab6-ghost="turquoise"] {
-  opacity: 0.28;
-  transform: translate3d(2px, 1px, 0);
-}
-
-/* About a pixel, and no end state — the `to` is not where it is going, it is
-   the far end of a cycle it never leaves. */
-@keyframes ab6-drift-oxide {
-  from {
-    transform: translate3d(-2px, -1px, 0);
-  }
-  to {
-    transform: translate3d(-3px, -2px, 0);
-  }
-}
-@keyframes ab6-drift-turquoise {
-  from {
-    transform: translate3d(2px, 1px, 0);
-  }
-  to {
-    transform: translate3d(3px, 2px, 0);
-  }
 }

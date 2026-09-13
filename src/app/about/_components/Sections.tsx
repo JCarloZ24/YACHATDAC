@@ -448,20 +448,36 @@ export function WhatWeAre() {
           >
             {shortName}
           </p>
+          </div>
 
-          <p
-            data-ab2-body
-            className="mt-16 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
-          >
-            {whatWeAre.body[1]}
-          </p>
-          <p
-            data-ab2-body
-            className="mt-8 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
-          >
-            {whatWeAre.body[2]}
-          </p>
-        </div>
+          {/* ⚠ THE PROSE IS ITS OWN BLOCK, AND SHARES THE NAME'S CELL WHEN HELD
+              — 13 September 2026, user direction, reported from 1366 x 643.
+              These two paragraphs used to sit inside the name block and arrive
+              while the name was still up, so a 643px screen carried the legal
+              name, the short name and 5 lines of prose at once and the last
+              line fell below the fold.
+
+              Clearing the name with `autoAlpha` would not have fixed it: a
+              hidden element keeps its box, so the paragraphs would still have
+              started 265px down an empty screen. Held, the two blocks share one
+              grid cell (about.css) so the prose is read WHERE THE NAME WAS, the
+              same way §06's calendar replaces its claim and §02's own register
+              replaces this prose a beat later. Nothing moves in the DOM, so the
+              reading order and the flow fallback are unchanged. */}
+          <div data-ab2-block="prose" className={`${COLUMN} relative pt-8 lg:pt-10`}>
+            <p
+              data-ab2-body
+              className="max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+            >
+              {whatWeAre.body[1]}
+            </p>
+            <p
+              data-ab2-body
+              className="mt-8 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+            >
+              {whatWeAre.body[2]}
+            </p>
+          </div>
 
         {/* ---- the road ---------------------------------------------------
             ⚠ ONE VARIABLE RUNS THIS BOTH WAYS. `--ab2-fold` is 1 when the band
@@ -1445,48 +1461,28 @@ export function WhoDecides() {
             className="mt-16 h-[2px] w-[24rem] max-w-full bg-ochre"
           />
 
-          {/* ⚠ FUTURE TENSE, AND THE ONE LINE ON THIS PAGE THAT DOES NOT SETTLE.
-              Grammar row: "what has not happened yet" — IMG-04's chromatic split,
-              released by F9 and spent here and nowhere else on the site. Two ghost
-              copies of the sentence sit a couple of pixels behind it, one oxide and
-              one turquoise, and drift about a pixel on a cycle with no end state,
-              because the Elder Advisory Group is not sitting. A tense marker, not a
-              texture (Figma 2707:21402 frame 03, "the clause that will not resolve").
+          {/* ⚠ FUTURE TENSE, AND IT STAYS THAT WAY until the Elder Advisory
+              Group is sitting. The sentence is the page's only future-tense
+              claim and the only thing on it that has not happened.
 
-              ⚠ ITS REMOVAL CONDITION. When the group sits: delete
-              `data-ab6-unsettled` here and take the future tense out of
-              `whoDecides.body[1]` in the draft and in src/content/about.ts. One
-              attribute and one sentence. Nothing else in the section knows about it.
+              ⚠ THE CHROMATIC MARKER IS GONE — 13 September 2026, user
+              direction. IMG-04's split held on this sentence as a tense marker:
+              two ghost copies, oxide and turquoise, drifting on a cycle with no
+              end state. It came off because the two layers did not align at
+              small sizes and the duotone is used nowhere else on the site.
 
-              ⚠ THE GHOSTS ARE SIBLINGS OF THE SENTENCE, NOT CHILDREN OF IT, and
-              that is structural rather than tidy: `settle` splits this paragraph
-              with SplitText, and ghost copies inside it would be split along with
-              it — three sets of lines animating as one, and the accessible name read
-              three times. They are `aria-hidden`, they come FIRST so the real
-              sentence paints over them, and the static paragraph is what gives the
-              wrapper its height. */}
-          <div data-ab6-unsettled className="relative mt-9 max-w-[940px]">
-            <span
-              aria-hidden
-              data-ab6-ghost="oxide"
-              className="absolute inset-0 text-lg leading-[1.5] font-medium text-oxide sm:text-2xl"
-            >
-              {whoDecides.body[1]}
-            </span>
-            <span
-              aria-hidden
-              data-ab6-ghost="turquoise"
-              className="absolute inset-0 text-lg leading-[1.5] font-medium text-turquoise sm:text-2xl"
-            >
-              {whoDecides.body[1]}
-            </span>
-            <p
-              data-ab6-future
-              className="relative text-lg leading-[1.5] font-medium text-canvas/95 sm:text-2xl"
-            >
-              {whoDecides.body[1]}
-            </p>
-          </div>
+              ⚠ WHAT DID NOT COME OFF WITH IT. The tense. The draft governs the
+              words (D5) and the sentence still says "is being established" and
+              "once it is sitting", which is the claim the marker was decorating
+              rather than making. kit.ts keeps its consent record for
+              about-people-02 unchanged. Removing a visual device is not
+              removing what it pointed at. */}
+          <p
+            data-ab6-future
+            className="mt-9 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/95 sm:text-2xl"
+          >
+            {whoDecides.body[1]}
+          </p>
         </div>
 
         {/* ---- PART 2 · the calendar ---------------------------------------
