@@ -19,7 +19,12 @@
  * ---------------
  *   [data-truth-tile="<n>"]        a montage / strip cell, in laying order
  *   [data-truth-strip]             the six-up grid that drifts as one
- *   [data-truth-card]              an Ahead deck record, entering as a set
+ *   [data-truth-card]              an Ahead deck record — one phase of a screen
+ *   [data-truth-ahead-phases]      the wrapper truth.css stacks those into
+ *   [data-truth-focus-row]         a row the reader's scroll walks a focus along
+ *   [data-truth-entry-copy]        a record's copy column, revealed element by
+ *                                  element (was unclaimed by any module until
+ *                                  the phase swap, 13 September 2026)
  *   [data-truth-attribution]       a speaker's name, held until they finish
  *   [data-truth-strata-layer="n"]  a seabed layer, built top → bottom
  *   [data-truth-deteriorates]      a ground that deteriorates as it is read
@@ -251,93 +256,203 @@ const heroBreath: Recipe = (_timeline, slide, span) => {
 };
 
 /**
- * §02/§03 Ahead. The two records arrive as a set — left, then right, each
- * lifting as it brightens. The frame draws three across at ~100ms apart; the
- * governing draft carries two, so two is what staggers. The gap between them
- * is the ~100ms reading equivalent, not a literal delay.
+ * §02–§03 — the Ahead deck, read as TWO PHASES of one screen (user direction,
+ * 13 September 2026).
  *
- * Their photographs deliberately take no push (see FeatureMedia) — the plane's
- * transform belongs to the hover.
+ * Grammar: "emerging from the ground, the phase swap" (M1 · Truth §02–§03) for
+ * the records, and "the world opening, one frame at a time, Truth cut" for the
+ * precinct's photographs. Geometry: ../../app/truth/_components/truth.css.
+ *
+ * WHAT WAS WRONG. The two records shared one pinned viewport in ordinary flow —
+ * 743px of precinct and 424px of partnership against a ~900px screen — so the
+ * deck's track slid about 270px and both were on screen, crowding each other,
+ * for almost the whole read. They are now stacked in one grid cell by truth.css
+ * and read one at a time: the precinct owns the first half of the span, the
+ * partnership the second.
+ *
+ * ⚠ SCRUBBED, NOT PLAYED. This recipe used to build its own timeline with
+ * `toggleActions: "play none none reverse"`, on the argument that it was "the
+ * one beat on the page that is played rather than scrubbed". A phase swap
+ * cannot be: the reader has to be able to stop between the two records and
+ * scroll back into the first, which is a position on a clock rather than a
+ * direction of travel. It now runs on the scrubbed timeline `bindTruthScenes`
+ * hands in — the one that was previously built empty for this slide and killed.
+ *
+ * ⚠ THE COPY TAKES NO TRAVEL, AND THAT IS NOT A STYLE CHOICE — it is the same
+ * law this recipe's old comment stated and then broke. `[data-truth-card]`
+ * carries its hover lift as a CSS `transform` rule, GSAP writes transforms
+ * inline, and an inline transform beats a stylesheet: a card given `y` silently
+ * never lifts again for the rest of the visit. The old code selected
+ * `[data-descent-arrive]` — which on this slide IS the two articles — and gave
+ * them `arrive`, i.e. `y: 16`, exactly the failure globals.css:407-410
+ * predicts. Brightness only here, on the copy's CHILDREN, and the one thing
+ * that scales is the tile.
+ *
+ * ⚠ SEQUENCED, WITH CLEAR AIR. About §03 measured both of its claims at full
+ * opacity for .14 of its read when the exit and the entrance were run together
+ * (recipes-about.ts:1303). Two records on one grid cell would print on top of
+ * each other the same way, so the second starts only after the first has gone,
+ * and there is deliberate empty screen between them.
+ *
+ * ⚠ NO SPLIT BEAT. `freshSplit` keeps one live SplitText per element and
+ * reverts the previous one, so a block that both arrives and leaves loses its
+ * arrival — which is why the sequence is `brighten` per element rather than
+ * `settle` per line. The elements are the beat here, which is also what the
+ * direction asked for: the eyebrow, then the title, then the description.
  */
+
+/** A tile at rest: smaller and quieter than the one the focus is on. */
+const FOCUS_REST_SCALE = 0.88;
+const FOCUS_REST_DIM = 0.55;
+
 /**
- * §02–§03 "What is being built" — the entrance REGISTERS (client direction,
- * 11 September 2026).
+ * The beat sheet, as fractions of the slide's own read span.
  *
- * Grammar: "arriving quietly" — 16px and a fade, the site's baseline entrance,
- * the same one the homepage uses.
- *
- * WHAT WAS WRONG. Every block in here entered on `brighten`: opacity 0.4 → 1,
- * `ease: "none"`, SCRUBBED across the read. Scrubbed means the entrance is tied
- * to scroll DISTANCE rather than to a duration, so on a 125vh pinned slide the
- * fade is spread over a screen and a quarter of scrolling and never resolves
- * into a moment — "too subtle and takes too long to register", which is exactly
- * what a quarter-opacity ramp over 1,100px looks like. Nothing was broken; it
- * was simply the wrong instrument.
- *
- * So this beat is PLAYED, not scrubbed: one 0.55s `arrive` on its own trigger
- * at the slide's read start. A viewport trigger cannot be used here — a pinned
- * slide never crosses the viewport (SCR-02, the note at the head of this file)
- * — so the trigger is the read clock's own start, which is the moment the
- * reader actually arrives.
- *
- * ⛔ THE CARDS TAKE NO TRAVEL, and this is not a style choice. `[data-truth-card]`
- * carries its hover lift as a CSS rule, GSAP writes transforms inline, and an
- * inline transform beats a stylesheet — a card animated on `y` silently never
- * lifts again for the rest of the visit. They get opacity alone, fast enough to
- * read as an arrival, and `clearProps` hands the transform back to CSS when it
- * lands. The tiles and the copy inside them take the full 16px.
- *
- * ⚠ ONE LOUD CHANNEL. scenes.md gives §02/§03 TYPE as their loud channel, and
- * FeatureMedia's own comment explains that its photographs deliberately take no
- * camera push for that reason. Photographs that now enter visibly are a second
- * channel on that screen. Asked for explicitly, so shipped — but if a reviewer
- * pulls on it, the copy keeps `arrive` and the tiles go back to `brighten`.
+ * ⚠ THE SCALE DOWN, NOT UP, IS LOAD-BEARING. About §07 grows its focused plate
+ * from rest and pays for it with a `sizes` bug — a `transform: scale()` is
+ * invisible to the browser's image selection, which sizes the request from the
+ * layout box. Running 0.88 → 1 keeps the largest painted size inside the layout
+ * box, so `FeatureMedia`'s `sizes` is simply true. Do not invert it.
  */
-const aheadCards: Recipe = (timeline, slide, span) => {
+const AHEAD = {
+  /** The precinct's copy, one element per beat. */
+  copyAt: 0,
+  copyStep: 0.015,
+  copyFor: 0.05,
+  /** The walk along the photographs. */
+  walkAt: 0.09,
+  walkFor: 0.33,
+  /** The precinct goes, then nothing is on screen for a moment. */
+  outAt: 0.42,
+  outFor: 0.06,
+  /** The partnership arrives on ground the precinct has left. */
+  inAt: 0.54,
+  /** The trailing rest that holds the clock open. */
+  restAt: 0.94,
+  restFor: 0.06,
+} as const;
+
+type Setter = (value: number) => void;
+
+/** Copy elements in reading order. The figure is the walk's, not the sequence's. */
+const copyBeats = (card: HTMLElement) =>
+  query<HTMLElement>(card, "[data-truth-entry-copy] > *").filter(
+    (el) => !isHeld(el) && el.tagName !== "FIGURE",
+  );
+
+/** Brighten a record's blocks one after another, `step` apart. */
+function revealCopy(
+  timeline: gsap.core.Timeline,
+  card: HTMLElement,
+  at: number,
+) {
+  copyBeats(card).forEach((el, index) => {
+    const start = at + index * AHEAD.copyStep;
+    brightenAt(timeline, [el], start, start + AHEAD.copyFor);
+  });
+}
+
+const aheadPhases: Recipe = (timeline, slide) => {
+  /* DOM order is reading order, and the beat sheet is inherently ordered: the
+     record the reader meets first owns the first half of the span. Selecting on
+     `[data-truth-card]` rather than on `#precinct` / `#partner` keeps this
+     consistent with the RECIPES table's own rule — anchors, never indexes —
+     while still not hard-coding which anchor is which phase. */
   const cards = query<HTMLElement>(slide, "[data-truth-card]").filter(
     (card) => !isHeld(card),
   );
-  const tiles = query<HTMLElement>(slide, "[data-truth-tile]").filter(
-    (tile) => !isHeld(tile),
-  );
-  /* The section's own copy blocks, which `arriveRest` would otherwise brighten
-     on the scrubbed timeline. `bindTruthScenes` claims them for this recipe. */
-  const copy = query<HTMLElement>(slide, "[data-descent-arrive]").filter(
-    (el) => !isHeld(el),
-  );
+  if (!cards.length) return;
 
-  if (!cards.length && !tiles.length && !copy.length) return;
+  const [first, ...rest] = cards;
 
-  /* Its own timeline, deliberately NOT the scrubbed one handed in: this is the
-     one beat on the page that is played rather than scrubbed, and mixing the
-     two on one clock is what would put it back on scroll distance. */
-  const entrance = gsap.timeline({
-    scrollTrigger: {
-      trigger: span.runway,
-      start: () => span.read.start,
-      toggleActions: "play none none reverse",
-      invalidateOnRefresh: true,
-      refreshPriority: span.index * 10 + 6,
-    },
-  });
+  // ---- phase one: the precinct ----------------------------------------
+  revealCopy(timeline, first, AHEAD.copyAt);
 
-  if (copy.length) entrance.arrive(copy, {}, 0);
-  if (tiles.length) entrance.arrive(tiles, {}, 0.12);
-  cards.forEach((card, index) => {
-    entrance.fromTo(
-      card,
-      { opacity: 0 },
+  /* The walk. One scrubbed cursor and every tile's state derived from it —
+     n tiles cannot drift out of step with each other if there is only one
+     clock (theRoster, recipes-about.ts:2420). The module writes two unitless
+     custom properties per tile and measures nothing; truth.css owns the
+     geometry and composes the transform, because a GSAP `scale` here would
+     replace the stylesheet's transform rather than merge with it. */
+  const row = query<HTMLElement>(first, "[data-truth-focus-row]")[0];
+  const tiles = row
+    ? query<HTMLElement>(row, "[data-truth-tile]").filter((t) => !isHeld(t))
+    : [];
+
+  if (tiles.length > 1) {
+    /* ⚠ REGISTER BOTH PROPERTIES WITH GSAP BEFORE THE WALK TOUCHES THEM.
+       `quickSetter` writes straight to the style attribute and keeps no
+       record, so `ctx.revert()` in `bindTruthScenes`' teardown would leave the
+       last scrubbed values behind — a tile stuck at .88 and half lit. Below
+       1024px that is invisible, because the rule that READS these lives in
+       truth.css's media query; but the deck also reverts on a route change and
+       on a reduced-motion switch with the window still wide, and there it
+       would show. One `set` inside the context records the original (empty)
+       inline style for both properties, so revert clears them. */
+    gsap.set(tiles, { "--t2-s": 1, "--t2-o": 1 });
+
+    const scale = tiles.map((t) => gsap.quickSetter(t, "--t2-s") as Setter);
+    const glow = tiles.map((t) => gsap.quickSetter(t, "--t2-o") as Setter);
+
+    const walk = (focus: number) => {
+      tiles.forEach((_, i) => {
+        const d = Math.abs(i - focus);
+        // Smoothstep over one pitch either side: flat at the extremes, so a
+        // tile neither snaps into focus nor creeps out of it. Continuous, with
+        // no index and no snap, which is what makes the reverse scrub retrace.
+        const near = d >= 1 ? 0 : (1 - d) * (1 - d) * (3 - 2 * (1 - d));
+        scale[i](FOCUS_REST_SCALE + (1 - FOCUS_REST_SCALE) * near);
+        glow[i](FOCUS_REST_DIM + (1 - FOCUS_REST_DIM) * near);
+      });
+    };
+    walk(0);
+
+    const cursor = { focus: 0 };
+    timeline.to(
+      cursor,
       {
-        opacity: 1,
-        duration: 0.45,
-        ease: "power2.out",
-        /* Hand the box back to CSS the moment it lands, or the inline opacity
-           sits on the element and the hover rule has a fight it cannot win. */
-        clearProps: "opacity",
+        focus: tiles.length - 1,
+        duration: AHEAD.walkFor,
+        ease: "none",
+        onUpdate: () => walk(cursor.focus),
       },
-      0.1 + index * 0.08,
+      AHEAD.walkAt,
     );
+  }
+
+  // ---- the swap --------------------------------------------------------
+  /* `autoAlpha`, so the retired record's two links leave the tab order rather
+     than sitting invisible and focusable in the middle of the pin. `visibility`
+     inherits, which is the reason About avoids autoAlpha on focusable content
+     (recipes-about.ts:131) and exactly the reason it is wanted here. */
+  timeline.to(
+    first,
+    { autoAlpha: 0, duration: AHEAD.outFor, ease: "none" },
+    AHEAD.outAt,
+  );
+
+  // ---- phase two: everything after the first --------------------------
+  rest.forEach((card) => {
+    /* Pre-hidden at build, so the rest state of the document is the FINISHED
+       page: below the deck's breakpoint, with JavaScript off or under reduced
+       motion, both records are simply there in ordinary flow. `fromTo` rather
+       than a `from`, because a `from` off a hidden element animates 0 → 0 and
+       the record would never appear (recipes-about.ts:115). */
+    gsap.set(card, { autoAlpha: 0 });
+    timeline.fromTo(
+      card,
+      { autoAlpha: 0 },
+      { autoAlpha: 1, duration: 0.02, ease: "none" },
+      AHEAD.inAt,
+    );
+    revealCopy(timeline, card, AHEAD.inAt);
   });
+
+  /* ⚠ A TRAILING REST HAS TO HOLD THE CLOCK OPEN, or it is not a rest at all —
+     it is every earlier beat played late. A scrub maps the reader's 0 → 1 onto
+     0 → `tl.duration()`, and the duration is wherever the last tween ends.
+     An inert tween occupies the last stretch and touches nothing. */
+  timeline.to({}, { duration: AHEAD.restFor }, AHEAD.restAt);
 };
 
 /** §04/§05 TODAY. The plate pushes; the montage is laid down by hand. */
@@ -872,7 +987,7 @@ const closingDrift: Recipe = (timeline, slide) => {
  */
 const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "[data-v2-hero-media]", recipe: heroBreath },
-  { match: "[data-truth-card]", recipe: aheadCards },
+  { match: "[data-truth-card]", recipe: aheadPhases },
   { match: "#today-fire", recipe: todayDeck },
   { match: "#research-discovery", recipe: researchStrip },
   { match: "#break-country-now", recipe: breakDissolve },
@@ -950,10 +1065,16 @@ export function bindTruthScenes(
         pushMedia(timeline, slide);
       }
 
-      // The Ahead deck animates ITSELF, on its own played clock — so the
-      // generic scrubbed arrival must not also claim anything in it. It used
-      // to claim only the cards; since 11 September 2026 the copy blocks enter
-      // with them, so the whole slide is handed over when cards are present.
+      // The Ahead deck animates ITSELF — so the generic scrubbed arrival must
+      // not also claim anything in it. It used to claim only the cards; since
+      // 11 September 2026 the copy blocks enter with them, so the whole slide
+      // is handed over when cards are present.
+      //
+      // ⚠ "on its own played clock" was true until 13 September 2026 and is
+      // not any more: `aheadPhases` runs on the scrubbed timeline handed in
+      // above, because a two-phase screen is a position on a clock rather than
+      // a direction of travel. The handover below is unchanged and is what
+      // keeps `arriveRest` from brightening a phase the swap owns.
       const aheadOwned = query<HTMLElement>(slide, "[data-truth-card]");
       arriveRest(
         timeline,

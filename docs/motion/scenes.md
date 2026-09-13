@@ -435,8 +435,8 @@ the build target.
 | # | Act | What it says | ⚡ | vh | Loud channel | Plate | Rest after? |
 |---|---|---|---|---|---|---|---|
 | 01 | II | Intro — the opening shot, and the door from Home | 4 | 117 | **media** | plate · wide | — |
-| 02 | II | Ahead — the Cultural Knowledge Precinct | 3 | 120 | **type** | diptych | — |
-| 03 | II | Partnerships — a guest on Country | 2 | 62 | **type** | `Card / Truth` | — |
+| 02 | II | Ahead — the Cultural Knowledge Precinct | 3 | **240 (§02+§03)** | **media** | diptych | — |
+| 03 | II | Partnerships — a guest on Country | 2 | ↑ shares §02's | **none** | `Card / Truth` | — |
 | 04 | II | TODAY — the fire comes toward you | 5 | 100 | **media** | plate · wide | ✓ hold |
 | 05 | II | TODAY montage — the work going on | 3 | 114 | **media** | field of four | — |
 | 06 | II | 2022 — the site studied with its owners. Nothing moves here | 1 | 84 | **none** | — | ✓ |
@@ -459,6 +459,14 @@ the build target.
 **Reads as:** no channel runs three deep. §10 carries the brown wave hand-off and is therefore
 `transition`, which is what breaks the 09/10/11 run. §20 joins §06 and §17 as intentional
 stillness (§15's is now the count's numerals rather than a whole screen); the closing shot does not dissolve back to the hero.
+
+⚠ **Re-checked after §02 moved to `media`, 13 September 2026.** The rule still holds, and it was
+worth checking rather than assuming: §01 and §02 are now two consecutive `media` screens — the
+permitted maximum, the same pairing /wonder already runs at its 01/02 — and §03 breaking to `none`
+is what keeps the run from reaching three. §03 losing its `type` designation is not a downgrade:
+its record is two sentences and a link, and the phase split means it now arrives on a cleared
+screen of its own, which is the loudest thing that has ever happened to it. The quiet channel is
+the correct declaration for a screen whose whole job is to be read.
 
 **The rail carries the chronology and the local reading state.** One frame (`2051:5368`) runs
 the full 2229vh, starting below the header and **breaking at the count**. Both strands are
@@ -570,7 +578,7 @@ What each beat does with its span:
 | Scene | Interior beat |
 |---|---|
 | 01 | The hero photograph **breathes**: 1.04 → 1.00 across its read AND its cover. ⚠ This SUPERSEDES "the hero … held at its rendered state" — user direction, 9 September 2026, "breathes rather than sits still". Its copy is still held; only the photograph moves, and the 20vh runway still exists to clear the navbar rather than to be read. |
-| 02–03 | The two Ahead records arrive as a set, 0.30 of the span apart, **brightness only** — M1 is explicit that an entrance here does not travel, and the descent supplies the movement. The **lift is the hover**: the card rises 4px and the picture scales 1.03 inside a frame that does not move. Their photographs take no scroll push — §02/§03 are type-channel scenes, and a plane cannot carry both a GSAP push and a CSS hover, because the inline transform wins and the hover silently never appears. ⚠ The frame draws three cards, L/M/R; the draft carries two. Raised, not invented. |
+| 02–03 | ⚠ **SUPERSEDED 13 September 2026, user direction — the two records no longer share a screen, they take turns on it.** The precinct owns 0 → .42 of the read and the partnership .54 → 1, with .06 of empty screen between them; each brightens its eyebrow, then its title, then its description, .015 apart, **brightness only** — M1 still governs and an entrance here still does not travel. Across .09 → .42 the reader's scroll walks a **focus** along the precinct's two photographs: the one in focus is at its layout size and the other waits at .88 and .55 brightness, continuous with no snap, so the row retraces exactly on the way back. That is what moves §02's loud channel from type to **media** — legal only because the split made these two screens instead of one. The **lift is still the hover** (4px on the card, 1.03 on the picture), and the walk writes a custom property to the TILE for exactly that reason: three elements, three transforms, and GSAP replaces a stylesheet's transform rather than merging with it. ⚠ The frame draws three cards, L/M/R; the draft carries two. Raised, not invented. **What this replaced:** the two records arriving as a set 0.30 apart, with their photographs taking no push at all. |
 | 05, 18 | Montages laid down by hand — uneven fixed offsets, never a single stagger. |
 | 07 | The strip pulls across L→R (~.012 apart), then drifts 40px left over the remainder. |
 | 08, 14 | The breaks **pull back**, 1.06 → 1.00, where ordinary media pushes in. The page has already stopped; advancing the camera into a held image while the scroll is locked reads as impatience. |
@@ -584,7 +592,9 @@ Scenes 06, 15, 17 and 20 and Suzanne's portrait are held at their rendered state
 inside slides that DO move, so a slide-level exclusion would be wrong in both directions at once.
 
 **The twenty story beats resolve into sixteen gated decks on desktop/fine-pointer input** (user
-direction, 9 September 2026). "What is being built" and "Work with us" share the Ahead deck;
+direction, 9 September 2026). "What is being built" and "Work with us" share the Ahead deck's PIN but no longer
+its screen — two scrubbed phases of one surface, ~120vh each, from 13 September 2026 (see the
+§02–03 beat above and D27);
 TODAY's full image and its Iningai Rangers record share a composed deck; "The site is studied with
 its owners" and "Research & discovery" share another; and the escarpment image and 1902 count
 share a fourth. Each pair is one viewport surface with one internal content track and one gate,

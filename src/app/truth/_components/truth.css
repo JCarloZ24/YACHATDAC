@@ -1,0 +1,104 @@
+/* ---------------------------------------------------------------------------
+   /truth §02–§03 — the Ahead deck, read as two phases of one screen.
+
+   Grammar rows: "emerging from the ground, the phase swap" and "the world
+   opening, one frame at a time, Truth cut". The choreography is `aheadPhases`
+   in src/lib/motion/truth-scenes.ts; the markup is ./Sections.tsx
+   (`EntryBlock`, `FeatureMedia`, and the `data-truth-ahead-phases` wrapper in
+   `EraSection`). All three are one object — read them together.
+
+   WHY THIS IS CSS AND NOT TAILWIND ON THE ELEMENTS. The same agreement
+   about.css makes with `data-ab-held` and our-people.css with
+   `data-people-ready`: the module owns the flag, the stylesheet owns the
+   layout, and neither guesses about the other. Everything here hangs off
+   `[data-deck-active]`, which gated-deck.ts writes on `[data-descent-root]`
+   when the deck builds (gated-deck.ts:1075) and deletes on revert (:1112).
+   Without that attribute this file contributes nothing and the two records are
+   ordinary stacked flow — which is exactly what they render today, and is the
+   fallback for every way the deck can be withheld: JavaScript off,
+   prefers-reduced-motion, a coarse pointer, a window under 1024px, or no Lenis.
+   It is one state rather than five, because it is the absence of a state.
+
+   ⚠ THE QUERY MATCHES THE DECK'S OWN, LONGHAND, AND IT IS NOT `deck:`.
+   gated-deck.ts:226 gates on `(pointer: fine) and (min-width: 1024px)` with no
+   height floor, while the shared `deck:` variant carries
+   `(min-height: 820px)`. Using the variant here would style a band the module
+   does not build in, which is the disagreement the variant's own comment in
+   globals.css warns about. Reduced motion needs no branch: `smoothScrollActive()`
+   is `lenis !== null` and Lenis is only constructed under
+   `(prefers-reduced-motion: no-preference)` (smooth-scroll.ts:42), so the deck
+   cannot run for a reader who asked for less.
+   --------------------------------------------------------------------------- */
+
+@media (pointer: fine) and (min-width: 1024px) {
+  /* THE TWO RECORDS SHARE ONE CELL. Measured on the built page, the precinct
+     block is 743px and the partnership 424px — 1,167px of content on a single
+     pinned viewport, which is why the deck read as one undifferentiated screen
+     rather than as two records. Stacked here and swapped by `aheadPhases`, each
+     is read alone on the screen the other has left.
+
+     ⚠ AND IT IS WHAT RETIRES THE TRACK TWEEN. `truth-track-1` travels
+     `-Math.max(0, track.scrollHeight - slide.clientHeight)` (gated-deck.ts:789),
+     so collapsing 1,167px of stacked content down to the taller of the two
+     brings that distance to roughly nothing without touching the deck. On a
+     short laptop it stays slightly positive and supplies a little settle inside
+     the phase, which is correct rather than a fallback. */
+  [data-descent-root][data-deck-active] [data-truth-ahead-phases] {
+    display: grid;
+    grid-template-areas: "phase";
+    /* Centred, not `start`: the cell is as tall as the precinct, and the
+       partnership is roughly half that. Seated at the top it would read as a
+       screen that had lost its lower half. */
+    align-items: center;
+    /* The wrapper's own `mt-8 lg:mt-12` is reading-flow spacing between an era
+       heading and its entries. There is no heading here (the Ahead era folds
+       its title into the kicker) and the deck needs the height. */
+    margin-top: 0;
+  }
+
+  [data-descent-root][data-deck-active] [data-truth-ahead-phases] > [data-truth-card] {
+    grid-area: phase;
+  }
+
+  /* The reading column's `lg:py-20` is 160px of a pinned viewport, and once the
+     phases are centred inside it that height is spent twice over. Trimmed to 40
+     a side, which is what brings the taller phase inside a 900px screen.
+
+     `:has(> …)` rather than a second markup hook: this is `inner` in
+     Sections.tsx, and it is `inner` for every era on the page — the one thing
+     that distinguishes this instance is the child it is holding. */
+  [data-descent-root][data-deck-active] :has(> [data-truth-ahead-phases]) {
+    padding-block: 2.5rem;
+  }
+
+  /* ---------------------------------------------------------------------
+     THE WALKED FOCUS ROW — the precinct's photographs, one in focus at a time.
+
+     ⚠ THE MODULE WRITES TWO UNITLESS NUMBERS AND MEASURES NOTHING. `--t2-s`
+     is a tile's scale and `--t2-o` its brightness; the geometry is here, in
+     CSS. A row that read `offsetWidth` every tick would be a layout read per
+     frame (theRoster's note, recipes-about.ts:2291).
+
+     ⚠ AND THE SCALE IS ON THE TILE, NEVER ON THE ARTICLE OR THE IMAGE PLANE.
+     globals.css:363-377 gives `[data-truth-card]` a `translateY(-4px)` hover
+     and `[data-truth-card] [data-media-plane]` a `scale(1.03)` one, both as
+     `transform`. GSAP writes an inline `transform` that REPLACES a
+     stylesheet's rather than merging with it, so a scale on either of those
+     two would kill its hover for the rest of the visit — the trap
+     globals.css:407-410 predicts in as many words. Three elements, three
+     transforms, and the tile is the only one this file or `aheadPhases`
+     touches.
+     --------------------------------------------------------------------- */
+  [data-descent-root][data-deck-active] [data-truth-focus-row] [data-truth-tile] {
+    /* The finished document, so a tile with no module behind it is simply
+       itself. `aheadPhases` mirrors the resting pair as REST_SCALE/REST_DIM. */
+    --t2-s: 1;
+    --t2-o: 1;
+    /* Grows and shrinks against the row's shared baseline, so the pictures
+       never drift vertically as the focus passes along them. */
+    transform-origin: bottom center;
+    transform: scale(var(--t2-s));
+    opacity: var(--t2-o);
+    will-change: transform, opacity;
+  }
+}

@@ -13,6 +13,10 @@ import {
 } from "./_components/Sections";
 import { TruthTrailRail } from "./_components/TrailRail";
 import { erasAfter, erasBefore, truthHero } from "@/content/truth";
+/* The Ahead deck's two phases and its walked focus row. Layout only, and it
+   contributes nothing until gated-deck.ts flags the deck active — see the head
+   of the file. Same placement as /about's (src/app/about/page.tsx). */
+import "./_components/truth.css";
 
 export const metadata: Metadata = {
   title: "Truth",

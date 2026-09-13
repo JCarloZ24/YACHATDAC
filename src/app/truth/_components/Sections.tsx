@@ -256,76 +256,107 @@ function entryGround(id: string | undefined): BandId {
 }
 
 /**
- * The precinct's photo pair, per the hi-fi frame (1440×1078 SVG, 2026-09-02):
- * a large rounded photograph left, a smaller one seated lower right, the
- * boomerang glyph over the big photo's top-left and the blue spiral in the
- * small photo's corner. Artwork stays static (the GoldTrail rule) and the
- * glyphs are decorative — empty alt, hidden from readers.
+ * The precinct's photographs — a swipe rail below `lg`, a walked focus row at
+ * `lg` and up.
+ *
+ * Grammar: "the world opening, one frame at a time, Truth cut" — the walked
+ * focus of About §07's roster on a row of two. The choreography is
+ * `aheadPhases` in src/lib/motion/truth-scenes.ts; the geometry is ./truth.css.
+ * Read both before changing this markup, because the three are one object.
+ *
+ * ⚠ THIS SUPERSEDES "NO CAMERA PUSH" (user direction, 13 September 2026). The
+ * note that stood here gave two reasons the plane could not move, and the deck
+ * split answers both:
+ *
+ *   · §02/§03's loud channel was TYPE because they shared one screen. They are
+ *     now two phases on that screen, so the carousel is §02's one loud channel
+ *     and its copy takes the quiet element-staggered `brighten` instead.
+ *   · The plane's transform is STILL spoken for, and that part has not been
+ *     walked back. `[data-truth-card] [data-media-plane]` carries the hover
+ *     scale and `[data-truth-card]` the hover lift (globals.css). The walk
+ *     therefore writes a custom property to the TILE — a third element, a
+ *     third transform — and never touches either of the other two. That is
+ *     exactly the trap globals.css's standing warning describes, and this
+ *     section was already tripping it: `aheadCards` gave the articles `y: 16`.
+ *
+ * ⚠ THE UNFOCUSED TILE SHRINKS; THE FOCUSED ONE IS ITS LAYOUT SIZE. About §07
+ * had to grow its focused plate because a portrait at rest still has to be
+ * legible, and it paid for that with a `sizes` bug reported as "why is the
+ * second image blurry" — a `transform: scale()` is invisible to the browser's
+ * image selection, which sizes the request from the layout box. Running the
+ * scale 0.88 → 1 instead of 1 → 1.13 puts the largest painted size back INSIDE
+ * the layout box, so `sizes` below is simply true. Do not invert it.
+ *
+ * The glyphs stay static (the GoldTrail rule) and are decorative — empty alt,
+ * hidden from readers. Furniture is indexed by layout position so a third
+ * photograph needs a content change and not markup surgery.
  */
+const TILE_FURNITURE: readonly { glyph: string; className: string; wave?: boolean }[] = [
+  { glyph: "/artwork/glyph-c.svg", className: "left-5 top-5 w-11 opacity-90", wave: true },
+  { glyph: "/artwork/glyph-b.svg", className: "bottom-4 right-4 w-10" },
+];
+
 function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }) {
-  const [lead, side] = slots;
-  /* NO CAMERA PUSH, deliberately, and this is the only media frame on the page
-     without one. Two reasons, and either would be enough:
-
-     §02/§03's loud channel is TYPE (scenes.md) — the precinct is argued in
-     words and its photographs are evidence, so a scrubbed push here would be a
-     second loud channel on a screen that already has one.
-
-     And the plane's transform is spoken for. These are the only photographs on
-     Truth that respond to a pointer: hovering the card scales the picture
-     inside its fixed frame. GSAP writes `pushIn` as an inline transform, which
-     beats a stylesheet rule, so a push and a hover cannot share one plane —
-     the hover would simply never appear. The quieter of the two wins. */
   return (
     <figure className="mt-10 max-w-4xl">
-      <div className="grid items-end gap-6 sm:grid-cols-[3fr_2fr] sm:gap-10">
-        <div
-          data-truth-tile="0"
-          className="relative aspect-3/2 overflow-hidden rounded-2xl"
-        >
-          <MediaOrField
-            src={presentSrc(lead.src)}
-            alt={lead.expects}
-            sizes="(min-width: 640px) 45vw, 100vw"
-            fieldClass={FIELD_CLASS[lead.tone]}
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-          <img
-            src="/artwork/glyph-c.svg"
-            alt=""
-            aria-hidden
-            className="absolute left-5 top-5 w-11 opacity-90"
-            loading="lazy"
-          />
-          {/* The wireframe's dot-wave trail running under the lead photo. */}
-          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-          <img
-            src="/artwork/dots-wave-gold.svg"
-            alt=""
-            aria-hidden
-            className="pointer-events-none absolute -bottom-1 left-0 w-full opacity-70"
-            loading="lazy"
-          />
-        </div>
-        <div
-          data-truth-tile="1"
-          className="relative aspect-3/2 overflow-hidden rounded-2xl sm:mb-10"
-        >
-          <MediaOrField
-            src={presentSrc(side.src)}
-            alt={side.expects}
-            sizes="(min-width: 640px) 30vw, 100vw"
-            fieldClass={FIELD_CLASS[side.tone]}
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-          <img
-            src="/artwork/glyph-b.svg"
-            alt=""
-            aria-hidden
-            className="absolute bottom-4 right-4 w-10"
-            loading="lazy"
-          />
-        </div>
+      {/* ⚠ ONE SET OF UTILITIES, BOTH CUTS — About §07's idiom, and NOT
+          `CardRail`, which turns into a grid at `sm`. That breakpoint is
+          hardcoded in the component and the deck does not take over until
+          `lg`, so 640–1023 would lose the rail and gain nothing. The bleed
+          cancels `inner`'s own `px-6` and re-applies it inside the scroller,
+          so the track's margin box is the column and its overflow is its own.
+
+          NO JAVASCRIPT IN THE MECHANISM below `lg`: native scroll-snap, which
+          is the house pattern (Ivy, 2026-09-05) and works with JS off. That is
+          the "draggable on mobile, no animations" half of the direction. */}
+      <div
+        data-truth-focus-row
+        className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-6 py-2 scroll-px-6 lg:mx-0 lg:grid lg:grid-cols-2 lg:items-end lg:gap-10 lg:snap-none lg:overflow-visible lg:px-0"
+      >
+        {slots.map((slot, index) => {
+          const furniture = TILE_FURNITURE[index];
+          return (
+            <div
+              key={slot.id}
+              data-truth-tile={index}
+              /* `w-[78vw]` is the peek that says a second plate is there; from
+                 `lg` the grid cell sizes it and the walk scales it. */
+              className="relative aspect-3/2 w-[78vw] shrink-0 snap-start overflow-hidden rounded-2xl lg:w-auto lg:shrink"
+            >
+              <MediaOrField
+                src={presentSrc(slot.src)}
+                alt={slot.expects}
+                /* The focused tile IS the layout box (see the head note), so
+                   440px is the real ceiling: max-w-4xl halved, less the gap. */
+                sizes="(min-width: 1024px) 440px, 78vw"
+                fieldClass={FIELD_CLASS[slot.tone]}
+              />
+              {furniture ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+                  <img
+                    src={furniture.glyph}
+                    alt=""
+                    aria-hidden
+                    className={`absolute ${furniture.className}`}
+                    loading="lazy"
+                  />
+                  {/* The wireframe's dot-wave trail running under the lead photo. */}
+                  {furniture.wave ? (
+                    /* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */
+                    <img
+                      src="/artwork/dots-wave-gold.svg"
+                      alt=""
+                      aria-hidden
+                      className="pointer-events-none absolute -bottom-1 left-0 w-full opacity-70"
+                      loading="lazy"
+                    />
+                  ) : null}
+                </>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
       {caption ? (
         <figcaption className="mt-3 text-xs leading-relaxed text-charcoal/60">
@@ -1079,9 +1110,19 @@ function EntryBlock({
             ) : null}
             {kicker || whenKicker ? (
               /* Undated whens ("More of this") are Link-weight, not ExtraBold —
-                 only the era kicker keeps the eyebrow's full weight. */
+                 only the era kicker keeps the eyebrow's full weight.
+
+                 ⚠ EXCEPT THE PRECINCT'S (user direction, 13 September 2026):
+                 "What is being built" is to match "Work with us", which is the
+                 partner card's `entry.when` at Link weight two lines up. The
+                 rule above still governs §17's OLDER THAN THE RECORD and §19's
+                 ALL OF THIS WAS UNDER WATER — the other two kickers `foldsEra`
+                 hands out — so this is scoped to the one card that was asked
+                 about rather than applied to the class. The two Ahead records
+                 now open identically, which is the point of splitting them
+                 into two phases of one screen. */
               <p
-                className={`eyebrow mb-6 ${accent} ${whenKicker && !kicker ? "font-normal" : ""}`}
+                className={`eyebrow mb-6 ${accent} ${(whenKicker && !kicker) || isAheadCard ? "font-normal" : ""}`}
               >
                 {kicker ?? whenKicker}
               </p>
@@ -1623,7 +1664,20 @@ export function EraSection({
           down the page, which put a canvas strip back under the charcoal and
           took a third of the crest with it. The entry's own `py-10` is the
           breathing room here. */}
-      <div className={startsFlush ? "mt-0 lg:mt-12" : "mt-8 lg:mt-12"}>
+      <div
+        /* THE AHEAD DECK'S TWO PHASES (user direction, 13 September 2026).
+           ./truth.css stacks these children into ONE grid cell where the deck
+           runs, so the precinct and the partnership are read one at a time
+           instead of crowding a single pinned viewport — measured at 743px and
+           424px against a ~900px screen, which is why the two looked like one
+           undifferentiated screen. `aheadPhases` does the swapping.
+
+           The hook is only worth carrying on the deck's own era: every other
+           era's entries are separate slides and stacking them would put two
+           unrelated records on top of each other. */
+        {...(combinesAheadDeck ? { "data-truth-ahead-phases": true } : {})}
+        className={startsFlush ? "mt-0 lg:mt-12" : "mt-8 lg:mt-12"}
+      >
         {era.entries.map((entry, index) => (
           <EntryBlock
             key={entry.title}
@@ -1655,6 +1709,15 @@ export function EraSection({
           data-truth-slide
           data-truth-slide-label="What is being built and Work with us"
           data-truth-ground="present"
+          /* TWO PHASES NEED TWO READS. `readDistance` (gated-deck.ts) gives a
+             slide 125vh unless it asks for more, and this one now holds two
+             records read in sequence rather than one screen holding both:
+             ~120vh each, which is what the ledger already budgeted for §02
+             (120) and a little over its §03 (62). Tuning knob — the beat sheet
+             in `aheadPhases` is expressed as fractions of whatever this is, so
+             changing it re-times everything proportionally and nothing else
+             has to move. */
+          data-truth-read-vh="240"
           className="relative"
         >
           {/* The wave belongs to the incoming Ahead deck, so its crest stays
