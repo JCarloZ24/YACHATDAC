@@ -452,8 +452,10 @@ export function RecordGrowsV2() {
                    frame's own 92px offset and `min-h` letting a plate grow
                    rather than swallow its last line. At 1440 the geometry is
                    identical to what it was. */
+                /* User direction, 14 September 2026: the four grounds shared
+                   with the question panels and document cards, one each. */
                 className={`relative min-h-[198px] overflow-hidden rounded-3xl px-7 pt-23 pb-7 ${
-                  i % 2 === 0 ? "bg-evergreen" : "bg-roasted"
+                  HOLD_GROUNDS[i % HOLD_GROUNDS.length]
                 }`}
               >
                 {HOLD_MOTIFS[i] ? (
@@ -501,6 +503,7 @@ export function RecordGrowsV2() {
  * — `undefined` is the slot, deliberately, rather than a fourth glyph invented
  * to fill it.
  */
+const HOLD_GROUNDS = ["bg-evergreen", "bg-roasted", "bg-eucalyptus", "bg-burnt"];
 const HOLD_MOTIFS: readonly (SeamGlyphMotif | undefined)[] = [
   "a",
   "b",

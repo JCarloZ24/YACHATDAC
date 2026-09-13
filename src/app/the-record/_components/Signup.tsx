@@ -26,8 +26,9 @@ export function RecordSignup() {
   const privacy = sentences.at(-1)?.trim() ?? "";
   const blurb = sentences.slice(0, -1).join(" ").trim();
 
+  // User direction, 14 September 2026: the 12rem gap under the lede is removed.
   return (
-    <form className="mt-48" onSubmit={(event) => event.preventDefault()}>
+    <form className="mt-12" onSubmit={(event) => event.preventDefault()}>
       {/* Work Sans SemiBold 24/32 — the frame does NOT set this in the
           headline face; the section already has one headline. */}
       <h3 className="max-w-[32.5rem] text-2xl leading-8 font-semibold">

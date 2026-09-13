@@ -6,7 +6,10 @@ import { createRecordDocuments } from "@/lib/motion/record-documents";
 import { documents } from "@/content/the-record";
 import { SeamGlyph, type SeamGlyphMotif } from "@/components/ui/Furniture";
 
-const tones = ["bg-evergreen", "bg-roasted", "bg-midnight"];
+// User direction, 14 September 2026: the question panels' four grounds, so
+// neighbours never repeat and no card is midnight (it disappeared on the
+// section's navy once the ground changes).
+const tones = ["bg-evergreen", "bg-roasted", "bg-eucalyptus", "bg-burnt"];
 const motifs: SeamGlyphMotif[] = ["a", "b", "c"];
 
 /** User direction 2026-09-09: native horizontal document shelf.
@@ -71,15 +74,15 @@ export function DocumentsCarousel() {
         onScroll={() => { const el = track.current; if (el) setPosition({ first: el.scrollLeft < 2, last: el.scrollLeft + el.clientWidth >= el.scrollWidth - 2 }); }}
         className="flex snap-x snap-proximity gap-5 overflow-x-auto overscroll-x-contain pr-6 pb-8 lg:gap-6 lg:pr-8">
         {documents.map((document, index) => (
-          <li key={document.title} className={`relative flex min-h-[480px] w-[82vw] shrink-0 snap-start flex-col overflow-hidden p-8 text-canvas lg:min-h-[560px] lg:w-[28vw] lg:p-10 ${tones[index % tones.length]}`}>
+          <li key={document.title} className={`relative flex min-h-[480px] w-[82vw] shrink-0 snap-start flex-col overflow-hidden rounded-3xl p-8 text-canvas lg:min-h-[560px] lg:w-[28vw] lg:p-10 ${tones[index % tones.length]}`}>
             <div className="relative mb-20 flex h-14 items-start justify-end">
               <SeamGlyph motif={motifs[index % motifs.length]} className="top-0 left-0 w-12" />
               <span className="eyebrow text-sm text-gold">{String(index + 1).padStart(2, "0")}</span>
             </div>
-            <p className="eyebrow mb-4 text-xs text-gold">{document.meta}</p>
+            <p className="eyebrow mb-4 text-[14px] text-gold">{document.meta}</p>
             <h3 className="headline text-h3 leading-[1.12]">{document.title}</h3>
             <p className="mt-5 text-base leading-[1.6] text-canvas/80">{document.summary}</p>
-            <p className="eyebrow mt-auto border-t border-canvas/20 pt-5 text-xs text-gold"><span className="block pt-6">{document.state === "available" ? "File not supplied" : "In preparation"}</span></p>
+            <p className="eyebrow mt-auto border-t border-canvas/20 pt-5 text-[14px] text-gold"><span className="block pt-6">{document.state === "available" ? "File not supplied" : "In preparation"}</span></p>
           </li>
         ))}
       </ul>

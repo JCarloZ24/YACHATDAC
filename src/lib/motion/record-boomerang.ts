@@ -84,7 +84,9 @@ export function createRecordBoomerang(canvas: HTMLCanvasElement, ready: () => vo
       catch { return; }
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.35;
+      // User direction, 14 September 2026: a darker boomerang. Exposure only;
+      // the painted texture and the lights keep their colours.
+      renderer.toneMappingExposure = 0.8;
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 40);
       camera.position.z = 7.5;

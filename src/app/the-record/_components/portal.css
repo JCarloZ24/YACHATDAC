@@ -38,27 +38,39 @@
 }
 
 /* User direction, 2026-09-09: stepped editorial panels in Country colours. */
+/* User direction, 14 September 2026: four different grounds, none repeated
+   and no midnight — a midnight panel vanished into the midnight section. */
 .record-question-panel { background: var(--color-roasted); }
-.record-question-panel:nth-child(4n + 2) {
-  background: var(--color-evergreen);
-}
-.record-question-panel:nth-child(4n + 3) {
-  background: var(--color-midnight);
-}
-.record-question-panel:nth-child(4n) {
-  background: var(--color-evergreen);
-}
+.record-question-panel:nth-child(4n + 2) { background: var(--color-evergreen); }
+.record-question-panel:nth-child(4n + 3) { background: var(--color-eucalyptus); }
+.record-question-panel:nth-child(4n) { background: var(--color-burnt); }
+/* User direction, 14 September 2026: the panels round like the catalogue
+   cards (rounded-3xl, 1.5rem) on their OUTER corners only — edges where two
+   panels meet stay square so the set still reads as one attached block.
+   Stacked on mobile, the top and foot of the column round; side by side on
+   desktop, only the outer corners of the two-by-two block round.
+   The gold mark steps inside the curve so it is not left floating off it. */
+.record-question-panel:first-child { border-radius: 1.5rem 1.5rem 0 0; }
+.record-question-panel:last-child { border-radius: 0 0 1.5rem 1.5rem; }
 .record-question-panel::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0.75rem;
+  left: 0.75rem;
   width: 5px;
   height: 5px;
   background: var(--color-gold);
 }
 @media (min-width: 1024px) {
   .record-question-panel:first-child { margin-top: 7rem; }
+  /* Only the block's own four corners: where panels meet — side by side
+     OR one above the other — the corner stays square (user, 14 Sep 2026).
+     02 stands taller than 01, so its top-left is open sky and rounds too. */
+  .record-question-panel:nth-child(n) { border-radius: 0; }
+  .record-question-panel:nth-child(1) { border-top-left-radius: 1.5rem; }
+  .record-question-panel:nth-child(2) { border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem; }
+  .record-question-panel:nth-last-child(2):nth-child(odd) { border-bottom-left-radius: 1.5rem; }
+  .record-question-panel:last-child:nth-child(even) { border-bottom-right-radius: 1.5rem; }
   .record-question-panel:nth-child(2) { padding-top: 6rem; }
 }
 
