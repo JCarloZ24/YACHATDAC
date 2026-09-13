@@ -48,6 +48,19 @@ const COVER_FULL_BLEED = "(min-width: 1024px) 100vw, 260vw";
 const COVER_PLATE = "(min-width: 1024px) 100vw, 420vw";
 /** The closing plate runs ~3.2 screens tall on a phone; 3840 is the ceiling. */
 const COVER_TALL_BLEED = "(min-width: 1024px) 100vw, 400vw";
+/**
+ * A plate that becomes a BAND below `lg` rather than a 100svh window — see
+ * `bandOnMobile`. The box is then roughly square (375 × 46svh ≈ 1.00) instead
+ * of 0.46, so by the rule above it needs `375 × (1.333 / 1.004)` = 498px of
+ * crop, or ~133vw. `COVER_PLATE`'s 420vw was derived for a viewport-tall
+ * window and over-serves a band by 3×, which is real bytes on a phone (R11).
+ *
+ * ⚠ 1.333, not 1.9. The deed's photograph is 4032×3024 — the one plate on the
+ * page whose source is NOT the library's ~1.9:1 landscape, which is also why
+ * its centred crop was so severe: a 0.46 box against a 4:3 source keeps 34.6%
+ * of the width.
+ */
+const COVER_BAND = "(min-width: 1024px) 100vw, 140vw";
 
 /**
  * /v2/truth — the descent, at full cinematic weight (F7).
@@ -1393,6 +1406,7 @@ function EntryPlate({
   title,
   deep,
   focus,
+  bandOnMobile,
   children,
   deckContent,
 }: {
@@ -1411,6 +1425,31 @@ function EntryPlate({
    * see a computed class, so call sites pass a literal.
    */
   focus?: string;
+  /**
+   * Below `lg`, give the photograph its own band and put the record BENEATH it
+   * instead of over it (user direction, 13 September 2026).
+   *
+   * WHY THE DEED NEEDS IT AND TODAY DOES NOT. A plate is a viewport-tall
+   * window, so `object-cover` throws away width. On a 1.9:1 source that costs
+   * the top and bottom and `focus` can rescue it — which is what TODAY does.
+   * The deed's photograph is 4032×3024, and its two subjects sit at roughly
+   * 24% and 72% across the frame: a 375×812 box shows 34.6% of the width,
+   * centred, so it landed on the table between them and cut both faces. No
+   * single `object-position` can hold two points 48% apart inside a 35%
+   * window — the BOX has to change, not the crop.
+   *
+   * At ~46svh the box is roughly square, which against a 4:3 source crops
+   * width only and shows the full height: ~75% of the frame at 375 and 390,
+   * ~92% at 320. Both people, whole, and no vertical crop at all.
+   *
+   * The record then cannot stay on the photograph — it is 615px of light type
+   * in an 812px screen, so it covered most of what the band exists to show.
+   * It moves into flow below, on its own charcoal ground, which the plate's
+   * `to-black/85` scrim foot already fades into.
+   *
+   * Nothing above `lg` changes: every class this switches is base-or-`lg:`.
+   */
+  bandOnMobile?: boolean;
   children?: React.ReactNode;
   deckContent?: React.ReactNode;
 }) {
@@ -1422,12 +1461,34 @@ function EntryPlate({
         data-truth-slide
         data-truth-slide-label={title}
         data-truth-ground={id === "deed" ? "return" : "present"}
-        className={`relative min-h-svh overflow-hidden ${hasDeckContent ? "" : "flex items-end"
+        className={`relative min-h-svh overflow-hidden ${hasDeckContent
+          ? ""
+          : bandOnMobile
+            /* `flex` defaults to ROW. Off the band path the plate is
+               `absolute` and the record is the only flex item, so this was
+               harmless; in a band both are in flow and a row would stand them
+               beside each other. Held to `lg`, where the plate is absolute
+               again and the record is once more the only item. */
+            ? "lg:flex lg:items-end"
+            : "flex items-end"
           }`}
       >
         {/* The crest that introduces this plate — below Ahead on TODAY, below
             TODAY's record on the deed (client direction, 11 September 2026).
             Egg-white over the photograph, which is where it reads. */}
+        {bandOnMobile ? (
+          /* The record's ground below `lg`. `[data-truth-ground]`'s own
+             ::before is egg white for the "return" band and sits at
+             `z-index: -1`, which paints OVER a background on the section
+             itself — so this is a real element, not a `bg-*` class up there.
+             `inset-0` rather than a matching `top-[46svh]`: the band above is
+             opaque where it sits, so one full-section ground needs no second
+             copy of the band's height to keep in step with. */
+          <div
+            aria-hidden
+            className="absolute inset-0 z-0 bg-charcoal lg:hidden"
+          />
+        ) : null}
         <div
           data-v2-plate
           data-motion={MOTION_GRADE[slot.bucket]}
@@ -1443,12 +1504,14 @@ function EntryPlate({
              TODAY join (user, 11 September 2026). Pinning the plane to the
              first screen puts the cover crop back inside what `sizes` asks
              for. */
-          className="absolute inset-x-0 top-0 h-svh overflow-hidden lg:inset-0 lg:h-auto"
+          className={bandOnMobile
+            ? "relative h-[46svh] overflow-hidden lg:absolute lg:inset-0 lg:h-auto"
+            : "absolute inset-x-0 top-0 h-svh overflow-hidden lg:inset-0 lg:h-auto"}
         >
           <MediaOrField
             src={presentSrc(slot.src)}
             alt={slot.expects}
-            sizes={COVER_PLATE}
+            sizes={bandOnMobile ? COVER_BAND : COVER_PLATE}
             quality={85}
             className={`object-cover ${focus ?? ""}`}
             fieldClass={FIELD_CLASS[slot.tone]}
@@ -1476,7 +1539,9 @@ function EntryPlate({
              `bottom-[16svh]` puts it in a 100svh box. */
           className={`mx-auto w-full max-w-6xl px-6 lg:px-24 ${hasDeckContent
             ? "absolute inset-x-0 top-[84svh] z-10 -translate-y-full lg:bottom-[16svh] lg:top-auto lg:translate-y-0"
-            : `relative z-30 ${deep ? "pb-[24svh]" : "pb-[16svh]"}`
+            : bandOnMobile
+              ? `relative z-30 pt-10 pb-16 lg:pt-0 ${deep ? "lg:pb-[24svh]" : "lg:pb-[16svh]"}`
+              : `relative z-30 ${deep ? "pb-[24svh]" : "pb-[16svh]"}`
             }`}
         >
           <p className="eyebrow text-lg text-gold sm:text-2xl">{eyebrow}</p>
@@ -1612,6 +1677,7 @@ export function EraSection({
           eyebrow={<>2026 &middot; {era.title}</>}
           title={deed.title}
           deep
+          bandOnMobile
         >
           {/* The plate's own line (client direction, 11 September 2026). It
               replaces the `when` + `body[0]` pair this used to set; the draft
