@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { register, start } from "@/lib/motion-controller";
 import { createHomeHero } from "@/lib/motion/home-hero";
+import { createHomePatterns } from "@/lib/motion/home-patterns";
 
 gsap.registerPlugin(useGSAP);
 
@@ -18,8 +19,9 @@ export function HomeHeroCanvas() {
     const root = element?.closest<HTMLElement>("[data-home-hero]");
     if (!element || !root) return;
     const unregister = register(createHomeHero(root, element));
+    const unregisterPatterns = register(createHomePatterns(root));
     start();
-    return unregister;
+    return () => { unregisterPatterns(); unregister(); };
   }, { scope: canvas });
   return <canvas ref={canvas} aria-hidden="true" className="home-hero-canvas absolute inset-0 h-full w-full" />;
 }

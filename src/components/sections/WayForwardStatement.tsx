@@ -59,24 +59,35 @@ export function WayForwardStatement() {
           pattern up from off screen to rest under the held line, and GSAP
           writes `transform`, which
           would otherwise overwrite the centring and offset transforms these
-          two carry as classes. Animate the wrapper, never the images. */}
+          two carry as classes. Animate the wrapper, never the images.
+          13 September 2026, user hover request: independent inner wrappers
+          take pointer drift so it cannot overwrite the scroll entrance or
+          the placement/centring on the outer wrappers. Type stays still. */}
       <div data-way-forward-ground aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <Image
-          src="/artwork/ring-b.svg"
-          alt=""
-          width={465}
-          height={470}
-          sizes="60vw"
-          className="absolute -right-[18vw] top-1/2 w-[60vw] max-w-none -translate-y-1/2 opacity-[0.28]"
-        />
-        <Image
-          src="/artwork/ring-a.svg"
-          alt=""
-          width={416}
-          height={375}
-          sizes="34vw"
-          className="absolute -bottom-[10vw] -left-[8vw] w-[34vw] max-w-none opacity-[0.28]"
-        />
+        <div className="absolute -right-[18vw] top-1/2 w-[60vw] -translate-y-1/2">
+          <div data-home-pattern>
+            <Image
+              src="/artwork/ring-b.svg"
+              alt=""
+              width={465}
+              height={470}
+              sizes="60vw"
+              className="block h-auto w-full max-w-none opacity-[0.28]"
+            />
+          </div>
+        </div>
+        <div className="absolute -bottom-[10vw] -left-[8vw] w-[34vw]">
+          <div data-home-pattern>
+            <Image
+              src="/artwork/ring-a.svg"
+              alt=""
+              width={416}
+              height={375}
+              sizes="34vw"
+              className="block h-auto w-full max-w-none opacity-[0.28]"
+            />
+          </div>
+        </div>
       </div>
       <div className="relative mx-auto w-full max-w-[1440px] px-6 lg:px-16">
         <h2 data-way-forward-line className="headline mx-auto max-w-[16ch] text-center text-h1 leading-[1.1] tracking-normal text-canvas">

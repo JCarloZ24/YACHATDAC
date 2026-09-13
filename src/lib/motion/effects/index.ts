@@ -124,6 +124,7 @@ export type EffectName =
   | "recordMasonryPass"
   | "recordWaveRoll"
   | "homeLandscapeBreeze"
+  | "homePatternDrift"
   | "recordPatternDrift"
   | "homeLoaderFilm"
   | "homeHeroOpen"

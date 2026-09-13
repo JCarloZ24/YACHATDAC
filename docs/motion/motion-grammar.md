@@ -10,6 +10,10 @@ separate route/article covers described below.
 
 *Last updated: 13 September 2026*
 
+| Home closing-pattern hover — 13 September 2026 | Behaviour | Timing | Authority | Implementation |
+| --- | --- | --- | --- | --- |
+| **what radiates**, Home closing ground | The two supplied spirals follow a fine mouse pointer with opposing shallow drift and rotation behind the stationary closing line and offer. Respond only after the scroll entrance seats the pattern; return to neutral on pointer exit, blur or leaving the beat. No automatic spin, distortion or new artwork. | Transform only; ±32px / ±24px opposing travel and ±3° / ±4° turn, power3.out with 0.8s horizontal / 1.05s vertical settling. Touch, reduced motion and static fallback stay still. | User screenshot of “A way forward” and hover request, 13 September 2026 | `homePatternDrift`, controller-owned `home-patterns.ts`; independent inner wrappers preserve the existing scroll transform |
+
 | Home galactic twilight overlap — 13 September 2026 | Behaviour | Timing | Authority | Implementation |
 | --- | --- | --- | --- | --- |
 | **the stars emerge as daylight leaves**, sunrise overlap | Keep the detailed Milky Way and its fine stars visible while the horizon warms and the sun crosses the treeline, in both directions. The band warms into amber and retains photographic contrast above the glare, instead of dropping out before the welcome/sunrise frame. Full daylight still clears the sky. | Existing reversible solar clock, no new tween or hold. Local glare remains spatial; a continuous 4–16° elevation rolloff releases the retained detail into daylight. Night keeps its existing colour. | User's simultaneous sun/Milky Way reference and screenshots of the disappearing band, 13 September 2026. Art-directed composite supersedes the earlier strict darkness threshold for the galactic layer. | `homeHeroOpen`, `homeHeroDissolve` → `home-stars.ts`, existing land shader |
