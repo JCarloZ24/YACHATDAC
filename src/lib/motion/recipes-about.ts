@@ -904,6 +904,7 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       const rows = qa(root, "[data-ab2-row]");
       const head = q(root, "[data-ab2-register-head]");
       const recap = q(root, "[data-ab2-recap]");
+      const prose = q(root, '[data-ab2-block="prose"]');
 
       root.dataset.abHeld = "true";
 
@@ -925,7 +926,9 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       // So the element is hidden, its beat flips it visible, and the mask only
       // has to do the part it is good at — the rise.
       gsap.set(
-        [registerBlock, short, ...bodies, ...facts, ...rows].filter(Boolean),
+        [registerBlock, prose, short, ...bodies, ...facts, ...rows].filter(
+          Boolean,
+        ),
         { autoAlpha: 0 },
       );
       if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
@@ -958,26 +961,52 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
         tl.settle(short, lineBeat(0.12), 0.18);
       }
 
+      // ---- the name goes BEFORE the prose arrives ------------------------
+      // ⚠ THE ORDER CHANGED — 13 September 2026, user direction, reported from
+      // 1366 x 643. The paragraphs used to arrive at .30 while the name was
+      // still up and the whole block cleared together at .48, so a 643px screen
+      // carried the legal name, the short name and five lines of prose at once
+      // and the last line fell below the fold.
+      //
+      // The name clears first and the prose is read on the screen it leaves.
+      // Clearing with `autoAlpha` alone would not have been enough — a hidden
+      // element keeps its box, so the prose would still have begun 265px down
+      // an empty screen. It is a separate block sharing the same grid cell now
+      // (Sections.tsx, about.css), so the prose is read WHERE THE NAME WAS.
+      //
+      // The block still clears WHOLE rather than line by line: its children
+      // each already own a split, and a second split beat on any of them would
+      // orphan the first one's line nodes — the trap annotated at `freshSplit`.
+      // Nothing is lost, because the derived recap carries what was read.
+      if (nameBlock) {
+        tl.to(
+          nameBlock,
+          { autoAlpha: 0, duration: 0.06, ease: EASE.country },
+          0.28,
+        );
+      }
+
       // ---- 03 · the body, line by line ----------------------------------
+      // ⚠ `lineBeat(0.09)`, NOT .12. The prose now owns its own stretch of the
+      // read instead of overlapping the name, and the beats after it did not
+      // move — the road still arrives at .56 — so the two paragraphs have to be
+      // read inside .34 → .54. At .12 the second one was still settling as the
+      // road slid in over it.
+      if (prose) tl.set(prose, { autoAlpha: 1 }, 0.34);
       bodies.forEach((body, i) => {
-        const at = 0.30 + i * 0.05;
+        const at = 0.34 + i * 0.1;
         tl.set(body, { autoAlpha: 1 }, at);
-        tl.settle(body, lineBeat(0.12), at);
+        tl.settle(body, lineBeat(0.09), at);
       });
 
       // ---- the turn -----------------------------------------------------
       // THE HEADING RETAINS; EVERYTHING UNDER IT GOES (user direction,
-      // 12 September 2026). The name block clears whole rather than line by
-      // line: its three children each already own a split, and a second split
-      // beat on any of them would orphan the first one's line nodes — the trap
-      // annotated at `freshSplit`. Nothing is lost by clearing it, because the
-      // derived recap carries what was read at 0.28, which is the board's
-      // "read already".
-      if (nameBlock) {
+      // 12 September 2026).
+      if (prose) {
         tl.to(
-          nameBlock,
-          { autoAlpha: 0, duration: 0.07, ease: EASE.country },
-          0.48,
+          prose,
+          { autoAlpha: 0, duration: 0.06, ease: EASE.country },
+          0.52,
         );
       }
 
@@ -1187,6 +1216,7 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       const ground = q(root, "[data-ab-ground]");
       const plate = q(root, "[data-ab-plate]");
       const question = q(root, "[data-ab-question]");
+      const claimsScreen = q(root, '[data-ab-screen="claims"]');
       const rule = q(root, '[data-ab-rule="quote"]');
       const attribution = q(root, "[data-ab-attribution]");
       const tagline = q(root, "[data-ab-tagline]");
@@ -1230,7 +1260,13 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
         tl.fromTo(
           ground,
           { "--ab-front": "130%" },
-          { "--ab-front": "-30%", duration: 0.18, ease: "none" },
+          // ⚠ .14, NOT .18. The crossing runs on an empty screen by design —
+          // the grammar row is explicit that dark ink on a darkening ground
+          // reads as a rendering fault — but the span was set against a 900px
+          // screen and at 643 it left the reader looking at nothing for about a
+          // fifth of the read (measured, 13 September 2026). Shorter, and the
+          // question follows it in rather than waiting on it.
+          { "--ab-front": "-30%", duration: 0.14, ease: "none" },
           0.58,
         );
       }
@@ -1279,7 +1315,14 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       // hundredths, and butting the two beats together put claim 1's last line
       // at ~25% opacity underneath a fully-arrived claim 2 (measured, .28–.32).
       // Anything that shortens this gap has to re-measure the handover.
-      if (claimA) tl.vacate(claimA, lineBeat(0.14), 0.06);
+      // ⚠ .10, NOT .14, AND CLAIM 2 COMES UP AT .20 — 13 September 2026.
+      // At .14 / .24 there was a stretch around p≈.22 with claim 1 gone, claim 2
+      // not yet arrived and nothing on the screen but the eyebrow (measured at
+      // 1366 x 643). The handover still keeps clear air between the two — the
+      // scrub trails the scroll by a few hundredths and butting them together
+      // once put claim 1's last line at ~25% under a fully-arrived claim 2 —
+      // but the air is now .03 rather than a dead beat.
+      if (claimA) tl.vacate(claimA, lineBeat(0.1), 0.06);
       if (claimB) {
         // ⚠ IT FADES, IT DOES NOT `settle`, AND THAT IS A CONSTRAINT AS WELL AS
         // THE BRIEF. The brief first: the reader's own description of this beat
@@ -1300,7 +1343,7 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
           claimB,
           { autoAlpha: 0 },
           { autoAlpha: 1, duration: 0.10, ease: EASE.country },
-          0.24,
+          0.2,
         );
         // Read, then gone — leaving just as the rising front reaches its band,
         // so the ground goes out from under the sentence as the sentence goes.
@@ -1316,9 +1359,26 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       // Held until the front is entirely past the head of the screen, so the
       // cream question has its full ratio in the first frame it is visible in
       // rather than landing on the tail of the evergreen crossing.
+      // ⚠ AND THE CLAIMS SCREEN IS CLEARED HERE, EXPLICITLY. Until now nothing
+      // cleared it: it sat at opacity 1 for the whole read and what hid the
+      // eyebrow was the rising front passing over it. That worked, but it was
+      // timing rather than layout — the eyebrow's box and the question's
+      // overlap inside the shared stage cell, so any viewport where the front
+      // had not reached the head of the screen when the question arrived would
+      // paint the two on top of each other. Reported from 1366 x 643 and not
+      // reproducible from the outside, which is exactly why it is fixed by
+      // removing the possibility rather than by re-timing the front.
+      if (claimsScreen) {
+        tl.to(
+          claimsScreen,
+          { autoAlpha: 0, duration: 0.04, ease: "none" },
+          0.72,
+        );
+      }
+
       if (question) {
-        tl.set(question, { autoAlpha: 1 }, 0.76);
-        tl.settle(question, lineBeat(0.10), 0.76);
+        tl.set(question, { autoAlpha: 1 }, 0.72);
+        tl.settle(question, lineBeat(0.1), 0.72);
       }
 
       // The thread's first appearance, drawing left to right: scaleX from a

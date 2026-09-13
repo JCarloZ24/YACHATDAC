@@ -1513,6 +1513,44 @@ Verified with no overflow at 1024 x 640, 1024 x 900, 1280 x 900, 1366 x 640, 144
 1920 x 1080; the cliff is clean at 639 and at 1023; and at 1440 x 900 the document is still
 22,693px with the frames' own type, unchanged.
 
+**THREE FIXES FROM 1366 x 643 — 13 September 2026, user direction.** All three are in sections
+built before the compact step, and none of them was caused by it: §03's faults reproduce identically
+at 900 tall.
+
+**§02's name clears before the prose, not with it.** The two paragraphs used to live inside the name
+block and arrive at .30 while the name was still up, with the whole block clearing together at .48 —
+so a 643px screen carried the legal name, the short name and five lines of prose at once and the
+last line fell below the fold at y 616. ⚠ Clearing with `autoAlpha` alone would not have fixed it:
+a hidden element keeps its box, so the prose would still have started 265px down an empty screen.
+The prose is its own block sharing the name's grid cell now, the way §06's calendar replaces its
+claim, so it is read WHERE THE NAME WAS. The last line moved from y 616 to y 339. The name beats are
+untouched: `decode` is ENT-07, spent once on the site, and the draft's joke needs both lines read.
+
+**§03 clears its claims screen explicitly, and has no dead screens.** Nothing used to clear that
+screen — it sat at opacity 1 for the whole read and what hid the eyebrow was the rising front
+passing over it. That is timing, not layout: the eyebrow's box and the question's overlap inside the
+shared stage cell, so any viewport where the front had not reached the head of the screen when the
+question arrived would paint them on top of each other. It is cleared at .72 now and the collision
+is impossible at any size. Separately there were two stretches with nothing on screen — claim 1 gone
+and claim 2 not yet arrived around p≈.22, and the ground crossing an empty screen for about a fifth
+of the read. The handover is tightened (claim 1 leaves over .10 not .14, claim 2 arrives at .20 not
+.24, keeping .03 of clear air rather than a dead beat) and the crossing runs .14 not .18 with the
+question following it in at .72.
+
+⚠ **THREE DETECTORS LIED ABOUT §03, AND THE FALSE POSITIVES ARE WORTH RECORDING** so nobody re-runs
+them. `settle` masks lines rather than fading them, so a hidden line still reads `opacity: 1`. The
+eyebrow is covered by the rising ground rather than faded, so it reads `visibility: visible`
+throughout. And `elementFromPoint` hits the legibility scrim, which sits above the copy, so
+hit-testing reports an empty screen at every fraction. **Screenshots were the only honest instrument
+here.** The user's two symptoms were never reproduced from the outside; the fix removes the
+conditions that make them possible rather than chasing a repro.
+
+**§06's chromatic marker is gone.** It did not align at small sizes and the duotone is used nowhere
+else on the site. See the retired row in motion-grammar.md for what came off and, more importantly,
+what did not: the sentence keeps its future tense and kit.ts keeps its consent record. IMG-04 is now
+unspent on the site, which also settles the Elder Advisory Group question this section was carrying
+— the artefact on the sentence describing their own authority is simply no longer there.
+
 **LEGIBILITY AND ONE ALIGNMENT BUG — 13 September 2026, user direction.**
 
 ⚠ **§02's LEGAL NAME WAS DIMMED TWICE.** The paragraph carried `text-evergreen/30` in the markup
