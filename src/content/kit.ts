@@ -538,10 +538,28 @@ export const PHOTOS: Photo[] = [
      (378A7604_1.28.1) and, on user direction 11 September 2026, §07's large
      portrait reuses Suzanne's confirmed `lw-hero` (378A7604_1.40.2).
 
-     R24: `about-people-02` remains an unnamed stand-in awaiting the correct
-     team portrait. It carries CONSENT UNRESOLVED in the markup. The large
-     portrait now shows Suzanne herself; neither slot implies a new identity
-     for the remaining man, who also appears in `op-card-01`.
+     R24: `about-people-02` is a stand-in awaiting the correct team portrait.
+     The large portrait shows Suzanne herself.
+
+     ⚠ 12 SEPTEMBER 2026, USER DECISION — THIS FRAME NOW CARRIES A NAME. §07's
+     rail labels it "Graham Ambridge". The decision was taken with this note in
+     front of the user, so it is recorded rather than argued with: the facts
+     above have not changed. This photograph is the same man as `op-card-01`,
+     `op-card-01` is NOT Graham Ambridge, no photograph of him exists in any
+     batch, and this frame's own consent is UNRESOLVED.
+
+     What makes the label a label and not a claim is the ⟡ Stand-in marker
+     rendered with it in `src/app/about/_components/Sections.tsx` — the same
+     contract /our-people's one named card already runs, which is why the two
+     pages now agree instead of contradicting each other. The `⚠ Consent
+     unresolved` badge §07 used to render was replaced by that marker, not
+     deleted.
+
+     ⚠ THE MARKER IS THE WHOLE OF THE PROTECTION AND IT COMES OFF LAST. Not
+     when the copy is tidied, not when the rail is restyled — when a cleared
+     photograph of Graham Ambridge exists and replaces this file. Until then a
+     screenshot of §07 without it is a claim about a real person, which is the
+     failure this block was written to prevent.
 
      Origin (about-suzanne): supplied batch 1, 378A7604_1.40.2; existing
      /media/library/living-work/livingwork-hero.webp derivative, reused intact.
@@ -573,7 +591,7 @@ export const PHOTOS: Photo[] = [
      world moves around a picture of a child's hands; the picture does not. */
   { id: "about-reciprocity", src: "/media/library/about/about-reciprocity.webp", width: 2000, height: 1334, grade: "frame", batch: 2, master: "March22-1547", subject: "Ochre-marked adult palms held out over a grinding stone toward a child's — no faces in frame" },
   /* `frame` on the portrait rule, the same rule that holds `elder-portrait`. */
-  { id: "about-people-02", src: "/media/library/about/about-people-02.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.77.4", subject: "⚠ Same man as op-card-01, full-length under a rock arch — ⚠ CONSENT UNRESOLVED" },
+  { id: "about-people-02", src: "/media/library/about/about-people-02.webp", width: 2000, height: 1054, grade: "frame", batch: 1, master: "378A7604_1.77.4", subject: "⚠ Same man as op-card-01, full-length under a rock arch — ⚠ CONSENT UNRESOLVED; labelled Graham Ambridge on /about §07 behind a ⟡ Stand-in marker, 12 Sep 2026" },
 
   /* ----------------------------------------------------------- Partnerships.
      Four cut for `07 · Partnerships` (Figma 2944:25988). The page's other two

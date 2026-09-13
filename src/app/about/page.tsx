@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { FooterGround } from "@/components/layout/FooterGround";
 import { PageTransition } from "@/components/transitions/PageTransition";
 import { aboutHero } from "@/content/about";
+import { skipLinks } from "@/content/site";
 import {
   AboutHero,
   Breath,
@@ -16,6 +17,7 @@ import {
 } from "./_components/Sections";
 import { AboutMotion } from "./_components/Motion";
 import { DebugRail } from "./_components/DebugRail";
+import "./_components/about.css";
 
 export const metadata: Metadata = {
   title: "About",
@@ -36,13 +38,16 @@ export const metadata: Metadata = {
  * Marc's styling and not rebuilt here; the page just declares the ground it
  * hands over on.
  *
- * ⚠ THE SEAM PASS IS MOUNTED. `<AboutMotion />` builds the ten
- * section-to-section seams of `REF · SCORE · 05 ABOUT` (Figma 2642:19666) and
- * the X4 baseline arrivals — and only those. The section interiors (§03's
- * 300vh pin, IMG-03, the line-mask settle, Group G's waypoints) remain
- * unbuilt, ledgered at docs/motion/scenes.md:331-390, and come as one pass,
- * not piecemeal. With JavaScript off the page still renders complete — rest
- * state is the finished state, and the reduced-motion cut is that same state.
+ * ⚠ THE SEAM PASS IS MOUNTED, AND SO IS §03'S INTERIOR. `<AboutMotion />`
+ * builds the ten section-to-section seams of `REF · SCORE · 05 ABOUT` (Figma
+ * 2642:19666), the X4 baseline arrivals, and — from 12 September 2026, user
+ * direction — §03's held screen: the claims leave, the ground goes out under
+ * them from the foot up, and the question is asked on bare charcoal
+ * (`theQuestion`, and the held layout in ./_components/about.css). Every other
+ * section interior (IMG-03's siblings, Group G's waypoints) remains unbuilt and
+ * ledgered at docs/motion/scenes.md. With JavaScript off the page still renders
+ * complete — rest state is the finished state, the reduced-motion cut is that
+ * same state, and §03 falls back to the two stacked screens it used to be.
  * See the header of ./_components/Sections.tsx before changing anything.
  *
  * `PageTransition` stays: it paints the page's own ground behind everything,
@@ -67,6 +72,19 @@ export default function AboutPage() {
       {/* Dev-only scroll readout for tuning the seams; renders nothing in
           production. */}
       {process.env.NODE_ENV !== "production" ? <DebugRail /> : null}
+      {/* ⚠ THE DECK'S OWN ESCAPE, and this page needs one where the static
+          routes do not: eleven sections, seven of them held screens, about
+          23,700px — roughly 29 PageDowns end to end. The layout's "skip to
+          content" lands a reader at the top of THIS; this one lands them past
+          it, at §09's #contact. `sr-only` until focused, so it changes nothing
+          visually. MOTION-SYSTEM.md: a page that jacks scroll must not trap a
+          keyboard or screen-reader user, and must provide a skip mechanism. */}
+      <a
+        href="#contact"
+        className="eyebrow sr-only rounded-xs bg-charcoal px-4 py-2 text-xs tracking-[0.08em] text-canvas focus:not-sr-only focus:fixed focus:top-16 focus:left-4 focus:z-100"
+      >
+        {skipLinks.sequence}
+      </a>
       <AboutHero />
       <WhatWeAre />
       <WhyWeExist />

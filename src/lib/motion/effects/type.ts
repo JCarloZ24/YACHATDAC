@@ -19,8 +19,11 @@
  */
 
 import gsap from "gsap";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { DUR, EASE } from "../tokens";
-import { assertEase, first, movable } from "./shared";
+import { assertEase, first, movable, noise } from "./shared";
+
+gsap.registerPlugin(ScrambleTextPlugin);
 
 /**
  * Counter and glyph proportions of a heavy grotesque zero, as fractions of the
@@ -221,6 +224,87 @@ export function registerType(): void {
         duration: config.duration as number,
         ease: config.ease as string,
         stagger: { each: 0.02, from: "start" },
+      });
+    },
+  });
+
+  /* --- the name resolves ---------------------------------------------------
+     Grammar: "what endures", the name resolves · sketch ENT-07, released by F9.
+
+     A name arrives as noise and resolves into itself. Spent ONCE on the site —
+     About §02's legal name — because there the copy is already the joke: the
+     draft sets the full name and then says "Most people say YACHATDAC", so the
+     resolve is the sentence's own argument rather than an effect laid over it.
+
+     ⚠ THIS SPLITS NOTHING, and that is the whole reason it can carry a line
+     this long. `display`'s six-word cap exists because a CHARACTER SPLIT of a
+     long line reads as a gimmick and wrecks the measure; ScrambleText rewrites
+     the text in place, so the guard neither applies nor may be borrowed. It
+     also means `freshSplit`'s one-split-per-element rule is not in play here.
+
+     ⚠ NEVER ON A PERSON'S NAME (ART-DIRECTION §6) and never on testimony. F9
+     licenses this for names of organisations, headings and interface text.
+
+     THE TARGET STRING IS READ FROM THE DOM, never passed in — the copy is
+     CMS-editable (D12) and the markup is the only place it may live. The
+     caller is responsible for the accessible name: put the real string on a
+     parent's `aria-label` and `aria-hidden` the run this animates, which is
+     the same contract SplitText's `aria: "auto"` gives the rest of this file.
+     Rewriting text without that lets assistive tech read noise.
+
+     Mixed case, and spaces are left alone, so word lengths survive the
+     scramble and the reader can see it is a name before they can read it. */
+  gsap.registerEffect({
+    name: "decode",
+    extendTimeline: true,
+    defaults: { duration: DUR.large, ease: EASE.machine, revealDelay: 0 },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      assertEase("decode", config.ease);
+      const el = first(targets);
+      if (!el) return gsap.timeline();
+      // Captured once, at build. Re-reading mid-tween would read the scramble
+      // back as the target and the line would never resolve.
+      const text = el.dataset.decodeText ?? el.textContent ?? "";
+      el.dataset.decodeText = text;
+
+      // ⚠ THE FIRST FRAME HAS TO BE NOISE, and neither the tween nor
+      // `immediateRender` delivers it. A timeline renders a tween sitting at
+      // position 0 as not-yet-active while its own time is exactly 0, so a
+      // scrubbed decode showed the fully RESOLVED name at progress 0 and only
+      // scrambled once the reader moved — the exact inverse of the board's
+      // frame 01, "THE NAME, UNRESOLVED" (measured, 12 September 2026). So the
+      // opening scramble is written here, at build, and ScrambleText takes
+      // over the instant time moves off zero. Both are noise, so the handover
+      // is invisible.
+      //
+      // Seeded from the index rather than Math.random: a reload, a screenshot
+      // test and a reviewer's machine should agree, which is the same reason
+      // `noise()` exists in shared.ts. Spaces are left alone so word lengths
+      // survive and the reader can see it is a name before they can read it.
+      const CHARS =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      el.textContent = Array.from(text)
+        .map((ch, i) =>
+          ch === " " ? ch : CHARS[Math.floor(noise(i + 1) * CHARS.length)],
+        )
+        .join("");
+      return gsap.to(el, {
+        duration: config.duration as number,
+        ease: config.ease as string,
+        // ⚠ WITHOUT THIS THE FIRST FRAME IS THE ANSWER. A `to` tween does not
+        // record or apply its start state until time moves off zero, so a
+        // scrubbed decode sitting at position 0 showed the fully RESOLVED name
+        // at progress 0 and only scrambled once the reader had moved — the
+        // exact inverse of the board's frame 01, "THE NAME, UNRESOLVED"
+        // (measured, 12 September 2026). Rendering immediately puts the noise
+        // on screen before the reader arrives at the section.
+        immediateRender: true,
+        scrambleText: {
+          text,
+          chars: "upperAndLowerCase",
+          speed: 0.45,
+          revealDelay: config.revealDelay as number,
+        },
       });
     },
   });

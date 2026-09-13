@@ -5,39 +5,57 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { register, start, stop, watchVisibility } from "@/lib/motion-controller";
 import { breath } from "@/lib/motion/recipes";
 import {
-  boardHandoff,
+  boardLift,
   coverSeams,
   doorsAssembly,
   heroQuiet,
-  loopAndRing,
-  nameAndRule,
-  partnersDots,
-  peopleWave,
-  questionRule,
-  roadScreen,
-  valuesRelay,
+  theCalendar,
+  theLoop,
+  theRegister,
+  thePartners,
+  theRoster,
+  theQuestion,
+  theValues,
 } from "@/lib/motion/recipes-about";
 
 /**
  * /about — the page's motion script. Verb: ANSWERS.
  *
- * THE SEAM PASS ONLY. This host wires the ten section joins of Figma
- * `REF · SCORE · 05 ABOUT` (2642:19666) plus the X4 baseline arrivals — the
- * section interiors (§03's 300vh pin, IMG-03, the animated ground ramp, the
- * line-mask settle, Group G's eight waypoints) are the next pass, ledgered at
- * docs/motion/scenes.md:331-390. Renders nothing.
+ * THE SEAMS, AND THE PAGE'S SEVEN HELD SCREENS. This host wires the ten section
+ * joins of Figma `REF · SCORE · 05 ABOUT` (2642:19666), the X4 baseline
+ * arrivals, and — from 12 September 2026, user direction — the interiors of
+ * §02 (`theRegister`), §03 (`theQuestion`), §04 (`theLoop`), §05 (`theValues`),
+ * §06 (`theCalendar`), §07 (`theRoster`) and §08 (`thePartners`). Group G's
+ * eight waypoints and the remaining section interiors are still unbuilt.
+ * Renders nothing.
+ *
+ * ⚠ SEVEN HELD SCREENS ON A PAGE THE GRAMMAR BUDGETS ONE PIN FOR, on top of the
+ * eight the deck already spends. §05 is held QUIETLY — it is the ledger's ⚡2
+ * rest and its beats are `settle` and a fade only — and §06's interior declares
+ * no loud channel at all, because that section spends its ⚡4 at its edges. All
+ * seven were user directions and all are flagged for design sign-off in
+ * scenes.md. None is a GSAP pin — they are sticky spans in about.css, so they do
+ * not fight the deck's own pins.
  *
  * THE SCENE LEDGER, so the pacing is readable here as well as in the docs:
  *
  *   §01 hero          media       110vh   ⚡4   (baseline only this pass)
- *   §02 what-we-are   type        299vh   ⚡3   three screens: decode · road · register
- *   §03 why-we-exist  type        235vh   ⚡5   (the pin is the interiors pass)
+ *   §02 what-we-are   type        300vh   ⚡3   HELD — the name resolves, the
+ *                                                facts arrive one at a time
+ *   §03 why-we-exist  type        300vh   ⚡5   HELD — the claims leave, the
+ *                                                ground goes out, the question
  *   §03b breath       none         55vh   ⚡1   the hold
- *   §04 what-we-do    media       265vh   ⚡4
- *   §05 how-we-work   type        249vh   ⚡2
- *   §06 who-decides   TRANSITION  245vh   ⚡4   navy wave in · overlap out
- *   §07 the-people    media       145vh   ⚡3
- *   §08 partners      type        175vh   ⚡2
+ *   §04 what-we-do    media       300vh   ⚡4   HELD — each clause builds its
+ *                                                card, the loop closes
+ *   §05 how-we-work   type        300vh   ⚡2   HELD — one value at a time,
+ *                                                then the photograph opens
+ *   §06 who-decides   TRANSITION  300vh   ⚡4   HELD — the claim clears, the
+ *                                                calendar takes its place;
+ *                                                navy wave in · overlap out
+ *   §07 the-people    media       300vh   ⚡3   HELD — the roster, one face
+ *                                                at a time
+ *   §08 partners      type        300vh   ⚡2   HELD — the register fills,
+ *                                                a column at a time
  *   §09 get-in-touch  TRANSITION  140vh   ⚡3   charcoal wave in · the doors
  *   §10 footer        none        135vh   ⚡1
  *
@@ -106,15 +124,54 @@ export function AboutMotion() {
       if (pairs.length) unregister.push(register(coverSeams(pairs)));
 
       wire(find("hero"), (el) => heroQuiet(el, 110));
-      wire(find("what-we-are"), (el) => nameAndRule(el, 299));
-      wire(find("road"), (el) => roadScreen(el, 62));
-      wire(find("why-we-exist"), (el) => questionRule(el, 235));
+      // §02 is the page's other held screen — the register writes itself.
+      // 200 is derived the same way §03's is: the section's 300vh less the one
+      // viewport its sticky screen is held for. `roadScreen` is gone; the road
+      // is a beat inside this sequence now, and its parallax with it (F7 —
+      // see the note at `theRegister`).
+      wire(find("what-we-are"), (el) => theRegister(el, 200));
+      // §03 is the page's one held screen. 200 is derived, not chosen — the
+      // section's 300vh less the one viewport its sticky screen is held for.
+      // The deck's BUFFER does NOT come off it; see the arithmetic and the
+      // measurement at `theQuestion`.
+      wire(find("why-we-exist"), (el) => theQuestion(el, 200));
       wire(find("breath"), (el) => breath(el, 55));
-      wire(find("what-we-do"), (el) => loopAndRing(el, 265));
-      wire(find("how-we-work"), (el) => valuesRelay(el, 249));
-      wire(find("who-decides"), (el) => boardHandoff(el, 245));
-      wire(find("the-people"), (el) => peopleWave(el, 145));
-      wire(find("partners"), (el) => partnersDots(el, 175));
+      // §04 is the page's third held screen — the loop closes. 200 is derived
+      // the same way §02's and §03's are: the section's 300vh less the one
+      // viewport its sticky screen is held for.
+      wire(find("what-we-do"), (el) => theLoop(el, 200));
+      // §05 is the page's fourth held screen — three values and a held
+      // photograph. Quiet by design: it is the ledger's ⚡2 rest between two
+      // ⚡4 sections and holding it must not turn it into a fifth spectacle.
+      wire(find("how-we-work"), (el) => theValues(el, 200));
+      // §06 is the page's fifth held screen — "Who decides", two parts under
+      // one persistent header, 200 derived the same way the other four are.
+      //
+      // ⚠ TWO MODULES ON ONE SECTION, and the split is load-bearing. A
+      // composition that declares the held bounds builds the CUT below them, so
+      // everything in `theCalendar` is withheld on a phone, on a short window
+      // and under reduced motion — which is right for its interior and wrong for
+      // its seam. `overlap` cannot be withheld: §07's wave is scored to ride
+      // over a board that is RECEDING. So the lift is its own bounds-free
+      // composition, and it is also where §06 spends the loud transition channel
+      // its ledger row gives it (`theCalendar` declares none).
+      wire(find("who-decides"), (el) => theCalendar(el, 200));
+      wire(find("who-decides"), (el) => boardLift(el, 245));
+      // §07 is the page's sixth held screen — the roster, one face at a time.
+      // 200 is derived the same way the other five are. The rail divides this
+      // read between however many people are on it, so adding a face costs no
+      // scroll; past about six, grow this number rather than the beats.
+      wire(find("the-people"), (el) => theRoster(el, 200));
+      // §08 is built but is NOT a held screen — the one interior on this page
+      // that scrolls while it plays. Its names are 30px type and nothing in it
+      // is sized in svh, so holding it would have meant shrinking the frame's
+      // own type to clear the 820px floor (user decision, 12 September 2026).
+      // §08 is the page's seventh held screen — the register fills a column at
+      // a time. 200 is derived the same way the other six are: 300vh less the
+      // one viewport its sticky screen is held for. It was briefly built
+      // unheld; the user watched it scroll away mid-sequence and asked for it
+      // still, and the spacing came in rather than the type. See `thePartners`.
+      wire(find("partners"), (el) => thePartners(el, 200));
       wire(find("get-in-touch"), (el) => doorsAssembly(el, 140));
 
       start();

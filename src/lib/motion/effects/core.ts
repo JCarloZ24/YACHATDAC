@@ -41,6 +41,49 @@ export function registerCore(): void {
     },
   });
 
+  /* --- the screen clears -------------------------------------------------
+     Grammar: "the screen clears" · About §03 · P9.
+
+     `settle` read backwards and upwards, and deliberately its counterpart:
+     what endures rises from behind its edge and never exits, what has been
+     answered leaves through the top and does not come back. Same line split,
+     same mask, same 90ms — so the two read as one gesture in two directions
+     rather than as two unrelated animations.
+
+     ⚠ NEVER ON TESTIMONY. A person's recorded words are read in stillness
+     (`dim`) and are not taken off the screen; this is for the page's OWN
+     claims, which exist to be measured against something and then to get out
+     of the way of it.
+
+     The fade is not decoration on top of the mask: masked travel alone leaves
+     the last sliver of a tall line hanging at the mask edge for the whole
+     exit, and the direction was asked for as "fade out and text moves up"
+     (user direction, 12 September 2026). Both, on the same span.
+
+     -110 rather than -100 so a descender clears the mask completely; `settle`
+     uses +110 for the ascender on the same reasoning. */
+  gsap.registerEffect({
+    name: "vacate",
+    extendTimeline: true,
+    defaults: { duration: DUR.large, ease: EASE.country, stagger: STAGGER.line },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      assertEase("vacate", config.ease);
+      const split = freshSplit(first(targets), {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        aria: "auto",
+      });
+      return gsap.to(split.lines, {
+        yPercent: -110,
+        opacity: 0,
+        duration: config.duration as number,
+        ease: config.ease as string,
+        stagger: config.stagger as number,
+      });
+    },
+  });
+
   /* --- a short display heading -------------------------------------------
      Grammar: "what endures", display cut · sketch B6.
      Characters ONLY on short display headings. tokens.md caps this at roughly

@@ -132,6 +132,7 @@ export type EffectName =
   | "homeHeroDissolve"
   // core — arrival, type, the rest
   | "settle"
+  | "vacate"
   | "display"
   | "waveClamp"
   | "brighten"
@@ -152,6 +153,7 @@ export type EffectName =
   | "handprintPortal"
   // type at scale
   | "aperture"
+  | "decode"
   | "knockout"
   | "ghostType"
   | "velocityDrift"

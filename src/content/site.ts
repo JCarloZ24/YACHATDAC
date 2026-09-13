@@ -109,6 +109,21 @@ export const primaryAction = { title: "Connect", href: "/connect" } as const;
  * Verbatim from the homepage draft's site-wide interface amendment (D5). */
 export const pageLoaderCopy = { viewing: "You’re viewing" };
 
+/**
+ * The skip mechanism MOTION-SYSTEM.md's accessibility rules require of a
+ * scroll-jacked page, and the site had none anywhere (measured 13 September
+ * 2026). `content` is the first focusable element on EVERY route; `sequence` is
+ * offered only where a page holds the reader — /about's deck is eleven sections
+ * and about 23,700px, which is roughly 29 PageDowns end to end.
+ *
+ * D12: copy is CMS-editable, so these are strings here and not literals in the
+ * layout. The wording follows `the-record.ts`'s existing `skip` precedent.
+ */
+export const skipLinks = {
+  content: "Skip to content",
+  sequence: "Skip the scroll sequence",
+} as const;
+
 export const pillars: Pillar[] = [
   {
     id: "wonder",

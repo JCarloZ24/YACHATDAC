@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { skipLinks } from "@/content/site";
 import { IntroGate } from "@/components/layout/IntroGate";
 import { TransitionProvider } from "@/components/motion/TransitionProvider";
 import { RouteBlink } from "@/components/motion/RouteBlink";
@@ -70,8 +71,23 @@ export default function RootLayout({
         {/* X7 / SYS-02, 11 September 2026: the named readiness cover for every
             public route, link navigation, refresh and hard refresh. */}
         <RouteLoader />
+        {/* ⚠ FIRST FOCUSABLE ELEMENT ON EVERY ROUTE, and it has to stay
+            first — `sr-only` until it is focused, then a real visible control.
+            MOTION-SYSTEM.md requires a skip mechanism of any page that jacks
+            scroll, and the site had none: measured on /about, a keyboard user
+            tabbing from the top reached the four footer links and nothing else
+            (13 September 2026). /about carries a second one past its deck; see
+            `AboutSkip`. */}
+        <a
+          href="#content"
+          className="eyebrow sr-only rounded-xs bg-charcoal px-4 py-2 text-xs tracking-[0.08em] text-canvas focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100"
+        >
+          {skipLinks.content}
+        </a>
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        <main id="content" className="flex-1">
+          {children}
+        </main>
         <SiteFooter />
       </body>
     </html>

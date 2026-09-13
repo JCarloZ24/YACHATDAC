@@ -9,6 +9,7 @@ import {
   whoDecides,
   whyWeExist,
 } from "@/content/about";
+import { governance, suzanneProfile, team } from "@/content/our-people";
 import { contactRoutes } from "@/content/contact";
 import { ContactDetails } from "@/components/sections/ContactDetails";
 import { ContactDoors } from "@/components/sections/ContactDoors";
@@ -145,8 +146,51 @@ const ROAD = photoById("about-road");
 const QUESTION = photoById("country-wide");
 const BREATH = photoById("about-breath");
 const RECIPROCITY = photoById("about-reciprocity");
-const PEOPLE_A = photoById("about-suzanne");
-const PEOPLE_B = photoById("about-people-02");
+/**
+ * §07's ROSTER — one line per face, and the names come from /our-people.
+ *
+ * ⚠ ADDING SOMEBODY IS ONE ENTRY HERE plus a row in kit.ts. The rail divides
+ * its own window by however many entries there are, so nothing else moves.
+ * Past about six the section's span should grow rather than the beats getting
+ * shorter — see `theRoster`, where that number lives.
+ *
+ * ⚠ THE NAME IS NOT TYPED HERE, IT IS LOOKED UP. `personOf` resolves each
+ * entry against `suzanneProfile`, `team.people` and `governance.people` in
+ * src/content/our-people.ts, so a person who is not on /our-people cannot
+ * appear on this rail, and a name or role corrected there is corrected here in
+ * the same edit. That is the whole of "based out of /our-people" (user
+ * direction, 12 September 2026).
+ *
+ * Photographs and their alt text are PRESENTATION and live here rather than in
+ * the content module — the same split /our-people makes for its own cards.
+ */
+const PEOPLE_FRAMES = [
+  {
+    person: "Suzanne Thompson",
+    photo: "about-suzanne",
+    alt: thePeople.suzannePortraitAlt,
+  },
+  {
+    /* ⚠ STAND-IN, AND THE MARKER IS WHY THE NAME IS ALLOWED TO BE HERE.
+       kit.ts records this frame as "⚠ Same man as op-card-01 — ⚠ CONSENT
+       UNRESOLVED", and states in as many words that op-card-01 is NOT Graham
+       Ambridge and that no photograph of him exists in any batch. The name
+       goes on the frame by user direction of 12 September 2026; what makes
+       that a label rather than a claim is the ⟡ Stand-in marker rendered with
+       it, which is the same contract /our-people's one named card already
+       runs. The marker comes off when his photograph arrives and not before.
+       The alt below says what is in the picture and names nobody. */
+    person: "Graham Ambridge",
+    photo: "about-people-02",
+    alt: "A man standing full length under a rock arch on Country.",
+    standIn: true,
+  },
+] as const;
+
+/** Every person /our-people knows about, in one place to look through. */
+const OUR_PEOPLE = [suzanneProfile, ...team.people, ...governance.people];
+
+const personOf = (name: string) => OUR_PEOPLE.find((p) => p.name === name);
 
 /* -------------------------------------------------------------------------
    01 · Hero — the escarpment, and three figures for scale · 110vh
@@ -249,28 +293,63 @@ export function AboutHero() {
 }
 
 /* -------------------------------------------------------------------------
-   02 · What we are — the name, the road, and the register · 299vh
+   02 · What we are — the name, the road, and the register · 300vh held
    ------------------------------------------------------------------------- */
 
 /**
- * The sentence says most people cannot say the corporation's legal name, so
- * the frame sets the long name at 64 and holds it at 0.3 while "Most people
- * say YACHATDAC." lands at 96 underneath. The type is making the point the
- * copy makes, which is why both halves come out of one authored string rather
- * than being two entries in the content module.
+ * ⚠ THE REGISTER PASS IS BUILT (12 September 2026, user direction). This was
+ * three passive screens read by scrolling past them; it is now ONE held screen
+ * running the sequence Figma `2632:19655` has specified all along — `REF ·
+ * 05 ABOUT §02 THE REGISTER — the facts arrive one at a time · 6 FRAMES`. The
+ * beats are `theRegister` in src/lib/motion/recipes-about.ts; the held layout
+ * is ./about.css, which §03 already uses. Read both before changing markup.
  *
- * ⚠ R15 — that long name is exactly what is unconfirmed. The logo and the
- * published research disagree on Yambangku / Yumbangku, and ICN and ABN are
- * blank. The draft's own note renders under the register rather than being
- * dropped, because a register that lists what is confirmed should say what is
- * not.
+ * THE BOARD'S ARGUMENT, because it is the reason the section exists in this
+ * shape: "The lo-fi draws four fact cards side by side, which means the reader
+ * meets nine pieces of information at once and reads none of them. Here each
+ * one arrives on its own, at size, and folds down into the register as the
+ * next one comes up. Nothing is lost — the reader met every fact singly and
+ * the record is still a readable index at the end."
  *
- * ⚠ CR10 is held on the third paragraph — "bought back for our people" is the
- * client's phrase about their own history and is not edited here.
+ * HOW THE SEQUENCE READS. The legal name arrives as noise and resolves into
+ * itself, then dims as the short name settles under it — which is the copy's
+ * own joke, since the draft sets the full name and then says most people say
+ * YACHATDAC. The two paragraphs settle line by line and the screen clears to a
+ * single dimmed recap. Then the road opens full bleed at the top of the
+ * screen, the ochre thread draws, and each of the four facts takes the screen
+ * ALONE at heading scale before folding down into the register — which is the
+ * table below, arriving one row at a time. The road gives up its height to the
+ * table as it fills.
  *
- * THE ROAD RUNS FULL BLEED THROUGH THE SECTION. It is a screen of its own, not
- * an image on the side: 1440 wide between the paragraphs and the register,
- * with a caption that names the way in rather than describing the picture.
+ * ⚠ THE BOARD SAYS "NO PIN, NO SCRUB" AND IS OVERRULED. Its own note reads
+ * "230vh, and deliberately NOT pinned … the scroll is never taken away, so a
+ * researcher can leave at any point and the register still reads". Held on
+ * user direction, 12 September 2026. The objection is answered rather than
+ * ignored: below `deck:` (1024 × 820), under reduced motion and with
+ * JavaScript off none of this applies and the section is exactly the document
+ * it was — the register the note is protecting. That is also the second held
+ * screen on a page the grammar budgets one pin for; flagged for sign-off in
+ * scenes.md alongside the deck's own deviation.
+ *
+ * ⚠ R15's NOTE IS IN BOARD FRAME 06 AND IS NOT BUILT. The editorial notes came
+ * off /about on 11 September 2026; `whatWeAre.pending` and STATUS.md are the
+ * record instead. The board predates that.
+ *
+ * ⚠ NO CLIP OF ANY KIND ON THIS SECTION — not `overflow-hidden`, and not
+ * `overflow-clip` either. TWO separate reasons, and conflating them deleted
+ * the seam wave once already (12 September 2026):
+ *
+ *   · the Wave / Divider below is seated `overhang`, which pulls it entirely
+ *     ABOVE this section's own box so it lands on the hero photograph. ANY
+ *     overflow clipping removes it — `clip` no less than `hidden`, since both
+ *     clip; `clip` only differs in not creating a scroll container.
+ *   · `overflow-hidden` would additionally make the section a scroll container,
+ *     and `position: sticky` inside it would then never stick.
+ *
+ * §03 takes `overflow-clip` because it has rings to clip and no overhanging
+ * wave. This section has the opposite pair, so the ring is clipped on its own
+ * layer instead — it needs it, being 1000px at left-54% — and the section
+ * itself clips nothing.
  */
 export function WhatWeAre() {
   const [legalName, shortName] = (() => {
@@ -279,117 +358,257 @@ export function WhatWeAre() {
     return [first.slice(0, cut + 1), first.slice(cut + 2)];
   })();
 
+  /**
+   * The recap — what has been read, held at 0.28 while the facts take the
+   * screen (board frames 04–06).
+   *
+   * DERIVED, NOT AUTHORED. The board draws a line that is not in the draft, so
+   * it is composed here from strings that are: the short name, and the first
+   * sentence of the last paragraph. D5 keeps copy in `src/content/about.ts`
+   * and this adds nothing to it — the same move the legal-name split above
+   * makes, and what `sentences()` exists for. A reviewer still reads it as a
+   * sentence, so it is flagged rather than buried.
+   */
+  const recap = `${shortName} · ${sentences(whatWeAre.body[2])[0]}`;
+
   return (
     <section data-ab="what-we-are" className="relative bg-canvas text-charcoal">
-      {/* ⚠ NO `overflow-hidden` ON THIS SECTION. The wave is pulled entirely
-          above the section's own box so that it lands on the hero photograph
-          below it — a clip here deletes it outright. The artwork is clipped on
-          its own layer instead, which it needs (ring-b is 1000px at left-54%
-          and would otherwise scroll the page sideways). */}
       {/* Seam 01 → 02 · Wave / Divider · OFF-WHITE. "The cliff's horizontal
           banding becomes the register's rules." The Guide's departure (G1,
           ▲ Leonard Mickelo) would leave from here; not built. */}
       <WaveDivider ground="var(--color-canvas)" hook="wave" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          tone="roasted"
-          className="top-[14%] left-[54%] w-[62.5rem] rotate-7 opacity-[0.08]"
-        />
-      </div>
 
-      <div className={`${COLUMN} relative pt-16 lg:pt-28`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
-        >
-          {whatWeAre.title}
-        </p>
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid; in flow it adds nothing and the children below simply stack in
+          the order they are written, which is the document this replaces.
 
-        {/* The long name, held back so the short one can land. */}
-        <p
-          data-arrive
-          className="headline mt-8 max-w-[1240px] text-4xl leading-[1.2] text-evergreen/30 sm:text-5xl lg:text-[3.5rem]"
-        >
-          {legalName}
-        </p>
-        <p
-          data-arrive
-          className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-6xl lg:text-[5rem]"
-        >
-          {shortName}
-        </p>
+          ⚠ THE DOM ORDER IS THE FLOW ORDER, AND THE HELD ORDER IS THE GRID'S.
+          Written out, this reads heading → the name → the road → the register,
+          which is what the frame draws and what the fallback has to be. Held,
+          the road is lifted to the first grid row so it can come in OVER the
+          heading and push it down; see about.css. Nothing is reordered in the
+          DOM to achieve that, so the reading order and the tab order are the
+          frame's in both builds. */}
+      <div data-ab-stage>
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <RingArtwork
+            piece="b"
+            tone="roasted"
+            className="top-[14%] left-[54%] w-[62.5rem] rotate-7 opacity-[0.08]"
+          />
+        </div>
 
-        <p className="mt-16 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
-          {whatWeAre.body[1]}
-        </p>
-        <p className="mt-8 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl">
-          {whatWeAre.body[2]}
-        </p>
-      </div>
+        {/* THE ONE HEADING, and it never leaves (user direction, 12 September
+            2026: "What we are header retains"). It is the fixed point the
+            whole section turns around — the name resolves under it, the copy
+            clears from under it, the road arrives over it and pushes it down,
+            and the register writes itself under it.
 
-      {/* The road. Full bleed — a screen, not an inset, and its OWN screen in
-          the ledger (scenes.md:358: "§02 is decode → the road → register"), so
-          it carries its own motion root and its own loud channel (media). The
-          plane is oversized past its clip so the parallax travel never exposes
-          ground; `movable()` holds it still if the photo is `frame` grade. */}
-      <figure data-ab="road" className="relative mt-16">
-        <div className="relative h-[44svh] w-full overflow-hidden lg:h-[62svh]">
-          <div
-            data-media
-            data-plane="mid"
-            data-motion={ROAD?.grade ?? "full"}
-            className="absolute inset-x-0 -inset-y-[8%]"
+            ⚠ ITS TRAVEL GOES ON THE WRAPPER. The heading itself must stay free
+            of inline transforms or the stylesheet's travel loses to them —
+            the same collision the register index hit. Nothing animates the
+            wrapper; nothing but the stylesheet writes its transform. */}
+        <div data-ab2-headwrap className={`${COLUMN} relative pt-16 lg:pt-28`}>
+          <p
+            data-ab-eyebrow
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] sm:text-2xl"
           >
-            <MediaOrField
-              src={ROAD?.src ?? null}
-              /* The vehicle is named because the crop below brings it into frame;
-                 it was entirely cut by the old centred crop. `kit.ts` has recorded
-                 it as the subject all along ("one vehicle at the end — no people"). */
-              alt="An aerial view down a sandy two-wheel track through low bushland, a single vehicle stopped on it"
-              sizes="(min-width: 1024px) 100vw, 260vw"
-              /* The plane is 2.70:1 and the photograph 1.78:1, so `object-cover`
-                 discards ~178px at each edge, and the centred default cut the near
-                 end of the track — including the vehicle on it, which is the thing
-                 that gives the aerial its scale. Anchored to the bottom on user
-                 direction, 11 September 2026. This moves the crop INSIDE the plane
-                 only: the plane's own 8% overhang, and so the parallax, is
-                 untouched, and ~48px of the photograph's true foot still sits
-                 below the clip so the travel never exposes ground. */
-              className="object-cover object-bottom"
-              fieldClass="bg-roasted/40"
-            />
+            {whatWeAre.title}
+          </p>
+        </div>
+
+        {/* ---- the name ---------------------------------------------------
+            Clears whole when the road arrives. Faded as a BLOCK rather than
+            line by line: its three children each already own a split, and a
+            second split beat on any of them would orphan the first one's line
+            nodes — see the note at `freshSplit`. */}
+        <div data-ab2-block="name" className={`${COLUMN} relative pt-8 lg:pt-10`}>
+          {/* THE NAME, UNRESOLVED. The run this decodes is `aria-hidden` and
+              the real string is the paragraph's `aria-label`, so assistive
+              tech never reads the scramble — the contract SplitText's
+              `aria: "auto"` gives every other split on this page. With
+              JavaScript off the span simply renders the name. */}
+          <p
+            aria-label={legalName}
+            /* ⚠ FULL-STRENGTH EVERGREEN, AND THE DIM LIVES IN ONE PLACE.
+               This carried `text-evergreen/30` AND took `opacity: 0.28` from
+               `theRegister` as the short name landed — two dimmers compounding
+               to 0.084, which is very nearly invisible on canvas and is why the
+               name could not be read (user, 13 September 2026). The class is
+               full strength now and the recipe is the only thing that dims it. */
+            className="headline max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+          >
+            <span data-ab2-decode aria-hidden="true">
+              {legalName}
+            </span>
+          </p>
+          <p
+            data-ab2-short
+            className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-6xl lg:text-[5rem]"
+          >
+            {shortName}
+          </p>
+
+          <p
+            data-ab2-body
+            className="mt-16 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+          >
+            {whatWeAre.body[1]}
+          </p>
+          <p
+            data-ab2-body
+            className="mt-8 max-w-[780px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+          >
+            {whatWeAre.body[2]}
+          </p>
+        </div>
+
+        {/* ---- the road ---------------------------------------------------
+            ⚠ ONE VARIABLE RUNS THIS BOTH WAYS. `--ab2-fold` is 1 when the band
+            is closed and 0 when it stands at full height, and it does the
+            arrival and the collapse with the same three tweens: the frame's
+            clip, the plane inside it, and the travel of everything below.
+
+            Arriving, it runs 1 → 0: the band opens downward from its own top
+            edge while the heading and the copy under it travel DOWN out of the
+            way, so the picture reads as sliding in over the heading and
+            pushing it down (user direction, 12 September 2026). Collapsing, it
+            runs 0 → 1 across the four register rows and everything travels
+            back up into the space. The plane counter-travels throughout, which
+            is what keeps the BOTTOM of the photograph — and the vehicle on the
+            track — in frame the whole way. Height is never animated. */}
+        <figure data-ab-road className="relative">
+          <div data-ab2-band className="relative h-[44svh] w-full overflow-hidden lg:h-[52svh]">
+            <div
+              data-media
+              data-ab2-plane
+              data-motion={ROAD?.grade ?? "full"}
+              className="absolute inset-0"
+            >
+              <MediaOrField
+                src={ROAD?.src ?? null}
+                /* The vehicle is named because the crop brings it into frame;
+                   `kit.ts` has recorded it as the subject all along ("one
+                   vehicle at the end — no people"). */
+                alt="An aerial view down a sandy two-wheel track through low bushland, a single vehicle stopped on it"
+                sizes="(min-width: 1024px) 100vw, 260vw"
+                /* The plane is 2.70:1 and the photograph 1.78:1, so
+                   `object-cover` discards ~178px at each edge, and the centred
+                   default cut the near end of the track — including the
+                   vehicle, which is the thing that gives the aerial its scale.
+                   Anchored to the bottom on user direction, 11 September 2026,
+                   and the fold above is built to keep that end visible. */
+                className="object-cover object-bottom"
+                fieldClass="bg-roasted/40"
+              />
+            </div>
+          </div>
+          <figcaption
+            data-ab2-caption
+            className={`${COLUMN} mt-4 text-base leading-[1.5] text-roasted`}
+          >
+            The way in. Turraburra is 120km north of Barcaldine.
+          </figcaption>
+        </figure>
+
+        {/* ---- the register ----------------------------------------------- */}
+        <div
+          data-ab2-block="register"
+          className={`${COLUMN} relative pt-6 pb-16 lg:pt-8 lg:pb-28`}
+        >
+          {/* What has been read. Derived — see `recap` above. */}
+          {/* ⚠ 70%, NOT THE BOARD'S 28. The board uses 0.28 for "read
+              already" and this line is read-already by definition — but 0.28
+              charcoal on canvas is about 2:1 against the background, which
+              fails AA for body text and was reported as unreadable (user,
+              13 September 2026). 70% is ~7:1 and still plainly secondary
+              beside the register below it. */}
+          <p
+            data-ab2-recap
+            className="max-w-[1240px] text-base leading-[1.5] text-charcoal/70 sm:text-lg"
+          >
+            {recap}
+          </p>
+
+          {/* The thread enters. Ochre reads 2.30:1 on canvas, so on this
+              ground it is a line and never a word. */}
+          <div aria-hidden data-ab2-rule className="mt-8 h-[3px] w-full bg-ochre" />
+
+          {/* ⚠ THE CLOSING TRAVEL GOES ON THIS WRAPPER, NOT ON ITS CHILDREN.
+              The register closes over the presenter's reserved height with a
+              CSS transform, and the head inside it takes a GSAP arrival that
+              writes `transform` INLINE — inline beats a stylesheet, so the
+              head stood still while the table slid up underneath it and the
+              two collided (caught on screen, 12 September 2026). A wrapper no
+              tween touches keeps one writer per property. */}
+          {/* THE REGISTER, AND THE ONE FACT CURRENTLY AT SIZE.
+
+              ⚠ THE TABLE APPENDS (user direction, 12 September 2026). The fact
+              being read is not a block sitting ABOVE the table — it stands in
+              its OWN ROW'S PLACE, at heading scale, directly under the rows
+              that have already settled, and then collapses into that row. The
+              next fact appears in the slot below it. What the reader sees is a
+              table writing itself one line at a time, which is the board's
+              "folds down into the register as the next one comes up" read
+              literally rather than as a hand-off between two places.
+
+              The presenter is positioned ABSOLUTELY against this wrapper and
+              travelled to each row's own offset, which is why the wrapper is
+              the positioning context. Absolute also means it costs no layout:
+              the rows beneath are present and merely invisible, so nothing
+              reflows as the facts advance and the table is measured once. */}
+          <div data-ab2-index className="relative">
+            <p
+              data-ab2-register-head
+              className="eyebrow mt-5 text-xs tracking-[0.08em] text-roasted/70"
+            >
+              Registered with
+            </p>
+
+            <dl data-ab2-register className="mt-8 border-t border-charcoal/14">
+              {whatWeAre.facts.map((fact) => (
+                <div
+                  key={fact.label}
+                  data-ab2-row
+                  className="grid gap-2 border-b border-charcoal/14 py-7 lg:grid-cols-[300px_1fr] lg:gap-10"
+                >
+                  {/* `text-sm`, not `text-xs`: 12px under a 32px value read as
+                      fine print rather than as the label of the row (user,
+                      13 September 2026). */}
+                  <dt className="eyebrow text-sm tracking-[0.08em] text-burnt">
+                    {fact.label}
+                  </dt>
+                  <dd className="headline text-xl leading-[1.19] text-evergreen sm:text-[2rem]">
+                    {fact.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            {/* A SECOND rendering of copy the table already carries, so it is
+                hidden from the accessibility tree exactly as §04's connectors
+                are: a reader using a screen reader meets each fact once, in the
+                table. Absent entirely in flow, where the table alone is the
+                section. `pt-7` matches the row's own top padding so the big
+                value seats on the same baseline the small one will. */}
+            <div data-ab2-presenter aria-hidden className="absolute inset-x-0 top-0">
+              {whatWeAre.facts.map((fact) => (
+                <div
+                  key={fact.label}
+                  data-ab2-fact
+                  className="absolute inset-x-0 top-0 pt-7"
+                >
+                  <p className="eyebrow text-xs tracking-[0.08em] text-burnt">
+                    {fact.label}
+                  </p>
+                  <p className="headline mt-3 max-w-[1100px] text-3xl leading-[1.15] text-evergreen sm:text-[2.5rem]">
+                    {fact.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-        <figcaption className={`${COLUMN} mt-6 text-base leading-[1.5] text-roasted`}>
-          The way in. Turraburra is 120km north of Barcaldine.
-        </figcaption>
-      </figure>
-
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
-        {/* The thread enters. Ochre reads 2.30:1 on canvas, so on this ground
-            it is a line and never a word. */}
-        <div aria-hidden className="h-[3px] w-full bg-ochre" />
-
-        <p className="eyebrow mt-5 text-xs tracking-[0.08em] text-roasted/70">
-          Registered with
-        </p>
-
-        <dl className="mt-8 border-t border-charcoal/14">
-          {whatWeAre.facts.map((fact) => (
-            <div
-              key={fact.label}
-              className="grid gap-2 border-b border-charcoal/14 py-7 lg:grid-cols-[300px_1fr] lg:gap-10"
-            >
-              <dt className="eyebrow text-xs tracking-[0.08em] text-burnt">
-                {fact.label}
-              </dt>
-              <dd className="headline text-xl leading-[1.19] text-evergreen sm:text-[2rem]">
-                {fact.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
       </div>
 
       {/* The seam. This rule runs past the column and becomes §03's.
@@ -407,133 +626,228 @@ export function WhatWeAre() {
 }
 
 /* -------------------------------------------------------------------------
-   03 · WHY WE EXIST — ⚑ the question · 235vh
+   03 · WHY WE EXIST — ⚑ the question · 300vh held against 235vh drawn
    ------------------------------------------------------------------------- */
 
 /**
  * The page's argument, and the section everything else is measured against.
  *
- * THE GROUND TAKES THE PHOTOGRAPH. A single ramp runs the whole section —
- * canvas at the top, evergreen at 40%, charcoal from 53% down — and the
- * photograph sits under a second gradient that resolves to solid charcoal
- * before the question arrives. So the two claims are read on Country, and the
- * question is asked on nothing.
+ * ⚠ THE INTERIORS PASS IS BUILT (12 September 2026, user direction). This was
+ * two stacked screens read one after the other; it is now ONE held screen and
+ * the frame's own sequence runs across it — Figma 2653:19669, "03 · Why we
+ * exist — ⚑ THE QUESTION · PINNED 300vh · the ground goes out under it". The
+ * beats are `theQuestion` in src/lib/motion/recipes-about.ts; the held layout
+ * is ./about.css. Read both before changing the markup, because the two are
+ * coupled through the `data-ab-*` hooks below and through one flag.
+ *
+ * HOW THE SEQUENCE READS. The first claim is read and then LEAVES upward past
+ * the heading; the second takes its exact place, is read, and leaves the same
+ * way. Underneath all of that the ground goes out from the foot up, taking the
+ * photograph with it — and the heading goes with the ground (user direction,
+ * 12 September 2026), so by the time the question is asked there is nothing on
+ * the screen at all. The question settles by line mask on bare charcoal, the
+ * ochre rule draws, the attribution arrives after it, and the tagline is the
+ * last thing said before the Breath.
+ *
+ * ⚠ REST STATE IS STILL THE FINISHED STATE, and it is the same document as
+ * before. Everything held is gated on ONE attribute that `theQuestion` writes
+ * (`data-ab-held`); without it this section is ordinary flow — two screens,
+ * every word present, the static ground ramp below doing the work the rising
+ * front does when held. That covers JavaScript off, prefers-reduced-motion,
+ * and a window too small or too short to hold a screen, as one state.
+ *
+ * ⚠ NO `overflow-hidden` ON THIS SECTION — it must be `overflow-clip`. Hidden
+ * makes the section a scroll container and `position: sticky` inside it then
+ * never sticks. See the note at the head of ./about.css.
  *
  * ⚠ THE ONE BARE GROUND ON THE PAGE, and it is deliberate. Every other section
  * carries the artist's rings behind it; here the question sits on charcoal
  * with nothing behind it at all, because anything behind it would be something
- * else to look at. The two rings the frame does place sit high and low, well
- * clear of the question's own band.
+ * else to look at. The rings are placed under the rising front rather than
+ * faded separately — the ground takes them the way it takes the photograph,
+ * which is one mechanism instead of two.
+ *
+ * THE CLAIMS ARE NOT TESTIMONY. The frame notes both of them as "undims (Y2)",
+ * and that is not built: Y2 is the `dim` row, "a person speaking", and the
+ * grammar's variants table holds its one non-testimony use to Truth §15B. These
+ * are the corporation's own sentences about itself, so they arrive and leave on
+ * the type rows instead. Raised rather than reconciled.
  *
  * The quote is the client's, from the Foreword to the Ten Year Strategic Plan,
- * and the attribution says so. It is never set as testimony and never split.
+ * and the attribution says so. It is never set as testimony and never split
+ * below the line.
  */
 export function WhyWeExist() {
   return (
     <section
       data-ab="why-we-exist"
-      className="relative overflow-hidden"
+      className="relative overflow-clip"
       style={{
         backgroundImage:
           "linear-gradient(180deg, #f6f6ec 0%, #f1f0e5 26%, #22372b 36%, #090e12 43%, #090e12 100%)",
       }}
     >
-      <RingArtwork
-        piece="b"
-        className="top-[4%] left-[64%] w-[56.25rem] opacity-30"
-      />
-      <RingArtwork
-        piece="a"
-        className="-left-48 top-[54%] w-[40rem] opacity-30"
-      />
-
-      {/* THE CLAIMS ARE READ ON COUNTRY. The photograph fills exactly this
-          block and no more — it is the intro's own background rather than a
-          percentage of the section, so however tall the copy runs it can never
-          reach the question below. That coupling is the whole point: the
-          picture belongs to the claims, and the question is asked on nothing.
-
-          ⚠ THE BLOCK IS A FULL SLIDE (user direction, 8 Sep). When the deck
-          seats this section, the arrival screen is the claims on a largely
-          CLEAR photograph — the coming-apart begins below the fold, so no
-          darkness shows at the bottom of the first viewport. Content-sized it
-          was 568px, which compressed the whole collapse into the arrival
-          screen; min-height makes the first beat the photograph's. */}
-      <div className="relative min-h-[100svh] lg:min-h-[130svh]">
-        <div data-motion={QUESTION?.grade ?? "full"} className="absolute inset-0 opacity-50">
-          <MediaOrField
-            src={QUESTION?.src ?? null}
-            alt="Open Country, wide — mulga running to the horizon"
-            sizes="(min-width: 1024px) 100vw, 260vw"
-            fieldClass="bg-evergreen/40"
-          />
-        </div>
-        {/* The coming-apart. Still resolves to solid charcoal before the block
-            ends — the ground takes the photograph before the question — but
-            the collapse now lives in the block's last fifth: light through
-            60%, evergreen at 82%, charcoal by 96%. On a 130svh block that
-            puts the first dark pixel below the arrival screen's fold. */}
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          one-cell grid; in flow it adds nothing and the two screens below
+          simply stack, which is the build this replaced. */}
+      <div data-ab-stage>
+        {/* ---- the claims screen ------------------------------------------
+            THE CLAIMS ARE READ ON COUNTRY. The photograph fills exactly this
+            block and no more — held, it is the screen; in flow it is a full
+            slide of its own, and either way the question below can never
+            reach it. */}
         <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "linear-gradient(180deg, rgba(246,246,236,0.6) 0%, rgba(241,240,229,0.55) 60%, rgba(34,55,43,0.92) 82%, #090e12 96%, #090e12 100%)",
-          }}
-        />
+          data-ab-screen="claims"
+          className="relative min-h-[100svh] lg:min-h-[130svh]"
+        >
+          <div
+            data-ab-plate
+            data-motion={QUESTION?.grade ?? "full"}
+            /* 70, not the flow build's 50. Held, this photograph is a whole
+               screen rather than the top of a tall block, and at 50 under the
+               scrim below it read as a tint of Country instead of Country. The
+               claims still clear their ratio — the scrim carries that, and it
+               was lightened to match. */
+            className="absolute inset-0 opacity-70"
+          >
+            <MediaOrField
+              src={QUESTION?.src ?? null}
+              alt="Open Country, wide — mulga running to the horizon"
+              sizes="(min-width: 1024px) 100vw, 260vw"
+              fieldClass="bg-evergreen/40"
+            />
+          </div>
 
-        <div className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-24 lg:pb-[22svh]`}>
-          <p
-            data-arrive
-            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
-          >
-            {whyWeExist.title}
-          </p>
-          <p
-            data-arrive
-            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
-          >
-            {whyWeExist.body[0]}
-          </p>
-          <p
-            data-arrive
-            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
-          >
-            {whyWeExist.body[1]}
-          </p>
-        </div>
-      </div>
-
-      {/* The screen has cleared. Nothing behind the question but ground.
-          A FULL BEAT (user direction, 8 Sep): the question holds a viewport
-          of bare charcoal to itself, centred, at the ramp's display size —
-          the page's argument at the scale ART-DIRECTION.md always meant for
-          it ("at full scale, on a pinned screen"). The line-mask settle and
-          the pin stay the interiors pass. */}
-      <div
-        className={`${COLUMN} relative flex min-h-[100svh] flex-col justify-center pb-16 lg:pb-28`}
-      >
-        <blockquote>
-          <p className="headline max-w-[1240px] text-4xl leading-[1.2] text-canvas sm:text-6xl lg:text-[6rem]">
-            {whyWeExist.quote}
-          </p>
-          {/* The question contracts into this. The thread starts here and runs
-              to §09, where it arrives. Seam 02 → 03's echo: the same ochre
-              line §02 extended, redrawn under the question. The question's own
-              line-mask settle is the interiors pass (scenes.md:367). */}
+          {/* The legibility scrim, and only that: constant, so the charcoal
+              claims clear their ratio on the photograph at every point of the
+              sequence. It used to carry the coming-apart as well; held, that
+              job belongs to the rising front. */}
           <div
             aria-hidden
-            data-ab-rule="quote"
-            className="mt-14 h-[3px] w-[26.5rem] max-w-full bg-ochre"
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(180deg, rgba(246,246,236,0.52) 0%, rgba(241,240,229,0.34) 100%)",
+            }}
           />
-          <footer className="mt-4 max-w-[900px] text-base leading-[1.5] text-canvas/72">
-            {whyWeExist.attribution}
-          </footer>
-        </blockquote>
 
-        <p className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl lg:mt-14">
-          {whyWeExist.tagline}
-        </p>
+          {/* THE COMING-APART, flow build only. Light through 60%, evergreen
+              at 82%, charcoal by 96% — so on a 130svh block the first dark
+              pixel is below the arrival screen's fold. Hidden the moment the
+              section is held, where the front below replaces it. */}
+          <div
+            aria-hidden
+            data-ab-scrim="flow"
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(180deg, rgba(246,246,236,0) 0%, rgba(241,240,229,0.15) 60%, rgba(34,55,43,0.92) 82%, #090e12 96%, #090e12 100%)",
+            }}
+          />
+
+          {/* THE GROUND GOING OUT, held build only. One rising front, driven
+              by a single custom property. Above the plate so it takes the
+              photograph; below the column so the type is never under it. */}
+          <div aria-hidden data-ab-ground className="absolute inset-0" />
+
+          {/* THE ARTIST'S RINGS, static at 30% as the frame draws them.
+
+              ⚠ ABOVE THE FRONT, NOT BELOW IT, AND THE ASSET DECIDES THAT.
+              `RingArtwork` ships in Ground/Off-White — its own comment says
+              "invisible ON canvas" — so on the light half of this section
+              there is nothing to see whichever side of the front they sit.
+              They are ground for the DARK state: as the front rises past them
+              they emerge out of it, which is the reading asked for on
+              12 September 2026 ("a background for when the colour turns
+              dark"). Under the front they were simply never visible at all,
+              and before that, on the stage, they sat beneath a screen painting
+              an opaque canvas ground.
+
+              ⚠ AND THIS RUNS AGAINST THE BARE-GROUND NOTE at the head of the
+              section, which says the question is asked on charcoal with
+              nothing behind it. Held as ONE screen the question is centred,
+              and ring B is 900px tall — there is no "high and low, clear of
+              the question's band" left to place them in. Flagged rather than
+              settled: if the bare ground wins, these come out of the held
+              build entirely and stay in the flow one. */}
+          <RingArtwork
+            piece="b"
+            className="top-[4%] left-[64%] w-[56.25rem] opacity-30"
+          />
+          <RingArtwork
+            piece="a"
+            className="-left-48 top-[54%] w-[40rem] opacity-30"
+          />
+
+          <div className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-24 lg:pb-[22svh]`}>
+            <p
+              data-arrive
+              data-ab-eyebrow
+              className="eyebrow text-base leading-[1.5] tracking-[0.08em] sm:text-2xl"
+            >
+              {whyWeExist.title}
+            </p>
+            {/* Both claims in one wrapper so the second can replace the first
+                in place when held. No `data-arrive` on either — they are
+                scrub-driven now, and the baseline arrival would fight the
+                sequence for the same opacity. */}
+            <div data-ab-claims className="mt-10">
+              <p
+                data-ab-claim
+                className="max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
+              >
+                {whyWeExist.body[0]}
+              </p>
+              <p
+                data-ab-claim
+                className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/90 sm:text-2xl"
+              >
+                {whyWeExist.body[1]}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ---- the answer screen ------------------------------------------
+            The screen has cleared. Nothing behind the question but ground, at
+            the ramp's display size — the page's argument at the scale
+            ART-DIRECTION.md always meant for it ("at full scale, on a pinned
+            screen"). */}
+        <div
+          data-ab-screen="answer"
+          className={`${COLUMN} relative flex min-h-[100svh] flex-col justify-center pb-16 lg:pb-28`}
+        >
+          <blockquote>
+            <p
+              data-ab-question
+              className="headline max-w-[1240px] text-4xl leading-[1.2] text-canvas sm:text-6xl lg:text-[6rem]"
+            >
+              {whyWeExist.quote}
+            </p>
+            {/* The question contracts into this. The thread starts here and
+                runs to §09, where it arrives. Seam 02 → 03's echo: the same
+                ochre line §02 extended, redrawn under the question, and it
+                draws left to right as the question lands. */}
+            <div
+              aria-hidden
+              data-ab-rule="quote"
+              className="mt-14 h-[3px] w-[26.5rem] max-w-full bg-ochre"
+            />
+            <footer
+              data-ab-attribution
+              className="mt-4 max-w-[900px] text-base leading-[1.5] text-canvas/72"
+            >
+              {whyWeExist.attribution}
+            </footer>
+          </blockquote>
+
+          <p
+            data-ab-tagline
+            className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl lg:mt-14"
+          >
+            {whyWeExist.tagline}
+          </p>
+        </div>
       </div>
     </section>
   );
@@ -631,9 +945,27 @@ const AREA_GROUNDS = [
 export function WhatWeDo() {
   /* `whatWeDo.title` is the eyebrow; the headline is the lede's own opening
      sentence, lifted out of the paragraph that follows — the page's headline
-     convention. What is left of the lede is the chain, rendered whole. */
+     convention. What is left of the lede is the chain. */
   const [headline, ...chain] = sentences(whatWeDo.lede);
   const lede = chain.join(" ");
+
+  /**
+   * The chain, split into its clauses WITH their punctuation kept.
+   *
+   * The draft's sentence is three clauses joined by semicolons, and the board
+   * sets each one on the spiral beside the card it names. Splitting on the
+   * semicolon and putting the separator back means the paragraph below renders
+   * character-for-character as it always did — one sentence, not three — while
+   * each clause is still an element the sequence can move. D5 holds: nothing is
+   * retyped here and nothing new enters `src/content/about.ts`.
+   *
+   * Three clauses, four cards. The fourth position is drawn and left empty,
+   * because the draft has three clauses and a fourth would be invented.
+   */
+  const clauses = lede
+    .split(";")
+    .map((part, i, all) => (i < all.length - 1 ? `${part.trim()}; ` : part.trim()))
+    .filter(Boolean);
 
   return (
     <section data-ab="what-we-do" className="relative bg-canvas text-charcoal">
@@ -643,100 +975,141 @@ export function WhatWeDo() {
           becomes the loop's baseline." The trail re-entering and forking into
           four is the Guide's (▲ Leonard Mickelo); not built. */}
       <WaveDivider ground="var(--color-canvas)" hook="wave" />
-      {/* Seam 04 → 05 rides this ring: "ring contracts, transform-only scrub —
-          the closed ring becomes the bullet of COUNTRY FIRST. Not C2 — Living
-          Work's aperture already spent it." Motion.tsx scrubs the ring's scale
-          as the section leaves; §05's first value rule receives it. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          tone="roasted"
-          className="top-[26%] left-[52%] w-[62.5rem] -rotate-6 opacity-[0.09]"
-        />
-      </div>
 
-      <div className={`${COLUMN} relative pt-16 lg:pt-24`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
-        >
-          {whatWeDo.title}
-        </p>
-        <h2
-          data-arrive
-          className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
-        >
-          {headline}
-        </h2>
-        <p
-          data-arrive
-          className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
-        >
-          {lede}
-        </p>
-      </div>
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          one, and in flow it adds nothing: the head, the lede and the card rail
+          below simply stack, which is the document this replaces. */}
+      <div data-ab-stage>
+        {/* THE GROUND GOING ROASTED, held build only. §04 → §05 is the one seam
+            on this page with no wave — the score gives it "ring contracts,
+            transform-only" — so the join is made by arriving on §05's own
+            ground before the seam plays. A rising front, the same single
+            custom property §03's uses. */}
+        <div aria-hidden data-ab4-ground className="absolute inset-0" />
 
-      <div className={`${COLUMN} relative pt-10 pb-16 lg:pt-20 lg:pb-24`}>
-        {/* ONE ROW OF FOUR — the house pattern, and the same grid The Record
-            §07, /partnerships §06 and the shared ContactDoors all use:
-            `gap-4 sm:grid-cols-2 lg:grid-cols-4`. Two-up on tablet, and a
-            swipe rail on a phone — `CardRail` supplies the row and leaves the
-            grid from 640 up exactly as it was.
+        <div data-ab4-head className={`${COLUMN} relative pt-16 lg:pt-24`}>
+          <p
+            data-arrive
+            data-ab4-eyebrow
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
+          >
+            {whatWeDo.title}
+          </p>
+          <h2
+            data-arrive
+            data-ab4-headline
+            className="headline mt-6 max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+          >
+            {headline}
+          </h2>
+          {/* ONE PARAGRAPH, THREE MOVING PARTS. In flow these spans are inline
+              and the sentence reads exactly as it always has. Held, each
+              becomes the clause that is read at size and then folds onto its
+              place on the spiral — the same element, moved, never a second
+              copy of copy already on the page. */}
+          <p
+            data-arrive
+            data-ab4-chain
+            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+          >
+            {clauses.map((clause, i) => (
+              <span key={i} data-ab4-clause={i}>
+                {clause}
+              </span>
+            ))}
+          </p>
+        </div>
 
-            It replaces a diamond arrangement that set the four around the
-            artist's spiral with the lede's clauses as connectors between them.
-            That was the frame's composition, and it was the only four-card row
-            on the site laid out that way — a reader arriving from The Record or
-            Partnerships met a different object doing the same job. The spiral
-            stays as ground artwork; the chain it carried is the lede directly
-            above, stated in full, which is where the argument actually lives.
+        {/* ---- the loop ---------------------------------------------------
+            ⚠ THE DIAMOND IS THE HELD BUILD'S, AND THE RAIL IS THE DOCUMENT'S.
+            A diamond of four around the artist's spiral is the frame's
+            composition, and it was taken out of the resting page on purpose:
+            it was the only four-card row on the site laid out that way, so a
+            reader arriving from The Record or /partnerships met a different
+            object doing the same job. That objection is about the DOCUMENT,
+            which has not changed — below `deck:`, under reduced motion and
+            with JavaScript off this is `CardRail`'s row exactly as before. The
+            diamond exists only while the screen is held, as choreography.
 
-            The card itself is unchanged: it is `04 · The Record` §02's recipe —
-            coloured ground, full-width image band, 35% scrim, one motif, then
-            title, body and a verb-led label at the foot. */}
-        {/* The four seating with `catch` overshoot (scenes.md:381) is the
-            interiors pass — the rail arrives as one quiet unit until then. */}
-        <div data-arrive>
+            ⚠ `CardRail` IS NOT MODIFIED. It already wraps each child in a cell
+            that goes `display: contents` from 640 up, so the slot below is the
+            grid item there and the desktop row is what it was. The Record §07,
+            /partnerships §06 and ContactDoors are untouched. */}
+        <div data-ab4-loop className={`${COLUMN} relative pt-10 pb-16 lg:pt-20 lg:pb-24`}>
+          {/* The spiral the four sit on. Ground artwork in flow, the loop's own
+              structure when held — which is why it moves out of the section's
+              artwork layer and into the stage here.
+
+              Seam 04 → 05 rides it: "the closed ring becomes the bullet of
+              COUNTRY FIRST. Not C2 — Living Work's aperture already spent it."
+              §05's first value rule receives it. */}
+          <div aria-hidden data-ab4-ring className="pointer-events-none absolute inset-0 overflow-hidden">
+            <RingArtwork
+              piece="b"
+              tone="roasted"
+              className="top-[26%] left-[52%] w-[62.5rem] -rotate-6 opacity-[0.09]"
+            />
+          </div>
+
+          {/* The fourth position on the loop. Drawn and empty by design — the
+              draft's sentence has three clauses, and a fourth would be
+              invented. It carries no mark of its own: what closes the loop
+              visually is the spiral, not a connector rule. */}
+          <div aria-hidden data-ab4-connector="empty" className="pointer-events-none absolute" />
+
           <CardRail columns="sm:grid-cols-2 lg:grid-cols-4">
-          {whatWeDo.areas.map((area, i) => {
-            const photo = photoById(AREA_PHOTOS[i]);
-            return (
-              <a
-                key={area.title}
-                href={area.cta.href}
-                className={`relative flex flex-col overflow-hidden rounded-3xl lg:min-h-[28.75rem] ${AREA_GROUNDS[i]} text-canvas`}
-              >
-                <div className="relative aspect-[380/232] w-full shrink-0 overflow-hidden">
-                  <div data-motion={photo?.grade ?? "full"} className="absolute inset-0">
-                    <MediaOrField
-                      src={photo?.src ?? null}
-                      alt={photo?.subject ?? ""}
-                      sizes="(min-width: 1024px) 298px, (min-width: 640px) 50vw, 78vw"
-                      fieldClass="bg-canvas/6"
-                    />
-                  </div>
-                  <span aria-hidden className="absolute inset-0 bg-black/35" />
-                  <SeamGlyph
-                    motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
-                    className="right-4 bottom-4 w-10"
-                  />
-                </div>
+            {whatWeDo.areas.map((area, i) => {
+              const photo = photoById(AREA_PHOTOS[i]);
+              return (
+                /* The slot is the grid item from 640 up (CardRail's own cell is
+                   `contents` there) and the thing the loop moves when held. In
+                   flow it is a plain box and the card fills it. */
+                <div key={area.title} data-ab4-slot={i} className="h-full">
+                  <a
+                    href={area.cta.href}
+                    className={`relative flex h-full flex-col overflow-hidden rounded-3xl lg:min-h-[28.75rem] ${AREA_GROUNDS[i]} text-canvas`}
+                  >
+                    <div className="relative aspect-[380/232] w-full shrink-0 overflow-hidden">
+                      <div data-motion={photo?.grade ?? "full"} className="absolute inset-0">
+                        <MediaOrField
+                          src={photo?.src ?? null}
+                          alt={photo?.subject ?? ""}
+                          sizes="(min-width: 1024px) 298px, (min-width: 640px) 50vw, 78vw"
+                          fieldClass="bg-canvas/6"
+                        />
+                      </div>
+                      <span aria-hidden className="absolute inset-0 bg-black/35" />
+                      <SeamGlyph
+                        motif={CARD_GLYPHS[i % CARD_GLYPHS.length]}
+                        className="right-4 bottom-4 w-10"
+                      />
+                    </div>
 
-                <div className="flex flex-1 flex-col px-6 pt-6 pb-7">
-                  <h3 className="headline text-2xl leading-[1.2] sm:text-[1.75rem]">
-                    {area.title}
-                  </h3>
-                  <p className="mt-3.5 text-[0.9375rem] leading-[1.5] text-canvas/86">
-                    {area.body}
-                  </p>
-                  {/* Verb-led. Never a route path. */}
-                  <p className="eyebrow mt-auto pt-6 text-xs tracking-[0.08em] text-gold">
-                    {area.cta.label} →
-                  </p>
+                    <div className="flex flex-1 flex-col px-6 pt-6 pb-7">
+                      <h3 className="headline text-2xl leading-[1.2] sm:text-[1.75rem]">
+                        {area.title}
+                      </h3>
+                      {/* THE BODY AND THE LABEL ARE WHAT A CARD GIVES UP when
+                          it compacts onto the loop. At the scale four cards
+                          fit on the spiral this copy lands near 8px and is
+                          unreadable, so a card is read WHOLE and then keeps
+                          only its photograph and its title — which is exactly
+                          what the board seats on the ring. Grouped so one
+                          opacity carries both; never hidden in the document. */}
+                      <div data-ab4-card-body className="flex flex-1 flex-col">
+                        <p className="mt-3.5 text-[0.9375rem] leading-[1.5] text-canvas/86">
+                          {area.body}
+                        </p>
+                        {/* Verb-led. Never a route path. */}
+                        <p className="eyebrow mt-auto pt-6 text-xs tracking-[0.08em] text-gold">
+                          {area.cta.label} →
+                        </p>
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            );
-          })}
+              );
+            })}
           </CardRail>
         </div>
       </div>
@@ -749,12 +1122,32 @@ export function WhatWeDo() {
    ------------------------------------------------------------------------- */
 
 /**
- * ⚠ THE HEADLINE SLOT IS DELIBERATELY EMPTY. Every other section on this page
- * lifts its headline out of the draft's opening sentence; this section has no
- * opening sentence, so the slot renders the absence as a bracketed marker
- * rather than being filled with something invented or quietly closed up.
- * `docs/design/lofi-spec.md:491-495` is the rule; this is the exception it
- * names.
+ * ⚠ THE INTERIORS PASS IS BUILT (12 September 2026, user direction). This was
+ * three values stacked down the page with a photograph before the third; it is
+ * now ONE held screen. "How we work" stands for the whole section, each value
+ * is read on its own and clears, the photograph opens from the top and pushes
+ * what is left down, and RECIPROCITY is read beneath it. The beats are
+ * `theValues` in src/lib/motion/recipes-about.ts; the held layout is
+ * ./about.css.
+ *
+ * ⚠ §05 HAS NO REFERENCE BOARD, unlike §02, §03 and §04. The page frame
+ * (Figma 2653:19672) gives the composition and the constraints; the sequence
+ * is the user's own. Where the two could disagree the frame won — see the
+ * plane note below.
+ *
+ * ⚠ KEPT QUIET ON PURPOSE. The ledger scores this section ⚡2 with "rest
+ * after": it is the page's breather between §04 and §06, both ⚡4. It is held,
+ * but its beats are `settle` and a fade and nothing else — no overshoot, no
+ * ground ramp, no contraction. §03b's Breath is still the page's hard rest.
+ *
+ * ⚠ THE IMAGE PLANE NEVER MOVES, and this is the one line where this band
+ * differs from §02's road. The frame's own layer note reads "P1 full-bleed
+ * hold: the ground and the type move around it, the image plane NEVER does",
+ * and the photograph is `frame` grade — the notes record at least four people
+ * cropped to hands, one of them a child, and no faces at all. So the band's
+ * CLIP opens and the column travels; the picture that was always there is
+ * uncovered and never translated. §02's road counter-travels inside its frame
+ * and copying that here would be wrong.
  *
  * Each value arrives as a lede and then a conclusion set at 44 — the sentence
  * that actually constrains a decision, landing on its own after a beat. The
@@ -762,101 +1155,143 @@ export function WhatWeDo() {
  *
  * ⚠ R22 — the draft calls reciprocity the Ngapartji-Ngapartji principle, which
  * is Western Desert language and not Iningai. The draft raises it against
- * itself and the note renders; it is Suzanne's to resolve.
+ * itself; it is Suzanne's to resolve. (The editorial notes stopped rendering
+ * on 11 September 2026, so this comment is the record.)
  *
- * The band is a rest scene, full bleed, sitting between the second value and
- * RECIPROCITY. `frame` grade: the notes record at least four people cropped to
- * hands and one of them a child, and no faces at all in the frame.
+ * ⚠ NO `overflow-hidden` ON THIS SECTION. It carries no wave of its own — seam
+ * 05 → 06's navy crest belongs to §06 — so the clip may be `overflow-clip`,
+ * which the artist's ring needs; `hidden` would make the section a scroll
+ * container and the sticky screen inside it would never stick. Same pair of
+ * reasons as §03; see the head of ./about.css.
  */
 export function HowWeWork() {
+  /* One value, rendered three times. Pulled out of the map so the photograph
+     can be a SIBLING of the values rather than a child of the third — the flow
+     order is unchanged (heading, value 1, value 2, the band, value 3, which is
+     the frame's), and held, the band can be lifted to its own grid row. */
+  const renderValue = (value: (typeof howWeWork.values)[number], i: number) => {
+    const parts = sentences(value.body);
+    const conclusion = parts[parts.length - 1];
+    const lede = parts.slice(0, -1).join(" ");
+
+    return (
+      <div
+        key={value.title}
+        data-ab5-value={i}
+        className={`${COLUMN} relative pt-12 lg:pt-16`}
+      >
+        {/* The thread, one line again. The FIRST value's rule and title are the
+            landing of seam 04 → 05 — §04's contracting loop hands off to them,
+            and `theLoop` says so. Neither hook may be renamed without changing
+            that recipe too. */}
+        <div
+          aria-hidden
+          data-ab5-rule
+          data-ab-rule={i === 0 ? "value" : undefined}
+          className="h-[2px] w-full bg-gold/55"
+        />
+        <p
+          data-ab5-label
+          data-ab-eyebrow={i === 0 ? "" : undefined}
+          className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold"
+        >
+          {value.title}
+        </p>
+        <p
+          data-ab5-lede
+          className="mt-4 max-w-[820px] text-lg leading-[1.5] font-medium text-canvas/86 sm:text-2xl"
+        >
+          {lede}
+        </p>
+        {/* ⚠ 1060, NOT THE FRAME'S 1000, AND FOR THREE PIXELS. RECIPROCITY's
+            first line — "Everyone who comes here gives something back to" —
+            measures 1003px in Block Berthold at 44px, so at a 1000 measure it
+            overflows by 3 and "to" drops to a line of its own. `settle` splits
+            by line and bakes the boundary, so the result is not a clean re-wrap
+            but a three-line block: the baked first line re-wrapping inside its
+            own div, and the baked second line under it. Widening is the fix the
+            user asked for ("bring the last line next to 'to'... so overall it's
+            two lines", 12 September 2026) rather than letting it break after
+            "back", which would be two lines with "to" leading the second.
+            1060 keeps ~57px of slack for metric drift and stays well inside the
+            1240 column. The other two conclusions are unaffected — both are
+            still two lines at this measure (checked on screen). */}
+        <p
+          data-ab5-conclusion
+          className="headline mt-8 max-w-[1060px] text-2xl leading-[1.23] sm:text-[2.75rem]"
+        >
+          {conclusion}
+        </p>
+      </div>
+    );
+  };
+
   return (
     <section
       data-ab="how-we-work"
-      className="relative overflow-hidden bg-roasted text-canvas"
+      className="relative overflow-clip bg-roasted text-canvas"
     >
       <RingArtwork
         piece="a"
         className="-left-56 top-[34%] w-[47.5rem] -rotate-11 opacity-[0.07]"
       />
 
-      <div className={`${COLUMN} relative pt-16 lg:pt-24`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
-        >
-          {howWeWork.title}
-        </p>
-        {/* The absence, marked. Not a headline, and not nothing. */}
-        <p
-          data-placeholder="no-headline"
-          className="mt-4 max-w-[900px] text-base leading-[1.5] text-canvas/42"
-        >
-          [ no headline — the draft gives this section no opening sentence ]
-        </p>
-      </div>
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid; in flow it adds nothing and the children below stack in the
+          order they are written, which is the frame's order and the document
+          this replaces. Held, the grid lifts the band to the first row so it
+          can arrive OVER the heading and push it down, exactly as §02 lifts its
+          road. Nothing is reordered in the DOM. */}
+      <div data-ab-stage>
+        <div data-ab5-head className={`${COLUMN} relative pt-16 lg:pt-24`}>
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+          >
+            {howWeWork.title}
+          </p>
+        </div>
 
-      {howWeWork.values.map((value, i) => {
-        const parts = sentences(value.body);
-        const conclusion = parts[parts.length - 1];
-        const lede = parts.slice(0, -1).join(" ");
+        {howWeWork.values.slice(0, 2).map((value, i) => renderValue(value, i))}
 
-        return (
-          <div key={value.title}>
-            {/* The band lands before the third value, not after the second —
-                it is the rest scene RECIPROCITY arrives out of. */}
-            {i === 2 ? (
-              <figure className="relative mt-16 mb-4 lg:mt-16">
-                <div
-                  data-motion={RECIPROCITY?.grade ?? "frame"}
-                  className="relative h-[40svh] w-full overflow-hidden lg:h-[56svh]"
-                >
-                  <MediaOrField
-                    src={RECIPROCITY?.src ?? null}
-                    alt="Ochre-marked adult palms held out over a grinding stone toward a child's"
-                    sizes="(min-width: 1024px) 100vw, 260vw"
-                    fieldClass="bg-charcoal/40"
-                  />
-                </div>
-                <figcaption
-                  className={`${COLUMN} mt-6 text-base leading-[1.5] text-canvas/75`}
-                >
-                  Ochre, prepared by hand.
-                </figcaption>
-              </figure>
-            ) : null}
-
-            <div className={`${COLUMN} relative pt-12 lg:pt-16`}>
-              {/* The thread, one line again. The FIRST value's rule and title
-                  are the landing of seam 04 → 05 — the frame's "bullet of
-                  COUNTRY FIRST" is not built as an element, so the contracted
-                  ring hands off to this rule and eyebrow instead. */}
-              <div
-                aria-hidden
-                data-ab-rule={i === 0 ? "value" : undefined}
-                className="h-[2px] w-full bg-gold/55"
+        {/* The band lands before the third value, not after the second — it is
+            the rest scene RECIPROCITY arrives out of. */}
+        <figure data-ab5-band className="relative mt-16 mb-4 lg:mt-16">
+          <div
+            data-ab5-frame
+            className="relative h-[40svh] w-full overflow-hidden lg:h-[56svh]"
+          >
+            {/* ⚠ NO TRANSFORM EVER REACHES THIS PLANE — see the head of the
+                component. The frame opens around a picture that does not move. */}
+            <div
+              data-ab5-plane
+              data-motion={RECIPROCITY?.grade ?? "frame"}
+              className="absolute inset-0"
+            >
+              <MediaOrField
+                src={RECIPROCITY?.src ?? null}
+                alt="Ochre-marked adult palms held out over a grinding stone toward a child's"
+                sizes="(min-width: 1024px) 100vw, 260vw"
+                fieldClass="bg-charcoal/40"
               />
-              <p
-                data-ab-eyebrow={i === 0 ? "" : undefined}
-                className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold"
-              >
-                {value.title}
-              </p>
-              <p className="mt-4 max-w-[820px] text-lg leading-[1.5] font-medium text-canvas/86 sm:text-2xl">
-                {lede}
-              </p>
-              <p className="headline mt-8 max-w-[1000px] text-2xl leading-[1.23] sm:text-[2.75rem]">
-                {conclusion}
-              </p>
             </div>
           </div>
-        );
-      })}
+          <figcaption
+            data-ab5-caption
+            className={`${COLUMN} mt-6 text-base leading-[1.5] text-canvas/75`}
+          >
+            Ochre, prepared by hand.
+          </figcaption>
+        </figure>
 
-      {/* §04's foot. This was the editorial note's container; the notes came off
-          the page on 11 September 2026 (user direction) and the padding stays,
-          because it is the air between RECIPROCITY and seam 05 -> 06's navy
-          crest, which is pulled up above §06's own box. */}
-      <div aria-hidden className={`${COLUMN} pt-10 pb-16 lg:pt-20 lg:pb-24`} />
+        {renderValue(howWeWork.values[2], 2)}
+
+        {/* The foot. This was the editorial note's container; the notes came off
+            the page on 11 September 2026 (user direction) and the padding stays,
+            because it is the air between RECIPROCITY and seam 05 → 06's navy
+            crest, which is pulled up above §06's own box. */}
+        <div aria-hidden data-ab5-foot className={`${COLUMN} pt-10 pb-16 lg:pt-20 lg:pb-24`} />
+      </div>
     </section>
   );
 }
@@ -885,9 +1320,20 @@ export function HowWeWork() {
  * stated and held, never counted up to. It is the date this page is
  * accountable to, and it is where the thread has been going.
  */
-const BEATS = ["Quarterly", "Annual general meeting", "2031 · the review"] as const;
-/** The frame's marker positions, as fractions of the 1240 column. */
-const BEAT_X = ["lg:left-0", "lg:left-[33.9%]", "lg:left-[73.4%]"] as const;
+const BEATS = [
+  "Quarterly",
+  "Annual general meeting",
+  "2031 · the review",
+] as const;
+/**
+ * The frame's marker positions, as fractions of the column.
+ *
+ * ⚠ UNPREFIXED SINCE 13 SEPTEMBER 2026. These were `lg:` only, because below
+ * that the beats stacked in a column beneath the thread; the phone cut is now a
+ * miniature of the same composition, so the fractions apply at every width and
+ * only the label type changes.
+ */
+const BEAT_X = ["left-0", "left-[33.9%]", "left-[73.4%]"] as const;
 /**
  * Where the thread STOPS: on the last beat, not at the column's edge.
  *
@@ -900,8 +1346,11 @@ const BEAT_X = ["lg:left-0", "lg:left-[33.9%]", "lg:left-[73.4%]"] as const;
  *
  * ⚠ Tied by hand to the last entry of BEAT_X — Tailwind cannot see a computed
  * class, so neither of these can be derived from the other. Move one, move both.
+ *
+ * ⚠ Unprefixed since 13 September 2026, with BEAT_X and for the same reason:
+ * the thread stops on 2031 at every width now, not only above `lg`.
  */
-const THREAD_W = "lg:w-[calc(73.4%+9px)]";
+const THREAD_W = "w-[calc(73.4%+9px)]";
 
 export function WhoDecides() {
   const claim = sentences(whoDecides.body[0]);
@@ -911,147 +1360,308 @@ export function WhoDecides() {
       {/* ⚠ NO `overflow-hidden` ON THIS SECTION — it carries seam 05 → 06's
           navy wave ("three values become three board facts"), pulled entirely
           above the section's own box onto §05's roasted foot. A clip here
-          deletes it. The rings re-clip on their own layer, as §02 and §04. */}
+          deletes it, and it has to stay OUTSIDE the stage below for the same
+          reason: the stage is the held screen and the held screen clips. */}
       <WaveDivider ground="var(--color-midnight)" hook="wave" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          className="top-[8%] left-[55%] w-[56.25rem] rotate-9 opacity-15"
-        />
-        <RingArtwork
-          piece="a"
-          className="-left-64 top-[56%] w-[51.25rem] -rotate-13 opacity-[0.13]"
-        />
-      </div>
 
-      {/* Seam 06 → 07 lifts THIS wrapper (`overlap`, the page's one loud
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid; in flow it contributes nothing and the three blocks below stack
+          in the order they are written — the eyebrow, the claim, the calendar —
+          which is the document this replaces. Held, the eyebrow takes the first
+          row and STANDS there while the two parts share the second, so the
+          calendar replaces the claim in place rather than following it down the
+          page (user direction, 12 September 2026).
+
+          ⚠ THE STAGE PAINTS NOTHING. The section's midnight is what the rings
+          sit on, so a ground here hides them — which is exactly what §03's
+          canvas screen did to its own rings. The user asked for the rings to
+          stay in the background; this is the line that keeps them.
+
+          Seam 06 → 07 lifts THIS wrapper (`overlap`, the page's one loud
           transition effect): the board recedes and dims as the people's
-          off-white wave rides over it. */}
-      <div data-ab-lift className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-28`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
-        >
-          {whoDecides.title}
-        </p>
-        <h2
-          data-arrive
-          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
-        >
-          {claim[0]}
-        </h2>
+          off-white wave rides over it. The hook is on the stage rather than on
+          a column inside it because held, the stage IS what stands at the
+          section's foot — and the rings recede with the board, which is what
+          "the board recedes" asks for. */}
+      <div data-ab-stage data-ab-lift className="relative">
+        {/* The rings live INSIDE the stage, as §02's do. Left outside, they are
+            `absolute inset-0` of a 300vh section, so `top-[8%]` is 72vh down and
+            `top-[56%]` is 168vh down and neither is ever on the held screen.
+            Inside, they resolve against the sticky screen when it is sticky (a
+            sticky box is a positioned box) and against the section when it is
+            not, which is the right answer in each build and needs no rule. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <RingArtwork
+            piece="b"
+            className="top-[8%] left-[55%] w-[56.25rem] rotate-9 opacity-15"
+          />
+          <RingArtwork
+            piece="a"
+            className="-left-64 top-[56%] w-[51.25rem] -rotate-13 opacity-[0.13]"
+          />
+        </div>
 
-        {/* True, and not the point. */}
-        <p className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/45 sm:text-2xl">
-          {claim[1]}
-        </p>
-        <p className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/45 sm:text-2xl">
-          {claim[2]}
-        </p>
+        {/* The persistent header. It settles once on the way in and then holds
+            for the whole section — both parts below are read under it. */}
+        <div data-ab6-head className={`${COLUMN} relative pt-16 lg:pt-24`}>
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+          >
+            {whoDecides.title}
+          </p>
+        </div>
 
-        {/* The thread, before it acquires a date. */}
-        <div aria-hidden className="mt-16 h-[2px] w-[24rem] max-w-full bg-ochre" />
+        {/* ---- PART 1 · the claim ------------------------------------------
+            What the board is and how it is made up. Read, then cleared whole:
+            the calendar is not more of this, it is the other half of the
+            answer. */}
+        <div data-ab6-part="claim" className={`${COLUMN} relative`}>
+          <h2
+            data-ab6-claim
+            className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
+          >
+            {claim[0]}
+          </h2>
 
-        {/* ⚠ Future tense. It stays that way until the group is sitting. */}
-        <p className="mt-9 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/95 sm:text-2xl">
-          {whoDecides.body[1]}
-        </p>
+          {/* True, and not the point. */}
+          <p
+            data-ab6-fact
+            className="mt-14 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/45 sm:text-2xl"
+          >
+            {claim[1]}
+          </p>
+          <p
+            data-ab6-fact
+            className="mt-8 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/45 sm:text-2xl"
+          >
+            {claim[2]}
+          </p>
 
-        {/* The thread acquires a date. The rule draws scrubbed, at reading
-            pace, and each beat seats with a short catch as the draw reaches
-            it — the transition channel this section is loud in. */}
-        <div className="relative mt-32">
-          {/* The thread, drawn as a dotted wave rather than a bar (user direction,
-              11 September 2026) — /truth's strand geometry turned horizontal, see
-              `thread-dots` in globals.css. 20px tall because the wave has
-              amplitude, and it is its MIDLINE, not its top, that the beats below
-              have to sit on.
-
-              ⚠ NOT `DottedRule`, and the difference is deliberate. That component
-              is the artist's STRAIGHT supplied rule, gold, static, and §08 uses
-              three of them as dividers between partner groups. This is the thread:
-              ochre, wavy, and drawn. Two dotted things on one page doing two
-              different jobs — do not reconcile them into one. */}
+          {/* The thread, before it acquires a date. */}
           <div
             aria-hidden
-            data-ab-rule="timeline"
-            /* Full width below `lg`, where the beats stack underneath it in their
-               own column and there is no last beat to stop on. */
-            className={`thread-dots h-5 w-full ${THREAD_W}`}
+            data-ab6-rule
+            className="mt-16 h-[2px] w-[24rem] max-w-full bg-ochre"
           />
-          <div className="mt-6 flex flex-col gap-5 lg:mt-0 lg:block lg:h-16">
-            {BEATS.map((beat, i) => (
-              <div key={beat} className={`lg:absolute lg:top-0 ${BEAT_X[i]}`}>
-                <span
-                  aria-hidden
-                  data-ab-beat
-                  /* ⚠ `lg:top-0` is measured from `div.relative.mt-32` — the
-                     wrapper that holds the THREAD as well as this row — so top 0
-                     is the thread's own top, NOT the top of the row this span
-                     sits in. The wave's midline is 10px down from there and the
-                     dot's centre is 9px down from its own top, so +1px lands the
-                     18px dot exactly on the line. (The old 2px rule needed -10px
-                     because a 2px bar has no midline worth the name; carrying
-                     that sign over put the beats 20px into the air.) Below `lg`
-                     the beats stack in their own column and -10px is only an
-                     optical nudge. */
-                  className="block h-[18px] w-[18px] -translate-y-[10px] rounded-full bg-ochre lg:translate-y-[1px]"
-                />
-                <p className="eyebrow mt-2 text-xs tracking-[0.08em] text-ochre">
-                  {beat}
-                </p>
-              </div>
-            ))}
+
+          {/* ⚠ FUTURE TENSE, AND THE ONE LINE ON THIS PAGE THAT DOES NOT SETTLE.
+              Grammar row: "what has not happened yet" — IMG-04's chromatic split,
+              released by F9 and spent here and nowhere else on the site. Two ghost
+              copies of the sentence sit a couple of pixels behind it, one oxide and
+              one turquoise, and drift about a pixel on a cycle with no end state,
+              because the Elder Advisory Group is not sitting. A tense marker, not a
+              texture (Figma 2707:21402 frame 03, "the clause that will not resolve").
+
+              ⚠ ITS REMOVAL CONDITION. When the group sits: delete
+              `data-ab6-unsettled` here and take the future tense out of
+              `whoDecides.body[1]` in the draft and in src/content/about.ts. One
+              attribute and one sentence. Nothing else in the section knows about it.
+
+              ⚠ THE GHOSTS ARE SIBLINGS OF THE SENTENCE, NOT CHILDREN OF IT, and
+              that is structural rather than tidy: `settle` splits this paragraph
+              with SplitText, and ghost copies inside it would be split along with
+              it — three sets of lines animating as one, and the accessible name read
+              three times. They are `aria-hidden`, they come FIRST so the real
+              sentence paints over them, and the static paragraph is what gives the
+              wrapper its height. */}
+          <div data-ab6-unsettled className="relative mt-9 max-w-[940px]">
+            <span
+              aria-hidden
+              data-ab6-ghost="oxide"
+              className="absolute inset-0 text-lg leading-[1.5] font-medium text-oxide sm:text-2xl"
+            >
+              {whoDecides.body[1]}
+            </span>
+            <span
+              aria-hidden
+              data-ab6-ghost="turquoise"
+              className="absolute inset-0 text-lg leading-[1.5] font-medium text-turquoise sm:text-2xl"
+            >
+              {whoDecides.body[1]}
+            </span>
+            <p
+              data-ab6-future
+              className="relative text-lg leading-[1.5] font-medium text-canvas/95 sm:text-2xl"
+            >
+              {whoDecides.body[1]}
+            </p>
           </div>
         </div>
 
-        {/* Reserved for the interiors pass: 2031 is stated and held, never
-            counted up to. `data-ab-date` is the attachment point; nothing
-            animates it in the seam pass. */}
-        <p
-          data-ab-date
-          className="headline mt-16 text-6xl leading-[1.2] text-gold sm:text-8xl lg:mt-16 lg:text-[5rem]"
-        >
-          2031
-        </p>
-        <p className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl">
-          {whoDecides.body[2]}
-        </p>
+        {/* ---- PART 2 · the calendar ---------------------------------------
+            The thread acquires a date. The rule draws scrubbed, at reading
+            pace, and each beat seats with a short catch as the draw reaches it
+            — the transition channel this section is loud in.
 
-        <div aria-hidden className="mt-20 h-px w-full bg-canvas/20" />
-        {/* The frame renders this label in full. It names what is there, not
-            where the file is. */}
-        <a
-          href={whoDecides.cta.href}
-          className="eyebrow mt-11 block max-w-[1100px] text-xs tracking-[0.08em] text-gold"
-        >
-          {whoDecides.cta.label} →
-        </a>
+            ⚠ HELD, BOTH ARE DRIVEN FROM THE SECTION'S READ, NOT FROM THEIR OWN
+            VIEWPORT CROSSINGS. See `theCalendar` for why. */}
+        <div data-ab6-part="calendar" className={`${COLUMN} relative pb-16 lg:pb-28`}>
+          <div data-ab6-thread className="relative mt-32">
+            {/* The thread, drawn as a dotted wave rather than a bar (user direction,
+                11 September 2026) — /truth's strand geometry turned horizontal, see
+                `thread-dots` in globals.css. 20px tall because the wave has
+                amplitude, and it is its MIDLINE, not its top, that the beats below
+                have to sit on.
+
+                ⚠ NOT `DottedRule`, and the difference is deliberate. That component
+                is the artist's STRAIGHT supplied rule, gold, static, and §08 uses
+                three of them as dividers between partner groups. This is the thread:
+                ochre, wavy, and drawn. Two dotted things on one page doing two
+                different jobs — do not reconcile them into one. */}
+            {/* ⚠ THE SAME WIDTH RULE AT EVERY SIZE, since 13 September 2026.
+                It used to run full width below `lg` because the beats stacked
+                in a column underneath and there was no last beat to stop on;
+                now there is one at every width, so the thread ends on 2031
+                here as it does on a desktop. */}
+            <div
+              aria-hidden
+              data-ab-rule="timeline"
+              className={`thread-dots h-5 ${THREAD_W}`}
+            />
+            {/* ⚠ A MINIATURE OF THE DESKTOP TIMELINE, NOT A LIST — user
+                direction, 13 September 2026. Below `lg` this was a flex column:
+                a horizontal thread with its three dots stacked beneath it in a
+                vertical list, which is what read as "not aligning, staggered".
+                The dots are positioned at every width now, on the same
+                fractions of the column, so the composition is identical and
+                only its scale changes. */}
+            {/* ⚠ NOT `relative`, AND THAT IS THE WHOLE ALIGNMENT. The beats
+                below are `absolute top-0`, and top 0 has to mean THE THREAD'S
+                own top — the wrapper above holds both the thread and this row.
+                Positioning this row made top 0 mean the row's top instead,
+                which is 20px lower, so every dot sat under the line rather than
+                on it (reported with a screenshot, 13 September 2026). The row
+                is a plain block that only reserves the height the labels need. */}
+            <div className="block h-24 lg:h-16">
+              {BEATS.map((beat, i) => (
+                <div key={beat} className={`absolute top-0 ${BEAT_X[i]}`}>
+                  <span
+                    aria-hidden
+                    data-ab-beat
+                    /* ⚠ `top-0` is measured from `div.relative` — the wrapper
+                       that holds the THREAD as well as this row — so top 0 is
+                       the thread's own top, NOT the top of the row this span
+                       sits in. The wave's midline is 10px down from there and
+                       the dot's centre is 9px down from its own top, so +1px
+                       lands the 18px dot exactly on the line. (The old 2px rule
+                       needed -10px because a 2px bar has no midline worth the
+                       name; carrying that sign over put the beats 20px into the
+                       air.) The `lg:` split is gone with the stacked cut: the
+                       dot sits on the midline at every width now, because the
+                       thread is above it at every width. */
+                    className="block h-[18px] w-[18px] translate-y-[1px] rounded-full bg-ochre"
+                  />
+                  {/* ⚠ FIXED-WIDTH COLUMNS, AND THE LAST ONE ENDS AT THE
+                      COLUMN EDGE. At 375 the dots land at 0, 111 and 240 in a
+                      327px column, and "Annual general meeting" set at 10px is
+                      about 154px wide — it would run under the third dot and
+                      the third label would overflow the page. Each label gets
+                      its own narrow column and wraps inside it; the last is
+                      right-aligned and pulled back so it finishes on the
+                      thread's end rather than past the gutter.
+
+                      Measured at 375: the dots land at 24, 135 and 264 in a
+                      327px column, so an 88px box on the last one would finish
+                      at 352 — a pixel past the gutter — and a full
+                      right-anchoring pulled it back to 194, straight under the
+                      second label. 80px and a nudge clears both ends at 375 and
+                      at 320.
+
+                      ⚠ THE WORDS ARE NOT ABBREVIATED. "AGM" is not what the
+                      draft says, and D5 puts the draft in charge of the copy —
+                      so the type gets smaller and wraps, and the words stay. */}
+                  <p
+                    data-ab6-beat-label
+                    /* ⚠ THE WIDTH IS EXCLUSIVE, NOT STACKED. `w-22 … w-20`
+                       in one string does not make the last one narrower:
+                       Tailwind orders width utilities by scale in the
+                       stylesheet, so `w-22` wins wherever both are present
+                       whatever the class order says, and the last label
+                       measured 88px and overflowed a 320px screen. */
+                    className={`eyebrow mt-2 text-[0.5625rem] leading-[1.5] tracking-[0.08em] text-ochre lg:w-auto lg:text-xs ${
+                      i === BEATS.length - 1
+                        ? "w-20 -translate-x-2 lg:translate-x-0"
+                        : "w-22"
+                    }`}
+                  >
+                    {beat}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 2031 is STATED AND HELD, never counted up to — the grammar's ban on
+              a count-up over a date this page is accountable to. */}
+          <p
+            data-ab-date
+            className="headline mt-16 text-6xl leading-[1.2] text-gold sm:text-8xl lg:mt-16 lg:text-[5rem]"
+          >
+            2031
+          </p>
+          <p
+            data-ab6-body
+            className="mt-10 max-w-[940px] text-lg leading-[1.5] font-medium text-canvas/90 sm:text-2xl"
+          >
+            {whoDecides.body[2]}
+          </p>
+
+          <div aria-hidden data-ab6-hairline className="mt-20 h-px w-full bg-canvas/20" />
+          {/* The frame renders this label in full. It names what is there, not
+              where the file is. */}
+          <a
+            href={whoDecides.cta.href}
+            data-ab6-cta
+            className="eyebrow mt-11 block max-w-[1100px] text-xs tracking-[0.08em] text-gold"
+          >
+            {whoDecides.cta.label} →
+          </a>
+        </div>
       </div>
     </section>
   );
 }
 
 /* -------------------------------------------------------------------------
-   07 · The people — two frames and one absence · 145vh
+   07 · The people — the roster, one face at a time · 300vh held
    ------------------------------------------------------------------------- */
 
 /**
- * R24 / user revision, 11 September 2026: the large frame now shows Suzanne,
- * using the already identified 378A7604_1.40.2 profile photograph. Its origin
- * and requested use are recorded under `about-suzanne` in kit.ts. The image
- * plane holds still. The second portrait remains an unnamed stand-in until
- * the correct team photographs arrive, with its consent marker visible.
+ * ⚠ A HELD SCREEN AND A ROSTER — 12 September 2026, user direction, and it
+ * supersedes the static three-column row this section used to draw. The header
+ * arrives and stands; the portraits become a rail the reader walks with their
+ * scroll, one face whole at a time. Grammar row: "the world opening, one face
+ * at a time". The roster, and how to add to it, is `PEOPLE_FRAMES` at the head
+ * of this file; the choreography is `theRoster`.
  *
- * ⚠ THE THIRD SLOT DRAWS ITS OWN ABSENCE. Neither batch holds archival
- * material of any kind, and three generations of families is written here, not
- * shown. The marker renders and the row does not shorten — a shortened row
- * would say there were only ever two things to show.
+ * R24 / user revision, 11 September 2026: the first frame shows Suzanne, using
+ * the already identified 378A7604_1.40.2 profile photograph. Its origin and
+ * requested use are recorded under `about-suzanne` in kit.ts. No transform
+ * reaches any image plane here — both photographs are `frame` grade, the plates
+ * scale uniformly and keep their aspect, and the picture is never re-cropped.
+ *
+ * ⚠ THE SECOND FRAME NOW CARRIES A NAME, AND A MARKER WITH IT (12 September
+ * 2026, user decision, taken with the kit note in front of them). kit.ts states
+ * that op-card-01 is NOT Graham Ambridge and that no photograph of him exists
+ * in any batch, and records this frame's own consent as unresolved. What the
+ * user asked for was the name; what makes the name a label rather than a claim
+ * is the ⟡ Stand-in marker rendered beside it — the same contract /our-people's
+ * one named card runs. **The marker is not cosmetic and does not come off until
+ * his photograph does arrive.** The old `⚠ Consent unresolved` badge is replaced
+ * by it rather than deleted, and kit.ts carries the decision.
+ *
+ * ⚠ THE DRAWN ABSENCE IS GONE, on the same direction. A dashed slot reading
+ * "no archival photograph exists" stood for "three generations of families"
+ * and does not belong in a rail of faces; those people are named on
+ * /our-people under *The ones who got us here*. If design wants it back it is
+ * one block, and this comment is the reasoning it used to carry.
  *
  * ⚠ NO CAPTION. The frame carries a sentence here explaining that frames are
  * captioned by what they show rather than by who the person is. That is a
  * design note about the page, not something a visitor came to read, and it is
- * stripped. The consent markers say the same thing by being there.
+ * stripped — and it is now also untrue of this section, which captions each
+ * frame with exactly who the person is.
  *
  * ⚠ THE WAVE HERE IS THE SCORE'S. An earlier reading — a wave only where a
  * full-bleed PHOTOGRAPH hands off to a ground, every ground-to-ground seam cut
@@ -1066,111 +1676,212 @@ export function WhoDecides() {
  * and the eyebrow's arrival.
  */
 export function ThePeople() {
+  const [claim, ...rest] = sentences(thePeople.body);
+
   return (
     <section data-ab="the-people" className="relative bg-canvas text-charcoal">
       {/* ⚠ NO `overflow-hidden` ON THIS SECTION — it carries seam 06 → 07's
-          off-white wave, pulled above its own box onto §06's navy foot. The
-          rings and the dots-wave (120% wide) re-clip on their own layer. */}
+          off-white wave, pulled above its own box onto §06's navy foot. A clip
+          here deletes it, and it stays OUTSIDE the stage below for the same
+          reason: the stage is the held screen and the held screen clips. */}
       <WaveDivider ground="var(--color-canvas)" hook="wave" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          className="top-[7%] left-[64%] w-[56.25rem] opacity-30"
-        />
-        <RingArtwork
-          piece="a"
-          tone="roasted"
-          className="-left-48 top-[54%] w-[40rem] opacity-30"
-        />
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-        <img
+
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid; in flow it contributes nothing and the three blocks below stack
+          in the order they are written, which is the document this replaces.
+
+          ⚠ THE STAGE PAINTS NOTHING. The section's canvas is what the rings and
+          the dots-wave are drawn on, so a ground here hides them — the mistake
+          §03's canvas screen made and §06 had to be built around. */}
+      <div data-ab-stage className="relative">
+        {/* The artwork lives INSIDE the stage, as §02's and §06's do. Left
+            outside, it is `absolute inset-0` of a 300vh section, so `top-[7%]`
+            is 21vh down and `top-[54%]` is 162vh down and neither is ever on
+            the held screen. Inside, it resolves against the sticky screen when
+            it is sticky and against the section when it is not. */}
+        <div
           aria-hidden
-          src="/artwork/dots-wave.svg"
-          alt=""
-          className="pointer-events-none absolute -left-20 bottom-8 w-[120%] opacity-[0.09]"
-        />
-      </div>
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+        >
+          <RingArtwork
+            piece="b"
+            className="top-[7%] left-[64%] w-[56.25rem] opacity-30"
+          />
+          <RingArtwork
+            piece="a"
+            tone="roasted"
+            className="-left-48 top-[54%] w-[40rem] opacity-30"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+          <img
+            aria-hidden
+            src="/artwork/dots-wave.svg"
+            alt=""
+            className="pointer-events-none absolute -left-20 bottom-8 w-[120%] opacity-[0.09]"
+          />
+        </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-28 lg:pb-24`}>
-        {/* Reserved: data-ab-rule="caption" — §07's first caption rule, the
+        {/* ---- the header, which stands ------------------------------------
+            Reserved: data-ab-rule="caption" — §07's first caption rule, the
             seam's scored carry target, if design adds the element. */}
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
-        >
-          {thePeople.title}
-        </p>
-        <h2
-          data-arrive
-          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
-        >
-          {sentences(thePeople.body)[0]}
-        </h2>
-        <p
-          data-arrive
-          className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
-        >
-          {sentences(thePeople.body).slice(1).join(" ")}
-        </p>
-
-        {/* 560 · 370 · 250 on 30px gutters is exactly the frame's 1240 column,
-            so the three run as proportions of whatever column they get rather
-            than as fixed widths. As fixed widths they needed 1440px and the
-            section's overflow-hidden was clipping the third slot at every
-            viewport. The vertical offsets are the frame's: +60, +110. */}
-        <div className="mt-16 flex flex-col gap-8 lg:grid lg:grid-cols-[560fr_370fr_250fr] lg:items-start lg:gap-[1.875rem]">
-          {[
-            { photo: PEOPLE_A, alt: thePeople.suzannePortraitAlt, pending: false },
-            { photo: PEOPLE_B, alt: "", pending: true },
-          ].map(({ photo, alt, pending }, i) => (
-            <div
-              key={photo?.id ?? i}
-              className={`relative w-full overflow-hidden rounded-sm ${
-                i === 0 ? "aspect-square" : "aspect-[370/500] lg:mt-[3.75rem]"
-              }`}
-            >
-              <div data-motion={photo?.grade ?? "frame"} className="absolute inset-0">
-                <MediaOrField
-                  src={photo?.src ?? null}
-                  alt={alt}
-                  sizes="(min-width: 1024px) 560px, 100vw"
-                  // X6 clears inline motion styles, including Next's fill
-                  // positioning; utilities preserve the portrait crop in that cut.
-                  className="absolute inset-0 h-full w-full object-cover"
-                  fieldClass="bg-evergreen/40"
-                />
-              </div>
-              {pending && (
-                <p
-                  data-placeholder="consent-unresolved"
-                  className="eyebrow absolute top-4 left-4 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
-                >
-                  ⚠ Consent unresolved
-                </p>
-              )}
-            </div>
-          ))}
-
-          {/* The absence, drawn. It is the same height as a photograph and it
-              does not collapse. */}
-          <div
-            data-placeholder="no-archival-photograph"
-            role="img"
-            aria-label="No archival photograph exists for this slot"
-            className="flex aspect-[16/10] w-full items-end rounded-sm border-[1.5px] border-dashed border-oxide/60 p-5 lg:mt-[6.875rem] lg:aspect-[250/410]"
+        <div data-ab7-head className={`${COLUMN} relative pt-16 lg:pt-28`}>
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl"
           >
-            <p className="eyebrow text-[10px] leading-[1.6] tracking-[0.08em] text-oxide">
-              ⟡ No archival photograph exists
-            </p>
+            {thePeople.title}
+          </p>
+          <h2
+            data-ab7-claim
+            className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+          >
+            {claim}
+          </h2>
+          <p
+            data-ab7-body
+            className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-charcoal/92 sm:text-2xl"
+          >
+            {rest.join(" ")}
+          </p>
+        </div>
+
+        {/* ---- the rail ----------------------------------------------------
+            One face whole at a time. Held, every frame is lifted onto one row
+            and driven from the section's read — see `theRoster`. In flow this
+            is an ordinary column of portraits, each with its name under it and
+            its marker on it, which is the document at every width the hold does
+            not apply to.
+
+            ⚠ THE PLATE AND THE LABEL ARE SEPARATE ELEMENTS, and that is the
+            layout. Only the plate scales; the name under it must not, or it
+            arrives at 2.3× the size of every other label on the page. The plate
+            grows from `bottom center` so the name never moves either. */}
+        <div data-ab7-rail className={`${COLUMN} relative mt-16`}>
+          {/* ⚠ A SWIPE RAIL BELOW `lg`, A WALKED ROW ABOVE IT — user direction,
+              13 September 2026. Stacked, two portraits measured 984px on a
+              phone and the roster is built to grow: every face added another
+              ~500px of column. Here the frames run horizontally, one to a
+              screen with the next peeking, on native scroll-snap.
+
+              ⚠ NO DOTS AND NO JAVASCRIPT. `CardRail`'s own comment records the
+              decision: "The peek was chosen over dots on 2026-09-05 (Ivy)
+              because it needs no JavaScript; that is still right for the pages
+              that are static by decision." /about is static by decision.
+
+              ⚠ AND NOT THROUGH `CardRail` EITHER, which turns into a grid at
+              `sm` — that breakpoint is hardcoded in the component, and §07's
+              held rail does not take over until `lg`, so 640–1023 would stack
+              again. Widening `CardRail` would reach /about §04, /partnerships,
+              /our-people and /wonder. These are the same handful of classes,
+              local, and `lg:` hands the frames back to about.css.
+
+              ⚠ UNPOSITIONED, deliberately: the held layout makes each frame
+              `position: absolute`, and their offset parent has to stay the
+              RAIL. A `relative` here would re-parent every frame's travel to a
+              box that is 100% wide instead of the column. */}
+          <div
+            data-ab7-track
+            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-6 scroll-px-6 sm:-mx-10 sm:px-10 sm:scroll-px-10 lg:mx-0 lg:block lg:snap-none lg:overflow-visible lg:px-0"
+          >
+          {PEOPLE_FRAMES.map((frame, i) => {
+            const photo = photoById(frame.photo);
+            const person = personOf(frame.person);
+            return (
+              <div
+                key={frame.photo}
+                data-ab7-frame
+                data-ab7-index={i}
+                className="flex w-[78vw] shrink-0 snap-start flex-col items-center lg:mt-10 lg:w-auto lg:shrink lg:first:mt-0"
+              >
+                <div
+                  data-ab7-plate
+                  className="relative aspect-[3/4] w-full max-w-[22rem] overflow-hidden rounded-sm"
+                >
+                  <div
+                    data-motion={photo?.grade ?? "frame"}
+                    className="absolute inset-0"
+                  >
+                    <MediaOrField
+                      src={photo?.src ?? null}
+                      alt={frame.alt}
+                      /* ⚠ `sizes` MUST DESCRIBE THE PLATE AT FULL FOCUS, NOT AT
+                         REST, AND THAT IS NOT AN OPTIMISATION — IT IS WHY THE
+                         PICTURE IS SHARP. A `transform: scale()` is invisible to
+                         the browser's image selection: it sizes the request from
+                         the LAYOUT box, which here is the resting plate, and then
+                         CSS paints that image 2.3× larger at focus. The first cut
+                         also wrote `36vh`, which resolved to 324px on a 900px
+                         window, so both portraits were fetched at 324 and
+                         upscaled past 2× on screen — reported as "why is the
+                         second image blurry", and it was both of them
+                         (12 September 2026).
+
+                         ⚠ AND THE BINDING DIMENSION IS HEIGHT, NOT WIDTH. Both
+                         masters are landscape at about 1.9:1 and the plate is a
+                         3/4 portrait, so `object-cover` crops away most of the
+                         width and it is the source's HEIGHT that has to reach
+                         the plate's. A focused plate is ≈352px tall on a 900px
+                         window, so the source needs ≈352 × 1.9 ≈ 670px of width
+                         before it stops being upscaled — a `sizes` of 420 picked
+                         the 640 variant, which is only 336px tall, and the
+                         portrait was still stretched. 720 picks 750, which is
+                         393 tall, and leaves the browser room to go up again for
+                         a 2× display.
+
+                         It is ~60% more image than the painted box needs, and
+                         that is the tax for cropping a landscape master into a
+                         portrait frame. The real fix is a portrait derivative
+                         per face; until those exist this is the honest number.
+                         Raise it if `--ab7-gain` or `--ab7-rest` goes up. */
+                      sizes="(min-width: 1024px) 720px, 100vw"
+                      // X6 clears inline motion styles, including Next's fill
+                      // positioning; utilities preserve the crop in that cut.
+                      className="absolute inset-0 h-full w-full object-cover"
+                      fieldClass="bg-evergreen/40"
+                    />
+                  </div>
+                  {"standIn" in frame && frame.standIn && (
+                    /* ⚠ COUNTER-SCALED, so it is exactly as legible when the
+                       face is small as when it is large. A marker that shrank
+                       with the plate would be least readable at the moment the
+                       photograph is least identifiable, which is backwards.
+                       `--ab7-s` is the plate's own scale, inherited. */
+                    <p
+                      data-ab7-marker
+                      data-placeholder="stand-in"
+                      className="eyebrow absolute top-3 left-3 rounded-xs bg-charcoal/70 px-2 py-1 text-[10px] text-canvas"
+                    >
+                      ⟡ Stand-in
+                    </p>
+                  )}
+                </div>
+                {/* Larger than the page's other eyebrows on purpose (user
+                    direction, 12 September 2026): every other use of this
+                    utility is a label ABOUT something, and this one is a
+                    person's name. It is the only thing on the rail that says
+                    who the reader is looking at, so it is set to read as a
+                    caption rather than as furniture. */}
+                <p
+                  data-ab7-label
+                  className="eyebrow mt-4 text-sm tracking-[0.08em] text-burnt sm:text-base"
+                >
+                  {person?.name ?? frame.person}
+                </p>
+              </div>
+            );
+          })}
           </div>
         </div>
 
-        <a
-          href={thePeople.cta.href}
-          className="eyebrow mt-20 block text-xs tracking-[0.08em] text-burnt"
-        >
-          {thePeople.cta.label} →
-        </a>
+        <div data-ab7-foot className={`${COLUMN} relative pb-16 lg:pb-24`}>
+          <a
+            href={thePeople.cta.href}
+            data-ab7-cta
+            className="eyebrow mt-20 block text-xs tracking-[0.08em] text-burnt"
+          >
+            {thePeople.cta.label} →
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -1193,9 +1904,22 @@ export function ThePeople() {
  * page's headline convention. What is left of the paragraph is the lede, in
  * the order the frame sets it.
  *
- * The third group's `[ add ]` is the frame's own marker: the draft lists two
- * names in a group the pending note says is incomplete, so the gap is drawn
- * rather than closed up.
+ * ⚠ THE `[ add ]` MARKER IS GONE — 12 September 2026, user direction. It was
+ * the frame's own marker for a group the draft's pending note calls incomplete,
+ * and the gap was drawn rather than closed up. The incompleteness has NOT gone
+ * with it: `partners.pending` in src/content/about.ts still reads "Confirm the
+ * current list, get approved logo files, and check whether each partnership is
+ * active", which is where a reviewer reads it. What changed is that a visitor no
+ * longer sees the gap drawn. One list item if design wants it back.
+ *
+ * ⚠ AND THE TRAILING SEPARATOR WENT WITH IT. The last group's last name used to
+ * carry a middot purely so it could be divided from `[ add ]`; left in, it is a
+ * middot after "Lake Eyre Basin Rangers" pointing at nothing.
+ *
+ * ⚠ THE NAMES FILL IN BY ROUND. `thePartners` reveals the first name of every
+ * group, then the second of every group, and so on, so the three lists advance
+ * in step — three kinds of partner held at the same time, not a ranked list.
+ * `data-ab8-round` is the number each element answers to.
  */
 export function Partners() {
   const [opening, claimSentence] = sentences(partners.body);
@@ -1207,48 +1931,93 @@ export function Partners() {
     // nothing else": each group's dotted rule draws itself on; no wave, and
     // this section KEEPS its clip. The thread becoming the artist's dotted
     // rule is the Guide's reading (▲ Leonard Mickelo); not built.
+    //
+    // ⚠ HELD, AFTER ALL — 12 September 2026, user direction, having watched the
+    // unheld cut: "the screen scrolls down and goes off screen before everything
+    // finishes." The first build gave the section 200vh and let the column
+    // travel through it, because holding it looked like it would mean shrinking
+    // the frame's 30px names to clear the 820px floor. It does not: the same
+    // direction allows the SPACING to come in instead ("we can lessen the
+    // padding/spacing as long as it feels right"), and tightening the gaps takes
+    // the column from 984px to about 776px, which stands on the shortest window
+    // the hold applies to with the type untouched. So §08 joins §02 – §07 as a
+    // sticky span and the register fills on a screen that is not moving.
+    //
+    // ⚠ `overflow-clip`, NOT `overflow-hidden`. An ancestor with
+    // `overflow: hidden` becomes a scroll container and `position: sticky` then
+    // resolves against a box that does not scroll — the screen simply never
+    // sticks. `clip` clips the rings just as well without establishing one. This
+    // section carries no wave of its own (seam 08 → 09's charcoal crest belongs
+    // to §09), so there is nothing overhanging for the clip to eat.
     <section
       id="partners"
       data-ab="partners"
-      className="relative scroll-mt-28 overflow-hidden bg-evergreen text-canvas"
+      className="relative scroll-mt-28 overflow-clip bg-evergreen text-canvas"
     >
-      <RingArtwork
-        piece="b"
-        className="top-[6%] left-[64%] w-[56.25rem] opacity-8"
-      />
-      <RingArtwork
-        piece="a"
-        className="-left-48 top-[54%] w-[40rem] opacity-7"
-      />
+      {/* THE HELD SCREEN. A plain wrapper until ./about.css makes it a sticky
+          grid. ⚠ It paints nothing — the section's evergreen is what the rings
+          are drawn on, and a ground here would delete them, which is the mistake
+          §03's canvas screen made and §06 and §07 were both built around. */}
+      <div data-ab-stage className="relative">
+        {/* The rings live INSIDE the stage, as §02's, §06's and §07's do. Left
+            outside, they are `absolute inset-0` of a 300vh section and neither
+            is ever on the held screen. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+        >
+          <RingArtwork
+            piece="b"
+            className="top-[6%] left-[64%] w-[56.25rem] opacity-8"
+          />
+          <RingArtwork
+            piece="a"
+            className="-left-48 top-[54%] w-[40rem] opacity-7"
+          />
+        </div>
 
-      <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
-        <p
-          data-arrive
-          className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+        <div
+          data-ab8-column
+          className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}
         >
-          {partners.title}
-        </p>
-        <h2
-          data-arrive
-          className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
-        >
-          {`${claim}.`}
-        </h2>
-        <p
-          data-arrive
-          className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl"
-        >
-          {lede}
-        </p>
+          <p
+            data-arrive
+            className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl"
+          >
+            {partners.title}
+          </p>
+          <h2
+            data-ab8-claim
+            className="headline mt-6 max-w-[1180px] text-4xl leading-[1.2] sm:text-5xl lg:text-[3.5rem]"
+          >
+            {`${claim}.`}
+          </h2>
+          <p
+            data-ab8-lede
+            className="mt-10 max-w-[900px] text-lg leading-[1.5] font-medium text-canvas/88 sm:text-2xl"
+          >
+            {lede}
+          </p>
 
-        <div className="mt-16">
-          {partners.groups.map((group, i) => (
-            <div key={group.title} className={i === 0 ? "" : "mt-16"}>
-              <DottedRule tone="gold" className="opacity-85" />
-              <p className="eyebrow mt-6 text-xs tracking-[0.08em] text-gold">
-                {group.title}
-              </p>
-              {/* Names as list items, not one joined string.
+          {/* ⚠ THE ROUNDS ARE ANCHORED ON THIS BLOCK, NOT ON THE SECTION — see
+            `thePartners`. §08 is the one interior on this page that scrolls
+            while it plays, so a scrub bound to the section's top would still be
+            running long after these three groups had left the screen. */}
+          <div data-ab8-groups className="mt-16">
+            {partners.groups.map((group, i) => (
+              <div
+                key={group.title}
+                data-ab8-group
+                className={i === 0 ? "" : "mt-16"}
+              >
+                <DottedRule tone="gold" className="opacity-85" />
+                <p
+                  data-ab8-title
+                  className="eyebrow mt-6 text-xs tracking-[0.08em] text-gold"
+                >
+                  {group.title}
+                </p>
+                {/* Names as list items, not one joined string.
                   `names.join("   ·   ")` set at 30px reads as a single line of
                   names in a 1240px column and as a run-on sentence in a 327px
                   one: the middots orphan at line ends and nothing distinguishes
@@ -1257,41 +2026,51 @@ export function Partners() {
                   separator trails its name (never leads the next) so it can
                   never start a line. The separator is decorative — the list
                   semantics carry the meaning for a screen reader. */}
-              <ul className="mt-5 flex max-w-[1240px] flex-wrap items-baseline gap-y-1">
-                {group.names.map((name, n) => (
-                  <li
-                    key={name}
-                    className="headline text-xl leading-[1.53] text-canvas/95 sm:text-[1.875rem]"
-                  >
-                    {name}
-                    {n < group.names.length - 1 ||
-                    i === partners.groups.length - 1 ? (
-                      <span aria-hidden className="mx-3 text-canvas/40 sm:mx-5">
-                        ·
-                      </span>
-                    ) : null}
-                  </li>
-                ))}
-                {/* The list is short and the draft says so. */}
-                {i === partners.groups.length - 1 ? (
-                  <li
-                    data-placeholder="add-partner"
-                    className="headline text-xl leading-[1.53] text-canvas/45 sm:text-[1.875rem]"
-                  >
-                    [ add ]
-                  </li>
-                ) : null}
-              </ul>
-            </div>
-          ))}
-        </div>
+                <ul
+                  data-ab8-list
+                  className="mt-5 flex max-w-[1240px] flex-wrap items-baseline gap-y-1"
+                >
+                  {group.names.map((name, n) => (
+                    <li
+                      key={name}
+                      data-ab8-name
+                      data-ab8-round={n}
+                      className="headline text-xl leading-[1.53] text-canvas/95 sm:text-[1.875rem]"
+                    >
+                      {name}
+                      {/* ⚠ THE SEPARATOR IS REVEALED WITH THE NAME AFTER IT, which
+                        is why it carries the NEXT round's number rather than its
+                        own. It sits inside the item it follows — a leading
+                        middot orphans at a line start, and each name has to wrap
+                        as a unit (see the note above) — so revealing it with its
+                        own name would show "QUT ·" pointing at nothing for a
+                        whole round. Grammar row: "accumulating, the register
+                        fills a column at a time". */}
+                      {n < group.names.length - 1 ? (
+                        <span
+                          aria-hidden
+                          data-ab8-sep
+                          data-ab8-round={n + 1}
+                          className="mx-3 text-canvas/40 sm:mx-5"
+                        >
+                          ·
+                        </span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
 
-        <a
-          href={partners.cta.href}
-          className="eyebrow mt-20 block text-xs tracking-[0.08em] text-gold"
-        >
-          {partners.cta.label} →
-        </a>
+          <a
+            href={partners.cta.href}
+            data-ab8-cta
+            className="eyebrow mt-20 block text-xs tracking-[0.08em] text-gold"
+          >
+            {partners.cta.label} →
+          </a>
+        </div>
       </div>
     </section>
   );

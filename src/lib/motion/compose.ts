@@ -38,6 +38,7 @@ import {
   revertSplits,
   type EffectName,
 } from "@/lib/motion/effects";
+import { clampScrollTo } from "@/lib/motion/smooth-scroll";
 import { SCRUB } from "@/lib/motion/tokens";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -71,6 +72,22 @@ export type CompositionSpec = {
    * document, which is the same property the reduced-motion cut relies on.
    */
   minWidth?: string;
+  /**
+   * Minimum viewport HEIGHT the composition is allowed to build at. Same
+   * contract as `minWidth` — below it the screen takes its `cut` — and a
+   * screen may declare either, both, or neither.
+   *
+   * It exists because a held screen is withheld by height as well as width.
+   * `globals.css`'s `deck:` and `hold:` variants both carry
+   * `(min-height: 820px)` for a stated reason: "a slide taller than its screen
+   * is a trap, because the snapping pulls the reader back to the top of the
+   * thing they were trying to see the bottom of". When the layout withholds
+   * the sticky screen on a short window, the motion has to stand down on the
+   * same query or it animates a held screen that is not held —
+   * `src/lib/motion/record.ts` writes the query out longhand for exactly this
+   * reason, and this is that agreement made declarable.
+   */
+  minHeight?: string;
   /**
    * Minimum viewport width at which the screen is allowed to PIN. Below it the
    * composition still builds — same timeline, same entrance — it just does not
@@ -145,7 +162,7 @@ export type CompositionSpec = {
  */
 const LOUD: Record<Exclude<LoudChannel, "none">, string[]> = {
   media: ["breakOut", "bleed", "plateParallax", "mosaic", "aperture"],
-  type: ["aperture", "ghostType", "knockout", "display"],
+  type: ["aperture", "ghostType", "knockout", "display", "decode"],
   transition: ["groundRamp", "overlap", "handoff", "escape"],
 };
 
@@ -212,10 +229,18 @@ export function composition(
     registerYachatdacEffects();
     mm = gsap.matchMedia();
 
-    // Three branches, not two, once a screen declares `minWidth`: full
-    // motion only when the reader wants it AND the window can carry it;
-    // otherwise the cut, whichever of the two reasons applies.
-    const wide = spec.minWidth ? ` and (min-width: ${spec.minWidth})` : "";
+    // Three branches, not two, once a screen declares `minWidth` or
+    // `minHeight`: full motion only when the reader wants it AND the window
+    // can carry it; otherwise the cut, whichever of the reasons applies.
+    //
+    // Width and height are ONE gate, not two: a screen is withheld by either,
+    // so the complement below negates the pair rather than each half. Negating
+    // them separately builds both branches on a window that fails only one.
+    const bounds = [
+      spec.minWidth ? `(min-width: ${spec.minWidth})` : null,
+      spec.minHeight ? `(min-height: ${spec.minHeight})` : null,
+    ].filter(Boolean) as string[];
+    const wide = bounds.length ? ` and ${bounds.join(" and ")}` : "";
 
     // The full branch, parameterised by whether it may pin — so a screen can
     // keep its choreography on a phone and give up only the pin.
@@ -271,7 +296,10 @@ export function composition(
 
       assertChannel(name, spec, spec.uses);
 
+      const detachFocus = revealOnFocus(root, tl);
+
       return () => {
+        detachFocus();
         tl.kill();
         entryTrigger?.kill();
         entryTl?.kill();
@@ -300,13 +328,13 @@ export function composition(
       spec.cut(root);
     });
 
-    // Narrow and motion-willing: same cut, different reason.
-    // `not (min-width: X)` rather than a max-width, so the two branches are
-    // exactly complementary — a max-width of the same value would ALSO match
-    // at the boundary itself and both branches would build.
-    if (spec.minWidth) {
+    // Too small and motion-willing: same cut, different reason.
+    // `not (...)` rather than a max-width, so the two branches are exactly
+    // complementary — a max-width of the same value would ALSO match at the
+    // boundary itself and both branches would build.
+    if (bounds.length) {
       mm.add(
-        `(prefers-reduced-motion: no-preference) and (not (min-width: ${spec.minWidth}))`,
+        `(prefers-reduced-motion: no-preference) and (not (${bounds.join(" and ")}))`,
         () => {
           revertSplits(root);
           spec.cut(root);
@@ -332,5 +360,126 @@ export function composition(
  * property rather than two features.
  */
 export function clearAll(root: HTMLElement): void {
-  gsap.set(root.querySelectorAll("*"), { clearProps: "all" });
+  gsap.set(root.querySelectorAll("*"), { clearProps: CLEARABLE });
 }
+
+/**
+ * Keyboard focus must never land on something the reader cannot see.
+ *
+ * ⚠ THIS IS A FIX FOR A REGRESSION THE HELD SCREENS INTRODUCED, and the
+ * measurement is worth keeping. Every held screen pre-hides its content with
+ * `autoAlpha` so nothing can flash before the timeline first renders — and
+ * `visibility: hidden` takes an element out of the tab order entirely. Driven
+ * in a browser on /about at scroll 0, SEVEN of the page's eleven focusable
+ * elements were unreachable: §04's four area cards, §06's governance link,
+ * §07's "meet the people" and §08's "partner with us". A keyboard user tabbing
+ * from the top reached the four footer links and nothing else
+ * (13 September 2026). MOTION-SYSTEM.md: "Keyboard focus visible and never
+ * animated out of view."
+ *
+ * So focus is treated as a request to be somewhere: when it lands on something
+ * this section is currently hiding, the page scrolls to the read position where
+ * that element is revealed, and the reader sees what they have tabbed to.
+ *
+ * ⚠ IT CANNOT JUST JUMP TO THE END OF THE READ. That would be right for §06,
+ * §07 and §08, whose registers are complete at 1.0 — but §04's cards have
+ * CONTRACTED by then, so its four links would still be invisible at the very
+ * position meant to reveal them. The section's own timeline is sampled instead:
+ * the first progress at which the element is actually visible is the one to
+ * scroll to. No per-section table, and it stays correct when a beat sheet moves.
+ *
+ * Sampling renders the timeline, so progress is restored before returning and
+ * the whole walk happens inside one synchronous event — the browser paints once,
+ * after it, and the reader sees no flicker.
+ *
+ * `clampScrollTo` rather than `window.scrollTo`: the deck clamps scroll at a
+ * gate and a raw jump fights it.
+ */
+function revealOnFocus(root: HTMLElement, tl: gsap.core.Timeline): () => void {
+  const onFocusIn = (event: FocusEvent) => {
+    const el = event.target as HTMLElement | null;
+    if (!el || !root.contains(el) || shown(el, root)) return;
+    const st = tl.scrollTrigger;
+    if (!st) return;
+
+    const was = tl.progress();
+    let at: number | null = null;
+    for (let i = 0; i <= FOCUS_STEPS; i += 1) {
+      tl.progress(i / FOCUS_STEPS, true);
+      if (shown(el, root)) {
+        at = i / FOCUS_STEPS;
+        break;
+      }
+    }
+    tl.progress(was, true);
+    if (at === null) return;
+
+    clampScrollTo(st.start + at * (st.end - st.start));
+  };
+
+  root.addEventListener("focusin", onFocusIn);
+  return () => root.removeEventListener("focusin", onFocusIn);
+}
+
+/**
+ * 20 is enough to land on the right beat and cheap enough to do on a keypress:
+ * on a 200vh read each step is 10vh, and every beat on this page is longer than
+ * that. Style is read once per step, only while a reader is actually tabbing.
+ */
+const FOCUS_STEPS = 20;
+
+/** Visible to a reader — and to the tab order — all the way up to the root. */
+function shown(el: HTMLElement, root: HTMLElement): boolean {
+  let node: HTMLElement | null = el;
+  while (node && node !== root.parentElement) {
+    const cs = getComputedStyle(node);
+    if (
+      cs.visibility === "hidden" ||
+      cs.display === "none" ||
+      Number(cs.opacity) < 0.05
+    ) {
+      return false;
+    }
+    node = node.parentElement;
+  }
+  return true;
+}
+
+/**
+ * What the cut is allowed to clear, and why it is a list rather than `"all"`.
+ *
+ * ⚠ `clearProps: "all"` DOES NOT MEAN "everything GSAP set" — it means every
+ * inline style on the element, including ones the application wrote and needs.
+ * `next/image` with `fill` positions itself entirely through an inline style
+ * attribute (`position:absolute;height:100%;width:100%;inset:0`), so a cut
+ * running over a section that contains one left the image with NO style
+ * attribute at all: `position: static`, height 0, gone. Measured 12 September
+ * 2026 on /about §03 at 1179 × 643, where the photograph collapsed and the
+ * section's gradient showed through the hole.
+ *
+ * The bug was latent for as long as the cut only ran under reduced motion. It
+ * surfaced when compositions started declaring `minWidth`/`minHeight`, because
+ * that made the cut the ordinary path for any window too small to hold a
+ * screen — which is a great many of them.
+ *
+ * So the cut clears exactly what the motion system is permitted to write.
+ * CLAUDE.md states that budget: "Per-frame work is transform, opacity,
+ * clip-path and CSS custom properties only." `visibility` is here because
+ * `autoAlpha` writes it, and the independent transform properties are here
+ * because GSAP writes those separately from the `transform` shorthand.
+ *
+ * Custom properties are deliberately NOT cleared and do not need to be: every
+ * rule that reads one is gated on a flag the recipe's own `cut` removes, so a
+ * value left inline is inert. Clearing them by name would put page-specific
+ * knowledge in a helper four pages share.
+ */
+const CLEARABLE = [
+  "transform",
+  "translate",
+  "rotate",
+  "scale",
+  "opacity",
+  "visibility",
+  "clipPath",
+  "willChange",
+].join(",");

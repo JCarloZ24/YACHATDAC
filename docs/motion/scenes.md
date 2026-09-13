@@ -1092,11 +1092,22 @@ authority for a hi-fi, so the frame stands and the content file is the one to re
 
 ## About — verb *answers* — 2053vh, 11 sections
 
-> **BUILT — seam pass, 8 Sep 2026.** The ten seams of `REF · SCORE · 05 ABOUT`
-> (2642:19666) and the X4 baselines are live: `src/app/about/_components/Motion.tsx`
-> hosts, `src/lib/motion/recipes-about.ts` holds the recipes. The section
-> interiors below — §03's pin, IMG-03, the animated ramp, Group G — remain
-> unbuilt and come as one later pass. Group G stays ▲ Leonard Mickelo.
+> **BUILT — seam pass, 8 Sep 2026; §02–§07's interiors, 12 Sep 2026.**
+> The ten seams of `REF · SCORE · 05 ABOUT` (2642:19666) and the X4 baselines
+> are live: `src/app/about/_components/Motion.tsx` hosts,
+> `src/lib/motion/recipes-about.ts` holds the recipes. **§02 – §07 are now built
+> too** — §02's register writes itself (`theRegister`), §03's question is asked
+> on ground that goes out under it (`theQuestion`), §04's loop closes
+> (`theLoop`), §05's values are read one at a time under a photograph that opens
+> from the top (`theValues`), §06's claim clears so the governance calendar can
+> take its place (`theCalendar`), and §07's portraits become a roster the reader
+> walks one face at a time (`theRoster`) — all six as held screens with their
+> layout in `src/app/about/_components/about.css`. §06's seam lift is its own
+> bounds-free composition (`boardLift`), because `overlap` must not be withheld
+> on the windows where the hold is. **§08 is built and held too**
+> (`thePartners`) — the register fills a column at a time. §01, §03b and
+> §09 – §11 interiors and Group G are still unbuilt; Group G stays
+> ▲ Leonard Mickelo.
 
 Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:19666` at x=0,
 1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
@@ -1105,14 +1116,14 @@ against 235vh drawn — the same convention as Living Work §02 and The Record �
 | # | Act | What it says | ⚡ | vh | Loud channel | Plate | Rest after? |
 |---|---|---|---|---|---|---|---|
 | 01 | I | About YACHATDAC — figures under the escarpment, people as scale | 4 | 110 | **media** | P1 | — |
-| 02 | I | What we are — the name decodes, the road runs through, the register writes itself | 3 | 299 | **type** | P3 | — |
+| 02 | I | What we are — the name decodes, the road runs through, the register writes itself | 3 | 300 | **type** | P3 | ✓ held 300 |
 | 03 | II | **THE QUESTION** — the ground takes the picture and the question is asked on nothing | 5 | 235 | **type** | **P9** | ✓ pinned 300 |
 | 03b | II | **BREATH** — held, no caption, no words | 1 | 55 | **none** | **P8** | ✓✓ |
-| 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 265 | **media** | P4 | — |
-| 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 249 | **type** | P1 | ✓ |
-| 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 245 | **transition** | — | — |
-| 07 | IV | The people — the frames dance, the type holds | 3 | 145 | **media** | P6 | — |
-| 08 | IV | Partners — names, not logos | 2 | 175 | **type** | — | ✓ |
+| 04 | III | What we do — four on the artist's spiral, each clause building its own card | 4 | 300 | **media** | P4 | ✓ held 300 |
+| 05 | III | How we work — three values, and ochre held full bleed before the third | 2 | 300 | **type** | P1 | ✓ held 300 |
+| 06 | IV | Who decides — the sentence that keeps qualifying itself, then a date | 4 | 300 | **transition** | — | ✓ held 300 |
+| 07 | IV | The people — the roster, one face at a time | 3 | 300 | **media** | P6 | ✓ held 300 |
+| 08 | IV | Partners — names, not logos; the register fills a column at a time | 2 | 300 | **type** | — | ✓ held 300 |
 | 09 | V | Get in touch — four doors, and ochre speaks once | 3 | 140 | **transition** | — | — |
 | 10 | V | Footer — Acknowledgement, then the traveller departs | 1 | 135 | **none** | — | — |
 
@@ -1123,17 +1134,401 @@ two and §03b drops to `none` immediately after. The 4–5 run is §03 (⚡5) in
 heaviest scene on the page gets the longest hold, which is the rule working rather than being
 survived.
 
-**§02 and §05 each carry a full-bleed band as a screen of their own.** At 299vh and 249vh these
-are three-screen sections, and the loud-channel law is per screen: §02 is decode (type) → the
-road (media) → register (type, quiet), and §05 is two values (type) → ochre held (media, at rest)
-→ the third value. Both replaced a blob-masked plate floating on the right, which read as an
-image on the side rather than as part of the page.
+**§05 carries a full-bleed band as a screen of its own.** At 249vh it is a three-screen section
+and the loud-channel law is per screen: two values (type) → ochre held (media, at rest) → the
+third value. It replaced a blob-masked plate floating on the right, which read as an image on the
+side rather than as part of the page.
 
-**§03 is the page's argument and the only pin.** The ground ramps canvas → evergreen → charcoal
-across the pin; the photograph is taken by the ground in bands (`IMG-03`, released under F9); both
-claims **leave** the screen rather than dimming in place; and the question settles by line mask on
-bare charcoal with nothing behind it. That bare ground is the one place on this page a ground
-carries no artwork, and it is deliberate — see the no-bare-ground rule this page otherwise keeps.
+§02 was the same shape and **is not any more.** Held as one screen from 12 September 2026 it gets
+ONE loud channel like any other screen — which is what took the road's parallax out, since
+`plateParallax` is LOUD media and the screen spends its loud channel on the name's decode. Its
+entry below has the reasoning.
+
+**§03 is the page's argument — BUILT 12 September 2026.** The ground ramps
+canvas → evergreen → charcoal across the pin; the photograph is taken by the ground (`IMG-03`,
+released under F9); both claims **leave** the screen rather than dimming in place; and the
+question settles by line mask on bare charcoal with nothing behind it. That bare ground is the one
+place on this page a ground carries no artwork, and it is deliberate — see the no-bare-ground rule
+this page otherwise keeps.
+
+Three things about the build differ from the frame's notes and are recorded rather than
+reconciled. **The ground RISES**, from the foot of the held screen past its head — the frame's own
+name for the section is "the ground goes out under it", and the direction was confirmed by the
+user on 12 September 2026. **The heading is not persistent**: it holds through both claims and then
+leaves on the ground's first frame (user direction, same day), so the question is asked on a screen
+with nothing on it at all. And **the claims are not `dim`** — the frame annotates both as "undims
+(Y2)", but Y2 is "a person speaking" and the grammar holds its one non-testimony use to Truth §15B;
+these are the corporation's own sentences, so they arrive and leave on the type rows instead.
+
+The beats are **sequential, not layered**, and that is a constraint rather than a preference: the
+claims are dark ink and the rising front is evergreen into charcoal, so any overlap is dark on
+dark. Every claim is read on the photograph, the ground changes on an empty screen, and the
+question is read on charcoal.
+
+**The hold is CSS, not a second pin.** §03 is a slide in `coverSeams`' deck, which already pins the
+section at its foot, so the interior uses a sticky span — the section carries the pin's full height
+and one `position: sticky` screen inside it does the holding. The scrub binds to the section's own
+top-to-foot span, which is exactly how long that screen is held: `height − viewport`, or 200vh of
+the 300. The deck's `BUFFER` does **not** come off it; the gate opens `BUFFER` late and the read
+mark takes it back off, so the two cancel. Below `deck:`'s 1024 × 820, under reduced motion and
+with JavaScript off, none of it applies and the section is the two stacked screens it always was.
+
+**§02 is the register writing itself — BUILT 12 September 2026.** Built to
+`REF · 05 ABOUT §02 THE REGISTER — the facts arrive one at a time` (Figma
+`2632:19655`), six frames whose scroll percentages are the beat sheet. The board's
+own argument for the shape: *"The lo-fi draws four fact cards side by side, which means the
+reader meets nine pieces of information at once and reads none of them. Here each one arrives on
+its own, at size, and folds down into the register as the next one comes up. Nothing is lost."*
+
+The legal name arrives as noise and resolves into itself (`decode`, ENT-07 released under F9),
+then dims to 0.28 as the short name settles under it — the copy's own joke, since the draft sets
+the full name and then says most people say YACHATDAC. The paragraphs settle line by line, the
+screen clears to a derived one-line recap, and then each of the four facts takes the screen ALONE
+at heading scale before folding into the register below it. The road opens full bleed at the head
+of that screen, **above** the heading (user direction), and gives up its height to the table as
+each row lands — clip from the bottom with the plane counter-travelling, so the picture's bottom
+edge and the vehicle on the track stay in frame.
+
+Three departures from the board, all user directions of 12 September 2026. **It is held**: the
+board says *"230vh, and deliberately NOT pinned … no pin, no scrub"*, reasoning that a researcher
+must be able to leave at any point — answered rather than ignored, because below `deck:`, under
+reduced motion and with JavaScript off the section is exactly the register the note protects.
+**The recap line is derived**, not authored: composed in the component from the short name and the
+first sentence of the last paragraph, so nothing new enters `src/content/about.ts` (D5). **The
+road collapses**, where the board's register frames carry no image at all. R15's pink note in
+board frame 06 is NOT built — the editorial notes came off /about on 11 September 2026.
+
+⚠ **F7 DECIDED THE BUILD.** The ledger satisfied the loud-channel law on this section per screen —
+decode (type) → the road (media) → the register (type, quiet). Folding three screens into one
+throws that reasoning away, so the held §02 declares **type**, `decode` is its one loud moment,
+and the road's `plateParallax` is gone: it is LOUD media and `assertChannel` would have thrown.
+`roadScreen` is retired into `theRegister`.
+
+⚠ **THE PAGE NOW SPENDS SEVEN HELD SCREENS AGAINST A ONE-PIN BUDGET**, on top of the eight the
+deck already spends — §02 through §08, every interior on the page that has been built. All seven
+are user directions; none is a GSAP pin — they are CSS sticky spans, so they do not fight the
+deck's own pins — and all seven are flagged here for design sign-off alongside the deck's own
+deviation. §05 is the one to look at hardest: it was the page's scored
+breather, and it is held quietly to preserve as much of that as holding allows. §06 grew 245vh →
+300vh with its hold, which moved the three seams below it; they were re-measured and still land.
+
+**§04 is the loop closing — BUILT 12 September 2026.** Built to `REF · 05 ABOUT §04 THE LOOP —
+each clause builds the card it names` (Figma `2695:21396`), six frames whose scroll percentages are
+the beat sheet. The section's claim is that four things hold each other up, and it draws it: the
+lede is a chain of three clauses, each arrives at reading size, the card it names arrives WHOLE
+beneath it, and once that card has been read it compacts onto the artist's spiral and the clause
+folds down beside it. The fourth position is drawn and left empty — the draft's sentence has three
+clauses and a fourth would be invented. All four standing is the only state in which the claim is
+true, and the section holds there before contracting into §05's first bullet.
+
+**One card is whole at a time, and that is the layout's doing rather than a preference.** A card
+carries a photograph, a title, a body and a label; at the scale four fit on the spiral the body
+lands near 8px. So a card is read whole for about 18vh of held scroll and then keeps only its
+photograph and its title — which is exactly what the board seats on the ring — as the next
+arrives. It is never rendered twice for this: a second copy of a link is a second tab stop, and
+`aria-hidden` does not take an element out of the tab order. The clause is not duplicated either;
+the element that was read is the one that folds.
+
+Three departures, all user directions of 12 September 2026. **It is held**, where the board says
+"265vh, not pinned" — the same objection §02's board raises and the same answer, that the flow
+build is the unpinned document the note protects. **The turn is position-scrubbed**, where the
+board asks for scroll velocity and a loop parkable mid-turn (IMG-01, released by F9); bound to
+position instead so the section retraces exactly, which is the contract the other two held screens
+keep. **§05's copy is not previewed inside §04**, where board frame 06 draws it arriving: §04 →
+§05 is a gated deck seam, so §04 ramps its ground to roasted and §05's own `valuesRelay` delivers
+COUNTRY FIRST behind an invisible cut.
+
+⚠ **THE DIAMOND IS THE HELD BUILD'S ONLY.** The resting document is `CardRail`'s row, unchanged —
+which is what the decision that removed the diamond was about ("the only four-card row on the site
+laid out that way"). `CardRail` itself is untouched, so The Record §07, /partnerships §06 and the
+shared contact doors are unaffected.
+
+**§05 is three values and a held photograph — BUILT 12 September 2026.** The only one of the four
+held screens with NO reference board: the page frame (`2653:19672`) gives the composition and the
+constraints, and the sequence is the user's. "How we work" stands for the whole section; each value
+is read on its own — the thread, then whose it is, then what it says, then the sentence that
+actually constrains a decision — and clears. After the second, the photograph opens from the top,
+pushes the heading and the column down into the space it takes, and RECIPROCITY is read beneath
+it. The picture stays: it is the rest scene that value arrives out of.
+
+⚠ **THE IMAGE PLANE IS NEVER TRANSFORMED, and that is a grade rule rather than a preference.** The
+band's layer is annotated *"P1 full-bleed hold: the ground and the type move around it, the image
+plane NEVER does"*, the photograph is `frame` grade, and the photo notes record four people cropped
+to hands, one of them a child. §02's road counter-travels its plane so a chosen edge stays in
+view; copying that here would be wrong. What opens is the frame; what is revealed was always
+there. Verified by sampling the plane's transform across the whole read — identity throughout.
+
+**Held, but deliberately quiet.** This section is scored ⚡2 with "rest after": it is the page's
+breather between §04 and §06, both ⚡4. It is held on user direction, and its beats are `settle`
+and a fade and nothing else — no overshoot, no ground ramp, no contraction — with a real rest
+across the last third. §03b's Breath is still the page's hard rest.
+
+⚠ **A TRAILING REST HAS TO HOLD THE CLOCK OPEN.** A scrub maps the reader's 0→1 onto
+0→`tl.duration()`, and the duration is wherever the last tween ends — so a genuinely empty final
+stretch shortens the clock and plays every earlier beat late. §02, §03 and §04 all end ON their
+last beat and normalise themselves; §05 is the first section scored with a rest AFTER its last
+beat, so the rest is declared as an inert tween that holds the duration at 1.0 and touches
+nothing. Worth knowing before the next section that wants to end on stillness.
+
+**§06 is the board and the calendar, on one screen — BUILT 12 September 2026.** Built to
+`REF · 05 ABOUT §06` (Figma `2707:21402`), five frames. The user's direction was to hold it and
+split it in two under a persistent header: part 1 is the claim — what the board is, how it is made
+up, when it sits, and the Elder Advisory Group — and it CLEARS; part 2 is the calendar — the dated
+thread, 2031, and the governance documents. The two parts share one grid cell, so the calendar
+replaces the claim in place rather than following it down the page.
+
+**The thread was re-bound, not rewritten.** Its clip-draw and its three seating dots were triggered
+from the THREAD's own viewport crossings (`top 80%` → `top 45%`; `top 65% once`). Inside a sticky
+screen the thread never crosses anything — it is parked on the held screen for the whole section —
+so both resolved at a moment the reader could not see. Both now run off the section's read clock,
+with the draw's clip, curve and pace unchanged. Two corrections came out of driving it rather than
+reading it: the dots were seating on a fixed 0.18 stagger and so arrived at 15% drawn, and now each
+seats as the line reaches its own position; and they **retreat with the line** on the way back,
+because "played once, never scrubbed" was written for a thread that scrolled away and a dot left
+sitting 73% along a line no longer under it reads as a fault. The pop still runs on its own clock in
+both directions, so the overshoot is never dragged and cannot jitter.
+
+⚠ **§06 CARRIES THE SITE'S ONE USE OF IMG-04** — the chromatic split, released by F9. The Elder
+Advisory Group sentence is the only future-tense claim on the page and the only thing on it that has
+not happened, so it is the only line that does not settle: two ghost copies, oxide and turquoise,
+held a couple of pixels off it and drifting about a pixel on a cycle with no end state. A tense
+marker, not a texture. **It has a removal condition and the condition is the point** — when the
+group sits, the sentence loses `data-ab6-unsettled` and the copy loses its future tense. Written as
+CSS rather than a registered effect because an unresolving loop cannot live in a scrubbed timeline;
+the grammar row ("what has not happened yet") carries the full reasoning. **This is the item to put
+in front of the Elder Advisory Group at presentation** — a moving artefact on the sentence
+describing their own authority is theirs to accept or refuse, and it comes off with one attribute.
+
+**The board's travelling marker is NOT built** (user decision, 12 September 2026): the frame asks
+for a marker whose position on the dated rule IS the reader's scroll position, "travelling the
+governance calendar". If design wants it, it is an addition to `theCalendar` rather than a rework —
+the read clock it would derive from is already there.
+
+⚠ **§06's LOUD CHANNEL IS SPENT AT ITS EDGES.** The section is ⚡4 in `transition` and spends it on
+the navy wave in and `overlap` out, so `theCalendar` declares `channel: "none"` and `assertChannel`
+holds the interior to it. The lift lives in a separate bounds-free composition (`boardLift`) because
+a composition declaring the held bounds builds the CUT below them, and §07's wave is scored to ride
+over a board that is receding. The cost, stated: the thread's draw and the dots' catch no longer
+happen below 1024px — `clearAll` leaves the thread drawn and the dots seated, so the document is
+complete, exactly as §02 – §05 are.
+
+⚠ **THE 06 → 07 LIFT FIRES AFTER THE COVER, NOT DURING IT.** `bottom 60%` → `bottom 8%` sits 360px
+later in the scroll than the deck's cover pin for that seam, which starts at `bottom 100%` — so by
+the time the board recedes, §07's wave has already passed over it. The arithmetic is the same before
+and after the hold (the offset is height-independent), so this is inherited rather than introduced,
+and it is left alone here rather than changed under cover of an unrelated pass. Worth a seam fix of
+its own.
+
+**§07 is the roster, one face at a time — BUILT 12 September 2026.** User direction, replacing the
+static three-column row of two photographs and one drawn absence. The header arrives in reading
+order and stands; underneath it the portraits are a rail the reader's scroll walks, the frame the
+focus is on grown to full size and named, the ones either side waiting small and unnamed. `focus`
+is a real number and every scale falls off smoothly from it, so the rail retraces exactly on the
+way back — no snap, no index, and nothing that needs the played-once guard §06's dots did.
+
+**The roster is a list, not a composition.** `PEOPLE_FRAMES` in `Sections.tsx` pairs a photograph
+with a person, and `personOf` resolves the name against `suzanneProfile`, `team.people` and
+`governance.people` in `src/content/our-people.ts` — so somebody who is not on /our-people cannot
+appear here, and a name corrected there is corrected here in the same edit. Adding a face is one
+line plus a kit row; the rail divides its own window by the roster length and costs the page no
+scroll. Verified by adding a third frame, measuring, and taking it out again. **Note what this
+also means: the rail can only grow as /our-people gains names, and today only two people on that
+page have one.**
+
+⚠ **THE PLATES GROW FROM THEIR OWN BOTTOM EDGE AND KEEP THEIR ASPECT.** These are `frame`-grade
+portraits of identifiable people, so no transform reaches an image plane and no frame is ever
+re-proportioned — a plate that changed aspect as it grew would re-crop the picture, which on a
+portrait means the crop travelling across somebody's face. Verified by sampling every plane's
+transform across the whole read (identity throughout) and every plate's aspect (0.75 throughout).
+
+⚠ **ONE PROPERTY PER ELEMENT, AND THE TRANSFORMS ARE COMPOSED IN CSS.** The frame takes the
+travel, the plate takes the scale, the label takes the opacity. The first cut seated the frames
+with GSAP's `y`, which writes an inline `transform` that REPLACES the stylesheet's rather than
+merging with it: every frame's travel froze at whatever `--ab7-x` held when the tween first
+rendered, and the whole rail scaled in place without moving. The scales measured perfectly the
+whole time — this only showed up in a screenshot. The rise is a custom property now. §04 states
+the same law from the other side and it has now cost this page twice.
+
+⚠ **§07's SECOND FRAME NOW CARRIES A NAME (user decision, 12 September 2026).** It reads "Graham
+Ambridge" over a photograph `kit.ts` records as the same man as `op-card-01` — and `kit.ts` states
+in as many words that `op-card-01` is NOT Graham Ambridge, that no photograph of him exists in any
+batch, and that this frame's own consent is UNRESOLVED. The decision was taken with that note in
+front of the user. What makes the label a label and not a claim is the **⟡ Stand-in marker**
+rendered with it, which is the contract /our-people's one named card already runs, so the two
+pages now agree instead of contradicting each other. The old `⚠ Consent unresolved` badge was
+replaced by that marker, not deleted, and the marker is counter-scaled so it is exactly as legible
+when the face is small as when it is large. **This is the item to put in front of the Elder
+Advisory Group, and the marker comes off only when a cleared photograph of him replaces the file.**
+
+**The drawn absence is gone**, on the same direction. A dashed slot reading "no archival
+photograph exists" stood for "three generations of families"; those people are named on
+/our-people under *The ones who got us here*, and a rail of faces is the wrong object to hang an
+absence off. One block if design wants it back.
+
+**§08 is the register filling a column at a time — BUILT 12 September 2026.** User direction. The
+three groups arrive together, rule and title, and then the names fill in by ROUND: the first
+partner of every group, then the second of every group, and so on, so the three lists advance in
+step. That is the section's own claim — three kinds of partner held at the same time, not a ranked
+list — and a register that filled one column to the bottom first would say the opposite. The groups
+are 4, 3 and 2 long, so there are four rounds and the shorter groups simply stop.
+
+**It took three cuts to get the span right, and the first two are worth recording.**
+
+⚠ **A DECK SLIDE'S CONTENT ONLY TRAVELS `height − one viewport`.** The first cut anchored the
+rounds on the groups block's own passage — `top 80%` → `bottom 30%`, about 1050px — reasoning that
+this kept every round on screen. It does not work on a deck: `coverSeams` pins the section the
+moment its foot meets the viewport's, so nothing inside it can travel further than that however the
+trigger is written, and the rest of the range is never scrolled through. Measured on a continuous
+scroll, the block stalled 150px from the top and **round four never arrived at all**. Stepping
+scroll positions looked fine; only a continuous scroll showed it.
+
+⚠ **AND THEN IT HAD TO BE HELD.** The second cut gave the section 200vh and let the column travel
+through it, on the reasoning that holding would mean shrinking the frame's 30px names to clear the
+820px floor. The user watched that scroll away mid-sequence — *"the screen scrolls down and goes off
+screen before everything finishes"* — and allowed the spacing to come in instead: *"we can lessen
+the padding/spacing as long as it feels right."* Every gap halves, the column goes from 984px to
+779 at 1280 and 662 at 1440, and **the type is untouched**. §08 is a sticky span like §02 – §07 and
+the register fills on a screen that is not moving.
+
+⚠ **ITS FLOOR IS 1280 WIDE, NOT 1024 LIKE THE OTHER SIX**, and that is the one place this section
+is genuinely different: nothing in it is sized in `svh`, so its height is a function of WIDTH.
+Measured across the range, the column is 803px at 1440, 920 at 1280 and **1056 at 1024**, where the
+heading goes from two lines to three and every group's list wraps to two. At 1024 the register does
+not stand on any laptop screen, tightened or not, and the only ways to make it would be to shrink
+the frame's own type or to drop copy. Below 1280 §08 is the complete flow document — the same
+fallback the other six take below their own bounds.
+
+**The rules and the titles share one clip tween.** A rule wiping left to right beside a title
+fading in place is two gestures happening at the same time, which is not the same thing as one
+gesture (*"both lines and text should be synced as it reveal"*). Given the same `clip-path` inset,
+the same start and the same duration, one edge travels across the line and its name together. It
+also runs at roughly double the first cut's pace, which read as a flicker.
+
+⚠ **A SEPARATOR BELONGS TO THE ROUND THAT BRINGS THE NAME AFTER IT.** The middot sits inside the
+item it follows — a leading one orphans at a line start, and each name has to wrap as a unit — so
+revealing it with its own name shows "QUT ·" pointing at nothing for a whole round. It is held back
+one round, and no fraction of the scrub ever leaves a visible separator as the last visible thing in
+its list.
+
+**`[ add ]` is gone**, on the same direction, and the trailing separator that existed only to divide
+it from the last name went with it. The incompleteness has NOT gone: `partners.pending` in
+`src/content/about.ts` still reads *"Confirm the current list, get approved logo files, and check
+whether each partnership is active"*, which is where a reviewer reads it. What changed is that a
+visitor no longer sees the gap drawn. One list item if design wants it back.
+
+**THE ACCESSIBILITY PASS — 13 September 2026.** The held screens took something away quietly, and
+this is the record of what and how it was given back.
+
+⚠ **SEVEN OF THE PAGE'S ELEVEN FOCUSABLE ELEMENTS WERE UNREACHABLE.** Measured by driving a
+browser at scroll 0: §04's four area cards, §06's governance link, §07's *meet the people* and
+§08's *partner with us*. A keyboard user tabbing from the top reached the four footer links and
+nothing else. The cause is `autoAlpha`, which every held screen uses to pre-hide its content so
+nothing flashes before the timeline first renders: it sets `visibility: hidden`, which takes an
+element out of the tab order AND out of the accessibility tree — and `visibility` **inherits**, so
+§04's cards were hidden through their slot wrapper and §06's link through the whole calendar part.
+
+The fix is `hideReachable` in `recipes-about.ts` — opacity plus `pointer-events: none` — used
+wherever the thing being hidden is focusable or contains something focusable. Opacity keeps the
+element in both trees; the pointer half matters just as much, because a transparent link still
+takes clicks and §04's cards sit on top of one another on the ring. Everything that is not
+focusable keeps `autoAlpha`: it is the better hide, and a screen reader reading a paragraph
+mid-clear is worse than silence.
+
+`revealOnFocus` in `compose.ts` then does the other half: focus is treated as a request to be
+somewhere, so when it lands on something a section is hiding, the page scrolls to where that
+element is revealed. ⚠ **It cannot just jump to the end of the read** — right for §06, §07 and §08,
+whose registers are complete at 1.0, but §04's cards have *contracted* by then, so its four links
+would still be invisible at the very position meant to reveal them. It samples the section's own
+timeline for the first progress at which the element is actually visible. Verified by walking Tab
+from a cold load: sixteen stops, every one on screen at full opacity, the page scrolling to each.
+
+**And the site had no skip mechanism at all**, which MOTION-SYSTEM.md has required of a
+scroll-jacked page since the brief. *Skip to content* is now the first focusable element in the
+shared layout on all eleven routes; /about adds *Skip the scroll sequence* past the deck. Copy is
+in `site.ts` (D12). **Arrow keys were never broken** — ArrowDown 40px, PageDown ~790, Space ~830,
+ArrowUp reversing, and `coverSeams`' keyboard escape firing at a seam — measured before and after,
+and recorded here so it is not re-investigated.
+
+**THE TWO MOBILE CUTS — 13 September 2026, user direction.**
+
+**§06's timeline is a miniature of the desktop one, not a list.** Below `lg` the thread drew full
+width and the three beats stacked in a column beneath it — a horizontal line with its dots in a
+vertical list under it, which is what read as "not aligning, staggered". `BEAT_X` and `THREAD_W`
+lost their `lg:` prefixes, so the dots sit on the thread at the same fractions and the thread still
+stops on 2031 at every width. ⚠ The labels are the whole difficulty: at 375 the dots land at 24,
+135 and 264 in a 327px column and "Annual general meeting" at 10px is ~154px wide. Each label gets
+a narrow column and wraps inside it, the last narrower still and nudged so it finishes on the
+thread's end. **The words are not abbreviated** — "AGM" is not what the draft says, and D5 puts the
+draft in charge of the copy. Verified at 375 and 320: no overlap, no overflow.
+
+**§07's portraits are a swipe rail below `lg`.** Stacked, two measured 984px and the roster is
+built to grow — every face added ~500px of column. They now run horizontally, one to a screen with
+the next peeking, on native scroll-snap: 984px → 426px, and the height no longer moves with the
+roster. ⚠ **No dots and no JavaScript** — `CardRail`'s own comment records that decision for the
+pages that are static by decision, and /about is one. ⚠ **And not through `CardRail`**, which turns
+into a grid at a hardcoded `sm` while §07's held rail does not take over until `lg`, so 640–1023
+would stack again; widening it would reach /about §04, /partnerships, /our-people and /wonder.
+
+**LEGIBILITY AND ONE ALIGNMENT BUG — 13 September 2026, user direction.**
+
+⚠ **§02's LEGAL NAME WAS DIMMED TWICE.** The paragraph carried `text-evergreen/30` in the markup
+AND took `opacity: 0.28` from `theRegister` as the short name landed under it, so the two
+compounded to **0.084** — very nearly invisible on canvas. The class dimmer is gone, the recipe is
+the only thing that dims it, and the value is 0.45. The board's "read already" is 0.28; this is a
+deliberate deviation on user direction, and worth knowing the next time a value from the board is
+put on an element that a recipe also animates.
+
+**§02's recap runs at 70%, not the board's 28.** That line is read-already by definition, but 28%
+charcoal on canvas is about 2:1 against the ground and fails AA for body text. 70% is ~7:1 and
+still plainly secondary to the register beneath it. **The register's labels are `text-sm`**, not
+`text-xs`: 12px under a 32px value read as fine print rather than as the row's label.
+
+⚠ **§06's BEATS SAT UNDER THE THREAD, NOT ON IT** — reported with a screenshot, and introduced by
+the mobile pass earlier the same day. The beats are `absolute top-0`, and top 0 has to mean the
+THREAD's own top, because the wrapper above holds the thread and the beat row together. Making the
+beat row `relative` so it could host them moved that origin 20px down. The row is a plain block
+again and the dots' centres measure exactly on the wave's midline at 1440 and at 375, with the last
+dot landing on the thread's end. The original comment in `Sections.tsx` had said this in as many
+words; it now says it twice.
+
+**§07 is the roster, one face at a time — BUILT 12 September 2026.** User direction, replacing the
+static three-column row of two portraits and one drawn absence. The header arrives in reading
+order and stands; underneath it the portraits are one row and the reader's scroll walks a FOCUS
+along it, so the frame the focus is on grows to full size and carries a legible name while the
+others wait small and unnamed. Continuous, not stepped — `focus` is a real number and every scale
+falls off smoothly from it, so the rail retraces exactly on the way back.
+
+**The roster is a list, and the names come from /our-people.** `PEOPLE_FRAMES` in Sections.tsx
+pairs a photograph with a person; `personOf` resolves that person against `suzanneProfile`,
+`team.people` and `governance.people` in `src/content/our-people.ts`. Adding a face is one entry
+plus a kit row, and the rail divides its own window by however many there are — verified on screen
+with a third frame, which re-paced itself and still fitted 100svh. **It also means the roster can
+only grow as /our-people gains names**: everyone else on that page is `name: null` today, which is
+the right constraint rather than an obstacle. Past about six faces the section's span should grow
+rather than the beats shrinking; the number is at `theRoster` and in Motion.tsx.
+
+⚠ **A NAMED FRAME OVER A STAND-IN PHOTOGRAPH — the thing to raise at presentation.** The second
+frame reads "Graham Ambridge" over `about-people-02`, which kit.ts records as the same man as
+`op-card-01`, states is NOT Graham Ambridge, and whose own consent is UNRESOLVED. The name was
+asked for with that note in front of the user (12 September 2026). What makes it a label and not a
+claim is the `⟡ Stand-in` marker rendered with it — the same contract /our-people's one named card
+already runs, so the two pages now agree. The marker is counter-scaled so it is exactly as legible
+on a small frame as on a large one: it must not be least readable at the moment the face is least
+identifiable. **It comes off when a cleared photograph of him exists and not before.**
+
+**Two corrections came out of driving it.** GSAP's `y` on the seat-in tween wrote an inline
+`transform` that replaced the stylesheet's, so every frame's travel silently froze at its build-
+time position and the rail scaled in place without moving — the numbers read perfect scales
+throughout, and only the screen showed it. The rise is a custom property now, and §04's law holds:
+one property per element, transforms composed in CSS. Separately, a `1fr` middle grid row shorter
+than the rail's fixed height overflowed both ways, putting the header off the top and the link off
+the bottom; three auto rows with `align-content: center` is the fix, and the rail's rest height is
+17svh rather than 20 so the 820px floor has real air rather than three pixels.
+
+**The drawn absence is gone**, on the same direction. A dashed slot reading "no archival
+photograph exists" stood for "three generations of families"; those people are named on
+/our-people under *The ones who got us here*, and a rail of faces is the wrong object to hang an
+absence off. If design wants it back it is one block.
 
 **Group G is back in build here, and only here.** The traveller and the page's thread are the same
 object: the question travels down the page and settles at each thing it measures. `G1` travel with
