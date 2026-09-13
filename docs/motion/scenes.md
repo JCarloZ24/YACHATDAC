@@ -1469,6 +1469,50 @@ pages that are static by decision, and /about is one. ⚠ **And not through `Car
 into a grid at a hardcoded `sm` while §07's held rail does not take over until `lg`, so 640–1023
 would stack again; widening it would reach /about §04, /partnerships, /our-people and /wonder.
 
+**THE HOLD'S FLOOR COMES DOWN TO 640 — 13 September 2026, user direction.** Reported from a
+1366 x 768 laptop: the animations looked broken in Chrome and Firefox but worked in Orca's
+embedded browser. Nothing was broken. A browser on that display has about 640px of viewport once
+the OS bar, tab strip and omnibox are taken off, which is under the old 820px floor, so every held
+screen fell back and the page rendered as the static document. Orca's pane measures 918 and cleared
+it. Measured cliff: 1920 x 820 holds at 20,948px of document; 1920 x 819 falls back at 14,873.
+
+⚠ **THE FLOOR WAS NEVER CHOSEN FOR SEVEN HELD SCREENS.** It predates all of this work, in
+globals.css since 4 September, from when §03 was the only one. Falling below it used to cost one
+screen; it now costs the page's entire motion design, on a common laptop.
+
+**Five of the seven already fitted 640** once the floor moved — §02 at 470px, §04 at 489, §06 at
+624, and §03 and §05 adapt because their bands are sized in `svh`. Only §07 (696) and §08 (710)
+overflowed.
+
+⚠ **BUT THE TYPE STEP IS PAGE-WIDE, NOT A PATCH ON THE TWO THAT OVERFLOWED.** Shrinking only those
+left five section headings reading 96px, 56px, 56px, 40px, 40px at one viewport, which is not a
+compact layout, it is a typographic accident. One step down, all together, keeps the relationships
+the frames draw: the question stays the page's giant at 64px, the four section headings sit a rank
+below at 40, §02's short name stays above them, and body copy goes to 18px. Above the step nothing
+applies and the frames render exactly as drawn.
+
+⚠ **IT KEYS ON SHORT *OR* NARROW, because the step is about room and not about height.** §08
+measures 913px at 1024 wide with the frame's type and 626 with the step: a tall 1024 window has the
+height and still cannot hold it, because the heading wraps to three lines and every partner list
+wraps to two. Keying only on height left §08 needing its own 1280px width floor, so between 1024
+and 1279 six sections held and it alone did not. **That half-animated page is the outcome worth
+avoiding**, and with the step keyed on either dimension §08's own floor is gone and the page holds
+uniformly wherever the others do.
+
+⚠ **`hold:` IN globals.css IS UNCHANGED AT 820, DELIBERATELY.** It was lowered and then put back:
+`src/lib/motion/record.ts` matches that exact query by hand for /the-record, and the variant's own
+comment says the module and the layout must not disagree. A page-specific floor does not belong in a
+shared variable, so about.css owns /about's and `HELD` carries the identical pair.
+
+▲ **The type step is a deviation from the V2 tokens and needs design sign-off.** Spacing on these
+screens had already been tightened once and there was nothing left to take from it, so below the
+step the page is a size smaller. The alternative was showing a common laptop a different page from
+everyone else.
+
+Verified with no overflow at 1024 x 640, 1024 x 900, 1280 x 900, 1366 x 640, 1440 x 900 and
+1920 x 1080; the cliff is clean at 639 and at 1023; and at 1440 x 900 the document is still
+22,693px with the frames' own type, unchanged.
+
 **LEGIBILITY AND ONE ALIGNMENT BUG — 13 September 2026, user direction.**
 
 ⚠ **§02's LEGAL NAME WAS DIMMED TWICE.** The paragraph carried `text-evergreen/30` in the markup

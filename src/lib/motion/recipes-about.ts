@@ -203,7 +203,7 @@ const quietly = (
  * something which must never be withheld — §06's seam lift — cannot put that
  * something in a composition carrying these. See `boardLift`.
  */
-const HELD = { minWidth: "1024px", minHeight: "820px" } as const;
+const HELD = { minWidth: "1024px", minHeight: "640px" } as const;
 
 /**
  * The pinned hand-offs — the five wave seams as holds.
@@ -2445,8 +2445,7 @@ export function thePartners(root: HTMLElement, span = 200): MotionModule {
     // (`partnersDots` declared "none", which contradicted the ledger row.)
     channel: "type",
     span,
-    /* ⚠ 1280, NOT `HELD`'s 1024, AND THIS IS THE ONE SECTION THAT NEEDS ITS OWN
-       FLOOR. Nothing in §08 is sized in `svh` — the names are 30px and the
+    /* ⚠ THIS USED TO DECLARE ITS OWN 1280px FLOOR, and no longer needs to. Nothing in §08 is sized in `svh` — the names are 30px and the
        heading 3.5rem — so its height is a function of WIDTH, not of the window.
        Measured: the column is 803px at 1440, 920 at 1280 and 1056 at 1024,
        because the heading goes from two lines to three and every group's list
@@ -2455,8 +2454,8 @@ export function thePartners(root: HTMLElement, span = 200): MotionModule {
        shrink the frame's own type or to drop copy. Below 1280 this is the
        complete flow document, the same fallback the other six take below theirs.
        about.css carries the identical pair and says so. */
-    minWidth: "1280px",
-    minHeight: "820px",
+    minWidth: "1024px",
+    minHeight: "640px",
     uses: ["settle", "arrive"],
     build: (tl) => {
       const claim = q(root, "[data-ab8-claim]");
