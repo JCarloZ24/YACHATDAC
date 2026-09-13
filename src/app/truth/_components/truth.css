@@ -30,6 +30,44 @@
    cannot run for a reader who asked for less.
    --------------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------------
+   THE 1950s BAND'S REST STATE, OFF THE DECK — the egg-white stripe.
+
+   globals.css:338 rests `[data-truth-deteriorates]` at charcoal on purpose:
+   "the rest state is the end state … a band that rests at egg white would hand
+   into the charcoal count as a hard jump." But that ground is painted by the
+   slide's own `::before`, which covers the ARTICLE — and the reading column's
+   `py-10 lg:py-20` belongs to the SECTION around it, which is `bg-canvas`. So
+   off the deck the dark 1950s block sits between two stripes of egg white, 40px
+   on a phone and 80px at `lg`, and hands into the charcoal count across one of
+   them. That is the hard jump the rest state exists to avoid, reintroduced by
+   padding.
+
+   On the deck path the slide is pinned at 100svh over that padding, so it can
+   never show — which is why this was invisible on a desktop with a mouse and
+   visible to anyone whose browser reports a coarse pointer at a wide viewport:
+   a touch laptop, an iPad in landscape, or a tab left in device emulation.
+
+   ⚠ GATED ON THE DECK BEING OFF, and that is not belt-and-braces. On the deck
+   the band OPENS on egg white and ramps to charcoal across its read; painting
+   the section charcoal up front would give that ramp nothing to travel from.
+   `:has()` rather than a new markup hook — the band is already identifiable by
+   the slide it contains, and `data-truth-deteriorates` is the thing that
+   decides the ground in the first place.
+
+   ⚠ `section:has(…)`, NOT `[data-descent-band]:has(…)`. There are TWO nested
+   egg-white sections here and only the outer one carries the band attribute:
+   page.tsx renders `<section data-descent-band="named-wrong" bg-canvas>` and
+   `EraSection` renders its own `<section relative bg-canvas>` inside it. The
+   padding that shows is the INNER one's, so a band-only selector recoloured
+   the wrong box — measured charcoal on the band and the stripe still there in
+   the screenshot. Both are matched now; nothing else on the page is a section
+   containing this slide. */
+[data-descent-root]:not([data-deck-active])
+  section:has([data-truth-deteriorates]) {
+  background-color: var(--color-charcoal);
+}
+
 @media (pointer: fine) and (min-width: 1024px) {
   /* THE TWO RECORDS SHARE ONE CELL. Measured on the built page, the precinct
      block is 743px and the partnership 424px — 1,167px of content on a single

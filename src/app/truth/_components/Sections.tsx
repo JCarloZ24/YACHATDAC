@@ -327,7 +327,16 @@ function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string
                 src={presentSrc(slot.src)}
                 alt={slot.expects}
                 /* The focused tile IS the layout box (see the head note), so
-                   440px is the real ceiling: max-w-4xl halved, less the gap. */
+                   this is a cover-crop figure and not a box width.
+
+                   ⚠ CORRECTED 13 September 2026 — the number is right and the
+                   old reason for it was wrong. It read "max-w-4xl halved, less
+                   the gap", which would be 428; measured at 1440 the tile is
+                   **316px**, because this figure's `max-w-4xl` never binds —
+                   its parent copy column is `max-w-2xl` (672), so the tile is
+                   (672 − 40 gap) / 2. 440 survives on the head note's rule
+                   instead: a 316px box at 3:2 from a 1.9:1 source needs
+                   316 × (1.9 / 1.5) = 400px of crop, and 440 serves it. */
                 sizes="(min-width: 1024px) 440px, 78vw"
                 fieldClass={FIELD_CLASS[slot.tone]}
               />
@@ -412,7 +421,14 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
           </div>
           <div
             data-truth-tile="2"
-            className="relative aspect-3/2 w-3/5 overflow-hidden rounded-2xl"
+            /* `sm:w-3/5`, not `w-3/5` (13 September 2026). 60% is the frame's
+               small bottom-left tile, and it only means anything once the grid
+               above has two columns — which it takes at `sm`. Unprefixed it
+               also applied on a phone, where the grid is a single column, so
+               this one photograph rendered 196px wide between three 327px
+               siblings and the montage read as ragged rather than laid. The
+               width now breaks where the grid it belongs to breaks. */
+            className="relative aspect-3/2 overflow-hidden rounded-2xl sm:w-3/5"
           >
             <MediaOrField
               src={presentSrc(hand.src)}
@@ -562,7 +578,21 @@ function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
     <figure className="mt-10 max-w-4xl">
       <div
         {...(MOTION_GRADE[country.bucket] === "frame" ? {} : { "data-v2-camera": true })}
-        className="relative aspect-23/8 overflow-hidden rounded-lg"
+        /* A MOBILE RATIO FOR A DOCUMENT, NOT A LANDSCAPE (13 September 2026).
+           23/8 is 2.875:1 — 114px tall against the phone's 327px column — and
+           this slot holds a dated timeline sheet, columns of small print at
+           1870s / 1880s / 1900s. At 114px it is not a wide photograph, it is an
+           unreadable smear, and the frame's ratio is a 1440 measurement that
+           was never a phone measurement.
+
+           ⚠ 16/9 IS THE FLOOR, AND THE NUMBER COMES FROM `sizes`. By this
+           file's own cover-crop rule (see the head of the file) a box needs
+           `width x (1.9 / box-aspect)` of image: at 327px that is 349px for
+           16/9, and the `100vw` below serves 375. Any mobile ratio at or above
+           ~1.66 stays inside what `sizes` already asks for, which is why this
+           box can change without touching a measured `sizes` string. Go below
+           5/3 and the photograph softens and `sizes` has to rise with it. */
+        className="relative aspect-16/9 overflow-hidden rounded-lg lg:aspect-23/8"
       >
         <MediaOrField
           src={presentSrc(country.src)}
@@ -860,11 +890,20 @@ function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }
             key={slot.id}
             data-motion={MOTION_GRADE[slot.bucket]}
             data-truth-tile={index}
+            /* ⚠ EVERY TILE IS ROUNDED (13 September 2026). The strip squares
+               always were; the stacked variants below them were the only
+               photographs on Truth with square corners, at any width —
+               FeatureMedia, TodayMontage and StrataStack are all `rounded-2xl`
+               and the document frames `rounded-lg`. Reported against the phone
+               (§18's five-up), but it was never a breakpoint: the class was
+               simply absent from these two branches. `2xl` to match the other
+               photo tiles; the strip keeps `lg` because its squares are a
+               third of the size. */
             className={`relative overflow-hidden ${strip
               ? "aspect-square rounded-lg"
               : slots.length === 1
-                ? "aspect-video max-w-xl"
-                : "aspect-4/3"
+                ? "aspect-video max-w-xl rounded-2xl"
+                : "aspect-4/3 rounded-2xl"
               }`}
           >
             <MediaOrField
@@ -1103,8 +1142,26 @@ function EntryBlock({
           ) : (
             <span aria-hidden className="hidden md:block" />
           )}
-          {/* The rail measures its label budget against this column's left edge. */}
-          <div data-truth-entry-copy className="max-w-2xl">
+          {/* The rail measures its label budget against this column's left edge.
+
+              ⚠ `min-w-0` IS LOAD-BEARING AND IT IS NOT COSMETIC. This div is a
+              GRID ITEM of `entryLayout`, and a grid item's automatic minimum
+              size is `min-content` — it will not shrink below the widest thing
+              inside it. `FeatureMedia`'s swipe rail gives its tiles
+              `w-[78vw] shrink-0`, which is 601px of min-content on a 375px
+              phone, and `overflow-x: auto` does NOT reduce a block's
+              min-content contribution — it only zeroes the automatic minimum
+              size of a flex/grid ITEM, which the rail is not. So the column
+              measured 601px inside a 375px viewport, every paragraph in it ran
+              off the screen, and the rail itself never scrolled: the DOCUMENT
+              scrolled sideways instead. Measured at 243px of overflow at 320,
+              274 at 375, 282 at 390 and 180 at 768 — and exactly 0 at 1440,
+              which is why it shipped (7885b7b, 13 September 2026).
+
+              It belongs here and not on the figure: with `min-w-0` on the
+              figure alone the overflow was unchanged at 274px, because the
+              grid item above it was still the constraint. */}
+          <div data-truth-entry-copy className="min-w-0 max-w-2xl">
             {isPartner ? (
               <p className={`eyebrow mb-6 font-normal ${accent}`}>{entry.when}</p>
             ) : null}
@@ -1920,7 +1977,14 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
               what changed is that there is now a file for the slot. */}
           <div
             data-v2-static
-            className="relative aspect-4/5 w-full max-w-80 overflow-hidden rounded-xs"
+            /* ⚠ `rounded-2xl`, was `rounded-xs` (13 September 2026). 2px on a
+               320x400 plate reads as a square corner, and this was the only
+               photograph on Truth still wearing one — a leftover from when
+               this slot was the dashed placeholder hold the note above
+               records coming off. A placeholder box wants a hairline radius;
+               a portrait does not. 16px is the page's photo-tile radius
+               (FeatureMedia, TodayMontage, EntryMedia, StrataStack). */
+            className="relative aspect-4/5 w-full max-w-80 overflow-hidden rounded-2xl"
           >
             <MediaOrField
               src={presentSrc(truthCountPortrait.src)}

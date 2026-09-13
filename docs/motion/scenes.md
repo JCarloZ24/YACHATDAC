@@ -708,6 +708,32 @@ Wattanuri floor's runway to `22svh`, both so the cover crop they ask for is insi
 need 1,604 CSS px and 260vw was serving 1,014. **Nothing above `lg` changed** — measured
 after: plate 879 = slide 879, break 879, track `padding-top` 879, heading identity transform.
 
+**The same bug again, 13 September 2026, and this time the deck's own markup caused it.**
+`7885b7b` gave the precinct's photographs a swipe rail below `lg` — `w-[78vw] shrink-0`
+tiles in an `overflow-x-auto` track, About §07's idiom. It put the page **243px over at
+320, 274 at 375, 282 at 390 and 180 at 768, and exactly 0 at 1440**, which is why it
+shipped: the deck it was written for is desktop-only and desktop was clean. `overflow-x:
+auto` does not reduce a block's min-content contribution — it only zeroes the automatic
+minimum size of a flex/grid *item*, which the track is not — so 601px of tiles propagated
+up to `[data-truth-entry-copy]`, and THAT is a grid item, whose automatic minimum size is
+`min-content`. The column measured 601px inside a 375px viewport and every paragraph in it
+ran off the screen. Worse, the rail therefore never scrolled: the document scrolled
+sideways in its place, so the mechanism the change existed to add was the one thing it did
+not deliver. `min-w-0` on the grid item is the whole fix — measured back to 0 at all four
+widths, with the rail's own `scrollLeft` now taking the 274px the document used to.
+Two smaller mobile faults went with it: the TODAY montage's `w-3/5` tile was unprefixed, so
+the frame's small bottom-left plate rendered 196px wide between three 327px siblings on a
+phone (`sm:w-3/5` now, breaking where its grid breaks); and the 1840s country band's
+`aspect-23/8` is 114px tall at a 327px column while the slot holds a dated timeline sheet,
+unreadable at that size (`aspect-16/9` below `lg`, the frame's ratio from `lg` up — and
+16/9 is the floor, because a 327px box needs `327 × 1.9 / aspect` of crop and the existing
+`100vw` covers any ratio at or above ~1.66, which is what lets the box change without
+touching a measured `sizes`). The strata bands at 327×103 and the evidence contact sheet at
+101px were screenshotted and left: both read correctly, and thin layers are §19's own
+argument. **Nothing above `lg` changed** — measured after: 1440 `scrollWidth` 1440 and page
+height 17,639px, both identical to before, and the Ahead phases still stack into one cell
+with the copy column at its full `max-w-2xl` 672.
+
 **§08 BREAK Country Now IS WITHDRAWN, 11 September 2026 (client direction)** — the
 section was removed from the page the same day the work below landed, so none of it
 renders. The present band now runs straight into the 2026 deed plate and that plate's own
