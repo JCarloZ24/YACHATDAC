@@ -41,7 +41,12 @@ const LANDSCAPE_INVITATION_ZOOM = 1.32;
  * travels with the offset. `shade` is the frame's full-scene black.
  *
  * These are measurements, not taste: change one only by re-reading its node.
- * Taste lives in the timing below.
+ * Taste lives in the timing below. Solar amendment, 13 September 2026:
+ * "Country carries the day" derives the sun/atmosphere from this same sky
+ * clock in home-sun.ts; these offsets now also drive generated lighting.
+ * "The stars emerge as daylight leaves", 13 September 2026: stellar
+ * visibility follows the resulting local sky light, not a panel entrance
+ * or a whole-field fade based on the sun's elevation.
  */
 export const HOME_SCENE = {
   night: { sky: 0, light: 0, lightHeight: 8028, shade: 0.4 },
@@ -91,7 +96,8 @@ const LANDSCAPE_EXIT_SHADE = 0.55;
  * timelines without touching that route.
  */
 export function registerHome(): void {
-  // AMB-05: one seamless phase; the canvas owner controls visibility/cleanup.
+  // AMB-05 / "the stars emerge as daylight leaves": one seamless phase for
+  // breeze and restrained stellar scintillation; the owner controls cleanup.
   gsap.registerEffect({
     name: "homeLandscapeBreeze",
     defaults: {},
@@ -157,8 +163,15 @@ export function registerHome(): void {
         ? (730 / 901 + (y - 730) * root.clientWidth / 1440 / root.clientHeight) * 100
         : y / 9.01;
       timeline.set(marker, { xPercent: homeTruthScenes[0].x / 14.4, yPercent: () => markerY(homeTruthScenes[0].y) }, 0);
+      // SCR-10 / "Country carries the years", user direction 13 September
+      // 2026: orient the reader during Truth's introduction, with a quiet
+      // fade in place alongside the heading rather than a later arrival.
       timeline.fromTo(root.querySelector("[data-truth-timeline]"),
-        { autoAlpha: 0, xPercent: 100 }, { autoAlpha: 1, xPercent: 0, duration: 0.4, ease: "sine.inOut" }, wonderAt + 2.3);
+        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "sine.inOut" }, wonderAt + 1.3);
+      // SCR-10, 13 September 2026: only the line introduces the chronology;
+      // the marker and its date wait until after the opening hold.
+      timeline.fromTo(marker,
+        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "sine.inOut" }, wonderAt + 2.3);
       homeTruthScenes.forEach((scene, index) => {
         const at = wonderAt + 2.3 + index;
         timeline.to(config.state, { sky: scene.sky, light: scene.light,
@@ -365,13 +378,10 @@ export function registerHome(): void {
       );
       // Anything but "black" restores the header and the thread line.
       timeline.call(() => { root.dataset.heroPhase = "scene"; }, [], 0.14);
-      // Night is SET at the top of the intro rather than being a fromTo's
-      // start value: the scrubbed timeline owns the same state object and
-      // parks it on the welcome frame the moment it is built, so a start
-      // value that is only applied when its own tween begins would leave the
-      // first second and a half of the page sitting on the wrong hour and
-      // then snap back. A set renders when the playhead reaches it, which is
-      // what the black beat is covering.
+      // Night is set under the black beat before the timed light lift.
+      // SCR-09 / solar handoff fix, 13 September 2026: this state belongs
+      // only to the opening. home-hero.ts selects the separate scroll state
+      // once reading begins, so this tween cannot reset Wonder to twilight.
       timeline.set(config.state,
         { sky: HOME_SCENE.night.sky, light: HOME_SCENE.night.light, onComplete: config.render }, 0);
       timeline.to(config.state,

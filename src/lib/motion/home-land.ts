@@ -1,10 +1,11 @@
-import { Color, ShaderMaterial, Texture, Vector2 } from "three";
+import { Color, ShaderMaterial, Texture, Vector2, Vector3, Vector4 } from "three";
+import { solarAtmosphere } from "./home-sun";
+import { nightAtmosphere } from "./home-stars";
 
 /**
  * The homepage's land plate — a clip-space full-screen quad carrying the
- * woodland road, the sky and light sequence layers that put it at a time of
- * day, and the lift that takes the whole scene off the top for the closing
- * beats.
+ * woodland road, generated sky and supplied night light layer, and the lift
+ * that takes the whole scene off the top for the closing beats.
  *
  * ⚠ 10 September 2026, user direction. This was home-painting.ts, and its
  * first job was the opening: it drew the supplied red painting outward from
@@ -23,17 +24,20 @@ import { Color, ShaderMaterial, Texture, Vector2 } from "three";
  * sky sequence, land, the frame's black, the light layer soft-lit through the
  * land. There is no longer a separate daylight path, and no `truth` mix: the
  * Truth sequence is simply further along the same day. See HOME_SCENE.
+ *
+ * 13 September 2026, "Country carries the day": the same clock now drives
+ * generated solar scattering and exposure in daylight. "The stars emerge
+ * as daylight leaves" extends one generated field to every night, with
+ * local sky-luminance visibility. The supplied night light remains;
+ * the actual land alpha holds both sun and stars behind the trees.
  */
 export function createLandMaterial(): ShaderMaterial {
   return new ShaderMaterial({
     transparent: true, depthTest: false, depthWrite: false,
     uniforms: {
-      // The time of day, exactly as Figma states it: how far each of the two
-      // sequence layers is pushed up behind the frame, and the black the
-      // frame lays over the whole composition. Four measured states, one per
-      // beat -- see HOME_SCENE in effects/home.ts for the node ids and the
-      // numbers. Defaults are the night the page opens on.
-      skyOffset: { value: 0 },
+      // Supplied night-land lighting retains Figma's layer offsets/black.
+      // The sky offset remains the CPU solar clock, not a texture lookup.
+      // See HOME_SCENE in effects/home.ts for the measured states.
       lightOffset: { value: 0 },
       // The light layer is placed at a different height in different frames
       // (8028 across the two welcome frames, 7619 from Wonder on), so its
@@ -42,13 +46,22 @@ export function createLandMaterial(): ShaderMaterial {
       shade: { value: 0.4 },
       belonging: { value: 0 },
       breezePhase: { value: 0 },
+      sunDirection: { value: new Vector3(0, -1, 1).normalize() },
+      sunEnergy: { value: 0 },
+      sunDisc: { value: new Vector4(0.011625, 1, 0.00008, 0) },
+      sunTransmission: { value: 1 },
+      solarNight: { value: 0 },
+      solarReadShade: { value: 0 },
+      solarDaylight: { value: 0 },
+      solarWarmth: { value: 0 },
+      solarAspect: { value: 1 },
+      solarDepression: { value: 0 },
       // Nothing paints until the photograph is decoded: this is the plate's
       // alpha, so an undecoded texture shows the DOM still rather than a
       // sheet of smeared first-row pixels.
       landscapeReady: { value: 0 },
-      // All three maps are handed in by home-hero.ts once their images decode.
+      // Both maps are handed in by home-hero.ts once their images decode.
       landscape: { value: null as Texture | null },
-      skyMap: { value: null as Texture | null },
       lightMap: { value: null as Texture | null },
       landscapeCrop: { value: new Vector2(1, 1) },
       landscapeAnchor: { value: 0.5 },
@@ -73,23 +86,18 @@ export function createLandMaterial(): ShaderMaterial {
     `,
     fragmentShader: `
       uniform float belonging;
-      uniform float skyOffset;
       uniform float lightOffset;
       uniform float lightHeight;
       uniform float shade;
       uniform float breezePhase;
       uniform float landscapeReady;
       uniform sampler2D landscape;
-      uniform sampler2D skyMap;
       uniform sampler2D lightMap;
       uniform vec2 landscapeCrop;
       uniform float landscapeAnchor;
       uniform float legacyScale;
       uniform float sceneHeight;
       uniform float landscapeZoom;
-      // The sky sequence is the same 6996-row layer in every frame, so this
-      // one does not travel. Its companion does -- see lightHeight.
-      const float skyHeight = 6996.0;
       uniform float lift;
       // How much of the canvas height the land takes to go out of focus and
       // into charcoal at the lift's trailing edge. Turn this, not the fade
@@ -133,22 +141,8 @@ export function createLandMaterial(): ShaderMaterial {
         float glow = exp(-dot(delta, delta) / 0.000018);
         return visible * (trail * 0.55 + glow * 0.85);
       }
-      vec3 nightStars(vec2 uv) {
-        vec2 grid = uv * vec2(480.0, 300.0);
-        vec2 cell = floor(grid);
-        vec2 seed = starHash(cell);
-        vec2 centre = 0.25 + 0.5 * starHash(cell + 17.3);
-        float distanceToStar = length(fract(grid) - centre);
-        float radius = mix(0.045, 0.19, pow(seed.y, 3.0));
-        float edge = max(fwidth(distanceToStar), 0.025);
-        float point = 1.0 - smoothstep(radius - edge, radius + edge, distanceToStar);
-        float selected = step(0.978, seed.x);
-        float twinkle = 0.78 + 0.22 * sin(breezePhase * 3.0 + seed.y * 62.83);
-        float brightness = mix(0.025, 0.42, pow(seed.y, 2.0));
-        vec3 night = mix(vec3(0.0006, 0.0018, 0.0048),
-          vec3(0.0012, 0.0038, 0.010), clamp(uv.y, 0.0, 1.0));
-        return night + vec3(0.78, 0.88, 1.0) * point * selected * brightness * twinkle;
-      }
+      ${solarAtmosphere}
+      ${nightAtmosphere}
       void main() {
         // 9 September 2026, user direction: The Invitation lifts the whole
         // land scene up the screen and leaves charcoal behind it, the way a
@@ -193,8 +187,6 @@ export function createLandMaterial(): ShaderMaterial {
         // right reading of "nearer than anything the old crop contained".
         // Sampling of the taller texture still uses landscapeUv itself.
         float legacyY = landscapeUv.y * legacyScale;
-        // Texture lookups keyed to the old crop must stay inside it.
-        float legacyBand = clamp(legacyY, 0.0, 1.0);
         vec4 terrain = texture2D(landscape, landscapeUv);
         // AMB-05: the road widens from the vanishing point toward the viewer.
         // Keep its whole corridor still; colour/luminance suppress bark and soil.
@@ -227,29 +219,18 @@ export function createLandMaterial(): ShaderMaterial {
           + texture2D(landscape, clamp(landscapeUv + wind + blurStep.yx, 0.001, 0.999))
           + texture2D(landscape, clamp(landscapeUv + wind - blurStep.yx, 0.001, 0.999))) * 0.25;
         terrain = mix(terrain, blurred, edgeBand);
-        // 10 September 2026, user direction: every beat of this page is the
-        // same Figma composition read at a different point in the day, so
-        // there is one stack here and no separate daylight path. The nodes,
-        // in order: 3371:41344 (night), 3371:41275 (the welcome), 3371:41413
-        // (Wonder), 3371:44759 (Truth), then the seven dated frames.
-        //
-        // Where a frame sits in the day is where its two sequence layers sit
-        // behind it. Both are placed against the 1500-row scene at one image
-        // row to one layer row, so a pixel's row in the photograph plus that
-        // frame's offset IS its row in the sequence.
-        //
-        // !! This row used to come from legacyBand, which saturates at 1 over
-        // everything above the treeline -- so the whole sky was a single flat
-        // colour and only the offset moved it. Every reference frame is a
-        // gradient from the top of the sky down to the horizon, so the row is
-        // now read from the photograph directly. legacyBand still owns the
-        // thresholds calibrated against the old 900-row crop -- the road
-        // corridor, the canopy -- it just no longer owns this.
+        // The surviving night-light sequence still follows the full-height
+        // photograph at one image row to one layer row (10 September 2026).
+        // Daylight and the sky are generated by the 13 September amendments.
         float sceneRow = (1.0 - landscapeUv.y) * sceneHeight;
-        vec3 skyBand = texture2D(skyMap, vec2(landscapeUv.x, 1.0 - (skyOffset + sceneRow) / skyHeight)).rgb;
-        // Terrain compositing below keeps every star behind the treeline.
-        skyBand = mix(skyBand, nightStars(vec2(landscapeUv.x, 1.0 - landscapeUv.y)), belonging);
-        skyBand += vec3(0.72, 0.86, 1.0) * shootingStar(sUv) * smoothstep(0.9, 1.0, belonging);
+        // SCR-10 solar amendment, 13 September 2026. Row 450 of the 1500px
+        // plate is the opaque horizon; the branches above it keep their alpha.
+        float horizon = (0.70 - landscapeAnchor) * landscapeZoom / landscapeCrop.y + 0.5;
+        // One generated night ground replaces the image sky: baked stars
+        // must not appear under, or crossfade into, a second star pattern.
+        vec3 skyBand = nightSky(sUv, horizon);
+        float discHighlight;
+        vec3 atmosphere = solarSky(sUv, horizon, discHighlight);
         // The frame stack in display RGB: sky, the transparent land over it,
         // the frame's full-scene black, then the light layer soft-lit through
         // the land's own alpha. The shade uniform is that black -- 0.4 through
@@ -258,6 +239,37 @@ export function createLandMaterial(): ShaderMaterial {
         vec3 light = sRGBTransferOETF(texture2D(lightMap, vec2(landscapeUv.x, 1.0 - (lightOffset + sceneRow) / lightHeight))).rgb;
         vec3 view = sRGBTransferEOTF(vec4(mix(base,
           softLight(base, light), terrain.a), 1.0)).rgb;
+        // Daylight no longer inherits the sequence's magenta/orange soft-light
+        // wash. Atmosphere and land are exposed together, in linear light.
+        vec3 sunlit = mix(atmosphere, solarTerrain(terrain.rgb, landscapeUv), terrain.a);
+        view = mix(sunlit, view, solarNight);
+        // The existing media-scrim exception: protect cream Truth copy when
+        // the low sun reaches the phone's upper reading band. This travels
+        // with the scene and clears into night; it never changes the text.
+        // Preserve the disc's bright core: a uniform scrim turned the high
+        // sun into a grey, moon-like circle. Trees still occlude the highlight.
+        float solarHighlight = discHighlight * (1.0 - terrain.a) * (1.0 - solarNight);
+        // In a tall crop the setting disc crosses the body copy. Keep the
+        // reading scrim there; restore its highlight once the sun is higher.
+        float highlightRoom = max(smoothstep(0.7, 1.2, solarAspect),
+          smoothstep(0.85, 0.98, solarDaylight));
+        float readShade = solarReadShade * 0.68 * smoothstep(0.3, 0.72, sUv.y);
+        view *= 1.0 - readShade
+          * (1.0 - solarHighlight * highlightRoom * 0.9);
+        // "The stars emerge as daylight leaves", 13 September 2026 spatial
+        // correction: compare stars with the actual exposed SKY at this pixel.
+        // Reproduce the sky-only night exposure and reading scrim, excluding
+        // terrain and DOM copy. Sampling view would let a dark branch reveal
+        // a star; using solarDepression would hide the dusk's spatial contrast.
+        vec3 nightExposure = sRGBTransferEOTF(vec4(
+          sRGBTransferOETF(vec4(skyBand, 1.0)).rgb * (1.0 - shade), 1.0)).rgb;
+        vec3 clearSky = mix(atmosphere, nightExposure, solarNight);
+        clearSky *= 1.0 - readShade
+          * (1.0 - discHighlight * (1.0 - solarNight) * highlightRoom * 0.9);
+        vec3 starlight = nightStars(sUv, horizon, clearSky);
+        starlight += vec3(0.72, 0.86, 1.0) * shootingStar(sUv) * 0.45
+          * smoothstep(0.9, 1.0, belonging) * smoothstep(12.0, 18.0, solarDepression);
+        view += starlight * (1.0 - terrain.a);
         // What the lift uncovers. Opaque, so it covers the renderer's own
         // clear colour. The hand-off is a fade across the lower part of the
         // blurred band, never a step: below the edge there is only charcoal,

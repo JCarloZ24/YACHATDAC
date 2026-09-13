@@ -7,8 +7,10 @@ import {
   SRGBColorSpace, Texture, Vector2, WebGLRenderer,
 } from "three";
 import { prefersReduced, type MotionModule } from "@/lib/motion-controller";
-import { HOME_SCENE, registerHome } from "./effects/home";
+import { HOME_SCENE } from "./effects/home";
+import { registerYachatdacEffects } from "./effects";
 import { createLandMaterial } from "./home-land";
+import { createSunUpdater } from "./home-sun";
 import { HOME_PORTAL } from "@/content/kit";
 import { awaitEntry, routeEntryPending } from "./route-entry";
 
@@ -67,7 +69,8 @@ const SCROLL_PER_UNIT = 0.8;
  * F7 holds: media is the loud channel and the type is quiet over it. AMB-05's
  * vegetation wind now starts as soon as the photograph decodes rather than on
  * the portal's arrival. R11: the collage's twenty-six above-the-fold WebPs
- * went with it, leaving this one photograph and its three layer maps.
+ * went with it. The 13 September solar/star treatment leaves just the
+ * photograph and its night light map; the sky is generated in the shader.
  */
 export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): MotionModule {
   let cleanup = () => {};
@@ -221,7 +224,14 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
         // The page opens at night; the intro walks this to HOME_SCENE.welcome
         // and the scroll takes it on through the day. See HOME_SCENE.
-        const exit = { ...HOME_SCENE.night, belonging: 0, landscapeLift: 0, landscapeZoom: 1 };
+        // "Country carries the day" / SCR-09, 13 September 2026 bug report:
+        // the intro used to keep writing twilight over a scroll that had
+        // already reached Wonder. Separate the clocks' state, then transfer
+        // ownership once; neither refresh nor reverse scroll replays night.
+        const opening = { ...HOME_SCENE.night, belonging: 0, landscapeLift: 0, landscapeZoom: 1 };
+        const exit = { ...HOME_SCENE.welcome, belonging: 0, landscapeLift: 0, landscapeZoom: 1 };
+        let scrollOwnsScene = false;
+        let introStarted = false;
         let landscapeReady = false;
         syncBreeze = () => {
           breeze?.paused(disposed || offscreen || document.hidden || !landscapeReady);
@@ -230,18 +240,18 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         const dark = new Color(tokens.getPropertyValue("--color-charcoal").trim());
         geometry = new PlaneGeometry(1, 1);
         const land = createLandMaterial();
+        const updateSun = createSunUpdater(land);
+        let viewportAspect = 1;
         // What sits behind the land once the lift takes it up, and what shows
         // anywhere the plate is not yet opaque: charcoal, from the token.
         (land.uniforms.beyond.value as Color).copy(dark);
         renderer.setClearColor(dark, 1);
         materials.push(land);
-        // Three layers, and they are the whole page: the photograph, the sky
-        // sequence behind it and the light sequence over it. The separate
-        // daylight sky (HOME_PORTAL.sky) went with the old opening -- every
-        // beat now reads the sequences, so there is nothing left for it to do.
+        // "The stars emerge as daylight leaves", 13 September 2026: the
+        // sky is generated at every hour now. Only the photograph and its
+        // night light sequence need maps; no second, baked star-field request.
         const maps = [
           { src: HOME_PORTAL.src, uniform: "landscape" },
-          { src: HOME_PORTAL.truthSky, uniform: "skyMap" },
           { src: HOME_PORTAL.truthLight, uniform: "lightMap" },
         ].map(({ src, uniform }) => {
           const image = new Image();
@@ -272,11 +282,15 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         const render = () => {
           syncBreeze();
           if (disposed || document.hidden || offscreen) return;
-          land.uniforms.belonging.value = exit.belonging;
-          land.uniforms.skyOffset.value = exit.sky;
-          land.uniforms.lightOffset.value = exit.light;
-          land.uniforms.lightHeight.value = exit.lightHeight;
-          land.uniforms.shade.value = exit.shade;
+          const state = scrollOwnsScene ? exit : opening;
+          land.uniforms.belonging.value = state.belonging;
+          land.uniforms.lightOffset.value = state.light;
+          land.uniforms.lightHeight.value = state.lightHeight;
+          land.uniforms.shade.value = state.shade;
+          // "Country carries the day", 13 September 2026: one reading clock
+          // also owns the sun and twilight star visibility; the breeze never
+          // advances its time of day.
+          updateSun(state.sky, viewportAspect);
           // Where the cover crop's window sits in the photograph. Recomputed
           // per frame rather than on resize because the push-in moves it: the
           // crop half-height comes from the current viewport, so this stays
@@ -292,8 +306,8 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           // narrows it. Bottom-anchoring means holding the window's lower edge
           // against the photograph's, so it has to follow the zoom — otherwise
           // pushing in would drag the near ground back out of frame.
-          const halfY = crop.y / exit.landscapeZoom * 0.5;
-          land.uniforms.landscapeZoom.value = exit.landscapeZoom;
+          const halfY = crop.y / state.landscapeZoom * 0.5;
+          land.uniforms.landscapeZoom.value = state.landscapeZoom;
           // Clamped to the texture. The landscape map wraps ClampToEdge, so a
           // window that runs off either end smears the first or last row of
           // the photograph across the band instead of erroring — silent, and
@@ -305,7 +319,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           // The Invitation carries the scene off the top of the canvas; the
           // window on the photograph does not move with it. See the lift note
           // in home-land.ts.
-          land.uniforms.lift.value = exit.landscapeLift;
+          land.uniforms.lift.value = state.landscapeLift;
           // Maps this plate into the old top-900 crop the shader thresholds
           // were calibrated against. See the HOME_PORTAL note in kit.ts.
           land.uniforms.legacyScale.value = HOME_PORTAL.height / HOME_PORTAL.legacyHeight;
@@ -338,6 +352,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           // trimmed, and LANDSCAPE_BOTTOM_BIAS decides where the vertical trim
           // comes off. Layout is read here and nowhere else.
           const aspect = width / height;
+          viewportAspect = aspect;
           const landscapeAspect = HOME_PORTAL.width / HOME_PORTAL.height;
           (land.uniforms.landscapeCrop.value as Vector2).set(
             Math.min(1, aspect / landscapeAspect), Math.min(1, landscapeAspect / aspect),
@@ -345,23 +360,47 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           renderer?.setSize(width, height, false);
           render();
         };
+        // SCR-09, 12 September 2026: only adopt the pinned layout after all
+        // maps decode. Measure that viewport, not the taller static fallback.
+        root.dataset.heroCanvas = "ready";
         resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(root);
         resize();
-        root.dataset.heroCanvas = "ready";
-        context = gsap.context(() => {
-          registerHome();
+        // SCR-09 / mobile startup, 12 September 2026: Home's dissolve uses
+        // frameOpen from the media family. Register the full vocabulary here;
+        // ClickBloom happens to do that on desktop, but never runs on touch.
+        registerYachatdacEffects();
+        // Store the context BEFORE building. If an effect throws halfway
+        // through, release() must still revert the intro's hidden text.
+        context = gsap.context(() => {}, root);
+        context.add(() => {
           breeze = gsap.effects.homeLandscapeBreeze(root, {
             phase: land.uniforms.breezePhase, render,
           });
-          timeline = gsap.effects.homeHeroOpen(root, { state: exit, render });
-          timeline?.eventCallback("onComplete", () => {
+          const settleOpening = () => {
+            scrollOwnsScene = true;
             root.dataset.heroMotion = "settled";
+            root.dataset.heroPhase = "scene";
             disarmSafety();
             window.removeEventListener("keydown", onKey);
-          });
+            render();
+          };
+          timeline = gsap.effects.homeHeroOpen(root, { state: opening, render });
+          timeline?.eventCallback("onComplete", settleOpening);
+          const takeScrollControl = (trigger: ScrollTrigger) => {
+            // A new pin may not have measured its end yet. Once measured,
+            // "top top" starts at -0.001, so zero scroll is slightly positive.
+            // Require real, measured travel rather than that epsilon/NaN.
+            const travel = trigger.progress * (trigger.end - trigger.start);
+            if (scrollOwnsScene || !Number.isFinite(travel) || travel <= 1) return;
+            // Claim BEFORE seeking the intro: its onUpdate callbacks can
+            // still render, but only the scroll state may reach the canvas.
+            scrollOwnsScene = true;
+            timeline?.progress(1).pause();
+            settleOpening();
+          };
           const dissolve = gsap.effects.homeHeroDissolve(root, { state: exit, render });
-          ScrollTrigger.create({
+          const trigger = ScrollTrigger.create({
             id: "home-hero-dissolve",
             trigger: root,
             start: "top top",
@@ -370,16 +409,21 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
             scrub: 0.8,
             animation: dissolve,
             invalidateOnRefresh: true,
+            onUpdate: takeScrollControl,
           });
-        }, root);
+          // A reload/history restoration may already be inside the pin
+          // before the entry cover releases. Do not start night over it.
+          takeScrollControl(trigger);
+        });
         document.addEventListener("visibilitychange", onVisibility);
         // The async canvas pin changes the following sections' document position.
         ScrollTrigger.refresh();
         root.dataset.pageReady = "ready";
 
         const begin = () => {
-          if (disposed || document.hidden) return;
+          if (disposed || document.hidden || introStarted || scrollOwnsScene) return;
           if (loaderCovering()) return;
+          introStarted = true;
           loaderObserver?.disconnect();
           root.dataset.heroMotion = "entering";
           root.dataset.heroPhase = "black";
@@ -397,7 +441,8 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         // X7 / SYS-02, 11 September 2026: a warm-cache canvas must also wait
         // for the shared readiness cover. The film keeps its own door after it.
         releaseEntry = awaitEntry(begin);
-      } catch {
+      } catch (error) {
+        console.warn("Homepage canvas could not initialise", error);
         // WebGL, the network or a decode can fail independently of the
         // readable page: the DOM still and the copy over it stay.
         release();

@@ -53,12 +53,14 @@ export function Pathways() {
       id="pathways"
       data-home-pathways
       /* lg:pt-28 keeps the panel clear of the header, which is 130px
-         tall and `absolute` — it overlays this panel rather than pushing
+         tall and `fixed` — it overlays this panel rather than pushing
          it down, so a `justify-center` block with no top padding centres
          itself straight under the nav. It did: the heading was reading
          through WONDER / TRUTH / LIVING WORK. 112px rather than the full
          130 because the logo is h-14 centred in that band, so its visible
-         foot is at about 93px and the rest is air. */
+         foot is at about 93px and the rest is air. Mobile clearance and
+         the remaining card height are handled in pathways.css (user
+         screenshot, 12 September 2026), including the 80px mobile bar. */
       className="home-pathways-panel absolute inset-0 z-[3] flex flex-col justify-center text-canvas lg:pt-28"
     >
       <div className="mx-auto w-full max-w-[1440px] px-5 lg:px-16">
@@ -94,7 +96,7 @@ export function Pathways() {
                 >
                   {/* Frame grade: the photograph is held, and the mark sits
                       over its top corner exactly as the Invitation's does. */}
-                  <div className="relative aspect-[5/4] max-h-[34svh] overflow-hidden rounded-[20px] lg:max-h-[40svh]">
+                  <div className="home-pathway-image relative aspect-[5/4] max-h-[34svh] overflow-hidden rounded-[20px] lg:max-h-[40svh]">
                     {/* ⚠ `sizes` IS NOT THE CARD WIDTH, and reading it as one
                         is what under-served these for two days (fixed 11
                         September 2026). `object-cover` scales a photograph
