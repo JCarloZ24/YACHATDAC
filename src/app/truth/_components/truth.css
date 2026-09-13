@@ -68,6 +68,31 @@
   background-color: var(--color-charcoal);
 }
 
+/* ---------------------------------------------------------------------------
+   AND ITS HEADING, for the same reason and on the same gate.
+
+   `inkHead` in Sections.tsx is `text-evergreen` for every record on the page,
+   and on the deck that is right at the start and corrected on the way down:
+   `nineteenFifties` tweens this heading evergreen → canvas as the ground walks
+   egg white → charcoal (the EVERGREEN constant in truth-scenes.ts), so the
+   display face crosses over with the ink. Measured on the deck: 11.71:1 at the
+   read's start and 14.20:1 at 90%.
+
+   Off the deck that tween never runs and the band rests at charcoal, so the
+   heading kept evergreen on near-black — measured 1.52:1, which is not a
+   contrast failure so much as an invisible heading. Its three siblings (`ink`,
+   `inkBody`, `inkMuted`) all already resolve to `--truth-ink` for this record;
+   only the display face was left out of that list, and the flow path is the
+   one place where that omission shows.
+
+   `--truth-ink` and not a literal, so this tracks globals.css's rest state
+   rather than restating it. `.headline` rather than `h3`, so a claim set in
+   the display face in this band is covered too — both take `inkHead`. */
+[data-descent-root]:not([data-deck-active])
+  [data-truth-deteriorates] .headline {
+  color: var(--truth-ink);
+}
+
 @media (pointer: fine) and (min-width: 1024px) {
   /* THE TWO RECORDS SHARE ONE CELL. Measured on the built page, the precinct
      block is 743px and the partnership 424px — 1,167px of content on a single
