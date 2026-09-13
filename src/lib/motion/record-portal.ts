@@ -33,8 +33,9 @@ import { loadRecordImage } from "./record-asset-cache";
  */
 // User refinement, 2026-09-09: the leftmost photo starts farther away;
 // a second set of photographs fills the journey at its own depths/speeds.
-const DEPTHS = [-48, -56, -38, -58, -62, -36, -52, -68, -44, -76];
-const ADVANCES = [5, 4, 16, 10, 6, 9, 7, 3, 12, 5];
+// Eighteen pictures from 14 September 2026: one depth and advance per slot.
+const DEPTHS = [-48, -56, -38, -58, -62, -36, -52, -68, -44, -76, -42, -64, -54, -40, -72, -46, -60, -50];
+const ADVANCES = [5, 4, 16, 10, 6, 9, 7, 3, 12, 5, 11, 6, 8, 14, 4, 9, 6, 12];
 const FRAME_DISTANCE = 20;
 const FOV = 42;
 
@@ -335,7 +336,11 @@ ${shader.vertexShader}`.replace(
           // frames already extend past the edges during the fast approach.
           // User refinement, 2026-09-09: pull the leftmost picture inward
           // so it remains noticeable before continuing past the screen edge.
-          const spread = element === elements[0] ? 0.95 : upper ? 0.55 : 1.25;
+          // User direction, 14 September 2026: the layout itself now spreads
+          // twelve frames to the edges, so the canvas keeps it as laid out;
+          // squeezing the upper row inward is what stacked pictures behind
+          // one another.
+          const spread = 1;
           card.baseX = openingX + x * unit * spread;
           card.baseY = openingY + y * unit;
           // Move whole frames outward, including the formerly centred picture,

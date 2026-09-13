@@ -5,11 +5,9 @@ import {
   onRequest,
   recordGrows,
   recordHero,
-  recordItems,
   recordPortalCopy,
 } from "@/content/the-record";
 import {
-  recordCardMedia,
   recordGrowsSlot,
   recordPortalMedia,
 } from "@/content/record-media";
@@ -90,10 +88,7 @@ export function RecordHeroV2() {
   const maskSrc = presentSrc(recordPortalMedia.mask);
   const stoneSrc = presentSrc(recordPortalMedia.wall.src);
   const stencilSrc = presentSrc(recordPortalMedia.stencilSheet);
-  const previews = recordPortalMedia.previewSlugs.flatMap((slug, portalSlot) => {
-    const item = recordItems.find((entry) => entry.slug === slug);
-    return item ? [{ ...item, portalSlot }] : [];
-  });
+  const previews = recordPortalMedia.previews;
 
   return (
     <>
@@ -102,30 +97,27 @@ export function RecordHeroV2() {
         {/* F8, 2026-09-08: hidden image sources and sizing guides for canvas-only
             fly-through pictures. Article links remain in the static catalogue. */}
         <div data-portal-gallery className="record-portal-gallery" aria-hidden="true" inert>
-          {previews.map((item) => {
-            const slot = recordCardMedia[item.slug];
-            return (
+          {previews.map((item, portalSlot) => (
+            <div
+              data-portal-card
+              data-portal-slot={portalSlot}
+              data-portal-position={portalSlot + 1}
+              key={item.src}
+              className="record-portal-card"
+            >
               <div
-                data-portal-card
-                data-portal-slot={item.portalSlot}
-                data-portal-position={(item.portalSlot % 5) + 1}
-                key={item.slug}
-                className="record-portal-card"
+                className="record-portal-card-media"
+                data-motion-grade="frame"
               >
-                <div
-                  className="record-portal-card-media"
-                  data-motion-grade="frame"
-                >
-                  <MediaOrField
-                    src={presentSrc(slot?.src ?? null)}
-                    alt={slot?.expects ?? ""}
-                    sizes="(min-width: 1024px) 25vw, 57vw"
-                    fieldClass="bg-roasted"
-                  />
-                </div>
+                <MediaOrField
+                  src={presentSrc(item.src)}
+                  alt={item.alt}
+                  sizes="(min-width: 1024px) 20vw, 45vw"
+                  fieldClass="bg-roasted"
+                />
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
         <div
           data-portal-wall

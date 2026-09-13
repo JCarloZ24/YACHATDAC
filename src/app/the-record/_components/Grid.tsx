@@ -115,7 +115,9 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
               {/* User direction 2026-09-09: the full editorial caption sits on
                   the card's own ground, not on the page's cream. */}
               <div className="flex flex-1 flex-col px-9 pt-6 pb-9">
-                <p className="eyebrow text-[11px] leading-[1.5] tracking-[0.06em] text-gold">
+                {/* User direction 2026-09-14: the type · source line is set at
+                    14px. */}
+                <p className="eyebrow text-[14px] leading-[1.5] tracking-[0.06em] text-gold">
                   {item.type}&ensp;&middot;&ensp;{item.source}
                 </p>
                 <h3 className="headline mt-4 text-h3 leading-[1.12]">{item.title}</h3>
@@ -123,7 +125,7 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
                     column away from the ones beside it. */}
                 <p className="mt-5 line-clamp-5 text-base leading-[1.6] text-canvas/85">{item.summary}</p>
                 {item.subjects.length > 0 ? (
-                  <p className="eyebrow mt-auto pt-10 text-[11px] leading-[1.6] tracking-[0.06em] text-gold">
+                  <p className="eyebrow mt-auto pt-10 text-[14px] leading-[1.6] tracking-[0.06em] text-gold">
                     {item.subjects.join(" · ")}
                   </p>
                 ) : null}

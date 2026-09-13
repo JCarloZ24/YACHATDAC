@@ -196,35 +196,115 @@
   overflow: hidden;
   background: var(--color-roasted);
 }
+/* User direction, 14 September 2026: eighteen distinct places, one per
+   picture, spread to the edges so no frame travels hidden behind another. */
 .record-portal-card[data-portal-position="1"] {
-  left: 4%;
-  top: 72%;
+  left: 3%;
+  top: 2.0%;
   width: 42%;
-  height: 15%;
+  height: 9%;
 }
 .record-portal-card[data-portal-position="2"] {
-  left: 4%;
-  top: 13%;
+  left: 53%;
+  top: 2.0%;
   width: 42%;
-  height: 18%;
+  height: 9%;
 }
 .record-portal-card[data-portal-position="3"] {
-  left: 20%;
-  top: 37%;
-  width: 60%;
-  height: 25%;
+  left: 6%;
+  top: 12.8%;
+  width: 42%;
+  height: 9%;
 }
 .record-portal-card[data-portal-position="4"] {
-  left: 54%;
-  top: 72%;
+  left: 56%;
+  top: 12.8%;
   width: 42%;
-  height: 15%;
+  height: 9%;
 }
 .record-portal-card[data-portal-position="5"] {
-  left: 54%;
-  top: 13%;
+  left: 3%;
+  top: 23.6%;
   width: 42%;
-  height: 18%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="6"] {
+  left: 53%;
+  top: 23.6%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="7"] {
+  left: 6%;
+  top: 34.4%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="8"] {
+  left: 56%;
+  top: 34.4%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="9"] {
+  left: 3%;
+  top: 45.2%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="10"] {
+  left: 53%;
+  top: 45.2%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="11"] {
+  left: 6%;
+  top: 56.0%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="12"] {
+  left: 56%;
+  top: 56.0%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="13"] {
+  left: 3%;
+  top: 66.8%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="14"] {
+  left: 53%;
+  top: 66.8%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="15"] {
+  left: 6%;
+  top: 77.6%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="16"] {
+  left: 56%;
+  top: 77.6%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="17"] {
+  left: 3%;
+  top: 88.4%;
+  width: 42%;
+  height: 9%;
+}
+.record-portal-card[data-portal-position="18"] {
+  left: 53%;
+  top: 88.4%;
+  width: 42%;
+  height: 9%;
 }
 
 @media (min-width: 64rem) {
@@ -239,34 +319,112 @@
     bottom: 36px;
   }
   .record-portal-card[data-portal-position="1"] {
-    left: 2%;
-    top: 46%;
-    width: 19%;
-    height: 34%;
+    left: 1.0%;
+    top: 4%;
+    width: 14%;
+    height: 22%;
   }
   .record-portal-card[data-portal-position="2"] {
-    left: 22%;
-    top: 18%;
-    width: 17%;
-    height: 27%;
+    left: 17.5%;
+    top: 8%;
+    width: 14%;
+    height: 22%;
   }
   .record-portal-card[data-portal-position="3"] {
-    left: 40%;
-    top: 34%;
-    width: 25%;
-    height: 36%;
+    left: 34.0%;
+    top: 4%;
+    width: 14%;
+    height: 22%;
   }
   .record-portal-card[data-portal-position="4"] {
-    left: 68%;
-    top: 57%;
-    width: 22%;
-    height: 27%;
+    left: 50.5%;
+    top: 8%;
+    width: 14%;
+    height: 22%;
   }
   .record-portal-card[data-portal-position="5"] {
-    left: 77%;
-    top: 17%;
-    width: 19%;
-    height: 25%;
+    left: 67.0%;
+    top: 4%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="6"] {
+    left: 83.5%;
+    top: 8%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="7"] {
+    left: 4.0%;
+    top: 36%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="8"] {
+    left: 20.5%;
+    top: 40%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="9"] {
+    left: 37.0%;
+    top: 36%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="10"] {
+    left: 53.5%;
+    top: 40%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="11"] {
+    left: 70.0%;
+    top: 36%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="12"] {
+    left: 86.5%;
+    top: 40%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="13"] {
+    left: 1.0%;
+    top: 68%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="14"] {
+    left: 17.5%;
+    top: 72%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="15"] {
+    left: 34.0%;
+    top: 68%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="16"] {
+    left: 50.5%;
+    top: 72%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="17"] {
+    left: 67.0%;
+    top: 68%;
+    width: 14%;
+    height: 22%;
+  }
+  .record-portal-card[data-portal-position="18"] {
+    left: 83.5%;
+    top: 72%;
+    width: 14%;
+    height: 22%;
   }
 }
 

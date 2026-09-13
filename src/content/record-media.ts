@@ -91,17 +91,36 @@ export const recordPortalMedia = {
   },
   mask: "/artwork/handprint-impression.png",
   stencilSheet: "/artwork/handprint-variations.png",
-  previewSlugs: [
-    "bringing-a-spring-back",
-    "a-season-of-bush-foods",
-    null, // User removed the central grass photo, 2026-09-09; preserve the other slots.
-    "fire-stick-farming-and-the-carbon-in-the-soil",
-    "you-are-standing-on-a-seabed",
-    "wattanuri-and-the-ones-he-followed",
-    "when-they-called-it-the-art-gallery",
-    "gracevale-becomes-turraburra",
-    "fifteen-thousand-markings-read-in-order",
-    "what-the-recorders-hear-at-night",
+  /**
+   * User direction, 14 September 2026: the fly-through spreads twelve
+   * pictures across the whole screen so none hides behind another, and it
+   * leads with people rather than objects. The previews therefore no longer
+   * borrow the article cards (engravings, hands, soil); they are supplied
+   * library photographs of people on Country, already in use on their own
+   * pages. Six object frames (ochre, mortar, seedlings, soil, a stencil, fire)
+   * were added back among them the same day, one to every third place, so
+   * people lead and the work sits between them. Frames with identifiable children (the card-5 consent flag above)
+   * are deliberately left out. Canvas-only and aria-hidden.
+   */
+  previews: [
+    { src: "/media/library/our-people/op-card-01.webp", alt: "An elder in a wide hat beneath a sandstone overhang" },
+    { src: "/media/library/living-work/livingwork-rangers1.webp", alt: "A ranger smiling among the scrub" },
+    { src: "/media/library/about/about-ochre.webp", alt: "Hands grinding ochre on a stone" },
+    { src: "/media/library/our-people/op-card-02.webp", alt: "A woman smiling in open woodland" },
+    { src: "/media/library/record/therecord-story3.webp", alt: "An elder picking from the trees, bowl in hand" },
+    { src: "/media/library/record/therecord-story11.webp", alt: "Seed poured into a stone mortar" },
+    { src: "/media/library/b1-11-proxy.webp", alt: "A woman in a hat looking up at a sandstone wall" },
+    { src: "/media/library/our-people/op-card-06.webp", alt: "A man in a hat on a rise above the trees" },
+    { src: "/media/library/living-work/livingwork-rangers4.webp", alt: "A hand tending seedlings in a raised bed" },
+    { src: "/media/library/work-botanical.webp", alt: "Two people examining a plant up close" },
+    { src: "/media/library/record/therecord-story13.webp", alt: "An elder grinding seed at the ute tray as the light goes" },
+    { src: "/media/library/record/therecord-story10.webp", alt: "A hand holding soil above the scrub" },
+    { src: "/media/library/our-people/op-card-03.webp", alt: "A man standing in long grass" },
+    { src: "/media/library/our-people/crew-walking-burnt-3840.webp", alt: "Two men talking on freshly burnt ground" },
+    { src: "/media/library/record/articles/red-hand-stencil-on-pale-sandstone.webp", alt: "A red hand stencil on pale sandstone" },
+    { src: "/media/library/about/about-people-02.webp", alt: "A man standing beneath a rock arch" },
+    { src: "/media/library/living-work/livingwork-hero.webp", alt: "A woman walking through the spinifex" },
+    { src: "/media/library/living-work/livingwork-work1.webp", alt: "A campfire burning in open country" },
   ],
 } as const;
 
