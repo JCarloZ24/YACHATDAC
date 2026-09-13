@@ -2,6 +2,30 @@
    No layout changes until Three has painted. Removing the attribute is a
    complete fallback, including all the long copy and the native contact rail. */
 .people-canvas { display: none; }
+.people-veil, .people-pattern { display: none; }
+[data-people-ready] > .people-pattern {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+[data-people-pattern-ring] {
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  background-color: var(--color-roasted);
+}
+[data-people-ready] > .people-veil {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-color: var(--color-roasted);
+}
 
 [data-people-ready] {
   /* ScrollTrigger rounds a fixed pin up by a pixel. Keep the photo camera
@@ -33,6 +57,9 @@
 [data-people-ready] [data-people-card] { background-color: transparent; }
 [data-people-ready] [data-people-card] > :last-child { background-color: var(--color-evergreen); }
 [data-people-ready] [data-people-card] { will-change: transform; }
+/* The hero fades in rather than scrolling up (14 Sep 2026); the value is set
+   on the reading clock in our-people.ts. */
+[data-people-ready] [data-people-hero-frame] > * { opacity: var(--people-hero-fade, 1); }
 [data-people-ready] [data-people-knockout] {
   background-image: none !important;
   background-color: transparent;
@@ -59,4 +86,36 @@
     position: relative !important;
     transform: none !important;
   }
+}
+
+/* The entrance — user direction 14 September 2026. Black screen, then the
+   advisory fades up, then the scroll cue. Held hidden only while scripting
+   can release it (OurPeopleCanvas latches data-people-entered the first time data-page-ready
+   leaves "loading", so a resize rebuild never hides and replays it), so
+   no-JS readers see the notice at once. Grammar row: "the page gathers",
+   the entrance. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-people-stage] [data-people-entrance] { opacity: 0; }
+  [data-people-stage][data-people-entered] [data-people-entrance] {
+    animation: people-entrance 0.7s var(--ease-quiet, ease-out) forwards;
+  }
+  [data-people-stage][data-people-entered] [data-people-entrance="rule"] {
+    animation: people-entrance-rule 0.5s var(--ease-quiet, ease-out) 0.15s forwards;
+    transform-origin: left center;
+  }
+  [data-people-stage][data-people-entered] [data-people-entrance="advice"] {
+    animation-delay: 0.35s;
+    animation-duration: 0.9s;
+  }
+  [data-people-stage][data-people-entered] [data-people-entrance="cue"] {
+    animation-delay: 1.1s;
+  }
+}
+@keyframes people-entrance {
+  from { opacity: 0; filter: blur(6px); transform: translateY(12px); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+@keyframes people-entrance-rule {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
 }

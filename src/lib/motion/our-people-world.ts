@@ -50,12 +50,16 @@ const fragmentShader = `
   uniform vec4 prefixBox;
   uniform float prefixHidden;
   uniform float letterReveal;
+  uniform float fade;
+  uniform float floorPx;
   varying vec2 vUv;
   void main() {
     vec2 sampleUv = (vUv - 0.5) * crop + 0.5 + offset;
     // An aperture may cross the edge of the held photograph while gathering.
     // Reveal the ground there instead of stretching the edge pixels.
     if (any(lessThan(sampleUv, vec2(0.0))) || any(greaterThan(sampleUv, vec2(1.0)))) discard;
+    // Anything drawn beneath the section covering this one is hidden.
+    if (gl_FragCoord.y < floorPx) discard;
     vec4 ink = texture2D(picture, sampleUv);
     float alpha = 1.0;
     // Top corners of the existing portrait card. Its body supplies the
@@ -79,7 +83,7 @@ const fragmentShader = `
         * step(0.0, prefixUv.y) * step(prefixUv.y, 1.0);
       alpha *= mix(letterReveal, 1.0 - prefixHidden, initial);
     }
-    gl_FragColor = vec4(ink.rgb, ink.a * alpha);
+    gl_FragColor = vec4(ink.rgb, ink.a * alpha * fade);
     #include <colorspace_fragment>
   }
 `;
@@ -93,7 +97,7 @@ function material(width: number, height: number, blank: Texture, radius = 0) {
       radius: { value: radius }, masked: { value: 0 },
       apertureBox: { value: new Vector4(0, 0, 1, 1) }, closing: { value: 0 },
       prefixBox: { value: new Vector4(0, 0, 1, 1) }, prefixHidden: { value: 0 },
-      letterReveal: { value: 1 },
+      letterReveal: { value: 1 }, fade: { value: 1 }, floorPx: { value: -1 },
     },
     vertexShader, fragmentShader, transparent: true,
     depthTest: false, depthWrite: false,
@@ -309,6 +313,8 @@ export function createPeopleWorld(
       photo.mesh.visible = Boolean(photo.texture) && nearby;
       if (!photo.mesh.visible) continue;
       const x = photo.frame ? Number(gsap.getProperty(photo.frame, "x")) || 0 : 0;
+      // A card's photograph fades with its HTML frame (14 Sep 2026).
+      if (photo.frame && photo !== hero) photo.mesh.material.uniforms.fade.value = Number(gsap.getProperty(photo.frame, "opacity"));
       photo.mesh.position.x = photo.box.left + photo.box.width / 2 + x;
       const crop = photo.mesh.material.uniforms.crop.value as Vector2;
       // P4 frame grade: the aperture moves, the pixels inside it stay held.
@@ -316,6 +322,7 @@ export function createPeopleWorld(
     }
     if (titleMesh && hero?.texture && title && titleBox) {
       titleMesh.visible = true;
+      titleMesh.position.y = -titleBox.top - titleBox.height / 2;
       titleMesh.material.uniforms.picture.value = hero.texture;
       const ink = titleMesh.material.uniforms;
       if (hasPortal && flight && masks?.initial) {
@@ -326,7 +333,8 @@ export function createPeopleWorld(
         const moving = k > 0 && k < 1;
         titleMesh.position.y = -titleBox.top - titleBox.height / 2
           - (moving ? state.travel - flight.titleTravel : 0);
-        hero.mesh.visible = Boolean(hero.texture) && (k < 1);
+        hero.mesh.visible = Boolean(hero.texture) && (k < 1) && state.reveal > 0;
+        hero.mesh.material.uniforms.fade.value = state.reveal;
         hero.mesh.position.y = -photo.top - photo.height / 2
           - (k > 0 ? Math.min(state.travel, flight.titleTravel) - flight.frameTravel : 0);
         const aperture = hero.mesh.material.uniforms;
@@ -359,6 +367,10 @@ export function createPeopleWorld(
       } else {
         (ink.offset.value as Vector2).set(0, 0.16 * (1 - state.knockout));
       }
+      // The hero holds still while Suzanne's section rises over it.
+      titleMesh.position.y -= state.heroOffset ?? 0;
+      titleMesh.material.uniforms.floorPx.value = state.heroFloor === undefined ? -1
+        : (height - state.heroFloor) * renderer.getPixelRatio();
       if (!title.hasAttribute("data-people-knockout")) title.dataset.peopleKnockout = "true";
     }
     renderer.render(scene, camera);

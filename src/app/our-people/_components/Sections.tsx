@@ -182,16 +182,25 @@ const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
  */
 export function OurPeopleAdvisory() {
   return (
+    /* User direction, 14 September 2026: a dramatic entrance. The page opens
+       on a full black screen and the advisory fades up out of it, then the
+       hero's scroll cue follows. The band is a full viewport now (was 45vh)
+       so nothing else is in frame while the notice arrives. The fade is CSS
+       gated on the stage's data-page-ready, so it plays after the site loader
+       lifts; see our-people.css. */
     <section
       data-people-scene="advisory"
-      className="relative flex min-h-[45svh] items-center bg-charcoal text-canvas"
+      className="relative flex min-h-svh items-center bg-charcoal text-canvas"
     >
-      <div className={`${COLUMN} pt-16 lg:pt-28`}>
+      <div className={`${COLUMN}`}>
         {/* the threshold — gold, 3px */}
-        <div aria-hidden className="h-[3px] w-[72px] bg-gold" />
-        <p className="mt-10 max-w-[1040px] text-lg leading-[1.5] font-medium sm:text-2xl">
+        <div aria-hidden data-people-entrance="rule" className="h-[3px] w-[72px] bg-gold" />
+        <p data-people-entrance="advice" className="mt-10 max-w-[1040px] text-lg leading-[1.5] font-medium sm:text-2xl">
           {culturalAdvice}
         </p>
+      </div>
+      <div aria-hidden data-people-entrance="cue" className="absolute inset-x-0 bottom-10 flex justify-center lg:bottom-14">
+        <span className="callout scroll-cue block text-scroll text-gold">&darr; Scroll</span>
       </div>
     </section>
   );
@@ -224,7 +233,11 @@ export function OurPeopleHero() {
     <section data-people-scene="hero" data-nav-hero className="relative bg-charcoal text-canvas">
       {/* The photograph. 1150 of the frame's 1890, hard-cut into charcoal at
           its foot — the scrim carries the cut so it does not read as a seam. */}
-      <div data-people-hero-frame className="relative h-[62svh] w-full overflow-hidden sm:h-[86svh] lg:h-[128svh]">
+      {/* User direction, 14 September 2026: at least a full screen below lg.
+          The photograph now fades in on a held screen instead of scrolling
+          up, and at 62svh / 86svh that screen showed a band of empty charcoal
+          under it on phones and tablets. */}
+      <div data-people-hero-frame className="relative h-svh w-full overflow-hidden lg:h-[128svh]">
         <div
           data-media
           data-motion="frame"
@@ -233,7 +246,7 @@ export function OurPeopleHero() {
           <MediaOrField
             src={HERO?.src ?? null}
             alt="Rangers walking burnt Country"
-            sizes="(min-width: 1024px) max(100vw, 171svh), (min-width: 640px) max(100vw, 115svh), max(100vw, 83svh)"
+            sizes="(min-width: 1024px) max(100vw, 171svh), max(100vw, 134svh)"
             quality={PHOTO_QUALITY}
             priority
             fieldClass="bg-charcoal"
@@ -390,8 +403,13 @@ export function SuzanneTestimony() {
           ))}
         </div>
 
-        {/* The testimony. Sits low on purpose — a screen of canvas above it. */}
-        <blockquote data-people-testimony className="mt-24 lg:mt-32">
+        {/* The testimony. User direction, 14 September 2026: it takes a whole
+            screen of its own, so the reader holds on her words alone with no
+            neighbouring ground (the roasted wave below) in frame. */}
+        {/* The quotation's screen also carries the editorial note (user
+            direction, 14 September 2026), so both are read together. */}
+        <div data-people-testimony-screen className="mt-24 flex min-h-svh flex-col justify-center lg:mt-32">
+        <blockquote data-people-testimony>
           <span
             aria-hidden
             className="headline block text-[5rem] leading-[1] text-ochre/30 sm:text-[7.5rem] lg:text-[8rem]"
@@ -416,10 +434,11 @@ export function SuzanneTestimony() {
             the only record that this profile is unfinished. */}
         <EditorialNote
           label="Editorial note — not for publication"
-          className="mt-20 max-w-[900px]"
+          className="mt-16 max-w-[900px]"
         >
           <p>{suzanneProfile.pending}</p>
         </EditorialNote>
+        </div>
       </div>
 
     </section>
@@ -441,7 +460,7 @@ export function HerDecision() {
   return (
     <section
       data-people-scene="decision"
-      className="relative flex min-h-[92svh] items-center lg:min-h-[140svh] bg-roasted text-canvas"
+      className="relative flex min-h-svh items-center lg:min-h-[140svh] bg-roasted text-canvas"
     >
       <WaveDivider ground="var(--color-roasted)" />
       {/* The rings are pulled outside the column and are far wider than a
@@ -453,7 +472,7 @@ export function HerDecision() {
 
           ⚠ THE WAVE STAYS OUTSIDE IT. WaveDivider is pulled entirely above
           its own box; inside an overflow-hidden parent it renders as nothing. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div aria-hidden data-people-decision-rings className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="a" className="-left-44 bottom-[8%] w-[36.7rem]" />
         <RingArtwork piece="b" className="top-[7%] left-[64.4%] w-[56.25rem]" />
       </div>
@@ -609,8 +628,12 @@ export function TheGathering() {
   return (
     <section
       data-people-scene="team"
-      className="relative overflow-hidden bg-canvas text-charcoal"
+      /* 14 Sep 2026: a canvas wave introduces the team over Who decides.
+         overflow-x-clip (not overflow-hidden) so the wave's overhang above
+         the section still renders. */
+      className="relative overflow-x-clip bg-canvas text-charcoal"
     >
+      <WaveDivider ground="var(--color-canvas)" />
       <div className={`${COLUMN} py-16 lg:py-24`}>
         <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
           The team
@@ -777,20 +800,28 @@ export function Governance() {
           className="mt-6 flex flex-wrap items-baseline gap-x-24 gap-y-6"
         >
           <div>
-            <p
-              className="headline text-6xl leading-[1.07] text-gold sm:text-[6.875rem]"
-            >
-              80%
+<p className="headline grid text-6xl leading-[1.07] text-gold sm:text-[6.875rem]">
+              {/* User direction, 14 September 2026: the figure counts up with
+                  the ratio bar (our-people.ts). The invisible copy holds the
+                  box so the row never reflows; the live copy is decorative
+                  and the sr-only text carries the fact. */}
+              <span aria-hidden className="invisible col-start-1 row-start-1">80%</span>
+              <span aria-hidden data-people-count="80" className="col-start-1 row-start-1">80%</span>
+              <span className="sr-only">80%</span>
             </p>
             <p className="mt-2 text-xl leading-[1.5] font-medium text-canvas/75">
               Aboriginal
             </p>
           </div>
           <div>
-            <p
-              className="headline text-6xl leading-[1.07] text-ochre sm:text-[6.875rem]"
-            >
-              20%
+<p className="headline grid text-6xl leading-[1.07] text-ochre sm:text-[6.875rem]">
+              {/* User direction, 14 September 2026: the figure counts up with
+                  the ratio bar (our-people.ts). The invisible copy holds the
+                  box so the row never reflows; the live copy is decorative
+                  and the sr-only text carries the fact. */}
+              <span aria-hidden className="invisible col-start-1 row-start-1">20%</span>
+              <span aria-hidden data-people-count="20" className="col-start-1 row-start-1">20%</span>
+              <span className="sr-only">20%</span>
             </p>
             <p className="mt-2 text-xl leading-[1.5] font-medium text-canvas/75">
               non-Aboriginal
