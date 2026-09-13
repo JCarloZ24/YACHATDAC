@@ -25,6 +25,7 @@ import { PullQuote } from "@/components/ui/PullQuote";
 import { WordEmphasis } from "@/components/lofi/ui/WordEmphasis";
 import { SharedMorph } from "@/components/transitions/SharedMorph";
 import { WaveDivider } from "@/components/ui/Furniture";
+import { GalaxyField } from "./GalaxyField";
 
 /* COVER CROPS NEED HEIGHT, NOT JUST WIDTH.
    Every photograph in the library is ~1.9:1 landscape (3840x2024). `sizes`
@@ -2615,6 +2616,8 @@ export function WattanuriBand() {
           aria-hidden
           className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.25] to-black/[0.68]"
         />
+        {/* The sky answers a fine pointer — GalaxyField.tsx (13 Sep 2026). */}
+        <GalaxyField />
         </div>
         {/* pb clears the footer's burnt crest (13.9vw), which rides the foot of
           this photograph — the page root is pulled up under it. */}

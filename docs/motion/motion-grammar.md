@@ -8,11 +8,12 @@ separate route/article covers described below.
 | --- | --- | --- | --- | --- |
 | **the page is ready**, every public route | One charcoal cover shows the supplied wordmark and dot sweep, then “You're viewing” and the destination name. Runs on link navigation, browser history, direct arrival, refresh and hard refresh. Waits for fonts, opening image decoding, video frame readiness, the motion build and stable layout; lower-page lazy media loads as needed. Entrances wait until the cover clears. | 200ms dim on navigation; readiness-paced count; 700ms name dwell; 260ms fade out. 12s readiness ceiling, Escape/Tab release and CSS backstop. Reduced motion retains a static readiness cover without animated transitions. | August, 11 September 2026 | `RouteLoader`, `PageLoader`; owned CSS transition, no cross-route GSAP timeline |
 
-*Last updated: 13 September 2026*
+*Last updated: 14 September 2026*
 
 | Home closing-pattern hover — 13 September 2026 | Behaviour | Timing | Authority | Implementation |
 | --- | --- | --- | --- | --- |
 | **what radiates**, Home closing ground | The two supplied spirals follow a fine mouse pointer with opposing shallow drift and rotation behind the stationary closing line and offer. Respond only after the scroll entrance seats the pattern; return to neutral on pointer exit, blur or leaving the beat. No automatic spin, distortion or new artwork. | Transform only; ±32px / ±24px opposing travel and ±3° / ±4° turn, power3.out with 0.8s horizontal / 1.05s vertical settling. Touch, reduced motion and static fallback stay still. | User screenshot of “A way forward” and hover request, 13 September 2026 | `homePatternDrift`, controller-owned `home-patterns.ts`; independent inner wrappers preserve the existing scroll transform |
+| **the sky answers the hand**, Truth Wattanuri floor | The galaxy photograph is redrawn in Three.js and swells gently outward under a fine pointer, so its own stars (the blue Pleiades included) part and brighten; generated stars near the cursor do the same. The rest of the field holds still; a slow twinkle otherwise. Copy does not move. Country bucket (sky only, R10), so the plate may be warped. | 150px Gaussian lens, 26px swell, strength eased 0.08/frame; 170px star reach, 18px parting. Touch, reduced motion, no WebGL and off-screen stay still. | User request, 13 September 2026 | `GalaxyField.tsx` (render loop, not a controller timeline) |
 
 | Home galactic twilight overlap — 13 September 2026 | Behaviour | Timing | Authority | Implementation |
 | --- | --- | --- | --- | --- |
