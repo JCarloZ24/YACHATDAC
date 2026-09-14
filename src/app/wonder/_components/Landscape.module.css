@@ -84,3 +84,53 @@
     inset: -5%;
   }
 }
+
+/* -------------------------------------------------------------------------
+   OUT HERE — the stepped read, 14 September 2026 (user direction).
+   Grammar: "accumulating", Wonder Out here.
+
+   Scoped to [data-wonder="out-here"] throughout: .section, .screen and
+   .stack are all shared with Turraburra (§05), which keeps its 80vh still
+   hold and its ordinary list.
+   ------------------------------------------------------------------------- */
+
+/* The stack is a GRID, not absolute positioning. Every item sits in the same
+   cell, so the box is always as tall as the TALLEST item — point 04 runs to
+   two sentences — and the block never resizes as the steps turn. Absolute
+   children would collapse the container to zero height instead, and the
+   copy below the rule would walk up the screen on every step.
+
+   At rest this rule does nothing: the class is only a grid container once
+   its children are placed, and they are placed in the motion block below. */
+.stack {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The track is as long as the content asks for. --out-here-steps comes off
+     the section element from points.length, so a sixth point from the CMS
+     buys its own 70svh instead of being crammed into the fifth's. The 100svh
+     is the screen itself; the rest is what the sticky screen holds through. */
+  .scene[data-wonder="out-here"][data-landscape-hold] .section {
+    min-height: calc(100svh + var(--out-here-steps, 5) * 70svh);
+  }
+
+  /* Stacked ONLY once the module has measured and taken ownership. Until
+     data-steps lands, the served markup is an ordinary flowing list — which
+     is the no-JS state, and the state a screen reader reads. */
+  .scene[data-wonder="out-here"] .section[data-steps] .stack {
+    display: grid;
+  }
+
+  .scene[data-wonder="out-here"] .section[data-steps] .stack > * {
+    grid-area: 1 / 1;
+  }
+
+  /* The list keeps its semantics and loses its bullets: the steps are read one
+     at a time, and a lone marker on a single visible item reads as a fragment
+     of a list rather than as a statement. */
+  .scene[data-wonder="out-here"] .section[data-steps] ul.stack {
+    list-style: none;
+    padding-left: 0;
+  }
+}

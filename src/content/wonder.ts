@@ -393,15 +393,52 @@ export const whereYouStay = {
  * there is Wi-Fi at camp and in the vehicles. A visitor planning around the
  * old line would have made the wrong call about being reachable.
  */
+/**
+ * ⚠ HI-FI COPY, 14 September 2026 — the `label` on each point.
+ *
+ * The five `text` strings are the draft's, unchanged and still D5-governed.
+ * The `label` is NOT in any draft and NOT drawn in any frame: §09 now reads one
+ * point at a time (grammar: "accumulating", Wonder Out here) and each step needs
+ * a word at display size to say what the reader is about to be told.
+ *
+ * They are deliberately navigation labels rather than statements about Country —
+ * one plain noun naming the subject of the sentence beneath it, claiming nothing
+ * the draft does not already claim. Still new words on a public page, so they go
+ * to Steve and August as a change request under F8, and land in the draft and in
+ * docs/terminology.md in the same pass if they are kept.
+ *
+ * Single words on purpose: the step sets them at 96px and the copy column is
+ * half of 1440. "Distance" fits; "The distances out here" does not.
+ *
+ * `label` is OPTIONAL, per D12 — copy is CMS-editable at launch, so an editor
+ * adding a sixth point must not break the section. The component falls back to
+ * the step's numeral when a label is absent, and takes the step count from
+ * `points.length` rather than a constant.
+ */
 export const whatItIsLike = {
   title: "What it is like out here",
   points: [
-    "Red earth, spinifex and kangaroos along the track at dusk.",
-    "Hot days and winter nights that can get close to freezing.",
-    "May to September is usually the most comfortable time to visit.",
-    "Mobile service is mostly out of range, with only a few spots where signal comes through. Wi-Fi is available around camp and in our vehicles when needed.",
-    "Distances are long, so fuel up before leaving Aramac.",
-  ],
+    {
+      label: "Ground",
+      text: "Red earth, spinifex and kangaroos along the track at dusk.",
+    },
+    {
+      label: "Weather",
+      text: "Hot days and winter nights that can get close to freezing.",
+    },
+    {
+      label: "Season",
+      text: "May to September is usually the most comfortable time to visit.",
+    },
+    {
+      label: "Signal",
+      text: "Mobile service is mostly out of range, with only a few spots where signal comes through. Wi-Fi is available around camp and in our vehicles when needed.",
+    },
+    {
+      label: "Distance",
+      text: "Distances are long, so fuel up before leaving Aramac.",
+    },
+  ] as ReadonlyArray<{ label?: string; text: string }>,
   image: "Standing on top of the escarpment looking out over woodland.",
 } as const;
 

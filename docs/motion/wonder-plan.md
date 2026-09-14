@@ -295,12 +295,71 @@ on user report**: drawn as a translucent evergreen band rising up the foot of
 the plate, what it actually read as was a green film over the sunset. A wipe
 belongs between two grounds, and there is no join here for it to happen at.
 
-Latest user direction, 9 September 2026: reuse §05's exact landscape module,
-markup helpers and animation. The sunset fills the viewport, the heading and
-list hold in the same reading position for 80vh of additional scroll, and mouse
-movement adds the same tilt and drift. The following Hosts wave enters only
-after that hold releases. Reduced motion, touch and tall-content fallbacks
-match §05. **The page has no `ground` sweep.**
+9 September 2026: reuse §05's exact landscape module, markup helpers and
+animation. The sunset fills the viewport, the heading and list hold in the same
+reading position for 80vh of additional scroll, and mouse movement adds the same
+tilt and drift. The following Hosts wave enters only after that hold releases.
+Reduced motion, touch and tall-content fallbacks match §05. **The page has no
+`ground` sweep.**
+
+**Latest user direction, 14 September 2026 — the hold becomes a stepped read.**
+The landscape half of the above is unchanged and still §05's: same module, same
+approach, same tilt and drift, same seat. What changed is what the 80vh was for.
+It was the page's flattest screen — five statements of equal weight, read all at
+once, over a photograph that had just done all the work of arriving — so the
+five conditions are now turned over ONE AT A TIME, 70vh each, 350vh in all.
+
+Each step carries its own topic word at display size (Wonder's local `H1`, not
+`text-h1` — this page is frame-literal) and one statement at lede size. A gold
+rule fills left to right across the whole track: 450vh is long enough that the
+reader is owed an answer to "how much is left".
+
+**The section heading is an eyebrow.** Corrected on user report the same day:
+first built at `H2`, it sat one size away from the 96px display word and the two
+read as competing headlines rather than as a label over a word. It now takes
+Wonder's local `H6` in gold and shares a single quiet line with the step index —
+`What it is like out here · 02 / 05` — which is also how §05 THE SPRING sets its
+own header, `The spring · Stream 02`. It is still an `<h2>` in the outline; only
+its size changed. The two sit adjacent rather than at opposite ends of the
+column: at 1440 the copy column is ~590px and `justify-between` left the count
+stranded with nothing between the pair to read.
+
+The layout is Living Work §05 THE SPRING's and the mechanism deliberately is
+not. The Spring's counter auto-runs 1→8 in about two seconds on one pinned
+scroll; here the reader drives it, and the display element is a word rather than
+a numeral, because a bare 01–05 counts nothing but list position. `splitFlap`
+stays on Living Work. This page's verb is ARRIVES and the steps arrive.
+
+Loud channel moves from **media** to **type**, which also fixes the run either
+side of it: §08 media, §09 type, §10 none, §11 media, instead of media twice
+over. The approach finishes before the first step, so only one channel is ever
+loud at a time.
+
+Not pinned — the hold is still the CSS module's sticky screen, and the one pin
+belongs to Living Work §05. The served markup is still the ordinary list, which
+is what reduced motion, no JavaScript and a screen reader get; stacking is
+applied by the module. Stepped on phones too, by user direction.
+
+**The ground changes with the step, 14 September 2026.** Each condition gets
+its own photograph, chosen to answer its own sentence rather than to look well:
+the red-earth road for "red earth… along the track", the treeline at last light
+for "nights close to freezing", wattle in full bloom for the season, walking out
+through waist-high grass for "out of range", a long track with one vehicle for
+"distances are long". `dissolve` and nothing else — the one media effect the
+grammar permits on held material — so the screen stays loud in TYPE.
+
+Three are new derivatives of unpublished batch-2 masters. Two are reuses, and
+deliberately: the library has no free frame for either sentence, and forcing one
+would have put a guided-walk photograph behind a sentence about temperature.
+`wonder-afterdark` is the only dusk frame on the project outside batch 3, and
+batch 3 is fire — which the photo index reserves for copy about caring for
+Country, never weather or atmosphere.
+
+⚠ Two frames carry children, unidentifiable, flagged in `wonder-media.ts` and
+going to review with the labels below.
+
+⚠ The five topic words are new copy with no draft and no frame behind them. See
+the note on `whatItIsLike` in `src/content/wonder.ts`.
 
 ### 10 · Your hosts — the pointer answers
 

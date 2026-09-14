@@ -40,6 +40,46 @@ carry a caption requirement on their entries.
 
 ---
 
+## 4 · This index does not say what is already ON the site — and one whole drop is a re-export
+
+Added 14 September 2026, building Wonder §09's stepped read, where the brief was
+five frames with nothing reused.
+
+**`public/media/library/wonder/*` is not a separate shoot.** `wonder-media.ts`
+describes it as "the Wonder batch, Downloads/Wonder Assets, 8 Sep 2026", which
+reads like new material. It is not: most of it is **batch 2 re-exported under
+new names and regraded** (contrast ×1.10, brightness ×0.92, saturation ×1.28).
+`wonder-stay-tents-clearing` IS `March22-8923`. `wonder-outhere-lookout` IS
+`March22-0257`. `wonder-turraburra` IS `378A7604_1.91.1`. Picking "an unused
+batch-2 frame" by filename will silently duplicate something already on a page.
+
+**`kit.ts` records a `master:` field; `*-media.ts` does not.** So grepping for a
+frame id finds only about half of what is actually published, and the grade
+defeats a naive pixel comparison.
+
+**How to check properly.** Compare a *greyscale, z-normalised* signature — that
+is invariant to the regrade, which a raw RGB comparison is not. A confirmed
+identical pair scores ~0.08; unrelated frames score above 1.0. Audited that way
+on 14 September 2026: **70 of the 133 masters are already published.**
+
+What that leaves, for anyone hunting a fresh frame:
+
+- **Batch 1 is exhausted.** Two frames unpublished, both portraits
+  (`1.60.2`, `1.76.7`), and `1.60.2` has a flare across the face.
+- **Batch 2 has ~13 usable landscape frames left** once rock art, ceremony and
+  identifiable children are excluded. Three went to Wonder §09 on 14 Sep 2026:
+  `March22-0267` → `wonder-red-road-aerial.webp`,
+  `March22-0241` → `wonder-wattle-bloom-gully.webp`,
+  `March22-2488` → `wonder-walking-seed-grass.webp`.
+- **Batch 3 is almost entirely unpublished and almost entirely unusable outside
+  fire copy**, per rule 3 above. It is not a reserve of general Country frames.
+
+**The practical consequence.** There is no night or dusk frame anywhere on this
+project outside batch 3. `wonder-afterdark` (the supplied `003A5805`) is the
+only one, which is why it is reused rather than replaced when copy needs dark.
+
+---
+
 ## 🔴 Do not use without clearance
 
 Rock art — painted figures, hand stencils, or engravings visible in frame:

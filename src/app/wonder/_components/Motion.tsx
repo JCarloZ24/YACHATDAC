@@ -16,6 +16,7 @@ import {
   hostsCopy,
   itinerary,
   holdAtFoot,
+  outHereTrack,
   sleepCards,
 } from "@/lib/motion/wonder";
 import { wonderLandscape } from "@/lib/motion/wonder-landscape";
@@ -69,7 +70,8 @@ const RAIL_HOOKS = {
  *   §06 itinerary     transition  —       the manual accordion, day 1 open; entrances only; holds at its foot under §07 (14 Sep 2026)
  *   §07 before        none        100vh   the hold, and one beat on the CTA
  *   §08 sleep         media       120vh   the copy enters; the carousel advances itself
- *   §09 out here      media       180vh   same landscape + copy hold and mouse drift
+ *   §09 out here      type        450vh   the landscape seats, then five conditions
+ *                                         step one per 70vh of scroll
  *   §10 hosts         none        100vh   the copy arrives, the faces hold
  *   §11 stories       media       —       the same pass again; holds at its foot under §12
  *   §12 close         none        100vh   the second CTA, quietest of all
@@ -155,6 +157,13 @@ export function WonderMotion() {
       // scroller, so nothing about the rail changed. Grammar: "what drifts",
       // Where you stay rail (14 Sep 2026).
       wire("sleep", (el) => createStayMarquee(el));
+      // Two modules on one scene, and the ORDER matters for the first frame:
+      // the track stacks the list, and wonderLandscape then measures a screen
+      // that fits the viewport and engages its sticky hold. Wired the other
+      // way round the first measurement sees five points in flow, decides the
+      // content is too tall to hold, and waits for the ResizeObserver to
+      // correct it.
+      wire("out-here-track", (el) => outHereTrack(el));
       wire("out-here", wonderLandscape);
       wire("hosts", (el) => hostsCopy(el, 100));
       // `endAtRootFoot`: From Country holds under §12, and the pass must not

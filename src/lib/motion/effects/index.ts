@@ -176,5 +176,6 @@ export type EffectName =
   // accumulating
   | "stepCounter"
   | "splitFlap"
+  | "stepArrive"
   | "vesselFill"
   | "flattenReveal";

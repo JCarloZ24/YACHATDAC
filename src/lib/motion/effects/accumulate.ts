@@ -187,6 +187,82 @@ export function registerAccumulate(): void {
     },
   });
 
+  /* --- the stepped read --------------------------------------------------
+     Grammar: "accumulating", Wonder Out here (user direction 14 September 2026)
+     — and the Variants table's loud column beside `stepCounter`.
+
+     `stepCounter` crossfades its steps SIMULTANEOUSLY: both tweens sit at the
+     same position `i`, so halfway through the turn the outgoing and incoming
+     steps are each at half opacity on top of one another. For one numeral that
+     is invisible — a glyph is small, and the swap reads as a swap. For a
+     display word and a paragraph of text it is mud: two sentences overlapping
+     at 50% cannot be read, and the reader spends the middle of every step
+     waiting for the page to make up its mind.
+
+     So this one SEQUENCES. The outgoing statement fades and lifts away first;
+     only then does the incoming one arrive, and it arrives on `arrive`'s own
+     vocabulary — 16px and a fade on `country` — because the page this belongs
+     to is Wonder and Wonder's verb is ARRIVES. The gap between the two halves
+     is what makes a long statement legible at every scroll position.
+
+     Steps declare themselves with data-step, exactly as `stepCounter` and
+     `splitFlap` do, so the three are interchangeable at the call site.
+
+     MEASURED, Wonder §09 at a 0.3-unit turn (14 September 2026): the outgoing
+     statement is at 1.00 / 0.42 / 0.06 / 0.01 / 0.00 across the first half and
+     the incoming one does not start until the second, so at no scroll position
+     are two sentences on screen together. The cost is a gap of roughly 7vh
+     where neither is — `country` is front-loaded, so the outgoing is
+     effectively gone well before the halfway mark. That gap is kept: between
+     two unrelated statements a clean cut reads as a page turning, and closing
+     it means overlapping the halves, which is the mud this effect exists to
+     avoid.
+
+     The rest state is the FIRST step, not the last. Living Work §05 rests on
+     day 08 because the copy beside it describes the finished spring; a reading
+     track rests at its beginning, because the reader has not read it yet.
+
+     Transitions land on integer positions so the composition can map one step
+     to one timeline unit and know where the holds are. Each half takes half
+     the configured duration, back to back, so a scrubbed reverse runs the read
+     backwards through the same states. */
+  gsap.registerEffect({
+    name: "stepArrive",
+    extendTimeline: true,
+    defaults: { duration: DUR.medium, ease: EASE.country, y: 16 },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      assertEase("stepArrive", config.ease);
+      const steps = gsap.utils.toArray<HTMLElement>(targets);
+      const duration = config.duration as number;
+      const ease = config.ease as string;
+      const y = config.y as number;
+      const half = duration / 2;
+      const tl = gsap.timeline();
+
+      // `autoAlpha`, not `opacity`: a step at zero must also be out of the
+      // hit-testing and out of the accessibility tree's rendered box while the
+      // stack sits on top of itself. The markup holds every step visible and in
+      // flow, so this is the first thing that takes them out of it.
+      gsap.set(steps, { autoAlpha: 0, y: 0 });
+      gsap.set(steps[0], { autoAlpha: 1 });
+
+      steps.slice(1).forEach((step, i) => {
+        // Out: away in the direction it came from, so the two halves read as
+        // one movement rather than as a fade followed by an unrelated rise.
+        tl.to(steps[i], { autoAlpha: 0, y: -y, duration: half, ease }, i);
+        // In: `immediateRender: false` or the fromTo would apply its start
+        // state at build time and blank the resting first step.
+        tl.fromTo(
+          step,
+          { autoAlpha: 0, y },
+          { autoAlpha: 1, y: 0, duration: half, ease, immediateRender: false },
+          i + half,
+        );
+      });
+      return tl;
+    },
+  });
+
   /* --- flatten to reveal -------------------------------------------------
      Grammar: "accumulating", disclosure cut · hi-fi §08.
 

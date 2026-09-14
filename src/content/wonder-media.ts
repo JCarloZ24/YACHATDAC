@@ -496,6 +496,84 @@ export const whereYouStayMedia: MediaSlot[] = [
  * `bucket: "cultural-site"` here and nothing else — MediaTile enforces the
  * grade. Raised with August 10 Sep 2026.
  */
+/**
+ * OUT HERE — the stepped read's five grounds, 14 September 2026 (user direction).
+ *
+ * §09 now turns its five conditions over one at a time, and the photograph
+ * behind them hands over with each step (grammar: "time handing over" ·
+ * `dissolve`, the one media effect that is correct on held material — it never
+ * deforms a plane, it hands one whole frame to another).
+ *
+ * EACH FRAME ANSWERS ITS OWN SENTENCE. That was the brief: not five nice
+ * pictures, five pictures that say what the words say.
+ *
+ * ORIGINS, because the binaries are not in git (CLAUDE.md) — masters live in
+ * `brand/photography/`, described frame by frame in `brand/PHOTO-INDEX.md`:
+ *
+ *   red-road-aerial      ← batch 2 `March22-0267`  (new derivative, 14 Sep 2026)
+ *   afterdark            ← supplied `003A5805`, August, 10 Sep 2026
+ *   wattle-bloom-gully   ← batch 2 `March22-0241`  (new derivative, 14 Sep 2026)
+ *   walking-seed-grass   ← batch 2 `March22-2488`  (new derivative, 14 Sep 2026)
+ *   about-road           ← batch 2 `March22-0261`, already published on About
+ *
+ * ⚠ TWO OF THE FIVE ARE REUSES, and deliberately. The library has no free
+ * frame for either sentence and forcing one would have put a guided-walk
+ * photograph behind a sentence about temperature. `wonder-afterdark` is the
+ * ONLY dusk frame on the project outside batch 3, and batch 3 is fire — which
+ * the photo index reserves for copy about caring for Country, never weather or
+ * atmosphere. `about-road` is a long track with one vehicle on it, which is
+ * exactly what "distances are long" looks like. Audited 14 Sep 2026 by
+ * perceptual match of all 133 masters against all 126 published derivatives;
+ * batch 1 has two unpublished frames left and both are portraits.
+ *
+ * ⚠ CHILDREN APPEAR in `wattle-bloom-gully` (two, overhead, specks) and in
+ * `walking-seed-grass` (two, backs to camera, one nearly hidden by the grass).
+ * `PHOTO-INDEX.md` clears both as "present but unidentifiable", and the
+ * dissolve never moves the image plane so no face is ever animated — but the
+ * index assessed them at card size and these run full-bleed. Raised with Steve
+ * and August alongside the step labels rather than settled here.
+ *
+ * All five are `country`, so all five grade `full`. Nothing here is a cultural
+ * site, no rock art is in any frame, and no ceremony is in progress.
+ */
+export const outHereGrounds: readonly MediaSlot[] = [
+  {
+    id: "wonder-out-here-ground",
+    bucket: "country",
+    expects: "Aerial straight down on a vivid red-earth road, one vehicle, green scrub below",
+    src: `${WONDER}/wonder-red-road-aerial.webp`,
+    tone: "burnt",
+  },
+  {
+    id: "wonder-out-here-weather",
+    bucket: "country",
+    expects: "Last light behind the treeline, the sun breaking through a gum",
+    src: `${WONDER}/wonder-afterdark.webp`,
+    tone: "midnight",
+  },
+  {
+    id: "wonder-out-here-season",
+    bucket: "country",
+    expects: "Wattle in full yellow bloom over a gully, a faint bush track through it",
+    src: `${WONDER}/wonder-wattle-bloom-gully.webp`,
+    tone: "eucalyptus",
+  },
+  {
+    id: "wonder-out-here-signal",
+    bucket: "country",
+    expects: "Walking away through waist-high seeding grass under a big cloudy sky",
+    src: `${WONDER}/wonder-walking-seed-grass.webp`,
+    tone: "roasted",
+  },
+  {
+    id: "wonder-out-here-distance",
+    bucket: "country",
+    expects: "Aerial down a long two-wheel track through low bushland, one vehicle at the end",
+    src: `${LIB}/about/about-road.webp`,
+    tone: "evergreen",
+  },
+];
+
 export const whatItIsLikeSlot: MediaSlot = {
   id: "wonder-out-here",
   bucket: "country",

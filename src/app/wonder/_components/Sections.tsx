@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { MediaSlot } from "@/content/lofi/media";
 import {
   beforeYouCome,
@@ -21,7 +21,7 @@ import {
   hostsSlot,
   stayStageMedia,
   turraburraSlot,
-  whatItIsLikeSlot,
+  outHereGrounds,
   whereYouStayMedia,
   wonderHeroSlot,
   wonderHeroVideo,
@@ -756,18 +756,55 @@ export function WonderCountry() {
   );
 }
 
-/** Shared photographic layers and legibility scrim, F7 / X5, 9 Sep 2026. */
-function LandscapeBackdrop({ slot }: { slot: MediaSlot }) {
+/** Shared photographic layers and legibility scrim, F7 / X5, 9 Sep 2026.
+ *
+ * `slot` takes an ARRAY for Out here, 14 September 2026: its ground hands over
+ * once per step, so the plates are stacked and cross-faded (`dissolve` — the
+ * one media effect correct on held material). Turraburra passes a single slot
+ * and takes the original single-plate branch below, unchanged.
+ *
+ * THE SCRIM IS THE SHARED ONE, and that was measured rather than assumed
+ * (14 September 2026). Five grounds running from a near-black treeline to a
+ * bright midday sky looked like they must need a stronger gradient than one
+ * graded photograph, so Out here was built with 90/50/25. Sampling the actual
+ * rendered pixels behind the type at every step says otherwise: the shared
+ * 80/30/10 already returns 8.2:1 at its worst, against the 4.5:1 AA needs —
+ * because the copy sits at the FOOT of the frame, where the gradient is at 80%
+ * whatever the photograph is doing higher up. The stronger scrim bought about
+ * 2.7:1 nobody needed and cost every picture its light, so it is gone.
+ */
+function LandscapeBackdrop({ slot }: { slot: MediaSlot | readonly MediaSlot[] }) {
+  const plates = Array.isArray(slot) ? slot : null;
   return (
     <div className={landscapeStyles.backdrop}>
       <div data-landscape-viewport className={landscapeStyles.viewport}>
         <div data-landscape-approach className={landscapeStyles.approach}>
-          <div
-            data-landscape-image
-            data-motion="full"
-            className={landscapeStyles.image}
-          >
-            <Slot slot={slot} sizes="(min-width: 1024px) 110vw, 300vw" />
+          <div data-landscape-image data-motion="full" className={landscapeStyles.image}>
+            {plates ? (
+              plates.map((plate, i) => (
+                /* Every plate but the first rests at opacity 0, so no-JS and
+                   reduced motion show ONE photograph rather than a pile. The
+                   approach and the pointer gyroscope both act on the wrapper
+                   above, so the stack travels together and no image plane is
+                   ever deformed independently.
+
+                   aria-hidden: one backdrop earns its alt text, five do not —
+                   a reader would hear five landscape descriptions before
+                   reaching the five sentences that are the actual content.
+                   Each frame's description still lives in `expects` in
+                   wonder-media.ts, which is where the sourcing brief belongs. */
+                <div
+                  key={plate.id}
+                  aria-hidden
+                  data-ground
+                  className={`absolute inset-0 ${i > 0 ? "opacity-0" : ""}`}
+                >
+                  <Slot slot={plate} sizes="(min-width: 1024px) 110vw, 300vw" />
+                </div>
+              ))
+            ) : (
+              <Slot slot={slot as MediaSlot} sizes="(min-width: 1024px) 110vw, 300vw" />
+            )}
           </div>
         </div>
         <div
@@ -779,24 +816,47 @@ function LandscapeBackdrop({ slot }: { slot: MediaSlot }) {
   );
 }
 
-/** Same reading position and 80vh hold for both landscapes. D5: words remain
- * supplied by the content module; only their container sticks (9 Sep 2026). */
+/** Same reading position and hold for both landscapes. D5: words remain
+ * supplied by the content module; only their container sticks (9 Sep 2026).
+ *
+ * `titleClassName` and `aside` are Out here's, added 14 September 2026: its
+ * heading is set as an EYEBROW rather than an H2, because the section now
+ * carries a display word of its own and two headlines one above the other
+ * compete instead of ranking (user report). Turraburra passes neither and its
+ * markup is unchanged — with no `aside` the heading renders exactly as before.
+ *
+ * The heading stays an `<h2>` whatever it is set in. It is still the section's
+ * heading in the document outline; only its size changed. */
 function LandscapeScreen({
   title,
+  titleClassName = H2,
+  aside,
   children,
 }: {
   title: string;
+  titleClassName?: string;
+  aside?: ReactNode;
   children: ReactNode;
 }) {
   return (
     <div data-landscape-screen className={landscapeStyles.screen}>
       <Container className="flex flex-col lg:flex-row lg:items-start lg:gap-20">
         <div aria-hidden className="hidden min-w-0 flex-1 lg:block" />
-        <div
-          data-plate-copy
-          className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6"
-        >
-          <h2 className={H2}>{title}</h2>
+        <div data-plate-copy className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
+          {aside ? (
+            /* One header line, the way §05 THE SPRING sets "The spring ·
+               Stream 02" — the name and the position in one quiet string, with
+               the display word beneath them. Adjacent rather than pushed to
+               opposite ends of the column: at 1440 this column is ~590px, and
+               `justify-between` left the count stranded on the far side with
+               nothing between the two to read as a pair. */
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h2 className={titleClassName}>{title}</h2>
+              {aside}
+            </div>
+          ) : (
+            <h2 className={titleClassName}>{title}</h2>
+          )}
           {children}
         </div>
       </Container>
@@ -1142,21 +1202,124 @@ export function WonderWhereYouStay() {
         full-bleed, copy right at 1440 and bottom-left on the phone
    ------------------------------------------------------------------------- */
 
+/**
+ * THE STEPPED READ, 14 September 2026 (user direction).
+ *
+ * Grammar: "accumulating", Wonder Out here. The landscape seats exactly as it
+ * does behind Turraburra — `landscapeApproach` spends the media channel before
+ * this starts — and then the five conditions are read ONE AT A TIME, 70vh of
+ * scroll each. This screen is loud in TYPE; the photograph never moves again.
+ *
+ * Layout is Living Work §05 THE SPRING's, term for term, and deliberately NOT
+ * its mechanism (see docs/motion/motion-grammar.md):
+ *
+ *   The Spring            here            why
+ *   "Day" eyebrow    →    "02 / 05"       the unit label and the count collapse
+ *   08 at 10vw       →    the topic word  a bare 01-05 counts nothing but list
+ *                                         position; the word says something
+ *   static gold rule →    a filling rule  450vh is long enough that the reader
+ *                                         is owed a "how much is left"
+ *   "Of eight"       →    dropped         "/ 05" already says it
+ *   the release line →    the point        the changing statement IS the payoff
+ *
+ * ⚠ THE POINT TEXT IS NOT A HEADLINE, and this is the one place the Spring
+ * template must not be copied. Its coda is one short sentence and can carry
+ * text-h3. Point 04 here is two sentences and ~150 characters; at display size
+ * it is a wall. Body face at lede size, which is what the list already used.
+ *
+ * ⚠ WHAT IS SERVED IS THE ORDINARY LIST. Every point is in the DOM, in order,
+ * in flow, with no step styling at all — that is the no-JavaScript state, the
+ * reduced-motion state, and what a screen reader reads however far the visual
+ * step track has got. `outHereTrack` sets data-steps on this section, and the
+ * CSS module stacks the items only then. Nothing here is hidden at rest.
+ */
 export function WonderOutHere() {
+  const points = whatItIsLike.points;
   return (
     <div data-wonder="out-here" className={landscapeStyles.scene}>
-      <LandscapeBackdrop slot={whatItIsLikeSlot} />
+      <LandscapeBackdrop slot={outHereGrounds} />
       {/* No wave at this join — the frame runs Where you sleep straight
           into the photo (the next Wave Line is 2033's at y=8265, which is
           Your hosts rising). */}
       <section
+        data-wonder="out-here-track"
         data-landscape-section
+        /* The step count reaches the CSS as a custom property rather than a
+           hardcoded height, so a sixth point from the CMS lengthens the track
+           instead of being read in the last step's 70vh. D12. */
+        style={{ "--out-here-steps": points.length } as CSSProperties}
         className={`${landscapeStyles.section} text-canvas`}
       >
-        <LandscapeScreen title={whatItIsLike.title}>
-          <ul className="text-base leading-normal font-medium lg:text-xl">
-            {whatItIsLike.points.map((point) => (
-              <li key={point}>· {point}</li>
+        <LandscapeScreen
+          title={whatItIsLike.title}
+          /* ⚠ NOT H2. Corrected 14 September 2026 on user report: at 56px the
+             heading sat a size away from the 96px display word and the two
+             read as competing headlines rather than as a label over a word.
+             H6 is Wonder's own eyebrow — the page is frame-literal, so this
+             takes the local constant rather than the generic `.eyebrow`
+             utility. It uppercases itself, so the content module keeps the
+             sentence case. Still an <h2>; only its size changed. */
+          titleClassName={`${H6} text-gold`}
+          /* The index rides the header line rather than sitting under it: two
+             quiet lines stacked read as two false starts before the word. */
+          aside={
+            <>
+              {/* A real element, not a ::before on the stack below. That <p> is
+                  a grid container once the steps are stacked, and a pseudo is
+                  a grid item too — but `.stack > *` does not match it, so it
+                  auto-placed into row 2 and the separator hung under the line
+                  instead of sitting in it. */}
+              <span aria-hidden className={`${H6} text-canvas/40`}>
+                &middot;
+              </span>
+              <p className={`${landscapeStyles.stack} ${H6} text-canvas/60`}>
+                {points.map((point, i) => (
+                  <span data-step-index key={point.text} aria-hidden>
+                    {String(i + 1).padStart(2, "0")} / {String(points.length).padStart(2, "0")}
+                  </span>
+                ))}
+              </p>
+            </>
+          }
+        >
+          {/* The display word — the only thing on this screen set large, now
+              that the heading is an eyebrow. Falls back to the numeral when a
+              CMS point arrives without a label. aria-hidden: it is a signpost
+              for the sentence below, and the sentence is the content.
+
+              No `mt-*` anywhere in this stack: the copy column is a flex
+              column with `gap-5 lg:gap-6`, so a margin here would be ADDED to
+              that gap rather than replacing it. That is what made the first
+              pass read airy. */}
+          <p className={`${landscapeStyles.stack} ${H1}`} aria-hidden>
+            {points.map((point, i) => (
+              <span data-step-word key={point.text}>
+                {point.label ?? String(i + 1).padStart(2, "0")}
+              </span>
+            ))}
+          </p>
+
+          {/* The rule fills left to right across the whole track. scaleX from
+              a left origin — a transform, never a width. Grammar: accumulating,
+              "a mark fills". */}
+          {/* `lg:mt-4` is not stray spacing on top of the column gap: at lg the
+              display word is `leading-none`, so its line box ends at the
+              baseline and the descenders of g/y hang outside it. Without this
+              the "g" of Signal sits on the rule. The phone keeps H1's 1.2
+              leading, which already carries the descender. */}
+          <span
+            aria-hidden
+            className="block h-px w-full origin-left bg-gold/80 lg:mt-4"
+            data-step-rule
+          />
+
+          {/* The points themselves. A real <ul> of real <li>, and the only
+              copy on the screen. */}
+          <ul className={`${landscapeStyles.stack} text-base leading-normal font-medium lg:text-xl`}>
+            {points.map((point) => (
+              <li data-step-point key={point.text}>
+                {point.text}
+              </li>
             ))}
           </ul>
         </LandscapeScreen>

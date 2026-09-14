@@ -344,3 +344,121 @@ export function gettingHereCopy(root: HTMLElement, span: number): MotionModule {
     cut: clearAll,
   });
 }
+
+/**
+ * §09 — WHAT IT IS LIKE OUT HERE. The stepped read.
+ *
+ * Grammar: "accumulating", Wonder Out here (user direction 14 September 2026).
+ * SUPERSEDES the 80vh still hold for this section only — Turraburra keeps it.
+ *
+ * The landscape is not this composition's business. `wonderLandscape` seats it
+ * over the 100vh approach and holds it with CSS stickiness, and it is finished
+ * before a single step turns. That is what lets this screen be loud in TYPE
+ * without breaking F7: the media channel was spent, in full, first.
+ *
+ * NOT PINNED. docs/design/README.md — "the page's one pin belongs to §05 The
+ * Spring and is not spent twice". The hold here is the CSS module's sticky
+ * screen; this composition only buys the scroll span the sticky holds through,
+ * and would fight the sticky for the scrollbar if it pinned.
+ *
+ * THE TIMELINE IS FIVE UNITS, ONE PER STEP. `stepArrive` and `stepCounter`
+ * place their transitions on integer positions, so adding them at 1 lands the
+ * turns on units 1, 2, 3 and 4 — each step holds for most of its own unit and
+ * turns over at the boundary. One unit is 70vh of scroll: ~21vh of that is the
+ * turn, the remaining ~49vh is reading. The empty tween at the end is what
+ * gives the LAST step a hold: without it the timeline would end at 4.3 and the
+ * fifth point would get two thirds of the scroll the other four got.
+ *
+ * NO SNAP, deliberately. The Spring's snap was removed because `1/(steps - 1)`
+ * landed mid-flap once `[data-release]` had stretched its timeline, and the
+ * same trap is here — rest positions sit at progress 0.1/0.3/0.5/0.7/0.9, not
+ * on quarters. Being stranded mid-turn is also far less wrong for a sentence
+ * than for a numeral, where a half-transitioned "3.5" is a lie about what is
+ * being counted. If it ever needs snapping, the fix is `snapTo` as an ARRAY of
+ * those five positions, which needs CompositionSpec.snap widened.
+ *
+ * Hooks, all of them inside the section:
+ *   [data-step-index]  the quiet "02 / 05", one per point
+ *   [data-step-word]   the display word, one per point
+ *   [data-step-point]  the statement itself, one per point
+ *   [data-step-rule]   the single gold bar that fills across the whole track
+ *   [data-ground]      the stacked photographic plates, one per point
+ */
+export function outHereTrack(root: HTMLElement, stepVh = 70): MotionModule {
+  const indices = qa(root, "[data-step-index]");
+  const words = qa(root, "[data-step-word]");
+  const points = qa(root, "[data-step-point]");
+  const rule = q(root, "[data-step-rule]");
+  // The plates are NOT inside the trigger. `LandscapeBackdrop` is a SIBLING of
+  // this section inside the scene wrapper — it has to be, because the backdrop
+  // spans both grid rows and sticks while the section scrolls past it. So the
+  // grounds are reached through the parent, not through `root`.
+  const grounds = qa(root.parentElement ?? root, "[data-ground]");
+  const steps = points.length;
+
+  return composition("wonder/out-here", root, {
+    channel: "type",
+    span: steps * stepVh,
+    pin: false,
+    uses: ["stepCounter", "stepArrive", "dissolve"],
+    build: (tl) => {
+      if (steps < 2) return;
+
+      // Stack the steps. Until this lands, the served markup is an ordinary
+      // flowing list — the no-JS state, and what a screen reader reads. Doing
+      // it here rather than in the markup is the whole reason this section
+      // degrades to a readable document. Removed again by `cut`, which is the
+      // branch a reader flipping on reduced motion arrives in.
+      root.setAttribute("data-steps", "");
+
+      // 0.3 of a unit ≈ 21vh at a 70vh step: long enough to read as a turn,
+      // short enough that the reader is never parked in one. `stepArrive`
+      // splits it in half — out, then in — so the two never overlap.
+      const turn = 0.3;
+
+      tl.stepArrive(words, { duration: turn, ease: EASE.country }, 1);
+      tl.stepArrive(points, { duration: turn, ease: EASE.country }, 1);
+      // The index is a single numeral pair and the crossfade is invisible on
+      // it, so it takes the plain sibling rather than the sequenced one.
+      tl.stepCounter(indices, { duration: turn, ease: EASE.machine }, 1);
+
+      // The ground hands over with the step. `dissolve` and nothing else:
+      // it is the one media effect the grammar permits on held material —
+      // it never scrubs, masks, pushes or warps a plane, it hands one whole
+      // frame to another, which is how film has always moved between two
+      // records. That is what keeps this screen loud in TYPE rather than
+      // turning five full-bleed changes into a media moment.
+      //
+      // Pairwise, because `dissolve` takes exactly [from, to]. Same position
+      // and duration as the text turn, so the whole screen changes together —
+      // and because the cross-fade overlaps where the text does not, the
+      // photograph is what carries continuity across the cut.
+      for (let i = 0; i + 1 < grounds.length; i += 1) {
+        tl.dissolve([grounds[i], grounds[i + 1]], { duration: turn, ease: EASE.country }, i + 1);
+      }
+
+      // The mark fills — "accumulating", and the answer to "how much is left"
+      // on a section this long. scaleX from a left origin: a transform, never
+      // a width. Linear, because it is reporting scroll position, not
+      // performing; an eased progress bar lies about where the reader is.
+      if (rule) {
+        tl.fromTo(
+          rule,
+          { scaleX: 1 / steps },
+          { scaleX: 1, duration: steps, ease: EASE.machine },
+          0,
+        );
+      }
+
+      // Pads the timeline to a whole number of steps so the last one holds for
+      // its full unit. An empty tween is the GSAP idiom for this; it animates
+      // nothing and exists only to set the duration.
+      tl.to({}, { duration: steps }, 0);
+    },
+    cut: (el) => {
+      // Back to the document: unstack, and let every point stand in flow.
+      el.removeAttribute("data-steps");
+      clearAll(el);
+    },
+  });
+}

@@ -2114,7 +2114,7 @@ page deepens. There is no WebGL on this route.
 | 06 | What a stay looks like | — | canvas, ordinary flow | **transition** | one manual accordion, day 1 open; `disclose` on click, line, copy and picture entrances; held screen and automatic stops removed 14 Sep 2026 |
 | 07 | Before you come | 100 | evergreen | **none** | `hold`, cells arrive, one beat on the call to action |
 | 08 | Where you stay | 120 | canvas | **media** | heading and copy enter; the ten-frame carousel does not — no card entrance (10 Sep 2026) |
-| 09 | What it is like out here | 180 | full bleed | **media** | same landscape entry, mouse drift and 80vh reading hold as §05; no sweep |
+| 09 | What it is like out here | 450 | full bleed | **type** | same landscape entry and mouse drift as §05, then the five conditions step one per 70vh, each on its own photograph, cross-faded; no sweep |
 | 10 | Your hosts | 100 | canvas | **none** | the copy arrives; the pointer names three of the eight, and the faces hold |
 | 11 | From Country | 100 | white | **media** | the card rail again, quieter |
 | 12 | Come and see it | 100 | roasted | **none** | the quietest screen, and the second conversion point |
@@ -2172,10 +2172,27 @@ nothing else. Portraits hold still; the world moves around them.
 
 Exception, latest user direction 9 September 2026: §05 Turraburra and §09 Out here
 share full-motion landscapes through `wonder-landscape.ts`: a sticky viewport
-with shallow entry approach and mouse tilt/drift. Copy holds with the photograph
-for 80vh of scroll after seating. Touch disables the pointer effect; reduced motion
-and no JavaScript render static full-height sections. Content too tall for the
-viewport uses ordinary reading flow.
+with shallow entry approach and mouse tilt/drift. Touch disables the pointer
+effect; reduced motion and no JavaScript render static full-height sections.
+Content too tall for the viewport uses ordinary reading flow.
+
+What happens AFTER the landscape seats is now different on the two sections
+(user direction 14 September 2026). Turraburra holds its copy with the
+photograph for 80vh and releases. Out here hands over to a stepped read —
+`outHereTrack`, grammar "accumulating" — and its five conditions are turned over
+one per 70vh, 350vh in all. The landscape is finished before the first step, so
+the media channel is spent and the screen is loud in TYPE.
+
+The GROUND changes with the step — five stacked plates, one per condition,
+each chosen to answer its own sentence — and `dissolve` is the only effect on
+them. No plate is ever scrubbed, masked, pushed or warped; the approach scales
+the whole stack and the pointer tilts the whole stack, exactly as before. The
+scrim stays the shared 80/30/10: measured at every step, the worst case is
+8.2:1 against cream, because the copy sits at the foot of the frame where the
+gradient is already at 80% whatever the photograph is doing above it. The list is stacked by JavaScript only, so the served document
+is still five points in flow, which is what reduced motion, no JavaScript and a
+screen reader get. No pin — the hold is the CSS module's sticky screen, and the
+page's one pin still belongs to Living Work §05.
 
 ### Both maps were cropped by their own layout, and both are fixed
 
