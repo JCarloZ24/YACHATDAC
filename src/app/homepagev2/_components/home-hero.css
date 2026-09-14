@@ -82,9 +82,32 @@ body:has([data-hero-phase="black"]) [data-home-thread] { visibility: hidden; }
 .v2-home-truth-panel { grid-area: 1 / 1; }
 .v2-home-truth-panel:not(:first-child), .v2-home-truth-timeline { opacity: 0; visibility: hidden; }
 .v2-home-truth-timeline { --text-h1: clamp(2rem, 4.444vw, 4rem); }
-.v2-home-truth-path { position: absolute; left: .625%; top: 81.02%; width: 123.472%; height: 5%; max-width: none; }
+/* ⚠ NEVER SIZE THESE ON BOTH AXES. Corrected 14 September 2026, user report:
+   the dotted path and the year marker looked right full-screen and squashed in
+   a window, and two people saw different things on the same build.
+
+   Both rules used to read `width: <pct>%; height: <pct>%` — width off the
+   VIEWPORT'S WIDTH, height off its HEIGHT, two independent numbers. They happen
+   to resolve to the artwork's own 1778x45 and 48x94 at exactly 1440x901, the
+   Figma frame, and to a stretched version of it at every other aspect ratio. A
+   window 1920x950 rendered the path at 2371x47 and the marker at 64x99, which
+   turns each dot into an ellipse. Whoever's window was near 1.6:1 saw it
+   correctly, which is why it read as a machine-specific bug and was not.
+
+   `height: auto` takes the height from the image's own ratio, so the artwork
+   scales uniformly at every size and is identical to the old rule at 1440x901.
+   The mobile branch below already did this for the path; desktop never did.
+
+   The two SVGs also carried `preserveAspectRatio="none"` from the Figma export,
+   which is what allowed the stretch to reach the geometry at all. Removed, so
+   the artwork cannot be distorted again by a future change to these boxes.
+
+   The marker's BOTTOM edge is its anchor (`bottom: 97.55%`) and the red dot
+   sits at the bottom of the 48x94 artwork, so an intrinsic height grows the
+   tail upward and leaves the dot exactly where it was. */
+.v2-home-truth-path { position: absolute; left: .625%; top: 81.02%; width: 123.472%; height: auto; max-width: none; }
 .v2-home-truth-marker { position: absolute; inset: 0; }
-.v2-home-truth-marker-art { position: absolute; width: 3.333%; height: 10.433%; left: -1.666%; bottom: 97.55%; }
+.v2-home-truth-marker-art { position: absolute; width: 3.333%; height: auto; left: -1.666%; bottom: 97.55%; }
 .v2-home-truth-years { position: absolute; bottom: 110.5%; left: -10%; width: 20%; display: grid; text-align: center; }
 .v2-home-truth-years > p { grid-area: 1 / 1; }
 .v2-home-truth-years > p:not(:first-child) { opacity: 0; visibility: hidden; }
