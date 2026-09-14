@@ -13,6 +13,7 @@ import { registerYachatdacEffects, revertSplits } from "./effects";
 import { PEOPLE_HANDOFF_VH, PEOPLE_PHOTO_HOLD, peopleTimeAt, type PeopleLeg, type PeopleState, type PeopleStop } from "./effects/people";
 import { clampScrollTo, refreshScrollBounds } from "./smooth-scroll";
 import { createPeopleWorld, peopleBox, type PeopleSection } from "./our-people-world";
+import { cardPassOpacity } from "./record-masonry";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -65,6 +66,12 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
     const heroSection = track.querySelector<HTMLElement>('[data-people-scene="hero"]');
     const setHeroSection = heroSection ? gsap.quickSetter(heroSection, "y", "px") : null;
     let heroHold: { start: number; end: number; bottom: number } | undefined;
+    // Marc's review, 14 September 2026: the team cards take The Record's card
+    // entrance — they fade IN and OUT at the viewport edges instead of all six
+    // lighting at once off the first card's position, and nothing travels
+    // sideways any more. Measured once per build; `paint` only does maths.
+    // Grammar: "being drawn in", Our People cards.
+    let cardPass: { card: HTMLElement; top: number; height: number; index: number; hidden: boolean }[] = [];
     // The same hold for Who decides under the team (14 Sep 2026). Its canvas
     // ground scrolls with the camera, so a roasted veil, clipped at the
     // team's top edge, stands in for it while the section is held.
@@ -102,6 +109,22 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
         decisionSection.style.clipPath = hidden ? `inset(0 0 ${hidden}px 0)` : "";
         holdVeil.style.opacity = offset > 0 ? "1" : "0";
         holdVeil.style.clipPath = offset > 0 ? `inset(0 0 ${Math.max(0, viewport - floor)}px 0)` : "";
+      }
+      for (const entry of cardPass) {
+        const fade = cardPassOpacity({
+          top: entry.top - state.travel, height: entry.height, viewport, index: entry.index,
+        });
+        // A custom property, not an opacity tween: the canvas draws each card's
+        // photograph and reads this same value back, and the ordinary-flow
+        // fallback simply never defines it (our-people.css defaults it to 1).
+        entry.card.style.setProperty("--people-card-fade", String(fade));
+        // A card the reader cannot see must not take a tab stop. Written only
+        // on the change, so a scroll frame is still one property write.
+        const hidden = fade < 0.01;
+        if (hidden !== entry.hidden) {
+          entry.hidden = hidden;
+          entry.card.style.visibility = hidden ? "hidden" : "";
+        }
       }
       world.render(state);
       const index = sections.findLastIndex(section => section.top <= state.travel + viewport * 0.35);
@@ -149,6 +172,13 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
       const advisory = track.querySelector<HTMLElement>('[data-people-scene="advisory"]');
       if (advisory) gsap.set(advisory, { clearProps: "opacity" });
       if (heroCopy) gsap.set(heroCopy, { clearProps: "transform" });
+      cardPass.forEach(({ card }) => {
+        card.style.removeProperty("--people-card-fade");
+        card.style.removeProperty("visibility");
+      });
+      cardPass = [];
+      // The ordinary document shows the fact, not a count that will never
+      // run: a fallback has no clock to reach the ratio with.
       track.querySelectorAll<HTMLElement>("[data-people-count]").forEach(count => { count.textContent = `${count.dataset.peopleCount}%`; });
       const veil = root.querySelector<HTMLElement>("[data-people-veil]");
       if (veil) gsap.set(veil, { clearProps: "opacity" });
@@ -409,6 +439,15 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
             if (row) row.push(card); else rows.push([card]);
           }
           rows.forEach((row, index) => addStop(row[0], 0.35, `team-${index}`, 0.12));
+          // The card entrance reads document position against the reading
+          // clock rather than riding the timeline, so each row genuinely
+          // arrives at its OWN stop — the one grouped fade this replaces lit
+          // row two long before `team-1` was reached. Measured here, with the
+          // rest of the page's geometry, and never inside a scroll frame.
+          cardPass = cards.map((card, index) => {
+            const box = peopleBox(card, track!);
+            return { card, top: box.top, height: box.height, index, hidden: false };
+          });
           const ratio = track!.querySelector<HTMLElement>("[data-people-ratio]");
           addStop(ratio, 2.4, "ratio", 0.5);
           const names = Array.from(track!.querySelectorAll<HTMLElement>('[data-people-scene="acknowledgements"] li'));
@@ -445,7 +484,6 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
           // still honours testimony's stillness; replaces the per-word `dim`.
           if (quote && testimony && blockquote) {
             const [mark, , cite] = Array.from(blockquote.children);
-            const note = blockquote.nextElementSibling;
             // Then, as before, the words brighten one by one with the scroll
             // (user, same day: keep the text's scroll animation) — the line
             // fades up at `dim`'s resting 28% and the reading lights it.
@@ -455,7 +493,8 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
             speech.duration(1.1);
             timeline.add(speech, "testimony+=0.8");
             if (cite) timeline.fromTo(cite, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "sine.inOut" }, "testimony+=1.7");
-            if (note) timeline.fromTo(note, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "sine.inOut" }, "testimony+=1.9");
+            // The quotation's editorial note used to follow her name here. It
+            // came off the page on 14 September 2026, so nothing follows.
           } else if (quote) {
             const speech = gsap.effects.dim(quote) as gsap.core.Tween;
             speech.duration(0.85);
@@ -498,28 +537,44 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
             authority.duration(1.1);
             timeline.add(authority, "decision+=0.8");
           } else if (decision) timeline.add(gsap.effects.settle(decision, { duration: 0.4, stagger: 0.06 }), at(decision, 0.85));
-          // User direction, 14 September 2026: the cards fade in where they
-          // sit instead of sliding in from either side (was peopleGather) —
-          // every card together, in one fade, as the first row arrives.
-          if (cards.length) timeline.fromTo(cards, { opacity: 0 }, {
-            opacity: 1, duration: 0.65, ease: "sine.inOut", immediateRender: true,
-          }, at(cards[0], 0.98));
+          // The team cards are NOT on this timeline. Marc's review, 14
+          // September 2026: they take The Record's card entrance, which is a
+          // function of where a card sits on the screen, not of a position on
+          // the clock — see `cardPass` above and the pass in `paint`. The one
+          // grouped fade that used to live here (and, before it, the
+          // sideways `peopleGather` Marc read as "cards going left and
+          // right") are both gone.
           // User direction, 14 September 2026 (after Living Work's rolling
           // figures): the bar fills with the scroll while the page holds on
           // it, and the numbers count up with it — 80 while the gold 4/5
           // draws, 20 while the last 1/5 does. Scrubbed, so it runs back too.
           if (ratio) {
+            // The span the count is drawn over. Halved by user direction on 14
+            // September 2026 and NOT reopened by Marc's review — his note was
+            // about the figure's resting state, not its pace.
             const fill = 2.0;
             timeline.add(gsap.effects.peopleGround(ratio, { duration: fill }), "ratio+=0.1");
             for (const count of track!.querySelectorAll<HTMLElement>("[data-people-count]")) {
               const target = Number(count.dataset.peopleCount);
               const first = target >= 50;
               const proxy = { value: 0 };
+              // ⚠ THE COUNT STARTS FROM WHAT THE PAGE ALREADY SHOWS (user
+              // direction, 14 September 2026). The figure ships as "0%" in the
+              // markup, so the number on screen before the ratio is reached is
+              // the number the count begins at, and nothing is written here at
+              // build. An earlier pass the same day rested the figure at 80%
+              // and swapped a counting copy in — which made the reader watch
+              // 80% jump backwards to nothing and climb again.
+              //
+              // `immediateRender: false` is what keeps that true in both
+              // directions: the tween does not touch the text until the
+              // playhead reaches it, and scrubbing back before it renders
+              // progress 0, which writes "0%" again rather than stranding the
+              // figure part-counted.
               timeline.fromTo(proxy, { value: 0 }, {
-                value: target, duration: fill * (first ? 0.8 : 0.2), ease: "none", immediateRender: true,
+                value: target, duration: fill * (first ? 0.8 : 0.2), ease: "none", immediateRender: false,
                 onUpdate: () => { count.textContent = `${Math.round(proxy.value)}%`; },
               }, `ratio+=${0.1 + (first ? 0 : fill * 0.8)}`);
-              count.textContent = "0%";
             }
           }
           // User direction, 14 September 2026: each acknowledgement — name and

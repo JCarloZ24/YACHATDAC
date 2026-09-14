@@ -110,7 +110,6 @@ function bezierOf(css: string): string {
  */
 export type EffectName =
   | "peopleJourney"
-  | "peopleGather"
   | "peopleKnockout"
   | "peopleGround"
   | "clickBloom"

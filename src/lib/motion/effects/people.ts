@@ -1,7 +1,9 @@
 "use client";
 
 /** Our People, user direction 11 September 2026 (F7, SCR-02 / SCR-09).
- * Grammar: peopleJourney, peopleGather, peopleKnockout and peopleGround.
+ * Grammar: peopleJourney, peopleKnockout and peopleGround. The team cards
+ * take The Record's card entrance instead of an effect of their own — see
+ * `cardPassOpacity` in ../record-masonry.ts and the pass in ../our-people.ts.
  * One reading clock drives the camera, HTML track and all interior effects.
  * A unit is 100vh; the module supplies measurements, never content strings.
  */
@@ -60,20 +62,11 @@ export function registerPeople(): void {
     },
   });
 
-  // P4 / L3. Only the frame translates. The canvas counter-registers the
-  // photograph to its final location; a face never scales, tilts or warps.
-  gsap.registerEffect({
-    name: "peopleGather",
-    extendTimeline: true,
-    defaults: { duration: 0.65, distance: 80, stagger: 0.08 },
-    effect: (targets: object, config: Record<string, unknown>) =>
-      gsap.fromTo(targets, {
-        x: (index: number) => (index % 2 ? 1 : -1) * (config.distance as number),
-      }, {
-        x: 0, duration: config.duration as number, stagger: config.stagger as number,
-        ease: "country", immediateRender: true,
-      }),
-  });
+  // `peopleGather` — the alternating left/right card arrival — was DELETED on
+  // 14 September 2026 (Marc's review: "some cards go to the left and right").
+  // It had already been superseded by a fade in the 14 September build but was
+  // still registered, and the canvas was still reading the `x` it wrote on
+  // every frame. The cards now take The Record's entrance; see the header.
 
   // Y1 / P4, user reference to Living Work's Our challenges (11 Sep 2026).
   // One large initial gathers the held photograph into the complete title.

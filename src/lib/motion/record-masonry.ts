@@ -42,6 +42,40 @@ export type MasonryHooks = {
   endAtRootFoot?: boolean;
 };
 
+/**
+ * SCR-12's opacity rule, on its own so a page that cannot host the module can
+ * still run the card entrance.
+ *
+ * `createRecordMasonry` derives a card's screen position from its own
+ * ScrollTrigger. /our-people cannot: it is one pinned stage whose HTML track is
+ * translated by a reading clock, so a card's screen top is `box.top - travel`
+ * and there is no per-card trigger to ask. The RULE is what the pages share —
+ * Marc's review, 14 September 2026, asked for The Record's card entrance on
+ * /our-people — so the numbers live here once and both callers read them.
+ *
+ * Takes a card's screen box and returns its opacity: it fades up once its top
+ * is 12vh inside the bottom edge and fades out as its foot reaches 14vh from
+ * the crown, smoothstepped, over a span that differs per card so a row does not
+ * arrive as one block. `enter` overrides the entry window in viewport
+ * fractions; /wonder passes its own.
+ */
+export function cardPassOpacity(
+  { top, height, viewport, index, enter }:
+  { top: number; height: number; viewport: number; index: number; enter?: [number, number] },
+): number {
+  const smooth = (value: number) => {
+    const t = gsap.utils.clamp(0, 1, value);
+    return t * t * (3 - 2 * t);
+  };
+  const enterSpan = [0.18, 0.27, 0.22, 0.32][index % 4];
+  const leaveSpan = [0.25, 0.17, 0.30, 0.21][index % 4];
+  const entering = enter
+    ? smooth((viewport * enter[0] - top) / (viewport * (enter[0] - enter[1])))
+    : smooth((viewport * 0.88 - top) / Math.min(height * 0.65, viewport * enterSpan));
+  const leaving = smooth((top + height - viewport * 0.14) / Math.min(height * 0.65, viewport * leaveSpan));
+  return Math.min(entering, leaving);
+}
+
 /** F7/F8, SCR-12. Stable wrappers measure scroll; whole linked cards move. */
 export function createRecordMasonry(root: HTMLElement, hooks: MasonryHooks = {}): MotionModule {
   const {
@@ -74,24 +108,13 @@ export function createRecordMasonry(root: HTMLElement, hooks: MasonryHooks = {})
           let cardHeight = card.offsetHeight;
           // Different entrances/exits per card, measured in viewport height.
           // Cache layout on refresh; scroll frames only read scroll/transform.
-          const enterSpan = [0.18, 0.27, 0.22, 0.32][index % 4];
-          const leaveSpan = [0.25, 0.17, 0.30, 0.21][index % 4];
-          const smooth = (value: number) => {
-            const t = gsap.utils.clamp(0, 1, value);
-            return t * t * (3 - 2 * t);
-          };
+          // The rule itself is `cardPassOpacity` above — /our-people runs the
+          // same numbers off its reading clock (Marc, 14 September 2026).
           const update = (self: ScrollTrigger) => {
             const viewport = window.innerHeight;
             const y = Number(gsap.getProperty(card, "y")) || 0;
             const top = self.start + viewport - self.scroll() + y;
-            const bottom = top + cardHeight;
-            // User timing correction: delay entry until the card is 12vh
-            // inside the bottom edge; finish exit 14vh before the top edge.
-            const entering = enter
-              ? smooth((viewport * enter[0] - top) / (viewport * (enter[0] - enter[1])))
-              : smooth((viewport * 0.88 - top) / Math.min(cardHeight * 0.65, viewport * enterSpan));
-            const leaving = smooth((bottom - viewport * 0.14) / Math.min(cardHeight * 0.65, viewport * leaveSpan));
-            setOpacity(Math.min(entering, leaving));
+            setOpacity(cardPassOpacity({ top, height: cardHeight, viewport, index, enter }));
           };
           // "bottom top" in scroll units, clamped to the root's hold when asked.
           // Measured on refresh, when ScrollTrigger has reverted any pin.
