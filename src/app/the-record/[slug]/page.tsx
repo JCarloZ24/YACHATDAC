@@ -145,7 +145,7 @@ export default async function RecordArticlePage({
             </p>
             <h1 className="headline mt-4 max-w-4xl text-h1 leading-[1.1]">{body?.title ?? article.title}</h1>
             <p className="mt-6 max-w-2xl text-base leading-[1.7] text-canvas/90 lg:text-lg">{body?.standfirst ?? article.summary}</p>
-            {article.subjects?.length ? <p className="eyebrow mt-5 max-w-2xl text-xs leading-[1.6] tracking-[0.08em] text-gold lg:mt-6">{article.subjects.join(" · ")}</p> : null}
+            {article.subjects?.length ? <p className="eyebrow mt-5 max-w-2xl text-sm leading-[1.6] tracking-[0.08em] text-gold lg:mt-6">{article.subjects.join(" · ")}</p> : null}
           </div>
         </section>
 

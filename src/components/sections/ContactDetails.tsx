@@ -41,7 +41,7 @@ export function ContactDetails({
     <dl className="grid gap-x-10 gap-y-9 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-3">
       {contactDetails.map((detail) => (
         <div key={detail.label} className={width}>
-          <dt className={`eyebrow text-xs tracking-[0.08em] ${accent}`}>
+          <dt className={`eyebrow text-sm tracking-[0.08em] ${accent}`}>
             {detail.label}
           </dt>
           {/* Bracketed and NOT a link while `pending`. The brackets are the

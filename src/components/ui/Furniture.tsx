@@ -41,20 +41,42 @@ import Link from "next/link";
 export const WAVE_PATH =
   "M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 105.324H1468.85L1470.04 7.97183V7.9544Z";
 
-/** The path's own box, from the viewBox crop above. */
+/** Where the path's own box starts, from the viewBox crop above (its width,
+    1467.84877, is the viewBox's and no longer the roll's — see WAVE_ROLL). */
 const WAVE_X0 = 1.00123;
-const WAVE_W = 1467.84877;
+
+/**
+ * The x of the path's last crest — the lowest point of the closing cubic
+ * (1470.04,7.95)→(1333.96,6.58), found numerically at t≈0.5246 where the
+ * curve touches y≈0. Its tangent is flat there by definition, and the curve
+ * either side of it mirrors to within 0.05 units, which is what makes it
+ * the one place the ink can be mirrored without a visible join.
+ */
+export const WAVE_APEX = 1398.8233;
 
 /**
  * One seamless roll of the wave strip, in user units. The ink is tiled
- * three wide — original, mirrored, original — so both junctions meet at
- * matching heights (a raw repeat would step: the path's left foot sits at
- * y≈93 and its right at y≈8). Rolling the strip left by exactly two tile
- * widths lands the visible window on the third copy, which is identical to
- * the first — so a finished roll is pixel-equal to the static markup.
- * Exported for About's seam gates, which animate the roll.
+ * three wide — original, MIRRORED ABOUT ITS LAST CREST, original — so the
+ * crest runs over the join smoothly and the far junction meets the third
+ * tile at a matching height. Rolling the strip left by exactly this much
+ * lands the visible window on the third copy, which is identical to the
+ * first — so a finished roll is pixel-equal to the static markup. Exported
+ * for About's seam gates, which animate the roll.
+ *
+ * ⚠ THE DENT, 14 September 2026 (user report, the white wave under every
+ * hero that rolls). Until this pass the mirror axis was the tile's EDGE
+ * (x=1470.04), where the path ends at y≈7.95 having already come down off
+ * its crest at 1398.8. Mirrored there the ink read crest → dip → crest: an
+ * 8-unit V notch at the seam, out of sight at rest (the viewBox stops at
+ * 1468.85) but carried into the middle of the screen by every roll, where it
+ * travelled sideways as the reader scrolled. Mirroring about the apex
+ * instead puts the axis where the slope is zero, so the union of the two
+ * tiles is the crest continued rather than a corner. The static render
+ * changes by at most ~1.4 units in the last 70 of the window — below a
+ * pixel at every width the wave ships — and every consumer that reads
+ * WAVE_ROLL (About, Truth, Our People, wave-roll.ts) keeps its own arithmetic.
  */
-export const WAVE_ROLL = 2 * WAVE_W;
+export const WAVE_ROLL = 2 * (WAVE_APEX - WAVE_X0);
 
 export function WaveDivider({
   ground,
@@ -116,17 +138,20 @@ export function WaveDivider({
         mirror ? "scale-x-[-1]" : ""
       } ${className}`}
     >
-      {/* The ink, as a three-tile strip (see WAVE_ROLL). At rest only the
-          first tile shows — the others sit beyond the viewBox crop — so the
-          static render is unchanged; a motion host may roll the group. All
-          three are the SAME exported path, transformed: nothing here is
-          hand-authored vector data. */}
+      {/* The ink, as a three-tile strip (see WAVE_ROLL). The second tile is
+          the first mirrored about its last crest (WAVE_APEX), so its ink
+          overlaps the first from ~1328 on and continues the crest rather
+          than notching it; the third is the first translated by one full
+          roll. At rest the window still shows the first tile's own drawing
+          to within a pixel; a motion host may roll the group. All three are
+          the SAME exported path, transformed: nothing here is hand-authored
+          vector data. */}
       <g data-wave-ink>
         <path d={WAVE_PATH} fill={ground} />
         <path
           d={WAVE_PATH}
           fill={ground}
-          transform={`translate(${2 * (WAVE_X0 + WAVE_W)} 0) scale(-1 1)`}
+          transform={`translate(${2 * WAVE_APEX} 0) scale(-1 1)`}
         />
         <path d={WAVE_PATH} fill={ground} transform={`translate(${WAVE_ROLL} 0)`} />
       </g>
@@ -282,9 +307,11 @@ function BlobChevron({ dir }: { dir: "right" | "down" }) {
   );
 }
 
-/** Label sizes: the shared 12px, and the Wonder frame's CTA16 (2033:7108). */
+/** Label sizes: the shared small label (14px — the site's floor, raised from
+    12 on 14 September 2026, user direction) and the Wonder frame's CTA16
+    (2033:7108). */
 const BLOB_LABEL = {
-  sm: "text-xs",
+  sm: "text-sm",
   /* CTA16 carries no tracking (like the story-card links); the utility's
      0.12em pushed the label onto two lines inside the 276 shape. */
   lg: "text-base tracking-normal whitespace-nowrap",
@@ -380,7 +407,8 @@ export function BlobHold({
     >
       <BlobShape tone={tone} shape="wide" />
       <span
-        className={`eyebrow relative ${muted ? "text-[11px]" : BLOB_LABEL[size]}`}
+        /* Muted labels used to sit at 11px; 14 is the floor (14 Sep 2026). */
+        className={`eyebrow relative ${muted ? "text-sm" : BLOB_LABEL[size]}`}
       >
         {children}
       </span>

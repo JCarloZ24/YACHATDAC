@@ -45,7 +45,7 @@ export function Invitation() {
             const media = homeInvitationMedia[index];
             return (
               <Link key={card.href} href={card.href} data-invitation-card
-                className="home-invitation-card relative flex flex-col overflow-hidden rounded-[20px] bg-charcoal p-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas lg:p-10">
+                className="group home-invitation-card relative flex flex-col overflow-hidden rounded-[20px] bg-charcoal p-8 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas lg:p-10">
                 {/* 45vw, not 30 (11 September 2026). Same correction as the
                     pathway cards and the offer plates: `object-cover` paints
                     the box's HEIGHT times the source's aspect whenever the
@@ -107,7 +107,7 @@ export function Invitation() {
                   <p className="mt-4 text-base font-medium leading-[1.5] text-canvas/90">{card.description}</p>
                 </div>
                 <span className="relative mt-auto flex items-center gap-2 pt-8">
-                  <span className="eyebrow text-base leading-[1.5] tracking-[0.2em]">{card.cta}</span>
+                  <span className="link-line group-hover:link-line-on group-focus-visible:link-line-on eyebrow text-base leading-[1.5] tracking-[0.2em]">{card.cta}</span>
                   <Image src="/media/home/derivatives/invitation-chevron.svg" alt="" width={24} height={24} className="shrink-0" />
                 </span>
               </Link>

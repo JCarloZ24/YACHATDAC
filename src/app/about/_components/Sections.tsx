@@ -576,7 +576,7 @@ export function WhatWeAre() {
           <div data-ab2-index className="relative">
             <p
               data-ab2-register-head
-              className="eyebrow mt-5 text-xs tracking-[0.08em] text-roasted/70"
+              className="eyebrow mt-5 text-sm tracking-[0.08em] text-roasted/70"
             >
               Registered with
             </p>
@@ -588,7 +588,7 @@ export function WhatWeAre() {
                   data-ab2-row
                   className="grid gap-2 border-b border-charcoal/14 py-7 lg:grid-cols-[300px_1fr] lg:gap-10"
                 >
-                  {/* `text-sm`, not `text-xs`: 12px under a 32px value read as
+                  {/* `text-sm`, not `text-sm`: 12px under a 32px value read as
                       fine print rather than as the label of the row (user,
                       13 September 2026). */}
                   <dt className="eyebrow text-sm tracking-[0.08em] text-burnt">
@@ -614,7 +614,7 @@ export function WhatWeAre() {
                   data-ab2-fact
                   className="absolute inset-x-0 top-0 pt-7"
                 >
-                  <p className="eyebrow text-xs tracking-[0.08em] text-burnt">
+                  <p className="eyebrow text-sm tracking-[0.08em] text-burnt">
                     {fact.label}
                   </p>
                   <p className="headline mt-3 max-w-[1100px] text-3xl leading-[1.15] text-evergreen sm:text-[2.5rem]">
@@ -1117,7 +1117,7 @@ export function WhatWeDo() {
                           {area.body}
                         </p>
                         {/* Verb-led. Never a route path. */}
-                        <p className="eyebrow mt-auto pt-6 text-xs tracking-[0.08em] text-gold">
+                        <p className="eyebrow mt-auto pt-6 text-sm tracking-[0.08em] text-gold">
                           {area.cta.label} →
                         </p>
                       </div>
@@ -1209,7 +1209,7 @@ export function HowWeWork() {
         <p
           data-ab5-label
           data-ab-eyebrow={i === 0 ? "" : undefined}
-          className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold"
+          className="eyebrow mt-5 text-sm tracking-[0.08em] text-gold"
         >
           {value.title}
         </p>
@@ -1575,7 +1575,7 @@ export function WhoDecides() {
                        stylesheet, so `w-22` wins wherever both are present
                        whatever the class order says, and the last label
                        measured 88px and overflowed a 320px screen. */
-                    className={`eyebrow mt-2 text-[0.5625rem] leading-[1.5] tracking-[0.08em] text-ochre lg:w-auto lg:text-xs ${
+                    className={`eyebrow mt-2 text-sm leading-[1.5] tracking-[0.08em] text-ochre lg:w-auto lg:text-sm ${
                       i === BEATS.length - 1
                         ? "w-20 -translate-x-2 lg:translate-x-0"
                         : "w-22"
@@ -1609,7 +1609,7 @@ export function WhoDecides() {
           <a
             href={whoDecides.cta.href}
             data-ab6-cta
-            className="eyebrow mt-11 block max-w-[1100px] text-xs tracking-[0.08em] text-gold"
+            className="eyebrow mt-11 block max-w-[1100px] text-sm tracking-[0.08em] text-gold"
           >
             {whoDecides.cta.label} →
           </a>
@@ -1845,7 +1845,7 @@ export function ThePeople() {
                     <p
                       data-ab7-marker
                       data-placeholder="stand-in"
-                      className="eyebrow absolute top-3 left-3 rounded-xs bg-charcoal/70 px-2 py-1 text-[10px] text-canvas"
+                      className="eyebrow absolute top-3 left-3 rounded-xs bg-charcoal/70 px-2 py-1 text-sm text-canvas"
                     >
                       ⟡ Stand-in
                     </p>
@@ -1873,7 +1873,7 @@ export function ThePeople() {
           <a
             href={thePeople.cta.href}
             data-ab7-cta
-            className="eyebrow mt-20 block text-xs tracking-[0.08em] text-burnt"
+            className="eyebrow mt-20 block text-sm tracking-[0.08em] text-burnt"
           >
             {thePeople.cta.label} →
           </a>
@@ -2009,7 +2009,7 @@ export function Partners() {
                 <DottedRule tone="gold" className="opacity-85" />
                 <p
                   data-ab8-title
-                  className="eyebrow mt-6 text-xs tracking-[0.08em] text-gold"
+                  className="eyebrow mt-6 text-sm tracking-[0.08em] text-gold"
                 >
                   {group.title}
                 </p>
@@ -2062,7 +2062,7 @@ export function Partners() {
           <a
             href={partners.cta.href}
             data-ab8-cta
-            className="eyebrow mt-20 block text-xs tracking-[0.08em] text-gold"
+            className="eyebrow mt-20 block text-sm tracking-[0.08em] text-gold"
           >
             {partners.cta.label} →
           </a>

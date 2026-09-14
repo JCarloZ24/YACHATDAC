@@ -60,7 +60,7 @@ export function ContactBlock({
                 >
                   {detail.value}
                   {detail.pending ? (
-                    <span className={`ml-2 text-xs italic ${ink.muted}`}>
+                    <span className={`ml-2 text-sm italic ${ink.muted}`}>
                       — to be confirmed
                     </span>
                   ) : null}

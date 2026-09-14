@@ -525,7 +525,7 @@ export function LivingWorkAperture() {
           <div data-band-dress aria-hidden className="pointer-events-none absolute inset-0 opacity-0">
             <div className="absolute inset-0 bg-linear-to-t from-charcoal/50 via-transparent to-transparent" />
             <div className="absolute inset-x-0 bottom-[12%] px-6 text-center">
-              <p className="eyebrow text-xs leading-relaxed text-gold">
+              <p className="eyebrow text-sm leading-relaxed text-gold">
                 8,870 hectares of Iningai Country&ensp;&middot;&ensp;2019
                 bought back for the Iningai people&ensp;&middot;&ensp;480
                 metre bore, one water system&ensp;&middot;&ensp;120 kilometres
@@ -594,7 +594,7 @@ export function LivingWorkAperture() {
               />
             </span>
           ))}
-          <span data-rail-count className="eyebrow ml-4 text-xs text-burnt-deep">
+          <span data-rail-count className="eyebrow ml-4 text-sm text-burnt-deep">
             {String(APERTURE_REST + 1).padStart(2, "0")} / {String(FIGURES.length).padStart(2, "0")}
           </span>
         </div>
@@ -708,8 +708,8 @@ function ChallengeGroup({ group }: { group: (typeof challengeGroups)[number] }) 
   return (
     <div data-cluster>
       <div className="flex items-baseline justify-between gap-6 border-b-2 border-burnt/70 pb-2">
-        <p className="eyebrow text-xs text-burnt-deep">{group.label}</p>
-        <p className="eyebrow text-xs text-burnt-deep">
+        <p className="eyebrow text-sm text-burnt-deep">{group.label}</p>
+        <p className="eyebrow text-sm text-burnt-deep">
           {String(group.items.length).padStart(2, "0")}
         </p>
       </div>
@@ -990,7 +990,7 @@ export function LivingWorkSpring() {
             leading 0 is a fixed plate, the way an airport board leaves settled
             digits alone. The step stack sizes the row; the 0 sits beside it. */}
         <div className="mt-12 max-w-sm lg:mt-16">
-          <p className="eyebrow text-xs text-gold">Day</p>
+          <p className="eyebrow text-sm text-gold">Day</p>
           <div className="mt-3 flex items-start">
             <p
               aria-hidden
@@ -1028,13 +1028,13 @@ export function LivingWorkSpring() {
             </div>
           </div>
           <div aria-hidden className="mt-8 h-px w-full bg-gold/80" />
-          <p className="eyebrow mt-4 text-xs text-gold">Of eight</p>
+          <p className="eyebrow mt-4 text-sm text-gold">Of eight</p>
         </div>
 
         {/* The payoff — held back until day 08 by the motion pass; with
             JavaScript off it simply reads in order, which is the final state. */}
         <div data-release className="mt-12 max-w-2xl lg:mt-16">
-          <p className="eyebrow text-xs text-gold">On release</p>
+          <p className="eyebrow text-sm text-gold">On release</p>
           {/* THE CODA. Work Sans MEDIUM, 40/43 — the frame's own values, off
               node 2143:2624. It had been shipping Regular at 30px with looser
               leading, which is why it read as body rather than as the payoff.
@@ -1154,7 +1154,7 @@ export function LivingWorkStreams() {
                          until that page exists. */
                       <div className="mt-8">
                         <div aria-hidden className="h-px w-32 bg-burnt" />
-                        <p className="eyebrow mt-3 text-xs text-burnt-deep">
+                        <p className="eyebrow mt-3 text-sm text-burnt-deep">
                           What stays here
                         </p>
                       </div>
@@ -1262,7 +1262,7 @@ export function LivingWorkInfrastructure() {
 
         <div className="mt-16 lg:flex lg:gap-[82px]">
           <aside className="hidden lg:sticky lg:top-[calc(var(--infra-head,20rem)+2rem)] lg:block lg:h-fit lg:w-[258px] lg:shrink-0">
-            <p className="eyebrow text-xs text-canvas/45">What it takes</p>
+            <p className="eyebrow text-sm text-canvas/45">What it takes</p>
             <ol className="mt-6 space-y-4">
               {/* Rest state IS the wireframe's own frame: the first pair lit,
                   the rest dimmed with their bars retracted. The motion pass
@@ -1272,7 +1272,7 @@ export function LivingWorkInfrastructure() {
                 <li
                   key={block.title}
                   data-index-item
-                  className={`relative pl-5 text-xs tracking-[0.08em] text-canvas uppercase ${
+                  className={`relative pl-5 text-sm tracking-[0.08em] text-canvas uppercase ${
                     i < 2 ? "" : "opacity-30"
                   }`}
                 >
@@ -1292,7 +1292,7 @@ export function LivingWorkInfrastructure() {
           <div data-infra-grid className="grid flex-1 gap-x-[60px] gap-y-20 sm:grid-cols-2">
             {infrastructure.map((block, i) => (
               <div key={block.title} data-infra-block>
-                <p className="eyebrow text-xs text-gold">
+                <p className="eyebrow text-sm text-gold">
                   {String(i + 1).padStart(2, "0")}
                 </p>
                 <h3 className="headline mt-3 text-2xl text-canvas lg:text-[28px]">
@@ -1445,7 +1445,7 @@ export function LivingWorkOutputs() {
             return (
               <div key={output.title} className="relative">
                 <p
-                  className={`eyebrow text-xs ${empty ? "text-gold/40" : "text-gold/85"}`}
+                  className={`eyebrow text-sm ${empty ? "text-gold/40" : "text-gold/85"}`}
                 >
                   {outputsRestsOn[output.title] ?? ""}
                 </p>
@@ -1520,7 +1520,7 @@ export function LivingWorkOutputs() {
                       className="absolute inset-0 h-full w-full"
                     />
                     <p
-                      className={`eyebrow absolute inset-0 flex items-center justify-center text-xs ${
+                      className={`eyebrow absolute inset-0 flex items-center justify-center text-sm ${
                         empty ? "text-canvas/40" : "text-gold/90"
                       }`}
                     >
@@ -1618,7 +1618,7 @@ export function LivingWorkInvitation() {
                   className="pointer-events-none absolute inset-0 bg-canvas opacity-0 transition-opacity duration-(--dur-small) ease-quiet group-hover:opacity-[0.04]"
                 />
                 <SeamGlyph motif={p.motif} className="relative top-0 left-0 w-11 shrink-0" />
-                <p className="eyebrow mt-6 text-xs text-gold">{p.audience}</p>
+                <p className="eyebrow mt-6 text-sm text-gold">{p.audience}</p>
                 <div className="mt-2 flex min-h-21 items-end">
                   <h3 className="headline text-2xl leading-[1.3] text-canvas">
                     {path.title}
@@ -1631,7 +1631,7 @@ export function LivingWorkInvitation() {
                   href={path.cta.href}
                   className="eyebrow mt-auto pt-8 text-gold"
                 >
-                  {path.cta.label}{" "}
+                  <span className="link-line group-hover:link-line-on">{path.cta.label}</span>{" "}
                   {/* 6px of travel on the card's hover — inside the p-9, so it
                       never reaches the clipped edge. */}
                   <span

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { ConnectButton } from "@/components/layout/ConnectButton";
 import { org, primaryAction, primaryNav } from "@/content/site";
 import { navHeroFoot } from "@/lib/nav-hero";
+import { usePanelTransition } from "@/components/layout/use-panel-transition";
 
 /**
  * Navbar / Mobile — Marc's 375×80 frame (2026-09-02): the wordmark at 135×40
@@ -345,7 +346,7 @@ export function MobileNav() {
                         <path d={expanded === item.href ? "M1 7L6 2L11 7" : "M1 1L6 6L11 1"} stroke="currentColor" strokeWidth="1.5" />
                       </svg>
                     </button>
-                    <ul id={`mobile-submenu-${i}`} hidden={expanded !== item.href} className="mb-2 ml-3 border-l border-charcoal/15 pl-4">
+                    <MobileSubmenu id={`mobile-submenu-${i}`} open={expanded === item.href}>
                       {item.children.map((child) => (
                         <li key={child.href}>
                           <Link
@@ -361,7 +362,7 @@ export function MobileNav() {
                           </Link>
                         </li>
                       ))}
-                    </ul>
+                    </MobileSubmenu>
                   </>
                 ) : (
                   <Link
@@ -400,6 +401,42 @@ export function MobileNav() {
           </div>
         </nav>
       </div>
+    </div>
+  );
+}
+
+/**
+ * The About submenu's entrance and exit (user direction, 14 September 2026,
+ * "also apply the animation on mobile"). Grammar: "the world opening", About
+ * nav panel. The list sits in flow, so it cannot just fade the way the
+ * desktop panel does — the links below would jump. It opens as a grid row
+ * from 0fr to 1fr with the list fading in behind the edge, `quiet` over
+ * `--dur-small`, and closes the same way; `usePanelTransition` keeps it
+ * mounted through the exit.
+ */
+function MobileSubmenu({
+  id,
+  open,
+  children,
+}: {
+  id: string;
+  open: boolean;
+  children: React.ReactNode;
+}) {
+  const { mounted, state, ref: panelRef, onTransitionEnd } = usePanelTransition<HTMLDivElement>(open);
+  return (
+    <div
+      ref={panelRef}
+      data-state={state}
+      hidden={!mounted}
+      onTransitionEnd={onTransitionEnd}
+      className="grid grid-rows-[1fr] transition-[grid-template-rows,opacity] duration-(--dur-small) ease-quiet motion-reduce:transition-none data-[state=closed]:grid-rows-[0fr] data-[state=closed]:opacity-0"
+    >
+      {/* `pb-2`, not the old `mb-2`: a margin sits outside the 0fr row and
+          would leave an 8px step for the links below at the end of the exit. */}
+      <ul id={id} className="ml-3 min-h-0 overflow-hidden border-l border-charcoal/15 pb-2 pl-4">
+        {children}
+      </ul>
     </div>
   );
 }

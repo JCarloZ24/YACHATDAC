@@ -1,6 +1,6 @@
 # 01 · Wonder — the motion plan
 
-*Last updated: 9 September 2026*
+*Last updated: 14 September 2026*
 
 **Latest responsive correction, 9 September 2026:** desktop itinerary selection
 depends on available width and reading space, not pointer type. DevTools touch
@@ -70,7 +70,13 @@ draws it, and the PHONE's crop is applied in CSS instead of in the file. One
 inlined SVG, one set of draw tags, both breakpoints, and not one path altered
 — the file stays as supplied.
 
-The wave carrying canvas up over the film stays exactly as built. Four changes:
+The wave carrying canvas up over the film stays exactly as built. **From 14
+September 2026 (user direction) every other seam on the page rolls the same
+way** — Getting here, Before you come, Hosts, Stories and Close each carry a
+`hook` on their `WaveDivider` and a `createWaveRoll` module of their own in
+`_components/Motion.tsx`, scrubbed across that section's approach. Same cut,
+same grammar row ("a change of ground", Record wave / SCR-11), no channel
+claimed; the two mirrored waves roll from the thick end. Four changes to §02:
 
 - **Extend the span.** 220vh to 320vh at 1440. The draw completes with scroll
   to spare today, which is why it reads as quick.
@@ -101,6 +107,21 @@ The wave carrying canvas up over the film stays exactly as built. Four changes:
   the grammar table with it.
 
 ### 03 · Highlights — the section that has to stop being bland
+
+**Amendment, 14 September 2026 (user direction).** §03 and §11 now take
+The Record's card entrance — `recordMasonryPass`, grammar row "being drawn
+in" / SCR-12 — so one card entrance runs across the pages. Each card sits in
+a `[data-card-tile]` wrapper the trigger measures; the whole `[data-card]`
+drifts on y at the column's rate and fades against the viewport edges,
+retracing on reverse scroll. Mobile is fade only; reduced motion is still.
+Louder than the catalogue's, same day (user report: "the animation is done
+before I got to scroll there"): the fade runs while the card's top crosses
+88% → 42% of the viewport, and every column travels the same 16vh rather
+than the catalogue's opposing 6/14/9/18 — "the cards should align perfectly"
+(user direction, same day): the row moves as one level unit. Both are
+parameters of the shared module; The Record's defaults are untouched.
+The `cardRail` composition below is superseded and deleted from wonder.ts.
+The frame grade holds: the plate moves, the picture inside it does not.
 
 It is three photographs and it currently does nothing with them.
 
@@ -176,6 +197,22 @@ Shared module: `src/lib/motion/wonder-landscape.ts`; shared markup helpers:
 
 ### 06 - Itinerary: automatic stops in the restored accordion
 
+**Amendment, 14 September 2026 (user direction).** The itinerary no longer
+scrolls away at its end: `holdAtFoot` (wonder.ts) pins the section by its
+FOOT, no pin spacing, for one viewport while Before you come rides up over it
+wave first — the hero → facts read, repeated at the far end of the page. The
+The same hold runs on §11 From Country (under §12) — and not on §12, whose
+footer join stays plain (user direction, same day). The
+accordion keeps its height changes; the pin re-measures on the same debounced
+refresh. Reduced motion keeps ordinary flow.
+
+> **Superseded 14 September 2026, user direction.** The desktop sticky reading
+> screen and every automatic open are removed ("bad UX, no freedom on
+> scroll"). §06 is now the restored native accordion at every width, day 1
+> open by default, `disclose` on click, scroll entrances and the rule fill as
+> an indicator. Module: `src/lib/motion/wonder-itinerary.ts`. Below is the
+> record of the retired cut.
+
 **Latest user direction, 9 September 2026:** open each stop automatically at
 a consistent viewport position, with scroll entrances for text and pictures.
 The live `/lab/effects` was inspected and its `settle` and `frameOpen` demos
@@ -227,6 +264,23 @@ band is the fastest way to make a page look like an ad.
 
 ### 08 · Where you sleep — the quiet twin of §03
 
+**Amendment, 14 September 2026 (user direction):** the swipe carousel now
+advances on its own — one card every four seconds, no buttons, back to the
+first from the last (grammar row "what drifts"). It drives the rail's own
+scroller, so the snap, the mouse drag and the dots are exactly as they were
+("you just need to make it move"); it pauses for a pointer, a touch, focus
+or the reader's own scroll and resumes five seconds later, and only runs on
+screen. Reduced motion keeps the plain swipe carousel. The heading and copy
+still enter as before; the frames still stage no entrance of their own.
+Same day: the lit slider dot is the clock — gold ink rises inside the
+artist's dot over the four seconds and the card moves on when it is full
+("like ink filling in the dots"). Rails the reader moves keep a full dot.
+And when the reader takes over — a dot pressed, a swipe or a drag — the ink
+spills first (0.35s), then the rail moves to their card and the fill starts
+over there ("the golden dot will spill then move to next image and repeats
+the original sequence"). The five-second resume delay went with this: the
+sequence simply begins again on the chosen card.
+
 Same instrument, lower volume: `frameOpen` on the two cards at `scale: 1`.
 The heading and body arrive first. Two cards, so no `emanate`. A spread of
 two is just a stagger. The 9 September 2026 image-quality pass removed the
@@ -274,6 +328,11 @@ pointer. What answers is everything else.
   content module, and removing a person is a one-line change.
 
 ### 11 · From Country — arrive, then get out of the way
+
+**Amendment, 14 September 2026:** the same Record pass as §03 (see there).
+The hover lift is gone; both rails' cards now *pop* under a fine pointer —
+scale 1.03 on an inner wrapper, grammar row "pops" — so the masonry keeps
+the card's own transform and the row stays level.
 
 `emanate` on the three story cards. The existing hover lift and chevron slide
 stay as they are; they are already right. Marra Wonga stays `frame` grade, so

@@ -49,7 +49,7 @@ export function ImageSlot({
           isLight(tone) ? "bg-evergreen/5" : "bg-canvas/5"
         }`}
       >
-        <p className={`p-4 text-xs leading-relaxed ${ink.muted}`}>
+        <p className={`p-4 text-sm leading-relaxed ${ink.muted}`}>
           <span className={`eyebrow block ${ink.accent}`}>Image</span>
           <span className="mt-1 block">{note}</span>
         </p>

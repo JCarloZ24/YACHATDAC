@@ -31,6 +31,8 @@
 
 import { clearAll, composition as createComposition, type CompositionSpec } from "@/lib/motion/compose";
 import { DUR, EASE } from "@/lib/motion/tokens";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MotionModule } from "@/lib/motion-controller";
 
 const q = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
@@ -98,47 +100,72 @@ export function factsCopy(root: HTMLElement, span: number): MotionModule {
 }
 
 /**
- * §03 — Highlights, and §11 — From Country. The same instrument at the same
- * volume, because they are the same thing: a rail of photographic cards that
- * currently does nothing.
+ * §03 — Highlights, and §11 — From Country. NOT HERE ANY MORE.
  *
- * The whole card arrives at once — picture, chip and caption as one object,
- * on the house entrance (`arrive`, 16px and a fade). It used to open its
- * frame's clip from the left while the copy followed a beat later; a card
- * that assembles itself in parts in front of the reader was read as fussy
- * (August, 10 September 2026, user direction) and the clip is gone.
+ * Both rails took The Record's card entrance on 14 September 2026 (user
+ * direction: one card entrance across the pages, "the record style") —
+ * `createRecordMasonry` in lib/motion/record-masonry.ts, wired from
+ * _components/Motion.tsx with the rail's own hooks. The `cardRail`
+ * composition that lived here (`arrive`, whole card, no stagger — 10 Sep
+ * 2026) is gone with it rather than left as a second entrance the hook could
+ * silently re-attach to. Its lineage is in git and in
+ * docs/motion/wonder-plan.md §03.
  *
- * NO SCALE ON THE CARD BOX, and that is deliberate (9 Sep 2026). This was
- * `emanate`, which arrives elements from 0.7 scale. When its timeline did not
- * finish — and on this page it did not — the cards were left standing at 70%
- * of their width, which reads as a layout that does not match the frame
- * rather than as an animation that stalled. A card that only ever moves and
- * fades cannot be left the wrong size by a stalled tween.
- *
- * Hooks: `[data-card]` per card. `[data-frame-media]` and `[data-card-copy]`
- * stay in the markup as the frame-grade and layout hooks they also are; this
- * composition no longer animates them separately.
+ * `[data-frame-media]` and `[data-card-copy]` stay in the markup as the
+ * frame-grade and layout hooks they also are. The grade holds: the pass moves
+ * the whole plate on y and never the picture inside it.
  */
-export function cardRail(root: HTMLElement, span: number): MotionModule {
-  return composition("wonder/card-rail", root, {
-    channel: "media",
-    span,
-    uses: ["arrive"],
-    build: () => {},
-    enter: (tl) => {
-      const cards = qa(root, "[data-card]");
-      if (!cards.length) return;
-      // ⚠ THE CARD ARRIVES WHOLE (August, 10 Sep 2026, user direction). The
-      // clip used to unroll the picture from the left while the chip and
-      // title followed a beat later, so a card assembled itself in three
-      // parts in front of the reader. It now uses the house entrance and
-      // nothing else — `arrive`, picture and caption together, one object.
-      // No stagger across the row, for the reason recorded above the previous
-      // version: a row of plates out of line reads as broken layout.
-      tl.arrive(cards, { y: 24, stagger: 0 });
+
+/**
+ * A section HOLDS AT ITS FOOT while the next one rides up over it.
+ *
+ * Three seams take it (14 September 2026, user direction, in two asks the
+ * same day): §06 → §07, "the itinerary section will not move on the end";
+ * then §11 From Country → §12 Take it with you, "use the same motion". Not
+ * §12 → the footer: "do not make the footer overlap" (same day). One module,
+ * two registrations in Motion.tsx.
+ *
+ * The first ask, for the record: the itinerary HOLDS AT ITS FOOT while Before you come rides up
+ * over it (14 September 2026, user direction: "the itinerary section will not
+ * move on the end, the Before you come section will overlap the itinerary
+ * section, just like the hero and second section movement").
+ *
+ * The hero does this with `sticky top-0`: it is one screen tall, so its top
+ * can pin at the viewport's top and the facts wave scrolls over it. The
+ * itinerary is several screens tall and an accordion that changes height, so
+ * a sticky top would trap its lower stops out of reach. Instead the section
+ * is pinned by ScrollTrigger at the moment its FOOT meets the viewport's
+ * foot, with no pin spacing, for as long as it takes §07 to travel one
+ * viewport up over it. §07 is positioned and later in the document, so it
+ * paints above the pinned section, wave first — the same read as §01 → §02.
+ *
+ * Grammar: "a change of ground", the incoming ground covering the held one
+ * (the hero's own row). Transition channel; the section's entrances are
+ * unchanged. Reduced motion keeps ordinary flow.
+ *
+ * The end is measured on refresh, so an accordion stop opening or closing
+ * (which Motion.tsx already answers with a debounced refresh) re-seats it.
+ */
+export function holdAtFoot(root: HTMLElement): MotionModule {
+  let cleanup: (() => void) | undefined;
+  return {
+    init() {
+      cleanup?.();
+      const media = gsap.matchMedia();
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        ScrollTrigger.create({
+          trigger: root,
+          start: "bottom bottom",
+          end: () => `+=${window.innerHeight}`,
+          pin: true,
+          pinSpacing: false,
+          invalidateOnRefresh: true,
+        });
+      }, root);
+      cleanup = () => media.revert();
     },
-    cut: clearAll,
-  });
+    destroy() { cleanup?.(); cleanup = undefined; },
+  };
 }
 
 /**

@@ -35,7 +35,9 @@ import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
   BlobButton,
   BlobHold,
+  WAVE_APEX,
   WAVE_PATH,
+  WAVE_ROLL,
   WaveDivider,
 } from "@/components/ui/Furniture";
 import { HeroVideo } from "./HeroVideo";
@@ -146,7 +148,7 @@ function Slot({
    eyebrow ramp in Bantayog (`font-eyebrow`), sized 14–36 and uppercased,
    where the tokens' H4–H6 are 18–32 heading sizes. Converting them would
    resize every eyebrow on the page to answer a question about headings. The
-   site's own `eyebrow` utility is the 13px nav size, smaller than either. */
+   site's own `eyebrow` utility is 14px (raised from 13 on 14 Sep 2026), smaller than either. */
 const H1 = "headline text-h1";
 const H2 = "headline text-h2";
 const H3 = "headline text-h3";
@@ -210,6 +212,7 @@ function WaveDrip({
   ground,
   seat = "-top-px",
   mirror = false,
+  hook,
   className = "",
 }: {
   ground: string;
@@ -220,18 +223,31 @@ function WaveDrip({
   /** Wave Lines the frame lays out at x=1441 with a 1441 width are
       flipped horizontally — thick end on the LEFT (2033:5432, 2033:5434). */
   mirror?: boolean;
+  /** Optional motion hook, as WaveDivider's — rendered as `data-seam` so
+      wave-roll.ts can find the ink. Added 14 September 2026 (user report:
+      "where you stay wave is not moving"). */
+  hook?: string;
   className?: string;
 }) {
   return (
     <svg
       aria-hidden
+      data-seam={hook}
       viewBox="1.00123 0 1467.84877 105.324"
       preserveAspectRatio="none"
       className={`pointer-events-none absolute inset-x-0 z-10 h-10 w-full sm:h-26 ${
         mirror ? "scale-[-1]" : "scale-y-[-1]"
       } ${seat} ${className}`}
     >
-      <path d={WAVE_PATH} fill={ground} />
+      {/* The same three-tile strip WaveDivider carries (see WAVE_ROLL there),
+          so a hooked drip can roll without a seam. The svg is flipped on y,
+          so the roll's bottom-anchored swell grows DOWN from the seat here,
+          which is the drip's own direction. */}
+      <g data-wave-ink>
+        <path d={WAVE_PATH} fill={ground} />
+        <path d={WAVE_PATH} fill={ground} transform={`translate(${2 * WAVE_APEX} 0) scale(-1 1)`} />
+        <path d={WAVE_PATH} fill={ground} transform={`translate(${WAVE_ROLL} 0)`} />
+      </g>
     </svg>
   );
 }
@@ -354,7 +370,9 @@ export function WonderFacts() {
           Placement is unchanged from the <img> version — see FactsMap. */}
           <FactsMap {...factsMapMarkup()} />
           <Container>
-            <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-20">
+            {/* `gap-9` on the phone is the frame's own 36 between the last fact
+                and the map (2576:22001 readout, 14 Sep 2026); it was 48. */}
+            <div className="flex flex-col gap-9 lg:flex-row lg:items-start lg:gap-20">
               <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-8">
                 <p data-tier="anchor" className={H4}>
                   {wonderHero.standfirst}
@@ -383,11 +401,17 @@ export function WonderFacts() {
                   ))}
                 </div>
               </div>
-              {/* The frame's Placeholder Image slot — empty; the map fills it. A
-              240-tall block on the phone, the right-hand column at 1440. */}
+              {/* The frame's Placeholder Image slot — empty; the map fills it.
+              The right-hand column at 1440. On the phone it is the SAME BOX
+              the map draws in (FactsMap's `aspect-[347/324]` at container
+              width) — it was a fixed 240 (the frame's number at 375), and at
+              any wider phone the map, which scales with the width, ran taller
+              than the slot and climbed into the fact list (user screenshot,
+              14 Sep 2026). Reserving the map's own height keeps the copy
+              above it at every width. */}
               <div
                 aria-hidden
-                className="h-[240px] w-full lg:aspect-[600/640] lg:h-auto lg:w-auto lg:min-w-0 lg:flex-1"
+                className="aspect-[347/324] w-full lg:aspect-[600/640] lg:h-auto lg:w-auto lg:min-w-0 lg:flex-1"
               />
             </div>
           </Container>
@@ -454,11 +478,29 @@ export function WonderHighlights() {
             {wonderHighlights.map((card, i) => {
               const media = wonderHighlightMedia[i];
               return (
+                /* THE TILE IS THE MEASURE, THE CARD IS WHAT MOVES (14 Sep
+                   2026, user direction: one card entrance across the pages,
+                   The Record's). `recordMasonryPass` drifts the whole card on
+                   y and fades it against the viewport edges, so the trigger
+                   needs an element GSAP never transforms. CardRail's own
+                   cell is `sm:contents` from 640 up and cannot be it; this
+                   div can. `h-full` both ways so the grid still squares the
+                   row. */
+                <div key={card.title} data-card-tile className="h-full min-w-0">
                 <article
-                  key={card.title}
                   data-card
-                  className="relative flex min-h-[400px] min-w-0 flex-col justify-end gap-4 overflow-hidden rounded-3xl p-5 text-canvas lg:min-h-[500px] lg:p-10"
+                  className="relative h-full min-h-[400px] min-w-0 overflow-hidden rounded-3xl text-canvas lg:min-h-[500px]"
                 >
+                  {/* THE HOVER LIVES ON THIS WRAPPER, not the article — the
+                      article's transform is the masonry's. It pops 3% under
+                      a fine pointer (lib/motion/card-pop.ts, grammar
+                      "pops"). Absolute so the article's min-height
+                      still sizes the plate and the copy still seats on its
+                      foot. */}
+                  <div
+                    data-card-hover
+                    className="absolute inset-0 flex flex-col justify-end gap-4 p-5 lg:p-10"
+                  >
                   {/* frame grade: the clip opens, the picture inside holds. */}
                   <div
                     data-frame-media
@@ -497,7 +539,9 @@ export function WonderHighlights() {
                       </p>
                     </div>
                   </div>
+                  </div>
                 </article>
+                </div>
               );
             })}
           </CardRail>
@@ -596,7 +640,7 @@ export function WonderGettingHere() {
           highlights ground. Above the top edge, so it sits on the section
           itself: the sticky screen below is overflow-hidden at lg and would
           cut it off. */}
-      <WaveDivider ground="var(--color-charcoal)" mirror />
+      <WaveDivider ground="var(--color-charcoal)" mirror hook="wonder-wave-getting-here" />
       {/* Wave Line 2033:5434 / 2576:22821 — charcoal dripping down over the
           Turraburra photo. Hung off this section's foot (1px overlapped so
           the seam never shows) above the shared landscape backdrop. On the
@@ -785,9 +829,11 @@ function WonderTurraburra() {
 /**
  * The rule under a stop doubles as the itinerary's scroll indicator (motion
  * grammar, "the world opening" / itinerary rule, 10 September 2026, user
- * direction). The burnt-ochre layer is the same artwork used as a mask, so
- * the dots that fill are the artist's dots; `--stage-fill` is written by
- * `src/lib/motion/wonder-itinerary.ts` and is 0% with no JavaScript.
+ * direction; 14 September 2026: the dots are revealed in black left to right
+ * rather than coloured in). The drawn layer is the same artwork used as a
+ * mask, so the dots that appear are the artist's dots; `--stage-fill` is
+ * written by `src/lib/motion/wonder-itinerary.ts` and is 0% with no
+ * JavaScript, where the static dots show instead.
  */
 function DottedLine() {
   return (
@@ -819,11 +865,12 @@ function DottedLine() {
 
 /**
  * Restored to 2033:5889 on 9 September 2026, user direction (D5/F7).
- * Native disclosures are the base layout at every width. Later user direction
- * on the same day adds viewport-aligned automatic opening and scroll entrances.
- * The controller enables the held layout only when every stop fits the screen.
- * The supplied desktop reference includes a closing rule; the 375 frame does
- * not, so that last rule is desktop-only.
+ * Native disclosures are the layout at every width, day 1 open by default.
+ * The desktop held reading screen and the automatic opening added on 9–10
+ * September were removed on 14 September 2026, user direction ("bad UX, no
+ * freedom on scroll"). Only a click opens or closes a stop; scroll entrances
+ * and the rule fill remain. The supplied desktop reference includes a closing
+ * rule; the 375 frame does not, so that last rule is desktop-only.
  */
 export function WonderStay() {
   return (
@@ -892,10 +939,9 @@ export function WonderStay() {
                           src="/wonder/chevron-up.svg"
                           alt=""
                           aria-hidden
-                          /* The turn is CSS so it is smooth in both the
-                             manual accordion and the held reading screen,
-                             where the module changes `open` directly.
-                             Grammar: "the world opening", chevron `quiet`. */
+                          /* The turn is a CSS transition rather than a GSAP
+                             tween. Grammar: "the world opening", chevron
+                             `quiet`. */
                           className="h-8 w-[33px] shrink-0 rotate-180 transition-[rotate] duration-[320ms] ease-out group-open:rotate-0 motion-reduce:transition-none"
                         />
                       </summary>
@@ -967,7 +1013,7 @@ export function WonderBeforeYouCome() {
       data-wonder="before"
       className="relative flex flex-col items-center gap-12 bg-evergreen px-5 py-16 text-canvas lg:gap-14 lg:px-[120px] lg:py-24"
     >
-      <WaveDivider ground="var(--color-evergreen)" />
+      <WaveDivider ground="var(--color-evergreen)" hook="wonder-wave-before" />
       <Container className="flex flex-col items-center">
         <div className="flex w-full max-w-[768px] flex-col items-center gap-3 lg:gap-4">
           <p data-eyebrow className={`${H5} text-gold text-center`}>
@@ -1035,7 +1081,7 @@ export function WonderWhereYouStay() {
       className={`relative bg-canvas py-10 text-charcoal lg:pt-[120px] lg:pb-28 ${GUTTER}`}
     >
       {/* The evergreen drips down into the canvas (frame wave 2033:6770). */}
-      <WaveDrip ground="var(--color-evergreen)" />
+      <WaveDrip ground="var(--color-evergreen)" hook="wonder-wave-sleep" />
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-4">
           <h2 className={H2}>{whereYouStay.title}</h2>
@@ -1054,7 +1100,8 @@ export function WonderWhereYouStay() {
         </div>
         {/* A rail at every width now, not a rail that becomes a grid — see
             StayRail for why this is not CardRail. The dots sit 24 under the
-            row, as on Highlights (2576:22570 / 2576:22542). */}
+            row, as on Highlights (2576:22570 / 2576:22542). Since 14 Sep
+            2026 it advances on its own (lib/motion/stay-marquee.ts). */}
         <StayRail label="Where you stay">
           {whereYouStayMedia.map((slot) => (
             <div
@@ -1129,7 +1176,7 @@ export function WonderHosts() {
       data-wonder="hosts"
       className={`relative bg-canvas pt-10 pb-16 text-charcoal lg:py-28 ${GUTTER}`}
     >
-      <WaveDivider ground="var(--color-canvas)" />
+      <WaveDivider ground="var(--color-canvas)" hook="wonder-wave-hosts" />
       <Container className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
         <div
           data-plate-copy
@@ -1180,7 +1227,7 @@ export function WonderStories() {
           same crest reads as the frame draws it. So it returns from `sm` up
           and the phone keeps the straight canvas-into-white join it has now.
           The bottom join is unchanged either way — it is Close's roasted. */}
-      <WaveDivider ground="white" className="hidden sm:block" />
+      <WaveDivider ground="white" className="hidden sm:block" hook="wonder-wave-stories" />
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex flex-col gap-5 lg:gap-4">
           {/* 16 on both frames — the one eyebrow that does not step up. */}
@@ -1205,11 +1252,16 @@ export function WonderStories() {
             {wonderStories.items.map((item, i) => {
               const media = wonderStoryMedia[i];
               return (
+                /* Tile and card, as §03 — see the note there. The hover lift
+                   (`hover:-translate-y-1`, then `data-pt-lift` for an
+                   afternoon) is gone: the card now POPS under the pointer
+                   instead, on the inner wrapper, as §03's does. */
+                <div key={item.href} data-card-tile className="h-full min-w-0">
                 <article
-                  key={item.href}
                   data-card
-                  className="group/card relative flex min-w-0 flex-col overflow-hidden rounded-3xl bg-charcoal text-canvas transition-transform duration-(--dur-small) ease-quiet hover:-translate-y-1"
+                  className="group/card relative flex h-full min-w-0 flex-col overflow-hidden rounded-3xl bg-charcoal text-canvas"
                 >
+                  <div data-card-hover className="flex flex-1 flex-col">
                   {/* Marra Wonga is frame-grade: the image plane holds under
                     the pointer; the card lifts, the label answers. */}
                   <div
@@ -1238,9 +1290,12 @@ export function WonderStories() {
                       </div>
                       <Link
                         href={item.href}
-                        className="mt-auto inline-flex items-center gap-2 font-eyebrow text-base leading-normal font-bold text-gold uppercase after:absolute after:inset-0 group-hover/card:underline group-hover/card:underline-offset-4"
+                        /* Nav & CTA/16 through the `eyebrow` utility — 800, the repointed face —
+                           rather than a hand-built font-eyebrow at 700 (14 Sep 2026, type pass).
+                           CTA16 carries no tracking, as the BlobHold note in Furniture.tsx records. */
+                        className="mt-auto inline-flex items-center gap-2 eyebrow text-base leading-normal tracking-normal text-gold after:absolute after:inset-0"
                       >
-                        {wonderStories.cta}
+                        <span className="link-line group-hover/card:link-line-on">{wonderStories.cta}</span>
                         {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
                         <img
                           src="/wonder/chevron-right.svg"
@@ -1251,7 +1306,9 @@ export function WonderStories() {
                       </Link>
                     </div>
                   </div>
+                  </div>
                 </article>
+                </div>
               );
             })}
           </CardRail>
@@ -1276,7 +1333,7 @@ export function WonderClose() {
     >
       {/* Wave Line at y=9975, laid out at x=1440 — a flipped instance, so
           the thick end is on the LEFT like 2033:5432. */}
-      <WaveDivider ground="var(--color-roasted)" mirror />
+      <WaveDivider ground="var(--color-roasted)" mirror hook="wonder-wave-close" />
       <Container className="flex flex-col items-center">
         {/* THE 768 CLAMP IS ON THE PROSE, NOT ON THE BLOCK (9 Sep 2026).
             `Max Width/max-width-large` = 768 governs the measure of the

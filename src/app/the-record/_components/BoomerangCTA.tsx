@@ -30,7 +30,7 @@ export function BoomerangCTA({ href, label }: { href: string; label: string }) {
     <div className="relative min-w-0 text-center">
       <canvas ref={canvas} tabIndex={0} role="img" aria-label={recordBoomerangCopy.label}
         className={`mx-auto h-[42svh] min-h-72 max-h-[440px] w-full cursor-grab touch-pan-y active:cursor-grabbing ${ready ? "opacity-100" : "opacity-0"}`} />
-      {ready ? <p className="eyebrow mt-3 text-xs tracking-[0.08em] text-canvas/55">{recordBoomerangCopy.hint}</p> : null}
+      {ready ? <p className="eyebrow mt-3 text-sm tracking-[0.08em] text-canvas/55">{recordBoomerangCopy.hint}</p> : null}
       <Link href={href} className="headline mx-auto mt-6 block max-w-xl text-h3 leading-[1.12] underline decoration-2 underline-offset-8">{label}</Link>
     </div>
   );

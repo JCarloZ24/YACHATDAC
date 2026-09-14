@@ -75,7 +75,7 @@ function TruthEntryBlock({
         </Reveal>
         {entry.source ? (
           <Reveal index={1}>
-            <p className={`mt-3 text-xs ${ink.muted}`}>{entry.source}</p>
+            <p className={`mt-3 text-sm ${ink.muted}`}>{entry.source}</p>
           </Reveal>
         ) : null}
       </div>
@@ -147,7 +147,7 @@ function TruthEntryBlock({
           <Reveal index={5}>
             <div className="mt-8 max-w-2xl space-y-2">
               {entry.footnotes.map((note) => (
-                <p key={note} className={`text-xs leading-relaxed ${ink.muted}`}>
+                <p key={note} className={`text-sm leading-relaxed ${ink.muted}`}>
                   {note}
                 </p>
               ))}

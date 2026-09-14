@@ -28,9 +28,9 @@ export function CtaLink({
   return (
     <Link
       href={href}
-      className={`group eyebrow inline-flex items-center gap-2 ${ink.accent} transition-colors duration-(--dur-small) ease-quiet hover:underline ${className}`}
+      className={`group eyebrow inline-flex items-center gap-2 ${ink.accent} transition-colors duration-(--dur-small) ease-quiet ${className}`}
     >
-      {children}
+      <span className="link-line group-hover:link-line-on group-focus-visible:link-line-on">{children}</span>
       <span
         aria-hidden
         className="transition-transform duration-(--dur-small) ease-quiet group-hover:translate-x-1"

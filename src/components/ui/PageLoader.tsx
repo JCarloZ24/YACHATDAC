@@ -371,7 +371,7 @@ export function PageLoader({
             named ? "opacity-100" : "opacity-0"
           }`}
         >
-          <p className="eyebrow text-xs text-gold">{pageLoaderCopy.viewing}</p>
+          <p className="eyebrow text-sm text-gold">{pageLoaderCopy.viewing}</p>
           <p className="headline mt-4 text-h2 leading-[1.05] tracking-[-0.015em] text-canvas">
             {name}
           </p>

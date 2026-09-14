@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 /**
  * The frame's slider dots under a phone card row (Highlights 2576:24656,
@@ -29,6 +29,7 @@ import { useEffect, useRef, useState } from "react";
 
 /** The dot, at its own bounding box in the export's coordinates. */
 const DOT_BOX = "132.72 0 7.51 7.42";
+
 const DOT_PATH =
   "M137.507 7.29029C136.889 7.43693 136.06 7.46952 135.425 7.29029C133.637 6.7852 132.417 4.8463 132.791 3.08663C133.181 1.31066 134.645 0.104955 136.255 0.00719573C138.076 -0.106857 139.588 1.14773 140.108 2.85852C140.677 4.71595 139.23 6.89925 137.523 7.29029H137.507Z";
 
@@ -81,6 +82,8 @@ export function SliderDots({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  // One clip id per dot row, so a page with two rails does not share one.
+  const clipId = useId();
 
   useEffect(() => {
     // The scroller is found from the node directly above this one — reached
@@ -128,6 +131,14 @@ export function SliderDots({
     if (!rail) return;
     const cell = rail.children[i];
     if (!(cell instanceof HTMLElement)) return;
+    // A self-advancing rail (lib/motion/stay-marquee.ts) answers this and
+    // moves itself — spilling the lit dot's ink first (August, 14 September
+    // 2026). Nobody listening means the rail is the reader's alone, and the
+    // dot scrolls it exactly as it always did.
+    const asked = rail.dispatchEvent(
+      new CustomEvent("rail:go", { detail: { index: i }, cancelable: true }),
+    );
+    if (!asked) return;
     cell.scrollIntoView({
       inline: "start",
       block: "nearest",
@@ -160,14 +171,41 @@ export function SliderDots({
             aria-hidden
             viewBox={DOT_BOX}
             className="h-[7.42px] w-[7.51px] shrink-0"
-            /* The export's own two values. Neither is a palette token: the
-               lit dot is #EFB35C, which is not --color-gold (#fbae3d), and
-               the rest are charcoal at 10%. Raised with the other V2/brand-kit
-               colour drifts rather than invented as a token here. */
-            fill={i === active ? "#EFB35C" : "#090E12"}
-            fillOpacity={i === active ? 1 : 0.1}
           >
-            <path d={DOT_PATH} />
+            {/* The export's own two values. Neither is a palette token: the
+                lit dot is #EFB35C, which is not --color-gold (#fbae3d), and
+                the rest are charcoal at 10%. Raised with the other V2/brand-kit
+                colour drifts rather than invented as a token here. */}
+            <path d={DOT_PATH} fill="#090E12" fillOpacity={0.1} />
+            {i === active ? (
+              /* THE INK (August, 14 September 2026: "like ink filling in the
+                 dots"). The lit dot is not a flat swap of fill: gold rises
+                 inside the artist's shape to `--stay-fill`, the clock a
+                 self-advancing rail keeps on its section (lib/motion/
+                 stay-marquee.ts). The fallback is 1, so on a rail that only
+                 the reader moves — Highlights, From Country — the dot is
+                 simply full, exactly as it was. The gold rect is clipped to
+                 the same path, and scales from its own foot so the ink reads
+                 as filling up, not sliding in. */
+              <>
+                <clipPath id={clipId}>
+                  <path d={DOT_PATH} />
+                </clipPath>
+                <rect
+                  x="132.72"
+                  y="0"
+                  width="7.51"
+                  height="7.42"
+                  fill="#EFB35C"
+                  clipPath={`url(#${clipId})`}
+                  style={{
+                    transformBox: "fill-box",
+                    transformOrigin: "50% 100%",
+                    transform: "scaleY(var(--stay-fill, 1))",
+                  }}
+                />
+              </>
+            ) : null}
           </svg>
         </button>
       ))}

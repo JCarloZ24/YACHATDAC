@@ -452,7 +452,9 @@ body {
 
 @utility eyebrow {
   font-family: var(--font-eyebrow);
-  font-size: 0.8125rem;
+  /* 14px, the site's type floor (14 September 2026, user direction: nothing
+     under 14). Was 0.8125rem / 13px, the frames' nav size. */
+  font-size: 0.875rem;
   /* 800 = ExtraBold, matching the Figma repoint of Eyebrow/Hero-32,
      Eyebrow/Section-24 and Nav & CTA/16. Was 700, which rendered a weight
      lighter than the lo-fi. */
@@ -620,6 +622,41 @@ body {
     background-image: none;
     -webkit-text-fill-color: currentColor;
   }
+}
+
+/* link-line — the underline that clickable text in a card wears on hover
+   (14 September 2026, user direction: "hover/underline effect to clickable
+   text elements in cards, matching main navigation style", the line to
+   "reveal left to right and exit from right to left").
+
+   The nav's own hover is the gold water fill above; this is the line that
+   goes with it on links whose rest colour is already gold, where a gold fill
+   would paint nothing. It is drawn as a background gradient rather than
+   text-decoration or a pseudo-element: text-decoration cannot be animated
+   along its length, and several of these links already spend their `::after`
+   on a stretched hit area (Wonder's story cards). The size runs 0% → 100% from
+   the left edge, so the line reveals left-to-right and, shrinking back to the
+   same origin, exits right-to-left. Same clock as the nav (`--dur-small`,
+   `quiet`).
+
+   `link-line-on` is the raised state on its own, so a card that hovers as a
+   whole can drive the line from its group: `link-line group-hover:link-line-on`. */
+@utility link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1.5px;
+  transition: background-size var(--dur-small) var(--ease-quiet);
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1.5px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+@utility link-line-on {
+  background-size: 100% 1.5px;
 }
 
 /* thread-dots — /about §06's thread, drawn as the artist's dotted line rather

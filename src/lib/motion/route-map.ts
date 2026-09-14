@@ -38,7 +38,11 @@
  *                                  ~26 units thick and were tagged 8, left
  *                                  from when this was an ink width, so the
  *                                  reveal reached only part way across them
- *                                  and they frayed as they drew.
+ *                                  and they frayed as they drew. §02's two
+ *                                  bands had the same fault (14 Sep 2026,
+ *                                  user report: the ghost continent's
+ *                                  texture and small unfilled gaps in the
+ *                                  ink): tagged 3 and 8, measured ~5 and ~12.
  *     data-from="0" data-to="0.6"  its share of the scroll (default 0 → 0.62)
  *     data-seg="70"                segment length, in viewBox units
  *   <path data-feature>            anything that simply arrives, by opacity.
@@ -138,12 +142,15 @@ const BRUSH_WOBBLE = { gap: 0.45, end: 0.9, bow: 0.5 };
 /**
  * How wide a reveal stroke is, as a multiple of the band's own `data-ink`.
  *
- * The stroke runs along the band's OUTLINE and has to reach across the band
- * to uncover it, so it is wider than the band is thick. Too wide and it
- * uncovers the neighbouring band early; 2.2 covers the state's own line and
- * the faint continent behind it without either bleeding into the other.
+ * The stroke runs along the band's OUTLINE — both edges of the ribbon — and
+ * has to reach across to the ribbon's middle from either side, so it must be
+ * more than TWICE the thickness or a core of the band stays masked. That
+ * core is what showed as slivers in Queensland's ink and as a hollow,
+ * doubled ghost continent (14 Sep 2026). 2.2 left no margin; 2.8 does.
+ * Since every band has its own mask and wrapper, a wider stroke cannot
+ * bleed into a neighbouring band — the earlier reason for keeping it tight.
  */
-const REVEAL_SCALE = 2.2;
+const REVEAL_SCALE = 2.8;
 /** The float: a slow bob, in viewBox units. */
 const FLOAT_RISE = 6;
 const FLOAT_PERIOD = 1.8;
@@ -217,6 +224,10 @@ type Route = {
   mask: SVGMaskElement;
   /** The group the mask hangs on, so the band keeps its own. */
   wrap: SVGGElement;
+  /** `url(#…)` of `mask`, to put back when the reader scrolls up. */
+  maskRef: string;
+  /** Whether the wrapper currently carries the mask. */
+  masked: boolean;
 };
 type Feature = {
   el: SVGElement;
@@ -467,7 +478,7 @@ export function createRouteMap(
       wrap.setAttribute("mask", `url(#${id})`);
       path.parentNode?.insertBefore(wrap, path);
       wrap.appendChild(path);
-      routes.push({ path, to, inks, mask, wrap });
+      routes.push({ path, to, inks, mask, wrap, maskRef: `url(#${id})`, masked: true });
     }
 
     const unstaged = featureEls.filter((el) => el.dataset.at === undefined);
@@ -504,10 +515,24 @@ export function createRouteMap(
     pins.forEach((_, i) => setLit(i, false));
 
     const paint = (progress: number) => {
-      for (const { inks } of routes) {
+      for (const route of routes) {
+        // ONCE A BAND HAS FINISHED DRAWING, THE MASK COMES OFF. The reveal
+        // strokes are an approximation of the ribbon and, whatever their
+        // width, the artwork underneath is the truth: at the end of its
+        // window the band is shown whole, exactly as the file draws it, and
+        // the mask goes back on only if the reader scrolls back into the
+        // draw (14 Sep 2026 — gaps in the ink and a hollow ghost continent
+        // were the mask staying on after the draw was done).
+        const done = progress >= route.to;
+        if (done === route.masked) {
+          if (done) route.wrap.removeAttribute("mask");
+          else route.wrap.setAttribute("mask", route.maskRef);
+          route.masked = !done;
+        }
+        if (done) continue;
         // One write per stroke, and it is the only thing that moves: the
         // mask opens along the band and the artwork stands where it opens.
-        for (const ink of inks) {
+        for (const ink of route.inks) {
           ink.path.style.strokeDashoffset = String(
             1 - window01(progress, [ink.from, ink.to]),
           );

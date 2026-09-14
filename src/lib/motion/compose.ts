@@ -33,6 +33,7 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MotionModule } from "@/lib/motion-controller";
+import { awaitEntry } from "@/lib/motion/route-entry";
 import {
   registerYachatdacEffects,
   revertSplits,
@@ -264,16 +265,33 @@ export function composition(
       // Entry motion has its own range, before the section's reading span.
       let entryTl: gsap.core.Timeline | null = null;
       let entryTrigger: ScrollTrigger | null = null;
+      let ungate: (() => void) | undefined;
       if (spec.enter) {
         // Build before attaching the trigger so it sees the full duration.
         // Scrubbed entries derive their state from scroll, including restored
         // positions. Single-play entries explicitly complete missed arrivals
         // on refresh so hash links cannot leave the content hidden.
-        entryTl = gsap.timeline({ paused: true });
-        spec.enter(entryTl, root);
+        const entry = gsap.timeline({ paused: true });
+        entryTl = entry;
+        spec.enter(entry, root);
+        // ⚠ THE TRIGGER WAITS FOR THE COVER (X7 / SYS-02; applied here
+        // 14 September 2026, user direction: "apply the page loader
+        // consistently across all pages to prevent scattered animation
+        // issues"). The timeline is built now — its `from` states pin the
+        // copy hidden, which is right under an opaque cover — but nothing
+        // can ask it to play until RouteLoader's cover has faded. Before
+        // this, a first-screen entrance on About, Living Work or Wonder ran
+        // underneath the cover and was over by the time it lifted, while
+        // Home, Partnerships and The Record already waited (their heroes
+        // gate on `awaitEntry` by hand). Gating here makes every
+        // composition on every page wait the same way. It cannot deadlock
+        // the cover: readiness watches `start()`, which has already run by
+        // the time this branch builds, not this trigger. Routes with no
+        // cover (/lab, /v2) release the gate at once.
+        const attach = () => {
         entryTrigger = spec.enterScrub ? ScrollTrigger.create({
           trigger: root,
-          animation: entryTl,
+          animation: entry,
           start: spec.enterStart ?? "top 82%",
           end: spec.enterEnd ?? "top 20%",
           scrub: SCRUB.normal,
@@ -292,6 +310,8 @@ export function composition(
             if (self.scroll() >= self.start) entryTl?.progress(1);
           },
         });
+        };
+        ungate = awaitEntry(attach);
       }
 
       assertChannel(name, spec, spec.uses);
@@ -300,6 +320,7 @@ export function composition(
 
       return () => {
         detachFocus();
+        ungate?.();
         tl.kill();
         entryTrigger?.kill();
         entryTl?.kill();

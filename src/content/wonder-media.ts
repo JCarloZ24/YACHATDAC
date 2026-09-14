@@ -579,10 +579,17 @@ export const wonderStoryMedia: MediaSlot[] = [
     /* 10 September 2026: `wonder-spring-story.webp` was a byte-for-byte copy
        of the Highlights wall frame standing in for a spring that has not been
        photographed. Two names for one file, and the wrong subject under a
-       spring's heading. The file is deleted and the slot renders its tonal
-       field, which is the honest state until the real frame lands. */
+       spring's heading. The file was deleted and the slot rendered its tonal
+       field until the real frame landed.
+       14 September 2026: it landed. Origin: camera file `003A6336` (5040 ×
+       3360), supplied by August the same day for this card. Derivative cut
+       to the library's 2000 × 1054 with sharp, graded toward the two frames
+       beside it — saturation eased, contrast lowered, a touch warmer — so the
+       three cards read as one set. The master is not in the repo. Credit and
+       permission follow the rest of the Wonder batch; confirm with Steve at
+       presentation. */
     expects: "The spring holding water",
-    src: null,
+    src: `${WONDER}/wonder-story-spring-lake.webp`,
     tone: "evergreen",
   },
 ];

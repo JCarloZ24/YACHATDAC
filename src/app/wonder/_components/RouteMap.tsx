@@ -329,7 +329,13 @@ export function FactsMap({ markup }: { markup: string }) {
       <div className="pointer-events-none absolute inset-0">
         <div
           data-map="mobile"
-          className="absolute bottom-0 left-5 aspect-[347/324] w-[calc(100%-2.5rem)] overflow-hidden lg:inset-auto lg:top-[9.22%] lg:left-[14.26%] lg:aspect-[1128.88/783] lg:w-[78.39%] lg:overflow-visible"
+          /* `bottom-16` on the phone, not `bottom-0`: the section pads its
+             foot by 64 (`py-16`), and the copy's placeholder slot — the same
+             aspect box as this — ends at the top of that padding. Anchored to
+             the section's edge the map sat a full 64 lower than its slot and
+             opened a gap under the last fact (user screenshot, 14 Sep 2026).
+             Now the two boxes coincide. */
+          className="absolute bottom-16 left-5 aspect-[347/324] w-[calc(100%-2.5rem)] overflow-hidden lg:inset-auto lg:top-[9.22%] lg:left-[14.26%] lg:aspect-[1128.88/783] lg:w-[78.39%] lg:overflow-visible"
         >
           <div
             className="absolute top-0 left-[-65.42%] h-[122.84%] w-[165.36%] lg:left-0 lg:h-full lg:w-full"

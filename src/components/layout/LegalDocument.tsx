@@ -141,7 +141,7 @@ export function LegalDocument({ doc }: { doc: LegalDoc }) {
           ))}
         </dl>
 
-        <p className="eyebrow mt-16 text-xs leading-[1.5] tracking-[0.08em] text-oxide lg:mt-12">
+        <p className="eyebrow mt-16 text-sm leading-[1.5] tracking-[0.08em] text-oxide lg:mt-12">
           Last updated{" "}
           <span data-placeholder="legal-date">{LAST_UPDATED_HELD}</span>
         </p>

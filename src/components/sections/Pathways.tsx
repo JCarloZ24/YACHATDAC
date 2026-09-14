@@ -80,7 +80,14 @@ export function Pathways() {
           reach it, silently desynchronising the track from the timeline. If
           that shows up in keyboard testing, the fix is a scroll handler that
           resets `scrollLeft`, not switching the mask off. */}
-      <div className="home-pathways-mask mt-8 overflow-hidden pl-5 lg:mt-14 lg:pl-16">
+      {/* `py-3 -my-3`: the mask clips at its padding edge, and the card's
+          CTA baseline sits exactly on the card's foot. The 3% hover pop
+          (card-pop.ts, 14 Sep 2026) grows the card ~6px past that edge, and
+          the underline — the last 1.5px of the card — was the part that got
+          clipped ("the underline removes itself when card pops"). The
+          padding gives the pop room; the negative margin keeps the layout
+          where it was. */}
+      <div className="home-pathways-mask mt-5 -mb-3 overflow-hidden py-3 pl-5 lg:mt-11 lg:pl-16">
         {/* The track carries its own trailing margin as padding, so the row
             comes to rest with the last card clear of the right edge rather
             than run into it. It is part of the measured width, which is why
@@ -92,7 +99,7 @@ export function Pathways() {
               <div key={path.href} data-pathway-card className="shrink-0 basis-[calc(100vw-3.5rem)] sm:basis-[46vw] lg:basis-[21vw]">
                 <Link
                   href={path.href}
-                  className="flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas"
+                  className="group flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-canvas"
                 >
                   {/* Frame grade: the photograph is held, and the mark sits
                       over its top corner exactly as the Invitation's does. */}
@@ -154,7 +161,7 @@ export function Pathways() {
                   <h3 className="headline mt-2 text-h3 leading-none tracking-normal">{path.title}</h3>
                   <p className="mt-4 text-base leading-[1.5] text-canvas/90">{path.description}</p>
                   <span className="mt-auto flex items-center gap-2 pt-8">
-                    <span className="eyebrow text-base leading-[1.5] tracking-[0.2em] text-ochre">{path.cta}</span>
+                    <span className="link-line group-hover:link-line-on group-focus-visible:link-line-on eyebrow text-base leading-[1.5] tracking-[0.2em] text-ochre">{path.cta}</span>
                     {/* Inline rather than the shared invitation-chevron.svg,
                         which is a hardcoded fill="white" stroke="white" and
                         would sit white beside ochre text. currentColor keeps

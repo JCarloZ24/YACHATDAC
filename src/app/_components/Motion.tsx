@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { start, stop, watchVisibility } from "@/lib/motion-controller";
+import { register, start, stop, watchVisibility } from "@/lib/motion-controller";
+import { createCardPop } from "@/lib/motion/card-pop";
 
 /**
  * The homepage's motion lifecycle. Renders nothing.
@@ -53,10 +54,21 @@ import { start, stop, watchVisibility } from "@/lib/motion-controller";
  */
 export function HomeMotion() {
   useEffect(() => {
+    // The Invitation and Pathway cards pop under a fine pointer — Wonder's
+    // rail hover, carried here (14 Sep 2026, user direction: "apply the
+    // hover effects on the cards"). Grammar: "pops". Both sections are
+    // server-rendered, so the modules are registered from here. Nothing
+    // else transforms these elements, so the card itself is scaled.
+    const unregister: Array<() => void> = [];
+    const invitation = document.querySelector<HTMLElement>(".home-invitation-cards");
+    if (invitation) unregister.push(register(createCardPop(invitation, { card: "[data-invitation-card]", inner: null })));
+    const pathways = document.querySelector<HTMLElement>("[data-pathways-track]");
+    if (pathways) unregister.push(register(createCardPop(pathways, { card: "[data-pathway-card]", inner: "a" })));
     start();
     const unwatch = watchVisibility();
     return () => {
       unwatch();
+      unregister.forEach((fn) => fn());
       stop();
     };
   }, []);

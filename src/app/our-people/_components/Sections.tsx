@@ -11,7 +11,6 @@ import {
 import { contactRoutes } from "@/content/contact";
 import { ContactDetails } from "@/components/sections/ContactDetails";
 import { ContactDoors } from "@/components/sections/ContactDoors";
-import { EditorialNote } from "@/components/ui/EditorialNote";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
   ClusterArtwork,
@@ -275,7 +274,7 @@ export function OurPeopleHero() {
             job, not the page's. */}
         <p
           data-placeholder="stand-in"
-          className="eyebrow absolute top-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
+          className="eyebrow absolute top-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-sm text-canvas"
         >
           ⟡ Stand-in
         </p>
@@ -422,7 +421,7 @@ export function SuzanneTestimony() {
             {suzanneProfile.quote}
           </p>
           <cite
-            className="eyebrow mt-20 block text-xs text-burnt not-italic"
+            className="eyebrow mt-20 block text-sm text-burnt not-italic"
           >
             {suzanneProfile.name}
           </cite>
@@ -430,14 +429,9 @@ export function SuzanneTestimony() {
 
         {/* Her external roles are incomplete — a national emissions reduction
             board, and possibly others. The §02 note carries this as a HELD
-            item, so it renders marked rather than being dropped: the note is
-            the only record that this profile is unfinished. */}
-        <EditorialNote
-          label="Editorial note — not for publication"
-          className="mt-16 max-w-[900px]"
-        >
-          <p>{suzanneProfile.pending}</p>
-        </EditorialNote>
+            item in `suzanneProfile.pending`, which is still the record. It no
+            longer RENDERS: the on-page editorial notes came off this page on
+            14 September 2026 (user direction). */}
         </div>
       </div>
 
@@ -580,7 +574,7 @@ function PersonCard({
             bottom-right: a face sits high in a 380x320 crop. */}
         <p
           data-placeholder="face"
-          className="eyebrow absolute top-2.5 left-1.5 z-10 rounded-xs bg-charcoal/70 px-2 py-1 text-[10px] tracking-[0.08em] text-canvas"
+          className="eyebrow absolute top-2.5 left-1.5 z-10 rounded-xs bg-charcoal/70 px-2 py-1 text-sm tracking-[0.08em] text-canvas"
         >
           ⟡ Placeholder face
         </p>
@@ -610,7 +604,7 @@ function PersonCard({
 
         {/* The role is REAL. Only the identity is held, so this carries full
             weight either way. */}
-        <p className="eyebrow mt-5 text-xs tracking-[0.08em] text-gold">
+        <p className="eyebrow mt-5 text-sm tracking-[0.08em] text-gold">
           {person.roleUnconfirmed ? "⚠ Role to confirm" : person.role}
         </p>
 
@@ -653,17 +647,10 @@ export function TheGathering() {
           ))}
         </div>
 
-        {/* The hold renders, VISIBLY MARKED as not for publication. Dropping
-            it would lose the only record that this section is unconfirmed
-            (R14/R20 exist because that keeps happening); rendering it as prose
-            would leave a reader unable to tell a drafting instruction from a
-            sentence. EditorialNote is the house answer to both. */}
-        <EditorialNote
-          label="Blocked — needs consent, not just content (R24)"
-          className="mt-20 max-w-[900px]"
-        >
-          <p>{team.pending}</p>
-        </EditorialNote>
+        {/* The hold (`team.pending`, R24) is still the record that this
+            section is unconfirmed; it no longer renders on the page — the
+            editorial notes came off /our-people on 14 September 2026 (user
+            direction). R14/R20 are why the content module keeps the text. */}
       </div>
 
     </section>
@@ -704,7 +691,7 @@ export function BreathTeam() {
       />
       <p
         data-placeholder="stand-in"
-        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
+        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-sm text-canvas"
       >
         ⟡ Stand-in
       </p>
@@ -745,7 +732,7 @@ function HeldSeat({
       data-people-seat
       className="relative flex min-h-[260px] flex-col justify-between overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/55 bg-charcoal p-5 lg:p-[26px]"
     >
-      <p className="eyebrow text-xs tracking-[0.5em] text-gold">Seat held</p>
+      <p className="eyebrow text-sm tracking-[0.5em] text-gold">Seat held</p>
       <div>
         {/* A gold rule, never a word. The same rule as the team cards. */}
         <div
@@ -755,7 +742,7 @@ function HeldSeat({
           className="h-[3px] w-[168px] bg-gold"
         />
         <div className="mt-7 flex items-end justify-between gap-4">
-          <p className="eyebrow text-xs tracking-[0.1em] text-canvas/90">
+          <p className="eyebrow text-sm tracking-[0.1em] text-canvas/90">
             {person.role}
           </p>
           <SeamGlyph
@@ -792,7 +779,7 @@ export function Governance() {
           cultural integrity.
         </p>
 
-        <p className="eyebrow mt-16 text-xs tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-14">
+        <p className="eyebrow mt-16 text-sm tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-14">
           Under our constitution
         </p>
 
@@ -840,7 +827,7 @@ export function Governance() {
           formal Iningai Nation representative.
         </p>
 
-        <p className="eyebrow mt-16 text-xs tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-16">
+        <p className="eyebrow mt-16 text-sm tracking-[0.3em] text-gold sm:tracking-[0.66em] lg:mt-16">
           Board seats · held
         </p>
         <div
@@ -856,7 +843,7 @@ export function Governance() {
           data-placeholder="elder-advisory"
           className="relative mt-14 overflow-hidden rounded-3xl border-[1.5px] border-dashed border-gold/60 p-6 lg:mt-12 lg:min-h-[420px] lg:p-[38px]"
         >
-          <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2 text-xs tracking-[0.3em] text-charcoal sm:tracking-[0.66em]">
+          <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2 text-sm tracking-[0.3em] text-charcoal sm:tracking-[0.66em]">
             Not yet sitting
           </p>
           {/* ⚠ THE ONLY FUTURE-TENSE PASSAGE ON THE PAGE, and it stays that
@@ -867,13 +854,9 @@ export function Governance() {
           <SeamGlyph motif="a" className="right-9 bottom-9 hidden w-11 lg:block" />
         </div>
 
-        <EditorialNote
-          tone="canvas"
-          label="Editorial note — not for publication"
-          className="mt-14 max-w-[900px]"
-        >
-          <p>{governance.pending}</p>
-        </EditorialNote>
+        {/* `governance.pending` is held in the content module and no longer
+            renders — editorial notes off this page, 14 September 2026 (user
+            direction). */}
       </div>
     </section>
   );
@@ -962,13 +945,9 @@ export function Acknowledgements() {
           </p>
         </div>
 
-        <EditorialNote
-          tone="canvas"
-          label="Editorial note — not for publication"
-          className="mt-14 max-w-[900px]"
-        >
-          <p>{acknowledgements.pending}</p>
-        </EditorialNote>
+        {/* `acknowledgements.pending` is held in the content module and no
+            longer renders — editorial notes off this page, 14 September 2026
+            (user direction). */}
       </div>
     </section>
   );
@@ -1003,7 +982,7 @@ export function BreathPivot() {
       />
       <p
         data-placeholder="stand-in"
-        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-[10px] text-canvas"
+        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-sm text-canvas"
       >
         ⟡ Stand-in
       </p>

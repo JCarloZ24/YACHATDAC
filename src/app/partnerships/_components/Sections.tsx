@@ -816,7 +816,7 @@ export function OpenQuestions() {
                       [data-vessel-source] because flattenReveal looks for the
                       source in the shutter's parentElement. */}
                   <div className="mt-auto pt-10">
-                    <p className="eyebrow text-[10px] leading-[1.3] tracking-[0.5em] text-gold">
+                    <p className="eyebrow text-sm leading-[1.3] tracking-[0.5em] text-gold">
                       What is running
                     </p>
                     <div className="relative mt-2">
@@ -962,7 +962,7 @@ export function AlreadyWorkingWith() {
                   quieter than the frame draws them; these are the content of
                   the section, not a caption under the eyebrow. */}
               <div className="flex items-start justify-between gap-4">
-                <p className="eyebrow max-w-[16ch] text-xs leading-[1.5] tracking-[0.28em] text-gold">
+                <p className="eyebrow max-w-[16ch] text-sm leading-[1.5] tracking-[0.28em] text-gold">
                   {group.title}
                 </p>
                 <SeamGlyph
@@ -1149,7 +1149,7 @@ export function WaysIn() {
                   <p> and the whole card is the anchor, so without `group-hover`
                   it sat inert while the card lifted under it. Underline is the
                   part that says "clickable"; the nudge is motion-safe only. */}
-              <p className="eyebrow mt-auto h-[18px] text-xs leading-[1.5] tracking-[0.333em] text-gold underline-offset-4 transition-transform duration-(--dur-small) ease-quiet group-hover:underline motion-safe:group-hover:translate-x-1">
+              <p className="eyebrow mt-auto h-[18px] text-sm leading-[1.5] tracking-[0.333em] text-gold underline-offset-4 transition-transform duration-(--dur-small) ease-quiet group-hover:underline motion-safe:group-hover:translate-x-1">
                 → {way.label}
               </p>
             </a>
@@ -1311,7 +1311,7 @@ export function HowWorkIsAgreed() {
               status label on the page uneditable at launch (D12) and unreadable
               to a screen reader. The rect and the type are reproducible from
               tokens, so they are. */}
-          <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2.5 text-xs leading-[14px] tracking-[0.28em] text-charcoal">
+          <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2.5 text-sm leading-[14px] tracking-[0.28em] text-charcoal">
             In preparation
           </p>
           <p className="mt-6 max-w-[1120px] text-base leading-[1.5] text-canvas/85 lg:mt-9 lg:text-[22px]">
@@ -1370,7 +1370,7 @@ export function TheEnding() {
           </p>
 
           <div className="mt-10">
-            <p className="eyebrow text-xs tracking-[0.08em] text-ochre">
+            <p className="eyebrow text-sm tracking-[0.08em] text-ochre">
               {office?.label}
             </p>
             <p className="mt-2 max-w-[360px] text-base leading-[1.5] text-charcoal">

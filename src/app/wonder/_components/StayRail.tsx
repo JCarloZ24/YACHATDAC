@@ -51,6 +51,12 @@ import { DragScrollRail } from "@/components/ui/DragScrollRail";
  * ONE CARD on the phone and TWO at 1024, which is the width the two-card
  * frame (2033:6782) drew — so the desktop row still reads as that frame, and
  * the extra eight are behind a swipe rather than a redesign of the section.
+ *
+ * IT ADVANCES ON ITS OWN since 14 September 2026 (August: "auto-scrolling
+ * image carousel, no left/right buttons"). Nothing here changed for it:
+ * lib/motion/stay-marquee.ts drives this scroller's own `scrollLeft` one
+ * card at a time and pauses for the reader, so the snap, the drag, the dots
+ * and the JS-off fallback are exactly as above. Grammar row "what drifts".
  */
 export function StayRail({
   label,

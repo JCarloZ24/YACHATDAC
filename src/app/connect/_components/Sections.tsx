@@ -192,7 +192,7 @@ export function ConnectHero() {
 
         <p
           data-placeholder="no-hero-image"
-          className="mt-10 max-w-[900px] text-xs leading-[1.5] text-gold"
+          className="mt-10 max-w-[900px] text-sm leading-[1.5] text-gold"
         >
           [ No hero image — typographic until a frame is chosen ]
         </p>

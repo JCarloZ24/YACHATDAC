@@ -80,7 +80,7 @@ export default function RootLayout({
             `AboutSkip`. */}
         <a
           href="#content"
-          className="eyebrow sr-only rounded-xs bg-charcoal px-4 py-2 text-xs tracking-[0.08em] text-canvas focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100"
+          className="eyebrow sr-only rounded-xs bg-charcoal px-4 py-2 text-sm tracking-[0.08em] text-canvas focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100"
         >
           {skipLinks.content}
         </a>

@@ -66,7 +66,7 @@ export function SignupField({
         </button>
       </div>
 
-      <p className={`text-xs ${ink.note}`}>{note}</p>
+      <p className={`text-sm ${ink.note}`}>{note}</p>
     </form>
   );
 }

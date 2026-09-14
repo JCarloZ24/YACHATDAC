@@ -108,7 +108,7 @@ export function TruthRailV2() {
       aria-hidden
       className="fixed left-6 top-1/2 z-20 hidden -translate-y-1/2 lg:block"
     >
-      <p className="eyebrow mb-6 origin-top-left text-[9px] tracking-[0.2em] text-ochre/70">
+      <p className="eyebrow mb-6 origin-top-left text-sm tracking-[0.2em] text-ochre/70">
         {loreMarker}
       </p>
       <div className="relative h-[46svh] w-px bg-canvas/15">
@@ -122,7 +122,7 @@ export function TruthRailV2() {
           <li
             key={mark.id}
             data-descent-mark={mark.id}
-            className="eyebrow text-[9px] text-canvas/30 transition-colors duration-300 data-[state=active]:text-ochre data-[state=passed]:text-canvas/60"
+            className="eyebrow text-sm text-canvas/30 transition-colors duration-300 data-[state=active]:text-ochre data-[state=passed]:text-canvas/60"
           >
             {mark.label}
           </li>
@@ -382,7 +382,7 @@ function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string
         })}
       </div>
       {caption ? (
-        <figcaption className="mt-3 text-xs leading-relaxed text-charcoal/60">
+        <figcaption className="mt-3 text-sm leading-relaxed text-charcoal/60">
           {caption}
         </figcaption>
       ) : null}
@@ -714,7 +714,7 @@ function PortraitTestimony({
               />
               <figcaption
                 data-truth-attribution
-                className="eyebrow mt-10 max-w-xs text-xs leading-relaxed text-ochre-deep"
+                className="eyebrow mt-10 max-w-xs text-sm leading-relaxed text-ochre-deep"
               >
                 {testimony.attribution} &middot; {testimony.role}
               </figcaption>
@@ -930,7 +930,7 @@ function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }
         ))}
       </div>
       {caption ? (
-        <figcaption className="mt-3 text-xs leading-relaxed text-charcoal/60">
+        <figcaption className="mt-3 text-sm leading-relaxed text-charcoal/60">
           {caption}
         </figcaption>
       ) : null}
@@ -1204,7 +1204,7 @@ function EntryBlock({
                   {label}
                 </p>
                 {sub ? (
-                  <p className={`mt-1 text-xs font-normal uppercase ${ink}`}>
+                  <p className={`mt-1 text-sm font-normal uppercase ${ink}`}>
                     {sub}
                   </p>
                 ) : null}
@@ -1218,7 +1218,7 @@ function EntryBlock({
                   }`}
               >
                 {entry.href ? (
-                  <Link href={entry.href} className={`transition-colors ${accentHover}`}>
+                  <Link href={entry.href} className={`link-line transition-colors ${accentHover}`}>
                     {entry.title}
                   </Link>
                 ) : (
@@ -1303,23 +1303,23 @@ function EntryBlock({
               )
             ) : null}
             {entry.footnotes?.map((footnote) => (
-              <p key={footnote.slice(0, 32)} className={`mt-4 text-xs leading-relaxed ${inkMuted}`}>
+              <p key={footnote.slice(0, 32)} className={`mt-4 text-sm leading-relaxed ${inkMuted}`}>
                 {footnote}
               </p>
             ))}
             {entry.source && entry.cta ? (
               /* The wireframe sets the record label and the CTA on one row. */
               <div className="mt-8 flex flex-wrap items-baseline justify-between gap-4">
-                <p className={`eyebrow text-[10px] font-normal ${accent}`}>
+                <p className={`eyebrow text-sm font-normal ${accent}`}>
                   {entry.source}
                 </p>
                 <Link
                   href={entry.cta.href}
                   /* The ground frames (17, 18) set the CTA at Yellow Gold. */
-                  className={`eyebrow text-xs transition-transform duration-300 hover:translate-x-1 ${accent
+                  className={`group eyebrow text-sm transition-transform duration-300 hover:translate-x-1 ${accent
                     }`}
                 >
-                  {entry.cta.label} &rarr;
+                  <span className="link-line group-hover:link-line-on">{entry.cta.label}</span> &rarr;
                 </Link>
               </div>
             ) : (
@@ -1328,7 +1328,7 @@ function EntryBlock({
                   /* The ground frames (10–12) set the tag in Burnt Ochre with or
                      without a CTA; elsewhere it stays quiet. */
                   <p
-                    className={`eyebrow mt-8 text-[10px] font-normal ${isGroundFrame ? accent : inkMuted
+                    className={`eyebrow mt-8 text-sm font-normal ${isGroundFrame ? accent : inkMuted
                       }`}
                   >
                     {entry.source}
@@ -1337,10 +1337,10 @@ function EntryBlock({
                 {entry.cta ? (
                   <Link
                     href={entry.cta.href}
-                    className={`eyebrow mt-6 inline-block text-xs transition-transform duration-300 hover:translate-x-1 ${accent
+                    className={`group eyebrow mt-6 inline-block text-sm transition-transform duration-300 hover:translate-x-1 ${accent
                       }`}
                   >
-                    {entry.cta.label} &rarr;
+                    <span className="link-line group-hover:link-line-on">{entry.cta.label}</span> &rarr;
                   </Link>
                 ) : null}
               </>
@@ -1693,14 +1693,14 @@ export function EraSection({
           ) : null}
           {deed.source && deed.cta ? (
             <div className="mt-10 flex flex-wrap items-baseline gap-x-16 gap-y-4">
-              <p className="eyebrow text-[10px] font-normal text-ochre">
+              <p className="eyebrow text-sm font-normal text-ochre">
                 {deed.source}
               </p>
               <Link
                 href={deed.cta.href}
-                className="eyebrow text-xs text-gold transition-transform duration-300 hover:translate-x-1"
+                className="group eyebrow text-sm text-gold transition-transform duration-300 hover:translate-x-1"
               >
-                {deed.cta.label} &rarr;
+                <span className="link-line group-hover:link-line-on">{deed.cta.label}</span> &rarr;
               </Link>
             </div>
           ) : null}
@@ -2528,7 +2528,7 @@ function RewindArrow() {
         <span className="block h-[13px] w-[23px] shrink-0 rotate-180 bg-gold [mask-image:url(/artwork/chevron-down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
         <span className="h-px flex-1 bg-gold/45" />
       </div>
-      <p className="eyebrow mt-4 text-center text-[10px] text-gold">
+      <p className="eyebrow mt-4 text-center text-sm text-gold">
         {rewindCue.hint}
       </p>
     </div>
@@ -2643,7 +2643,7 @@ export function WattanuriBand() {
                   actually commissioned. */}
               <Link
                 href={wattanuri.cta.href}
-                className="eyebrow mt-10 inline-block text-xs text-gold transition-transform duration-300 hover:translate-x-1"
+                className="eyebrow mt-10 inline-block text-sm text-gold transition-transform duration-300 hover:translate-x-1"
               >
                 {wattanuri.cta.label} &rarr;
               </Link>

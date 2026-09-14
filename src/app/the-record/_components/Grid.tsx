@@ -88,7 +88,7 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
                  navigation and the actual responsive article image decode. */
               onPointerEnter={() => router.prefetch(`/the-record/${item.slug}`)}
               onFocus={() => router.prefetch(`/the-record/${item.slug}`)}
-              className="block rounded-3xl focus-visible:opacity-100! focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold">
+              className="group block rounded-3xl focus-visible:opacity-100! focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-gold">
               <div data-card-hover className={`relative flex flex-col overflow-hidden rounded-3xl text-canvas ${SOURCE_GROUND[item.source]}`}>
               <div className={`relative w-full overflow-hidden ${PHOTO_BAND}`}>
                 {slot?.src ? (
@@ -120,7 +120,7 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
                 <p className="eyebrow text-[14px] leading-[1.5] tracking-[0.06em] text-gold">
                   {item.type}&ensp;&middot;&ensp;{item.source}
                 </p>
-                <h3 className="headline mt-4 text-h3 leading-[1.12]">{item.title}</h3>
+                <h3 className="headline mt-4 text-h3 leading-[1.12]"><span className="link-line group-hover:link-line-on group-focus-visible:link-line-on">{item.title}</span></h3>
                 {/* Clamped at five lines so one long summary cannot run a
                     column away from the ones beside it. */}
                 <p className="mt-5 line-clamp-5 text-base leading-[1.6] text-canvas/85">{item.summary}</p>

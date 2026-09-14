@@ -43,31 +43,10 @@ export function registerDisclosure(): void {
     },
   });
 
-  /** Grammar: "the world opening", viewport-aligned disclose variant.
-      The module has already changed native open state and measured the rows.
-      Only row transforms animate; the arrival effects treat the photo as held. */
-  gsap.registerEffect({
-    name: "itineraryStep",
-    extendTimeline: true,
-    defaults: { duration: DUR.large, ease: EASE.country },
-    effect: (targets: object, config: Record<string, unknown>) => {
-      const rows = config.rows as HTMLElement[];
-      const offsets = config.offsets as number[];
-      const tl = gsap.timeline();
-      tl.fromTo(rows, { y: (i) => offsets[i] }, {
-        y: 0, duration: config.duration as number,
-        ease: config.ease as string, clearProps: "transform",
-      }, 0);
-      tl.stageArrival(targets, {}, 0.1);
-      return tl;
-    },
-  });
-
   /** Grammar: "the world opening", itinerary rule (10 September 2026,
-      August's direction). The dotted rule under a stop fills with burnt ochre
-      across that stop's reading span and is full when the list advances. Only
-      a CSS custom property changes per frame; the held screen writes the same
-      property directly from its scroll controller. */
+      August's direction). The dotted rule under a stop draws its black dots
+      left to right as the stop passes through the viewport. Only
+      a CSS custom property changes per frame (black reveal, 14 Sep 2026). */
   gsap.registerEffect({
     name: "stageRule",
     extendTimeline: true,

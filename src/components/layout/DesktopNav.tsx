@@ -174,7 +174,7 @@ export function DesktopNav() {
                   /* Colour is written on the band per frame (cream over the
                      hero, midnight on the white); the links inherit it so the
                      fade carries them with it. */
-                  className="eyebrow text-xs whitespace-nowrap text-current transition-colors duration-(--dur-small) ease-quiet hover:text-gold"
+                  className="eyebrow text-sm whitespace-nowrap text-current transition-colors duration-(--dur-small) ease-quiet hover:text-gold"
                 >
                   {item.title}
                 </Link>

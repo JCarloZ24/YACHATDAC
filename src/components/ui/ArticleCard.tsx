@@ -45,7 +45,7 @@ export function ArticleCard({
             isLight(tone) ? "bg-evergreen/5" : "bg-canvas/5"
           }`}
         >
-          <p className={`p-3 text-xs leading-relaxed ${ink.muted}`}>{image}</p>
+          <p className={`p-3 text-sm leading-relaxed ${ink.muted}`}>{image}</p>
         </div>
       ) : null}
 
@@ -62,7 +62,7 @@ export function ArticleCard({
       </p>
 
       {meta ? (
-        <p className={`mt-5 text-xs ${ink.muted}`}>{meta}</p>
+        <p className={`mt-5 text-sm ${ink.muted}`}>{meta}</p>
       ) : null}
 
       <span

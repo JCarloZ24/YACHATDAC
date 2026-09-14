@@ -148,14 +148,14 @@ export function RecordHeroV2() {
         <div className="record-portal-controls">
           <p
             data-portal-copy
-            className="record-portal-hint eyebrow text-xs leading-[1.5] tracking-[0.08em]"
+            className="record-portal-hint eyebrow text-sm leading-[1.5] tracking-[0.08em]"
           >
             {recordPortalCopy.scroll}
           </p>
           <a
             data-portal-skip
             href="#research-and-discovery"
-            className="record-portal-skip eyebrow text-xs leading-[1.5] tracking-[0.06em]"
+            className="record-portal-skip eyebrow text-sm leading-[1.5] tracking-[0.06em]"
           >
             {recordPortalCopy.skip}
           </a>

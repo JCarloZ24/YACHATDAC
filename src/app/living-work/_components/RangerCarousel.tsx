@@ -480,10 +480,10 @@ export function RangerCarousel({
     <div>
       {/* The count and the drag cue, aligned with the section's column. */}
       <div className="mx-auto flex w-full max-w-[1440px] items-baseline justify-between px-6 sm:px-10 lg:px-25">
-        <p className="eyebrow text-xs text-gold">
+        <p className="eyebrow text-sm text-gold">
           <span ref={countRef}>01 / {pad(slots.length)}</span>
         </p>
-        <p className="eyebrow text-xs text-canvas/55">Drag &rarr;</p>
+        <p className="eyebrow text-sm text-canvas/55">Drag &rarr;</p>
       </div>
 
       {/* The stage. SSR renders the old strip; on mount the cards seat on
@@ -550,14 +550,14 @@ export function RangerCarousel({
                     />
                     <p
                       aria-hidden
-                      className="eyebrow absolute bottom-4 left-4 text-xs text-gold opacity-0 transition-all duration-500 ease-quiet group-hover:opacity-100 group-focus-visible:opacity-100 group-data-flying:opacity-0!"
+                      className="eyebrow absolute bottom-4 left-4 text-sm text-gold opacity-0 transition-all duration-500 ease-quiet group-hover:opacity-100 group-focus-visible:opacity-100 group-data-flying:opacity-0!"
                     >
                       View profile &rarr;
                     </p>
                   </div>
                   </div>
                   <div data-card-text>
-                    <p className="eyebrow mt-4 text-xs text-gold">[ name held ]</p>
+                    <p className="eyebrow mt-4 text-sm text-gold">[ name held ]</p>
                     <p className="mt-1 text-sm text-canvas/70">{slot.caption}</p>
                   </div>
                 </button>
@@ -568,7 +568,7 @@ export function RangerCarousel({
                     className="flex h-[400px] items-end rounded-sm border border-dashed border-canvas/25 bg-canvas/5 p-4"
                   >
                   </div>
-                  <p className="eyebrow mt-4 text-xs text-gold">[ name held ]</p>
+                  <p className="eyebrow mt-4 text-sm text-gold">[ name held ]</p>
                   <p className="mt-1 text-sm text-canvas/70">{slot.caption}</p>
                 </div>
               )}
@@ -608,7 +608,7 @@ export function RangerCarousel({
             data-profile-exit
             data-profile-fade
             onClick={close}
-            className="eyebrow fixed top-6 right-6 z-10 flex items-center gap-3 rounded-full border border-canvas/25 bg-charcoal/70 px-5 py-3 text-xs text-canvas backdrop-blur transition-colors duration-(--dur-small) ease-quiet hover:border-gold hover:text-gold lg:top-8 lg:right-12"
+            className="eyebrow fixed top-6 right-6 z-10 flex items-center gap-3 rounded-full border border-canvas/25 bg-charcoal/70 px-5 py-3 text-sm text-canvas backdrop-blur transition-colors duration-(--dur-small) ease-quiet hover:border-gold hover:text-gold lg:top-8 lg:right-12"
           >
             <span aria-hidden className="text-base leading-none">&times;</span>
             Back to the Rangers
@@ -646,7 +646,7 @@ export function RangerCarousel({
                 >
                   [ name held ]
                 </h3>
-                <p data-profile-line className="eyebrow mt-4 text-xs text-gold">
+                <p data-profile-line className="eyebrow mt-4 text-sm text-gold">
                   {open.caption}
                 </p>
                 {/* ⚠ Stand-in biography — the section body until per-ranger
@@ -659,7 +659,7 @@ export function RangerCarousel({
                 </p>
                 <p
                   data-profile-line
-                  className="eyebrow mt-10 max-w-xl text-xs leading-relaxed text-gold"
+                  className="eyebrow mt-10 max-w-xl text-sm leading-relaxed text-gold"
                 >
                   &#9671; Name, identification and consent to be named are
                   still to come &mdash; this profile is built to receive them.
@@ -669,7 +669,7 @@ export function RangerCarousel({
 
             {/* The gallery — the rest of the strip, inside the profile. */}
             <div data-profile-fade data-profile-gallery className="mt-24">
-              <p data-profile-line className="eyebrow text-xs text-burnt">
+              <p data-profile-line className="eyebrow text-sm text-burnt">
                 Gallery
               </p>
               <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

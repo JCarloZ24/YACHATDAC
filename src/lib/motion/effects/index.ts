@@ -166,7 +166,6 @@ export type EffectName =
   | "reflow"
   | "disclose"
   | "stageArrival"
-  | "itineraryStep"
   | "mosaic"
   | "scatterResolve"
   // section-to-section continuity

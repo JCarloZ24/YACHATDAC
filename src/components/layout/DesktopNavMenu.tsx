@@ -5,12 +5,21 @@ import { usePathname } from "next/navigation";
 import type { NavChild } from "@/content/site";
 import { WaterNavLink } from "@/components/layout/WaterNavLink";
 import { useWaterFill } from "@/components/layout/use-water-fill";
+import { usePanelTransition } from "@/components/layout/use-panel-transition";
 
 /**
  * D2 amendment, user direction 11 September 2026: About holds the existing
  * organisation pages. Native buttons and links keep click, touch and keyboard
- * navigation available. The panel changes state immediately; its links reuse
- * the header's existing water-fill interaction. No additional opening motion.
+ * navigation available. Its links reuse the header's existing water-fill
+ * interaction.
+ *
+ * 14 September 2026, user direction: the rounded panel animates on entrance
+ * and exit. Grammar: "the world opening", About nav panel — the panel rises
+ * 6px into place and fades in from its top-right corner on `quiet` over
+ * `--dur-small`, and leaves the same way. The state machine that keeps the
+ * closing panel mounted is `usePanelTransition`, shared with the mobile
+ * submenu. Nothing here is GSAP: a hover menu opens and closes many times a
+ * minute and needs no registry.
  */
 export function DesktopNavMenu({
   label,
@@ -24,6 +33,7 @@ export function DesktopNavMenu({
   headerShown: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const { mounted, state, ref: panelRef, onTransitionEnd } = usePanelTransition<HTMLUListElement>(open);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -122,10 +132,21 @@ export function DesktopNavMenu({
       </button>
       <div
         id={panelId}
-        hidden={!open}
+        hidden={!mounted}
         className="absolute right-0 top-full z-10 w-max min-w-56 max-w-72 pt-3"
       >
-        <ul className="rounded-lg border border-charcoal/10 bg-white p-2 shadow-lg">
+        {/* Entrance and exit on the rounded panel: opacity, a 6px rise and a
+            short scale about the top-right corner, where the panel hangs from
+            the label. The closed pose is the first frame after `hidden`
+            lifts, then the hook flips it open on the next commit; the closed
+            pose is also the exit, so exit retraces entrance. Grammar: "the world opening",
+            About nav panel (14 Sep 2026). */}
+        <ul
+          ref={panelRef}
+          data-state={state}
+          onTransitionEnd={onTransitionEnd}
+          className="origin-top-right rounded-lg border border-charcoal/10 bg-white p-2 shadow-lg transition-[opacity,translate,scale] duration-(--dur-small) ease-quiet motion-reduce:transition-none data-[state=closed]:pointer-events-none data-[state=closed]:opacity-0 data-[state=closed]:scale-[0.96] data-[state=closed]:-translate-y-1.5"
+        >
           {links.map((link) => (
             <li key={link.href}>
               <WaterNavLink

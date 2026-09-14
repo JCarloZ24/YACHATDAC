@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 13 September 2026*
+*Last updated: 14 September 2026*
 
 Home closing-pattern hover, 13 September 2026 (user screenshot, **what radiates**, Home closing ground): the existing two spiral assets respond to mouse position with shallow opposing drift and turn. The headline, offer photographs, original artwork, resting placement and scroll timing do not change. Hover owns inner wrappers; the original ground wrapper still owns the scroll entrance. Input is enabled only once that entrance has seated and the panel is visible, then resets on exit, blur, hidden tab or leaving the beat. Controller teardown removes listeners, observers and tweens. Fine hover pointers only; reduced-motion, touch and failed-canvas fallback remain still.
 
@@ -875,6 +875,30 @@ The follow-up animates the divider like About: its ink swells from 60% to
 full height and rolls from -15% of WAVE_ROLL to zero over the 100vh entrance,
 with 0.3s scrub smoothing. Reverse scroll retraces it; reduced motion keeps
 the full static crest. No additional pin or scroll gate is introduced.
+
+**Entrances wait for the cover everywhere, 14 September 2026 (user direction:
+"apply the page loader consistently across all pages to prevent scattered
+animation issues").** The cover itself was already site-wide (RouteLoader, 11
+September); what was not was the hand-off. Only Home, Partnerships, The Record
+and Truth gated their first-screen entrance on `awaitEntry`, so About, Living
+Work and Wonder played theirs under the cover and were finished when it
+lifted. `composition()` in compose.ts now attaches every entry trigger only
+once the cover has faded, so all compose-built screens on every page wait the
+same way. Below-the-fold screens are unaffected in practice; reduced motion
+builds no entry; routes without a cover release the gate at once.
+
+**Wave seam correction, 14 September 2026 (user report: a "dent" in the white
+wave under the hero on every page that rolls it).** The three-tile strip
+mirrored its second tile about the path's edge (x=1470.04), where the ink has
+already come 8 units down off its last crest at x≈1398.8 — so the seam read
+crest → notch → crest, invisible at rest but carried mid-screen by every roll.
+`WaveDivider` now mirrors the second tile about that crest (`WAVE_APEX`), where
+the slope is zero and the curve either side matches to 0.05 units, and
+`WAVE_ROLL` is the matching period `2·(WAVE_APEX − x₀)`. Every consumer that
+reads `WAVE_ROLL` (this page, Wonder, Living Work, About, Truth, Our People)
+keeps its own arithmetic. The static crest changes by under a pixel. The
+redrawn white wave in the V2 file (node 3781-31272) is still to be applied —
+the frame could not be read in the session that made this correction.
 
 **Catalogue layout amendment, 9 September 2026.** User reference replaces the
 sidebar and boxed cards with full-width masonry on the original cream ground
@@ -1963,7 +1987,7 @@ page deepens. There is no WebGL on this route.
 | 03 | Highlights | 100 | white | **media** | `emanate` across the rail, each card's clip opening from its left edge |
 | 04 | Getting here — the route map | 300 | charcoal, sticky span | **media** | the same draw and flare; the copy arrives in stop order |
 | 05 | Turraburra | 180 | full bleed | **media** | landscape behind Getting here's outgoing wave; `landscapeApproach` on entry, `landscapeGyroscope` on mouse hover; image and copy hold for 80vh before exit (user direction 9 September 2026) |
-| 06 | What a stay looks like | ~720 | canvas, sticky reading screen | **transition** | six automatic stops at one viewport position; line, copy and picture entrances from the effects lab |
+| 06 | What a stay looks like | — | canvas, ordinary flow | **transition** | one manual accordion, day 1 open; `disclose` on click, line, copy and picture entrances; held screen and automatic stops removed 14 Sep 2026 |
 | 07 | Before you come | 100 | evergreen | **none** | `hold`, cells arrive, one beat on the call to action |
 | 08 | Where you stay | 120 | canvas | **media** | heading and copy enter; the ten-frame carousel does not — no card entrance (10 Sep 2026) |
 | 09 | What it is like out here | 180 | full bleed | **media** | same landscape entry, mouse drift and 80vh reading hold as §05; no sweep |
@@ -1979,6 +2003,12 @@ maps are the loud pair and §03 sits between them at a much lower volume. **Flag
 The alternative is to make §03 or §05 quiet, and both were judged worse.
 
 ### The itinerary opens each stop at one viewport position
+
+> **Superseded 14 September 2026, user direction.** The held reading screen
+> and the automatic opening described here are removed as "bad UX, no freedom
+> on scroll". The itinerary is one manual accordion at every width, day 1 open,
+> and only a click changes a stop. The rule fill stays as an indicator. The
+> text below is the record of the retired cut.
 
 9 September 2026 responsive correction: desktop touch pointers (including
 DevTools emulation) use the same automatic itinerary as mouse input. Wonder's
