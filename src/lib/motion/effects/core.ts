@@ -12,7 +12,7 @@
 
 import gsap from "gsap";
 import { DUR, EASE, JITTER, STAGGER, TRIAD } from "../tokens";
-import { assertEase, first, freshSplit, noise } from "./shared";
+import { assertEase, first, noise, splitTween } from "./shared";
 
 export function registerCore(): void {
   /* --- what endures ------------------------------------------------------
@@ -26,18 +26,17 @@ export function registerCore(): void {
     defaults: { duration: DUR.large, ease: EASE.country, stagger: STAGGER.line },
     effect: (targets: object, config: Record<string, unknown>) => {
       assertEase("settle", config.ease);
-      const split = freshSplit(first(targets), {
-        type: "lines",
-        mask: "lines",
-        autoSplit: true,
-        aria: "auto",
-      });
-      return gsap.from(split.lines, {
-        yPercent: 110,
-        duration: config.duration as number,
-        ease: config.ease as string,
-        stagger: config.stagger as number,
-      });
+      return splitTween(
+        first(targets),
+        { type: "lines", mask: "lines", autoSplit: true, aria: "auto" },
+        (split) =>
+          gsap.from(split.lines, {
+            yPercent: 110,
+            duration: config.duration as number,
+            ease: config.ease as string,
+            stagger: config.stagger as number,
+          }),
+      );
     },
   });
 
@@ -68,19 +67,18 @@ export function registerCore(): void {
     defaults: { duration: DUR.large, ease: EASE.country, stagger: STAGGER.line },
     effect: (targets: object, config: Record<string, unknown>) => {
       assertEase("vacate", config.ease);
-      const split = freshSplit(first(targets), {
-        type: "lines",
-        mask: "lines",
-        autoSplit: true,
-        aria: "auto",
-      });
-      return gsap.to(split.lines, {
-        yPercent: -110,
-        opacity: 0,
-        duration: config.duration as number,
-        ease: config.ease as string,
-        stagger: config.stagger as number,
-      });
+      return splitTween(
+        first(targets),
+        { type: "lines", mask: "lines", autoSplit: true, aria: "auto" },
+        (split) =>
+          gsap.to(split.lines, {
+            yPercent: -110,
+            opacity: 0,
+            duration: config.duration as number,
+            ease: config.ease as string,
+            stagger: config.stagger as number,
+          }),
+      );
     },
   });
 
@@ -98,19 +96,23 @@ export function registerCore(): void {
       assertEase("display", config.ease);
       const els = gsap.utils.toArray<HTMLElement>(targets);
       const tooLong = els.some((el) => (el.textContent ?? "").trim().length > 48);
-      const split = freshSplit(els[0], {
-        type: tooLong ? "lines" : "chars",
-        ...(tooLong ? { mask: "lines" as const } : {}),
-        autoSplit: true,
-        aria: "auto",
-      });
-      return gsap.from(tooLong ? split.lines : split.chars, {
-        yPercent: 110,
-        ...(tooLong ? {} : { opacity: 0 }),
-        duration: config.duration as number,
-        ease: config.ease as string,
-        stagger: (tooLong ? STAGGER.line : config.stagger) as number,
-      });
+      return splitTween(
+        els[0],
+        {
+          type: tooLong ? "lines" : "chars",
+          ...(tooLong ? { mask: "lines" as const } : {}),
+          autoSplit: true,
+          aria: "auto",
+        },
+        (split) =>
+          gsap.from(tooLong ? split.lines : split.chars, {
+            yPercent: 110,
+            ...(tooLong ? {} : { opacity: 0 }),
+            duration: config.duration as number,
+            ease: config.ease as string,
+            stagger: (tooLong ? STAGGER.line : config.stagger) as number,
+          }),
+      );
     },
   });
 
@@ -274,20 +276,20 @@ export function registerCore(): void {
     },
     effect: (targets: object, config: Record<string, unknown>) => {
       assertEase("dim", config.ease);
-      const split = freshSplit(first(targets), {
-        type: "words",
-        autoSplit: true,
-        aria: "auto",
-      });
-      return gsap.fromTo(
-        split.words,
-        { opacity: config.dim as number },
-        {
-          opacity: 1,
-          duration: config.duration as number,
-          ease: config.ease as string,
-          stagger: config.stagger as number,
-        },
+      return splitTween(
+        first(targets),
+        { type: "words", autoSplit: true, aria: "auto" },
+        (split) =>
+          gsap.fromTo(
+            split.words,
+            { opacity: config.dim as number },
+            {
+              opacity: 1,
+              duration: config.duration as number,
+              ease: config.ease as string,
+              stagger: config.stagger as number,
+            },
+          ),
       );
     },
   });

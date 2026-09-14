@@ -77,6 +77,79 @@ export function freshSplit(el: Element, vars: SplitText.Vars): SplitText {
 }
 
 /**
+ * A split beat that survives its own element re-splitting.
+ *
+ * ⚠ THIS EXISTS BECAUSE `autoSplit` SILENTLY UNDOES A PLAYED BEAT, and the
+ * symptom is a sentence that will not leave the screen.
+ *
+ * Every split effect here asks for `autoSplit: true`, which is right: SplitText
+ * re-splits when the text re-wraps — a window resize, a browser zoom, a font
+ * arriving late — so the line boxes keep matching the lines. But a re-split
+ * BUILDS NEW LINE NODES and throws the old ones away, and the tween the
+ * timeline is holding goes on animating the nodes that left the document. The
+ * fresh lines render at their own rest state: `yPercent: 0`, `opacity: 1`.
+ *
+ * For an arrival (`gsap.from`) that is invisible — rest IS the arrived state.
+ * For an exit it is the bug: the sentence that had left comes back at full
+ * opacity and can never leave again, because nothing is animating it any more.
+ * Measured on /about §03, 14 September 2026 — claim 1 vacated correctly
+ * (`yPercent −110`, `opacity 0`), a re-wrap restored it to `0 / 1`, and it then
+ * sat under claim 2 in the one grid cell the two share. Reported as the two
+ * claims conflicting.
+ *
+ * So the beat is rebuilt against the new nodes and put back where the old one
+ * sat: same parent, same start time, and wound to the local time the parent is
+ * already at, so a scrubbed timeline keeps the state its progress has earned
+ * instead of jumping. `onSplit` is GSAP's own hook for this; what it does not
+ * do by itself is re-seat the replacement on a parent timeline, which is the
+ * whole of the work here.
+ *
+ * The first call is not a re-split: it returns the tween for the effect to hand
+ * to its timeline in the ordinary way, and no parent exists yet.
+ */
+export function splitTween(
+  el: Element,
+  vars: SplitText.Vars,
+  build: (split: SplitText) => gsap.core.Tween,
+): gsap.core.Tween {
+  let current: gsap.core.Tween | undefined;
+
+  const rebuild = (split: SplitText) => {
+    const next = build(split);
+    const prev = current;
+    current = next;
+    if (!prev) return next;
+
+    const parent = prev.parent;
+    const at = prev.startTime();
+    prev.kill();
+    if (parent) {
+      parent.add(next, at);
+      /* Wind the replacement to where the parent already is. Without this the
+         new nodes sit at their rest state until the next scroll moves the
+         scrub, which is the same defect one frame later. */
+      const local = parent.time() - at;
+      next.time(Math.min(Math.max(local, 0), next.duration()), true);
+    }
+    return next;
+  };
+
+  splits.get(el)?.revert();
+  const split = SplitText.create(el, {
+    ...vars,
+    onSplit: (self: SplitText) => rebuild(self),
+  });
+  splits.set(el, split);
+  if (!current) {
+    /* `onSplit` fires synchronously inside `create`, so this cannot happen —
+       and if a future SplitText ever changes that, failing here is better than
+       handing a timeline an undefined beat and losing the effect in silence. */
+    throw new Error("splitTween: SplitText did not call onSplit");
+  }
+  return current;
+}
+
+/**
  * Undo every split under `root` and clear inline styles.
  *
  * Used by the reduced-motion cut: an element that was split under full motion
