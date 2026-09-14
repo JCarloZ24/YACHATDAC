@@ -6,7 +6,6 @@
  * The original next/image elements supply decoded, optimised WebP textures;
  * there is no second photo request and no screenshot of the written content.
  */
-import gsap from "gsap";
 import {
   CanvasTexture, Color, DataTexture, LinearFilter, Mesh, MeshBasicMaterial,
   OrthographicCamera, PlaneGeometry, Scene, ShaderMaterial, SRGBColorSpace,
@@ -312,13 +311,18 @@ export function createPeopleWorld(
       if (nearby && !photo.texture && photo.element.loading !== "eager") photo.element.loading = "eager";
       photo.mesh.visible = Boolean(photo.texture) && nearby;
       if (!photo.mesh.visible) continue;
-      const x = photo.frame ? Number(gsap.getProperty(photo.frame, "x")) || 0 : 0;
-      // A card's photograph fades with its HTML frame (14 Sep 2026).
-      if (photo.frame && photo !== hero) photo.mesh.material.uniforms.fade.value = Number(gsap.getProperty(photo.frame, "opacity"));
-      photo.mesh.position.x = photo.box.left + photo.box.width / 2 + x;
-      const crop = photo.mesh.material.uniforms.crop.value as Vector2;
-      // P4 frame grade: the aperture moves, the pixels inside it stay held.
-      (photo.mesh.material.uniforms.offset.value as Vector2).set(x / photo.box.width * crop.x, 0);
+      // A card's photograph fades with its HTML frame (14 Sep 2026). It reads
+      // the custom property our-people.ts writes rather than the computed
+      // opacity — six getComputedStyle calls a frame for one number.
+      //
+      // Nothing writes `x` to a card any more: the sideways `peopleGather`
+      // went with Marc's review on 14 September 2026, so the counter-registered
+      // `offset` it existed to serve went with it. A card only fades.
+      if (photo.frame && photo !== hero) {
+        const fade = photo.frame.style.getPropertyValue("--people-card-fade");
+        photo.mesh.material.uniforms.fade.value = fade === "" ? 1 : Number(fade);
+      }
+      photo.mesh.position.x = photo.box.left + photo.box.width / 2;
     }
     if (titleMesh && hero?.texture && title && titleBox) {
       titleMesh.visible = true;

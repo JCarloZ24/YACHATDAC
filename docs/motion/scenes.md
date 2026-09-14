@@ -2092,6 +2092,31 @@ photographs, belong to the stage; the shared HTML footer is outside it. The
 original markup remains the accessible text layer and the complete fallback.
 No narrative words, names, placeholders or destinations change.
 
+**14 September 2026 — Marc's review.** Four notes on the built page, recorded
+in full in `docs/design/our-people-review-2026-09-14.md`. Three changed the
+build:
+
+- **The card entrance is The Record's.** The six team cards fade in and out at
+  the viewport edges instead of lighting together off the first card's
+  position, and nothing on a card travels sideways any more. The rule is
+  `cardPassOpacity`, exported from `src/lib/motion/record-masonry.ts` so The
+  Record, /wonder and /our-people all run one set of numbers; this page cannot
+  host the module itself, because it is one pinned stage whose cards have no
+  per-card trigger to measure against — it reads the same rule off the reading
+  clock. The Record's per-column drift is **not** taken: Marc's objection was
+  cards that moved. `peopleGather`, the superseded side-on arrival that was
+  still registered and still being read every frame by the canvas, is deleted.
+- **The 80 / 20 figures count from what the page already shows.** The live
+  figure ships as `0%` in the markup instead of being written there at build,
+  and `immediateRender: false` keeps the tween off the text until the playhead
+  reaches it — so it reads 0% from load, counts up as the ratio is reached, and
+  counts back down on reverse scroll rather than stranding part-counted. An
+  intermediate pass the same day rested the figure at 80% and swapped a
+  counting copy in; the reader watched 80% jump backwards to nothing and climb
+  again, so it was reverted. The count's pace is untouched.
+- **Every rendered editorial note came off the page**, ⟡ markers included —
+  see *What is held* below, which this reverses.
+
 **11 September 2026 — photo-to-title refinement.** Following the user's
 reference to Living Work's *Our challenges*, the hero holds for 35vh, then
 gathers into a large aperture taken from the headline's actual initial. Across
@@ -2106,8 +2131,9 @@ The reading clock uses measured section heights rather than the frame's fixed
 pixel totals, so longer CMS copy and mobile wrapping extend the journey. Short
 holds land on the title, portrait, decision, team rows, ratio and acknowledgements.
 Suzanne's quotation gets an 85vh still reading span and 30vh fully lit hold.
-The card frames gather around held portraits; the original waves carry the solid
-grounds. Every movement reverses with scroll. Escape, reduced motion, unavailable
+The card frames no longer gather around held portraits — from 14 September 2026
+they fade in and out at the viewport edges (Marc's review, above); the original
+waves carry the solid grounds. Every movement reverses with scroll. Escape, reduced motion, unavailable
 WebGL and print restore normal document flow; hash links and keyboard focus map
 back to the measured reading clock. See `peopleJourney` in the motion grammar.
 
@@ -2163,6 +2189,11 @@ and a 35% scrim; **the doors deliberately take no photograph** (Ivy, 2 September
 the artist's motif carry them. The rule is now in `CLAUDE.md`: *a card is a coloured ground, a
 photograph and a tiny artwork, never a white box.*
 
+**Door order, 14 September 2026 (Marc's review).** The four keep their grounds and change their
+sequence: roasted, evergreen, midnight, charcoal — lightest to darkest, so the row grades across
+instead of reading as four arbitrary picks. /about draws the same component with its own
+alternating pair and is untouched.
+
 All six Gathering cards share **one ground**. Varying it would code a difference between the
 named card and the five held ones, and §03's whole argument is that there is none.
 
@@ -2195,8 +2226,9 @@ file's own conventions rather than new ones:
   knockout is charcoal, so the photograph's edge is not a ground change and its hard cut is
   annotated as deliberate.
 - **The three motifs rotate across the six Gathering cards** — boomerang, circle, starburst,
-  repeating — placed bottom-right of each image plane, because top-left is the `⟡ PLACEHOLDER
-  FACE` badge and a face sits high in a 380×320 crop. The rotation deliberately **cuts across
+  repeating — placed bottom-right of each image plane. The reason was the `⟡ PLACEHOLDER
+  FACE` badge at top-left; with the badge gone (14 September 2026) the second half of the
+  reason still holds on its own — a face sits high in a 380×320 crop, so the mark belongs low. The rotation deliberately **cuts across
   the roles** rather than encoding them: assigning a motif to a role would ascribe meaning to
   the artist's marks, which is not ours to author.
 - **The hero and both breaths** carry an `Artwork / Cluster` and a seam glyph, following Truth.

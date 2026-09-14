@@ -56,7 +56,16 @@
 [data-people-ready] [data-people-texture] { opacity: 0; }
 [data-people-ready] [data-people-card] { background-color: transparent; }
 [data-people-ready] [data-people-card] > :last-child { background-color: var(--color-evergreen); }
-[data-people-ready] [data-people-card] { will-change: transform; }
+/* The card entrance — The Record's, run off this page's reading clock (Marc's
+   review, 14 September 2026). our-people.ts writes the value per frame and
+   our-people-world.ts reads the same one back to fade the card's photograph;
+   the default of 1 is what the ordinary-flow fallback, reduced motion and
+   no-JS all get, so a card is never stranded invisible.
+   Grammar row: "being drawn in", Our People cards. */
+[data-people-ready] [data-people-card] {
+  opacity: var(--people-card-fade, 1);
+  will-change: opacity;
+}
 /* The hero fades in rather than scrolling up (14 Sep 2026); the value is set
    on the reading clock in our-people.ts. */
 [data-people-ready] [data-people-hero-frame] > * { opacity: var(--people-hero-fade, 1); }

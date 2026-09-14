@@ -104,6 +104,17 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * No photograph of Graham Ambridge exists in any batch. See the block comment
  * on the Our People batch in src/content/kit.ts.
  *
+ * ⚠⚠ AND THE PAGE NO LONGER SAYS SO. The `⟡ Placeholder face` badge on every
+ * card, and the `⟡ Stand-in` markers on the hero and both breaths, were
+ * REMOVED on 14 September 2026 — Marc's review, explicitly: every rendered
+ * editorial note off this page. That reverses the rule those markers existed
+ * for (kit.ts: "a screenshot circulated without it is exactly how a
+ * placeholder becomes a claim"), and the reason has not gone away. This
+ * comment, kit.ts, docs/motion/scenes.md and
+ * docs/design/our-people-review-2026-09-14.md are now the only places that
+ * say these faces are stand-ins. A screenshot of this page does not.
+ * R24 is still the page's blocker.
+ *
  * Suzanne is the exception and is not in this map: she is the one person shown
  * as herself, and `lw-hero` is her frame (378A7604_1.40.2).
  */
@@ -268,16 +279,10 @@ export function OurPeopleHero() {
           className="top-[81.7%] right-[7.85%] hidden w-11 lg:block"
         />
 
-        {/* ⟡ STAND-IN. On the image, not only in a layer name — the marker
-            stays because it flags unreal content. What it must be replaced BY
-            (a cleared frame of Iningai Rangers on Country) is the notes lane's
-            job, not the page's. */}
-        <p
-          data-placeholder="stand-in"
-          className="eyebrow absolute top-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-sm text-canvas"
-        >
-          ⟡ Stand-in
-        </p>
+        {/* The ⟡ STAND-IN marker came off here on 14 September 2026 (Marc's
+            review — every rendered editorial note off this page). What the
+            frame must be replaced BY, and that it is a stand-in at all, stays
+            recorded in this component's header and in src/content/kit.ts. */}
       </div>
 
       {/* User reference, 11 September 2026 (D5: reference governs layout):
@@ -405,8 +410,6 @@ export function SuzanneTestimony() {
         {/* The testimony. User direction, 14 September 2026: it takes a whole
             screen of its own, so the reader holds on her words alone with no
             neighbouring ground (the roasted wave below) in frame. */}
-        {/* The quotation's screen also carries the editorial note (user
-            direction, 14 September 2026), so both are read together. */}
         <div data-people-testimony-screen className="mt-24 flex min-h-svh flex-col justify-center lg:mt-32">
         <blockquote data-people-testimony>
           <span
@@ -570,14 +573,11 @@ function PersonCard({
         </div>
         <span aria-hidden data-scrim className="absolute inset-0 bg-black/35" />
 
-        {/* ⟡ PLACEHOLDER FACE — top-left, which is why the motif is
-            bottom-right: a face sits high in a 380x320 crop. */}
-        <p
-          data-placeholder="face"
-          className="eyebrow absolute top-2.5 left-1.5 z-10 rounded-xs bg-charcoal/70 px-2 py-1 text-sm tracking-[0.08em] text-canvas"
-        >
-          ⟡ Placeholder face
-        </p>
+        {/* The ⟡ PLACEHOLDER FACE badge came off on 14 September 2026 (Marc's
+            review). The motif stays BOTTOM-RIGHT regardless: a face sits high
+            in a 380x320 crop, so the mark belongs low whether or not anything
+            else occupies the top-left. That every face here is a stand-in is
+            still recorded in this file's header and in src/content/kit.ts. */}
         <SeamGlyph
           motif={CARD_GLYPHS[index % CARD_GLYPHS.length]}
           className="right-4 bottom-4 w-11"
@@ -603,13 +603,27 @@ function PersonCard({
         )}
 
         {/* The role is REAL. Only the identity is held, so this carries full
-            weight either way. */}
-        <p className="eyebrow mt-5 text-sm tracking-[0.08em] text-gold">
-          {person.roleUnconfirmed ? "⚠ Role to confirm" : person.role}
-        </p>
+            weight either way.
+
+            ⚠ AN UNCONFIRMED ROLE RENDERS NOTHING (Marc's review, 14 September
+            2026 — every rendered editorial note off this page). Dropping the
+            "⚠" alone would not have done it: the string in the content module
+            IS "Role to confirm", so the line would still have printed the
+            note. `roleUnconfirmed` stays on the Person type; it is still the
+            record that the role is open, it simply no longer draws. */}
+        {person.roleUnconfirmed ? null : (
+          <p className="eyebrow mt-5 text-sm tracking-[0.08em] text-gold">
+            {person.role}
+          </p>
+        )}
 
         {person.bio ? (
-          <p data-bio className="mt-3.5 text-sm leading-[1.5] text-canvas/80">
+          /* The bio takes the role's own top margin when no role is drawn, so
+             a card with the line suppressed does not open a gap where it was. */
+          <p
+            data-bio
+            className={`${person.roleUnconfirmed ? "mt-5" : "mt-3.5"} text-sm leading-[1.5] text-canvas/80`}
+          >
             {person.bio}
           </p>
         ) : null}
@@ -635,9 +649,11 @@ export function TheGathering() {
         <h2 className="headline mt-3 text-4xl leading-[1.16] text-evergreen sm:text-6xl">
           {team.title}
         </h2>
-        <p className="mt-7 max-w-[760px] text-lg leading-[1.5] font-medium sm:text-[1.375rem]">
-          {team.lede}
-        </p>
+        {/* `team.lede` — "Placeholder roles below. Names, titles and
+            photographs to be confirmed." — is held in the content module and
+            no longer renders: every rendered editorial note came off this page
+            on 14 September 2026 (Marc's review). R14/R20 are why the string
+            stays. */}
 
         <div
           className="mt-14 grid gap-y-12 sm:grid-cols-2 sm:gap-6 lg:mt-14 lg:grid-cols-3 lg:gap-x-12"
@@ -689,12 +705,7 @@ export function BreathTeam() {
         tone="gold"
         className="top-[12%] right-[7.4%] hidden w-28 lg:block"
       />
-      <p
-        data-placeholder="stand-in"
-        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-sm text-canvas"
-      >
-        ⟡ Stand-in
-      </p>
+      {/* ⟡ Stand-in marker removed 14 September 2026 (Marc's review). */}
     </section>
   );
 }
@@ -787,13 +798,24 @@ export function Governance() {
           className="mt-6 flex flex-wrap items-baseline gap-x-24 gap-y-6"
         >
           <div>
-<p className="headline grid text-6xl leading-[1.07] text-gold sm:text-[6.875rem]">
+            <p className="headline grid text-6xl leading-[1.07] text-gold sm:text-[6.875rem]">
               {/* User direction, 14 September 2026: the figure counts up with
                   the ratio bar (our-people.ts). The invisible copy holds the
-                  box so the row never reflows; the live copy is decorative
-                  and the sr-only text carries the fact. */}
+                  box at the FINAL width so the row never reflows as the digits
+                  change; the live copy is decorative and the sr-only text
+                  carries the fact.
+
+                  ⚠ THE LIVE COPY SHIPS AS "0%" AND THE COUNT STARTS THERE
+                  (user direction, 14 September 2026). A pass earlier the same
+                  day made the resting figure read 80% and swapped the counting
+                  copy in when the ratio was reached — which meant the reader
+                  watched 80% jump backwards to nothing and climb again. The
+                  number the page shows before the count is the number the
+                  count starts from. Writing it in the markup rather than from
+                  the module also means there is no frame of 80% before the
+                  clock exists. */}
               <span aria-hidden className="invisible col-start-1 row-start-1">80%</span>
-              <span aria-hidden data-people-count="80" className="col-start-1 row-start-1">80%</span>
+              <span aria-hidden data-people-count="80" className="col-start-1 row-start-1">0%</span>
               <span className="sr-only">80%</span>
             </p>
             <p className="mt-2 text-xl leading-[1.5] font-medium text-canvas/75">
@@ -801,13 +823,10 @@ export function Governance() {
             </p>
           </div>
           <div>
-<p className="headline grid text-6xl leading-[1.07] text-ochre sm:text-[6.875rem]">
-              {/* User direction, 14 September 2026: the figure counts up with
-                  the ratio bar (our-people.ts). The invisible copy holds the
-                  box so the row never reflows; the live copy is decorative
-                  and the sr-only text carries the fact. */}
+            <p className="headline grid text-6xl leading-[1.07] text-ochre sm:text-[6.875rem]">
+              {/* The 20% half of the same object — see the 80% figure above. */}
               <span aria-hidden className="invisible col-start-1 row-start-1">20%</span>
-              <span aria-hidden data-people-count="20" className="col-start-1 row-start-1">20%</span>
+              <span aria-hidden data-people-count="20" className="col-start-1 row-start-1">0%</span>
               <span className="sr-only">20%</span>
             </p>
             <p className="mt-2 text-xl leading-[1.5] font-medium text-canvas/75">
@@ -921,11 +940,12 @@ export function Acknowledgements() {
               <p className="mt-5 max-w-[860px] text-lg leading-[1.5] text-canvas/70">
                 {entry.detail}
               </p>
-              {entry.unconfirmed ? (
-                <p className="mt-3 max-w-[860px] text-[0.9375rem] leading-[1.5] text-gold">
-                  ⚠ {entry.unconfirmed}
-                </p>
-              ) : null}
+              {/* `entry.unconfirmed` no longer renders — every rendered
+                  editorial note came off this page on 14 September 2026
+                  (Marc's review). The identity questions are still held
+                  against their entries in src/content/our-people.ts, which is
+                  the record, and guessing at a name on a memorial list is
+                  still not a tidy-up. */}
             </li>
           ))}
         </ul>
@@ -940,9 +960,10 @@ export function Acknowledgements() {
             aria-label="Further names to be added — Suzanne to complete"
             className="h-1.5 w-[430px] max-w-full bg-gold"
           />
-          <p className="mt-6 max-w-[860px] text-lg leading-[1.5] text-canvas/70">
-            {acknowledgements.outstanding}
-          </p>
+          {/* `acknowledgements.outstanding` is held in the content module and
+              no longer renders (Marc's review, 14 September 2026). The rule
+              above it stays: an empty name at full size is the honest state of
+              a list that is not finished, and it says so without a note. */}
         </div>
 
         {/* `acknowledgements.pending` is held in the content module and no
@@ -980,12 +1001,7 @@ export function BreathPivot() {
         motif="a"
         className="top-[12%] right-[10.9%] hidden w-11 lg:block"
       />
-      <p
-        data-placeholder="stand-in"
-        className="eyebrow absolute bottom-6 left-6 z-10 rounded-xs bg-charcoal/70 px-3 py-1.5 text-sm text-canvas"
-      >
-        ⟡ Stand-in
-      </p>
+      {/* ⟡ Stand-in marker removed 14 September 2026 (Marc's review). */}
     </section>
   );
 }
@@ -1017,11 +1033,18 @@ export function BreathPivot() {
  * `/the-record`, which is the route that exists after the rename, and under D5
  * the content wins. Every label here is verb-led and none renders a path.
  */
+/**
+ * Marc's review, 14 September 2026: the same four grounds, ORDERED. They ran
+ * evergreen / roasted / midnight / charcoal, which reads as four arbitrary
+ * picks; lightest to darkest grades the row across instead. Literal classes
+ * only — see the `grounds` prop on ContactDoors for why an interpolated
+ * `bg-${tone}` compiles to nothing.
+ */
 const DOOR_GROUNDS = [
-  "bg-evergreen",
-  "bg-roasted",
-  "bg-midnight",
-  "bg-charcoal",
+  "bg-roasted", //   #4e3524
+  "bg-evergreen", // #22372b
+  "bg-midnight", //  #122449
+  "bg-charcoal", //  #090e12
 ] as const;
 
 export function GetInTouch() {
