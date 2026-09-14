@@ -459,7 +459,51 @@ const aheadPhases: Recipe = (timeline, slide) => {
 const todayDeck: Recipe = (timeline, slide) => {
   pushMedia(timeline, slide);
   layTiles(timeline, slide, MONTAGE_STARTS);
+  todayCrest(timeline, slide);
 };
+
+/**
+ * TODAY's crest, over the stretch where it is actually crossing the plate.
+ *
+ * Grammar: "a change of ground", rolling wave / SCR-11 — `recordWaveRoll`,
+ * the same swell-and-roll the deck gives the seam crests. This one is not at
+ * a gate: it is seated on the leading edge of the record panel that rises
+ * over the fire photograph INSIDE this slide (Sections.tsx, `EntryPlate`), so
+ * its clock is the slide's own read rather than a hand-off.
+ *
+ * ⚠ AND IT IS THE ONE CREST THAT STAYS. Every other wave on the page is off
+ * screen once its section has seated; this one is a boundary between an image
+ * and the record laid over it, so it belongs to the page at rest and is
+ * meant to still be there (user direction, 14 September 2026). Nothing here
+ * takes it away again.
+ *
+ * The window is the track's lead-in. The panel opens `pt-[100svh]` below the
+ * plate, so the crest is on screen from the read's start until the track has
+ * travelled that lead — which is the fraction gated-deck measures for its own
+ * purposes as `coverFractions`, computed the same way from the same two
+ * numbers rather than plumbed across a module boundary.
+ *
+ * ⚠ MEASURED ONCE, at build. Every beat in this file is a fixed fraction of
+ * the read for the same reason; a resize tears the deck down and rebuilds it,
+ * which is what re-measures this.
+ */
+function todayCrest(timeline: gsap.core.Timeline, slide: HTMLElement) {
+  const ink = slide.querySelector<SVGGElement>(
+    '[data-seam="today-wave"] [data-wave-ink]',
+  );
+  const track = slide.querySelector<HTMLElement>("[data-truth-deck-track]");
+  if (!ink || !track) return;
+  const lead = parseFloat(getComputedStyle(track).paddingTop) || 0;
+  const travel = Math.max(0, track.scrollHeight - slide.clientHeight);
+  /* No lead means no rise to ride — the crest is simply drawn, which is its
+     rest state and the correct no-JS/reduced-motion reading of it. */
+  if (travel <= 0 || lead <= 0) return;
+  const crossing = Math.min(1, lead / travel);
+  timeline.add(
+    (gsap.effects.recordWaveRoll(ink) as gsap.core.Tween).duration(crossing),
+    0,
+  );
+}
 
 /** §18 Still to be found. Same hand, six frames, different unevenness. */
 const openResearch: Recipe = (timeline, slide) => {

@@ -24,7 +24,7 @@ import { EditorialNote } from "@/components/ui/EditorialNote";
 import { PullQuote } from "@/components/ui/PullQuote";
 import { WordEmphasis } from "@/components/lofi/ui/WordEmphasis";
 import { SharedMorph } from "@/components/transitions/SharedMorph";
-import { WaveDivider } from "@/components/ui/Furniture";
+import { WaveDivider, WaveInk } from "@/components/ui/Furniture";
 import { GalaxyField } from "./GalaxyField";
 
 /* COVER CROPS NEED HEIGHT, NOT JUST WIDTH.
@@ -1114,7 +1114,18 @@ function EntryBlock({
           data-count-wave stays on it — TrailRail measures the record strand's
           restart from this node, and drops to the band top if it vanishes. */}
       {isMitchell && !withinDeck ? (
-        <HandoffWave to="canvas" placement="leading" railAnchor bleed />
+        <HandoffWave
+          to="canvas"
+          placement="leading"
+          railAnchor
+          bleed
+          /* `truth-wave` is the hook the gated deck queries on the INCOMING
+             slide, so this crest now rolls across the hand-off out of the
+             count exactly as the Ahead deck's does. Added 14 September 2026;
+             before that it was the one seam seated correctly and still
+             unable to move, because this component had no ink group. */
+          hook="truth-wave"
+        />
       ) : null}
       <div {...(withinDeck ? {} : { "data-truth-deck-viewport": true })}>
         <div
@@ -2245,8 +2256,19 @@ const WAVE_FILL: Record<string, string> = {
   evergreen: "fill-evergreen",
   charcoal: "fill-charcoal",
   midnight: "fill-midnight",
+  /* Added 13 September 2026 for the black crest into the galaxy. Its call
+     site was superseded on 14 September by the egg-white crest that caps that
+     section instead (see `WattanuriBand`), so this fill currently has no
+     caller — kept rather than deleted, because the seam it was drawn for is
+     still there and the decision was about direction, not about the colour. */
   night: "fill-black",
 };
+
+/** This component's own tile — the frame's 349:3676 drawing, which closes at
+    y=151 where the Wave / Divider closes at 105.324. Same curve, deeper box;
+    see the note at the `WaveInk` call below. */
+const HANDOFF_WAVE_PATH =
+  "M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z";
 
 /**
  * Marc's colour-handoff wave (349:3676), 1442×151. Fill = the colour of the
@@ -2259,9 +2281,18 @@ export function HandoffWave({
   placement = "trailing",
   railAnchor = false,
   bleed = false,
+  hook,
 }: {
   to: keyof typeof WAVE_FILL;
   placement?: "leading" | "trailing";
+  /**
+   * Optional motion hook, rendered as `data-seam`, exactly as `WaveDivider`'s.
+   * Added 14 September 2026 so the seams drawn by THIS component could take
+   * the roll too — before that only `WaveDivider` had an ink group to move,
+   * and the 1840s crest was the one seam on the page the deck could not
+   * animate for want of one. Inert unless a motion host wires it.
+   */
+  hook?: string;
   /**
    * Break out of a width-constrained ancestor to span the viewport.
    *
@@ -2286,6 +2317,7 @@ export function HandoffWave({
     <svg
       aria-hidden
       data-descent-wave
+      data-seam={hook}
       {...(railAnchor ? { "data-count-wave": true } : {})}
       viewBox="0 0 1442 151"
       preserveAspectRatio="none"
@@ -2297,10 +2329,23 @@ export function HandoffWave({
           : "bottom-0"
         }`}
     >
-      <path
-        d="M1470.04 7.9544C1427.51 -2.1372 1377.18 -2.66008 1333.96 6.57748C1270.32 20.155 1224.29 42.5343 1157.49 50.8132C1113.11 56.3209 1072.13 52.2598 1028.08 50.5343C969.069 48.2162 917.126 51.1444 860.791 61.48C807.923 71.1707 756.575 83.7895 700.999 88.7046C633.371 94.6829 564.487 84.9573 499.434 73.4888C434.382 62.0203 369.263 48.5648 300.776 46.7696C195.602 44.0157 95.7447 68.87 1.00558 93.1491L1.00123 151H1470.04V7.9544Z"
-        className={WAVE_FILL[to]}
-      />
+      {/* The shared three-tile strip, so this seam can roll like every other.
+          ⚠ IT CHANGES NOTHING AT REST. Tiles 2 and 3 land at x≈1468→2937 and
+          2936→4404, both outside this component's own 0–1442 crop, so only
+          tile 1 has ever been visible and only tile 1 is visible now. The
+          crop is narrower than `WaveDivider`'s 1467.85, which makes the roll
+          read fractionally further here — 30.5% of the drawn width against
+          30.0% — and that is below noticing.
+
+          ⚠ AND IT PASSES ITS OWN TILE, which is the whole reason `WaveInk`
+          takes one. This component's drawing closes `L1.00123 151H1470.04…`
+          against the Wave / Divider's `L1.00123 105.324H1468.85…`: the same
+          curve over a deeper box, because the frame draws the colour-handoff
+          wave (349:3676) and the divider as two separate objects. Tiling the
+          divider's shorter path inside this 151-tall viewBox would leave the
+          bottom 30% of every handoff wave unfilled. Only the TILING is
+          shared. */}
+      <WaveInk d={HANDOFF_WAVE_PATH} className={WAVE_FILL[to]} />
     </svg>
   );
 }
@@ -2587,38 +2632,107 @@ export function WattanuriBand() {
             `scale-105` is not decoration: a plane that travels needs somewhere
             to travel from, or the drift walks its own edge into frame. Every
             other moving plate on the page opens oversized for the same reason. */}
-        {/* The seam into the galaxy (user, 13 September 2026): a wave for the
-            TRANSITION only. Seated leading, over the outgoing beat, so it
-            shows while this slide covers the shelter and sits above the
-            viewport once the sky has landed. Filled black to meet the top of
-            the photograph. The clip moved off the section onto this wrapper
-            so the crest can overhang. */}
-        <HandoffWave to="night" placement="leading" />
+        {/* ⚠ THE CLIP IS A SEPARATE, STATIC BOX.
+            `scale-105` grows the plane about its own centre, so the photograph
+            overhangs this section by (1.05 - 1) / 2 of the viewport on every
+            side — 23px at 918 tall, measured. A scaled element's own
+            `overflow-hidden` clips its CHILDREN, not itself, and this section
+            no longer clips it either: `overflow-hidden` came off the section on
+            13 September 2026 so a crest could overhang it, and the deck sets
+            `overflow: visible` on any slide owning a deck track regardless.
+
+            Harmless while the join was bare — the bleed is the same photograph
+            continuing 23px early, and nobody can see where a picture starts.
+            NOT harmless once a crest caps this section: the bleed sits ABOVE
+            the crest, paints over the departing record because this section is
+            later in document order, and reads as a dark stripe between two
+            bands of egg white (reported with a screenshot, 14 September 2026;
+            measured at a constant 23px across the whole hand-off, which is what
+            told us it was a bleed and not the seam coming apart).
+
+            Everything this band paints lives inside the clip, so nothing can
+            reach past the section again. `closingDrift` keeps its oversize
+            plane to travel on, inside it. */}
         <div aria-hidden className="absolute inset-0 overflow-hidden">
-        <div
-          data-truth-galaxy
-          className="absolute inset-0 scale-105 overflow-hidden will-change-transform"
-        >
-          <MediaOrField
-            src={presentSrc(outgoing.src)}
-            alt={outgoing.expects}
-            sizes={COVER_TALL_BLEED}
-            quality={85}
-            fieldClass={FIELD_CLASS[outgoing.tone]}
+          <div
+            data-truth-galaxy
+            className="absolute inset-0 scale-105 overflow-hidden will-change-transform"
+          >
+            <MediaOrField
+              src={presentSrc(outgoing.src)}
+              alt={outgoing.expects}
+              sizes={COVER_TALL_BLEED}
+              quality={85}
+              fieldClass={FIELD_CLASS[outgoing.tone]}
+            />
+          </div>
+          {/* LIGHTENED, 11 September 2026 (client: the ending is too dark). The
+              wash was 0 → .387 → .86; the foot cannot move far, because that is
+              where the band's white type sits and the copy has to clear it, so
+              the lift is taken through the middle and the foot comes back only
+              as far as the type allows. */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.25] to-black/[0.68]"
           />
+          {/* The sky answers a fine pointer — GalaxyField.tsx (13 Sep 2026). */}
+          <GalaxyField />
+          {/* THE SEABED ENDS IN WATER, not on a ruled line. The record above
+              this band is egg white and this band is a night photograph, and
+              until 14 September 2026 the two met on a straight horizontal edge
+              — the only join on the page without a divider.
+
+              ⚠ SUPERSEDES THE BLACK CREST OF 13 SEPTEMBER 2026 (ea16401), which
+              seated a `HandoffWave to="night"` leading, overhanging UP onto the
+              outgoing beat. Same seam, opposite reading, and the client chose
+              this one on 14 September 2026: the departing RECORD ends in water
+              over the picture, rather than the picture arriving as a black
+              crest over the record. Only one can stand at a join.
+
+              ⚠ AND IT IS SEATED ON THE INCOMING SECTION, which is the second
+              attempt at that. The first hung it below the seabed's own foot,
+              where the picture says it belongs — but a crest that hangs below
+              its owner is painted over by the section arriving under it, and
+              the only way to lift it is to lift the whole slide, because
+              `[data-truth-slide][data-truth-ground]` isolates. Lifting the
+              slide lifts its GROUND too, so the departing egg white then paints
+              over the arriving photograph for the whole hand-off and shrinks
+              away as it lands — reported as the screen "going back to before
+              people, then disappearing again". There is no z-index that
+              separates a crest from the ground it sits on.
+
+              So the crest lives in the band it introduces, capping the
+              photograph, and the egg white above it is the record still welded
+              to this section's head. `seat="inline"` (no pull-up — that would
+              put it back over the seabed, egg white on egg white) and `flip`,
+              so the solid edge is at the join and the wave cuts down into the
+              sky. `z-10` carries it over the scrim and the star field, which
+              are its siblings here. The deck welds it to the departing foot,
+              withdraws it as this section seats and pulls it on the way back
+              (`truth-foot-wave`, gated-deck.ts). With no deck — a phone,
+              reduced motion, JavaScript off — it stays as the drawn seam,
+              which is the right reading of a page that is not transitioning. */}
+          <div
+            data-truth-foot-crest
+            aria-hidden
+            /* ⚠ THE BOX EXISTS SO THE DECK HAS SOMETHING TO TRANSLATE. `flip`
+               compiles to a `transform` on the svg itself, and a GSAP write to
+               the root would replace it and un-flip the wave — the same trap
+               wave-roll.ts records for the seat's `-translate-y`. The ink
+               carries the roll, this box carries the withdrawal and the pull,
+               and the svg's own transform is left alone. It takes the wave's
+               own height, which is what `seat="inline"` asks of its owner. */
+            className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 sm:h-26"
+          >
+            <WaveDivider
+              ground="var(--color-canvas)"
+              seat="inline"
+              flip
+              hook="truth-foot-wave"
+            />
+          </div>
         </div>
-        {/* LIGHTENED, 11 September 2026 (client: the ending is too dark). The
-            wash was 0 → .387 → .86; the foot cannot move far, because that is
-            where the band's white type sits and the copy has to clear it, so
-            the lift is taken through the middle and the foot comes back only
-            as far as the type allows. */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.25] to-black/[0.68]"
-        />
-        {/* The sky answers a fine pointer — GalaxyField.tsx (13 Sep 2026). */}
-        <GalaxyField />
-        </div>
+
         {/* pb clears the footer's burnt crest (13.9vw), which rides the foot of
           this photograph — the page root is pulled up under it. */}
         <div data-truth-deck-viewport className="relative z-10">
