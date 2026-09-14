@@ -661,10 +661,34 @@ export function clusterDescent(
  * THE SPRING. Hi-fi §05 — "the page's pinned moment · eight days".
  *
  * "Counter · X3 scrubbed 1→8, the only place scroll controls time." Eight days
- * a spring ran, one per step, the reader turning them over.
+ * a spring ran, one per step, the reader turning them over. Scroll down counts
+ * 1→8; scroll up counts 8→1, every day retraced.
  *
- * Snapped, because a scrubbed counter stranded between two days shows a number
- * that does not exist. `snap` is 1/(steps-1).
+ * ⚠ THIS REVERSES THE 8 SEPTEMBER AUTO-RUN — user direction, 14 September 2026:
+ * "fix the scroll behaviour for the numbers 1-8 · 1->8 scroll down, 8->1 scroll
+ * up". On 8 Sep the days were taken off the scrollbar and made to run on their
+ * own in ~2.2s, because eight scrubbed days cost ~130vh to show a number
+ * changing (docs/design/living-work-qa-2026-09-08.md, item 6). The complaint
+ * then was the COST, not the mechanism, so the count comes back onto scroll at
+ * a third less travel: 100vh, not the original 150.
+ *
+ * WHAT MAKES 100vh ENOUGH, where 150 was too much. The days are one timeline
+ * unit apart and SNAPPED, so a day is one snap increment — about 12vh, a single
+ * wheel notch. The reader flicks eight times rather than scrolling a page and a
+ * half, and lands on a whole day each time.
+ *
+ * THE SNAP IS AN EXPLICIT ARRAY, and that is the whole of why snap works now.
+ * It was removed on 8 Sep as broken: `snapTo` was `1 / (steps - 1)` while the
+ * lead-in and the release stretched the timeline past 7, so every day but the
+ * first snapped mid-flip. The rest positions are computed here from the same
+ * constants that place the flips, so the two cannot drift apart.
+ *
+ * THE PIN IS NO LONGER DESKTOP-ONLY, and that is a consequence of the request
+ * rather than a preference. `pinMinWidth` was right while the count auto-ran:
+ * the days ran on their own and did not need the section held. Now scroll IS
+ * the mechanism, and an unpinned scrub would flip days 05–08 after the numerals
+ * had scrolled off the top of a phone. The pin is what keeps the count on
+ * screen for the length of the count.
  *
  * Loud channel: MEDIA. The photograph behind the count is the thing; the
  * numerals are large but they are an index, not a display.
@@ -679,61 +703,56 @@ export function clusterDescent(
  *   [data-media]    the plate behind them
  *   [data-release]  the withheld payoff, revealed with the final step
  */
-export function pinnedCount(root: HTMLElement, span = 60): MotionModule {
+export function pinnedCount(root: HTMLElement, span = 100): MotionModule {
   const steps = qa(root, "[data-step]");
+
+  /* The shape of the count, in timeline units — one unit per day, so a day is
+     one snap increment whatever the span. `splitFlap` places its turns on
+     integer positions and cannot be told to space them, so the spacing is
+     fixed at 1 and the FLIP is what is tuned: a short turn inside a long unit
+     means most of the travel shows a settled digit, and the snap only has to
+     catch the rest. */
+  const FLIP = DUR.small;
+  /* Day 01 holds before the first turn. Without this the count begins turning
+     the instant the section seats and day 01 is never read. */
+  const LEAD = 0.5;
+  /* Where the last day settles: the final turn starts at LEAD + (n - 2). */
+  const LANDS = LEAD + Math.max(steps.length - 2, 0) + FLIP;
+  /* The release, then a beat so the finished screen holds at the end of the
+     span rather than handing straight over. */
+  const TOTAL = LANDS + DUR.medium + 0.4;
+
+  /* Where each day is fully settled — the middle of its own dwell, so a snap
+     can never land on a turning digit. The last one waits for the release to
+     finish arriving, or the snap would park mid-fade on the payoff line. */
+  const rests = steps.map((_, i) => {
+    if (i === 0) return LEAD / 2;
+    if (i === steps.length - 1) return (LANDS + DUR.medium + TOTAL) / 2;
+    return LEAD + (i - 1) + FLIP + (1 - FLIP) / 2;
+  });
+
   return composition("pinnedCount", root, {
     channel: "media",
     span,
-    // Still pinned, so the section holds still while the count runs — but the
-    // count no longer rides the scrollbar.
-    //
-    // Ivy, 8 Sep: eight days scrubbed against scroll cost 130vh of travel to
-    // show a number changing, and the only thing moving was the number. The
-    // days now run on their own the moment the section lands, in about two
-    // seconds, and the whole screen costs one swipe instead of a page and a
-    // half.
-    //
-    // This trades away the note's "the one place on the page where scrolling
-    // controls time" — deliberately, and recorded in
-    // docs/design/living-work-qa-2026-09-08.md.
-    //
-    // `snap` goes with it, and was broken anyway: snapTo was 1/(steps-1) while
-    // [data-release] stretched the timeline to 7.55, so every snap point but
-    // the first landed mid-flap.
     pin: true,
-    // Only the PIN is desktop. The eight days still count on a phone — that
-    // is the section, and gating the whole recipe took it away and left the
-    // cut showing all eight digits stacked on one another.
-    pinMinWidth: DESKTOP,
+    snap: steps.length > 1 ? rests.map((t) => t / TOTAL) : undefined,
     uses: ["splitFlap"],
-    // Nothing rides the scrub now. The pin is the whole of what the span buys.
-    build: () => {},
-    // `enterStart` is "top top" so the count begins when the section is pinned
-    // and whole on screen, not at the default 82% where it would start behind
-    // the fold and be half over by the time it arrived.
-    enterStart: "top top",
-    enter: (tl) => {
+    build: (tl) => {
+      if (steps.length > 1) tl.splitFlap(steps, { duration: FLIP }, LEAD);
       const release = q(root, "[data-release]");
-      if (steps.length > 1) {
-        // splitFlap places its transitions on integer positions, so eight days
-        // is a 6.55-unit timeline whatever the per-flip duration. Nesting it
-        // and scaling by 3 turns that into ~2.2s — about 275ms a day, which
-        // reads as a counter running rather than a slideshow. The release
-        // below stays at natural speed, outside the nested scale.
-        const count = gsap.timeline();
-        count.splitFlap(steps, { duration: DUR.medium }, 0);
-        count.timeScale(3);
-        tl.add(count, 0);
-      }
-      // The payoff arrives just after day 08 lands.
+      // The payoff arrives as day 08 lands, on the same scroll that turned it.
       if (release) {
         tl.fromTo(
           release,
           { autoAlpha: 0, y: 24 },
           { autoAlpha: 1, y: 0, duration: DUR.medium, ease: EASE.country },
-          2.3,
+          LANDS,
         );
       }
+      // Pad to the whole span so the finished screen holds, and so the snap
+      // fractions above are measured against the timeline they were computed
+      // from rather than whatever the last tween happened to end at.
+      tl.to({}, { duration: TOTAL }, 0);
     },
     cut: (el) => {
       // clearAll is enough: the steps are absolutely STACKED, so the markup

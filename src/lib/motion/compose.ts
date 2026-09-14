@@ -99,8 +99,21 @@ export type CompositionSpec = {
    * but the thing the pin was holding still for is usually worth keeping.
    */
   pinMinWidth?: string;
-  /** Snap points, for step-throughs. `1 / (steps - 1)`. */
-  snap?: number;
+  /**
+   * Snap points, for step-throughs.
+   *
+   * A NUMBER is an even increment (`1 / (steps - 1)`) and only works when the
+   * timeline's rest positions are evenly spaced. An ARRAY is the explicit list
+   * of progress values to land on, for a timeline whose steps are not.
+   *
+   * Living Work §05 is why the array exists: `splitFlap` puts its turns on
+   * integer positions but the timeline also carries a lead-in and a release
+   * tail, so the rest positions are neither evenly spaced nor at
+   * `1 / (steps - 1)`. Snapping to that increment landed every day but the
+   * first mid-flip, which is what got snap removed there in the first place.
+   * Both forms go straight to ScrollTrigger's `snapTo`, which accepts either.
+   */
+  snap?: number | number[];
   /**
    * The effects this recipe reaches for.
    *

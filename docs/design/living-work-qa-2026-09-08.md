@@ -287,10 +287,36 @@ artboard and still did not work for a reader.
 | 3 | The numbers make no sense | **A fixed `h-[30vw]` box around a `16vw` glyph** left ~200px of dead air and pushed the label to the foot of the screen at 12px. Now a two-column grid: numeral left, label beside it at 18px, swapping together. Also closed 45vh of dead screen in the timeline; span 430 → 400vh. |
 | 4 | Rangers artwork leans left | The frame draws the rule at x=100 w=1240 — the full content width. The build capped it at `max-w-5xl` and left-aligned. |
 | 5 | Card hierarchy and drag | Scale off a cosine bell against the viewport while the pitch stayed flat: the hierarchy flattened at the edges and the gaps grew 31 → 60 → 80. Now an even ramp with the pitch integrating the scale — constant 20px gaps. Wheel/trackpad added, horizontal intent only. |
-| 6 | The Spring costs too much scroll | The eight days alone ate ~130vh. Auto-runs in ~2.2s now; pin 150 → 60vh. Trades away the note's "scrolling controls time", deliberately. |
+| 6 | The Spring costs too much scroll | The eight days alone ate ~130vh. Auto-runs in ~2.2s now; pin 150 → 60vh. Trades away the note's "scrolling controls time", deliberately. **⚠ SUPERSEDED 14 September 2026** — see the note below the table. |
 | 7 | Infrastructure header should stay | Header sticky on `lg`, blocks pass under the artist's rule. The index parks below it via a measured custom property. |
 | 8 | Don't ship the stroked text | It was Ivy's drawing of the animation, not a thing to ship. Three drawing layers collapse to one solid name wiped left-to-right; the rule and tick below carry the proportion, and Rainbow Credits' empty track is now the whole of how it reads as unstarted. |
 | 9 | Are the cards that wide? | **No — at 362 they are the narrowest three-up on the site.** The gap was the problem: 32 against the frame's 77. Opened to the drawn value. The glyph now goes through `SeamGlyph`. |
+
+### ⚠ Item 6 was reversed — 14 September 2026
+
+User direction: *"fix the scroll behaviour for the numbers 1-8 · 1->8 scroll down, 8->1
+scroll up"*. The count is back on the scrollbar.
+
+This record stands as what was decided on 8 September and is left unedited. What it got
+wrong is worth naming, because it is the reason the fix took two passes: **the complaint
+was the COST, and the change answered it by removing the MECHANISM.** Taking the days off
+scroll did make the section cheap, but it also gave up the one thing the hi-fi note is
+explicit about — "the only place scroll controls time" on this page.
+
+The cost is now answered without that trade: 100vh rather than the original 150, with the
+days SNAPPED so one day is one snap increment (~12vh, a single wheel notch). Eight flicks,
+each landing on a whole day, instead of a page and a half of travel.
+
+Snap is also fixed rather than restored. It was removed in the same 8 Sep pass as broken,
+and it was: `snapTo` was `1 / (steps - 1)` while the lead-in and the release stretched the
+timeline past 7, so every day but the first landed mid-flip. `CompositionSpec.snap` now
+takes an explicit array as well as an increment, and the rest positions are computed from
+the same constants that place the flips.
+
+One knock-on, recorded because it is a real cost: **the pin is no longer desktop-only.**
+`pinMinWidth` was right while the days ran on their own — they did not need the section
+held. Now scroll is the mechanism, and an unpinned scrub flips days 05–08 after the
+numerals have scrolled off the top of a phone.
 
 ### Two things deliberately not done
 

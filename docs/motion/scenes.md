@@ -916,7 +916,7 @@ yet, and the two should be reconciled before this page is signed off.
 | 02 | V | **THE APERTURE** — the 0 is a portal onto the plain | 5 | 300 | **type** | — | ✓ pinned |
 | 03 | V | Our challenges — the ground thins under you as you read | 3 | 330 | **transition** | — | — |
 | 04 | V | Iningai Rangers — the human centre, on dark ground | 4 | 100 | **media** | P1 | ✓ |
-| 05 | V | **THE SPRING** — eight days, counted | 5 | 150 | **media** | P8 | ✓ pinned, snapped |
+| 05 | V | **THE SPRING** — eight days, counted | 5 | 100 | **media** | P8 | ✓ pinned, snapped |
 | 06 | V | The work — seven streams | 3 | 360 | **media** | P5 | — |
 | 07 | V | Infrastructure — what it takes, met two at a time | 2 | 160 | **none** | — | — |
 | 07b | V | **BREATH** — held, no caption | 1 | 47 | **none** | P8 | ✓✓ |
@@ -2560,6 +2560,15 @@ Per `spine.md`, scroll advances time in exactly three places. Everywhere else it
 - **Living Work 05** — THE SPRING. The hi-fi is explicit: "counter · X3 scrubbed 1→8, **the
   only place scroll controls time**" on that page. Eight days a spring ran, one per step,
   snapped so the reader is never stranded on a day that does not exist.
+
+  ⚠ This was briefly untrue. On 8 September the days were taken off the scrollbar and made
+  to auto-run in ~2.2s, because eight scrubbed days cost ~130vh
+  (`docs/design/living-work-qa-2026-09-08.md`, item 6) — and this ledger was never corrected,
+  so it described a scrub that had been removed. **User direction 14 September 2026 puts the
+  count back on scroll**, which makes the line above true again: 1→8 down, 8→1 up. The cost
+  is answered by SNAP rather than by leaving the scrollbar — 100vh, one day per snap
+  increment (~12vh, a single wheel notch), so the reader flicks eight times instead of
+  scrolling a page and a half.
 
 Any other scrub on any other screen is a mistake, not a variation. Note the distinction that
 keeps this honest: plenty of screens are *scrubbed* — grounds ramp, plates parallax, apertures

@@ -325,9 +325,13 @@ column: at 1440 the copy column is ~590px and `justify-between` left the count
 stranded with nothing between the pair to read.
 
 The layout is Living Work §05 THE SPRING's and the mechanism deliberately is
-not. The Spring's counter auto-runs 1→8 in about two seconds on one pinned
-scroll; here the reader drives it, and the display element is a word rather than
-a numeral, because a bare 01–05 counts nothing but list position. `splitFlap`
+not. ⚠ Corrected 14 September 2026: The Spring no longer auto-runs — user
+direction put its count back on scroll the same day, so BOTH screens are now
+reader-driven. What still separates them is the unit and the display element.
+The Spring advances a NUMERAL and snaps, one day per wheel notch over 100vh;
+here a whole statement turns over, the display element is a word rather than a
+numeral (a bare 01–05 counts nothing but list position), and there is no snap
+because a paragraph caught mid-change is not the same failure as a digit is. `splitFlap`
 stays on Living Work. This page's verb is ARRIVES and the steps arrive.
 
 Loud channel moves from **media** to **type**, which also fixes the run either
