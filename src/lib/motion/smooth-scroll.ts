@@ -38,13 +38,57 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 let lenis: Lenis | null = null;
 let tick: ((time: number) => void) | null = null;
 
+/**
+ * WHEEL WEIGHT — how far one wheel notch moves the document, as a multiplier.
+ *
+ * 1 is Lenis's own default and the feel every page shipped with; a page passes
+ * something lower to make its scrubbed beats cost more wheel WITHOUT changing a
+ * single scroll span, CSS height or measured seam. /about is the first caller
+ * (14 September 2026, user direction: the page read too fast and sections went
+ * past unread) — see its layout for the reasoning and the number.
+ *
+ * ⚠ CONSTRUCTION-TIME ONLY. Lenis reads `wheelMultiplier` off the options it was
+ * constructed with, and its public `options` type exposes only
+ * `duration | easing | prevent | virtualScroll | naiveDimensions` as mutable. A
+ * page that wants a different weight therefore needs a NEW instance, which is
+ * why `build` compares and rebuilds rather than early-returning on any live one.
+ *
+ * ⚠ WHEEL ONLY, AND THAT IS THE WHOLE SURFACE. This scales Lenis's virtual
+ * scroll and nothing else: keyboard paging stays native (see objection 2 above),
+ * touch never constructs Lenis at all, a scrollbar drag is native, and
+ * `lenis.scrollTo` glides carry their own duration. About's deck reads raw
+ * `deltaY` from a capture-phase listener that runs BEFORE Lenis, so its gate
+ * charge is unaffected too — the hold still fires on the same wheel travel.
+ */
+export const DEFAULT_WHEEL = 1;
+
+export type SmoothScrollConfig = {
+  /** Wheel weight; see DEFAULT_WHEEL. Lower is heavier. */
+  wheel?: number;
+};
+
+/** The weight the LIVE instance was built with, so a route wanting a different
+    one can be told apart from a route wanting the one already running. */
+let liveWheel = DEFAULT_WHEEL;
+
+/** The mount that currently owns the instance. React can mount the incoming
+    route's SmoothScroll before the outgoing route's cleanup runs, and an
+    unguarded cleanup then destroys the instance its successor just built. */
+let owner: symbol | null = null;
+
 const canSmooth = (): boolean =>
   window.matchMedia("(prefers-reduced-motion: no-preference)").matches &&
   window.matchMedia("(pointer: fine)").matches;
 
-function build(): void {
-  if (lenis || !canSmooth()) return;
-  lenis = new Lenis({ lerp: 0.12, anchors: true });
+function build(wheel: number): void {
+  if (!canSmooth()) return;
+  // A live instance is reused only when it already has the requested weight.
+  if (lenis) {
+    if (liveWheel === wheel) return;
+    teardown();
+  }
+  lenis = new Lenis({ lerp: 0.12, wheelMultiplier: wheel, anchors: true });
+  liveWheel = wheel;
   lenis.on("scroll", ScrollTrigger.update);
   tick = (time: number) => lenis?.raf(time * 1000);
   gsap.ticker.add(tick);
@@ -60,13 +104,21 @@ function teardown(): void {
 }
 
 /** Mounted by SmoothScroll in the active route. Returns its unmount cleanup. */
-export function createSmoothScroll(): () => void {
-  build();
+export function createSmoothScroll(
+  config: SmoothScrollConfig = {},
+): () => void {
+  const wheel = config.wheel ?? DEFAULT_WHEEL;
+  const token = Symbol("smooth-scroll");
+  owner = token;
+  build(wheel);
   const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const onChange = () => (media.matches ? teardown() : build());
+  const onChange = () => (media.matches ? teardown() : build(wheel));
   media.addEventListener("change", onChange);
   return () => {
     media.removeEventListener("change", onChange);
+    // Someone else owns the instance now — they built it, they tear it down.
+    if (owner !== token) return;
+    owner = null;
     teardown();
   };
 }
