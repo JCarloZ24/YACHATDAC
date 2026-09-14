@@ -779,13 +779,18 @@ export function WhyWeExist() {
               and before that, on the stage, they sat beneath a screen painting
               an opaque canvas ground.
 
-              ⚠ AND THIS RUNS AGAINST THE BARE-GROUND NOTE at the head of the
-              section, which says the question is asked on charcoal with
-              nothing behind it. Held as ONE screen the question is centred,
-              and ring B is 900px tall — there is no "high and low, clear of
-              the question's band" left to place them in. Flagged rather than
-              settled: if the bare ground wins, these come out of the held
-              build entirely and stay in the flow one. */}
+              ⚠ THE BARE-GROUND NOTE AT THE HEAD OF THE SECTION IS SETTLED
+              AGAINST — user direction, 14 September 2026. That note said the
+              question is asked on charcoal with nothing behind it, and this
+              block was flagged rather than settled: "if the bare ground wins,
+              these come out of the held build entirely". The rings won. They
+              were briefly lost when `theQuestion` began clearing the whole
+              claims screen, and the report that brought them back ("the
+              background svg is gone again in 'what does it leave for the
+              generations who come after us?'") is the ruling — the question is
+              read against the rings, not against nothing. The sequence now
+              clears `[data-ab-claims-col]` instead of the screen, so these
+              survive it; see `theQuestion`. */}
           <RingArtwork
             piece="b"
             className="top-[4%] left-[64%] w-[56.25rem] opacity-30"
@@ -795,7 +800,18 @@ export function WhyWeExist() {
             className="-left-48 top-[54%] w-[40rem] opacity-30"
           />
 
-          <div className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-24 lg:pb-[22svh]`}>
+          {/* ⚠ NAMED SO THE SEQUENCE CAN CLEAR THE TYPE WITHOUT CLEARING THE
+              SCREEN. `theQuestion` used to fade the whole `[data-ab-screen=
+              "claims"]` out before the question arrived, which also took the
+              artist's rings below with it and left the question on bare
+              charcoal (reported 14 September 2026, "the background svg is gone
+              again"). The rings are ground for the dark state and are meant to
+              be under the question; only the eyebrow and the claims have to go,
+              because those are what share the stage cell with it. */}
+          <div
+            data-ab-claims-col
+            className={`${COLUMN} relative pt-16 pb-[22svh] lg:pt-24 lg:pb-[22svh]`}
+          >
             <p
               data-arrive
               data-ab-eyebrow

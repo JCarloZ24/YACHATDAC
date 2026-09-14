@@ -384,6 +384,35 @@
   [data-ab="what-we-do"][data-ab-held] [data-ab4-ground] {
     display: block;
   }
+
+  /* ⚠ THE SECTION GOES ROASTED, THE STAGE STAYS CANVAS — the same split §03
+     makes above, and for the identical reason. §04's roasted front is painted
+     by `[data-ab4-ground]`, which lives INSIDE the sticky screen; when the
+     sticky releases, that screen scrolls away and the section's own
+     `bg-canvas` is what shows in the band below it. So the sequence ended on
+     roasted, the hold then put a bright off-white screen back in front of the
+     reader for the whole of the gate's charge, and §05 rose into that rather
+     than into the ground §04 had just handed it (reported 14 September 2026:
+     "the section becomes white for a second again and the 'how we work'
+     section fills the white screen from the bottom").
+
+     §03 records this exact failure — "Canvas there was a bright band sliding
+     up under a black screen" — and fixed it by painting the held SECTION the
+     colour its sequence ends on. §04 never got the same treatment, which is
+     why the flash came back on the one seam with no wave to hide it: the score
+     gives 04 → 05 "ring contracts, transform-only", so there is no crest
+     travelling across the join to cover a mismatched ground.
+
+     The stage has to take the canvas back, or the section's roasted would be
+     the ground the whole read happens on and the front would have nothing to
+     rise over. Held only — in flow, below the bounds and under reduced motion
+     the section is `bg-canvas` from the markup and none of this applies. */
+  [data-ab="what-we-do"][data-ab-held] {
+    background-color: var(--color-roasted);
+  }
+  [data-ab="what-we-do"][data-ab-held] [data-ab-stage] {
+    background-color: var(--color-canvas);
+  }
   /* -------------------------------------------------------------------------
      §05 — "How we work", three values and a held photograph.
 
@@ -392,6 +421,42 @@
      and the constraints, the sequence is the user's. SCOPED BY SECTION NAME,
      like every other section in this file.
      ------------------------------------------------------------------------- */
+
+  /* ⚠ THE SEAM ABOVE THIS SECTION HAS NO WAVE, SO IT NEEDS A FLOOR.
+     Reported 14 September 2026: "a slight gap showing navy blue div appears
+     above when How we work comes in."
+
+     Every other join on /about is bridged by a WaveDivider, which is seated
+     with `-translate-y-[calc(100%-1px)]` — the `-1px` in that calc is the same
+     defect being guarded against one seam at a time. 04 → 05 is the ONE seam
+     the score gives no wave ("ring contracts, transform-only"), so when the
+     pinned §04 and the incoming §05 separate by even a few pixels there is
+     nothing between them and the page's own ground shows through. That ground
+     is `#090e12` (PageTransition in ./page.tsx, and the charcoal wrapper in
+     ./layout.tsx) — a blue-black, which against §05's roasted brown reads as a
+     navy band. It is the same seam the white flash appeared at, and for the
+     same underlying reason: nothing covers this join but the two sections
+     themselves.
+
+     ⚠ THIS IS A COVER, NOT A CAP, AND THE DISTINCTION IS RECORDED. The motion
+     grammar's "the hand-off scrolls" row says Truth's `createGatedDeck` is
+     "capped every frame at the incoming's measured penetration, so the two can
+     never separate and show bare page". `coverSeams` — About's own deck — has
+     no such cap and never did. Capping it properly means per-frame measurement
+     inside a module carrying nine pinned gates and a charged hold, all of it
+     user-directed; painting the join costs nothing and cannot desynchronise.
+     If the cap is ever added to `coverSeams`, this rule becomes redundant and
+     should come out with it.
+
+     An outset box-shadow paints an 8rem roasted band above §05's top edge with
+     ZERO layout effect — no margin, no height, no measurement any seam or span
+     depends on — and `overflow-clip` on the section does not clip an element's
+     own outer shadow. Held only: in flow, under reduced motion and below the
+     bounds there is no `data-ab-held`, §04 is `bg-canvas` from the markup, and
+     a brown band above §05 would be visible and wrong. */
+  [data-ab="how-we-work"][data-ab-held] {
+    box-shadow: 0 -8rem 0 0 var(--color-roasted);
+  }
 
   /* The band takes its own height, the heading takes its own, the values take
      what is left and share one cell so exactly one is ever on screen. Written

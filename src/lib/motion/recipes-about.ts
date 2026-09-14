@@ -937,7 +937,12 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       // ---- 01 → 02 · the name ------------------------------------------
       // The decode runs first and alone; nothing else is on the screen, which
       // is the board's own frame 01.
-      if (legal) tl.decode(legal, { duration: 0.18 }, 0);
+      // ⚠ .13, NOT .18 (pacing pass, 14 September 2026, two readings). The
+      // decode is this screen's one loud moment and was also its most generous
+      // beat; what it gives up is spent below on DWELL — see the next block,
+      // which is where this section was actually failing. At /about's 0.55
+      // wheel weight .13 is still ~425px of wheel to resolve one name.
+      if (legal) tl.decode(legal, { duration: 0.13 }, 0);
 
       // It resolves, and dims as the short name lands under it — "two lines,
       // one gesture: this is what we are called, and this is what you will
@@ -953,12 +958,31 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
         tl.to(
           legal.parentElement,
           { opacity: 0.45, duration: 0.08, ease: EASE.country },
-          0.18,
+          0.13,
         );
       }
+      /* ⚠ THE ARRIVAL IS HALVED AND THE DWELL IS THE POINT (user direction,
+         14 September 2026, second reading: "the text 'Most people say
+         yachatdac' disappears too quickly after appearing like you won't have
+         a second to read it").
+
+         The reported defect was not spacing, it was SIGN. `settle` ran .12 from
+         .15, so the line finished arriving at .27 — and the block that carries
+         it began clearing at .25. The short name never reached full opacity in
+         a single frame: it was still fading in while it was already fading out,
+         which is exactly what "you won't have a second to read it" describes.
+         The pass before this one moved both numbers together and preserved the
+         overlap, because the relationship looked deliberate when it was read as
+         a relationship rather than as a duration and an end.
+
+         A `settle` is ARRIVAL, not reading; reading happens in the still frame
+         after it. So the arrival is .06 (~196px of wheel at 0.55) and the line
+         then STANDS from .19 to .28 with nothing else moving — ~295px of wheel
+         on a screen that is not itself travelling. Every reading beat below is
+         budgeted the same way, and none of them clears before it has landed. */
       if (short) {
-        tl.set(short, { autoAlpha: 1 }, 0.18);
-        tl.settle(short, lineBeat(0.12), 0.18);
+        tl.set(short, { autoAlpha: 1 }, 0.13);
+        tl.settle(short, lineBeat(0.06), 0.13);
       }
 
       // ---- the name goes BEFORE the prose arrives ------------------------
@@ -981,22 +1005,27 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       if (nameBlock) {
         tl.to(
           nameBlock,
-          { autoAlpha: 0, duration: 0.06, ease: EASE.country },
+          { autoAlpha: 0, duration: 0.05, ease: EASE.country },
           0.28,
         );
       }
 
       // ---- 03 · the body, line by line ----------------------------------
-      // ⚠ `lineBeat(0.09)`, NOT .12. The prose now owns its own stretch of the
-      // read instead of overlapping the name, and the beats after it did not
-      // move — the road still arrives at .56 — so the two paragraphs have to be
-      // read inside .34 → .54. At .12 the second one was still settling as the
-      // road slid in over it.
-      if (prose) tl.set(prose, { autoAlpha: 1 }, 0.34);
+      /* ⚠ `lineBeat(0.06)` AND .14 APART — arrival, then dwell, the same
+         correction the short name above carries and for the same reason. At
+         `lineBeat(0.09)` .10 apart a four-line paragraph finished arriving .08
+         after it started, so the second was still settling when the first was
+         already being replaced and the block's own clear (.49) landed before
+         the second had finished (.52). Both paragraphs were arriving-and-
+         leaving rather than standing.
+
+         .06 arrives a four-line paragraph in ~.08, and the .14 step leaves each
+         one standing for ~.06 — ~196px of wheel at 0.55 — before the next. */
+      if (prose) tl.set(prose, { autoAlpha: 1 }, 0.33);
       bodies.forEach((body, i) => {
-        const at = 0.34 + i * 0.1;
+        const at = 0.33 + i * 0.14;
         tl.set(body, { autoAlpha: 1 }, at);
-        tl.settle(body, lineBeat(0.09), at);
+        tl.settle(body, lineBeat(0.06), at);
       });
 
       // ---- the turn -----------------------------------------------------
@@ -1005,8 +1034,8 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       if (prose) {
         tl.to(
           prose,
-          { autoAlpha: 0, duration: 0.06, ease: EASE.country },
-          0.52,
+          { autoAlpha: 0, duration: 0.05, ease: EASE.country },
+          0.61,
         );
       }
 
@@ -1019,8 +1048,8 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       if (stage) {
         tl.to(
           stage,
-          { "--ab2-fold": 0, duration: 0.09, ease: EASE.country },
-          0.56,
+          { "--ab2-fold": 0, duration: 0.08, ease: EASE.country },
+          0.62,
         );
       }
 
@@ -1028,17 +1057,24 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       if (registerBlock) {
         tl.to(
           registerBlock,
-          { autoAlpha: 1, duration: 0.05, ease: EASE.country },
-          0.62,
+          { autoAlpha: 1, duration: 0.04, ease: EASE.country },
+          0.66,
         );
       }
-      if (recap) quietly(tl, recap, 0.63);
+      if (recap) quietly(tl, recap, 0.665);
 
       // ---- 04 · the thread enters ---------------------------------------
+      // ⚠ FURNITURE, AND IT PAYS FOR THE FACTS. The road, the register and the
+      // thread all arrive .04 earlier than they did before 14 September 2026.
+      // Nothing here is read — the road is a picture collapsing, the rule is a
+      // 2px line — so shortening the gap between them costs the reader nothing
+      // and buys the four facts below the width they needed. Their shape is
+      // unchanged: the register still lands mid-fold and the rule still draws
+      // into the first fact's arrival, exactly as they did at .62/.65.
       if (rule) {
-        tl.to(rule, { scaleX: 1, duration: 0.04, ease: EASE.country }, 0.65);
+        tl.to(rule, { scaleX: 1, duration: 0.03, ease: EASE.country }, 0.68);
       }
-      if (head) quietly(tl, head, 0.66);
+      if (head) quietly(tl, head, 0.69);
 
       // ---- 04 → 06 · the facts arrive one at a time ----------------------
       // The mechanism the whole section exists for. Each fact takes the screen
@@ -1059,18 +1095,52 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       // presenter's positioning context.
       const rowTop = rows.map((row) => row.offsetTop);
 
-      const FACT_AT = 0.68;
+      // ⚠ .085 APART, NOT .07 — and the run starts at .62, not .68 (user
+      // direction, 14 September 2026: "the scroll is too quick in pacing and
+      // user might miss some sections or text"). At .07 a fact got 126px of a
+      // 200vh read, which made this the tightest sequence on /about — three
+      // times tighter per item than §05's values at .30–.35, and half of §08's
+      // .12, which is the one number on this page the reader has already
+      // ratified ("too fast, slow it down", 12 September 2026, see thePartners).
+      //
+      // .07 is 126px, and at /about's 0.55 wheel weight that is ~229px of
+      // wheel per fact — over the bar §08 was ratified at, which is the test
+      // that matters now the whole page is scrolled 1.8x heavier.
+      //
+      // ⚠ IT CAME DOWN FROM .085, AND THAT IS A TRADE, NOT A REGRESSION. The
+      // second reading found the failure was upstream: the name and both
+      // paragraphs were arriving and leaving without ever standing still (see
+      // the blocks above), and fixing SIGN costs more of the read than fixing
+      // spacing did. The budget now divides as .13 decode + .15 name and its
+      // dwell + .05 clear + .28 prose and its dwells + .09 furniture + .29
+      // facts + .01 rest = 1.0, with nothing spare. Eight reading beats do not
+      // fit a 200vh read with dwell on all of them; the heavier wheel is what
+      // makes .07 read like .12 did, and more span is the only thing that would
+      // buy real room here.
+      const FACT_AT = 0.69;
       const FACT_STEP = 0.07;
       facts.forEach((fact, i) => {
         const at = FACT_AT + i * FACT_STEP;
-        const folds = at + 0.045;
+        // ⚠ THE FOLD MUST NOT START BEFORE THE ARRIVAL LANDS. At .045 after an
+        // arrival that ran .035 the fact stood for .010; the first cut of this
+        // pass shortened the offset to .03 and made it NEGATIVE — the same
+        // defect being fixed above, reintroduced two beats later and caught by
+        // the budget check rather than by eye. Arrival .022, fold at .05: the
+        // fact stands for .028 at heading scale before it collapses.
+        //
+        // It is thinner than the dwells above and that is deliberate rather
+        // than a shortfall — a fact does not VANISH, it folds into its register
+        // row and the row stays on the screen, so the reading continues after
+        // the beat. The short name had nowhere to go, which is why it needed
+        // three times this.
+        const folds = at + 0.05;
         const top = rowTop[i] ?? 0;
 
         // Arrives in its row's place, one row below the last that settled.
         tl.fromTo(
           fact,
           { autoAlpha: 0, y: top + 18 },
-          { autoAlpha: 1, y: top, duration: 0.035, ease: EASE.country },
+          { autoAlpha: 1, y: top, duration: 0.022, ease: EASE.country },
           at,
         );
 
@@ -1107,7 +1177,7 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
             stage,
             {
               "--ab2-fold": (i + 1) / facts.length,
-              duration: 0.045,
+              duration: 0.035,
               ease: "none",
             },
             folds + 0.012,
@@ -1115,6 +1185,16 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
         }
       });
 
+      /* ⚠ THE TRAILING REST, ADDED 14 September 2026 WITH THE PACING PASS.
+         A scrub maps the reader's 0→1 onto 0→`tl.duration()`, and the duration
+         is wherever the LAST tween ends — so until this line existed every
+         position in this recipe was quietly renormalised against whatever the
+         fourth fact happened to land on (.992 before the pass, .977 after it),
+         and each edit above silently moved every beat that was not edited. The
+         rest pins the clock at 1.0 so a position written here is the fraction
+         of the read it says it is. §05, §06, §07 and §08 each carry one for the
+         same reason; §02 was the section that did not and should have. */
+      tl.to({}, { duration: 0.01 }, 0.99);
     },
     // ⚠ NO ENTRY ARRIVAL, DELIBERATELY. The heading is the one thing on this
     // section that never moves, and its travel when the road arrives is a
@@ -1216,7 +1296,7 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       const ground = q(root, "[data-ab-ground]");
       const plate = q(root, "[data-ab-plate]");
       const question = q(root, "[data-ab-question]");
-      const claimsScreen = q(root, '[data-ab-screen="claims"]');
+      const claimsCol = q(root, "[data-ab-claims-col]");
       const rule = q(root, '[data-ab-rule="quote"]');
       const attribution = q(root, "[data-ab-attribution]");
       const tagline = q(root, "[data-ab-tagline]");
@@ -1359,18 +1439,35 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       // Held until the front is entirely past the head of the screen, so the
       // cream question has its full ratio in the first frame it is visible in
       // rather than landing on the tail of the evergreen crossing.
-      // ⚠ AND THE CLAIMS SCREEN IS CLEARED HERE, EXPLICITLY. Until now nothing
-      // cleared it: it sat at opacity 1 for the whole read and what hid the
-      // eyebrow was the rising front passing over it. That worked, but it was
-      // timing rather than layout — the eyebrow's box and the question's
-      // overlap inside the shared stage cell, so any viewport where the front
-      // had not reached the head of the screen when the question arrived would
-      // paint the two on top of each other. Reported from 1366 x 643 and not
-      // reproducible from the outside, which is exactly why it is fixed by
-      // removing the possibility rather than by re-timing the front.
-      if (claimsScreen) {
+      // ⚠ THE CLAIMS COLUMN IS CLEARED HERE, EXPLICITLY — THE COLUMN, NOT THE
+      // SCREEN. Originally nothing cleared it: it sat at opacity 1 for the whole
+      // read and what hid the eyebrow was the rising front passing over it. That
+      // worked, but it was timing rather than layout — the eyebrow's box and the
+      // question's overlap inside the shared stage cell, so any viewport where
+      // the front had not reached the head of the screen when the question
+      // arrived would paint the two on top of each other. Reported from
+      // 1366 x 643 and not reproducible from the outside, which is exactly why
+      // it is fixed by removing the possibility rather than by re-timing.
+      //
+      // ⚠ BUT IT WAS THE WHOLE SCREEN, AND THAT TOOK THE RINGS (reported
+      // 14 September 2026: "the background svg is gone again in 'what does it
+      // leave for the generations who come after us?'"). `[data-ab-screen=
+      // "claims"]` carries four layers the question needs left alone — the
+      // plate, the two scrims and the risen charcoal FRONT — and the artist's
+      // rings, which sit above the front precisely so they emerge out of it as
+      // it rises and are ground for the dark state. Fading the screen faded all
+      // five, so the question was asked on bare charcoal and the section's
+      // background was the only thing behind it.
+      //
+      // Only the eyebrow and the claims share the cell with the question, and
+      // they are the column. Clearing the column keeps the 1366 x 643 guarantee
+      // — the two can still never paint on top of each other — and leaves the
+      // front and the rings standing, which is the composition the question was
+      // always meant to be read against. Nothing else in this recipe needed to
+      // change: the front is already fully risen by .72.
+      if (claimsCol) {
         tl.to(
-          claimsScreen,
+          claimsCol,
           { autoAlpha: 0, duration: 0.04, ease: "none" },
           0.72,
         );
@@ -1387,9 +1484,17 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       // consumed while the slide is still behind the one covering it: the
       // draw plays where nobody can see it and then nothing moves for the
       // whole read. That failure is the grammar's "interior scrub" row.
+      // ⚠ .86, NOT .89, AND THE TWO LINES BELOW MOVE WITH IT (pacing pass,
+      // 14 September 2026). The attribution and the tagline sat .035 apart —
+      // ~63px of a 200vh read, the narrowest pair on /about — so the citation
+      // and the line about ancient traditions arrived almost together at the
+      // end of the page's loudest screen. The .03 comes out of the question's
+      // own dwell, which had .21 of the read to itself and still has .19; the
+      // question is not read any faster and the two lines below it get half
+      // again as long. The tagline's position is NOT part of this: see below.
       if (rule) {
-        tl.set(rule, { autoAlpha: 1 }, 0.89);
-        tl.to(rule, { scaleX: 1, duration: 0.04, ease: EASE.country }, 0.89);
+        tl.set(rule, { autoAlpha: 1 }, 0.86);
+        tl.to(rule, { scaleX: 1, duration: 0.04, ease: EASE.country }, 0.86);
       }
 
       // After the settle has landed, never with it — naming the source while
@@ -1397,7 +1502,7 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       //
       // `quietly` is X4's arrival written as a fromTo — see the helper for why
       // it cannot be `arrive` here.
-      if (attribution) quietly(tl, attribution, 0.93);
+      if (attribution) quietly(tl, attribution, 0.91);
       // ⚠ THE LAST BEAT ENDS AT EXACTLY 1.0, and that is load-bearing rather
       // than tidy. A timeline's position parameter is a TIME, and a scrub maps
       // the reader's 0→1 onto 0→`tl.duration()` — so while the longest beat
@@ -1567,7 +1672,26 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
       // clearing ellipse, which is sized for a COMPACT card — fold it while
       // its card is still at full size and the label lands on top of the
       // photograph it belongs to (caught on screen, 12 September 2026).
-      const CLAUSE_AT = 0.12;
+      // ⚠ .09, NOT .12 (user direction, 14 September 2026: the first card and
+      // "If Country is not cared for" should arrive "few % scroll more early,
+      // like around 2-3%"). Nothing animates between 0 and this mark — the head
+      // is `set` visible at 0 and then holds — so the opening .12 was a static
+      // eyebrow-and-headline screen the reader waited out before the section
+      // began. Taking it to .09 is the 3% asked for, at the top of the range.
+      //
+      // It moves ALL THREE clauses, and that is deliberate rather than
+      // incidental: `at` is `CLAUSE_AT + i * STEP`, so lowering the mark slides
+      // the whole chain earlier and leaves `STEP` — the rhythm between clauses,
+      // and the thing CARD_SEAT's read is measured inside — completely
+      // untouched. Moving only the first would have made the gap to the second
+      // .20 against the others' .17, which is a limp in the one sequence on the
+      // page whose claim is that four things hold each other up evenly.
+      //
+      // The tail absorbs it. The fourth card now seats at .715 instead of .745
+      // and the deliberately empty hold at .80 → .86 is unchanged, so the run
+      // up to it grows from .055 to .085 of quiet — more of the pause the hold
+      // already exists to give, not less.
+      const CLAUSE_AT = 0.09;
       const STEP = 0.17;
       const CARD_IN = 0.025; // after its clause
       // ⚠ THE GAP BETWEEN THESE TWO IS THE READ, and it is the point of the
@@ -2066,17 +2190,26 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
         tl.set(heading, { autoAlpha: 1 }, 0.03);
         tl.settle(heading, lineBeat(0.055), 0.03);
       }
+      /* ⚠ .11 APART, NOT .07 (user direction, 14 September 2026 — the same
+         pass that widened §02's facts and §03's closing pair). At .07 these two
+         sentences were tied with §02's facts as the narrowest reading beats on
+         the page: 126px of a 200vh read to take in how the board is made up
+         before the next sentence replaced it.
+         The room comes from below, not from the reader — part 1's clear, the
+         thread's draw and everything after it all move back with these, and the
+         trailing rest gives up .05 of the hold it was spending on a finished
+         calendar. Nothing that is read lost any of its own time. */
       facts.forEach((fact, i) => {
-        const at = [0.11, 0.18][i] ?? 0.18;
+        const at = [0.12, 0.23][i] ?? 0.23;
         tl.set(fact, { autoAlpha: 1 }, at);
         tl.settle(fact, lineBeat(0.045), at);
       });
       if (factRule) {
-        tl.to(factRule, { scaleX: 1, duration: 0.035, ease: EASE.country }, 0.25);
+        tl.to(factRule, { scaleX: 1, duration: 0.035, ease: EASE.country }, 0.31);
       }
       if (future) {
-        tl.set(future, { autoAlpha: 1 }, 0.29);
-        tl.settle(future, lineBeat(0.05), 0.29);
+        tl.set(future, { autoAlpha: 1 }, 0.35);
+        tl.settle(future, lineBeat(0.05), 0.35);
       }
 
       /* ---- part 1 clears -------------------------------------------------
@@ -2090,7 +2223,7 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
       tl.to(
         claimPart,
         { autoAlpha: 0, y: -40, duration: 0.06, ease: EASE.country },
-        0.43,
+        0.48,
       );
 
       /* ---- part 2 · the thread acquires a date ---------------------------
@@ -2100,25 +2233,25 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
          same edge travelling across held geometry that Wonder's itinerary rule
          uses, and it leaves the dots their own shape. Pace and curve unchanged
          from the viewport-triggered original. */
-      const DRAW_AT = 0.52;
+      const DRAW_AT = 0.57;
       const DRAW_FOR = 0.2;
-      // Part 1 is gone by .49; the gate opens on the bare screen between them.
-      tl.set(calendarPart, { opacity: 1, pointerEvents: "auto" }, 0.5);
+      // Part 1 is gone by .54; the gate opens on the bare screen between them.
+      tl.set(calendarPart, { opacity: 1, pointerEvents: "auto" }, 0.55);
       tl.to(
         rule,
         { clipPath: "inset(0 0% 0 0)", duration: DRAW_FOR, ease: EASE.machine },
         DRAW_AT,
       );
 
-      if (date) quietly(tl, date, 0.73, 0.035);
+      if (date) quietly(tl, date, 0.78, 0.035);
       if (body) {
-        tl.set(body, { autoAlpha: 1 }, 0.76);
-        tl.settle(body, lineBeat(0.05), 0.76);
+        tl.set(body, { autoAlpha: 1 }, 0.81);
+        tl.settle(body, lineBeat(0.05), 0.81);
       }
       if (hairline) {
-        tl.to(hairline, { scaleX: 1, duration: 0.03, ease: EASE.country }, 0.82);
+        tl.to(hairline, { scaleX: 1, duration: 0.03, ease: EASE.country }, 0.87);
       }
-      if (cta) quietly(tl, cta, 0.84, 0.03);
+      if (cta) quietly(tl, cta, 0.89, 0.03);
 
       /* ---- the dots, played once from the read clock ---------------------
          F9: §06's beats and §09's doors are where this page spends its
@@ -2206,7 +2339,7 @@ export function theCalendar(root: HTMLElement, span = 200): MotionModule {
          The rest also has to be real here for a reason §05's did not: the
          section hands over to §07's wave, and the governance link is the last
          thing a reader is asked to notice on this page. */
-      tl.to({}, { duration: 0.13 }, 0.87);
+      tl.to({}, { duration: 0.08 }, 0.92);
     },
     // The eyebrow only, and it never leaves.
     enter: arrivals,
