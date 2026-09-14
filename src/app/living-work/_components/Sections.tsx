@@ -1103,7 +1103,26 @@ export function LivingWorkStreams() {
       data-lw="streams"
       className="relative overflow-x-clip bg-canvas py-16 lg:py-32"
     >
-      <div className={COLUMN}>
+      {/* ▲ ARTWORK — the dots wave as ground, at the placement the page
+          already gives it: §08 Outputs lays it out 120% wide, pulled left, at
+          single-digit opacity on charcoal, and /about's The People does the
+          same on canvas. This was the one section on the page carrying no
+          artwork at all, which is what made it read as a different page.
+
+          Low in the section on purpose: the faint dotted crest hands into the
+          real wave divider §07 now pulls up over this foot, so the two waves
+          read as one handover rather than two unrelated marks.
+
+          Static — no `data-artwork-drift`, so recipes.ts's quiet artwork drift
+          does not claim it, and no motion-grammar row is owed. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div data-artwork="dots-wave" className="absolute bottom-32 -left-20 w-[120%] opacity-[0.09]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/artwork/dots-wave.svg" alt="" className="w-full" />
+        </div>
+      </div>
+
+      <div className={`relative ${COLUMN}`}>
         <p className="eyebrow text-burnt-deep">The work</p>
         <h2 className="headline mt-5 max-w-3xl text-h2 text-evergreen">
           The work
@@ -1121,6 +1140,29 @@ export function LivingWorkStreams() {
             /* Alternation — odd streams carry the image right, even left;
                anchors bleed on the side they already sit. */
             const imageRight = i % 2 === 0;
+            /* Radius 24 — `rounded-3xl`, the same corner the Card / Story
+               component is drawn with and the one every other photograph on
+               the site takes (Truth, Wonder, Partnerships, Our People).
+
+               An anchor bleeds to the viewport edge at `lg`, and a rounded
+               corner ON that edge reads as a mistake — a notch of canvas in
+               the corner of the screen — so the bled side squares off there.
+               Below `lg` the negative margin is not applied and the frame sits
+               in column, so all four corners round.
+
+               Carried on the IMAGE as well as the frame because frameOpen
+               animates `clip-path` on the frame and rests at
+               `inset(0% 0% 0% 0%)`; a clip-path replaces the border box, so the
+               frame's own radius stops painting the moment motion runs. The
+               frame's copy is what no-JS and reduced-motion get; the image's is
+               what survives the reveal. Both streams' wipes are edge wipes, so
+               frameOpen never scales the media and the radius cannot breathe
+               mid-scrub. */
+            const radius = anchor
+              ? imageRight
+                ? "rounded-3xl lg:rounded-r-none"
+                : "rounded-3xl lg:rounded-l-none"
+              : "rounded-3xl";
             return (
               <article
                 key={stream.number}
@@ -1172,7 +1214,7 @@ export function LivingWorkStreams() {
                     {...(anchor ? { "data-frame": true } : { "data-media": true })}
                     data-motion={photo.grade}
                     data-reveal-edge={imageRight ? "right" : "left"}
-                    className={`relative overflow-hidden ${
+                    className={`relative overflow-hidden ${radius} ${
                       imageRight ? "" : "lg:order-1"
                     } ${
                       anchor
@@ -1188,7 +1230,7 @@ export function LivingWorkStreams() {
                       alt=""
                       fill
                       sizes="(min-width: 1024px) 50vw, 100vw"
-                      className="object-cover"
+                      className={`object-cover ${radius}`}
                     />
                   </div>
                 ) : null}
@@ -1223,6 +1265,25 @@ export function LivingWorkInfrastructure() {
       data-lw="infrastructure"
       className="relative bg-evergreen py-16 lg:pt-0 lg:pb-32"
     >
+      {/* ⚠ NO `overflow-hidden` ON THIS SECTION — the wave is pulled entirely
+          above its own box so it lands on §06's canvas foot.
+
+          Marc's divider on its default `overhang` seat, per the component's
+          own rule: the fill is the colour of the section it INTRODUCES and it
+          overlaps the bottom of the outgoing one. The page already hands over
+          this way at §01 → §02 and at the spring's foot, but both of those go
+          dark into canvas. This is the canvas-into-dark one.
+
+          Canvas is the section that argues; evergreen with §08's charcoal is
+          the one dark passage where the apparatus is counted. That change of
+          ground was the page's only silent cut.
+
+          NO `hook`, so no `data-seam` and no roll — unlike §01's seam block.
+          §06's loud channel is MEDIA (stickyStreams: seven photographs opening
+          in turn), and a crest rolling across the join would be a second loud
+          thing on the same screen. It holds still, as the spring's foot wave
+          does. */}
+      <WaveDivider ground="var(--color-evergreen)" />
       <div className={COLUMN}>
         {/* THE HEADER STAYS. Twenty-three facts in six blocks is a long read,
             and the section's own question — what it takes to run a property
