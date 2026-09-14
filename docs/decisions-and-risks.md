@@ -1,6 +1,6 @@
 # Decisions, Risks & Issues — paste-ready
 
-*Last updated: 13 September 2026*
+*Last updated: 14 September 2026*
 
 Everything here is written to be **copied straight into Proyekto**:
 
@@ -187,6 +187,7 @@ Full read in `docs/content/STATUS.md`, notes 1, 2b, 5, 7, 8, 9, 10, 11, 12, 13.
 | D25 | Where the empty state's "ask us what exists" goes | **Final** (26 Aug) — the same page's contribute block | Marc |
 | D26 | Which of Marc's two type scales the site is built on | **Final** (11 Sep) — the **rem column**, i.e. the `YACHATDAC Type` variable collection already in `globals.css`. Every page brought onto `text-h1`…`text-h6`; Wonder's frame-literal 96/56/40 ramp retired | August, Marc |
 | D27 | Whether Truth's Ahead deck holds both records on one screen | **Final** (13 Sep) — **two scrubbed phases of one pin.** Precinct 0–.42 of the read, partnership .54–1, cleared screen between. Supersedes the 9 Sep "share the Ahead deck" direction; the pin is unchanged, its interior is not. Moves §02's loud channel type → media | August |
+| D28 | Truth's seam crests: when they move, and a fifth wave at the seabed's foot | **Final** (14 Sep) — all four existing crests take About's roll on the **cover span**, not the outgoing slide's read tail; a fifth crest caps the Wattanuri photograph at the seabed join and withdraws as it seats. The 1950s → count crest is left static: measured, it is charcoal on charcoal inside a clipped track and would animate nothing | August |
 | F1 | Homepage copy lives in the repo | **Superseded** by D12 | August |
 | F2 | Homepage thread is a plain vertical rule | **On hold** | August, Ivy, JC |
 | F3 | Homepage Truth beat is typographic | **On hold** | August, Ivy |
@@ -909,6 +910,80 @@ Record as **Final**, except F1 which is **Superseded**.
 - **Still open, and it is not new.** The count's Oxide Red measures **2.84:1 on charcoal** — below even the 3:1 large-text floor. Pre-existing, and untouched here, but this change makes the count the page's single dark moment and therefore more conspicuous. Not altered unilaterally: *"red is spent once"* is doctrine and the fix is a palette call. Logged in `open-questions.md`.
 - **Where it lands** — `src/app/truth/page.tsx`, `src/app/truth/layout.tsx`, `globals.css` (the `[data-truth-ground]` map and the 1950s band), `src/app/truth/_components/Sections.tsx`, `TrailRail.tsx`, `src/lib/motion/truth-scenes.ts`, and a new `tone="ink"` cut on `EditorialNote`.
 - **What happens next** — this is a palette decision under F8's build-first model: it ships, and it goes to Steve and the Elder Advisory Group at presentation. If it is reversed, reverse this entry with it rather than deleting it.
+
+## D28 — Truth's seam crests: when they move, and a fifth wave · **FINAL (14 Sep)**
+
+**The ask.** "Animate the white waves better… currently it doesn't move when transitioning the
+decks, only when scrolling inside hero" — with `/about`'s crest named as the reference: grow in
+height and roll to the right going down, the opposite coming back up.
+
+**What was actually there.** Four dividers on the page and only one of them animated, over the
+wrong span. `gated-deck.ts` scrubbed the crest across the final 20vh of the OUTGOING slide's read,
+so the roll was finished before the hand-off began; on the hero, whose entire read is 20vh, it was
+finished before the gate engaged. Two of the four are drawn by a second component (`HandoffWave`)
+that had no ink group to roll, and TODAY's hook was dead — nothing in the repo selected it.
+
+**Decided.**
+
+1. **The clock is the cover.** Every seam crest is bound to `read.end → next runway top` — the
+   stretch where the two slides actually change places — at `scrub 0.3`, running the registered
+   `recordWaveRoll` effect rather than the deck's own copy of its numbers. Reversible, because the
+   deck plays a cover backwards on upward travel. The grammar row (SCR-11) is extended rather than
+   replaced: on a decked page "the incoming section's approach" IS the cover.
+2. **A fifth wave, at the seabed → Wattanuri join.** The seabed handed into the closing
+   photograph on a straight ruled line. Both grounds are egg white, so what changes at that join
+   is that the arriving section is a photograph — which means the crest has to paint over it, and
+   a crest that paints over a section has to live inside it. It is seated `inline` at the top of
+   Wattanuri, flipped, capping the picture, with the departing record's egg white welded above it.
+   Because it is inside the section it is still on screen when that section seats, so it
+   **withdraws**: its box translates out over the last fifth of the cover, clipped by the
+   section's own `overflow-hidden`.
+
+   ⚠ **The first attempt hung it below the seabed's foot and had to be replaced.** That is where
+   the picture says it belongs, but a crest hanging below its owner is painted over by the section
+   arriving beneath it, and the only lift available is on the whole slide — which lifts that
+   slide's GROUND over the incoming one for the length of the hand-off. Reported as the screen
+   going back to the previous section and then disappearing; measured at 1702×918 as the seabed
+   covering the top 160px of Wattanuri and shrinking to 0, over the photograph rather than under
+   it. There is no z-index that separates a crest from the ground it sits on. The `foot` seat and
+   the `bleed` prop added to `WaveDivider` for that attempt were both removed again.
+
+   ⚠ **And it is welded to the departing foot every frame.** The two sections travel on different
+   clocks — the incoming off its pin, the outgoing on a scrubbed exit tween that lags it. Downward
+   the exit's modifier caps that lag and the seam holds; upward nothing does, and the join opened
+   by up to 67px, reading as a dark band because the deck sets `overflow: visible` on a slide that
+   owns a track and this one's `scale-105` photograph bleeds 23px above its top edge. A ticker now
+   takes the crest's position from the thing it has to meet rather than from a clock. 0px in both
+   directions, measured. **A pull** was added on the way back up on the same direction: the crest
+   is tugged down from the join and released before the reverse roll.
+
+   ⚠ **And the closing photograph had to be clipped.** A second band survived the weld, constant
+   at 23px — which is what identified it, since a desync varies and a bleed does not. The plane is
+   `scale-105`, a scaled element's own `overflow-hidden` clips its children rather than itself, and
+   the section that used to clip it stopped once the deck began setting `overflow: visible` on
+   every slide owning a track. A static clip box now wraps the plane. 0px after, both directions.
+
+3. **TODAY's crest is the exception and keeps its rest state.** It is not at a gate: it rides the
+   record panel climbing over the fire photograph inside one slide, so it takes that rise as its
+   clock and is still drawn after the section seats. It is a boundary between an image and the
+   record laid over it, not a hand-off, and the user named it as the exception.
+4. **The 1950s → count crest stays static**, against the instruction to animate it, and this is
+   recorded rather than done quietly. Measured: it is `HandoffWave to="charcoal"` arriving on a
+   band whose ground has already ramped to charcoal, onto a charcoal slide — nothing to carry —
+   and it sits inside `[data-truth-deck-viewport]`, which the deck clips. Animating it would move
+   something no reader can see. Making it visible is a decision about that section's fill or its
+   seating, not about the waves.
+
+**Cost, stated.** `WaveDivider` gains a third seating (`foot`) and a `bleed` prop; its three-tile
+ink is extracted as `WaveInk` and shared with `HandoffWave`, which gains an optional `hook`.
+Proven render-identical: 21 wave screenshots across /truth, /about, /wonder, /the-record and
+/living-work are byte-for-byte unchanged. The new seabed crest renders on phones too, static — the
+user's choice, and consistent with every other wave on the page, none of which is breakpoint-gated.
+
+**Not fixed here, and not caused here.** The slide boxes separate by 82–117px at the top of the
+viewport during a REVERSE hand-off. Measured identical on the commit before this work (84–136px),
+invisible because the descent band's own ground paints behind it and the crest over it. It belongs
+to the deck's scrubbed exit tween lagging a 0.9s reverse commit, not to the dividers.
 
 ## D1 — Blog and Resources are one page · **RESOLVED**
 

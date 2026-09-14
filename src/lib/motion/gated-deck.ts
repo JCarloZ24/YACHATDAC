@@ -20,7 +20,6 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { WAVE_ROLL } from "@/components/ui/Furniture";
 import type { MotionModule } from "@/lib/motion-controller";
 import { registerYachatdacEffects } from "@/lib/motion/effects";
 import { scene } from "@/lib/motion/scene";
@@ -33,6 +32,14 @@ import {
 } from "@/lib/motion/smooth-scroll";
 import { SCRUB } from "@/lib/motion/tokens";
 
+/**
+ * The seam crests' scrub. Not in `SCRUB` because it is not a deck-wide
+ * weight: it is the grammar row's own number for `recordWaveRoll`
+ * ("scrub 0.3s"), shared with wave-roll.ts so every page carrying About's
+ * crest carries it at the same lag.
+ */
+const WAVE_SCRUB = 0.3;
+
 gsap.registerPlugin(ScrollTrigger);
 
 export type GatedDeckOptions = {
@@ -43,6 +50,13 @@ export type GatedDeckOptions = {
   railGuide?: string;
   firstRailAnchor?: string;
   wave?: string;
+  /**
+   * A crest hanging below a slide's own foot, rather than overhanging the
+   * top of the one arriving. Same hand-off clock, opposite seating — for a
+   * join where the INCOMING section is a photograph, so the outgoing ground
+   * is the only thing that can carry the change.
+   */
+  footWave?: string;
   railHiddenSlides?: string;
   railFadeOutSlide?: string;
   railFadeInSlide?: string;
@@ -193,6 +207,7 @@ export function createGatedDeck({
   railGuide = "[data-truth-trail-guide]",
   firstRailAnchor = "[data-hero-cue]",
   wave: waveSelector = '[data-seam="truth-wave"]',
+  footWave: footSelector = '[data-seam="truth-foot-wave"]',
   railHiddenSlides = '#break-escarpment, [data-truth-ground="count"]',
   railFadeOutSlide = "#art-gallery",
   railFadeInSlide = "#mitchell",
@@ -348,8 +363,10 @@ export function createGatedDeck({
               let drain: gsap.core.Tween | null = null;
               const charge = { progress: 0 };
               const gates: Gate[] = [];
-              const crestReady = 0.6;
-              const rollReach = WAVE_ROLL * 0.15;
+              /* Per-frame crest welds, held so teardown can release them:
+                 `gsap.ticker` callbacks are not owned by the gsap.context and
+                 would otherwise outlive a revert. */
+              const welds: Array<() => void> = [];
               const hiddenRailIndexes = new Set(
                 slides.flatMap((slide, index) =>
                   slide.matches(railHiddenSlides) ? [index] : [],
@@ -812,45 +829,6 @@ export function createGatedDeck({
                   }
                 }
                 const over = gate.over;
-                const wave = over?.querySelector<SVGElement>(waveSelector);
-                const ink = wave?.querySelector<SVGGElement>(
-                  "[data-wave-ink]",
-                );
-                if (wave && ink) {
-                  // About pulls this same ink with buffer charge. Truth's
-                  // pull is earned by the last 20vh of ordinary reading:
-                  // ScrollTrigger brings the crest to full at 100%, then it
-                  // stands unchanged while the magnetic buffer charges.
-                  gsap.set(wave, { autoAlpha: 1 });
-                  gsap.fromTo(
-                    ink,
-                    {
-                      scaleY: crestReady,
-                      x: -rollReach,
-                      transformOrigin: "50% 100%",
-                    },
-                    {
-                      scaleY: 1,
-                      x: 0,
-                      ease: "none",
-                      immediateRender: true,
-                      scrollTrigger: {
-                        id: `${eventPrefix}-wave-${index}`,
-                        trigger: runways[index],
-                        start: () =>
-                          Math.max(
-                            read.start,
-                            read.end -
-                              window.innerHeight * (bufferVh / 100),
-                          ),
-                        end: () => read.end,
-                        scrub: SCRUB.light,
-                        invalidateOnRefresh: true,
-                        refreshPriority: refreshPriority + 2,
-                      },
-                    },
-                  );
-                }
                 if (over) {
                   ScrollTrigger.create({
                     id: `${eventPrefix}-pin-${index}`,
@@ -966,6 +944,212 @@ export function createGatedDeck({
                     })
                   : null;
                 gate.cover = cover;
+
+                /* -------------------------------------------------------
+                   THE SEAM CRESTS, ON THE HAND-OFF.
+
+                   Grammar: "a change of ground", rolling wave / SCR-11 —
+                   About's crest swell and sideways roll, scrubbed. The tween
+                   is the registered `recordWaveRoll` effect and this file
+                   restates none of its numbers; the deck's own copies of them
+                   (a 0.6 crest and a 0.15 roll reach) went with this rewrite.
+
+                   ⚠ THE CLOCK IS THE COVER, AND THAT IS THE CHANGE (user
+                   direction, 14 September 2026). It used to be the final
+                   `bufferVh` of THIS slide's read, which finished the crest
+                   before the hand-off it exists to carry had started — and on
+                   the hero, whose whole read is 20vh, the entire roll was
+                   spent before the gate even engaged. The old comment here
+                   described that as the design ("the crest to full at 100%,
+                   then it stands unchanged while the magnetic buffer
+                   charges"); it read as a static wave in the one moment the
+                   reader is watching the join. Bound to the cover the crest
+                   moves while the two slides actually change places, and a
+                   cover played backwards retraces it.
+
+                   Scrub 0.3 and not `SCRUB.light`: a committed cover is
+                   already an eased 0.9s Lenis tween, and 0.6 lags the crest
+                   past the point where the slide has seated. 0.3 is the value
+                   the grammar row names and the one wave-roll.ts uses.
+
+                   TWO SEATINGS, because the page needs both:
+                     `waveSelector` on the INCOMING slide — this page's law,
+                       "a divider has to be attached to the surface that moves
+                       during the cover", and what keeps a crest off screen
+                       until the hand-off and gone after it.
+                     `footSelector` on the OUTGOING slide — a crest hanging
+                       below its own foot, for the seabed → Wattanuri join
+                       where the arriving section is a photograph and the
+                       departing egg white is the only thing that can carry.
+                   Both ride this same span; a seam may hold either or none.
+                   ------------------------------------------------------- */
+                if (cover) {
+                  const roll = (crest: SVGElement | null, id: string) => {
+                    const ink = crest?.querySelector<SVGGElement>(
+                      "[data-wave-ink]",
+                    );
+                    if (!crest || !ink) return;
+                    gsap.set(crest, { autoAlpha: 1 });
+                    ScrollTrigger.create({
+                      id,
+                      trigger: runways[index],
+                      start: () => cover.start,
+                      end: () => cover.end,
+                      animation: gsap.effects.recordWaveRoll(
+                        ink,
+                      ) as gsap.core.Tween,
+                      scrub: WAVE_SCRUB,
+                      invalidateOnRefresh: true,
+                      refreshPriority: refreshPriority + 2,
+                    });
+                  };
+                  roll(
+                    over?.querySelector<SVGElement>(waveSelector) ?? null,
+                    `${eventPrefix}-wave-${index}`,
+                  );
+                  /* THE CREST THAT CAPS A PHOTOGRAPH, and then leaves.
+
+                     Seated INSIDE the incoming section rather than overhanging
+                     it, because the section it introduces is a photograph and
+                     the crest has to paint over it (Sections.tsx,
+                     `WattanuriBand`, has the whole note). That means it is
+                     still on screen when its section seats — unlike every
+                     overhanging crest, which is above the viewport by then —
+                     so it withdraws upward over the tail of the same span
+                     instead of being left sitting in the section. Its own box
+                     takes the translate; the ink takes the roll.
+
+                     ⚠ It leaves no rest state behind: off the deck the wave is
+                     simply the drawn seam capping the photograph, which is the
+                     right reading of a page that is not transitioning. */
+                  const foot = over?.querySelector<SVGElement>(footSelector) ?? null;
+                  const footInk = foot?.querySelector<SVGGElement>(
+                    "[data-wave-ink]",
+                  );
+                  const footBox = over?.querySelector<HTMLElement>(
+                    "[data-truth-foot-crest]",
+                  );
+                  if (over && foot && footInk && footBox) {
+                    gsap.set(foot, { autoAlpha: 1 });
+                    /* The join, so the pull stretches into the picture rather
+                       than off its own seat. */
+                    gsap.set(footBox, { transformOrigin: "50% 0%" });
+                    const withdraw = gsap
+                      .timeline()
+                      .add(
+                        gsap.effects.recordWaveRoll(footInk) as gsap.core.Tween,
+                        0,
+                      )
+                      /* THE WITHDRAWAL. A crest seated INSIDE the section it
+                         introduces is still on screen when that section seats,
+                         unlike every overhanging one, so it leaves under its
+                         own steam over the tail of the same span. `yPercent` on
+                         the BOX, never the svg: `flip` compiles to a transform
+                         on the root and a GSAP write there would replace it and
+                         un-flip the wave. */
+                      .to(
+                        footBox,
+                        { yPercent: -100, ease: "power2.in", duration: 0.2 },
+                        0.8,
+                      );
+
+                    /* ⚠ THE CREST IS WELDED TO THE OUTGOING FOOT EVERY FRAME,
+                       and a scrub cannot do it.
+
+                       The crest belongs to the INCOMING section — it has to,
+                       because it paints over that section's photograph and no
+                       stacking context can separate a crest from the ground it
+                       sits on (Sections.tsx, `WattanuriBand`). But the two
+                       sections travel on different clocks: the incoming one is
+                       driven straight off its pin, while the outgoing one is a
+                       SCRUBBED exit tween and lags it. Going down, that tween's
+                       modifier caps the lag against the incoming's own rect and
+                       the seam holds. Coming back up nothing caps it, the
+                       outgoing foot runs AHEAD of the incoming head, and the
+                       join opens — measured at 1702x918, up to 67px of
+                       daylight between the departing record and the crest. It
+                       reads as a dark band rather than as bare ground because
+                       the deck sets `overflow: visible` on any slide that owns
+                       a track, and this one's `scale-105` photograph bleeds
+                       23px above its own top edge into exactly that strip
+                       (reported with a screenshot, 14 September 2026).
+
+                       So the crest stops inferring its position from a clock
+                       and takes it from the thing it has to meet. `min(0, …)`
+                       because it may only ever be pulled UP, to reach a foot
+                       that has run ahead: pushing it DOWN in the opposite case
+                       would open the same band on the other side of the join,
+                       where the incoming section is already painting over the
+                       outgoing one. Clamped to its own height, which is more
+                       than any lag measured here.
+
+                       A per-frame `getBoundingClientRect` is the honest cost,
+                       and it is the same one the exit tween's modifier already
+                       pays a few lines up — real geometry rather than an
+                       assumption about it. It is added and removed with the
+                       hand-off, so it runs for one span and no longer. */
+                    const setWeld = gsap.quickSetter(footBox, "y", "px");
+                    const weld = () => {
+                      const lag =
+                        slide.getBoundingClientRect().bottom -
+                        over.getBoundingClientRect().top;
+                      setWeld(
+                        Math.max(-footBox.offsetHeight, Math.min(0, lag)),
+                      );
+                    };
+
+                    welds.push(weld);
+
+                    ScrollTrigger.create({
+                      id: `${eventPrefix}-foot-${index}`,
+                      trigger: runways[index],
+                      start: () => cover.start,
+                      end: () => cover.end,
+                      animation: withdraw,
+                      scrub: WAVE_SCRUB,
+                      invalidateOnRefresh: true,
+                      refreshPriority: refreshPriority + 2,
+                      onToggle: (self) => {
+                        if (self.isActive) {
+                          /* Once immediately: the ticker's first run is a
+                             frame away, and the frame that activates this is
+                             the one where the join is closing. Measured
+                             without it: a single 14px flash of the picture at
+                             the instant the crest takes over. */
+                          weld();
+                          gsap.ticker.add(weld);
+                        } else {
+                          gsap.ticker.remove(weld);
+                          setWeld(0);
+                        }
+                      },
+                      /* THE PULL, on the way back up (user direction, 14
+                         September 2026). Re-entering the hand-off from below,
+                         the crest is tugged down from the join before the
+                         reverse roll takes it back out — the wave gathering
+                         itself before it goes. Box scale, so it composes with
+                         the weld's `y` and the withdrawal's `yPercent` inside
+                         one transform. `overwrite` because a reader who flicks
+                         up and down can start this while the last one is still
+                         easing. */
+                      onEnterBack: () => {
+                        gsap.fromTo(
+                          footBox,
+                          { scaleY: 1 },
+                          {
+                            scaleY: 1.14,
+                            duration: 0.16,
+                            ease: "power2.out",
+                            yoyo: true,
+                            repeat: 1,
+                            overwrite: "auto",
+                          },
+                        );
+                      },
+                    });
+                  }
+
+                }
               });
 
               // About selected the first semantic <header>; Truth has two.
@@ -1112,6 +1296,8 @@ export function createGatedDeck({
                 delete root.dataset.deckActive;
                 window.clearTimeout(boot);
                 drain?.kill();
+                welds.forEach((fn) => gsap.ticker.remove(fn));
+                welds.length = 0;
                 removeWheel();
                 if (holding) unlockScroll();
                 live.remove();

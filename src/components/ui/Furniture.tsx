@@ -78,6 +78,104 @@ export const WAVE_APEX = 1398.8233;
  */
 export const WAVE_ROLL = 2 * (WAVE_APEX - WAVE_X0);
 
+/**
+ * The wave's ink, as a three-tile strip (see WAVE_ROLL).
+ *
+ * At rest only the first tile shows — the others sit beyond whatever viewBox
+ * crop the host svg uses — so a static render is unchanged by its presence; a
+ * motion host may roll the group. All three are the SAME exported path,
+ * transformed: nothing here is hand-authored vector data.
+ *
+ * ⚠ THIS GROUP IS THE ONLY THING A MOTION MODULE MAY TRANSFORM. Its host svg
+ * seats itself with a Tailwind `translate-y`, which compiles to `transform` —
+ * a GSAP write to the root clobbers that seat and the wave vanishes (the
+ * defect recorded in recipes-about.ts and again in wave-roll.ts).
+ *
+ * Shared by `WaveDivider` and /truth's `HandoffWave`, which draw the same path
+ * through different viewBox crops. Extracted 14 September 2026 so the second
+ * of those could carry a roll; neither's resting pixels changed.
+ *
+ * `fill` for a CSS colour (the `ground` prop's form), `className` for a
+ * Tailwind `fill-*` utility. Callers pass one or the other, never both.
+ *
+ * The tiling is x-only, so it holds for any tile whose own x-range is the
+ * exported path's (1.00123 → 1470.04) — which is what lets two drawings of
+ * different depths share it.
+ */
+export function WaveInk({
+  d = WAVE_PATH,
+  fill,
+  className,
+}: {
+  /**
+   * The tile to repeat. Defaults to the Wave / Divider's own 105.324-tall
+   * path; /truth's colour-handoff wave passes its 151-tall drawing of the
+   * SAME curve instead.
+   *
+   * ⚠ IT IS A PROP AND NOT A CONSTANT, and the first cut of this extraction
+   * got it wrong. The two drawings share their curve and their x-range but
+   * close at different depths — 105.324 against 151 — so tiling the shorter
+   * one inside the taller one's viewBox leaves the bottom 30% of every
+   * handoff wave unfilled. Only the TILING is shared; the tile is the
+   * caller's.
+   */
+  d?: string;
+  fill?: string;
+  className?: string;
+}) {
+  return (
+    <g data-wave-ink>
+      <path d={d} fill={fill} className={className} />
+      {/* Mirrored about the path's LAST CREST (`WAVE_APEX`), not about the
+          tile's edge: at the edge the path has already come down off its
+          crest, so mirroring there reads crest → dip → crest and carries an
+          8-unit notch into the middle of the screen on every roll (the dent
+          reported 14 September 2026). At the apex the slope is zero, so the
+          union of the two tiles is the crest continued. */}
+      <path
+        d={d}
+        fill={fill}
+        className={className}
+        transform={`translate(${2 * WAVE_APEX} 0) scale(-1 1)`}
+      />
+      <path
+        d={d}
+        fill={fill}
+        className={className}
+        transform={`translate(${WAVE_ROLL} 0)`}
+      />
+    </g>
+  );
+}
+
+/**
+ * Where the ink sits relative to its owner's box. Kept as one map so the
+ * vertical edge and the pull that leaves it are decided together — writing
+ * `top-0` in the base class and overriding it with `top-auto` here would put
+ * two utilities for the same property in one string, and Tailwind resolves
+ * that by stylesheet order rather than by the order they are written.
+ */
+const WAVE_SEAT = {
+  /* Figma's rule, and every caller before 11 September 2026: the wave is
+     pulled UP out of the top of the section that owns it, so it overlaps the
+     foot of the outgoing section. */
+  overhang: "top-0 -translate-y-[calc(100%-1px)]",
+  /* No pull — the ink fills its own box. For a seam that is its OWN element
+     rather than the lip of a section: /living-work's §01 → §02 join is a
+     transparent block between a sticky hero and a pinned aperture, and there
+     the wave has to sit inside that block's height or it overhangs the
+     photograph and undoes the full-bleed hero the block exists to give. Give
+     the owner the same height the wave has (`h-10 sm:h-26`). */
+  inline: "top-0",
+  /* ⚠ THERE IS NO `foot` SEAT, and one was tried and removed on 14 September
+     2026. A crest hanging below its owner's box is painted over by the
+     section arriving beneath it, and the only way to lift it is to lift the
+     whole slide — which lifts that slide's GROUND over the incoming one for
+     the length of the hand-off. See the note in truth/Sections.tsx's
+     `WattanuriBand`. A wave that has to sit over the next section belongs
+     inside it, `inline`. */
+} as const;
+
 export function WaveDivider({
   ground,
   flip = false,
@@ -90,22 +188,8 @@ export function WaveDivider({
   ground: string;
   /** A crest that rises rather than falls (Figma's flip=up). */
   flip?: boolean;
-  /**
-   * Where the ink sits relative to this element's own box.
-   *
-   * `overhang` (the default, and every caller before 11 September 2026) pulls
-   * the wave UP out of the top of the section that owns it — Figma's rule,
-   * where the divider overlaps the foot of the outgoing section.
-   *
-   * `inline` drops that pull-up and leaves the ink filling its own box. It
-   * exists for a seam that is its OWN element rather than the lip of a
-   * section: /living-work's §01 → §02 join is a transparent block between a
-   * sticky hero and a pinned aperture, and there the wave has to sit inside
-   * that block's height or it overhangs the photograph and undoes the
-   * full-bleed hero the block exists to give. Give the owner the same height
-   * the wave has (`h-10 sm:h-26`).
-   */
-  seat?: "overhang" | "inline";
+  /** Where the ink sits relative to this element's own box — see WAVE_SEAT. */
+  seat?: keyof typeof WAVE_SEAT;
   /** Thick end on the left — the frame's Wave Lines laid out at x=1441
       with a 1441 width are horizontally flipped instances. */
   mirror?: boolean;
@@ -132,29 +216,13 @@ export function WaveDivider({
          preserveAspectRatio="none" stretches the crop back to full width. */
       viewBox="1.00123 0 1467.84877 105.324"
       preserveAspectRatio="none"
-      className={`pointer-events-none absolute inset-x-0 top-0 h-10 w-full sm:h-26 ${
-        seat === "overhang" ? "-translate-y-[calc(100%-1px)]" : ""
+      className={`pointer-events-none absolute inset-x-0 h-10 w-full sm:h-26 ${
+        WAVE_SEAT[seat]
       } ${flip ? "scale-y-[-1]" : ""} ${
         mirror ? "scale-x-[-1]" : ""
       } ${className}`}
     >
-      {/* The ink, as a three-tile strip (see WAVE_ROLL). The second tile is
-          the first mirrored about its last crest (WAVE_APEX), so its ink
-          overlaps the first from ~1328 on and continues the crest rather
-          than notching it; the third is the first translated by one full
-          roll. At rest the window still shows the first tile's own drawing
-          to within a pixel; a motion host may roll the group. All three are
-          the SAME exported path, transformed: nothing here is hand-authored
-          vector data. */}
-      <g data-wave-ink>
-        <path d={WAVE_PATH} fill={ground} />
-        <path
-          d={WAVE_PATH}
-          fill={ground}
-          transform={`translate(${2 * WAVE_APEX} 0) scale(-1 1)`}
-        />
-        <path d={WAVE_PATH} fill={ground} transform={`translate(${WAVE_ROLL} 0)`} />
-      </g>
+      <WaveInk fill={ground} />
     </svg>
   );
 }
