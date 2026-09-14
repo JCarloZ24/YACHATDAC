@@ -1189,6 +1189,124 @@ Built to `05 · About — HI-FI · Desktop · the page answers` (Figma `2653:196
 1440 × 18,474px). The frame is 2,053vh; the scroll span is ~2,118vh because §03 pins 300vh
 against 235vh drawn — the same convention as Living Work §02 and The Record §03.
 
+**THE PACING PASS — 14 September 2026, user direction** ("the scroll is too quick in pacing
+and user might miss some sections or text, and we need a heavier scrolling so the animation
+doesn't go too fast"). **Not one vh moved.** The page is the same 2,540vh / ~23,700px it was;
+no span, no section height and no seam measurement changed, because lengthening the page was
+considered the same day and declined. Two things changed instead.
+
+**The wheel got heavier.** `/about`'s layout mounts `<SmoothScroll wheel={0.25} />` — the first
+page on the site to pass anything but the default 1. It reached that in three steps on
+14 September 2026, each a reading of the built page: **0.7 → 0.55 → 0.25**. At 0.25 a notch moves
+the document a quarter as far, so every scrubbed beat costs **4× the wheel** it did and the page
+is roughly **95,000px of wheel travel** end to end against ~23,700 at the site default. It is wheel only: keyboard paging
+stays native, touch never constructs Lenis, and the deck's gate charge reads raw `deltaY` from
+a capture-phase listener ahead of Lenis, so seams fire on exactly the travel they always did.
+This is `/about`'s equivalent of the homepage's `SCROLL_PER_UNIT` — the one dial that scales
+all of a page's pacing without retiming any of its beats.
+
+**Three sections were re-budgeted against §08's ratified floor.** §08's rounds sit .12 apart
+(~216px of a 200vh read) because that number was set on 12 September 2026 in answer to this
+same complaint — it is the one pacing figure on this page the reader has already accepted, so
+it is the benchmark the rest were measured against. Three fell under it and were widened
+*within their own clocks*, taking the room from furniture rather than from anything read:
+
+- **§02** — the facts were the tightest sequence on the page at .07 (126px), three times
+  tighter per item than §05's values. Now `FACT_AT` .62 and `FACT_STEP` .085; the decode gives
+  up .03 (.18 → .15) and the road, register and thread arrive .04 earlier. §02 also gained the
+  **trailing rest it never had**: its duration was previously whatever the fourth fact landed
+  on, so every position in the recipe was being quietly renormalised against .992.
+- **§06** — its two facts were .07 apart. Now .12 and .23; part 1's clear, the thread's draw
+  and everything after move back with them, and the trailing rest gives up .05 of the hold it
+  was spending on a finished calendar.
+- **§03** — the attribution and the tagline were .035 apart, the narrowest pair on the page.
+  The rule moves .89 → .86 and the attribution .93 → .91, out of the question's own dwell
+  (.21 → .19). The tagline stays at .965 because §03's last beat must end at exactly 1.0.
+
+§04, §05 and §07 were already at or above the floor and were left alone.
+
+⚠ **What this pass could NOT reach.** Lenis intercepts the wheel and nothing else, so a reader
+paging with the keyboard or dragging the scrollbar still gets the old rate; the beat
+re-budgeting above is the only part of the fix that reaches them, and it is also the only part
+that reaches touch, where the deck does not exist at all.
+
+**SECOND READING, same day — the first pass measured the wrong thing.** The wheel went 0.7 → 0.55
+("still need heavier scrolling for this page again"), but the substantive finding was §02: *"the
+text 'Most people say yachatdac' disappears too quickly after appearing like you won't have a
+second to read it."*
+
+The defect was **sign, not spacing**. `settle` ran .12 from .15, so the short name finished
+arriving at .27 — and the block carrying it began clearing at .25. It never reached full opacity
+in a single frame: still fading in while already fading out. Both paragraphs had the same shape
+(the block's clear at .49 landed before the second finished at .52), and so did all four facts
+(.010 of stand). The first pass had moved these numbers *together* and preserved every overlap,
+because the relationship looked deliberate when it was read as a relationship rather than as a
+duration and an end.
+
+The rule this establishes, and it is worth more than the numbers: **a `settle` is arrival, not
+reading.** Reading happens in the still frame afterwards. So arrivals were halved and the time
+spent on dwell — the short name now stands .09 (~295px of wheel) with nothing else moving, the
+paragraphs .06 each, the facts .028 apiece. Facts came back from .085 to .07 to pay for it, which
+is a trade rather than a regression: at 0.55 that is ~229px of wheel, still over §08's bar, and a
+fact folds into a register row that stays on screen rather than vanishing.
+
+**§04's opening was dead air.** User direction, 14 September 2026: the first card and "If
+Country is not cared for" should arrive "few % scroll more early, like around 2-3%". Nothing
+animated between 0 and `CLAUSE_AT` — the head is `set` visible at 0 and holds — so the first .12
+of the read was a static eyebrow-and-headline screen. `CLAUSE_AT` .12 → **.09**, the 3% asked
+for. `STEP` is untouched, so the whole chain slides earlier and the rhythm between clauses (and
+`CARD_SEAT`'s ~18vh card read inside it) is unchanged; moving only the first clause would have
+left a .20 gap to the second against the others' .17, a limp in the one sequence on the page
+whose claim is that four things hold each other up *evenly*. The fourth card now seats at .715
+instead of .745, and the deliberately empty .80 → .86 hold is unchanged — so its run-up grows
+from .055 to .085 of quiet.
+
+⚠ **The gates did NOT get heavier with the wheel.** `coverSeams` charges its hold from raw
+`deltaY` read ahead of lenis, so a seam fires on ~0.2 of a viewport of wheel whatever the
+multiplier is. At the site default, reading a 200vh section cost about ten times the wheel its
+gate then asked for; at 0.25 it costs about forty. The seams are proportionally much cheaper than
+the reading now — raise `BUFFER` if they begin firing by accident. Not reported as of this entry.
+
+⚠ **§02 is now full.** .13 decode + .15 name and dwell + .05 clear + .28 prose and dwells + .09
+furniture + .29 facts + .01 rest = 1.0, nothing spare. Eight reading beats do not fit a 200vh read
+with dwell on all of them. The heavier wheel is what makes the remaining numbers read; more span
+is the only thing that would buy real room, and the page's length is still fixed.
+
+**Two ground defects went with it, both at joins.** §03's rings — see the §03 paragraph above;
+the question is no longer asked on bare charcoal. And **§04 → §05 flashed canvas**: §04's roasted
+front is painted inside its sticky screen, so once that screen released, the section's own
+`bg-canvas` was what showed, and §05 rose into a bright off-white screen instead of into the
+ground §04 had just handed it. §03 records this identical failure — "Canvas there was a bright
+band sliding up under a black screen" — and fixed it by painting the held SECTION the colour its
+sequence ends on; §04 never got the same treatment, which is why it surfaced on the one seam with
+no wave to hide it (the score gives 04 → 05 "ring contracts, transform-only", so no crest travels
+across the join). `about.css` now paints the held §04 roasted and gives the canvas back to its
+stage. **Any held section whose sequence ends on a ground its markup does not carry needs this
+pair of rules** — it is the third time the same defect has been found.
+
+**And then the same seam showed a navy band** ("a slight gap showing navy blue div appears above
+when How we work comes in"). Same join, same root: **nothing covers it but the two sections
+themselves.** Every other join on /about is bridged by a `WaveDivider`, seated with
+`-translate-y-[calc(100%-1px)]` — that `-1px` is this defect guarded one seam at a time — and
+04 → 05 is the one seam the score gives no wave. When the pinned §04 and the incoming §05
+separate by a few pixels the page's own ground shows through, and that ground is `#090e12`
+(`PageTransition` in `about/page.tsx`, the charcoal wrapper in `about/layout.tsx`): a blue-black
+that against roasted brown reads as navy. `about.css` now paints an 8rem roasted outset
+`box-shadow` above the held §05 — zero layout effect, and `overflow-clip` does not clip an
+element's own outer shadow.
+
+⚠ **This is a cover, not a cap, and `coverSeams` still has no cap.** The grammar's "the hand-off
+scrolls" row says `createGatedDeck` (Truth) is "capped every frame at the incoming's measured
+penetration, so the two can never separate and show bare page". About's deck has no equivalent
+and never did. Capping it properly means per-frame measurement inside a module carrying nine
+pinned gates and a charged hold, all user-directed; painting the join cannot desynchronise. If a
+cap is ever added, the box-shadow becomes redundant and comes out with it.
+
+⚠ **Two other seams are bare and carry the same exposure**, untouched because neither has been
+reported: **02 → 03** (ground sweep) and **07 → 08** (dots and rule only). Both would show
+`#090e12` against a canvas edge, which would be obvious — so they may simply not separate. **03 →
+03b** is bare too and cannot show it: charcoal covers charcoal, and the page ground IS charcoal.
+
 | # | Act | What it says | ⚡ | vh | Loud channel | Plate | Rest after? |
 |---|---|---|---|---|---|---|---|
 | 01 | I | About YACHATDAC — figures under the escarpment, people as scale | 4 | 110 | **media** | P1 | — |
@@ -1223,9 +1341,15 @@ entry below has the reasoning.
 **§03 is the page's argument — BUILT 12 September 2026.** The ground ramps
 canvas → evergreen → charcoal across the pin; the photograph is taken by the ground (`IMG-03`,
 released under F9); both claims **leave** the screen rather than dimming in place; and the
-question settles by line mask on bare charcoal with nothing behind it. That bare ground is the one
-place on this page a ground carries no artwork, and it is deliberate — see the no-bare-ground rule
-this page otherwise keeps.
+question settles by line mask on charcoal. ⚠ **The bare ground did NOT survive** — user
+direction, 14 September 2026. This paragraph used to end "on bare charcoal with nothing behind it
+… the one place on this page a ground carries no artwork, and it is deliberate". The artist's
+rings sit above the rising front so they emerge out of it as it darkens, and when `theQuestion`
+began clearing the whole claims screen it took them with it; the report that followed ("the
+background svg is gone again") settled the tension the build had flagged rather than decided. The
+question is read against the rings. The sequence clears `[data-ab-claims-col]` — the eyebrow and
+the claims, which are what share the stage cell with the question — and leaves the front and the
+rings standing.
 
 Three things about the build differ from the frame's notes and are recorded rather than
 reconciled. **The ground RISES**, from the foot of the held screen past its head — the frame's own
