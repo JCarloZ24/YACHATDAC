@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 14 September 2026*
+*Last updated: 15 September 2026*
 
 Home closing-pattern hover, 13 September 2026 (user screenshot, **what radiates**, Home closing ground): the existing two spiral assets respond to mouse position with shallow opposing drift and turn. The headline, offer photographs, original artwork, resting placement and scroll timing do not change. Hover owns inner wrappers; the original ground wrapper still owns the scroll entrance. Input is enabled only once that entrance has seated and the panel is visible, then resets on exit, blur, hidden tab or leaving the beat. Controller teardown removes listeners, observers and tweens. Fine hover pointers only; reduced-motion, touch and failed-canvas fallback remain still.
 
@@ -2219,8 +2219,8 @@ page deepens. There is no WebGL on this route.
 | § | Section | vh | Ground | Loud | What happens |
 |---|---|---|---|---|---|
 | 01 | Hero — the film | 100 | full bleed, sticky | **media** | the H1 settles; the scrim ramps as the wave rides up over the film |
-| 02 | The facts — the Queensland map | 320 | canvas, sticky span | **media** | `routeDraw` → `brushFill` → `inkFlare`; copy arrives in three tiers |
-| 03 | Highlights | 100 | white | **media** | `emanate` across the rail, each card's clip opening from its left edge |
+| 02 | The facts — the Queensland map | 420 | canvas, sticky span | **media** | `routeDraw` → `brushFill`; copy arrives in three tiers; 100vh extra reading hold after the draw; tall panels scroll fully into view before holding at their foot (15 Sep 2026) |
+| 03 | Highlights | 100 | white | **media** | `recordMasonryPass`, entrance-only: equal 16vh rises and fades stop at the layout row (15 Sep 2026) |
 | 04 | Getting here — the route map | 300 | charcoal, sticky span | **media** | the same draw and flare; the copy arrives in stop order |
 | 05 | Turraburra | 180 | full bleed | **media** | landscape behind Getting here's outgoing wave; `landscapeApproach` on entry, `landscapeGyroscope` on mouse hover; image and copy hold for 80vh before exit (user direction 9 September 2026) |
 | 06 | What a stay looks like | — | canvas, ordinary flow | **transition** | one manual accordion, day 1 open; `disclose` on click, line, copy and picture entrances; held screen and automatic stops removed 14 Sep 2026 |
@@ -2228,7 +2228,7 @@ page deepens. There is no WebGL on this route.
 | 08 | Where you stay | 120 | canvas | **media** | heading and copy enter; the ten-frame carousel does not — no card entrance (10 Sep 2026) |
 | 09 | What it is like out here | 450 | full bleed | **type** | same landscape entry and mouse drift as §05, then the five conditions step one per 70vh, each on its own photograph, cross-faded; no sweep |
 | 10 | Your hosts | 100 | canvas | **none** | the copy arrives; the pointer names three of the eight, and the faces hold |
-| 11 | From Country | 100 | white | **media** | the card rail again, quieter |
+| 11 | From Country | 100 | white | **media** | same entrance-only card rail; stays settled and opaque under the closing wave (15 Sep 2026) |
 | 12 | Come and see it | 100 | roasted | **none** | the quietest screen, and the second conversion point |
 
 **Reads as:** media · media · media · media · media · transition · none · media · none · media

@@ -350,15 +350,14 @@ export function WonderFacts() {
     wonderHero.facts.slice(3),
   ];
   return (
-    /* At 1440 the section is a sticky span (the D4 lab's shape): 220vh of
-       scroll with the screen held inside it while the map draws. The phone
-       keeps its flow — the stacked layout is taller than a screen. */
-    /* 320vh, up from 220 on 9 Sep 2026: the draw completed with scroll to
-       spare, which is what made it read as quick. */
+    /* At desktop the map draws inside a held panel. The phone keeps its
+       flow — the stacked layout is taller than a screen. */
+    /* 420vh, 15 Sep 2026, user direction: more effort to leave §02.
+       The last 100vh holds the finished map; RouteMap keeps its draw span. */
     <section
       data-sticky-span
       data-wonder="facts"
-      className="relative pt-10 text-charcoal sm:pt-26 lg:h-[320vh]"
+      className="relative pt-10 text-charcoal sm:pt-26 motion-safe:lg:min-h-[420vh]"
     >
       {/* Wave Line 2033:5350 — canvas rising over the hero's foot. With the
           hero pinned full-bleed (8 Sep 2026) the wave belongs to THIS
@@ -378,8 +377,11 @@ export function WonderFacts() {
       </div>
       {/* Padding on the section, not a margin here — a margin collapses
           through the section and shoves the whole section below the hero. */}
-      <div className="bg-canvas lg:sticky lg:top-0 lg:h-svh lg:overflow-hidden">
-        <div className={`relative overflow-hidden py-16 lg:h-full ${GUTTER}`}>
+      {/* 15 Sep 2026, full-journey review: a 720px desktop clipped the last
+          two answers. Natural height lets every answer scroll into view;
+          factsCopy holds tall panels at their foot, measured on resize. */}
+      <div data-facts-screen className="bg-canvas lg:min-h-svh motion-safe:lg:sticky motion-safe:lg:top-[var(--facts-top,0px)]">
+        <div className={`relative overflow-hidden py-16 lg:min-h-svh ${GUTTER}`}>
           {/* The illustrated map, both cuts, inlined so it draws itself on
           scroll (route-map.ts · `the guide leading the eye` · routeDraw).
           Placement is unchanged from the <img> version — see FactsMap. */}

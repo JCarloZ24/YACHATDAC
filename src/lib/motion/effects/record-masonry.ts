@@ -6,13 +6,17 @@ import gsap from "gsap";
 export function registerRecordMasonry() {
   gsap.registerEffect({
     name: "recordMasonryPass",
-    defaults: { travel: 0 },
-    effect: (targets: gsap.TweenTarget, config: { travel: () => number }) => {
+    defaults: { travel: 0, entranceOnly: false },
+    effect: (targets: gsap.TweenTarget, config: { travel: () => number; entranceOnly: boolean }) => {
       const timeline = gsap.timeline();
-      timeline.fromTo(targets, { y: () => config.travel() },
-        { y: () => -config.travel(), duration: 1, ease: "none" }, 0);
-      // SCR-12: opacity is driven by actual viewport overlap in the module,
-      // including the current scrubbed translation, rather than shared phases.
+      // SCR-12, Wonder correction, 15 Sep 2026: a rail arrives into its
+      // layout slot. Continuing above it crosses the section heading.
+      timeline.fromTo(targets,
+        { y: () => config.travel(), ...(config.entranceOnly ? { opacity: 0 } : {}) },
+        { y: () => config.entranceOnly ? 0 : -config.travel(),
+          ...(config.entranceOnly ? { opacity: 1 } : {}), duration: 1, ease: "none" }, 0);
+      // The catalogue's opacity still follows actual viewport overlap in
+      // the module; entrance-only rails share the timeline above instead.
       return timeline;
     },
   });

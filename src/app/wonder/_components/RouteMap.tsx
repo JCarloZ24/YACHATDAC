@@ -57,7 +57,15 @@ function useDrawnMap(hostRef: RefObject<HTMLDivElement | null>) {
       ? createRouteMap(host, {
           reduced,
           trigger: span ?? host.closest("section") ?? host,
-          ...(span ? { start: "top top", end: "bottom bottom" } : {}),
+          ...(span ? {
+            start: "top top",
+            // 15 Sep 2026: §02 buys another 100vh to read the finished map.
+            // Subtract viewport pixels on refresh; a trigger percentage
+            // here would scale against the whole 420vh section instead.
+            end: span.dataset.wonder === "facts"
+              ? () => `bottom-=${window.innerHeight} bottom`
+              : "bottom bottom",
+          } : {}),
         })
       : createRouteMap(host, {
           reduced,

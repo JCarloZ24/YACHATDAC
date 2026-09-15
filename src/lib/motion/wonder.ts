@@ -85,7 +85,7 @@ export function heroArrival(root: HTMLElement, span: number): MotionModule {
  * X4's Wonder cut follows scroll, alongside the map, in both directions.
  */
 export function factsCopy(root: HTMLElement, span: number): MotionModule {
-  return composition("wonder/facts", root, {
+  const copy = composition("wonder/facts", root, {
     channel: "media",
     span,
     uses: ["triad"],
@@ -97,6 +97,33 @@ export function factsCopy(root: HTMLElement, span: number): MotionModule {
     enterStart: "top 70%",
     cut: clearAll,
   });
+  let sizing: ResizeObserver | undefined;
+  // F7 / the guide leading the eye, 15 Sep 2026: read the whole facts panel
+  // before holding. A fixed viewport clipped its last answers on short
+  // desktops. Only layout/viewport changes measure this; scroll stays CSS.
+  const fit = () => {
+    const screen = q(root, "[data-facts-screen]");
+    if (screen) root.style.setProperty("--facts-top", `${Math.min(0, window.innerHeight - screen.offsetHeight)}px`);
+  };
+  return {
+    init() {
+      copy.init?.();
+      fit();
+      const screen = q(root, "[data-facts-screen]");
+      if (screen) {
+        sizing = new ResizeObserver(fit);
+        sizing.observe(screen);
+      }
+      window.addEventListener("resize", fit);
+    },
+    destroy() {
+      sizing?.disconnect();
+      sizing = undefined;
+      window.removeEventListener("resize", fit);
+      root.style.removeProperty("--facts-top");
+      copy.destroy?.();
+    },
+  };
 }
 
 /**

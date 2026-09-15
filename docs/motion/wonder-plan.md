@@ -1,6 +1,6 @@
 # 01 · Wonder — the motion plan
 
-*Last updated: 14 September 2026*
+*Last updated: 15 September 2026*
 
 **Latest responsive correction, 9 September 2026:** desktop itinerary selection
 depends on available width and reading space, not pointer type. DevTools touch
@@ -27,6 +27,29 @@ that the build does not match.*
 *Supersedes the 8 Sep draft of this file: the terrain dolly and every 3D scene
 are withdrawn on user direction, 9 September 2026. Wonder is a GSAP page. The
 drawn maps it already has are the thing to deepen, not to replace.*
+
+**Scroll-journey correction, 15 September 2026 (user direction).** Highlights
+and From Country now use the entrance-only `recordMasonryPass`: equal 16vh
+rises stop at the card row, and opacity shares that timeline. Cards cannot
+cross their headings or fade under the outgoing section's hold during rapid
+reversals. The Record's continuing masonry drift is unchanged.
+
+The facts section grows from 320vh to 420vh on desktop, adding 100vh after
+the original map draw. Its panel now sizes to its content and holds at its
+foot when taller than the viewport. The full-journey review found two answers
+clipped at 1280 × 720 by the former fixed-height panel. Mobile and reduced
+motion retain ordinary flow, with all six answers accessible.
+
+**Verification, 15 September 2026.** Chromium journeys at 1440 × 900,
+1280 × 720 and 375 × 812 reached all section headings and default body copy
+on forward and reverse scroll, with no browser errors. All 16 mobile rail
+cards (3 Highlights, 10 accommodation, 3 From Country) fit and remain
+reachable. All five Out here points are readable in both directions, one
+at a time; reduced motion restores the full list and removes the facts hold.
+Repeated wheel reversals across the itinerary and closing seams produced
+no visible gaps or cards crossing the heading; the held story cards stayed
+opaque. The map remains fully drawn throughout the extra 100vh. TypeScript,
+ESLint, typography lint and production build pass. Changes verified locally.
 
 ## The verb
 

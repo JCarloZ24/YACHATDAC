@@ -31,6 +31,9 @@ export type MasonryHooks = {
    * arriving as it reaches the middle of the screen.
    */
   enter?: [number, number];
+  /** Wonder's rails settle into their slots and remain readable on exit.
+   * Transform and opacity share one clock, including rapid reversals. */
+  entranceOnly?: boolean;
   /**
    * End every tile's pass no later than the moment the ROOT's foot meets
    * the viewport's foot. For a rail that then HOLDS there (Wonder's From
@@ -80,7 +83,7 @@ export function cardPassOpacity(
 export function createRecordMasonry(root: HTMLElement, hooks: MasonryHooks = {}): MotionModule {
   const {
     tile: tileHook = "[data-record-tile]", card: cardHook = "[data-record-card]",
-    rates = [0.06, 0.14, 0.09, 0.18], enter, endAtRootFoot = false,
+    rates = [0.06, 0.14, 0.09, 0.18], enter, endAtRootFoot = false, entranceOnly = false,
   } = hooks;
   let cleanup: (() => void) | undefined;
   return {
@@ -102,8 +105,8 @@ export function createRecordMasonry(root: HTMLElement, hooks: MasonryHooks = {})
         tiles.forEach((tile, index) => {
           const card = tile.querySelector<HTMLElement>(cardHook);
           if (!card) return;
-          const animation = gsap.effects.recordMasonryPass(card, { travel: () => travel(tile) }) as gsap.core.Timeline;
-          gsap.set(card, { opacity: 1 });
+          const animation = gsap.effects.recordMasonryPass(card, { travel: () => travel(tile), entranceOnly }) as gsap.core.Timeline;
+          if (!entranceOnly) gsap.set(card, { opacity: 1 });
           const setOpacity = gsap.quickSetter(card, "opacity");
           let cardHeight = card.offsetHeight;
           // Different entrances/exits per card, measured in viewport height.
@@ -111,15 +114,21 @@ export function createRecordMasonry(root: HTMLElement, hooks: MasonryHooks = {})
           // The rule itself is `cardPassOpacity` above — /our-people runs the
           // same numbers off its reading clock (Marc, 14 September 2026).
           const update = (self: ScrollTrigger) => {
+            if (entranceOnly) return;
             const viewport = window.innerHeight;
             const y = Number(gsap.getProperty(card, "y")) || 0;
-            const top = self.start + viewport - self.scroll() + y;
+            const scroll = endAtRootFoot ? Math.min(self.scroll(), self.end) : self.scroll();
+            const top = self.start + viewport - scroll + y;
             setOpacity(cardPassOpacity({ top, height: cardHeight, viewport, index, enter }));
           };
-          // "bottom top" in scroll units, clamped to the root's hold when asked.
+          // End at the entrance's resting point or the full card passage,
+          // clamped to the root's hold when asked.
           // Measured on refresh, when ScrollTrigger has reverted any pin.
           const end = () => {
-            const natural = tile.getBoundingClientRect().top + window.scrollY + tile.offsetHeight;
+            const top = tile.getBoundingClientRect().top + window.scrollY;
+            const natural = entranceOnly
+              ? top - window.innerHeight * (enter?.[1] ?? 0.42)
+              : top + tile.offsetHeight;
             if (!endAtRootFoot) return natural;
             const hold = root.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
             return Math.min(natural, hold);

@@ -91,7 +91,7 @@ export type RouteMapOptions = {
   trigger?: Element;
   /** ScrollTrigger start/end, on the trigger. */
   start?: string;
-  end?: string;
+  end?: string | (() => string);
   scrub?: number;
 };
 

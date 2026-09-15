@@ -47,9 +47,11 @@ const RAIL_HOOKS = {
   // should align perfectly"). The catalogue's opposing column rates are the
   // point of a masonry; on a rail of three equal plates they put the row out
   // of line for the whole passage, which reads as broken layout, not motion.
-  // Every column travels 16vh together, so the row is level at every scroll.
+  // Every column arrives from 16vh below and stops at its layout slot
+  // (15 Sep 2026): no upward exit into the heading, no fading under a hold.
   rates: [0.16],
   enter: [0.88, 0.42] as [number, number],
+  entranceOnly: true,
 };
 
 /**
@@ -62,7 +64,7 @@ const RAIL_HOOKS = {
  * THE SCENE LEDGER, in order, so the pacing reads here as well as in the plan:
  *
  *   §01 hero          media       100vh   the film, and the title rising
- *   §02 facts         media       320vh   the Queensland map draws · copy in tiers
+ *   §02 facts         media       420vh   the Queensland map draws · copy in tiers
  *                                            · the canvas crest rolls up over the film
  *   §03 highlights    media       —       the cards pass, The Record's way (scrubbed)
  *   §04 getting here  media       300vh   the route map draws in stages
@@ -108,7 +110,7 @@ export function WonderMotion() {
       };
 
       wire("hero", (el) => heroArrival(el, 100));
-      wire("facts", (el) => factsCopy(el, 320));
+      wire("facts", (el) => factsCopy(el, 420));
       // The canvas crest rising over the film — About's wave motion on this
       // one seam, scrubbed across §02's approach. Registered SEPARATELY from
       // factsCopy rather than folded into it: the wave is the join between
