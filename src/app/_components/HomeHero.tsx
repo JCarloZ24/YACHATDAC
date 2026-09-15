@@ -81,7 +81,14 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
         </div>
         {belonging.cta && <a href={belonging.cta.href} className="relative mt-8 inline-flex min-h-14 items-center gap-4 px-6 py-4 text-charcoal focus-visible:outline-2 focus-visible:outline-offset-4">
           <span aria-hidden="true" className="absolute inset-0 bg-canvas [mask-image:url('/artwork/blob-button.svg')] [mask-size:100%_100%]" />
-          <span className="eyebrow relative text-base leading-[1.4] tracking-normal">{belonging.cta.label}</span>
+          {/* Phones, 15 September 2026, user direction: the label wrapped to
+              "… THIS / COUNTRY", one orphan word under a blob that filled the
+              column. Balanced and held to 19ch below sm, it breaks into two
+              even rows and the blob shrinks to fit them. 19ch, not a <br>:
+              the label is CMS copy (D12). "KEEPING THIS COUNTRY" measures
+              17.6ch in Bantayog ExtraBold at 16px. Tablet and desktop keep
+              the one line they have room for. */}
+          <span className="eyebrow relative text-base leading-[1.4] tracking-normal text-balance max-sm:max-w-[19ch]">{belonging.cta.label}</span>
           <span aria-hidden="true" className="relative text-2xl">&rsaquo;</span>
         </a>}
       </div>
