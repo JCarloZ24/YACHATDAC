@@ -1,56 +1,80 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { loreMarker } from "@/content/truth";
+import { useEffect, useState, type CSSProperties } from "react";
+import { loreMarker, wattanuri } from "@/content/truth";
+import {
+  RAIL_TRAVEL_BOTTOM_INSET,
+  RAIL_TRAVEL_TOP,
+} from "@/lib/motion/truth-rail-map";
 
 /**
- * The record trail — the wireframe's full left-edge timeline (588×32768
- * asset + build notes, 2026-09-02). Three parts:
+ * The record trail — FINITE AND STICKY from 15 September 2026 (user
+ * direction; grammar row "the guide leading the eye, Truth cut"). It
+ * supersedes the document-height strand of 8–14 September, which scrolled
+ * with the page and went under at the count. Three parts:
  *
- *   · the legend — "LORE — CONTINUOUS" — STATIC at the top of the trail; it
- *     scrolls away with the page and never follows the reader;
+ *   · the legend — "LORE — CONTINUOUS" — at the head of the rail. The rail
+ *     is sticky now, so the legend rides with the reader the whole descent;
  *   · the LEFT dotted strand — LORE · continuous: the record itself, static
  *     ochre (#CB7722) the whole page, never breaks, not even at the count;
- *   · the RIGHT dotted strand — RECORD: the scroll indicator. Faint dots
- *     ahead (charcoal, 0.25 — they were off-white at 0.45 until the page went
- *     to one egg-white ground, where off-white on off-white drew nothing),
- *     the lore ochre (#CB7722) filling through them to the
- *     reading line as the reader travels ([data-v2-steps-fill], clipped
- *     open by the motion module, scroll-derived, both directions). It goes
- *     under at the escarpment break and resumes at the 1840s.
+ *   · the RIGHT dotted strand — RECORD: the page-progress indicator. Faint
+ *     dots ahead, the lore ochre filling through them to the pointer
+ *     ([data-v2-steps-fill], clipped open by the motion module,
+ *     scroll-derived, both directions).
  *
- * One trail-point traveller is the current beat's progress marker. On the
- * hero it begins below "Start from the beginning"; later beats reset to the
- * top of the viewport. It samples the RECORD strand's actual SVG geometry,
- * holds at the foot while the seam charges, then travels with the cover to
- * the next beat's head. Its read ScrollTriggers fade it over the final fifth
- * of the 1950s, hold it absent through the escarpment and count, and restore
- * it over the opening fifth of the 1840s. It leaves for good at the end of
- * Before people.
+ * Both strands stand ONE VIEWPORT tall inside the sticky screen and are cut
+ * at its head and foot under a gradient opacity mask (truth.css,
+ * `[data-truth-rail-strands]`) so the cut never reads as a cut. The strand
+ * NO LONGER GOES UNDER at the count — the rail is visible on the dark bands,
+ * and its inks ride the custom properties the deck's painter steps at the
+ * 1950s' luminance crossover (`--rail-base-ink`, `--rail-ink`,
+ * `--rail-ink-sub`; values in truth.css under `[data-rail-dark]`).
+ *
+ * One trail-point traveller is the pointer. Its y is PAGE PROGRESS: the
+ * document's scroll fraction mapped piecewise through the era anchors
+ * (src/lib/motion/truth-rail-map.ts — Ahead at the head, 2020 near three
+ * quarters), so it sits on an era's mark while that era is read. The fill's
+ * clip goes through the same map, so tip and pointer cannot disagree.
  *
  * IT CARRIES THE ERA (user, 10 September 2026) — the label and its sub ride
  * at the arrow's tip, so the arrow points at something. Still no progress
- * gauge and no count: what was banned was a readout of how far through you
- * are, and the chronology is what the rail exists to carry. The pointer now
- * appears only on sections that HAVE an era, popping in and out with it, so
- * it is never an arrow indicating nothing.
+ * gauge and no count readout: the chronology is what the rail exists to
+ * carry. The pointer appears only on sections that HAVE an era — and the
+ * count's screens now have theirs (1902, 1886, from the figures beside
+ * them).
  *
- * The fill is scroll position, both directions: jumping to "Start from the
- * beginning" smooth-scrolls down and the ink flows down with it; scrolling
- * back up drains it. The clip is derived from scroll each frame, so it
- * cannot run backwards or desync — the reversal bug the build note warns
- * about cannot occur with a scroll-derived clip.
+ * RAIL A / RAIL B — the Figma pull landed 15 September 2026. The strands
+ * render the exported hi-fi assets, public/artwork/rail-a.svg (the artist's
+ * jittered dots — LORE) and rail-b.svg (the smooth strand — RECORD), as CSS
+ * mask stencils over token-coloured fields — About §06's mechanism — so the
+ * dark-band ink swap stays one custom-property write. The invisible guide
+ * the pointer samples is retuned to rail-b.svg's measured wander (the
+ * constants below). Recorded in ASSETS.md as Figma-exported generated
+ * artwork, per the 8 September amendment.
  *
  * Decorative wayfinding: aria-hidden, pointer-events-none, lg and up only.
  */
 
-/** Strand geometry — dot size/spacing from the designed asset (~4.5px dots
- *  every ~10px); two strands share the wander, offset like the asset's pair. */
+/** Strand geometry — measured off the committed assets (a least-squares sine
+ *  fit over each file's 112 dot positions, rms ≤ 1.5px): ~4.5px dots every
+ *  ~10px, centre-of-wander 12.7 inside the 27.57-wide box, amplitude 10.2,
+ *  wavelength ~216. The pair stands 38px apart in the frame, wander centre
+ *  to wander centre (Rail A at 85.8, Rail B at 123.7 of the 1440 grid). */
 const RAIL_W = 160;
-const INK_X = 40; // left strand centre
-const STEP_X = 72; // right strand centre
-const AMPLITUDE = 8;
-const WAVELENGTH = 214;
+const INK_X = 40; // Rail A's centre-of-wander — LORE
+const STEP_X = 78; // Rail B's centre-of-wander — RECORD, the frame's 38px gap
+/** The assets' natural box; the mask repeats down the screen at this size.
+ *  One strand is ~5.03 wanders, so the repeat seam lands near a crest and
+ *  the guide below drifts ≤ ~2px into a second tile — invisible under the
+ *  50px rosette. */
+const ART_W = 27.57;
+const ART_H = 1087.7;
+const ART_MID = 12.7;
+/** rail-b.svg's own wander, for the invisible guide the pointer samples:
+ *  x(y) = STEP_X + AMPLITUDE · sin(2πy / WAVELENGTH + GUIDE_PHASE). */
+const AMPLITUDE = 10.2;
+const WAVELENGTH = 216.2;
+const GUIDE_PHASE = 1.34;
 const SAMPLE = 12;
 /** Where the artwork's chevron ends, from the traveller anchor. The image is
  *  96px drawn at left-[-22px] and its arrowhead sits at x 87–93, so the tip
@@ -60,52 +84,23 @@ const LABEL_W_MAX = 200;
 /** Narrower than this and the label is not worth the collision. */
 const LABEL_W_MIN = 120;
 
-/**
- * LORE · continuous — never breaks, not even at the count. The frame's own
- * CSS (2026-09-03): a full-page strand at #CB7722, surfacing at y147.75
- * (under the wordmark) and fading in over 0.94% of the height, holding to
- * 99.06%, fading out before the footer's crest rises over the page's
- * foot. Static: this is the record, not the reader.
- */
+/** LORE · continuous — the record, static. The frame's own ochre; deliberately
+ *  NOT `--color-ochre` (#d69828), which is a different colour. */
 const LORE_COLOR = "#CB7722";
-const LORE_TOP = 148;
-function loreFade(height: number, end: number) {
-  const ramp = Math.max(height * 0.0094, 120);
-  /* `end` is the footer's crest: the line is gone before the wave rises. */
-  const image = `linear-gradient(to bottom, transparent ${LORE_TOP}px, black ${
-    LORE_TOP + ramp
-  }px, black ${end - ramp * 2}px, transparent ${end}px)`;
-  return { maskImage: image, WebkitMaskImage: image };
-}
 
-/**
- * RECORD · S1 · dots ahead (faint) — the frame's CSS (2026-09-03): the
- * footsteps strand DOES exist ahead of the reader, faintly — off-white at
- * 0.45, fading in over the first 2.98% of the run and out over the last
- * 2.98%. S1 runs from under the wordmark (y147.75) to the escarpment break;
- * the strand goes under through the count and S2 resumes at the 1840s.
- * The laid-down steps (data-v2-steps-fill) draw over this at full.
- */
-const AHEAD_RAMP = 0.0298;
-function aheadFade(from: number, to: number) {
-  const ramp = Math.max((to - from) * AHEAD_RAMP, 60);
-  const image = `linear-gradient(to bottom, transparent ${from}px, black ${
-    from + ramp
-  }px, black ${to - ramp}px, transparent ${to}px)`;
-  return { maskImage: image, WebkitMaskImage: image };
-}
-
-/** An element's layout top relative to the descent root, ignoring transforms.
- * The traveller samples document geometry, so layout coordinates remain the
- * stable source while other scroll-scrubbed transforms are active. */
-function layoutTop(el: HTMLElement, root: HTMLElement): number {
-  let top = 0;
-  let node: HTMLElement | null = el;
-  while (node && node !== root) {
-    top += node.offsetTop;
-    node = node.offsetParent as HTMLElement | null;
-  }
-  return top;
+/** One strand as a stencil: the asset's alpha over a token-coloured field,
+ *  at its natural size so the dots stay round — never stretched. */
+function strandMask(asset: string): CSSProperties {
+  return {
+    width: ART_W,
+    backgroundColor: "currentcolor",
+    maskImage: `url("${asset}")`,
+    maskSize: `${ART_W}px ${ART_H}px`,
+    maskRepeat: "repeat-y",
+    WebkitMaskImage: `url("${asset}")`,
+    WebkitMaskSize: `${ART_W}px ${ART_H}px`,
+    WebkitMaskRepeat: "repeat-y",
+  };
 }
 
 function strandX(y: number, center: number, phase: number): number {
@@ -126,19 +121,17 @@ function strandPath(
 }
 
 export function TruthTrailRail() {
-  const [height, setHeight] = useState(0);
   const [left, setLeft] = useState(0);
-  /** Where the footsteps strand goes under: from the top of the escarpment
-   *  break, through the count, back at the 1840s mark. [start, end] in rail
-   *  coordinates; null until measured (or if either anchor is absent). */
-  const [gap, setGap] = useState<[number, number] | null>(null);
-  /** Where the two strands end (the 20 frame). The footsteps strand stops
-   *  under the "Underneath all of it" heading — the reader has arrived; the
-   *  ink strand runs on and fades out above the footer's crest, which rides
-   *  the foot of the page. Rail coordinates; null until measured. */
-  const [ends, setEnds] = useState<{ steps: number; ink: number } | null>(
-    null,
-  );
+  /** One viewport of strand. The finite rail's whole height. */
+  const [viewH, setViewH] = useState(0);
+  /**
+   * Where the rail's WRAPPER ends: the Wattanuri floor's head, not the
+   * root's foot. The sticky screen parks against it and rides up off the
+   * page as the floor arrives — a rail that IS the descent must not run
+   * past it (D20, carried onto the finite rail). Structural rather than
+   * animated, so it holds for reduced motion and no-JS too.
+   */
+  const [railEnd, setRailEnd] = useState(0);
   /**
    * How wide the pointer's era label may be before it runs into the reading
    * column, in px — 0 when there is no room and the arrow rides alone.
@@ -156,12 +149,33 @@ export function TruthTrailRail() {
     if (!root) return;
 
     const measure = () => {
-      setHeight(root.offsetHeight);
+      setViewH(window.innerHeight);
+      // The floor's position is read off its RUNWAY through the offsetTop
+      // chain, not a viewport rect: under the deck the slide itself goes
+      // position:fixed while pinned and a rect would measure the pin, while
+      // the runway never leaves the flow. The chain bottoms out at the root
+      // (it is position:relative); a missing floor falls back to the root's
+      // own height, which is the old wrapper extent.
+      const floorSection = document.getElementById(wattanuri.id);
+      const floorRunway =
+        floorSection?.closest<HTMLElement>("[data-truth-slide-runway]") ??
+        floorSection;
+      let end = root.offsetHeight;
+      if (floorRunway) {
+        let y = 0;
+        let node: HTMLElement | null = floorRunway;
+        while (node && node !== root) {
+          y += node.offsetTop;
+          node = node.offsetParent as HTMLElement | null;
+        }
+        if (node === root && y > 0) end = y;
+      }
+      setRailEnd(end);
       // The strand pair centres on the "C" of the YACHATDAC wordmark (its
       // third letter): the descent drops out of the logo's own letterform.
       // More than one wordmark is in the DOM (the mobile bar's is first but
       // display:none at lg, measuring a zero rect), so take the visible one.
-      // Falls back to the content container's margin if the logo is absent.
+      // Falls back to the Ahead section's left edge if the logo is absent.
       //
       // ⚠ NOT THE LOADING PANEL'S. RouteLoader mounts PageLoader in the ROOT
       // layout ABOVE SiteHeader (11 September 2026), and its wordmark is
@@ -190,50 +204,6 @@ export function TruthTrailRail() {
           section ? Math.max(section.getBoundingClientRect().left, 0) : 0,
         );
       }
-      // The strand goes under from the top of the escarpment break and
-      // surfaces again UNDER THE COUNT — at the navy wave that closes the
-      // count band — running through the wave and down to the 1840s
-      // pointer, so the line connects the count to the 1840s.
-      const breakEl = document.getElementById("break-escarpment");
-      // The restart is the FOOT of the count's hand-off wave — the strand
-      // surfaces where the ground turns back to the page's own colour, and
-      // runs from there down to the 1840s pointer.
-      //
-      // Measured through layoutTop (offsetTop), not getBoundingClientRect.
-      // The wave lives on a slide the deck pins and a track the deck
-      // translates, so a viewport rect reports wherever the section happens
-      // to be sitting at the instant the observer fires — and this measure
-      // re-runs on a ResizeObserver, which can fire mid-scroll. offsetTop is
-      // immune to both, so the gap stops depending on when it was taken.
-      //
-      // The wave is an <svg> with no offsetParent chain of its own, so the
-      // anchor is its parent section plus the wave's own height: the wave is
-      // seated leading, overhanging the join by all but a pixel of itself.
-      const wave = document.querySelector<SVGElement>("[data-count-wave]");
-      const waveHost = wave?.parentElement ?? null;
-      const resumeTop = waveHost
-        ? layoutTop(waveHost, root) + (wave?.getBoundingClientRect().height ?? 0)
-        : (() => {
-            const band = document.querySelector<HTMLElement>(
-              '[data-descent-band="before-record"]',
-            );
-            return band ? layoutTop(band, root) : null;
-          })();
-      setGap(
-        breakEl && resumeTop !== null
-          ? [layoutTop(breakEl, root), resumeTop]
-          : null,
-      );
-      // The footer's wave block (13.9vw) is pulled up over the page's foot:
-      // the ink must be gone before it.
-      const crest = root.offsetHeight - window.innerWidth * 0.139;
-      // The record strand fades out and is gone before UNDERNEATH ALL OF
-      // IT begins: the reader has arrived. The lore line runs on alone.
-      const floor = document.getElementById("underneath-all-of-it");
-      setEnds({
-        steps: floor ? layoutTop(floor, root) : crest,
-        ink: crest,
-      });
       // The NARROWEST reading column on the page, not the first one.
       //
       // Entries do not all sit in the same wrapper — measured, the first copy
@@ -264,12 +234,13 @@ export function TruthTrailRail() {
       // label hangs off THAT — so the budget starts at the strand's rightmost
       // wander, not at the rail box's left edge. Omitting it overstated the
       // room by ~80px and put the label inside the copy.
-      const room =
-        column - (railLeft + STEP_X + AMPLITUDE + LABEL_X) - 16;
+      const room = column - (railLeft + STEP_X + AMPLITUDE + LABEL_X) - 16;
       setLabelWidth(room < LABEL_W_MIN ? 0 : Math.min(room, LABEL_W_MAX));
     };
 
     measure();
+    // The root's box changes with every viewport resize (its paddings are in
+    // vh), so observing it re-measures the viewport-height strands too.
     const ro = new ResizeObserver(measure);
     ro.observe(root);
     return () => {
@@ -277,150 +248,127 @@ export function TruthTrailRail() {
     };
   }, []);
 
-  // The container (and the fill hook) renders from the first paint even
-  // though the strands wait on measurement — the motion module's init runs
-  // before this component's measuring effect can re-render, and it must
-  // find [data-v2-steps-fill] then.
-  /* The record strand's runs — from under the wordmark to the escarpment
-     break, and from the 1840s to the strand's end. The faint base and the
-     colour fill both draw exactly these, so their dots coincide. */
-  const recordRuns: Array<[number, number]> = gap
-    ? [
-        [LORE_TOP, gap[0]],
-        [gap[1], ends?.steps ?? height],
-      ]
-    : [[LORE_TOP, ends?.steps ?? height]];
-
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-y-0 z-20 hidden lg:block"
-      style={{ width: RAIL_W + 220, left }}
+      data-truth-trail-rail
+      className="pointer-events-none absolute top-0 z-20 hidden lg:block"
+      style={{ width: RAIL_W + 220, left, height: railEnd || "100%" }}
     >
-      {/* The legend never breaks — and never moves: it sits at the top of
-          the trail and scrolls away with the page. Marc's hand-set
-          LORE · CONTINUOUS cut (2026-09-02) replaces the typeset version. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-      <img
-        src="/artwork/lore-legend.svg"
-        alt={loreMarker}
-        className="absolute left-4 top-36 w-7"
-        loading="lazy"
-      />
-
-      {/* Geometry-only twin of the RECORD strand. It is always mounted so
-          the controller can retain the node before the first measurement;
-          React updates its d attribute when the full rail height is known. */}
-      <svg
-        width={RAIL_W}
-        height={Math.max(height, 1)}
-        viewBox={`0 0 ${RAIL_W} ${Math.max(height, 1)}`}
-        fill="none"
-        className="absolute left-0 top-0 overflow-visible opacity-0"
-      >
-        <path
-          data-truth-trail-guide
-          d={strandPath(height, STEP_X, 0.9)}
-          stroke="transparent"
-        />
-      </svg>
-
-      {/* Left strand — LORE · continuous. The full record at #CB7722, edge
-          to edge of the page; it never breaks, not even at the count. */}
-      {height > 0 ? (
-        <svg
-          width={RAIL_W}
-          height={height}
-          viewBox={`0 0 ${RAIL_W} ${height}`}
-          fill="none"
-          className="absolute left-0 top-0"
-          style={loreFade(height, ends?.ink ?? height)}
-        >
-          <path
-            d={strandPath(height, INK_X, 0)}
-            stroke={LORE_COLOR}
-            strokeWidth={4.5}
-            strokeLinecap="round"
-            strokeDasharray="0.1 9.9"
-          />
-        </svg>
-      ) : null}
-
-      {/* The lore strand carries no fill: it is the record, static. The
-          scroll indicator is the RECORD strand beside it. */}
-
-      {/* Right strand base — RECORD · S1/S2 · dots ahead (faint): the run
-          from the wordmark to the escarpment break, and the run from the
-          1840s to the strand's end. Nothing between — the count. */}
-      {height > 0
-        ? recordRuns.map(([from, to]) => (
-            <svg
-              key={`ahead-${from}`}
-              width={RAIL_W}
-              height={height}
-              viewBox={`0 0 ${RAIL_W} ${height}`}
-              fill="none"
-              className="absolute left-0 top-0 text-charcoal opacity-25"
-              style={aheadFade(from, to)}
-            >
-              <path
-                d={strandPath(to, STEP_X, 0.9, from)}
-                stroke="currentColor"
-                strokeWidth={3.5}
-                strokeLinecap="round"
-                strokeDasharray="0.1 12"
-              />
-            </svg>
-          ))
-        : null}
-
-      {/* RECORD strand fill — the scroll indicator: the lore ochre flowing
-          through the faint dots to the reading line, in both directions
-          ([data-v2-steps-fill], clipped open by the motion module and
-          derived from scroll each frame). Renders from the first paint,
-          empty until measured — the module wires the clip at init. */}
+      {/* THE WHOLE RAIL IS ONE STICKY SCREEN. The strands, the legend and the
+          traveller ride it together. The wrapper's measured height ends at
+          the Wattanuri floor (see `railEnd`), so the screen parks there and
+          leaves with the descent — no fade needed, and the end masks mean
+          its exit reads as the strand dissolving, not as a box scrolling
+          off. */}
       <div
-        data-v2-steps-fill
-        className="absolute left-0 top-0"
-        /* Sized explicitly: the runs inside are absolutely positioned, and a
-           clip-path in percentages needs a box to clip. */
-        style={{ width: RAIL_W, height, clipPath: "inset(0% 0% 100% 0%)" }}
+        data-truth-rail-screen
+        className="sticky top-0 h-svh w-full overflow-visible"
       >
-        {/* The SAME runs and the SAME fades as the faint base — so the
-            colour lands on the dots, not between them, and fades out before
-            the count, back in at the 1840s, and away under "Underneath all
-            of it" exactly where the base does. */}
-        {height > 0
-          ? recordRuns.map(([from, to]) => (
-              <svg
-                key={`fill-${from}`}
-                width={RAIL_W}
-                height={height}
-                viewBox={`0 0 ${RAIL_W} ${height}`}
-                fill="none"
-                className="absolute left-0 top-0"
-                style={{ color: LORE_COLOR, ...aheadFade(from, to) }}
-              >
-                <path
-                  d={strandPath(to, STEP_X, 0.9, from)}
-                  stroke="currentColor"
-                  strokeWidth={3.5}
-                  strokeLinecap="round"
-                  strokeDasharray="0.1 12"
-                />
-              </svg>
-            ))
-          : null}
-      </div>
+        {/* The legend rides at the head of the sticky rail. Marc's hand-set
+            LORE · CONTINUOUS cut (2026-09-02), laid ALONG Rail A's own
+            wander (user direction, 15 September 2026 — it used to sit
+            diagonally ACROSS the strand). Measured off the committed
+            rail-a.svg: its dots fit x = 12.7 + 10.2·sin(2πy/216.2 + 1.505)
+            at 1.6px rms, the steepest down-right run centres at y ≈ 164,
+            and over the art's 114px span the strand stays within ±2.5px of
+            that chord — whose ~10° lean is the art's own baked angle. So:
+            top = 164 − 57, left = the strand's centre (INK_X = 40) − half
+            the 27px box. The box's foot clears the rosette laterally
+            (legend right ≈ 53, rosette's left edge ≈ 62 at the travel
+            head). */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+        <img
+          src="/artwork/lore-legend.svg"
+          alt={loreMarker}
+          className="absolute w-7"
+          style={{ left: 26, top: 107 }}
+          loading="lazy"
+        />
 
-      {/* G1 / "the guide leading the eye": the sticky viewport is stable;
-          the gated-deck controller writes only transforms and opacity to the
-          traveller. The full-height guide remains the source of its lateral
-          position and tangent. */}
-      <div className="sticky top-0 h-svh w-full overflow-visible">
+        {/* Both strands, one viewport tall, cut at the head and the foot
+            under the gradient mask truth.css draws — the finite rail's ends
+            dissolve rather than stop. */}
+        <div data-truth-rail-strands className="absolute inset-0">
+          {/* Geometry-only twin of the RECORD strand. Always mounted so the
+              controller can retain the node before the first measurement;
+              React updates its d attribute when the viewport is known. */}
+          <svg
+            width={RAIL_W}
+            height={Math.max(viewH, 1)}
+            viewBox={`0 0 ${RAIL_W} ${Math.max(viewH, 1)}`}
+            fill="none"
+            className="absolute left-0 top-0 overflow-visible opacity-0"
+          >
+            <path
+              data-truth-trail-guide
+              d={strandPath(Math.max(viewH, 1), STEP_X, GUIDE_PHASE)}
+              stroke="transparent"
+            />
+          </svg>
+
+          {/* Rail A — LORE · continuous. The artist's jittered dots
+              (rail-a.svg) in the frame's own ochre, the full height of the
+              rail; it never breaks, not even at the count (#CB7722 stands
+              on both the egg white and the charcoal). */}
+          <div
+            className="absolute top-0 h-full"
+            style={{
+              left: INK_X - ART_MID,
+              color: LORE_COLOR,
+              ...strandMask("/artwork/rail-a.svg"),
+            }}
+          />
+
+          {/* Rail B base — RECORD · dots ahead (faint). The smooth strand
+              (rail-b.svg); its ink is the painter's — charcoal on the egg
+              white, canvas on the dark bands (`--rail-base-ink`) — at a
+              constant quarter strength. */}
+          <div
+            className="absolute top-0 h-full opacity-25"
+            style={{
+              left: STEP_X - ART_MID,
+              color: "var(--rail-base-ink)",
+              ...strandMask("/artwork/rail-b.svg"),
+            }}
+          />
+
+          {/* Rail B fill — the page-progress ink: the lore ochre flowing
+              through the faint dots to the pointer, in both directions
+              ([data-v2-steps-fill], clipped open by the motion module and
+              derived from scroll each frame through the SAME map the pointer
+              rides). Renders from the first paint, empty until measured —
+              the module wires the clip at init. */}
+          <div
+            data-v2-steps-fill
+            className="absolute left-0 top-0"
+            /* Sized explicitly: the run inside is absolutely positioned, and
+               a clip-path in percentages needs a box to clip. */
+            style={{
+              width: RAIL_W,
+              height: Math.max(viewH, 1),
+              clipPath: "inset(0% 0% 100% 0%)",
+            }}
+          >
+            <div
+              className="absolute top-0 h-full"
+              style={{
+                left: STEP_X - ART_MID,
+                color: LORE_COLOR,
+                ...strandMask("/artwork/rail-b.svg"),
+              }}
+            />
+          </div>
+        </div>
+
+        {/* G1 / "the guide leading the eye": the gated-deck controller writes
+            only transforms, opacity and the rail's ink custom properties. The
+            viewport-height guide above is the source of the pointer's lateral
+            position and tangent; its y is the mapped page progress
+            (truth-rail-map.ts), inside the travel box the map exports
+            (RAIL_TRAVEL_TOP / RAIL_TRAVEL_BOTTOM_INSET). */}
         <div
           data-truth-trail-traveller
-          data-trail-end={ends?.steps}
           className="absolute left-0 top-0 h-0 w-0 opacity-0"
         >
           {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
@@ -433,30 +381,102 @@ export function TruthTrailRail() {
           />
           {/* The era the arrow is pointing at, riding with it. Empty here and
               filled by the deck on each slide change: the strings live in the
-              section's own gutter block, which goes sr-only at lg so the era
-              still reaches a screen reader that cannot see this rail.
+              section's own gutter block (or the count's own figure years), so
+              there is one source for what the era is.
 
-              NEVER GOLD. The artwork beside it is baked gold at 1.72:1 on this
-              ground (open-questions.md) and is already flagged for a
-              light-ground cut; type must not inherit that. burnt-deep is
-              6.31:1 and is the page's compliant warm. */}
+              NEVER GOLD. The artwork beside it is baked gold at 1.72:1 on the
+              light ground (open-questions.md) and is already flagged for a
+              light-ground cut; type must not inherit that. The colours ride
+              `--rail-ink` / `--rail-ink-sub` — ochre-deep/charcoal on the egg
+              white, canvas on the dark bands — stepped by the painter at the
+              1950s' own crossover (truth.css, `[data-rail-dark]`). */}
           {/* Always rendered, even with no room for it — the deck looks these
               nodes up once at init, so a box that only appears after a resize
               would never be found and the label would stay blank until a
               reload. With no room it is a zero-width clip instead. */}
+          {/* `py-3` is CLIP HEADROOM, not spacing: the box is overflow-hidden
+              (the width clip when the reading column leaves no room) and the
+              stack inside translates vertically between its two layouts —
+              year centred on the arrow's axis alone, stacked above a sub —
+              so the clip bounds need 12px of slack each way. Symmetric, so
+              the -translate-y-1/2 centring is unmoved. The stack wrapper
+              exists because the deck's year count owns the label <p>'s own
+              transform (scale) — the layout shift has to ride a parent or
+              the two writes would fight (truth.css owns the geometry;
+              user direction, 15 September 2026). */}
           <div
             data-truth-trail-label-box
-            className="absolute top-0 -translate-y-1/2 overflow-hidden"
+            className="absolute top-0 -translate-y-1/2 overflow-hidden py-3"
             style={{ left: LABEL_X, width: labelWidth }}
           >
-            <p data-truth-trail-label className="eyebrow text-xl text-ochre-deep" />
-            <p
-              data-truth-trail-sub
-              className="mt-1 text-sm font-normal uppercase leading-relaxed text-charcoal"
-            />
+            <div data-truth-trail-label-stack>
+              <p
+                data-truth-trail-label
+                className="eyebrow text-xl"
+                style={{ color: "var(--rail-ink)" }}
+              />
+              <p
+                data-truth-trail-sub
+                className="mt-1 text-sm font-normal uppercase leading-relaxed"
+                style={{ color: "var(--rail-ink-sub)" }}
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+/**
+ * The mobile timeline — the homepage's TWO-LINE RAIL, sticky at the foot of
+ * the screen (user direction, 15 September 2026, superseding the same day's
+ * per-era wave strips; grammar row "the guide leading the eye, Truth mobile
+ * cut"). One persistent instrument, styled exactly as the homepage styles
+ * its SCR-10 pair: Rail B is `truth-dotted-path.svg` bleeding past both
+ * edges, Rail A the SAME artwork recoloured `--color-burnt` through a mask
+ * a line below it (no new asset — the paths come off the homepage manifest,
+ * `homeTruthArtwork`, so there is one source for what they are), and the
+ * homepage's `truth-year-marker.svg` arrow rides Rail B pointing down at
+ * the line with the era's SHORT mark above it — "Before people", never
+ * "Before people · about 100 million years ago"; the full line lives in the
+ * section. Geometry and colours in truth.css.
+ *
+ * Everything that MOVES — the marker's x (page progress through the same
+ * chronological map as the desktop rail), the year swaps, the bar's own
+ * arrival with the chronology — is truth-mobile-rail.ts's. At rest the bar
+ * is invisible (`opacity-0`); under reduced motion the module never runs
+ * and the bar simply never shows, the same absence as the desktop
+ * traveller.
+ */
+export function TruthTrailBar() {
+  return (
+    <div
+      aria-hidden
+      data-truth-trail-bar
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-30 opacity-0 lg:hidden"
+    >
+      {/* ⚠ EVERY PIECE IS A MASK, NOT AN <img>. The homepage draws this
+          pair over dark photography and its artwork is baked #FCF7F0 —
+          measured here, the dots simply vanish on /truth's egg white. So
+          the SAME files render as alpha masks over token colours (the
+          technique home-hero.css itself uses for Rail A): Rail B in ochre,
+          Rail A in burnt, the marker a single-ink stamp of the homepage
+          silhouette in charcoal — canvas over the dark bands. The forms
+          are the homepage's exactly; only the ink adapts to the ground,
+          as everything on this page does. Geometry in truth.css. */}
+      <div data-truth-bar-line className="truth-bar-line">
+        <span className="truth-bar-path-a" />
+        <span className="truth-bar-path" />
+        <div data-truth-bar-marker className="truth-bar-marker">
+          <p data-truth-bar-year className="headline truth-bar-year" />
+          <span className="truth-bar-marker-art" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* The travel box is shared with the painter and the masks; re-exported so
+   truth.css's numbers have one named source to cite. */
+export { RAIL_TRAVEL_TOP, RAIL_TRAVEL_BOTTOM_INSET };

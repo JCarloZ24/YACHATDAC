@@ -292,6 +292,24 @@ export const ARTWORK: ArtworkPiece[] = [
     paths: 243,
     note: "FOUNDATIONS band, the taller cut.",
   },
+  {
+    id: "rail-a",
+    src: "/artwork/rail-a.svg",
+    node: "2048:12273",
+    width: 27.57,
+    height: 1087.66,
+    paths: 112,
+    note: "Rail A — LORE strand, the artist's jittered dots. Figma-exported GENERATED artwork (frame 05 · TODAY montage, 2048:11158; pulled 15 Sep 2026), dot fills normalised to a solid stencil for CSS-mask use — ink is the renderer's token, not the file's. /truth's finite rail, left.",
+  },
+  {
+    id: "rail-b",
+    src: "/artwork/rail-b.svg",
+    node: "2048:11629",
+    width: 27.57,
+    height: 1087.79,
+    paths: 112,
+    note: "Rail B — RECORD strand, the smooth wander. Figma-exported GENERATED artwork (same frame and pull as rail-a), stencil-normalised: the frame bakes a lit segment (28 gold #EFB35C dots, white ahead-dots — an evergreen-ground state a static homepage cut may keep) that /truth instead computes at runtime, so the file carries geometry only. /truth's finite rail, right — base and fill share it.",
+  },
 ];
 
 /**

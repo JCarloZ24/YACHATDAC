@@ -11,7 +11,7 @@ import {
   TruthHeroV2,
   WattanuriBand,
 } from "./_components/Sections";
-import { TruthTrailRail } from "./_components/TrailRail";
+import { TruthTrailBar, TruthTrailRail } from "./_components/TrailRail";
 import { erasAfter, erasBefore, truthHero } from "@/content/truth";
 /* The Ahead deck's two phases and its walked focus row. Layout only, and it
    contributes nothing until gated-deck.ts flags the deck active — see the head
@@ -66,6 +66,16 @@ export default function TruthPage() {
             reader stands. */}
         <TruthTrailRail />
 
+        {/* THE MOBILE TIMELINE (user direction, 15 September 2026; grammar
+            row "the guide leading the eye, Truth mobile cut"). Below lg the
+            chronology is the homepage's two-line rail, one bar sticky at
+            the viewport's foot — the marker's arrow points at the current
+            era's short mark and travels with page progress
+            (truth-mobile-rail.ts). The full era lines live in the sections
+            themselves (the gutter blocks, mobile-visible since the same
+            direction). */}
+        <TruthTrailBar />
+
         <section data-descent-band="present" className="bg-canvas">
           <TruthHeroV2 />
           <EraSection era={ahead} />
@@ -109,9 +119,10 @@ export default function TruthPage() {
             and her testimony are screens of their own, so the numerals take a
             viewport alone as the draft's build note asks and her words are not
             something the reader scrolls past on the way somewhere else.
-            They carry data-truth-ground="count", which is also what finally
-            makes the deck's own railHiddenSlides selector do its job — the
-            rail is silent across all three. */}
+            They carry data-truth-ground="count", which the deck's
+            railDarkSlides selector reads — the rail no longer goes silent
+            here (15 September 2026): it stays visible on the charcoal in
+            canvas ink, and the figures screen names its own eras. */}
         <section data-descent-band="count" className="bg-charcoal">
           <SuzanneCount />
           <SuzanneTestimony />

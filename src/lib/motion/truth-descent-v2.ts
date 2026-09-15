@@ -10,10 +10,11 @@
  *   [data-v2-hero-media]   the hero photograph — held through its read gate
  *   [data-v2-camera]       ordinary image frames — M1 1.00→1.06 push-in,
  *                          scrubbed; frame-grade and held scenes stay still
- *   [data-v2-steps-fill]   the record strand's ochre fill — clipped open
- *                          linearly with document scroll, trailing it on a
- *                          heavy scrub (scroll-derived; the lag is the only
- *                          easing, and it settles to the true position)
+ *   [data-v2-steps-fill]   the record strand's ochre fill — clipped open to
+ *                          the rail pointer's own mapped page progress
+ *                          (truth-rail-map.ts), trailing it on a heavy scrub
+ *                          (scroll-derived; the lag is the only easing, and
+ *                          it settles to the true position)
  * The gated-deck module owns the G1 rail traveller and the navbar exit. This
  * module keeps the chronology fill and scene-interior media treatments only.
  *
@@ -26,6 +27,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MotionModule } from "@/lib/motion-controller";
 import { registerYachatdacEffects } from "@/lib/motion/effects";
 import { SCRUB } from "@/lib/motion/tokens";
+import {
+  RAIL_TRAVEL_BOTTOM_INSET,
+  RAIL_TRAVEL_TOP,
+  railProgressAt,
+} from "@/lib/motion/truth-rail-map";
 import { Y2_DIM } from "@/lib/sections/y2";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -41,23 +47,15 @@ export function createTruthDescentV2(): MotionModule {
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const localCleanup: Array<() => void> = [];
-        // The winding trail. Two clipped layers, both derived from scroll:
-        //   · the gold ink ([data-v2-trail-fill]) carries a short scrub lag
-        //     so it reads as liquid flowing through the dots — it still maps
-        //     linearly to scroll and works in both directions, so a jump
-        //     (e.g. "Start from the beginning") just flows down to meet you;
-        //   · the gray footsteps ([data-v2-steps-fill]) track the READING
-        //     LINE — the same 60%-of-viewport line that lights each pointer.
-        //     Its tip starts 0.6vh down the trail and stays glued to that
-        //     line the whole descent, so it meets every pointer exactly as
-        //     the pointer bursts — top of the page or bottom.
+        // The record strand's fill on the FINITE STICKY rail (15 September
+        // 2026 — see TrailRail.tsx). One clipped layer, derived from scroll:
+        // its tip opens to where the rail's pointer stands, through the SAME
+        // piecewise era-anchor map the pointer's y rides
+        // (truth-rail-map.ts), so tip and pointer cannot disagree. The lag
+        // is the one easing, and it settles to the true position.
         const root = document.querySelector<HTMLElement>("[data-descent-root]");
         if (root) {
-          const wireFill = (
-            selector: string,
-            lag: number,
-            headStart: number,
-          ) => {
+          const wireFill = (selector: string, lag: number) => {
             const layer = document.querySelector<HTMLElement>(selector);
             if (!layer) return;
             // Tween a number, not the clip-path string: the browser
@@ -65,23 +63,38 @@ export function createTruthDescentV2(): MotionModule {
             // `inset(0%)` at rest), so when GSAP re-read the layer on a
             // refresh the value counts no longer matched and the
             // interpolation ran off — a 489% bottom inset mid-descent, the
-            // strand gone. The proxy's start is re-evaluated on refresh.
-            const startBottom = () =>
-              Math.max(
-                0,
-                100 -
-                  ((headStart * window.innerHeight) / root.offsetHeight) * 100,
-              );
-            const proxy = { bottom: startBottom() };
+            // strand gone.
+            //
+            // The number is the SCROLL CLOCK, not the inset: the map from
+            // scroll to rail fraction is piecewise, so the thing the scrub
+            // may lag linearly is the scroll itself — the lagged position is
+            // then pushed through the same map the pointer uses. Lagging the
+            // fraction instead would ease it across anchor corners the
+            // pointer turns sharply, and the two would part company mid-era.
+            /* `clock` lands after the tween exists (it IS the tween's own
+               ScrollTrigger); immediateRender paints once before that, off
+               the live scroll position. */
+            const proxy: { p: number; clock?: ScrollTrigger } = { p: 0 };
             const paint = () => {
-              layer.style.clipPath = `inset(0% 0% ${proxy.bottom.toFixed(3)}% 0%)`;
+              const clock = proxy.clock;
+              const scrollY = clock
+                ? clock.start + proxy.p * (clock.end - clock.start)
+                : window.scrollY;
+              const viewH = Math.max(window.innerHeight, 1);
+              const travelSpan = Math.max(
+                1,
+                viewH - RAIL_TRAVEL_BOTTOM_INSET - RAIL_TRAVEL_TOP,
+              );
+              const tipY =
+                RAIL_TRAVEL_TOP + travelSpan * railProgressAt(scrollY);
+              const bottom = Math.max(0, 100 - (tipY / viewH) * 100);
+              layer.style.clipPath = `inset(0% 0% ${bottom.toFixed(3)}% 0%)`;
             };
-            paint();
-            gsap.fromTo(
+            const tween = gsap.fromTo(
               proxy,
-              { bottom: startBottom },
+              { p: 0 },
               {
-                bottom: 0,
+                p: 1,
                 ease: "none",
                 immediateRender: true,
                 onUpdate: paint,
@@ -94,14 +107,14 @@ export function createTruthDescentV2(): MotionModule {
                 },
               },
             );
+            proxy.clock = tween.scrollTrigger;
+            paint();
           };
           // The record strand's colour drops behind the scroll on purpose
           // (2026-09-03): a heavy scrub, so the ochre trails the reader
           // down the dots and catches up when they pause. Still scroll-
-          // derived, still both directions. The tip aims at the 0.6vh
-          // reading line, arriving there once the lag settles.
-          wireFill("[data-v2-steps-fill]", SCRUB.heavy * 1.5, 0.6);
-
+          // derived, still both directions.
+          wireFill("[data-v2-steps-fill]", SCRUB.heavy * 1.5);
         }
 
         // THE FLOW PATH ONLY — everything from here to the Y2 words below is

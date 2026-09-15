@@ -349,6 +349,12 @@ supersedes are written up as **D26**; these are the loose ends it leaves.
   two of them that attribute for real, so the selector now does the job it
   was written for and the rail is silent across all three.
 
+  ⚠ **Superseded 15 September 2026 (user direction).** The finite sticky rail
+  stays VISIBLE through the 1950s, the escarpment and the count — the option
+  and its selector were removed with the silence they gated. The count's
+  screens now name their own eras (1902, 1886) on the traveller. See
+  `motion-grammar.md`, "the guide leading the eye, Truth cut".
+
 - **The count's panel height is now load-bearing and nothing enforces it.** The
   ground and its crest cover the escarpment because panel + wave ≈ one
   viewport. That is a `min-h-[calc(100svh-7rem)]` floor plus content that
