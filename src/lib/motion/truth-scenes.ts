@@ -38,7 +38,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import type { DeckSlideSpan } from "@/lib/motion/gated-deck";
-import { registerYachatdacEffects } from "@/lib/motion/effects";
+import { layOrder, registerYachatdacEffects } from "@/lib/motion/effects";
+import type { FrameEdge } from "@/lib/motion/effects";
 import { SCRUB } from "@/lib/motion/tokens";
 import { Y2_DIM } from "@/lib/sections/y2";
 
@@ -61,6 +62,55 @@ const HERO_BREATH = 1.04;
 const MONTAGE_STARTS = [0.1, 0.17, 0.21, 0.3] as const;
 const MONTAGE_STARTS_SIX = [0.08, 0.15, 0.19, 0.26, 0.3, 0.39] as const;
 const MONTAGE_LENGTH = 0.18;
+
+/**
+ * The diptychs' two offsets. Same hand, two frames — closer together than a
+ * montage's because a pair read at a montage's spacing reads as one picture
+ * and then, separately, another one.
+ */
+const DIPTYCH_STARTS = [0.12, 0.2] as const;
+
+/**
+ * How long a tile's clip takes to open, as a fraction of a read span.
+ *
+ * ⚠ TWO VOLUMES, AND WHICH ONE A SCREEN GETS IS F7, NOT TASTE. `LOUD` is the
+ * montage cut at full strength and belongs only to a screen whose declared
+ * loud channel is MEDIA (scenes.md: §02, §05). `QUIET` is the same clip on a
+ * screen already loud in type or transition (§07, §10, §11, §18) — it swaps
+ * the instrument the media channel is playing without turning it up, which is
+ * what keeps the reveal from spending a second channel. It is the strip's own
+ * length, so the two six-ups still agree with each other.
+ */
+const WIPE_LOUD = MONTAGE_LENGTH;
+const WIPE_QUIET = 0.1;
+
+/**
+ * Seeds for the lay order — one per montage, so two fields on one page never
+ * arrive in the same sequence. Chosen rather than generated, and the resulting
+ * permutation is written beside each one because a seed nobody can read is a
+ * magic number; `layOrder` is pure, so these are checkable by hand.
+ *
+ *   TODAY §05      seed 4  → slots [2,0,3,1], i.e. tiles arrive 1 · 3 · 0 · 2
+ *   open research  seed 32 → slots [2,3,1,4,0], tiles arrive 4 · 2 · 0 · 1 · 3
+ *   the precinct   seed 2  → slots [1,0], the far plate first
+ *   the diptychs   seed 2  → slots [1,0], the detail before the anchor
+ *
+ * ⚠ THE PERMUTATION IS SIZED FROM THE TILES ACTUALLY ON THE PAGE, not from
+ * the offsets table. §18's sheet is FIVE frames against `MONTAGE_STARTS_SIX`'s
+ * six offsets — the sixth was never supplied — so `layOrder` is asked for five
+ * and the last offset simply goes unused. A permutation hard-coded to the
+ * table's length would index a tile that is not there the day a slot is added
+ * or withdrawn, which on this page happens.
+ *
+ * With two tiles a shuffle has exactly one alternative to reading order, and
+ * taking it is the whole intent — there is nothing to vary between them.
+ */
+const LAY_SEED = {
+  today: 4,
+  openResearch: 32,
+  precinct: 2,
+  diptych: 2,
+} as const;
 
 /** The strip arrives as one pull, so its cells are ~50ms apart, not ~100ms. */
 const STRIP_STEP = 0.012;
@@ -143,6 +193,84 @@ function brightenAt(
     targets,
     { dim: M1_DIM, duration: Math.max(0.01, to - from), ease: "none" },
     from,
+  );
+}
+
+/**
+ * The montage cut. Grammar: "the world opening, laid by hand, Truth montage
+ * cut" (15 September 2026, user direction), which supersedes the brightness
+ * arrival above for /truth's fields of photographs.
+ *
+ * This is the homepage's offer-plate reveal, not a second implementation of
+ * it: `frameOpen` with the plane pinned, the effect generalised in place to
+ * take a vertical axis (effects/media.ts). `scale: 1` is the frame-grade pin —
+ * the window travels, the picture inside it never does — which is what makes
+ * the cut legal on `frame`-graded tiles as well as `full` ones. `ease: "none"`
+ * because every beat in this file is scrubbed and the reader sets the pace.
+ *
+ * ⚠ THE CLOSED STATE IS SEATED AT THE TOP OF THE PARENT, NOT LEFT TO THE
+ * EFFECT'S OWN FROM-STATE. `frameOpen` builds a NESTED timeline, and a nested
+ * `fromTo` positioned a third of the way into a scrubbed parent cannot be
+ * relied on to have rendered its from-state before the playhead arrives — the
+ * homepage's offer plates shipped fully open for one build for exactly this
+ * reason, and the comment recording it is in effects/home.ts. Zero duration,
+ * so it reverses with everything else.
+ */
+function wipeAt(
+  timeline: gsap.core.Timeline,
+  tile: HTMLElement,
+  from: number,
+  length: number,
+  edge: FrameEdge,
+) {
+  timeline.set(tile, { clipPath: CLOSED_CLIP[edge] }, 0);
+  timeline.frameOpen(
+    tile,
+    { edge, scale: 1, duration: Math.max(0.01, length), ease: "none" },
+    from,
+  );
+}
+
+/** The from-state for each axis. `frameOpen` builds the same strings. */
+const CLOSED_CLIP: Record<FrameEdge, string> = {
+  center: "inset(16% 12% 16% 12%)",
+  left: "inset(0% 100% 0% 0%)",
+  right: "inset(0% 0% 0% 100%)",
+  top: "inset(0% 0% 100% 0%)",
+  bottom: "inset(100% 0% 0% 0%)",
+};
+
+/**
+ * Which edge each tile in a field is already against.
+ *
+ * The row's rule is that the two axes in the gesture are the two axes in the
+ * grid: a tile with nothing above it unrolls LEFT TO RIGHT, a tile sitting
+ * under another unrolls TOP TO BOTTOM. Opening a tile from a side nothing
+ * borders is the thing this avoids — it reads as a picture arriving from
+ * off-screen rather than as a window opening where it stands.
+ *
+ * "Under another" is measured, not declared: another tile must both end above
+ * this one AND overlap it horizontally. That distinction matters on the
+ * diptychs, where the detail is dropped 21% down its stage but sits BESIDE the
+ * anchor rather than below it — a plain top-comparison would wipe it downward
+ * for a neighbour that is nowhere above it. On TODAY's montage it returns
+ * left · left · top · top, which is the frame read out loud.
+ *
+ * ⚠ MEASURED ONCE, AT BUILD, like every other fraction in this file. A resize
+ * tears the deck down and rebuilds it, which is what re-measures this.
+ */
+function wipeEdges(tiles: HTMLElement[]): FrameEdge[] {
+  const boxes = tiles.map((tile) => tile.getBoundingClientRect());
+  return boxes.map((me, i) =>
+    boxes.some(
+      (other, j) =>
+        j !== i &&
+        other.bottom <= me.top + 1 &&
+        other.right > me.left + 1 &&
+        other.left < me.right - 1,
+    )
+      ? "top"
+      : "left",
   );
 }
 
@@ -319,7 +447,13 @@ const AHEAD = {
   copyAt: 0,
   copyStep: 0.015,
   copyFor: 0.05,
-  /** The walk along the photographs. */
+  /** The photographs arrive, then the walk moves along them. */
+  layAt: [0, 0.035] as const,
+  /** Short, because the window is short — the walk owns everything after .09,
+      and a clip still opening under a moving focus is two beats on one plate.
+      This is the montage cut's length being set by the beat sheet rather than
+      by its own volume; §02's channel is media either way. */
+  layFor: 0.055,
   walkAt: 0.09,
   walkFor: 0.33,
   /** The precinct goes, then nothing is on screen for a moment. */
@@ -380,6 +514,35 @@ const aheadPhases: Recipe = (timeline, slide) => {
     : [];
 
   if (tiles.length > 1) {
+    /* The pair ARRIVES before it is walked. Grammar: "the world opening, laid
+       by hand, Truth montage cut" — the same clip every other field on the
+       page now takes, seated so both frames are fully open by `walkAt`, which
+       is when the focus starts moving. The walk is the READ; this is the
+       arrival, and until now the photographs were simply present from the
+       first frame while the copy beside them emerged. The second frame
+       finishes opening exactly as `walkAt` is reached, so the focus never
+       starts travelling along a plate that is still being revealed.
+
+       ⚠ NO SECOND LOUD CHANNEL. §02's declared channel is MEDIA and the walk
+       already spends it; a second media gesture is the same channel doing two
+       things, which F7 permits, and the clip is on the TILE's `clip-path`
+       while the walk writes `--t2-s` / `--t2-o` and truth.css composes the
+       transform — three authors, three properties, none overwriting another.
+       That separation is the standing warning in globals.css and the reason
+       the walk writes custom properties in the first place. */
+    const layEdges = wipeEdges(tiles);
+    const layOrders = layOrder(tiles.length, LAY_SEED.precinct);
+    tiles.forEach((tile, index) => {
+      const slot = layOrders[index] ?? index;
+      wipeAt(
+        timeline,
+        tile,
+        AHEAD.layAt[slot] ?? AHEAD.layAt[AHEAD.layAt.length - 1],
+        AHEAD.layFor,
+        layEdges[index],
+      );
+    });
+
     /* ⚠ REGISTER BOTH PROPERTIES WITH GSAP BEFORE THE WALK TOUCHES THEM.
        `quickSetter` writes straight to the style attribute and keeps no
        record, so `ctx.revert()` in `bindTruthScenes`' teardown would leave the
@@ -458,7 +621,20 @@ const aheadPhases: Recipe = (timeline, slide) => {
 /** §04/§05 TODAY. The plate pushes; the montage is laid down by hand. */
 const todayDeck: Recipe = (timeline, slide) => {
   pushMedia(timeline, slide);
-  layTiles(timeline, slide, MONTAGE_STARTS);
+  /* §05's declared loud channel is MEDIA (scenes.md), so the montage cut plays
+     at full volume here — this screen is the row's home.
+
+     ⚠ AND IT IS THE ONE FIELD ON THE PAGE THAT SITS UNDER THE LEAD-IN. The
+     montage opens 1172px inside a track whose whole travel is 796px, so it
+     does not cross the fold until a third of the way through the read and is
+     not wholly in view until nearly the end of it. Laid against the read's
+     own clock the cut finished before a reader could see any of it; laid into
+     the measured window it plays where they are looking. See
+     `readableWindow`. */
+  layTiles(timeline, slide, MONTAGE_STARTS, {
+    seed: LAY_SEED.today,
+    within: readableWindow(slide, slide.querySelector("#today-fire figure")),
+  });
   todayCrest(timeline, slide);
 };
 
@@ -505,25 +681,179 @@ function todayCrest(timeline: gsap.core.Timeline, slide: HTMLElement) {
   );
 }
 
-/** §18 Still to be found. Same hand, six frames, different unevenness. */
+/** §18 Still to be found. Same hand, five frames, different unevenness. */
 const openResearch: Recipe = (timeline, slide) => {
   pushMedia(timeline, slide);
-  layTiles(timeline, slide, MONTAGE_STARTS_SIX);
+  /* §18's loud channel is TYPE, so the contact sheet takes the quiet setting:
+     the same clip, a shade over half as long, and the plane still pinned. The
+     media channel changes instrument without changing volume, which is what
+     keeps F7 intact on a screen that is already spending its one channel. */
+  layTiles(timeline, slide, MONTAGE_STARTS_SIX, {
+    seed: LAY_SEED.openResearch,
+    length: WIPE_QUIET,
+  });
 };
 
+/**
+ * Lay a field of photographs down by hand.
+ *
+ * Grammar: "the world opening, laid by hand, Truth montage cut". Two things
+ * are in play and they are deliberately separate:
+ *
+ *   · WHEN — the uneven offsets in `starts`, which are the fixed hand-written
+ *     constants the older brightness row already ratified. Evenly spaced
+ *     arrivals read as a slideshow; these do not, and nothing here changes
+ *     them.
+ *   · WHICH — `layOrder`, a seeded permutation saying which tile takes which
+ *     of those offsets. Laying a grid in its own reading order reads as a
+ *     mechanical sweep, which is the same failure the unevenness was written
+ *     against. Seeded and pure, so a reload, a screenshot and a rebuild after
+ *     a resize all lay the same order, and the reverse scrub retraces it
+ *     because the order lives in timeline positions rather than in a replay.
+ *
+ * `data-truth-tile` carries the LAYING order, which is not always DOM order
+ * (TODAY's montage reads down two columns and states its own sequence), so the
+ * permutation is indexed by that attribute and not by position in the query.
+ */
 function layTiles(
   timeline: gsap.core.Timeline,
   slide: HTMLElement,
   starts: readonly number[],
+  options: {
+    seed: number;
+    length?: number;
+    shuffle?: boolean;
+    /** Lay the field inside the stretch of the read where it is on screen.
+        See `readableWindow` — only the fields that sit below a lead-in need
+        it, and passing nothing keeps the offsets exactly as written. */
+    within?: { from: number; to: number } | null;
+  },
 ) {
-  query<HTMLElement>(slide, "[data-truth-tile]")
-    .filter((tile) => !isHeld(tile))
-    .forEach((tile) => {
-      const order = Number(tile.dataset.truthTile ?? 0);
-      const from = starts[order] ?? starts[starts.length - 1];
-      brightenAt(timeline, [tile], from, from + MONTAGE_LENGTH);
-    });
+  const tiles = query<HTMLElement>(slide, "[data-truth-tile]").filter(
+    (tile) => !isHeld(tile),
+  );
+  if (!tiles.length) return;
+
+  const { seed, length = WIPE_LOUD, shuffle = true, within = null } = options;
+  const order = shuffle
+    ? layOrder(tiles.length, seed)
+    : tiles.map((_, index) => index);
+  const edges = wipeEdges(tiles);
+
+  /* The offsets are written against a read that starts with the field already
+     in front of the reader. Where that is not true, the same rhythm is mapped
+     into the window where it IS true — proportionally, so the unevenness that
+     the row is built on survives the move; only its scale changes. */
+  const extent = Math.max(...starts) + length;
+  const scale = within
+    ? Math.max(0, within.to - within.from) / Math.max(0.0001, extent)
+    : 1;
+  const base = within ? within.from : 0;
+  const floors = within ? tileEntries(slide, tiles) : null;
+
+  tiles.forEach((tile, position) => {
+    const index = Number(tile.dataset.truthTile ?? position);
+    const slot = order[index] ?? index;
+    const written = starts[slot] ?? starts[starts.length - 1];
+    const from = base + written * scale;
+    /* ⚠ A TILE MAY NOT OPEN BEFORE IT CAN BE SEEN. The seeded order says which
+       tile is laid when; geometry says the earliest moment each one is in
+       front of the reader. Where they disagree the geometry wins, because a
+       clip that finishes below the fold has not been shown — it has been
+       spent. This is a floor and not the usual case: on TODAY's real grid at
+       1440 the mapped offsets already clear every entry, so nothing is moved
+       and the seeded order is exactly the order that plays. It bites only
+       when a field is taller than the travel it has left, which is the
+       failure this whole window was added for. */
+    const floor = floors?.[position] ?? 0;
+    wipeAt(timeline, tile, Math.max(from, floor), length * scale, edges[position]);
+  });
 }
+
+/**
+ * When each tile first crosses the fold, as a fraction of its slide's read.
+ *
+ * Measured the way `todayCrest` measures its own crossing, from the same two
+ * numbers and for the same reason: the deck track opens a `pt-[100svh]` lead
+ * below the plate, so a field sitting under that lead is off screen for the
+ * front of the read. A tile at `T` inside the track is in view once the track
+ * has travelled `T - slideHeight`.
+ *
+ * Returns zeroes when there is no track to measure against, which makes every
+ * floor a no-op rather than a guess.
+ */
+function tileEntries(slide: HTMLElement, tiles: HTMLElement[]): number[] {
+  const track = slide.querySelector<HTMLElement>("[data-truth-deck-track]");
+  const travel = track
+    ? Math.max(0, track.scrollHeight - slide.clientHeight)
+    : 0;
+  if (!track || travel <= 0) return tiles.map(() => 0);
+  const trackTop = track.getBoundingClientRect().top;
+  return tiles.map((tile) => {
+    const top = tile.getBoundingClientRect().top - trackTop;
+    return Math.min(1, Math.max(0, (top - slide.clientHeight) / travel));
+  });
+}
+
+/**
+ * The stretch of a slide's read in which a field is actually in front of the
+ * reader — the window `layTiles` lays into.
+ *
+ * ⚠ THIS EXISTS BECAUSE THE CUT SHIPPED SPENT (15 September 2026, reported
+ * against §05). The montage cut replaced a brightness arrival, and the two
+ * fail differently when they are seated too early: `brighten` at 0.4 opacity
+ * still shows a photograph, so beats running below the fold cost nothing a
+ * reader notices, and TODAY's offsets had been written under that forgiveness.
+ * A clip wipe has no such tolerance — it is invisible, then it is finished. On
+ * §05 at 1440 every tile was measured at 100% open before the montage had ever
+ * crossed the fold: the wipe played correctly and no reader could ever have
+ * seen it. Measuring the window is the fix; moving the numbers by hand would
+ * only relocate the same assumption.
+ *
+ * `to` stops short of the read's end so the last tile lands before the slide
+ * begins handing off, rather than finishing into the cover.
+ *
+ * ⚠ MEASURED ONCE, at build, like every other fraction in this file. A resize
+ * tears the deck down and rebuilds it, which is what re-measures this.
+ */
+function readableWindow(
+  slide: HTMLElement,
+  field: HTMLElement | null,
+): { from: number; to: number } | null {
+  const track = slide.querySelector<HTMLElement>("[data-truth-deck-track]");
+  if (!track || !field) return null;
+  const travel = Math.max(0, track.scrollHeight - slide.clientHeight);
+  if (travel <= 0) return null;
+  const top = field.getBoundingClientRect().top - track.getBoundingClientRect().top;
+  const enters = (top - slide.clientHeight) / travel;
+  /* Already in front of the reader when the read opens — the offsets as
+     written are correct and nothing is remapped. */
+  if (enters <= 0) return null;
+  return { from: Math.min(0.75, enters), to: LAY_WINDOW_END };
+}
+
+/** The lay is finished before the slide starts handing off. */
+const LAY_WINDOW_END = 0.95;
+
+/**
+ * §10 2020 and §11 2019 — the two diptychs.
+ *
+ * They had no interior beat at all until 15 September 2026: neither frame
+ * carried `data-truth-tile`, so a pair of photographs on a pinned screen
+ * simply sat there while the copy arrived. They are fields of more than one
+ * picture, so the montage cut is theirs too.
+ *
+ * Quiet setting both times, and for two different reasons — §10's loud channel
+ * is TRANSITION (it carries the brown ground hand-off) and §11's is TYPE. The
+ * detail is dropped down its stage but sits beside the anchor rather than
+ * under it, so `wipeEdges` gives both frames the left axis; see its note.
+ */
+const diptych: Recipe = (timeline, slide) => {
+  layTiles(timeline, slide, DIPTYCH_STARTS, {
+    seed: LAY_SEED.diptych,
+    length: WIPE_QUIET,
+  });
+};
 
 /**
  * §07 Research & discovery. Six frames arrive left to right fast enough to
@@ -533,10 +863,22 @@ function layTiles(
 const researchStrip: Recipe = (timeline, slide) => {
   const strip = slide.querySelector<HTMLElement>("[data-truth-strip]");
   if (!strip || isHeld(strip)) return;
-  query<HTMLElement>(strip, "[data-truth-tile]").forEach((tile) => {
-    const order = Number(tile.dataset.truthTile ?? 0);
+  const tiles = query<HTMLElement>(strip, "[data-truth-tile]").filter(
+    (tile) => !isHeld(tile),
+  );
+  const edges = wipeEdges(tiles);
+  /* ⚠ THE ONE FIELD ON THE PAGE THAT IS NOT SHUFFLED. Everywhere else a
+     reading-order lay reads as a mechanical sweep and the seeded order is the
+     fix; here the order IS the meaning — "six frames arrive left to right fast
+     enough to read as one strip pulled across" is its own grammar row, and
+     shuffling it would delete the row rather than improve it. The clip cut
+     suits it better than the brightness it replaces, because a strip pulled
+     across is exactly what a left-edge wipe draws. Quiet setting: §07's loud
+     channel is type. */
+  tiles.forEach((tile, position) => {
+    const order = Number(tile.dataset.truthTile ?? position);
     const from = STRIP_FROM + order * STRIP_STEP;
-    brightenAt(timeline, [tile], from, from + STRIP_LENGTH);
+    wipeAt(timeline, tile, from, STRIP_LENGTH, edges[position]);
   });
   timeline.fromTo(
     strip,
@@ -1034,6 +1376,9 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "[data-truth-card]", recipe: aheadPhases },
   { match: "#today-fire", recipe: todayDeck },
   { match: "#research-discovery", recipe: researchStrip },
+  /* The two diptychs. Listed by anchor, like every other row here. */
+  { match: "#renamed", recipe: diptych },
+  { match: "#just-us", recipe: diptych },
   { match: "#break-country-now", recipe: breakDissolve },
   { match: "#father", recipe: testimony },
   { match: "#art-gallery", recipe: nineteenFifties },

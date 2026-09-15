@@ -518,7 +518,17 @@ function Diptych({
         {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
         className="grid gap-6 sm:grid-cols-[539fr_359fr] sm:items-start"
       >
-        <div className="relative aspect-539/341 overflow-hidden rounded-3xl">
+        {/* `data-truth-tile` carries the laying order for the montage cut
+            ("the world opening, laid by hand, Truth montage cut", 15 September
+            2026). Added here because the pair had no interior beat at all:
+            neither frame was claimed by any recipe, so two photographs on a
+            pinned screen simply sat there while the copy arrived. The order is
+            shuffled from a seed in truth-scenes.ts, not taken from this file —
+            the attribute states the sequence, the module chooses it. */}
+        <div
+          data-truth-tile="0"
+          className="relative aspect-539/341 overflow-hidden rounded-3xl"
+        >
           <MediaOrField
             src={presentSrc(anchor.src)}
             alt={anchor.expects}
@@ -551,7 +561,10 @@ function Diptych({
         </div>
         {/* The detail drops 80px on the 342-high stage (~23%) — self-start
             plus a top margin, so it never stretches to the anchor's height. */}
-        <div className="relative aspect-359/270 overflow-hidden rounded-3xl sm:mt-[21%]">
+        <div
+          data-truth-tile="1"
+          className="relative aspect-359/270 overflow-hidden rounded-3xl sm:mt-[21%]"
+        >
           <MediaOrField
             src={presentSrc(detail.src)}
             alt={detail.expects}

@@ -33,6 +33,37 @@ export function assertEase(name: string, ease: unknown): void {
 export const noise = (i: number) =>
   Math.abs((Math.sin(i * 12.9898) * 43758.5453) % 1);
 
+/**
+ * A seeded lay order for a field of tiles.
+ *
+ * Returns a permutation of 0…count-1: read it as "the tile at index `n` takes
+ * the `order[n]`-th arrival slot". Grammar: "the world opening, laid by hand,
+ * Truth montage cut" — laying a grid in reading order reads as a mechanical
+ * sweep, which is the same failure the older "laid by hand" row was written
+ * against, and shuffling the order is what restores the hand.
+ *
+ * ⚠ SEEDED, AND THE SEED IS THE WHOLE POINT. A pure function of (count, seed)
+ * through `noise` above, so a reload, a screenshot test, a reviewer's machine
+ * and a deck rebuild after a resize all lay the SAME order. `Math.random()`
+ * here would make every screenshot flap and two reviewers see two designs —
+ * the rule `noise` and JITTER already state, applied to order rather than to
+ * offset.
+ *
+ * Reversibility is free and does not belong here: callers bake the order into
+ * positions on a scrubbed timeline, so scrolling back up retraces it exactly
+ * rather than replaying anything.
+ *
+ * Fisher–Yates, walked backwards, drawing each swap index from `noise`.
+ */
+export const layOrder = (count: number, seed = 0): number[] => {
+  const order = Array.from({ length: Math.max(0, count) }, (_, i) => i);
+  for (let i = order.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(noise(seed * 101 + i * 7 + 1) * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return order;
+};
+
 /** First element of whatever a caller passed as targets. */
 export const first = (targets: object) =>
   gsap.utils.toArray<HTMLElement>(targets)[0];
