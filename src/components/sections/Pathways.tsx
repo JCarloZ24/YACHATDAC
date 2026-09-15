@@ -46,6 +46,10 @@ import "./pathways.css";
  * own scroll then carries the track right to bring it in. One scroll, one
  * direction of input: there is no separate swipe to discover, which is the
  * point of it being on the canvas at all.
+ *
+ * ⚑ Below lg that is reversed, 15 September 2026, user direction: on phones
+ * and tablets the row is swiped (a native snap scroller, pathways.css) and the
+ * page's scroll no longer carries it. Desktop is unchanged.
  */
 export function Pathways() {
   return (

@@ -35,8 +35,8 @@
    as well: browser chrome must not hide the links on a shorter phone.
 
    Shared grid rows keep all four images and CTAs aligned to the longest
-   copy. The existing scroll-driven horizontal travel still measures this
-   same track; nothing here introduces another scrolling surface. */
+   copy. (The note that this added no scrolling surface was true until
+   15 September 2026 — see the swipe rule below.) */
 @media (width < 64rem) {
   .home-pathways-panel {
     height: 100svh;
@@ -50,6 +50,27 @@
     min-height: 0;
     margin-top: 24px;
   }
+
+  /* ⚑ SWIPED, 15 September 2026, user direction: below lg the row is a
+     native scroller again, one card per swipe, and homeHeroDissolve no longer
+     carries the track at this width (its x resolves to 0), so the transform
+     and the scroll position never move the cards together. overflow-y stays
+     hidden for the pop padding; vertical pans still go to the page. The snap
+     lands each card on the 20px viewport margin. */
+  .home-pathways-mask {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.25rem;
+    scrollbar-width: none;
+  }
+  .home-pathways-mask::-webkit-scrollbar { display: none; }
+  /* max-content: a track only as wide as the mask lets its cards overflow it,
+     and overflowing children do not carry the parent's trailing padding into
+     the scroll range — the last card came to rest flush on the right edge.
+     Sized to its cards, the pr-5 is inside and the row ends on the margin. */
+  [data-pathways-track] { width: max-content; }
+  [data-pathway-card] { scroll-snap-align: start; }
 
   [data-pathways-track] {
     height: 100%;

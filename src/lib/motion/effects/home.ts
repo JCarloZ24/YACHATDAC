@@ -472,11 +472,24 @@ export function registerHome(): void {
       // against on the right is the track's own trailing padding, and it is
       // inside scrollWidth — so the space at either end is stated once, in
       // the markup, and this stays a single subtraction.
+      //
+      // ⚑ SWIPED BELOW LG, 15 September 2026, user direction ("instead of
+      // scrolling up and down to see other cards, just make it swipable" —
+      // mobile only, desktop untouched). Below 1024 the mask is a native snap
+      // scroller (pathways.css), so the track must not also be carried: x
+      // resolves to 0 there and the 1.8 units become part of the held screen
+      // the reader swipes in. The duration is kept rather than branched so a
+      // tablet rotating across 1024 keeps a timeline that fits either width;
+      // `invalidateOnRefresh` re-reads this on every resize. Going up to lg,
+      // the mask's scroll position is cleared, since it is `overflow: hidden`
+      // there and would otherwise silently offset the carried track.
       const track = root.querySelector<HTMLElement>("[data-pathways-track]");
       timeline.to(track, {
         x: () => {
           const mask = track?.parentElement;
           if (!mask || !track) return 0;
+          if (root.clientWidth < 1024) return 0;
+          mask.scrollLeft = 0;
           const gutter = parseFloat(getComputedStyle(mask).paddingLeft) || 0;
           return Math.min(0, mask.clientWidth - gutter - track.scrollWidth);
         },
