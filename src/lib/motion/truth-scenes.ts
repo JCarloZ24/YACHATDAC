@@ -697,29 +697,15 @@ const nineteenFifties: Recipe = (timeline, slide) => {
     CROSS_AT,
   );
 
-  // THE RAIL CARRIES THIS ERA'S NAME, so the light goes out of it too (user,
-  // 11 September 2026). "1950s / ADMIRED UNDER THE WRONG NAME" is the band's
-  // own gutter block, copied onto the traveller — but the traveller is a
-  // sibling of the section, not a descendant, so the `color: var(--truth-ink)`
-  // above never reached it and the label sat burnt-deep on charcoal at 1.4:1
-  // for the second half of the band. Same crossover, same step, same
-  // argument: the colour drains out of the labels as the light goes out.
-  //
-  // Written inline on the traveller's nodes, which are shared by every era;
-  // the deck clears them on the next slide change (`setRailLabel`), because a
-  // scrub that has been left behind cannot undo itself.
-  const railLabels = query<HTMLElement>(
-    document,
-    "[data-truth-trail-label], [data-truth-trail-sub]",
-  );
-  if (railLabels.length) {
-    timeline.fromTo(
-      railLabels,
-      { color: CHARCOAL },
-      { color: CANVAS, ease: "none", duration: 0.004 },
-      CROSS_AT,
-    );
-  }
+  // THE RAIL'S OWN STEP LEFT THIS FILE (15 September 2026). This recipe used
+  // to write the same crossover inline onto the traveller's label nodes —
+  // the traveller is a sibling of the section, so `--truth-ink` above never
+  // reached it — and the write stranded: a scrub parked at its end cannot
+  // undo itself, so the colour outlived the era. The finite rail's ink is
+  // now the painter's business — gated-deck's `railDarkAt` flips
+  // `data-rail-dark` on the rail root at this same 0.53 crossover
+  // (`railRampSlide`), and truth.css owns the values. One clock, two
+  // owners, no stranded inline colour.
 
   // AND THE HEADING, which is the dark green of the section above it (client
   // direction, 11 September 2026) rather than the band's travelling ink. It

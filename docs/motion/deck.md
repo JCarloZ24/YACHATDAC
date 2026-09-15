@@ -60,8 +60,9 @@ as far as that track did, parked at the pinned slide's bottom edge, and was then
 1840s rising over it rather than leading it. Two rules it broke: a divider is seated on the
 section it introduces (`scenes.md`, the hero→Ahead note), and a wave inside a
 `[data-truth-deck-viewport]` can never overhang its join because the deck clips that box. It now
-sits on the 1840s article, leading, full-bleed out of the reading column, carrying the
-`data-count-wave` anchor the trail rail measures its restart from.
+sits on the 1840s article, leading, full-bleed out of the reading column, still stamped with the
+`data-count-wave` anchor — which the finite rail (15 September 2026) no longer measures; the
+attribute stays for markup stability only.
 
 **The hand-off scrolls; it does not overlay** (9 September 2026, user direction). A cover used to
 be legible on colour alone: a section was replaced by one arriving in a *different* colour, so
@@ -117,18 +118,29 @@ scrolling now does something other than scroll. Nothing is hidden and nothing is
 
 ## The instrument belongs to the page
 
-About's wave is its gauge. Truth uses the chronology rail instead: the single traveller follows
-the actual lateral wander and tangent of the full-height SVG guide. The hero marker begins below
-its "Start from the beginning" cue; subsequent beats reset to the top and travel to the bottom.
-It remains at the bottom while the 20vh buffer charges, then transfers continuously along the
-SVG guide from the outgoing foot to the incoming head as the cover plays. There is no endpoint
-jump. It carries the era label and its sub at the arrow's tip
-(10 September 2026). The dot is always there; the ARROW and the label belong to the era, drawn out
-of the rosette and faded in on the section's own read and retracted before the cover. A section
-naming no era keeps the dot alone. No number, and still no progress bar. On rewind the inverse is true. The marker's
-read ScrollTrigger fades it over the final fifth of the 1950s, keeps it absent through the
-escarpment and count, and restores it over the opening fifth of the 1840s. It fades permanently
-over the final fifth of Before people. The visible RECORD strand follows the same silences.
+About's wave is its gauge. Truth uses the chronology rail instead — since 15 September 2026 a
+FINITE, STICKY, one-viewport rail (see scenes.md): the single traveller's y is the document's
+scroll fraction mapped piecewise through **chronologically proportional** era anchors (dated
+marks linear by elapsed years, deep time past a declared scale break — 15 September 2026,
+superseding the hand-spaced fixed points), reached through a short critically-damped eased
+follow, and it follows the lateral wander and tangent of the finite SVG guide at the
+smoothed y. It holds while the 20vh buffer charges — the scroll
+is clamped, so the map holds it — and during the cover the scroll itself carries it toward the
+incoming era's anchor. There is no endpoint jump. It carries the era label and its sub at the
+arrow's tip (10 September 2026). The dot is always there; the ARROW and the label belong to the
+era, stamped the moment the hand-off lands — entries are short catches, and once out they
+STAY out: arrow and year persist across seams and label-less sections, withdrawing only for
+full-bleed plate phases and the terminal fade (user direction, 15 September 2026, inverting
+the same morning's seam rule). A year hands to a year — decades included, 2003 → 1950s
+ticks and lands on "1950s" — by counting through the years between them on its own 0.8s
+clock, enlarging and settling as it lands — triggered by the band crossing, never scrubbed
+(same direction). A section naming no era keeps the LAST era on the pointer; only the hero
+rides bare. No number, and still no progress bar. On rewind the inverse is true. Rail and traveller now stay VISIBLE through the 1950s, the
+escarpment and the count (user direction, 15 September 2026): the ink steps to canvas at the
+1950s' 0.53 crossover and back out of the count, and the count's screens hand their eras to
+the pointer — 1902 with "and then further back" as its sub, 1886 at its own figure, the
+testimony retaining 1886 — while their in-section marks go transparent at `lg`. The traveller
+still fades permanently over the final fifth of Before people.
 
 Marc's Wave / Divider remains structural on Truth. It carries the incoming ground with the
 cover; its root receives no GSAP transform. The reusable inner ink takes About's 0.6→1 pull and
@@ -290,4 +302,4 @@ came from the frame:
 
 ---
 
-*Last updated: 10 September 2026 · Reviewed by: —*
+*Last updated: 15 September 2026 · Reviewed by: —*

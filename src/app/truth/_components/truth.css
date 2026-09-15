@@ -69,6 +69,226 @@
 }
 
 /* ---------------------------------------------------------------------------
+   THE FINITE RAIL'S INKS AND END MASKS — user direction, 15 September 2026.
+   Grammar row: "the guide leading the eye, Truth cut".
+
+   The module owns the flag, the stylesheet owns the values (the same
+   agreement as [data-deck-active] above): gated-deck's painter toggles
+   `data-rail-dark` on the rail root when the ground under the sticky rail is
+   charcoal — across the count's three screens, and from the 1950s band's own
+   0.53 luminance crossover, the same instant its type steps — and these
+   custom properties do the rest. The label is NEVER gold: ochre-deep is the
+   page's compliant warm on egg white (the same colour the gutter labels
+   wear), canvas the only readable ink on charcoal.
+
+   The strands are cut at the sticky screen's head and foot under a gradient
+   opacity mask so the finite rail's ends dissolve rather than stop. The
+   stops are the hi-fi frame's own end scrims, measured (frame 05's
+   Rectangles 366/367: 175px tall, solid through 26.44% — ≈46px — then
+   fading out; drawn there as ground-colour overlays on evergreen, drawn
+   here as an alpha mask so the dissolve holds on every ground, including
+   the count's charcoal). The numbers bracket the pointer's travel box —
+   RAIL_TRAVEL_TOP 176 / RAIL_TRAVEL_BOTTOM_INSET 176 in
+   src/lib/motion/truth-rail-map.ts — so the pointer always rides
+   fully-drawn strand: opaque from 175px in to 175px off the foot. Change
+   the travel box and these stops together. */
+[data-truth-trail-rail] {
+  --rail-ink: var(--color-ochre-deep);
+  --rail-ink-sub: var(--color-charcoal);
+  --rail-base-ink: var(--color-charcoal);
+}
+
+[data-truth-trail-rail][data-rail-dark] {
+  --rail-ink: var(--color-canvas);
+  --rail-ink-sub: var(--color-canvas);
+  --rail-base-ink: var(--color-canvas);
+}
+
+/* The pointer's era label has two layouts (user direction, 15 September
+   2026): alone, the year's glyph line centres on the arrow's axis; with a
+   sub-line, the pair stacks — year above, sub below — which is the box's
+   natural flow. The deck flips `data-has-sub` on the box as it stamps the
+   label (gated-deck.ts, setRailLabel); the stack GLIDES between the two on
+   a .25s transform transition — event-driven, never per-frame — and the
+   sub fades in just behind the shift. The lift value compensates both the
+   box's own recentring (its height changes with the sub) and the eyebrow
+   face's high-riding glyphs; it is tuned against a screenshot, not
+   derived. The transform rides the STACK wrapper because the deck's year
+   count owns the label <p>'s transform (scale). */
+[data-truth-trail-label-stack] {
+  transition: transform 0.25s ease;
+}
+[data-truth-trail-label-box]:not([data-has-sub])
+  [data-truth-trail-label-stack] {
+  /* Measured headless at 1440: 5px left the glyph centre 3px under the
+     axis, so 2px is the zero. */
+  transform: translateY(2px);
+}
+[data-truth-trail-sub] {
+  transition:
+    opacity 0.2s ease 0.05s,
+    transform 0.2s ease 0.05s;
+}
+[data-truth-trail-label-box]:not([data-has-sub]) [data-truth-trail-sub] {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+[data-truth-rail-strands] {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 46px,
+    black 175px,
+    black calc(100% - 175px),
+    transparent calc(100% - 46px)
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 46px,
+    black 175px,
+    black calc(100% - 175px),
+    transparent calc(100% - 46px)
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   THE MOBILE TIMELINE'S BOTTOM BAR — user direction, 15 September 2026
+   (superseding the same day's per-era wave rules). Grammar row: "the guide
+   leading the eye, Truth mobile cut".
+
+   The homepage's SCR-10 two-line rail, carried to /truth's viewport foot
+   and styled exactly as home-hero.css styles it: Rail B is the
+   `truth-dotted-path.svg` image bleeding past both edges (width 123.472%,
+   the homepage's own number), Rail A is the SAME artwork recoloured
+   `--color-burnt` through a mask one line below it. ⚠ NEVER SIZED ON BOTH
+   AXES (home-hero.css's 14 September rule): the image takes `height: auto`
+   and the mask box locks to the artwork's own 1778:45 through
+   `aspect-ratio`, so a dot cannot become an ellipse at any viewport. The
+   homepage's `truth-year-marker.svg` arrow (32 × 63, its mobile cut) rides
+   Rail B pointing down at the line, the era's short mark centred above it.
+   The bar rests invisible; truth-mobile-rail.ts reveals it with the
+   chronology, travels the marker, and swaps the year. Word-marks ("Before
+   people") take the smaller face; years the larger. `--rail-ink` steps to
+   canvas over the charcoal bands via the same data flag as the desktop
+   rail. */
+[data-truth-trail-bar] {
+  height: 118px;
+  padding-bottom: env(safe-area-inset-bottom);
+  /* The desktop pointer's own ink (user correction, 15 September 2026:
+     the bar matches the desktop rail, never defaults to charcoal). */
+  --rail-ink: var(--color-ochre-deep);
+  /* The legibility scrim — a straight top-to-bottom gradient, transparent
+     into the standing ground's own colour. A GRADIENT BY EXPLICIT USER
+     DIRECTION (15 September 2026): the second sanctioned exception to the
+     no-gradient rule after the media scrim, recorded in the grammar row. */
+  /* Solid from 30%-off-the-foot down (user direction, 15 September 2026:
+     "even more opaque"): the ramp lives in the top 70%, the stretch the
+     lines and the year actually stand on is full ground. */
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-canvas) 70%
+  );
+}
+[data-truth-trail-bar][data-rail-dark] {
+  --rail-ink: var(--color-canvas);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-charcoal) 70%
+  );
+}
+.truth-bar-line {
+  position: absolute;
+  inset: 0;
+}
+/* Rail B — the marker's line, in ochre. A MASK, not the raw image: the
+   homepage's artwork is baked #FCF7F0 for its dark photography and
+   vanishes on egg white; the same file over a token colour is the exact
+   technique home-hero.css uses for its Rail A. */
+.truth-bar-path {
+  position: absolute;
+  left: -11.7%;
+  bottom: 26px;
+  width: 123.472%;
+  aspect-ratio: 1778 / 45;
+  background-color: var(--color-ochre);
+  mask-image: url("/media/home/derivatives/truth-dotted-path.svg");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url("/media/home/derivatives/truth-dotted-path.svg");
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+}
+.truth-bar-path-a {
+  position: absolute;
+  left: -11.7%;
+  bottom: 6px;
+  width: 123.472%;
+  aspect-ratio: 1778 / 45;
+  background-color: var(--color-burnt);
+  mask-image: url("/media/home/derivatives/truth-dotted-path.svg");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url("/media/home/derivatives/truth-dotted-path.svg");
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+}
+/* The marker anchors at x 0 and the module translates it; children centre
+   on that x so the arrow's tip and the year share the travelling axis. */
+.truth-bar-marker {
+  position: absolute;
+  left: 0;
+  bottom: 30px;
+}
+/* The homepage marker's silhouette as a single-ink stamp — its baked
+   whites vanish on egg white too. It rides `--rail-ink` with the year. */
+.truth-bar-marker-art {
+  position: absolute;
+  left: -16px;
+  bottom: 0;
+  width: 32px;
+  aspect-ratio: 48 / 94;
+  background-color: var(--rail-ink);
+  mask-image: url("/media/home/derivatives/truth-year-marker.svg");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url("/media/home/derivatives/truth-year-marker.svg");
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+}
+/* The homepage's own mobile scale (its years render at ~2rem there —
+   user correction, 15 September 2026). Left-anchored, NO CSS centring:
+   gsap's `x` write replaces the whole resolved transform, so a
+   `translate: -50%` here silently vanished the first frame the module
+   wrote (measured — the labels sat left-shifted by half their width).
+   The module owns centring AND the edge clamp in one number. */
+.truth-bar-year {
+  position: absolute;
+  bottom: 66px;
+  left: 0;
+  width: max-content;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 2rem;
+  line-height: 1;
+  /* The brand orange, not the pointer's ochre-deep (user direction,
+     15 September 2026) — the same `--color-burnt` Rail A below it wears,
+     so the year and its line read as one instrument. Canvas over the dark
+     bands, same as everything else on the bar. */
+  color: var(--color-burnt);
+}
+[data-truth-trail-bar][data-rail-dark] .truth-bar-year {
+  color: var(--color-canvas);
+}
+/* A word-mark is longer than a year and reads at a step down (user
+   direction: "Before people", smaller font — rescaled with the years). */
+.truth-bar-year[data-word] {
+  font-size: 1.25rem;
+  line-height: 1.15;
+}
+
+/* ---------------------------------------------------------------------------
    AND ITS HEADING, for the same reason and on the same gate.
 
    `inkHead` in Sections.tsx is `text-evergreen` for every record on the page,

@@ -48,7 +48,6 @@ export type GatedDeckOptions = {
   runways?: string;
   railTraveller?: string;
   railGuide?: string;
-  firstRailAnchor?: string;
   wave?: string;
   /**
    * A crest hanging below a slide's own foot, rather than overhanging the
@@ -57,10 +56,32 @@ export type GatedDeckOptions = {
    * is the only thing that can carry the change.
    */
   footWave?: string;
-  railHiddenSlides?: string;
-  railFadeOutSlide?: string;
-  railFadeInSlide?: string;
   railTerminalSlide?: string;
+  /**
+   * PAGE PROGRESS → rail fraction, 0–1 (user direction, 15 September 2026).
+   * The finite sticky rail's pointer no longer travels each slide top to
+   * bottom: its y is the document's scroll position through this map — on
+   * /truth the piecewise era-anchor map in truth-rail-map.ts, shared with
+   * the record fill's clip so tip and pointer cannot disagree. Defaults to
+   * the plain document fraction.
+   */
+  railProgress?: (scrollY: number) => number;
+  /** The pointer's travel box inside the sticky rail screen, px. */
+  railTravel?: { top: number; bottomInset: number };
+  /**
+   * Slides whose ground under the sticky rail is dark for their WHOLE read
+   * (the count's screens, the escarpment break between them). The painter
+   * flips `data-rail-dark` on the rail root there — the rail stays VISIBLE
+   * on the dark bands (user direction, 15 September 2026); truth.css owns
+   * the ink values.
+   */
+  railDarkSlides?: string;
+  /**
+   * The one slide whose ground WALKS to dark as it is read (Truth's 1950s).
+   * The rail's ink steps at that band's own luminance crossover, the same
+   * instant its type steps — see `nineteenFifties` in truth-scenes.ts.
+   */
+  railRampSlide?: string;
   /**
    * Where a slide states the era the traveller is pointing at, and its sub.
    * A slide with no match gets NO traveller: the pointer and the label are one
@@ -68,6 +89,14 @@ export type GatedDeckOptions = {
    */
   railLabel?: string;
   railLabelSub?: string;
+  /**
+   * Cuts a slide's era string down to the mark the rail prints. The gutter
+   * block the string is read from carries the FULL line ("Before people ·
+   * about 100 million years ago" — that is its job in the section); the
+   * pointer's label wears only the short mark, so the caller passes the cut
+   * (/truth passes truth-rail-map's `shortMark`). Identity when omitted.
+   */
+  railLabelText?: (text: string) => string;
   siteHeader?: string;
   bufferVh?: number;
   openingReadVh?: number;
@@ -167,14 +196,30 @@ const TILT_RATIO = POINTER_TILT_DEG / TANGENT_SPAN_DEG;
  * rail goes under entirely, has no mark at all.
  */
 const ROSETTE_CUT = 54.2;
-/** Share of a read span the tail spends growing, and again retracting. */
-const TAIL_RAMP = 0.12;
-/** The label follows the arrow out and leaves before it. */
-const LABEL_RAMP = 0.15;
-const LABEL_DELAY = 0.06;
+/** ENTRIES ARE CATCHES, AND ONCE OUT THE POINTER STAYS OUT (user direction,
+ * 15 September 2026, twice in one day: the morning removed the entry ramps,
+ * the afternoon removed the exits too — grammar row "the guide leading the
+ * eye, Truth cut"). The arrow and its era persist down the whole descent,
+ * across seams and across sections naming no era of their own, withdrawing
+ * only where a full-bleed photograph takes the screen (a plate phase) and
+ * at the terminal fade. The one true entry is the first labelled slide;
+ * everywhere else the pointer arrives already dressed. */
+const TAIL_ENTRY = 0.04;
+const LABEL_ENTRY = 0.06;
+/** Share of a gate cover across which the pointer ramps out (when the cover
+ *  reveals a plate-led slide) or catches back in (leaving one upward). */
+const COVER_WITHDRAW = 0.3;
 
-const rampIn = (p: number, ramp: number, delay = 0) =>
-  clamp01(Math.min((p - delay) / ramp, (1 - p - delay) / ramp));
+/** A YEAR HANDS TO A YEAR BY COUNTING (user direction, 15 September 2026;
+ * grammar row "the guide leading the eye, Truth cut"). When both marks are
+ * year marks — plain years or decades, "1950s" counting by its own numeral
+ * — the label counts through the years between them — down with the
+ * descent, up on rewind — enlarging as the count runs and settling back
+ * as it lands. Triggered at the band crossing, then on its OWN clock: the
+ * scroll decides when, the tween owns the seconds. Never scrubbed. */
+const YEAR_HANDOFF = 0.8;
+const YEAR_HANDOFF_SCALE = 1.3;
+const YEAR_MARK = /^\d{4}s?$/;
 
 /** Binary-searches the full-height rail guide at a document-space y. */
 function pointAtY(path: SVGPathElement, targetY: number) {
@@ -205,15 +250,16 @@ export function createGatedDeck({
   runways: runwaySelector = "[data-truth-slide-runway]",
   railTraveller = "[data-truth-trail-traveller]",
   railGuide = "[data-truth-trail-guide]",
-  firstRailAnchor = "[data-hero-cue]",
   wave: waveSelector = '[data-seam="truth-wave"]',
   footWave: footSelector = '[data-seam="truth-foot-wave"]',
-  railHiddenSlides = '#break-escarpment, [data-truth-ground="count"]',
-  railFadeOutSlide = "#art-gallery",
-  railFadeInSlide = "#mitchell",
   railTerminalSlide = "#seabed",
+  railProgress,
+  railTravel = { top: 176, bottomInset: 176 },
+  railDarkSlides = '#break-escarpment, [data-truth-ground="count"]',
+  railRampSlide = "#art-gallery",
   railLabel = "[data-era-label]",
   railLabelSub = "[data-era-sub]",
+  railLabelText = (text: string) => text,
   siteHeader = "[data-site-header]",
   bufferVh = 20,
   openingReadVh = 20,
@@ -352,7 +398,12 @@ export function createGatedDeck({
               const subNode = traveller?.querySelector<HTMLElement>(
                 "[data-truth-trail-sub]",
               );
-              const firstAnchor = root.querySelector<HTMLElement>(firstRailAnchor);
+              /* The rail's root carries the ink flag the stylesheet reads
+                 (`data-rail-dark`, truth.css). Written only when the state
+                 changes — never per frame. */
+              const railRoot = traveller?.closest<HTMLElement>(
+                "[data-truth-trail-rail]",
+              );
 
               let phase: Phase = "reading";
               let disposed = false;
@@ -367,51 +418,81 @@ export function createGatedDeck({
                  `gsap.ticker` callbacks are not owned by the gsap.context and
                  would otherwise outlive a revert. */
               const welds: Array<() => void> = [];
-              const hiddenRailIndexes = new Set(
+              /* Slides that stand the rail on a dark ground for their whole
+                 read; the 1950s ramp joins them from its own crossover. */
+              const darkRailIndexes = new Set(
                 slides.flatMap((slide, index) =>
-                  slide.matches(railHiddenSlides) ? [index] : [],
+                  slide.matches(railDarkSlides) ? [index] : [],
                 ),
               );
-              // Which slides name an era. The traveller shows on these and
-              // nowhere else — the hero included, which is how it stops
-              // appearing before the chronology has started.
+              const rampRailIndex = slides.findIndex((slide) =>
+                slide.matches(railRampSlide),
+              );
+              /**
+               * A slide's era labels, in reading order. Most slides carry one
+               * (or none — no era, no tail); the count's figures screen
+               * carries TWO, each stamped with the fraction of the read it
+               * belongs to (`data-era-at`), so 1902 and 1886 meet the reader
+               * at their own figures (user direction, 15 September 2026).
+               */
+              const labelSources = slides.map((slide) => {
+                const sources = Array.from(
+                  slide.querySelectorAll<HTMLElement>(railLabel),
+                ).map((el) => ({
+                  el,
+                  at: Number(el.dataset.eraAt) || 0,
+                }));
+                sources.sort((a, b) => a.at - b.at);
+                return sources;
+              });
+              // Which slides name an era of their own. The pointer's arrow
+              // and year PERSIST from the first of these to the terminal
+              // fade (user direction, 15 September 2026) — a slide in
+              // between that names none simply keeps the standing era.
               const labelledIndexes = new Set(
-                slides.flatMap((slide, index) =>
-                  slide.querySelector(railLabel) ? [index] : [],
+                slides.flatMap((_, index) =>
+                  labelSources[index].length ? [index] : [],
                 ),
               );
+              /* The chronology's first voice — before it (the hero) the
+                 pointer rides bare, and rewinding above it clears. */
+              const firstLabelledIndex = slides.findIndex((_, index) =>
+                labelledIndexes.has(index),
+              );
+              const labelBandAt = (index: number, progress: number) => {
+                const sources = labelSources[index];
+                let band = 0;
+                for (let i = 0; i < sources.length; i += 1) {
+                  if (sources[i].at <= progress) band = i;
+                }
+                return band;
+              };
               let labelIndex = -1;
-              const fadeOutRailIndex = slides.findIndex((slide) =>
-                slide.matches(railFadeOutSlide),
-              );
-              const fadeInRailIndex = slides.findIndex((slide) =>
-                slide.matches(railFadeInSlide),
-              );
+              /* The gate cover currently being tracked for the era stamp —
+                 the seam stamps the INCOMING era as soon as the hand-off
+                 commits, so the year count plays WITH the deck transition
+                 rather than after it lands (user direction, 15 September
+                 2026). Cleared on every reading paint so a fresh crossing
+                 always re-reads its own direction. */
+              let coverTrack: {
+                index: number;
+                last: number;
+                forward: boolean;
+              } | null = null;
+              let labelBand = -1;
               const terminalRailIndex = slides.findIndex((slide) =>
                 slide.matches(railTerminalSlide),
               );
 
               /** Opacity is derived only from a slide's read ScrollTrigger.
-               * The rail silence begins before the 1950s cover, spans the
-               * escarpment/count, and reverses during the 1840s opening. */
+               * The rail no longer goes silent across the dark bands (user
+               * direction, 15 September 2026) — it swaps ink instead, see
+               * `railDarkAt`. The one remaining fade is the permanent one:
+               * out over the final fifth of Before people, absent for the
+               * Wattanuri floor, because a rail that IS the descent must not
+               * run past it (D20). */
               const railOpacityAt = (index: number, progress: number) => {
                 const p = clamp01(progress);
-                // A section with no era keeps its DOT; what it loses is the
-                // tail and the label (see tailAt / labelAt). The only mark
-                // that goes entirely is the 1902 band's, where the strand
-                // itself goes under.
-                if (hiddenRailIndexes.has(index)) return 0;
-                if (index === fadeOutRailIndex) {
-                  // Over the final HALF, not the final fifth. This slide ramps
-                  // its ground from egg white down to charcoal as it is read,
-                  // and the rail floats above it: the label is burnt-deep,
-                  // 6.31:1 on the opening ground and unreadable on the closing
-                  // one. The ink crosses at 0.53, so the guide has to be gone
-                  // by then. The band is the light going out; the guide
-                  // leaving early reads as part of that.
-                  return clamp01((1 - p) / 0.5);
-                }
-                if (index === fadeInRailIndex) return clamp01(p / 0.2);
                 if (index === terminalRailIndex) {
                   return clamp01((1 - p) / 0.2);
                 }
@@ -419,6 +500,32 @@ export function createGatedDeck({
                   return 0;
                 }
                 return 1;
+              };
+
+              /**
+               * Is the ground under the sticky rail dark here? The count's
+               * screens (and the escarpment break between them) for their
+               * whole read; the 1950s from its own 0.53 crossover — the same
+               * instant the band's type steps (`nineteenFifties`,
+               * truth-scenes.ts). A STEP, not a tween: walked across, ink
+               * and ground meet in the mid-greys and vanish.
+               */
+              const INK_CROSS = 0.53;
+              const railDarkAt = (index: number, progress: number) => {
+                if (darkRailIndexes.has(index)) return true;
+                if (index === rampRailIndex) {
+                  return clamp01(progress) >= INK_CROSS;
+                }
+                return false;
+              };
+
+              /* The flag write — cheap, and only on change. */
+              let railDarkState: boolean | null = null;
+              const paintRailInk = (dark: boolean) => {
+                if (dark === railDarkState || !railRoot) return;
+                railDarkState = dark;
+                if (dark) railRoot.dataset.railDark = "true";
+                else delete railRoot.dataset.railDark;
               };
 
               /**
@@ -437,47 +544,77 @@ export function createGatedDeck({
               const afterCover = (index: number, p: number, ramp: number, delay = 0) =>
                 clamp01((p - coverFractions[index] - delay) / ramp);
 
-              /** How far the tail is drawn out, 0 → 1. No era, no tail. */
-              const tailAt = (index: number, progress: number) => {
-                if (!labelledIndexes.has(index)) return 0;
+              /**
+               * How dressed the pointer is on a slide's read, 0 → 1 —
+               * PERSISTENT (user direction, 15 September 2026): once the
+               * first labelled slide has caught, arrow and era ride every
+               * read at 1 — labelled or not — and withdraw only across a
+               * plate phase (`afterCover`: hidden while the full-bleed
+               * photograph holds the screen, caught again once the record
+               * covers it) and at the terminal fade, which the traveller's
+               * own opacity carries. The entry catch survives only at the
+               * chronology's first voice; the tail's runs a beat ahead of
+               * the label's, so the arrow still arrives before its words.
+               */
+              const pointerAt = (
+                index: number,
+                progress: number,
+                entry: number,
+              ) => {
+                if (firstLabelledIndex < 0 || index < firstLabelledIndex)
+                  return 0;
                 const p = clamp01(progress);
-                return coverFractions[index] > 0
-                  ? afterCover(index, p, TAIL_RAMP)
-                  : rampIn(p, TAIL_RAMP);
+                if (coverFractions[index] > 0)
+                  return afterCover(index, p, entry);
+                if (index === firstLabelledIndex) return clamp01(p / entry);
+                return 1;
               };
+              const tailAt = (index: number, progress: number) =>
+                pointerAt(index, progress, TAIL_ENTRY);
+              const labelAt = (index: number, progress: number) =>
+                pointerAt(index, progress, LABEL_ENTRY);
+
+              /* The pointer's state at a slide's two boundaries, for the
+                 gate covers: entering a plate-led slide it is hidden (the
+                 photograph is about to take the screen); entering any other
+                 slide past the first era it is already dressed; leaving any
+                 slide past the first era it is dressed (a plate slide ends
+                 covered by its record, `afterCover` holding 1). */
+              const standingAtStart = (index: number) =>
+                firstLabelledIndex >= 0 &&
+                index > firstLabelledIndex &&
+                index < slides.length &&
+                coverFractions[index] === 0;
+              const standingAtEnd = (index: number) =>
+                firstLabelledIndex >= 0 && index >= firstLabelledIndex;
 
               /**
-               * The label's own fade, scrubbed on the section's read.
-               *
-               * Delayed behind the tail at both ends so the arrow arrives
-               * before its words and leaves after them, and finished well
-               * before the cover: a label crossing a seam belongs to neither
-               * section it is over.
+               * PAGE PROGRESS, mapped. The pointer's y inside the sticky rail
+               * screen is the document's scroll position through the caller's
+               * map (on /truth, the piecewise era-anchor map — Ahead at the
+               * head, 2020 near three quarters), inside the travel box the
+               * rail's masks bracket. The scroll clock covers every phase by
+               * construction: a read advances it, the hold clamps it, and a
+               * playing cover is itself a scroll.
                */
-              const labelAt = (index: number, progress: number) => {
-                if (!labelledIndexes.has(index)) return 0;
-                const p = clamp01(progress);
-                return coverFractions[index] > 0
-                  ? afterCover(index, p, LABEL_RAMP, LABEL_DELAY)
-                  : rampIn(p, LABEL_RAMP, LABEL_DELAY);
-              };
-
-              const rootDocumentTop = () =>
-                root.getBoundingClientRect().top + window.scrollY;
-
-              const railBounds = (index: number) => {
-                const defaultTop = window.innerHeight * 0.1;
-                const bottom = window.innerHeight - 28;
-                const anchoredTop = firstAnchor
-                  ? firstAnchor.getBoundingClientRect().bottom + 16
-                  : defaultTop;
-                return {
-                  top:
-                    index === 0
-                      ? Math.min(Math.max(anchoredTop, defaultTop), bottom)
-                      : defaultTop,
-                  bottom,
-                };
+              const railFractionAt =
+                railProgress ??
+                ((scrollY: number) =>
+                  clamp01(
+                    scrollY /
+                      Math.max(
+                        1,
+                        document.documentElement.scrollHeight -
+                          window.innerHeight,
+                      ),
+                  ));
+              const railTravelBox = () => {
+                const top = railTravel.top;
+                const bottom = Math.max(
+                  top + 1,
+                  window.innerHeight - railTravel.bottomInset,
+                );
+                return { top, span: bottom - top };
               };
 
               const announce = (
@@ -490,37 +627,173 @@ export function createGatedDeck({
               };
 
               /**
-               * Put the active slide's era on the pointer.
+               * Put an era on the pointer.
                *
-               * Called on slide change only — never per frame. The strings are
-               * read straight out of the section's own gutter block, so there
-               * is one source for what the era is and no second copy to drift.
-               * Whether the words are actually VISIBLE is `labelAt`'s business,
-               * scrubbed on the read; this only decides what they say.
+               * Called on slide or band change only — never per frame. The
+               * strings are read straight out of the section's own gutter
+               * block (or, on the count's figures screen, the figure's own
+               * year term), so there is one source for what the era is and no
+               * second copy to drift. Whether the words are actually VISIBLE
+               * is `labelAt`'s business, scrubbed on the read; this only
+               * decides what they say.
+               *
+               * Colour is deliberately NOT touched here. The label rides the
+               * rail root's `--rail-ink` custom properties, stepped by
+               * `paintRailInk` — the inline colour write the 1950s recipe
+               * used to leave stranded is gone with the recipe's tween
+               * (15 September 2026), and an inline write here would now be
+               * clobbering the component's own `var(--rail-ink)` style.
                */
-              const setRailLabel = (index: number) => {
+              /* The year hand-off's running count. One at a time: a new
+                 stamp kills it and, because the count below starts from the
+                 year ON SHOW rather than the band's own year, a reversal
+                 mid-count walks back from wherever it got to. */
+              let yearHandoff: gsap.core.Timeline | null = null;
+              const setRailLabel = (index: number, band: number) => {
                 const slide = slides[index];
-                const source = slide?.querySelector<HTMLElement>(railLabel);
+                const source = labelSources[index]?.[band]?.el;
+                // RETENTION (user direction, 15 September 2026): a slide
+                // naming no era keeps the standing one — text, sub and the
+                // has-sub flag all ride through untouched. Only above the
+                // first labelled slide does the fall-through blank it.
+                if (
+                  !source &&
+                  firstLabelledIndex >= 0 &&
+                  index >= firstLabelledIndex
+                )
+                  return;
                 const sub = slide?.querySelector<HTMLElement>(railLabelSub);
-                const text = source?.textContent?.trim() ?? "";
+                // The gutter holds the full era line; the pointer wears the
+                // short mark (grammar row "the guide leading the eye, Truth
+                // cut" — the caller's cut, /truth's `shortMark`).
+                const text = railLabelText(source?.textContent?.trim() ?? "");
                 if (labelNode) {
-                  labelNode.textContent = text;
                   // A decade reads "1950s", not "1950S" — the eyebrow
                   // uppercases, so a label opening on a digit opts out.
                   labelNode.classList.toggle("normal-case", /^\d/.test(text));
+                  // A YEAR HANDS TO A YEAR BY COUNTING (user direction,
+                  // 15 September 2026). Triggered here — this stamp only
+                  // runs on a band or slide crossing, which is the scroll
+                  // position deciding WHEN — and then on its own clock,
+                  // never scrubbed. It rides textContent and scale, the two
+                  // properties `paintRail` never writes per frame, so the
+                  // painter cannot fight it. The chronology counts; the
+                  // count's FIGURES stay stated and held (figures-of-loss
+                  // ban, untouched).
+                  const shown = labelNode.textContent?.trim() ?? "";
+                  // parseInt, not Number: a decade mark counts by its own
+                  // numeral — "1950s" is 1950 mid-count and lands with its s.
+                  const from = YEAR_MARK.test(shown)
+                    ? Number.parseInt(shown, 10)
+                    : null;
+                  const to = YEAR_MARK.test(text)
+                    ? Number.parseInt(text, 10)
+                    : null;
+                  yearHandoff?.kill();
+                  yearHandoff = null;
+                  if (from !== null && to !== null && from !== to) {
+                    const node = labelNode;
+                    const counter = { year: from };
+                    // Grows away from the arrow's tip, not across it.
+                    gsap.set(node, { transformOrigin: "0% 50%" });
+                    yearHandoff = gsap
+                      .timeline({
+                        onComplete: () => {
+                          node.textContent = text;
+                          yearHandoff = null;
+                        },
+                      })
+                      .to(
+                        counter,
+                        {
+                          year: to,
+                          duration: YEAR_HANDOFF,
+                          ease: "power2.out",
+                          onUpdate: () => {
+                            node.textContent = String(
+                              Math.round(counter.year),
+                            );
+                          },
+                        },
+                        0,
+                      )
+                      .to(
+                        node,
+                        {
+                          scale: YEAR_HANDOFF_SCALE,
+                          duration: YEAR_HANDOFF * 0.45,
+                          ease: "power2.out",
+                        },
+                        0,
+                      )
+                      .to(
+                        node,
+                        {
+                          scale: 1,
+                          duration: YEAR_HANDOFF * 0.55,
+                          ease: "power2.inOut",
+                        },
+                        YEAR_HANDOFF * 0.45,
+                      );
+                  } else {
+                    labelNode.textContent = text;
+                    gsap.set(labelNode, { scale: 1 });
+                  }
                 }
-                if (subNode) subNode.textContent = sub?.textContent?.trim() ?? "";
+                const subText = sub?.textContent?.trim() ?? "";
+                if (subNode) subNode.textContent = subText;
+                // The label box's layout flag: with no sub-line the year
+                // centres on the arrow's axis, with one the pair stacks —
+                // truth.css owns the geometry and the .25s transition (user
+                // direction, 15 September 2026).
+                labelBox?.toggleAttribute("data-has-sub", subText.length > 0);
+              };
 
-                // AN ERA'S OWN STYLING DOES NOT OUTLIVE THE ERA. A section
-                // whose ground changes under the reader may take the rail's
-                // label with it — Truth's 1950s does, because the label is
-                // that band's own era name and burnt-deep on charcoal is
-                // 1.4:1 — and it writes an inline colour to do it. That
-                // section's scrub sits at its end once the reader has left,
-                // so it cannot put the colour back itself. Cleared here, on
-                // the one call that already knows the era has changed.
-                labelNode?.style.removeProperty("color");
-                subNode?.style.removeProperty("color");
+              /* THE EASED FOLLOW (user direction, 15 September 2026 —
+                 "continuous + eased", chosen over park-and-glide). The
+                 chronological map makes some reads long reaches — the 1950s
+                 alone crosses ~29% of the rail — so the position write is no
+                 longer paintRail's: paintRail sets the TARGET each frame and
+                 this ticker weld carries the pointer to it through a
+                 critically-damped lerp, sampling the strand at the SMOOTHED
+                 y so the rosette never leaves the dots. Still scroll-derived
+                 — the target is the map, every frame — and never a scrubbed
+                 tween; settled, it costs one comparison per frame. A
+                 ScrollTrigger refresh snaps it (`snapFollow`): a resize is a
+                 teleport, not travel. */
+              const FOLLOW = 0.12;
+              let followTarget: number | null = null;
+              let followY: number | null = null;
+              const followTick = () => {
+                if (
+                  followTarget === null ||
+                  !traveller ||
+                  !guide ||
+                  !pointer ||
+                  followY === followTarget
+                )
+                  return;
+                const blend =
+                  1 - Math.pow(1 - FOLLOW, gsap.ticker.deltaRatio());
+                followY =
+                  followY === null
+                    ? followTarget
+                    : followY + (followTarget - followY) * blend;
+                if (Math.abs(followTarget - followY) < 0.05) {
+                  followY = followTarget;
+                }
+                const sampled = pointAtY(guide, followY);
+                if (!sampled) return;
+                gsap.set(traveller, { x: sampled.point.x, y: followY });
+                gsap.set(pointer, {
+                  rotation: sampled.rotation * TILT_RATIO,
+                  transformOrigin: "22px 50%",
+                });
+              };
+              welds.push(followTick);
+              gsap.ticker.add(followTick);
+              const snapFollow = () => {
+                followY = followTarget;
               };
 
               const paintRail = (
@@ -529,48 +802,52 @@ export function createGatedDeck({
                 bufferProgress = 0,
                 mode: "reading" | "buffer" | "cover" = "reading",
                 opacityOverride?: number,
-                screenYOverride?: number,
+                coverPointer = 0,
               ) => {
                 if (!traveller || !guide || !pointer) return;
                 const p = clamp01(progress);
                 const buffer = clamp01(bufferProgress);
-                // Keep the artwork inside the viewport: its exported rosette
-                // is wider than its anchor and would clip at literal 0/100.
-                // Truth opens near the foot of the hero copy; later beats
-                // use the regular viewport-safe top. A cover can supply an
-                // explicit y so its destination is the INCOMING beat's top.
-                if (index !== labelIndex) {
-                  labelIndex = index;
-                  setRailLabel(index);
+                // A cover walks progress backwards and its label is hidden
+                // anyway (labelAlpha 0 below), so the band holds — without
+                // this, leaving the count re-stamped 1902 over 1886 mid-seam.
+                // During a cover the SEAM owns the stamp
+                // (paintTransitionRail stamps the incoming era as the
+                // hand-off commits, so the count plays with the transition);
+                // re-deriving the band from the walked-back cover progress
+                // here would immediately restamp the outgoing era over it.
+                if (mode !== "cover") {
+                  coverTrack = null;
+                  const band = labelBandAt(index, p);
+                  if (index !== labelIndex || band !== labelBand) {
+                    labelIndex = index;
+                    labelBand = band;
+                    setRailLabel(index, band);
+                  }
                 }
-                const { top, bottom } = railBounds(index);
-                const screenY =
-                  screenYOverride ?? top + (bottom - top) * p;
-                const guideY = clamp01(
-                  (window.scrollY - rootDocumentTop() + screenY) /
-                    Math.max(root.offsetHeight, 1),
-                ) * root.offsetHeight;
-                const sampled = pointAtY(guide, guideY);
-                if (!sampled) return;
+                // A cover interpolates two slides' grounds, so it makes the
+                // ink call itself (paintTransitionRail); everywhere else the
+                // slide's own clock decides.
+                if (mode !== "cover") paintRailInk(railDarkAt(index, p));
+                // PAGE PROGRESS. The pointer's y ignores the slide clock: it
+                // is the document's scroll position through the map, placed
+                // inside the travel box the end masks bracket. Only the
+                // TARGET is set here — the eased follow above owns the
+                // position write, sampling the guide at its smoothed y.
+                const { top, span } = railTravelBox();
+                followTarget = top + span * railFractionAt(window.scrollY);
 
                 const opacity = opacityOverride ?? railOpacityAt(index, p);
 
-                // The cover is a seam, not a read: the arrow is already back
-                // to a dot and the label already gone before it plays, and
-                // `paintTransitionRail` walks progress backwards, which would
-                // otherwise grow both again halfway across the join.
-                const tail = mode === "cover" ? 0 : tailAt(index, p);
-                const labelAlpha = mode === "cover" ? 0 : labelAt(index, p);
+                // During a gate cover the pointer's dress is the SEAM's call
+                // (`paintTransitionRail`): carried across whole between two
+                // standing slides, ramped out only into a plate.
+                const tail = mode === "cover" ? coverPointer : tailAt(index, p);
+                const labelAlpha =
+                  mode === "cover" ? coverPointer : labelAt(index, p);
 
-                gsap.set(traveller, {
-                  x: sampled.point.x,
-                  y: screenY,
-                  autoAlpha: opacity,
-                });
+                gsap.set(traveller, { autoAlpha: opacity });
                 gsap.set(pointer, {
-                  rotation: sampled.rotation * TILT_RATIO,
                   scale: mode === "buffer" ? 1 + buffer * 0.12 : 1,
-                  transformOrigin: "22px 50%",
                   clipPath: `inset(0% ${((1 - tail) * ROSETTE_CUT).toFixed(2)}% 0% 0%)`,
                 });
                 if (labelBox) gsap.set(labelBox, { autoAlpha: labelAlpha });
@@ -593,16 +870,68 @@ export function createGatedDeck({
 
               const paintTransitionRail = (gate: Gate) => {
                 const progress = clamp01(gate.cover?.progress ?? 0);
-                const outgoing = railBounds(gate.index);
-                const incoming = railBounds(gate.index + 1);
+                // THE SEAM STAMPS THE ERA (user direction, 15 September
+                // 2026: "match the count to the deck transition — it was
+                // animating afterwards"). Direction from the cover's own
+                // motion — first sight of a crossing reads its starting
+                // end (≈0 forward, ≈1 reverse) — then the target era is
+                // stamped at once, so the 0.8s year count runs WITH the
+                // ~0.9s cover instead of after it. paintRail's own stamp is
+                // suspended in cover mode, so nothing overwrites this; a
+                // slide naming no era retains the standing one as usual.
+                const prior =
+                  coverTrack?.index === gate.index ? coverTrack : null;
+                const forward = prior
+                  ? progress === prior.last
+                    ? prior.forward
+                    : progress > prior.last
+                  : progress < 0.5;
+                coverTrack = { index: gate.index, last: progress, forward };
+                const targetIndex = forward ? gate.index + 1 : gate.index;
+                const targetBand = forward ? 0 : labelBandAt(gate.index, 1);
+                if (labelIndex !== targetIndex || labelBand !== targetBand) {
+                  labelIndex = targetIndex;
+                  labelBand = targetBand;
+                  setRailLabel(targetIndex, targetBand);
+                }
+                // The cover is itself a scroll, so the pointer's mapped y
+                // already travels toward the incoming era's anchor, and
+                // opacity crossfades between the two slides' own values. The
+                // ink steps when the cover is half played — by then the
+                // incoming plate is what stands under the rail.
+                paintRailInk(
+                  progress < 0.5
+                    ? railDarkAt(gate.index, 1)
+                    : railDarkAt(gate.index + 1, 0),
+                );
+                // THE POINTER RIDES THE SEAM (user direction, 15 September
+                // 2026): between two slides where it stands, the arrow and
+                // year carry straight across — the year count is what the
+                // reader sees at the hand-off. It ramps out over the first
+                // `COVER_WITHDRAW` of a cover revealing a plate-led slide
+                // (the photograph is about to take the screen), and back in
+                // over the last stretch when the reverse crossing leaves
+                // one. Reverse plays the same progress backwards, so one
+                // expression serves both directions.
+                const outStanding = standingAtEnd(gate.index);
+                const inStanding = standingAtStart(gate.index + 1);
+                const hold =
+                  outStanding && inStanding
+                    ? 1
+                    : outStanding
+                      ? 1 - clamp01(progress / COVER_WITHDRAW)
+                      : inStanding
+                        ? clamp01(
+                            (progress - (1 - COVER_WITHDRAW)) / COVER_WITHDRAW,
+                          )
+                        : 0;
                 paintRail(
                   gate.index,
                   1 - progress,
                   0,
                   "cover",
                   transitionRailOpacity(gate.index, progress),
-                  outgoing.bottom +
-                    (incoming.top - outgoing.bottom) * progress,
+                  hold,
                 );
               };
 
@@ -1246,7 +1575,10 @@ export function createGatedDeck({
                   attributeFilter: ["d"],
                 });
               }
-              const refreshRail = () => syncRail();
+              const refreshRail = () => {
+                snapFollow();
+                syncRail();
+              };
               ScrollTrigger.addEventListener("refreshInit", prepareRunways);
               ScrollTrigger.addEventListener("refresh", refreshRail);
 
@@ -1296,6 +1628,8 @@ export function createGatedDeck({
                 delete root.dataset.deckActive;
                 window.clearTimeout(boot);
                 drain?.kill();
+                yearHandoff?.kill();
+                yearHandoff = null;
                 welds.forEach((fn) => gsap.ticker.remove(fn));
                 welds.length = 0;
                 removeWheel();

@@ -1111,8 +1111,10 @@ function EntryBlock({
           the slide precisely so an incoming crest can overhang upward onto the
           outgoing beat.
 
-          data-count-wave stays on it — TrailRail measures the record strand's
-          restart from this node, and drops to the band top if it vanishes. */}
+          data-count-wave stays on it for markup stability, but nothing
+          measures it any more: the finite sticky rail (15 September 2026) no
+          longer breaks at the count, so the record strand has no restart to
+          measure. */}
       {isMitchell && !withinDeck ? (
         <HandoffWave
           to="canvas"
@@ -1141,17 +1143,26 @@ function EntryBlock({
               the 180px column then collapses and drags every reading column on
               the page 228px to the left. `invisible` keeps the layout but
               drops the text from the accessibility tree, and the rail that
-              replaces it is aria-hidden — so the era would reach nobody. */}
+              replaces it is aria-hidden — so the era would reach nobody.
+
+              BELOW lg THE YEAR CEDES TO THE BOTTOM BAR (user direction,
+              15 September 2026, its second ruling of the day on this block):
+              the mobile timeline bar already wears the era mark at the
+              viewport's foot, so the label here is `max-lg:sr-only` — still
+              the deck's string source and still reaching assistive tech,
+              since the bar is aria-hidden — and only the DESCRIPTION stays
+              visible in the section ("only retain the description"). It
+              used to be `hidden md:block`, then fully visible below md. */}
           {label ? (
             /* self-start: as a grid child this would stretch to the row
                height. `data-era-label` / `data-era-sub` are what the deck
                reads the pointer's strings from — see gated-deck's railLabel. */
-            <div className="hidden self-start pt-2 md:block lg:pointer-events-none lg:opacity-0">
+            <div className="self-start pt-2 lg:pointer-events-none lg:opacity-0">
               {/* normal-case: the eyebrow uppercases, and a decade reads
               "1950s", not "1950S". */}
               <p
                 data-era-label
-                className={`eyebrow text-xl ${accent} ${/^\d/.test(label) ? "normal-case" : ""}`}
+                className={`eyebrow text-xl max-lg:sr-only ${accent} ${/^\d/.test(label) ? "normal-case" : ""}`}
               >
                 {label}
               </p>
@@ -1209,18 +1220,12 @@ function EntryBlock({
                 {kicker ?? whenKicker}
               </p>
             ) : null}
-            {label ? (
-              <div className="mb-6 md:hidden">
-                <p className={`eyebrow ${accent} ${/^\d/.test(label) ? "normal-case" : ""}`}>
-                  {label}
-                </p>
-                {sub ? (
-                  <p className={`mt-1 text-sm font-normal uppercase ${ink}`}>
-                    {sub}
-                  </p>
-                ) : null}
-              </div>
-            ) : null}
+            {/* The below-md label+sub copy that used to live here is GONE
+                (user report, 15 September 2026: duplicate descriptions on
+                mobile). It dated from when the gutter was `hidden md:block`
+                and this was the phone's only era line — the gutter now
+                renders at every width, its sub is the one description, and
+                the bottom bar wears the year. */}
             {titleOnPlate ? null : (
               <h3
                 className={`headline ${inkHead} ${kicker || isPartner || label || whenKicker
@@ -1841,6 +1846,12 @@ export function EraSection({
     return (
       <div data-truth-slide-runway className="relative">
         <section
+          /* The era's own id, which nothing here stamped before: the rail's
+             page-progress map anchors its Ahead mark on `#research`
+             (truth-rail-map.ts) and TrailRail's no-logo fallback measures
+             the same element — both were querying an id that did not exist
+             (15 September 2026). */
+          id={era.id}
           data-truth-slide
           data-truth-slide-label="What is being built and Work with us"
           data-truth-ground="present"
@@ -2030,11 +2041,32 @@ function CountScreen({
  * anywhere other than that review.
  */
 export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
+  /* The pointer's sub line — the marker minus its short mark, the complement
+     of the cut `shortMark` makes client-side (truth-rail-map.ts; this file is
+     a server component and cannot call into that "use client" module).
+     Derived from the content string, never retyped (D5). */
+  const markerSub = suzanne.marker.split(/[,·]/).slice(1).join(",").trim();
   const head = (
     <div className="grid gap-6 md:grid-cols-[180px_1fr] md:gap-12">
-      <p className="eyebrow self-start pt-3 text-h6 text-canvas">
-        {suzanne.marker}
-      </p>
+      {/* THE MARKER LINE RIDES THE POINTER AT `lg` (user direction,
+          15 September 2026): `data-era-label` hands the deck this string —
+          the pointer wears the short cut ("1902") with the remainder as its
+          sub — and the block goes transparent exactly like every other era
+          gutter (`opacity-0`, never `sr-only`: sr-only is position:absolute
+          and collapses the 180px column — see EntryBlock's note). Below `lg`
+          it stays the section's own full era line. */}
+      <div className="self-start pt-3 lg:pointer-events-none lg:opacity-0">
+        <p data-era-label className="eyebrow text-h6 text-canvas">
+          {suzanne.marker}
+        </p>
+        {markerSub ? (
+          /* String source only — the deck reads textContent; the line above
+             already shows the full marker, so this renders to no-one. */
+          <p data-era-sub aria-hidden hidden>
+            {markerSub}
+          </p>
+        ) : null}
+      </div>
       <div>
         <h2 className="headline max-w-4xl text-h2 leading-[1.2] text-oxide">
           {suzanne.title}
@@ -2143,17 +2175,38 @@ export function SuzanneCount() {
   return (
     <CountScreen id="the-count-figures" label="The count" readVh={220}>
       <dl className="space-y-16">
-        {suzanne.figures.map((figure) => (
+        {suzanne.figures.map((figure, index) => (
           <div
             key={figure.year}
             className="grid gap-6 md:grid-cols-[180px_1fr] md:gap-12"
           >
             {/* Same marker column as SuzanneBand, so the two screens line up.
-                `pt-3` seats the eyebrow against the figure's cap height. */}
-            <dt className="eyebrow self-start pt-3 text-h6 text-canvas">
+                `pt-3` seats the eyebrow against the figure's cap height.
+
+                `data-era-label` + `data-era-at`: the rail's traveller reads
+                the count's era marks off these years (user direction,
+                15 September 2026 — the rail no longer goes under here). Two
+                labels on one slide: the deck swaps 1902 for 1886 halfway
+                through the read, so each mark meets the reader at its own
+                figure. AT `lg` THE MARK GOES TRANSPARENT (same user
+                direction, later the same day): the pointer wears it, and a
+                year standing beside the rail that carries it is furniture —
+                `opacity-0`, never `sr-only`, which is position:absolute and
+                would collapse the 180px column (see EntryBlock's note).
+                BELOW `lg` IT IS `sr-only` TOO (the day's third ruling):
+                the bottom bar wears the year there, and a pure year term
+                has no description to retain — the <dl> semantics and the
+                deck's string source both survive, and the <dd>'s explicit
+                `md:col-start-2` keeps the emptied first column from
+                swallowing it at md. */}
+            <dt
+              data-era-label
+              data-era-at={index === 0 ? 0 : 0.5}
+              className="eyebrow self-start pt-3 text-h6 text-canvas max-lg:sr-only lg:pointer-events-none lg:opacity-0"
+            >
               {figure.year}
             </dt>
-            <dd className="max-w-3xl">
+            <dd className="max-w-3xl md:col-start-2">
               <p data-v2-static className="headline text-h1 text-canvas">
                 {figure.figure}
               </p>
@@ -2201,6 +2254,16 @@ export function SuzanneTestimony() {
        finished, so the section is not already handing over to the 1840s while
        she is still being read. */
     <CountScreen id="the-count-testimony" label="Her testimony" readVh={560}>
+      {/* HER TESTIMONY KEEPS 1886 ON THE POINTER (user direction,
+          15 September 2026): the era must not vanish while she is speaking
+          to it — her first quotation opens "In 1886…". String source only:
+          the year is the count's second figure's own term (D5, never
+          retyped), rendered to no-one (`hidden` + aria-hidden — the visible
+          era is the rail's, and her words carry the year themselves); the
+          deck reads textContent for the pointer's label. */}
+      <span data-era-label aria-hidden hidden>
+        {suzanne.figures[1].year}
+      </span>
       <div className="max-w-3xl pb-10 md:pl-[calc(180px+3rem)] lg:py-28">
         {/* The first of these carries the unratified CR4 word. Steve's note of
             7 Sep is explicit that as a bare pull quote it "reads as our copy —
@@ -2306,10 +2369,11 @@ export function HandoffWave({
    */
   bleed?: boolean;
   /**
-   * Stamps `data-count-wave`, which the trail rail measures the record
-   * strand's restart from. Exactly one wave on the page carries it — the
-   * hand-off out of the count — and the rail falls back to the top of the
-   * before-record band if it ever goes missing.
+   * Stamps `data-count-wave`. The document-height rail used to measure the
+   * record strand's restart from it; the finite sticky rail (15 September
+   * 2026) never breaks, so nothing reads the attribute now. It stays for
+   * markup stability — exactly one wave on the page carries it, the
+   * hand-off out of the count.
    */
   railAnchor?: boolean;
 }) {

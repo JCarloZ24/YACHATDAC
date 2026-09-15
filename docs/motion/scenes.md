@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 14 September 2026*
+*Last updated: 15 September 2026*
 
 Home closing-pattern hover, 13 September 2026 (user screenshot, **what radiates**, Home closing ground): the existing two spiral assets respond to mouse position with shallow opposing drift and turn. The headline, offer photographs, original artwork, resting placement and scroll timing do not change. Hover owns inner wrappers; the original ground wrapper still owns the scroll entrance. Input is enabled only once that entrance has seated and the panel is visible, then resets on exit, blur, hidden tab or leaving the beat. Controller teardown removes listeners, observers and tweens. Fine hover pointers only; reduced-motion, touch and failed-canvas fallback remain still.
 
@@ -484,15 +484,34 @@ its record is two sentences and a link, and the phase split means it now arrives
 screen of its own, which is the loudest thing that has ever happened to it. The quiet channel is
 the correct declaration for a screen whose whole job is to be read.
 
-**The rail carries the chronology and the local reading state.** One frame (`2051:5368`) runs
-the full 2229vh, starting below the header and **breaking at the count**. Both strands are
-instanced from Leonard Mickelo's supplied meander — never redrawn, never chopped, never tiled.
-A **gold mask whose height is document scroll** travels over artwork that is itself static. One
-`trail-point` traveller separately reports the current beat. The hero starts below its "Start
-from the beginning" cue; subsequent beats run from the viewport top to its foot. The marker is
-held at the foot while the 20vh buffer charges. During the cover it transfers from the outgoing
-foot to the incoming head while continuing to sample the rendered guide's lateral wander and
-tangent; it never teleports between endpoints.
+**The rail carries the chronology and the local reading state — and it is FINITE and STICKY
+(user direction, 15 September 2026).** This supersedes the document-height strand of 8–14
+September, which ran the full 2229vh and broke at the count. Both strands now stand one
+viewport tall inside the traveller's own sticky screen, cut at the head and the foot under a
+gradient opacity mask so the cut never reads as a cut; the legend rides at the rail's head,
+its hand-set lettering laid along Rail A's own wander (realigned 15 September 2026 — it used
+to sit diagonally across the strand).
+The strands are Rail A (LORE · continuous, left) and Rail B (RECORD, right) from the hi-fi's
+`05 · TODAY montage` frame — the Figma pull landed 15 September 2026: the exported assets are
+committed as `public/artwork/rail-a.svg` / `rail-b.svg` (Figma-exported generated artwork,
+dot fills normalised to a solid stencil so ink stays a CSS custom property; `kit.ts` holds
+the origin), the end masks carry the frame's measured 175px scrims, and the pointer's guide
+is retuned to Rail B's measured wander. The anchor fractions are **chronologically
+proportional** (user direction, 15 September 2026, superseding the same day's hand-spaced
+fixed points): the dated marks 2026 → 1840s sit linearly by elapsed years across the rail's
+middle band — 2003 → 1950s is a long reach, 2026 → 2019 a tight cluster, which is what a
+timeline drawn to scale looks like — and the two undatable deep-time marks sit past a
+declared scale break at the foot (100 million years cannot share a linear axis with 186).
+Computed from the marks' own year strings in `truth-rail-map.ts`. The record fill is still
+**scroll, both directions** — its clip and the traveller's y ride the SAME map, so the
+pointer sits on an era's mark while that era is read and the fill's tip settles to the
+pointer. The traveller's position write is an **eased follow** (same direction): the target
+is scroll-derived every frame and a short critically-damped ticker follow carries the
+pointer to it, sampling the strand at the smoothed y, so the long chronological reaches
+glide rather than jump; a ScrollTrigger refresh or the rewind's landing snaps it. One
+`trail-point` traveller reports the current beat; it is held while the 20vh buffer charges,
+and during a cover the scroll itself carries it toward the incoming era's anchor; it never
+teleports between endpoints.
 
 **It carries the era, from 10 September 2026 (user direction).** The era label and its sub ride at
 the arrow's tip — `●-> Ahead / Within five years` — so the arrow points at something; previously it
@@ -504,24 +523,88 @@ width is measured against the narrowest reading column and it hides below 120px 
 at roughly 1150px wide; the arrow rides alone from there down to the rail's own 1024px floor.
 
 **The mark is always a dot; the ARROW is what belongs to an era.** On a section that names one —
-ten of the eighteen slides, Today included — the tail draws itself out of the rosette left to
-right (`● · ●- · ●-->`) and runs back the same way on the way out, scrubbed on that section's own
-read, and the label fades in just behind it and leaves just before it. On a section that names
-none the dot simply stays and never grows a tail. The one place nothing shows at all is the 1902
-band, where the strand itself goes under.
+the count's screens now included — the tail draws itself out of the rosette left to right
+(`● · ●- · ●-->`) **the moment the hand-off lands**, the label just behind it: entries are
+short catches, a few percent of the read, not reads of their own (user direction, 15 September
+2026 — the year used to arrive a few scrolls into the section, but the reader has already
+ridden the transition, so the era is stamped as it completes). And once out they STAY OUT
+(user direction, 15 September 2026, inverting the same morning's seam rule): the arrow and
+its era persist across seams and across sections that name no era of their own — the
+standing year simply rides through, so the reader is always told where in the chronology
+they are. They withdraw only where a full-bleed photograph takes the screen (a plate phase,
+the runtime `coverFractions` test: ramped out across the first ~30% of a cover revealing a
+plate-led slide, hidden across the plate, caught again once the record covers it) and at
+the terminal fade into Before people. Rewinding above the first era clears them; the hero
+never carries one. With no sub-line the year sits centred on the arrow's axis; when an era
+carries one, the pair animates into the stacked layout (.25s transform transition on the
+box's `data-has-sub` flag — event-driven, never per-frame).
 
-Both the growth and the label's fade are **scroll-derived, and finish inside the section's read**:
-neither runs across a cover, because a label crossing a seam belongs to neither section it is
-over. The arrow's tilt is scaled to ±2° of the strand's ±13.2° tangent — at 96px long it turned
+**A year hands to a year by counting, on its own clock (user direction, 15 September 2026).**
+When both marks are year marks — plain years or decades: 1902 → 1886 at the count's figures,
+the bought-back ladder's 2022 → 2020 → 2019 → 2003, and 2003 → 1950s, which ticks 2003…1951
+and lands on "1950s" — the label counts through the years between them, downward with the
+descent and upward on rewind, enlarging as the count runs and settling back as it lands.
+With the persistence above, every adjacent hand-off is SEEN as a count — the pointer never
+blanks between eras (user direction, 15 September 2026).
+Triggered, never scrubbed — and at the SEAM'S COMMIT: a gate cover stamps the incoming era
+the moment the hand-off commits (direction read off the cover's own motion), so the 0.8s
+count runs WITH the ~0.9s transition rather than after it lands; a band crossing inside one
+slide fires at the crossing. It rides
+`textContent` and `scale`, the two properties the painter never writes per frame, so nothing
+fights it; killed mid-count it re-counts from the year on show. The year is chronology — the
+rail's own subject — not a figure: the count's FIGURES beside it stay stated and held, so the
+figures-of-loss ban is untouched. Non-year marks still swap in place.
+
+**The rail no longer goes under at the count (user direction, 15 September 2026).** Rail and
+pointer stay visible on the dark bands: the count's screens hand their eras to the POINTER —
+the opening screen's own marker line ("1902" cut at its comma, "and then further back" riding
+as the sub), then 1886 meeting the reader at its own figure, and her testimony KEEPS 1886 on
+the pointer for its whole read (user direction, 15 September 2026: the era must not vanish
+while she is speaking to it). The in-section year marks that stood beside the figures go
+transparent at `lg` exactly like every other era gutter — the same `opacity-0`-never-`sr-only`
+treatment, strings still read from those blocks — because a mark the rail already wears is
+furniture beside it. Below `lg` they all stay visible; the bottom bar's marker carries only
+the band's short mark. And the
+rail's ink STEPS at the 1950s' 0.53 luminance crossover, the same instant the band's type
+crosses (burnt-deep/charcoal on egg white, canvas on charcoal; the label is NEVER gold). The
+step belongs to the painter (`railDarkAt` flipping `data-rail-dark`), not to a scene tween: the old inline write from the
+1950s recipe parked at its end and stranded its colour, which is the bug this replaces. The
+traveller still fades permanently over the final fifth of Before people, before the closing
+Wattanuri floor.
+
+The tail's growth and the label's catch are **scroll-triggered**; what crosses a seam now
+crosses it deliberately — the pair rides every seam except one revealing a full-bleed plate,
+where they ramp out first (the 15 September 2026 persistence ruling; the old
+"a label crossing a seam belongs to neither section" holds only for plates). The arrow's tilt is scaled to ±2° of the strand's ±13.2° tangent — at 96px long it turned
 the full tangent into wobble rather than into tracking. Still no progress readout and no count:
 what was banned was a gauge of how far through you are, and the chronology is the thing this rail
-exists to carry. The
-visible strand goes under at the escarpment and the traveller shares that silence: the 1950s read
-ScrollTrigger fades it over its final fifth, it remains absent through the escarpment and count,
-and the 1840s read ScrollTrigger restores it over its opening fifth. It fades permanently over the
-final fifth of Before people, before the closing Wattanuri floor. Under reduced motion the
-traveller is absent. This is G1,
+exists to carry. Under reduced motion the traveller is absent. This is G1,
 **the guide leading the eye**, and `the page holding its ground`, not a timeline mark per era.
+
+**Below `lg` the chronology is the homepage's two-line rail, sticky at the foot of the screen
+(user direction, 15 September 2026 — superseding the same day's per-era wave strips).** One
+persistent instrument, not furniture at each era's head: a bar fixed to the viewport's foot
+carrying the homepage SCR-10 pair in its exact forms — Rail B is `truth-dotted-path.svg`
+bleeding past both edges, Rail A the same artwork a line below, the homepage's
+`truth-year-marker.svg` arrow riding Rail B pointing down at the line with the era's SHORT
+mark above it — every piece an alpha mask over a token colour (no new asset): the homepage
+draws the pair over dark photography and its baked #FCF7F0 dots vanish on egg white, so
+Rail B takes ochre, Rail A burnt, and the marker and its year wear the desktop pointer's
+own `--rail-ink` — ochre-deep on light, canvas over the dark bands (user correction,
+15 September 2026). The section carries "Before people · about 100 million years ago" in full;
+the bar says only "Before people", word-marks a size below the years. The marker's x is page progress,
+LINEAR through the chronology's own extent — the to-scale chronological spacing stays the
+desktop's (user ruling, 15 September 2026: the phone travels by webpage progress) — under
+the same eased follow, and the rosette rides the line's own measured wander
+(y = 20.78 + 16.64·sin(2πx/354 + 1.650), fit off the committed artwork). The era anchors
+still decide which year the arrow points at, swapping on a short crossfade; the words
+clamp inside the viewport at the line's ends; the year sits at the homepage's own mobile
+scale, word-marks a step down. A straight transparent-into-ground scrim backs the bar —
+a gradient sanctioned by explicit user direction (15 September 2026), the second
+exception after the media scrim. Below `lg` the section gutters cede the year to the bar
+("only retain the description"): era labels go `sr-only`, descriptions stay. The bar arrives with the chronology and leaves at the Wattanuri
+floor. Reduced motion never shows it — the same absence as the desktop traveller. See the
+"Truth mobile cut" row in `motion-grammar.md`.
 
 **§15C IS PACED BY THE LINE, 10 September 2026 (user direction).** Her testimony is the
 longest screen on the page and the only one whose read span is derived rather than chosen. The
@@ -564,9 +647,9 @@ exception and it was a bug, corrected 9 September 2026: it sat in flow at the co
 riding the escarpment slide's track, so it stopped when that track stopped and the 1840s covered
 it instead of carrying it. It now leads the 1840s article — the element the deck actually moves —
 and breaks the reading column's width with the same `calc(50% - 50vw)` escape the pinned slide's
-ground uses. The trail rail's restart anchor (`data-count-wave`) moved with it, and is now
-measured through `offsetTop` rather than a viewport rect, so a mid-scroll re-measure can no longer
-read it off a pinned, translated surface.
+ground uses. The trail rail's restart anchor (`data-count-wave`) rode with it while the strand
+still went under at the count; since the finite rail (15 September 2026) the strand no longer
+breaks and nothing measures the attribute — it stays stamped for markup stability only.
 
 *Superseded, kept for the record:* each section used to own its own solid colour and the
 supplied divider carried it down the ladder — evergreen *living present* → roasted brown *the
