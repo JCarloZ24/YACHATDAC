@@ -1,6 +1,6 @@
 # Homepage collage derivatives
 
-*Last updated: 11 September 2026*
+*Last updated: 15 September 2026*
 
 ## Replacement painting
 
@@ -97,3 +97,12 @@ recorded above, capped at 1000px with no master in this repo; an SSIM sweep of a
 images scored ~0.10 against each, i.e. no match. `person-beside-smoking-fire` is 802px and is
 already at its ceiling. Fixing them means re-downloading the fills from node 3371:41740 at full
 resolution.
+
+## Higher-quality foreground, 15 September 2026
+
+Origin: `foreground_v2.webp` supplied by Ivy on 15 September 2026 as a higher-quality encode of
+the Figma foreground layer (node 3371:41347); how it was produced is not recorded. Credit/production method remains unconfirmed.
+It replaces `derivatives/woodland-road-full.webp` as `HOME_PORTAL.src`. Checked first as a pure
+drop-in: 1440x1500 RGBA like the old file, pixel-registered (best match at 0,0, mean luma error
+0.9/255), alpha within 0.1/255, same colour means. Nothing was cropped, resampled or regraded.
+937 KB against 350 KB, inside R11. The old derivative stays on disk, unreferenced.

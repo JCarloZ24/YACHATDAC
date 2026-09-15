@@ -114,9 +114,18 @@ export const HOME_PAINTING = {
  * — treeline, canopy, the sky bands, and the Truth sequence offsets that
  * multiply by a literal 900 — was calibrated against it, so the shader remaps
  * into that space rather than being re-tuned beat by beat. Do not change
- * either number without reading the legacyY note in that file. */
+ * either number without reading the legacyY note in that file.
+ *
+ * ⚑ HIGHER-QUALITY FOREGROUND, 15 September 2026, user direction. `src` now
+ * reads foreground_v2.webp, supplied by Ivy as a cleaner encode of the same
+ * layer. Verified a drop-in before repointing: same 1440×1500 canvas, best
+ * registration at 0,0 offset (mean luma error 0.9/255, next-best 8.9), alpha
+ * matching to 0.1/255, same colour means — so framing, the object-bottom
+ * crop and every legacyY threshold hold unchanged. 937 KB against 350 KB;
+ * still inside R11's 2.5 MB above-fold budget. woodland-road-full.webp stays
+ * on disk as the record and is now unreferenced by the homepage. */
 export const HOME_PORTAL = {
-  src: "/media/home/derivatives/woodland-road-full.webp",
+  src: "/media/home/foreground_v2.webp",
   // ⚠ `sky` is unreferenced since 10 September 2026 (user direction). It was
   // the approximated daylight band the land wore before Truth; every beat now
   // reads the sequence layers below at its frame's own offset, so there is no
