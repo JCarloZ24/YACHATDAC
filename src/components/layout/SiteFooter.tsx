@@ -202,29 +202,35 @@ export function SiteFooter() {
                 (node 2146:3766) per build documentation §5. White type on
                 transparency: dark grounds only. */}
             <div>
+              {/* Phones, 15 September 2026, user direction: below md, where
+                  the lockup sits on a row of its own, it is centred and the
+                  registration block is not shown. md and up are unchanged. */}
               <Image
                 src="/brand/logo-stacked.png"
                 alt={`${org.name} — ${org.legalName}`}
                 width={1990}
                 height={2338}
-                className="w-44"
+                className="w-44 max-md:mx-auto"
               />
 
               {/* Registration — the 21 frame: label, ICN, then ABN with the
-                  R15 flag on the same line. */}
-              <p className="eyebrow mt-6 text-base text-canvas">Registration</p>
-              <p className="mt-4 text-base text-canvas">
-                ICN {registration.icn ?? "[ number ]"}
-              </p>
-              <p className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-sm text-canvas">
-                <span>ABN {registration.abn ?? "[ number ]"}</span>
-                {registration.icn === null || registration.abn === null ? (
-                  <span className="text-canvas/90">
-                    <span className="text-gold">&#9888;</span> R15 &mdash;
-                    registration numbers not yet supplied
-                  </span>
-                ) : null}
-              </p>
+                  R15 flag on the same line. ⚠ Hidden below md (see above):
+                  R15 is still open, it is only not shown on phones. */}
+              <div className="max-md:hidden">
+                <p className="eyebrow mt-6 text-base text-canvas">Registration</p>
+                <p className="mt-4 text-base text-canvas">
+                  ICN {registration.icn ?? "[ number ]"}
+                </p>
+                <p className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-sm text-canvas">
+                  <span>ABN {registration.abn ?? "[ number ]"}</span>
+                  {registration.icn === null || registration.abn === null ? (
+                    <span className="text-canvas/90">
+                      <span className="text-gold">&#9888;</span> R15 &mdash;
+                      registration numbers not yet supplied
+                    </span>
+                  ) : null}
+                </p>
+              </div>
             </div>
 
             {/* Two-up below md; md:contents dissolves this wrapper back into
