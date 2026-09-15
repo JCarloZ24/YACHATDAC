@@ -52,7 +52,8 @@ import { registerPeople } from "./people";
 
 gsap.registerPlugin(CustomEase);
 
-export { revertSplits } from "./shared";
+export { revertSplits, layOrder } from "./shared";
+export type { FrameEdge } from "./media";
 
 let registered = false;
 

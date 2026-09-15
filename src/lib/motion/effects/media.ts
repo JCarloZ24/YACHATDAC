@@ -22,6 +22,12 @@ import gsap from "gsap";
 import { DUR, EASE, PARALLAX } from "../tokens";
 import { assertEase, first, movable } from "./shared";
 
+/**
+ * Which side a `frameOpen` clip unrolls from. "center" is the letterbox open;
+ * the other four name the edge the picture is already against.
+ */
+export type FrameEdge = "center" | "left" | "right" | "top" | "bottom";
+
 export function registerMedia(): void {
   /* --- the world opening -------------------------------------------------
      Grammar: "the world opening" · sketch M2 · plate P3.
@@ -33,7 +39,16 @@ export function registerMedia(): void {
      `edge` picks where the opening starts. "center" (default) is the letterbox
      open. "left"/"right" wipe from that edge — a scroll unrolling from where
      the image already sits, so a frame anchored to the page's right unrolls
-     right-to-left rather than appearing from thin air on the wrong side. */
+     right-to-left rather than appearing from thin air on the wrong side.
+
+     ⚠ "top"/"bottom" ADDED 15 September 2026 for the Truth montage cut
+     ("the world opening, laid by hand, Truth montage cut"). A grid has two
+     axes and the rule above has always been about the edge the picture is
+     ALREADY against — a tile sitting under another is against its own top
+     edge, and unrolling that one left to right opens it from a side nothing
+     borders. The horizontal pair and the letterbox are untouched, so every
+     existing caller (the homepage's offer plates, About §05, Wonder) is
+     byte-identical in behaviour. */
   gsap.registerEffect({
     name: "frameOpen",
     extendTimeline: true,
@@ -51,7 +66,7 @@ export function registerMedia(): void {
       const inset = config.inset as number;
       const duration = config.duration as number;
       const ease = config.ease as string;
-      const edge = config.edge as "center" | "left" | "right";
+      const edge = config.edge as FrameEdge;
       // inset(top right bottom left) — collapsing the OPPOSITE side to 100%
       // pins the visible sliver at the named edge, so animating back to 0
       // unrolls the picture from where it already sits.
@@ -60,7 +75,11 @@ export function registerMedia(): void {
           ? "inset(0% 100% 0% 0%)"
           : edge === "right"
             ? "inset(0% 0% 0% 100%)"
-            : `inset(${inset}% ${inset * 0.75}% ${inset}% ${inset * 0.75}%)`;
+            : edge === "top"
+              ? "inset(0% 0% 100% 0%)"
+              : edge === "bottom"
+                ? "inset(100% 0% 0% 0%)"
+                : `inset(${inset}% ${inset * 0.75}% ${inset}% ${inset * 0.75}%)`;
       const tl = gsap.timeline();
       tl.fromTo(
         frame,
@@ -69,7 +88,7 @@ export function registerMedia(): void {
         0,
       );
       if (media) {
-        if (edge === "left" || edge === "right") {
+        if (edge !== "center") {
           // Edge wipes must not read as a zoom — no scale at all. The media
           // drifts in from the reveal side instead, settling as the clip
           // finishes. The drift (6%) is always smaller than the remaining
@@ -77,13 +96,20 @@ export function registerMedia(): void {
           // exposes the frame's far edge mid-wipe. scale:1 is the caller's
           // "plane holds still" pin (frame grade) — honour it here too and
           // move only the clip.
+          //
+          // The drift follows the wipe's OWN axis. A vertical wipe carrying a
+          // horizontal drift would slide the picture sideways behind a clip
+          // travelling down it, which reads as two moves rather than one.
           if ((config.scale as number) !== 1) {
-            tl.fromTo(
-              media,
-              { xPercent: edge === "right" ? 6 : -6 },
-              { xPercent: 0, duration, ease },
-              0,
-            );
+            const drift =
+              edge === "left" || edge === "right"
+                ? { xPercent: edge === "right" ? 6 : -6 }
+                : { yPercent: edge === "bottom" ? 6 : -6 };
+            const settle =
+              edge === "left" || edge === "right"
+                ? { xPercent: 0, duration, ease }
+                : { yPercent: 0, duration, ease };
+            tl.fromTo(media, drift, settle, 0);
           }
         } else {
           tl.fromTo(media, { scale: config.scale as number }, { scale: 1, duration, ease }, 0);

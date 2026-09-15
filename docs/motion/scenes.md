@@ -484,6 +484,64 @@ its record is two sentences and a link, and the phase split means it now arrives
 screen of its own, which is the loudest thing that has ever happened to it. The quiet channel is
 the correct declaration for a screen whose whole job is to be read.
 
+**The fields of photographs are LAID BY HAND, by clip, 15 September 2026 (user
+direction).** Every screen on Truth holding more than one picture reveals its
+tiles with the homepage's offer-plate gesture — `frameOpen`, the plane pinned —
+instead of the brightness arrival they carried until this date. `frameOpen` was
+generalised in place to take a vertical axis rather than copied, so /truth and
+the homepage call one effect. Each tile unrolls from the edge it is already
+against: left to right with nothing above it, top to bottom sitting under
+another, measured from the built grid rather than declared. The arrival ORDER is
+a seeded permutation (`layOrder`), because laying a grid in its own reading
+order reads as a mechanical sweep — the same failure the uneven offsets were
+written against. Seeded, so a reload, a screenshot and a rebuild after a resize
+all lay the same order, and the reverse scrub retraces it exactly.
+
+⚠ **Which volume a screen gets is F7, not taste.** The cut plays loud only where
+the declared loud channel is already media; everywhere else it takes the quiet
+setting — the same clip, a shade over half as long, plane still pinned — so the
+media channel changes instrument without changing volume and no screen spends a
+second channel:
+
+| § | id | Loud channel | Setting |
+|---|---|---|---|
+| 02 | `precinct` | **media** | loud, seeded order; seated to finish by `walkAt` so the focus never travels along a plate still opening |
+| 05 | `#today-fire` | **media** | loud, seeded order — the cut's home |
+| 07 | `#research-discovery` | **type** | quiet, **order NOT shuffled**: "a strip pulled across" is its own grammar row and the order is its meaning |
+| 10 | `#renamed` | **transition** | quiet, seeded order (no interior beat before this date) |
+| 11 | `#just-us` | **type** | quiet, seeded order (no interior beat before this date) |
+| 18 | `#opportunities` | **type** | quiet, seeded order |
+
+⚠ **§05 shipped spent, and was fixed the same day (15 September 2026).** The
+montage opens 1172px inside a deck track whose whole travel is 796px, so it does
+not cross the fold until 0.34 of the read and is not wholly in view until 0.885
+of it — while the cut's offsets (.10–.30, each .18 long) had it finished by 0.48.
+Measured in a browser at 1440: every tile read 100% open before the montage had
+ever been on screen. The wipe was correct and unwatchable. The brightness
+arrival it replaced had hidden this for as long as it shipped, because a
+photograph at 0.4 opacity is still a photograph and beats spent below the fold
+cost a reader nothing. A clip has no such tolerance.
+
+The fix is measured, not re-typed: `readableWindow` takes the same two numbers
+`todayCrest` already reads off the track (`paddingTop`, `scrollHeight -
+clientHeight`), finds the stretch of the read in which the field is actually in
+front of the reader, and maps the written rhythm into it proportionally so the
+unevenness survives and only its scale changes. A per-tile floor stops any tile
+opening before it is on screen, so geometry outranks the seeded order in the
+rare case they disagree — on §05's real grid at 1440 they do not, and the
+shuffled order plays exactly as seeded. Fields that are already in view when
+their read opens get no window and are untouched; §05 is the only one on the
+page that needed it.
+
+Untouched by the cut: §12's portrait, §06 / §17 / §20 and every
+`data-v2-static` subtree, §13 / §14 (photographs withdrawn), §16's held journal
+scan, and §19's strata stack, which builds top → bottom on its own row.
+
+⚠ **It is the DECK PATH only, by construction.** `bindTruthScenes` runs inside
+the gated deck's `(pointer: fine) and (min-width: 1024px)` branch, itself inside
+`scene()`. Touch, narrow and reduced motion keep the static, fully visible rest
+state they already had — there is no phone behaviour here to review.
+
 **The rail carries the chronology and the local reading state.** One frame (`2051:5368`) runs
 the full 2229vh, starting below the header and **breaking at the count**. Both strands are
 instanced from Leonard Mickelo's supplied meander — never redrawn, never chopped, never tiled.
