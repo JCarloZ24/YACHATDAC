@@ -51,6 +51,7 @@ const fragmentShader = `
   uniform float letterReveal;
   uniform float fade;
   uniform float floorPx;
+  uniform vec4 inset;
   varying vec2 vUv;
   void main() {
     vec2 sampleUv = (vUv - 0.5) * crop + 0.5 + offset;
@@ -64,6 +65,11 @@ const fragmentShader = `
     // Top corners of the existing portrait card. Its body supplies the
     // bottom corners in HTML; the photo must not acquire four round corners.
     vec2 p = vec2(vUv.x, 1.0 - vUv.y) * size;
+    // "The world opening" (15 Sep 2026): Living Work's frameOpen clip,
+    // inset(top right bottom left) as fractions of the box, drawn here
+    // because the canvas, not the HTML image, paints this photograph.
+    if (p.y < inset.x * size.y || p.x > size.x * (1.0 - inset.y)
+      || p.y > size.y * (1.0 - inset.z) || p.x < inset.w * size.x) discard;
     if (p.y < radius && (p.x < radius || p.x > size.x - radius)) {
       vec2 centre = vec2(p.x < radius ? radius : size.x - radius, radius);
       alpha *= 1.0 - smoothstep(radius - 1.0, radius, length(p - centre));
@@ -97,6 +103,7 @@ function material(width: number, height: number, blank: Texture, radius = 0) {
       apertureBox: { value: new Vector4(0, 0, 1, 1) }, closing: { value: 0 },
       prefixBox: { value: new Vector4(0, 0, 1, 1) }, prefixHidden: { value: 0 },
       letterReveal: { value: 1 }, fade: { value: 1 }, floorPx: { value: -1 },
+      inset: { value: new Vector4(0, 0, 0, 0) },
     },
     vertexShader, fragmentShader, transparent: true,
     depthTest: false, depthWrite: false,
@@ -301,6 +308,11 @@ export function createPeopleWorld(
     }
   }
   const hasPortal = Boolean(flight && masks?.aperture && masks.initial);
+  // Suzanne's portrait opens like Living Work's break frame (15 Sep 2026).
+  // Living Work's 16% / 12% start, deepened to 26% / 20% after the user
+  // could barely see it: the window begins as a clearly smaller picture.
+  const PORTRAIT_INSET = { y: 0.26, x: 0.2 };
+  const portrait = photos.find(photo => photo.element.closest('[data-people-scene="suzanne"] figure'));
 
   function render(state: PeopleState) {
     if (disposed || document.hidden) return;
@@ -321,8 +333,23 @@ export function createPeopleWorld(
       if (photo.frame && photo !== hero) {
         const fade = photo.frame.style.getPropertyValue("--people-card-fade");
         photo.mesh.material.uniforms.fade.value = fade === "" ? 1 : Number(fade);
+        // The Record's column drift (15 Sep 2026): the HTML card is lifted by
+        // --people-card-y and its photograph must ride with it.
+        const lift = Number(photo.frame.style.getPropertyValue("--people-card-y") || 0);
+        photo.mesh.position.y = -photo.box.top - photo.box.height / 2 - lift;
       }
       photo.mesh.position.x = photo.box.left + photo.box.width / 2;
+    }
+    // ⚑ THE WORLD OPENING, 15 September 2026, user direction ("same as the
+    // one from living work where it's getting big"): Living Work's frameOpen
+    // at frame grade, an inset window → inset(0) with the picture
+    // held at scale 1, so only the window grows. our-people.ts sets
+    // `portraitOpen` each paint from the frame's screen position; undefined
+    // means fully open, which is what a build without the portrait leaves.
+    if (portrait) {
+      const shut = 1 - (state.portraitOpen ?? 1);
+      (portrait.mesh.material.uniforms.inset.value as Vector4).set(
+        PORTRAIT_INSET.y * shut, PORTRAIT_INSET.x * shut, PORTRAIT_INSET.y * shut, PORTRAIT_INSET.x * shut);
     }
     if (titleMesh && hero?.texture && title && titleBox) {
       titleMesh.visible = true;
@@ -342,8 +369,11 @@ export function createPeopleWorld(
         hero.mesh.position.y = -photo.top - photo.height / 2
           - (k > 0 ? Math.min(state.travel, flight.titleTravel) - flight.frameTravel : 0);
         const aperture = hero.mesh.material.uniforms;
-        aperture.closing.value = phase(0, 0.22, k);
-        const gather = phase(0.22, 0.78, k);
+        // ⚑ 15 September 2026: the close shortened (0.22 → 0.12) so the big
+        // O no longer sits on screen before it starts to gather; with the
+        // shorter handoff the O runs large → small in one movement.
+        aperture.closing.value = phase(0, 0.12, k);
+        const gather = phase(0.12, 0.78, k);
         const initialHeight = Math.min(Math.min(height, photo.height) * 0.82,
           photo.width * 0.9 * initial.height / initial.width);
         const apertureHeight = initialHeight + (initial.height - initialHeight) * gather;

@@ -16,10 +16,16 @@ export type PeopleState = {
   /** Hero held under Suzanne (14 Sep 2026): px the hero is counter-moved,
    * and the screen y of Suzanne's top edge, below which the hero is hidden. */
   heroOffset?: number; heroFloor?: number;
+  /** Suzanne's portrait window, 0 = inset to Living Work's frameOpen start,
+   * 1 = the whole photograph (15 Sep 2026). */
+  portraitOpen?: number;
 };
 export type PeopleStop = { y: number; hold: number; key: string; travelVh?: number };
 export type PeopleLeg = { from: number; to: number; start: number; end: number };
-export const PEOPLE_HANDOFF_VH = 220;
+/** ⚑ 220 → 90, 15 September 2026, user direction ("fasten this O transition
+ * … a smooth O to small o in a short period or one scroll"). The whole
+ * close-gather-reveal now runs in under one screen of scroll. */
+export const PEOPLE_HANDOFF_VH = 90;
 export const PEOPLE_PHOTO_HOLD = 0.35;
 
 /** First arrival at a document distance, including every preceding hold. */

@@ -25,7 +25,7 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * Figma 2841:25358 (06 · Our People — HI-FI · Desktop · the page gathers),
  * 1440 x 16,515px = 1,835vh across eleven frames. The verb is GATHERS.
  *
- *   00  The advisory — the one thing on this page that never moves
+ *   00  The advisory — on the loading cover since 15 Sep 2026 (see below)
  *   01  Hero — the picture leaves the screen and survives inside the word
  *   02  Suzanne Thompson — her own photograph, and the ground that follows it
  *   02b Her decision — the operative sentence on the site, alone on a screen
@@ -122,6 +122,20 @@ const HERO = ourPeopleMedia.hero;
 const SUZANNE = photoById("lw-hero");
 const BREATH_TEAM = ourPeopleMedia.breathTeam;
 const BREATH_PIVOT = ourPeopleMedia.breathPivot;
+/**
+ * LESS SOLID GROUND AND RING, 15 September 2026, user direction ("there's
+ * too much solid background + ring vector on our people page ... the goal is
+ * less solid color + ring"). Four long screens in a row were a flat ground
+ * under the artist's rings (the testimony, Who decides, governance and the
+ * acknowledgements), with the footer's rings straight after. Two of them now
+ * stand on Country instead, the way the other pages set words on land (Home's
+ * beats, Living Work's X5 plates, Truth's Underneath): a held photograph
+ * under a legibility scrim. Both are Country with nobody in frame, so they
+ * make no claim about who is shown. Who decides keeps the rings (the one
+ * ring screen left, and it turns); governance and the doors lose theirs.
+ */
+const TESTIMONY_GROUND = photoById("country-sunset-grass"); // grass heads at last light
+const REMEMBRANCE_GROUND = photoById("lw-regrowth-dusk"); // a dead tree over regrowth at dusk
 
 /** R11, user sharpness refinement (11 September 2026): 85 is already allowed
  * by Next. Sizes account for the full image width required by object-cover,
@@ -177,42 +191,43 @@ const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
 const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
 
 /* -------------------------------------------------------------------------
-   00 · The advisory — the page's one still element · 45vh
+   00 · The advisory — on the loading cover, not a screen of its own
    ------------------------------------------------------------------------- */
 
 /**
  * Australian cultural protocol, and the draft puts it first for that reason.
- * Set in the body face at 24 rather than a display face, because it is a
- * protocol notice and not a headline.
  *
- * No dismiss, no collapse, NOTHING ABOVE IT. It is also the only element on
- * the page that never moves: everything else gathers, and this holds. The
- * hero photograph rises from beneath it as the reader scrolls; the band itself
- * does not shift.
+ * ⚑ MOVED TO THE COVER, 15 September 2026, user direction ("remove the …
+ * caution text … put it on the loading part … so that the caution is not a
+ * hero page"). It opened the page as a full black screen (14 Sep) and before
+ * that as a 45vh band. It now sits on /our-people's loading cover under the
+ * wordmark (RouteLoader → PageLoader `advice`), which is still the first
+ * thing a reader meets, and the page opens on its photograph.
+ *
+ * What stays here is what the cover cannot reach:
+ *   · a visually hidden copy, first in the document, so the notice still
+ *     precedes the page for assistive technology and for anyone reading the
+ *     markup without the cover;
+ *   · a <noscript> band, because the cover is display:none without scripting
+ *     and a no-JS reader would otherwise never see it.
+ * Neither is a `data-people-scene`, so the reading clock does not measure
+ * either as a screen.
  */
 export function OurPeopleAdvisory() {
   return (
-    /* User direction, 14 September 2026: a dramatic entrance. The page opens
-       on a full black screen and the advisory fades up out of it, then the
-       hero's scroll cue follows. The band is a full viewport now (was 45vh)
-       so nothing else is in frame while the notice arrives. The fade is CSS
-       gated on the stage's data-page-ready, so it plays after the site loader
-       lifts; see our-people.css. */
-    <section
-      data-people-scene="advisory"
-      className="relative flex min-h-svh items-center bg-charcoal text-canvas"
-    >
-      <div className={`${COLUMN}`}>
-        {/* the threshold — gold, 3px */}
-        <div aria-hidden data-people-entrance="rule" className="h-[3px] w-[72px] bg-gold" />
-        <p data-people-entrance="advice" className="mt-10 max-w-[1040px] text-lg leading-[1.5] font-medium sm:text-2xl">
-          {culturalAdvice}
-        </p>
-      </div>
-      <div aria-hidden data-people-entrance="cue" className="absolute inset-x-0 bottom-10 flex justify-center lg:bottom-14">
-        <span className="callout scroll-cue block text-scroll text-gold">&darr; Scroll</span>
-      </div>
-    </section>
+    <>
+      <p className="sr-only">{culturalAdvice}</p>
+      <noscript>
+        <section className="bg-charcoal py-16 text-canvas lg:py-24">
+          <div className={`${COLUMN}`}>
+            <div aria-hidden className="h-[3px] w-[72px] bg-gold" />
+            <p className="mt-8 max-w-[1040px] text-lg leading-[1.5] font-medium sm:text-2xl">
+              {culturalAdvice}
+            </p>
+          </div>
+        </section>
+      </noscript>
+    </>
   );
 }
 
@@ -407,34 +422,54 @@ export function SuzanneTestimony() {
           ))}
         </div>
 
-        {/* The testimony. User direction, 14 September 2026: it takes a whole
-            screen of its own, so the reader holds on her words alone with no
-            neighbouring ground (the roasted wave below) in frame. */}
-        <div data-people-testimony-screen className="mt-24 flex min-h-svh flex-col justify-center lg:mt-32">
-        <blockquote data-people-testimony>
-          <span
-            aria-hidden
-            className="headline block text-[5rem] leading-[1] text-ochre/30 sm:text-[7.5rem] lg:text-[8rem]"
-          >
-            &ldquo;
-          </span>
-          <p
-            className="headline mt-6 max-w-[1240px] text-4xl leading-[1.22] text-evergreen sm:text-7xl"
-          >
-            {suzanneProfile.quote}
-          </p>
-          <cite
-            className="eyebrow mt-20 block text-sm text-burnt not-italic"
-          >
-            {suzanneProfile.name}
-          </cite>
-        </blockquote>
-
         {/* Her external roles are incomplete — a national emissions reduction
             board, and possibly others. The §02 note carries this as a HELD
             item in `suzanneProfile.pending`, which is still the record. It no
             longer RENDERS: the on-page editorial notes came off this page on
             14 September 2026 (user direction). */}
+      </div>
+
+      {/* The testimony. User direction, 14 September 2026: it takes a whole
+          screen of its own, so the reader holds on her words alone.
+
+          ON COUNTRY, 15 September 2026 (see TESTIMONY_GROUND): the screen was
+          canvas with the ring pattern, and read as blank until the words
+          arrived. It is now full bleed, out of the column, over a held
+          photograph of grass at last light. Testimony is read in stillness,
+          so the photograph never moves; the canvas paints it like every other
+          [data-media] on the page. The scrim is X5's legibility exception,
+          and the words take the canvas ink over it. */}
+      <div data-people-testimony-screen className="relative flex min-h-svh flex-col justify-center text-canvas">
+        <div data-media data-motion={TESTIMONY_GROUND?.grade ?? "full"} className="absolute inset-0 overflow-hidden">
+          <MediaOrField
+            src={TESTIMONY_GROUND?.src ?? null}
+            alt=""
+            sizes="max(100vw, 190svh)"
+            quality={PHOTO_QUALITY}
+            fieldClass="bg-roasted"
+          />
+        </div>
+        <div aria-hidden data-people-testimony-scrim className="absolute inset-0 bg-charcoal/55" />
+        <div aria-hidden data-people-testimony-scrim className="absolute inset-0 bg-linear-to-b from-charcoal/30 via-transparent to-charcoal/60" />
+        <div className={`${COLUMN} relative`}>
+          <blockquote data-people-testimony>
+            <span
+              aria-hidden
+              className="headline block text-[5rem] leading-[1] text-gold/60 sm:text-[7.5rem] lg:text-[8rem]"
+            >
+              &ldquo;
+            </span>
+            <p
+              className="headline mt-6 max-w-[1240px] text-4xl leading-[1.22] text-canvas sm:text-7xl"
+            >
+              {suzanneProfile.quote}
+            </p>
+            <cite
+              className="eyebrow mt-20 block text-sm text-gold not-italic"
+            >
+              {suzanneProfile.name}
+            </cite>
+          </blockquote>
         </div>
       </div>
 
@@ -470,6 +505,10 @@ export function HerDecision() {
           ⚠ THE WAVE STAYS OUTSIDE IT. WaveDivider is pulled entirely above
           its own box; inside an overflow-hidden parent it renders as nothing. */}
       <div aria-hidden data-people-decision-rings className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* The rings TURN with the scroll (15 Sep 2026); our-people.ts rotates
+            the <img> inside each, since the pointer drift owns the
+            [data-artwork] box's transform. They are kept off the photograph
+            before this screen: they fade in after the cut, on brown alone. */}
         <RingArtwork piece="a" className="-left-44 bottom-[8%] w-[36.7rem]" />
         <RingArtwork piece="b" className="top-[7%] left-[64.4%] w-[56.25rem]" />
       </div>
@@ -643,10 +682,11 @@ export function TheGathering() {
     >
       <WaveDivider ground="var(--color-canvas)" />
       <div className={`${COLUMN} py-16 lg:py-24`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">
-          The team
-        </p>
-        <h2 className="headline mt-3 text-4xl leading-[1.16] text-evergreen sm:text-6xl">
+        {/* The "The team" eyebrow above this came off on 15 September 2026
+            (user: "there double the team here"): `team.title` is also "The
+            team", so the section said it twice. The heading is the draft's
+            (D5), so it is the one that stays. */}
+        <h2 className="headline text-4xl leading-[1.16] text-evergreen sm:text-6xl">
           {team.title}
         </h2>
         {/* `team.lede` — "Placeholder roles below. Names, titles and
@@ -770,7 +810,11 @@ export function Governance() {
   return (
     <section data-people-scene="governance" className="relative bg-evergreen text-canvas">
       <WaveDivider ground="var(--color-evergreen)" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* The rings, and they TURN (15 September 2026, user direction: "bring
+          back the turning ring artwork on the green solid background part").
+          our-people.ts rotates the <img> inside each with the scroll; the
+          pointer drift keeps the [data-artwork] box's transform. */}
+      <div aria-hidden data-people-governance-rings className="pointer-events-none absolute inset-0 overflow-hidden">
         <RingArtwork piece="b" className="top-[4%] left-[64.4%] w-[56.25rem]" />
         <RingArtwork piece="a" className="-left-48 bottom-[16%] w-[40rem]" />
       </div>
@@ -912,27 +956,56 @@ export function Governance() {
 export function Acknowledgements() {
   return (
     <section data-people-scene="acknowledgements" className="relative bg-charcoal text-canvas">
-      <WaveDivider ground="var(--color-charcoal)" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" className="top-[7%] left-[48.6%] w-[62.5rem]" />
-        <RingArtwork piece="a" className="-left-45 bottom-[10%] w-[44rem]" />
+      {/* 15 September 2026 (see REMEMBRANCE_GROUND): the rings came off and the
+          section opens on Country, a dead tree over regrowth at dusk, held,
+          with the heading set low on it and a scrim that closes to the
+          charcoal the names are read on. Still no photograph OF anyone: this
+          is the land they kept reachable, not a picture of them (see the
+          header note). The names stay on the plain ground. */}
+      <div className="relative flex min-h-[78svh] flex-col justify-end lg:min-h-[92svh]">
+        <div data-media data-motion={REMEMBRANCE_GROUND?.grade ?? "full"} className="absolute inset-0 overflow-hidden">
+          <MediaOrField
+            src={REMEMBRANCE_GROUND?.src ?? null}
+            alt=""
+            sizes="max(100vw, 175svh)"
+            quality={PHOTO_QUALITY}
+            fieldClass="bg-charcoal"
+          />
+        </div>
+        <div aria-hidden className="absolute inset-0 bg-charcoal/35" />
+        <div aria-hidden className="absolute inset-0 bg-linear-to-b from-charcoal/40 via-charcoal/25 to-charcoal" />
+        {/* The join from governance (15 September 2026, user direction: "just
+            do a green wave design and remove the black wave"). The charcoal
+            crest that rose out of governance is gone; governance's evergreen
+            carries on over the top of the photograph as a hanging wave, so
+            the green gives way to Country rather than to a black band. */}
+        <WaveDivider ground="var(--color-evergreen)" flip seat="inline" />
+        <div className={`${COLUMN} relative pt-32 pb-4 lg:pb-8`}>
+          <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-gold sm:text-2xl">
+            Acknowledgements
+          </p>
+          <h2 className="headline mt-3 max-w-[1100px] text-4xl leading-[1.16] sm:text-6xl">
+            {acknowledgements.title}
+          </h2>
+          <p className="mt-7 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl">
+            {acknowledgements.lede}
+          </p>
+        </div>
       </div>
 
-      <div className={`${COLUMN} relative py-16 lg:py-24`}>
-        <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-ochre sm:text-2xl">
-          Acknowledgements
-        </p>
-        <h2 className="headline mt-3 max-w-[1100px] text-4xl leading-[1.16] sm:text-6xl">
-          {acknowledgements.title}
-        </h2>
-        <p className="mt-7 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl">
-          {acknowledgements.lede}
-        </p>
+      {/* A very light ring at the foot of the names (15 September 2026, user
+          direction), so the charcoal is not bare. Held back to 40% of the
+          artwork's own weight so it stays behind the words. */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] overflow-hidden">
+        <RingArtwork piece="a" className="-left-45 bottom-[4%] w-[44rem] opacity-40" />
+      </div>
 
-        <ul className="mt-14">
+      <div className={`${COLUMN} relative pb-16 lg:pb-24`}>
+        <ul className="mt-10 lg:mt-14">
           {acknowledgements.people.map((entry) => (
             <li key={entry.name} className="border-t border-canvas/15 py-8">
               <p
+                data-people-name
                 className="headline text-4xl leading-[1.17] sm:text-6xl"
               >
                 {entry.name}
@@ -1055,17 +1128,9 @@ export function GetInTouch() {
       className="relative scroll-mt-28 bg-canvas text-charcoal"
     >
       <WaveDivider ground="var(--color-canvas)" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork
-          piece="b"
-          className="top-[5%] left-[64.4%] w-[56.25rem] opacity-30"
-        />
-        <RingArtwork
-          piece="a"
-          tone="roasted"
-          className="-left-48 bottom-[12%] w-[40rem] opacity-30"
-        />
-      </div>
+      {/* Its two faint rings came off, 15 September 2026 (see
+          TESTIMONY_GROUND): the footer's rings follow straight after, and the
+          four coloured doors below already carry a motif each. */}
 
       <div className={`${COLUMN} relative py-16 lg:py-24`}>
         <p className="eyebrow text-base leading-[1.5] tracking-[0.08em] text-burnt sm:text-2xl">

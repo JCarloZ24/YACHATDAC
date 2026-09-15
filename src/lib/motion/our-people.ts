@@ -10,6 +10,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReduced, type MotionModule } from "@/lib/motion-controller";
 import { registerYachatdacEffects, revertSplits } from "./effects";
+import { EASE } from "./tokens";
 import { PEOPLE_HANDOFF_VH, PEOPLE_PHOTO_HOLD, peopleTimeAt, type PeopleLeg, type PeopleState, type PeopleStop } from "./effects/people";
 import { clampScrollTo, refreshScrollBounds } from "./smooth-scroll";
 import { createPeopleWorld, peopleBox, type PeopleSection } from "./our-people-world";
@@ -71,7 +72,36 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
     // lighting at once off the first card's position, and nothing travels
     // sideways any more. Measured once per build; `paint` only does maths.
     // Grammar: "being drawn in", Our People cards.
-    let cardPass: { card: HTMLElement; top: number; height: number; index: number; hidden: boolean }[] = [];
+    let cardPass: { card: HTMLElement; top: number; height: number; index: number; hidden: boolean; rate: number }[] = [];
+    // ⚑ THE WORLD OPENING, Suzanne's portrait — 15 September 2026, user
+    // direction ("same as the one from living work where it's getting big").
+    // Living Work's break frame (clusterDescent, recipes.ts) opens its clip
+    // from inset(16% 12%) to the whole frame while the frame's top travels
+    // from 92% to 40% of the screen, eased `country`, the picture held at
+    // scale 1 (frame grade), and a caption settling in from halfway. The same
+    // numbers here — but read off the frame's SCREEN position each paint, not
+    // placed on the timeline: this page holds its track still at stops while
+    // the clock runs on, and a timed open played out during a hold with the
+    // photograph barely on screen. The canvas draws the photograph, so the
+    // window itself is an inset in our-people-world.ts.
+    //
+    // ⚑ RETUNED, same day, user report ("you can barely see that transition
+    // … when i get to the whole image it's already done"). Living Work's
+    // numbers were copied too literally: `country` is a steep ease-out, so
+    // 80% of the open had happened in the first third of the travel, before
+    // the photograph was fully on screen. Now the window starts smaller
+    // (see PORTRAIT_INSET in our-people-world.ts), runs from the frame's top
+    // at 95% of the screen to 14% — just before the page's own "portrait"
+    // stop at 12% — so it is still opening while the whole picture is in
+    // view, and eases `sine.inOut` so the growth is spread across the travel.
+    const PORTRAIT_FROM = 0.95;
+    const PORTRAIT_TO = 0.14;
+    let portraitPass: { top: number; caption: HTMLElement | null } | undefined;
+    // Resolved on first paint: the `country` CustomEase is registered by
+    // registerYachatdacEffects inside build, after this closure is created.
+    let countryEase: ((progress: number) => number) | undefined;
+    const country = (progress: number) => (countryEase ??= gsap.parseEase(EASE.country))(progress);
+    const even = gsap.parseEase("sine.inOut");
     // The same hold for Who decides under the team (14 Sep 2026). Its canvas
     // ground scrolls with the camera, so a roasted veil, clipped at the
     // team's top edge, stands in for it while the section is held.
@@ -118,12 +148,38 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
         // photograph and reads this same value back, and the ordinary-flow
         // fallback simply never defines it (our-people.css defaults it to 1).
         entry.card.style.setProperty("--people-card-fade", String(fade));
+        // ⚑ THE RECORD'S COLUMN DRIFT, 15 September 2026, user direction
+        // ("the cards are like in a random position when scrolling then
+        // going to the fixed place where they are all uniform"): each column
+        // rides lower by its own share of the screen — The Record's
+        // 6/14/9/18vh, cycled by column — and settles into the even row as
+        // its top rises from the screen's foot to 30%, ahead of the row's
+        // own stop at 12%. Desktop only, as on The Record (`rate` is 0 below
+        // lg). Linear, like the catalogue: it is the scroll shown as drift.
+        if (entry.rate) {
+          const settle = gsap.utils.clamp(0, 1, (viewport - (entry.top - state.travel)) / (viewport * 0.7));
+          const lift = entry.rate * viewport * (1 - settle);
+          entry.card.style.setProperty("--people-card-y", String(lift));
+          entry.card.style.transform = lift ? `translateY(${lift}px)` : "";
+        }
         // A card the reader cannot see must not take a tab stop. Written only
         // on the change, so a scroll frame is still one property write.
         const hidden = fade < 0.01;
         if (hidden !== entry.hidden) {
           entry.hidden = hidden;
           entry.card.style.visibility = hidden ? "hidden" : "";
+        }
+      }
+      if (portraitPass) {
+        const top = portraitPass.top - state.travel;
+        const progress = gsap.utils.clamp(0, 1,
+          (viewport * PORTRAIT_FROM - top) / (viewport * (PORTRAIT_FROM - PORTRAIT_TO)));
+        state.portraitOpen = even(progress);
+        if (portraitPass.caption) {
+          // The caption settles in over the last third of the open.
+          const settle = country(gsap.utils.clamp(0, 1, (progress - 0.66) / 0.3));
+          portraitPass.caption.style.opacity = String(settle);
+          portraitPass.caption.style.transform = settle < 1 ? `translateY(${14 * (1 - settle)}px)` : "";
         }
       }
       world.render(state);
@@ -174,9 +230,14 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
       if (heroCopy) gsap.set(heroCopy, { clearProps: "transform" });
       cardPass.forEach(({ card }) => {
         card.style.removeProperty("--people-card-fade");
+        card.style.removeProperty("--people-card-y");
         card.style.removeProperty("visibility");
+        card.style.transform = "";
       });
       cardPass = [];
+      if (portraitPass?.caption) { portraitPass.caption.style.opacity = ""; portraitPass.caption.style.transform = ""; }
+      portraitPass = undefined;
+      state.portraitOpen = undefined;
       // The ordinary document shows the fact, not a count that will never
       // run: a fallback has no clock to reach the ratio with.
       track.querySelectorAll<HTMLElement>("[data-people-count]").forEach(count => { count.textContent = `${count.dataset.peopleCount}%`; });
@@ -362,7 +423,10 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
         });
         context = gsap.context(() => {
           registerYachatdacEffects();
-          const stops: PeopleStop[] = [{ y: 0, hold: 0.12, key: "advisory" }];
+          // "open", was "advisory": the page's first screen is the hero
+          // photograph since the advisory moved to the loading cover
+          // (15 September 2026, user direction).
+          const stops: PeopleStop[] = [{ y: 0, hold: 0.12, key: "open" }];
           const addStop = (element: HTMLElement | null, hold: number, key: string, align = 0.28) => {
             if (!element) return;
             const box = peopleBox(element, track!);
@@ -387,7 +451,13 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
           // does not scroll the photograph up. The advisory fades out on the
           // spot, the track cuts across the shared charcoal while the screen
           // is empty, and the photograph fades in where it is held.
-          const fadeIn = world.hasPortal && heroFlight && titleStop ? 0.9 : 0;
+          //
+          // ⚑ 15 September 2026: the advisory is no longer on the page, so
+          // there is nothing to fade out and the photograph is simply there
+          // at the top. The fade stays wired for a markup that still carries
+          // an advisory scene, and is skipped when none is found.
+          const advisoryScene = track!.querySelector<HTMLElement>('[data-people-scene="advisory"]');
+          const fadeIn = advisoryScene && world.hasPortal && heroFlight && titleStop ? 0.9 : 0;
           if (fadeIn && heroFlight) {
             stops.push({ y: 0, hold: 0.7, key: "advisory-out" });
             state.reveal = 0;
@@ -444,9 +514,18 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
           // arrives at its OWN stop — the one grouped fade this replaces lit
           // row two long before `team-1` was reached. Measured here, with the
           // rest of the page's geometry, and never inside a scroll frame.
+          const portraitFrame = track!.querySelector<HTMLElement>('[data-people-scene="suzanne"] figure [data-media]');
+          portraitPass = portraitFrame ? {
+            top: peopleBox(portraitFrame, track!).top,
+            caption: portraitFrame.parentElement?.querySelector<HTMLElement>("figcaption") ?? null,
+          } : undefined;
+          // Columns by measured left edge, as The Record reads its own.
+          const cardColumns = [...new Set(cards.map(card => Math.round(peopleBox(card, track!).left)))].sort((a, b) => a - b);
+          const drifts = width >= 1024 ? [0.06, 0.14, 0.09, 0.18] : [0];
           cardPass = cards.map((card, index) => {
             const box = peopleBox(card, track!);
-            return { card, top: box.top, height: box.height, index, hidden: false };
+            const column = Math.max(0, cardColumns.indexOf(Math.round(box.left)));
+            return { card, top: box.top, height: box.height, index, hidden: false, rate: drifts[column % drifts.length] };
           });
           const ratio = track!.querySelector<HTMLElement>("[data-people-ratio]");
           addStop(ratio, 2.4, "ratio", 0.5);
@@ -466,8 +545,7 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
             copy: heroFlight ? heroCopy : undefined,
           }), heroFlight ? `hero-photo+=${fadeIn + PEOPLE_PHOTO_HOLD}` : at(title, 0.95));
           if (fadeIn && heroFrame) {
-            const advisory = track!.querySelector<HTMLElement>('[data-people-scene="advisory"]');
-            if (advisory) timeline.fromTo(advisory, { opacity: 1 }, { opacity: 0, duration: 0.7, ease: "sine.inOut" }, "advisory-out");
+            if (advisoryScene) timeline.fromTo(advisoryScene, { opacity: 1 }, { opacity: 0, duration: 0.7, ease: "sine.inOut" }, "advisory-out");
             // The photo plane and the HTML furniture on it (scrim, artwork,
             // stand-in marker) share one value. A custom property, so the
             // knockout's own opacity tween on the frame is never contested.
@@ -501,31 +579,40 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
             timeline.add(speech, "testimony");
           }
           if (merged && veil && testimony && decision && decisionScene) {
-            timeline.to(testimony, { autoAlpha: 0, duration: 0.5, ease: "sine.inOut" }, "decision-veil");
+            // The words clear; the screen and its scrim stay under the wash
+            // (15 Sep 2026), so the photograph does not brighten as it goes.
+            timeline.to(blockquote ?? testimony, { autoAlpha: 0, duration: 0.5, ease: "sine.inOut" }, "decision-veil");
+            // The scrim sits above the wash (it is in the track, the veil is
+            // under it), so it clears on the wash's own tempo: photograph and
+            // scrim give way to the roasted ground together, with no dark
+            // brown step at the cut.
+            const scrims = testimony.querySelectorAll("[data-people-testimony-scrim]");
+            if (scrims.length) timeline.to(scrims, { opacity: 0, duration: 0.9, ease: "sine.inOut" }, "decision-veil+=0.2");
             timeline.fromTo(veil, { opacity: 0 }, { opacity: 1, duration: 0.9, ease: "sine.inOut" }, "decision-veil+=0.2");
             // The section's own roasted ground is now under the veil.
             timeline.set(veil, { opacity: 0 }, "decision");
             // The pattern is already on the testimony screen (user, 14 Sep
             // 2026) and only changes colour with the wash; at the cut the
             // section's own rings, at the identical place, take over.
-            const pattern = root.querySelector<HTMLElement>("[data-people-pattern]");
-            const patternBox = root.querySelector<HTMLElement>("[data-people-pattern-box]");
             const decisionStop = stops.find(stop => stop.key === "decision");
             const team = sections.find(section => section.element.dataset.peopleScene === "team");
             if (decisionStop && team && team.top > decisionStop.y) {
               const scene = peopleBox(decisionScene, track!);
               decisionHold = { start: decisionStop.y, end: team.top, bottom: scene.top + scene.height };
             }
-            if (pattern && patternBox && decisionStop) {
-              const box = peopleBox(decisionScene, track!);
-              gsap.set(patternBox, { top: box.top - decisionStop.y, height: box.height });
-              const tokens = getComputedStyle(root);
-              timeline.fromTo(pattern, { opacity: 0 }, { opacity: 1, duration: 0.9, ease: "sine.inOut" }, "testimony+=0.15");
-              timeline.fromTo(pattern.querySelectorAll("[data-people-pattern-ring]"),
-                { backgroundColor: tokens.getPropertyValue("--color-roasted").trim() },
-                { backgroundColor: tokens.getPropertyValue("--color-canvas").trim(), duration: 0.9, ease: "sine.inOut" },
-                "decision-veil+=0.2");
-              timeline.set(pattern, { opacity: 0 }, "decision");
+            // Who decides' rings (15 September 2026, user direction): kept off
+            // the full-bleed photograph, so they come up only after the cut,
+            // on the roasted ground alone, and TURN at Living Work's tempo
+            // (20 degrees per unit, linear, scrubbed) from there until the team
+            // section reaches the top. Inner <img> only.
+            const decisionRings = decisionScene.querySelector<HTMLElement>("[data-people-decision-rings]");
+            if (decisionRings) {
+              timeline.fromTo(decisionRings, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.9, ease: "sine.inOut" }, "decision");
+              const team = sections.find(section => section.element.dataset.peopleScene === "team");
+              const turnFrom = timeline.labels.decision ?? at(decisionScene, 0);
+              const turnFor = Math.max(0.5, (team ? peopleTimeAt(legs, team.top) : timeline.duration()) - turnFrom);
+              timeline.fromTo(decisionRings.querySelectorAll("[data-artwork] > img"), { rotation: 0 },
+                { rotation: 20 * turnFor, duration: turnFor, ease: "none" }, turnFrom);
             }
             const eyebrow = decisionScene.querySelector(".eyebrow");
             // User direction, 14 September 2026: the same entrance as the
@@ -580,10 +667,32 @@ export function createOurPeople(root: HTMLElement, canvas: HTMLCanvasElement): M
           // User direction, 14 September 2026: each acknowledgement — name and
           // what they did — fades in whole where it sits, one after another as
           // the reader reaches it (was a line settle on the name only).
+          //
+          // 15 September 2026, user direction ("the same text animation as the
+          // ones on living work where the white text goes from left to
+          // right"): each NAME now wipes in left to right, Living Work §08's
+          // clip (inset from the right, eased `country`), and what they did
+          // fades up behind it. On this page's reading clock, so it scrubs.
           for (const name of names) {
-            timeline.fromTo(name, { autoAlpha: 0 }, {
-              autoAlpha: 1, duration: 0.6, ease: "sine.inOut", immediateRender: true,
-            }, at(name, 0.9));
+            const heading = name.querySelector<HTMLElement>("[data-people-name]");
+            const detail = heading?.nextElementSibling;
+            const start = at(name, 0.9);
+            timeline.fromTo(name, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01, immediateRender: true }, start);
+            if (heading) timeline.fromTo(heading, { clipPath: "inset(0% 100% 0% 0%)" },
+              { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7, ease: EASE.country, immediateRender: true }, start);
+            if (detail) timeline.fromTo(detail, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: "sine.inOut", immediateRender: true }, start + 0.35);
+          }
+          // The governance rings turn with the scroll across the section's whole
+          // passage (15 September 2026, user direction), at Living Work's tempo
+          // (20 degrees per unit, linear, scrubbed both ways). Inner <img> only.
+          const governanceScene = track!.querySelector<HTMLElement>('[data-people-scene="governance"]');
+          const governanceRings = governanceScene
+            ? Array.from(governanceScene.querySelectorAll<HTMLElement>("[data-people-governance-rings] [data-artwork] > img")) : [];
+          if (governanceScene && governanceRings.length) {
+            const box = peopleBox(governanceScene, track!);
+            const from = at(governanceScene, 1);
+            const span = Math.max(0.5, peopleTimeAt(legs, box.top + box.height) - from);
+            timeline.fromTo(governanceRings, { rotation: 0 }, { rotation: 20 * span, duration: span, ease: "none" }, from);
           }
           for (const seat of track!.querySelectorAll<HTMLElement>("[data-people-seat]")) {
             timeline.add(gsap.effects.arrive(seat, { y: 16, duration: 0.45 }), at(seat));

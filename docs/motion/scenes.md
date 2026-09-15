@@ -2463,7 +2463,7 @@ about people who are anything but. So the choreography carries the argument inst
 
 | # | Act | What it says | ⚡ | vh | Loud channel | Plate | Rest after? |
 |---|---|---|---|---|---|---|---|
-| 00 | I | The advisory — the one thing on this page that never moves | 1 | 45 | **none** | **P8** | — |
+| 00 | I | The advisory — on the loading cover since 15 Sep 2026 (user direction); no longer a screen of the page | — | 0 | **none** | — | — |
 | 01 | I | Our people — the photograph leaves the screen and survives inside the word | 4 | 210 | **type** | P1 | — |
 | 02 | II | Suzanne Thompson — her own photograph, testimony undimming word by word, then the ground goes | 3 | 250 | **transition** | P6 | — |
 | 02b | II | **Her decision** — the operative sentence on the site, alone on a screen | 4 | 140 | **type** | — | ✓ |

@@ -66,19 +66,16 @@ export default function OurPeoplePage() {
         <div data-people-veil aria-hidden className="people-veil" />
         {/* Who decides' ground while it is held under the team (14 Sep 2026). */}
         <div data-people-hold-veil aria-hidden className="people-veil" />
-        {/* The Who decides ring pattern, already on the testimony screen
-            (14 Sep 2026): the same two pieces at the same placement as
-            HerDecision's, drawn as masks so only their colour changes with the
-            ground. our-people.ts sizes the box to the section and hands over
-            to the section's own rings at the cut. */}
-        <div data-people-pattern aria-hidden className="people-pattern">
-          <div data-people-pattern-box className="absolute inset-x-0 top-0 overflow-hidden">
-            <div data-artwork="ring-a" data-people-pattern-ring style={{ maskImage: "url(/artwork/ring-a.svg)" }} className="absolute -left-44 bottom-[8%] aspect-[415.952/375.023] w-[36.7rem]" />
-            <div data-artwork="ring-b" data-people-pattern-ring style={{ maskImage: "url(/artwork/ring-b.svg)" }} className="absolute top-[7%] left-[64.4%] aspect-[465.005/469.992] w-[56.25rem]" />
-          </div>
-        </div>
+        {/* The Who decides ring pattern layer (14 Sep 2026) came up over the
+            testimony screen, and so, once that screen became a full-bleed
+            photograph, over the photograph during the wash. Removed on 15
+            September 2026, user direction: "remove the ring artwork only on
+            the section with full bleed image, dont remove the turning ring on
+            the brown part". Who decides' own rings fade in after the cut. */}
         <div data-people-track className="people-track relative">
-          {/* The advisory renders first, as the draft specifies. */}
+          {/* The advisory is read first, as the draft specifies — on the
+              loading cover since 15 Sep 2026; this is its hidden and no-JS
+              copy. See OurPeopleAdvisory. */}
           <OurPeopleAdvisory />
           <OurPeopleHero />
           <SuzanneTestimony />
