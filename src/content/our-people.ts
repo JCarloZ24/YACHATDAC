@@ -11,8 +11,10 @@
  * faces on it.
  *
  * ⚠ CULTURAL ADVICE. The draft opens with a warning that this page contains
- * images and names of people who have passed away. It renders first, above
- * everything, and it is not a dismissible banner — see the page.
+ * images and names of people who have passed away. It is still the first
+ * thing a reader meets and is not dismissible, but since 15 September 2026
+ * (user direction) it is set on the page's loading cover rather than as a
+ * screen of the page — see RouteLoader and OurPeopleAdvisory.
  *
  * ⚠ CR4 — ruled 7 Sep: this line KEEPS "settler". Graham Ambridge's
  * biography describes himself, in his own word, and FNAN raised CR4 against
@@ -32,8 +34,9 @@ export const ourPeopleHero = {
 } as const;
 
 /**
- * Rendered before the page content, always. Australian cultural protocol, and
- * the draft puts it first for that reason.
+ * Shown before the page content, always: on /our-people's loading cover, with
+ * a hidden and a no-JS copy first in the page. Australian cultural protocol,
+ * and the draft puts it first for that reason.
  */
 export const culturalAdvice =
   "Aboriginal and Torres Strait Islander readers are advised that this page contains images and names of people who have passed away.";

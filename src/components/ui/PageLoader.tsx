@@ -17,6 +17,7 @@ export function PageLoader({
   sweepMs = 650,
   dwellMs = 700,
   navigation = false,
+  advice,
   onReveal,
 }: {
   name: string;
@@ -26,6 +27,8 @@ export function PageLoader({
   sweepMs?: number;
   dwellMs?: number;
   navigation?: boolean;
+  /** A route's cultural advice, set on the cover itself (see below). */
+  advice?: string;
   onReveal?: () => void;
 }) {
   const HARD_CAP_MS = hardCapMs;
@@ -377,6 +380,20 @@ export function PageLoader({
           </p>
         </div>
       </div>
+
+      {/* ⚑ CULTURAL ADVICE ON THE COVER, 15 September 2026, user direction
+          ("the caution is not a hero page"). /our-people used to open on a
+          full-screen advisory band; the notice now sits here instead, under
+          the wordmark and the count, so it is still the first thing a reader
+          meets and the page itself opens on its photograph. It does NOT fade
+          with the count: it holds through the announcement until the cover
+          lifts, and RouteLoader lengthens that dwell so the sentence can be
+          read. Words come from the route's content module (D5), never here. */}
+      {advice ? (
+        <p className="absolute inset-x-0 bottom-[12svh] mx-auto max-w-[44rem] px-6 text-center text-base leading-[1.5] font-medium text-canvas/85 lg:text-lg">
+          {advice}
+        </p>
+      ) : null}
     </div>
   );
 }

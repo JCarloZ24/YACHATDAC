@@ -7,6 +7,7 @@ import { createPageReadiness, isPublicRoute, PAGE_LOAD_START } from "@/lib/page-
 import { beginRoute, markRouteSettled } from "@/lib/motion/route-entry";
 import { markEntered } from "@/lib/site-entry";
 import { footerNav, legalLinks, org, pillars, primaryAction, primaryNav, resourcesFooterLinks } from "@/content/site";
+import { culturalAdvice as ourPeopleAdvice } from "@/content/our-people";
 
 /** X7 / SYS-02, August, 11 September 2026: the named cover runs for every
  * visit, including a warm link navigation, back/forward and hard refresh.
@@ -45,6 +46,20 @@ const ROUTE_TITLES: [href: string, title: string][] = [
   // and "Home" is a word the site does not otherwise use.
   ["/", org.name],
 ];
+
+/**
+ * Cultural advice shown on a route's loading cover (15 September 2026, user
+ * direction: /our-people's advisory moved off the page and onto its cover).
+ * Keyed by route, longest prefix wins like the titles. The dwell is how long
+ * the announcement holds before the cover lifts: long enough to read the
+ * sentence, where the default 700ms is only long enough to see a name.
+ */
+const ROUTE_ADVICE: [href: string, advice: string][] = [["/our-people", ourPeopleAdvice]];
+const ADVICE_DWELL_MS = 2800;
+
+function adviceFor(pathname: string): string | undefined {
+  return ROUTE_ADVICE.find(([href]) => pathname === href || pathname.startsWith(`${href}/`))?.[1];
+}
 
 /** "Our people" → "our-people", so a label can be compared with a route. */
 const slugify = (title: string): string =>
@@ -115,10 +130,13 @@ export function RouteLoader() {
 
   if (!isPublicRoute(visit.pathname)) return null;
   const name = titleFor(visit.pathname) ?? org.name;
+  const advice = adviceFor(visit.pathname);
   return (
     <PageLoader
       key={visit.id}
       name={name}
+      advice={advice}
+      dwellMs={advice ? ADVICE_DWELL_MS : undefined}
       navigation={visit.navigation}
       ready={() => committed.current === visit.pathname && Boolean(reader.current?.check())}
       onReveal={() => {
