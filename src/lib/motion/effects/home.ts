@@ -2,6 +2,8 @@
 
 import gsap from "gsap";
 import { homeTruthScenes } from "@/content/home-truth-scenes";
+import { truthMarkerStem } from "../home-truth-marker";
+import { TRUTH_COMPACT_BELOW, truthAcrossScale } from "../home-truth-layout";
 
 /**
  * How far the land pushes in across The Invitation beat. Grammar: "being
@@ -111,7 +113,7 @@ export function registerHome(): void {
   gsap.registerEffect({
     name: "homeHeroDissolve",
     defaults: {},
-    effect: (targets: HTMLElement[], config: { state: { sky: number; light: number; lightHeight: number; shade: number; belonging: number; landscapeLift: number; landscapeZoom: number }; render: () => void }) => {
+    effect: (targets: HTMLElement[], config: { state: { sky: number; light: number; lightHeight: number; shade: number; belonging: number; landscapeLift: number; landscapeZoom: number; truthDraw: number; truthOpacity: number }; render: () => void; railY?: (x: number) => number; railFade?: (x: number) => number }) => {
       const root = targets[0];
       const timeline = gsap.timeline({ paused: true });
       // The hero holds on the land (10 September 2026, user direction). What
@@ -158,43 +160,147 @@ export function registerHome(): void {
         { y: 0, autoAlpha: 1, duration: 0.6, ease: "none" }, wonderAt + 1.3);
       timeline.to({}, { duration: 0.4 }, wonderAt + 1.9);
       // SCR-10: measured Figma layer offsets; still prose between transitions.
-      const marker = root.querySelector("[data-truth-marker]");
-      const markerY = (y: number) => root.clientWidth < 1024
-        ? (730 / 901 + (y - 730) * root.clientWidth / 1440 / root.clientHeight) * 100
+      const marker = root.querySelector<HTMLElement>("[data-truth-marker]");
+      // Below 1024 the offset from the anchor line uses the rails' own
+      // across-scale (15 September 2026) — the marker's compact size — so the
+      // pin lands on the enlarged top rail. Desktop's branch is untouched.
+      const markerY = (y: number) => root.clientWidth < TRUTH_COMPACT_BELOW
+        ? (730 / 901 + (y - 730) * truthAcrossScale(root.clientWidth) / root.clientHeight) * 100
         : y / 9.01;
-      timeline.set(marker, { xPercent: homeTruthScenes[0].x / 14.4, yPercent: () => markerY(homeTruthScenes[0].y) }, 0);
+      // ⚑ THE MARKER RIDES THE TOP RAIL, 15 September 2026, user direction.
+      // Its position is a frame x; its height is Rail B's own centre line at
+      // that x (home-truth-rails.ts), so it stays on the line while it moves
+      // instead of cutting straight between the seven anchors. Without the
+      // canvas's rail it falls back to exactly that straight cut.
+      const railY = config.railY ?? ((x: number) => {
+        const scenes = homeTruthScenes;
+        if (x <= scenes[0].x) return scenes[0].y;
+        const n = scenes.findIndex((scene) => scene.x >= x);
+        if (n < 0) return scenes[scenes.length - 1].y;
+        const a = scenes[n - 1], b = scenes[n];
+        return a.y + (b.y - a.y) * (x - a.x) / (b.x - a.x);
+      });
+      // ⚑ …AND WEARS ITS FADE (same day, user direction): where the rails fade
+      // out at their ends, the marker fades with them, so the ring sliding in
+      // from the left end surfaces out of the line rather than over it. Its
+      // opacity is the rails' own end-fade at its x (home-truth-rails.ts);
+      // visibility alone is what the timeline switches on and off.
+      const railFade = config.railFade ?? (() => 1);
+      const glide = { x: homeTruthScenes[0].x };
+      const placeMarker = () => {
+        if (marker) gsap.set(marker, {
+          xPercent: glide.x / 14.4, yPercent: markerY(railY(glide.x)), opacity: railFade(glide.x),
+        });
+      };
+      // home-hero.ts re-places it on resize: the mobile branch of markerY
+      // reads the viewport, and a held marker gets no onUpdate to catch up.
+      timeline.data = { placeMarker };
+      placeMarker();
       // SCR-10 / "Country carries the years", user direction 13 September
       // 2026: orient the reader during Truth's introduction, with a quiet
       // fade in place alongside the heading rather than a later arrival.
+      //
+      // ⚑ TWO RAILS, DRAWN, 15 September 2026, user direction: the line no
+      // longer fades in. Truth's rail pair (home-truth-rails.ts) draws dot by
+      // dot from the left on the canvas across the same beat, Rail B chasing
+      // Rail A; `ease: "none"` because the scrub is the ease, and each dot
+      // carries its own pop. 1.0 unit (was 0.9) so the chase has room to read,
+      // and it still lands as the marker arrives at +2.3. The DOM wrapper now
+      // holds only the marker, which keeps its own fade, so it is switched on.
+      timeline.fromTo(config.state, { truthDraw: 0 },
+        { truthDraw: 1, duration: 1, ease: "none", onUpdate: config.render }, wonderAt + 1.3);
       timeline.fromTo(root.querySelector("[data-truth-timeline]"),
-        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: "sine.inOut" }, wonderAt + 1.3);
+        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01, ease: "none" }, wonderAt + 1.3);
       // SCR-10, 13 September 2026: only the line introduces the chronology;
       // the marker and its date wait until after the opening hold.
-      timeline.fromTo(marker,
-        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: "sine.inOut" }, wonderAt + 2.3);
+      //
+      // ⚑ THE MARKER ARRIVES, 15 September 2026, user direction. It no longer
+      // fades in on 1861: the ring slides in along the top rail from the
+      // line's left end, off the edge of the canvas, and settles on 1861. The
+      // stem and arrowhead belong to the DATE — they grow up out of the ring
+      // when a date lands and fold back down before the marker moves, so no
+      // arrow travels pointing at nothing (home-truth-marker.ts inlines and
+      // ranks them; if it could not, the arrow simply stays on the marker).
+      // The marker used to travel continuously between years; it now travels
+      // and HOLDS, because a date needs somewhere still to land.
+      const stem = truthMarkerStem(marker);
+      /** Unit spans: the slide in, the arrow folding, travel, the arrow growing. */
+      const SLIDE = 0.5, FOLD = 0.12, TRAVEL = 0.5, STEM = 0.28;
+      /** Frame x the ring enters from and leaves to: clear of the canvas edge
+       *  at any width, and past both ends of the rails' fade. */
+      const ENTER_X = -60, EXIT_X = 1520;
+      // Only the first grow renders its hidden state up front; the later ones
+      // must not, or they would hide the arrow the earlier years are showing.
+      // ⚠ The origin is set ONCE, before any tween. Given only in a grow's
+      // to-vars, the hidden from-state rendered about GSAP's default SVG
+      // origin, and smoothOrigin's compensation for the switch stayed behind
+      // as a translate: every stem dot settled ~1.6 units off, the arrowhead
+      // ~6 (reported with a screenshot, 15 September 2026; measured in a
+      // headless replay, zero offset with this line).
+      if (stem.length) gsap.set(stem, { transformOrigin: "50% 50%" });
+      const growStem = (from: number, first = false) => {
+        if (!stem.length) return;
+        timeline.fromTo(stem,
+          { autoAlpha: 0, scale: 0.2 },
+          { autoAlpha: 1, scale: 1, duration: 0.12, ease: "back.out(1.6)",
+            stagger: { each: (STEM - 0.12) / (stem.length - 1) }, immediateRender: first }, from);
+      };
+      const foldStem = (from: number) => {
+        if (!stem.length) return;
+        timeline.to(stem.slice().reverse(),
+          { autoAlpha: 0, scale: 0.2, duration: 0.08, ease: "sine.in",
+            stagger: { each: (FOLD - 0.08) / (stem.length - 1) } }, from);
+      };
+      const arrive = wonderAt + 2.3;
+      timeline.set(marker, { visibility: "visible" }, arrive);
+      timeline.fromTo(glide, { x: ENTER_X },
+        { x: homeTruthScenes[0].x, duration: SLIDE, ease: "power2.out", onUpdate: placeMarker }, arrive);
+      // The first date arrives with its arrow once the ring has settled.
+      timeline.fromTo(root.querySelector('[data-truth-year="0"]'),
+        { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25, ease: "sine.inOut" }, arrive + SLIDE);
+      growStem(arrive + SLIDE, true);
       homeTruthScenes.forEach((scene, index) => {
         const at = wonderAt + 2.3 + index;
         timeline.to(config.state, { sky: scene.sky, light: scene.light,
           duration: 1, ease: "none", onUpdate: config.render }, at);
         if (index) {
-          timeline.to(marker, { xPercent: scene.x / 14.4, yPercent: () => markerY(scene.y),
-            duration: 1, ease: "none" }, at);
+          const lands = at + FOLD + TRAVEL;
+          foldStem(at);
+          timeline.to(glide, { x: scene.x, duration: TRAVEL, ease: "sine.inOut", onUpdate: placeMarker }, at + FOLD);
           timeline.to(root.querySelector('[data-truth-panel="' + (index - 1) + '"]'),
             { autoAlpha: 0, duration: 0.3, ease: "sine.inOut" }, at);
           timeline.to(root.querySelector('[data-truth-year="' + (index - 1) + '"]'),
-            { autoAlpha: 0, duration: 0.3, ease: "sine.inOut" }, at);
+            { autoAlpha: 0, duration: 0.15, ease: "sine.inOut" }, at);
           timeline.fromTo(root.querySelector('[data-truth-panel="' + index + '"]'),
             { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: "sine.inOut" }, at + 0.32);
           timeline.fromTo(root.querySelector('[data-truth-year="' + index + '"]'),
-            { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: "sine.inOut" }, at + 0.32);
+            { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25, ease: "sine.inOut" }, lands);
+          growStem(lands);
         }
-        // Continuous travel between years; pause only on the final account.
-        if (index === homeTruthScenes.length - 1) timeline.to({}, { duration: 0.9 }, at + 1);
+        // Pause only on the final account.
+        if (index === homeTruthScenes.length - 1) {
+          timeline.to({}, { duration: 0.9 }, at + 1);
+          // ⚑ THE MARKER LEAVES ALONG THE RAIL, 15 September 2026, user
+          // direction: it no longer stops on 2026 and vanishes with the
+          // wrapper. After the date has been read, the arrow folds, the date
+          // goes, and the ring runs on along the top rail to the line's right
+          // end — accelerating, the mirror of its eased arrival — where the
+          // rails' own end fade takes it out. It is gone before Belonging's
+          // clear-out begins, so nothing else changes around it.
+          const leaves = at + 1 + 0.4;
+          foldStem(leaves);
+          timeline.to(root.querySelector('[data-truth-year="' + index + '"]'),
+            { autoAlpha: 0, duration: 0.15, ease: "sine.inOut" }, leaves);
+          timeline.to(glide, { x: EXIT_X, duration: SLIDE, ease: "power2.in", onUpdate: placeMarker }, leaves + FOLD);
+        }
       });
       // SCR-10: the dated account clears before Belonging arrives.
       const belongingAt = timeline.duration();
       timeline.to(root.querySelectorAll("[data-home-truth], [data-truth-timeline]"),
         { autoAlpha: 0, duration: 0.45, ease: "sine.inOut" }, belongingAt);
+      // The rails leave the way the old path did; only the arrival changed.
+      timeline.to(config.state,
+        { truthOpacity: 0, duration: 0.45, ease: "sine.inOut", onUpdate: config.render }, belongingAt);
       timeline.to(config.state, { sky: 5822, light: 5822, belonging: 1,
         duration: 1.2, ease: "sine.inOut", onUpdate: config.render }, belongingAt);
       timeline.fromTo(root.querySelector("[data-home-belonging]"),

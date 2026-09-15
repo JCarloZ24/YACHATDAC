@@ -12,6 +12,8 @@ import { registerYachatdacEffects } from "./effects";
 import { createLandMaterial } from "./home-land";
 import { createSunUpdater } from "./home-sun";
 import { createHomeHandStars } from "./home-hand-stars";
+import { createHomeTruthRails } from "./home-truth-rails";
+import { inlineTruthMarker } from "./home-truth-marker";
 import { HOME_PORTAL } from "@/content/kit";
 import { awaitEntry, routeEntryPending } from "./route-entry";
 
@@ -117,8 +119,10 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
     };
     let breeze: gsap.core.Timeline | undefined;
     let syncBreeze = () => {};
+    let placeMarker = () => {};
     let geometry: PlaneGeometry | undefined;
     let handStars: ReturnType<typeof createHomeHandStars> | undefined;
+    let truthRails: ReturnType<typeof createHomeTruthRails> | undefined;
     const textures: Texture[] = [];
     const materials: ShaderMaterial[] = [];
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -143,6 +147,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
       textures.forEach((texture) => texture.dispose());
       geometry?.dispose();
       handStars?.dispose();
+      truthRails?.dispose();
       renderer?.dispose();
       canvas.removeEventListener("webglcontextlost", onLost);
       preference.removeEventListener("change", init);
@@ -231,8 +236,8 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         // the intro used to keep writing twilight over a scroll that had
         // already reached Wonder. Separate the clocks' state, then transfer
         // ownership once; neither refresh nor reverse scroll replays night.
-        const opening = { ...HOME_SCENE.night, belonging: 0, landscapeLift: 0, landscapeZoom: 1 };
-        const exit = { ...HOME_SCENE.welcome, belonging: 0, landscapeLift: 0, landscapeZoom: 1 };
+        const opening = { ...HOME_SCENE.night, belonging: 0, landscapeLift: 0, landscapeZoom: 1, truthDraw: 0, truthOpacity: 1 };
+        const exit = { ...HOME_SCENE.welcome, belonging: 0, landscapeLift: 0, landscapeZoom: 1, truthDraw: 0, truthOpacity: 1 };
         let scrollOwnsScene = false;
         let introStarted = false;
         let landscapeReady = false;
@@ -268,11 +273,20 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         const plate = new Mesh(geometry, land);
         plate.frustumCulled = false;
         scene.add(plate);
+        // Truth's two rails, 15 September 2026: drawn dot by dot on this
+        // canvas. Loaded with the photograph, so a failure takes the same
+        // catch below and leaves the reader the DOM still.
+        truthRails = createHomeTruthRails();
+        scene.add(truthRails.mesh);
         // The photograph is the page's first screen, so it is waited for
         // rather than faded in behind the copy: the black beat lifts onto a
         // finished scene. A decode that fails throws to the catch below and
         // leaves the reader the DOM still, which is the same photograph.
-        await Promise.all(maps.map(({ image }) => image.decode()));
+        // The year marker goes inline so its dots can draw (15 September
+        // 2026). Unlike the maps it is not load-bearing: on failure the <img>
+        // stays and the dissolve falls back to the marker's old fade.
+        await Promise.all([...maps.map(({ image }) => image.decode()), truthRails.load(),
+          inlineTruthMarker(root).catch(() => {})]);
         if (disposed) return;
         maps.forEach(({ texture }) => { texture.needsUpdate = true; });
         landscapeReady = true;
@@ -335,6 +349,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           // were calibrated against. See the HOME_PORTAL note in kit.ts.
           land.uniforms.legacyScale.value = HOME_PORTAL.height / HOME_PORTAL.legacyHeight;
           handStars?.update();
+          truthRails?.setDraw(state.truthDraw, state.truthOpacity);
           renderer?.render(scene, camera);
         };
 
@@ -390,7 +405,9 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           );
           renderer?.setSize(width, height, false);
           handStars?.setSize(width, height);
+          truthRails?.setLayout(width, height);
           render();
+          placeMarker();
         };
         // SCR-09, 12 September 2026: only adopt the pinned layout after all
         // maps decode. Measure that viewport, not the taller static fallback.
@@ -431,7 +448,13 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
             timeline?.progress(1).pause();
             settleOpening();
           };
-          const dissolve = gsap.effects.homeHeroDissolve(root, { state: exit, render });
+          // The year marker rides the canvas's top rail (15 September 2026).
+          const dissolve = gsap.effects.homeHeroDissolve(root, {
+            state: exit, render,
+            railY: (x: number) => truthRails?.topRailY(x) ?? 752.5,
+            railFade: (x: number) => truthRails?.fadeAt(x) ?? 1,
+          });
+          placeMarker = () => (dissolve.data as { placeMarker?: () => void } | undefined)?.placeMarker?.();
           const trigger = ScrollTrigger.create({
             id: "home-hero-dissolve",
             trigger: root,

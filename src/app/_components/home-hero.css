@@ -140,62 +140,9 @@ body:has([data-hero-phase="black"]) > header { visibility: hidden; }
    The marker's BOTTOM edge is its anchor (`bottom: 97.55%`) and the red dot
    sits at the bottom of the 48x94 artwork, so an intrinsic height grows the
    tail upward and leaves the dot exactly where it was. */
-.home-truth-path { position: absolute; left: .625%; top: 81.02%; width: 123.472%; height: auto; max-width: none; }
-/* SCR-10 second line, 15 September 2026 (user direction): the chronology runs
-   on TWO parallel dotted lines, not one. Figma frame 05, "05 · TODAY montage
-   — GROUND · evergreen + FIELD OF FOUR" (2048:11158), draws the rail as a pair
-   — Rail A (2048:12273) and Rail B (2048:11629) — and the line this page
-   already had is Rail B: both are 112 dots, and Rail B is the strand the
-   rosette rides, which is exactly what the year marker does here. So the piece
-   that was missing is Rail A, and Rail A is all this adds. Nothing else moves
-   and nothing else is repositioned.
-
-   ⚠ NO NEW ARTWORK, ON PURPOSE. Read from Figma on 15 September 2026, Rail A
-   and Rail B are ONE strand used twice: their dot x-coordinates are identical
-   (18.95, 20.54, 17.71, 16.98, 13.73 …) and differ only by a 224.32 shift along
-   the strand's own length. truth-dotted-path.svg is that same strand already
-   transposed to this page's scale — 1087.66 × 27.57 at ×1.6322 is 1775 × 45
-   against its 1778 × 45 — so Rail A is this file's existing artwork in a second
-   colour. It is carried through a MASK so the supplied paths are never edited
-   and no hex reaches the markup: the chevron pattern at
-   truth/_components/Sections.tsx:2545 and the blob-button masks in HomeHero.
-   The mask URL is the literal that homeTruthArtwork.path also names — CSS
-   cannot read the content module, so if that path ever moves, move it here too.
-
-   Rail A is #CB7722 in the frame, V2's "Colour/Burnt Ochre", which
-   globals.css:28 already carries as outstanding against --color-burnt
-   (#d97804). It renders in the token, so reconciling the token moves this line
-   with it and nothing here needs a second edit.
-
-   ⚠ THE 224.32 LENGTHWISE STAGGER IS DELIBERATELY NOT PORTED. It exists in
-   frame 05 so a FINITE vertical rail can show two different fade-out points.
-   This line is not finite — it is 123.472% wide and runs off both edges — so
-   staggering it would only drag its baked end-fade into view and read as a line
-   that stops early. The perpendicular gap is the part that makes it two lines,
-   and that is ported exactly: 111 − 73 = 38 between strand centres, ×1.6322 to
-   this page's scale = 62.02 artwork px = 4.306% of the hero width this artwork
-   is sized from. A percentage margin on an absolutely positioned box resolves
-   against the containing block's WIDTH — the one axis that drives this
-   artwork's scale — so the gap holds its proportion at every window size.
-
-   Rail A sits BELOW Rail B because the marker and its year occupy the space
-   above (bottom: 97.55% and 110.5%), and because that is the frame's own
-   arrangement: Rail A is the far strand from the rosette and its label.
-
-   ⚠ AND IT IS STILL NEVER SIZED ON BOTH AXES — the 14 September rule above.
-   `mask-size: 100% 100%` is safe here ONLY because `aspect-ratio` locks the box
-   to the artwork's own 1778:45, so both percentages resolve to one scale and a
-   dot cannot become an ellipse. Do not drop the aspect-ratio and keep the
-   mask-size. */
-.home-truth-path-a {
-  position: absolute; left: .625%; top: 81.02%; width: 123.472%;
-  aspect-ratio: 1778 / 45; margin-top: 4.306%;
-  background-color: var(--color-burnt);
-  -webkit-mask-image: url("/media/home/derivatives/truth-dotted-path.svg");
-  mask-image: url("/media/home/derivatives/truth-dotted-path.svg");
-  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-}
+/* `.home-truth-path` retired 15 September 2026: the two rails are drawn in the
+   hero canvas (home-truth-rails.ts), which carries this rule's placement —
+   left .625%, top 81.02%, 123.472% of the WIDTH — into its vertex shader. */
 /* SCR-10, 13 September 2026: marker and date arrive after the line. */
 .home-truth-marker { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
 .home-truth-marker-art { position: absolute; width: 3.333%; height: auto; left: -1.666%; bottom: 97.55%; }
@@ -204,8 +151,9 @@ body:has([data-hero-phase="black"]) > header { visibility: hidden; }
 .home-truth-years > p:not(:first-child) { opacity: 0; visibility: hidden; }
 body:has([data-hero-canvas="ready"]) #truth { display: none; }
 @media (max-width: 63.999rem) {
-  .home-truth-copy { top: 9%; }
-  .home-truth-path { height: auto; }
+  /* 9% → 13%, 15 September 2026, user direction: the Truth copy sat too high
+     under the header on phones and tablets. Desktop keeps its 13.75%. */
+  .home-truth-copy { top: 13%; }
   .home-truth-marker-art { width: 32px; height: 63px; left: -16px; bottom: calc(100% - 16px); }
   .home-truth-years { bottom: calc(100% + 62px); left: -45px; width: 90px; }
   .home-truth-panel { font-size: clamp(.875rem, 2.7vw, 1rem); }

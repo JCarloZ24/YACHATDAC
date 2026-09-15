@@ -60,6 +60,15 @@ Truth colour layers, 9 September 2026. Origin: Figma 7XBvi0Mdbtmym10nkF9IGp, fra
 
 Origin: Figma YACHATDAC V2, Homepage Prototype 3371:45208-46472. `derivatives/truth-sky-sequence.webp` and `truth-light-sequence.webp` are complete supplied image layers exported to WebP (quality 95), replacing cropped views for reversible offset animation; no authored replacement pixels. Credit unconfirmed. `truth-dotted-path.svg` (3371:45366) and `truth-year-marker.svg` (3371:45367) are exact vector exports including the original arrow and rosette. Narrative and date provenance: `src/content/home-truth-scenes.ts` and homepage draft amendment.
 
+### Truth rails - 15 September 2026
+
+Origin: Figma YACHATDAC V2 (7XBvi0Mdbtmym10nkF9IGp), Truth frame "05 · TODAY montage" 2048:11158.
+`derivatives/truth-rail-a.svg` (Rail A, 2048:12273) and `truth-rail-b.svg` (Rail B, 2048:11629) are
+exact vector exports, bytes unchanged. They replace `truth-dotted-path.svg` on the homepage at user
+direction: the canvas rasterises both, turns them −90°, recolours them to the canvas off-white
+`#FCF7F0` in the shader and draws them dot by dot (`src/lib/motion/home-truth-rails.ts`). The files
+keep Figma's own colours. `truth-dotted-path.svg` stays on disk, unreferenced by `/`. Credit unconfirmed.
+
 ### Invitation - 9 September 2026
 Origin: Figma 7XBvi0Mdbtmym10nkF9IGp, frame 3371:41740. Photos sandstone-overhang-group.webp (3371:41802), verandah-table-people.webp (3371:41842), person-beside-smoking-fire.webp (3371:41865) are exact supplied fills converted with Sharp to WebP quality 88, maximum width 1000 without enlargement. Credits and identities unconfirmed; use authorised by user direction/F8. All three use frame motion. Fire photograph accompanies Caring for Country only. No generated photography. invitation-ring.svg (3371:41805), invitation-spiral.svg (3371:41845), invitation-boomerang.svg (3371:41868), invitation-chevron.svg (I3371:41841;4179:9009) are unchanged Figma exports.
 

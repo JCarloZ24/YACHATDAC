@@ -65,18 +65,8 @@ export function HomeHero({ beat, wonder, truth, belonging }: { beat: Beat; wonde
         <div className="sr-only">{truth.sequence?.subjectDetail.slice(1).map((p, i) => <p key={i}>{p}</p>)}</div>
       </div>
       <div data-truth-timeline className="home-truth-timeline pointer-events-none absolute inset-0 z-[3] text-canvas">
-        {/* SCR-10 second line, 15 September 2026 (user direction): the chronology
-            runs on two parallel dotted lines. This is Rail A of Figma frame 05
-            (2048:12273), the partner to the line below it — which is that
-            frame's Rail B, the strand the rosette rides, exactly as the year
-            marker rides this one. It is the SAME supplied artwork recoloured to
-            --color-burnt through a mask (see home-hero.css), so it brings no new
-            asset, and it sits inside [data-truth-timeline] so it arrives on the
-            fade that wrapper already plays — no tween of its own. Nothing here
-            moves that did not move before, which is why the screen's one loud
-            channel (F7) stays with the Three.js sky, sun and stars. */}
-        <span aria-hidden className="home-truth-path-a" />
-        <Image src={homeTruthArtwork.path} alt="" width={1778} height={45} unoptimized className="home-truth-path" />
+        {/* The dotted rails are drawn in the hero canvas, dot by dot, since 15
+            September 2026 — src/lib/motion/home-truth-rails.ts. */}
         <div data-truth-marker className="home-truth-marker">
           <div className="home-truth-years">{homeTruthScenes.map((scene, index) => <p key={scene.year} data-truth-year={index} className="headline text-h1 leading-none">{scene.year}</p>)}</div>
           <Image src={homeTruthArtwork.marker} alt="" width={48} height={94} unoptimized className="home-truth-marker-art" />
