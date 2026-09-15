@@ -20,6 +20,7 @@ import {
   RingArtwork,
   SeamGlyph,
   WaveDivider,
+  WaveInk,
 } from "@/components/ui/Furniture";
 import type { SeamGlyphMotif } from "@/components/ui/Furniture";
 
@@ -140,6 +141,73 @@ const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
  */
 const sentences = (para: string): string[] =>
   para.match(/[^.]+\./g)?.map((s) => s.trim()) ?? [para];
+
+/**
+ * Break a string onto `count` lines of as near the same length as the words
+ * allow. Derived, never authored — the same contract `sentences()` keeps, and
+ * for the same reason: copy is CMS-editable (D12) and the draft governs the
+ * words (D5), so a revised name must re-break itself rather than strand a
+ * hand-typed `<br>` in the middle of a sentence nobody typed.
+ *
+ * ⚠ IT EXISTS BECAUSE A DECODE CANNOT BE ALLOWED TO RE-WRAP, and that is a
+ * measured defect rather than a preference. `decode` is ScrambleText: it
+ * rewrites the element's whole text every frame, and a wrapping paragraph
+ * therefore re-breaks under the reader for the length of the resolve. Measured
+ * in browser on 15 September 2026, §02's legal name ran four lines of noise
+ * resolving into two at 1366, stranded a 312px last line at 1280, and at 1440
+ * put 1238px of noise inside a 1240px column — flush to both edges with no
+ * gutter, which is what was reported as "it exceeds the section width". One
+ * unlucky draw of wide glyphs takes it past the edge outright.
+ *
+ * Set on fixed lines, the line COUNT cannot change mid-resolve, every line is
+ * of comparable length by construction, and the longest line is a number that
+ * can be measured once and sized against instead of a thing that happens.
+ *
+ * The algorithm is the standard balanced-wrap DP, scored on the square of each
+ * line's slack against the ideal — cheap at this size (one string, ten words)
+ * and it runs on the server, once, per render. It balances by CHARACTER count,
+ * not by advance width: the caller cannot measure Block Berthold here, and
+ * character count is the right proxy anyway because the scramble draws its
+ * glyphs uniformly from the alphabet.
+ */
+const balanceLines = (text: string, count: number): string[] => {
+  const words = text.split(/\s+/).filter(Boolean);
+  if (count <= 1 || words.length <= count) {
+    return count <= 1 ? [text] : words;
+  }
+  const ideal = text.length / count;
+  // best[i][k] = the least cost of setting words[i..] on k lines.
+  const best: number[][] = Array.from({ length: words.length + 1 }, () =>
+    Array<number>(count + 1).fill(Number.POSITIVE_INFINITY),
+  );
+  const take: number[][] = Array.from({ length: words.length + 1 }, () =>
+    Array<number>(count + 1).fill(0),
+  );
+  best[words.length][0] = 0;
+  for (let i = words.length - 1; i >= 0; i -= 1) {
+    for (let k = 1; k <= count; k += 1) {
+      let len = -1;
+      for (let n = 1; i + n <= words.length - (k - 1); n += 1) {
+        len += words[i + n - 1].length + 1;
+        const rest = best[i + n][k - 1];
+        if (!Number.isFinite(rest)) continue;
+        const slack = len - ideal;
+        const cost = slack * slack + rest;
+        if (cost < best[i][k]) {
+          best[i][k] = cost;
+          take[i][k] = n;
+        }
+      }
+    }
+  }
+  const lines: string[] = [];
+  for (let i = 0, k = count; k > 0; k -= 1) {
+    const n = take[i][k];
+    lines.push(words.slice(i, i + n).join(" "));
+    i += n;
+  }
+  return lines;
+};
 
 const HERO = photoById("about-hero");
 const ROAD = photoById("about-road");
@@ -371,6 +439,25 @@ export function WhatWeAre() {
    */
   const recap = `${shortName} · ${sentences(whatWeAre.body[2])[0]}`;
 
+  /**
+   * THE LEGAL NAME, ON THREE FIXED LINES — 15 September 2026, user report
+   * ("the acronym reveal is too slow and exceeds the section width").
+   *
+   * Three, not two, and derived rather than typed: see `balanceLines` for the
+   * measurements. In short, `decode` is ScrambleText and rewrites the whole
+   * string every frame, so a single wrapping paragraph re-breaks under the
+   * reader for the length of the resolve — four lines of noise resolving into
+   * two at 1366 — and at 1440 the noise ran 1238px inside a 1240px column,
+   * flush to both edges. On fixed lines the count cannot change and the
+   * longest line is a number that can be sized against.
+   *
+   * ⚠ THE WORDS ARE UNTOUCHED. This is the draft's string broken onto lines,
+   * not a rewrite: D5 governs the copy and the draft writes "and", not "&".
+   * (CLAUDE.md's own prose writes "&" — raised as a drift, not reconciled
+   * here.) The split is computed, so a revised name re-breaks itself (D12).
+   */
+  const legalLines = balanceLines(legalName, 3);
+
   return (
     <section data-ab="what-we-are" className="relative bg-canvas text-charcoal">
       {/* Seam 01 → 02 · Wave / Divider · OFF-WHITE. "The cliff's horizontal
@@ -436,11 +523,50 @@ export function WhatWeAre() {
                to 0.084, which is very nearly invisible on canvas and is why the
                name could not be read (user, 13 September 2026). The class is
                full strength now and the recipe is the only thing that dims it. */
-            className="headline max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[3.5rem]"
+            /* ⚠ THE ONLY FLUID SIZE ON THIS PAGE, AND IT IS THE DECODE THAT
+               MAKES IT ONE. Everything else here steps once at `lg` because
+               the frame draws two grids; this line cannot, because what has to
+               fit the column is not the NAME, it is the NOISE. ScrambleText
+               draws uniformly from the alphabet while the name is mostly
+               lowercase, so a decode measures ~23% wider than the string it
+               resolves into — line 2 is 756px resolved and up to 932px mid-
+               scramble at 48px (measured over sixty random draws, 15 September
+               2026). Fixed at the frame's 3.5rem the noise runs past the
+               column at every held width below about 1560; fixed at anything
+               that clears 1024 it is small at 1440.
+
+               So it is tied to the COLUMN, which is the box it actually has to
+               fit — and the column is `vw − 200`, not a fraction of `vw`, so
+               the expression carries the gutter as a subtraction. A plain
+               `vw` multiplier over-sizes the narrow end, where the fixed 200px
+               is a bigger share of the width, and that is where the margin was
+               thinnest. `calc(4.6vw - 0.55rem)` reaches the frame's own 3.5rem
+               at the frame's own 1440 and caps there; at 1024 — the narrowest
+               window the hold applies to, verified in browser — it gives 38px,
+               where the widest of four hundred random scrambles measures well
+               inside the 824px column and none of them re-wraps. The `lg` step
+               is still ONE step; it is a ceiling rather than a value. */
+            className="headline max-w-[1240px] text-4xl leading-[1.2] text-evergreen sm:text-5xl lg:text-[clamp(2.25rem,calc(4.6vw-0.55rem),3.5rem)]"
           >
-            <span data-ab2-decode aria-hidden="true">
-              {legalName}
-            </span>
+            {/* ⚠ ONE RUN PER LINE, AND THEY ARE `inline` UNTIL `lg`. The decode
+                only ever runs where the screen is held — `theRegister`'s
+                composition declares the same 1024/640 bounds this stylesheet
+                does — so below `lg` these collapse back into one ordinary
+                paragraph that wraps as it always has, and the fixed lines exist
+                exactly where the scramble would otherwise re-break them.
+
+                The separating space is INSIDE the run rather than between the
+                runs: `decode` captures `textContent` and leaves spaces alone,
+                so a trailing space survives the scramble unchanged and is
+                collapsed away the moment the run becomes a block — whereas a
+                text node BETWEEN two blocks is a stray the layout has to
+                swallow. One run, one line's words, one trailing space. */}
+            {legalLines.map((line, i) => (
+              <span key={line} data-ab2-decode aria-hidden="true" className="lg:block">
+                {line}
+                {i < legalLines.length - 1 ? " " : ""}
+              </span>
+            ))}
           </p>
           <p
             data-ab2-short
@@ -763,8 +889,36 @@ export function WhyWeExist() {
 
           {/* THE GROUND GOING OUT, held build only. One rising front, driven
               by a single custom property. Above the plate so it takes the
-              photograph; below the column so the type is never under it. */}
-          <div aria-hidden data-ab-ground className="absolute inset-0" />
+              photograph; below the column so the type is never under it.
+
+              ⚠ ITS LEADING EDGE IS A WAVE, AND IT IS A CROPPED REVEAL — user
+              direction, 15 September 2026. The front used to be a soft gradient
+              stop; it is now the Wave / Divider's own contour worn as the top
+              edge of the rising ground, so the charcoal is revealed THROUGH a
+              wave. It is not a wave laid over the top, and that distinction is
+              the instruction: both halves of this screen carry figures — the
+              photograph and its scrim above the edge, the artist's rings below
+              it that emerge out of the front as it passes them — and an opaque
+              shape drawn over them deletes the composition the section is.
+
+              The geometry is ./about.css; only the ink is here, because the ink
+              is a component. `WaveInk` is the same three-tile strip every seam
+              on this page draws, through `WAVE_PATH`'s own viewBox crop and
+              `preserveAspectRatio="none"` — so /about has ONE wave language,
+              and the strip means a roll is available later without a second
+              drawing. Nothing rolls it today: the cover IS the motion. */}
+          <div aria-hidden data-ab-ground className="absolute inset-0">
+            <div data-ab-front>
+              <svg
+                data-ab-front-crest
+                viewBox="1.00123 0 1467.84877 105.324"
+                preserveAspectRatio="none"
+              >
+                <WaveInk fill="var(--color-evergreen)" />
+              </svg>
+              <div data-ab-front-body />
+            </div>
+          </div>
 
           {/* THE ARTIST'S RINGS, static at 30% as the frame draws them.
 
@@ -791,12 +945,27 @@ export function WhyWeExist() {
               read against the rings, not against nothing. The sequence now
               clears `[data-ab-claims-col]` instead of the screen, so these
               survive it; see `theQuestion`. */}
+          {/* ⚠ THEY TURN UNDER SCROLL — user direction, 15 September 2026
+              ("the rings should rotate under scrolling, the way /living-work
+              does it"). `drift` opts them into `driftArtwork`, which is
+              /living-work's own helper and not a second one: a slow clockwise
+              turn scrubbed across §03's whole read, unwinding at the same tempo
+              on the way back up. Grammar row: "what radiates, the artist's ring
+              grounds under scroll".
+
+              It costs the section nothing it was spending elsewhere — the turn
+              is ground rather than an event, so §03 is still loud in TYPE and
+              `assertChannel` is untouched. Whole vectors, never redrawn (F2).
+              Under reduced motion, JavaScript off or a window too small to hold
+              the screen they simply stand, as they did before. */}
           <RingArtwork
             piece="b"
+            drift
             className="top-[4%] left-[64%] w-[56.25rem] opacity-30"
           />
           <RingArtwork
             piece="a"
+            drift
             className="-left-48 top-[54%] w-[40rem] opacity-30"
           />
 
@@ -1052,25 +1221,39 @@ export function WhatWeDo() {
           </p>
         </div>
 
-        {/* ---- the loop ---------------------------------------------------
-            ⚠ THE DIAMOND IS THE HELD BUILD'S, AND THE RAIL IS THE DOCUMENT'S.
-            A diamond of four around the artist's spiral is the frame's
-            composition, and it was taken out of the resting page on purpose:
-            it was the only four-card row on the site laid out that way, so a
-            reader arriving from The Record or /partnerships met a different
-            object doing the same job. That objection is about the DOCUMENT,
-            which has not changed — below `deck:`, under reduced motion and
-            with JavaScript off this is `CardRail`'s row exactly as before. The
-            diamond exists only while the screen is held, as choreography.
+        {/* ---- the row ----------------------------------------------------
+            ⚠ THE CAROUSEL IS THE HELD BUILD'S, AND THE RAIL IS THE DOCUMENT'S.
+            Rebuilt 15 September 2026 on user direction: "four cards in
+            horizontally, no need to shrink, scroll carousel to the left upon
+            scrolling", with the homepage Pathways rail named as the style to
+            follow. What it replaces is a DIAMOND of four cards around the
+            artist's spiral — the frame's composition, seated at 0.475 scale,
+            each card losing its body to a clip-path because at that size the
+            body measured about 8px, with the ring turning a quarter per card.
+            The direction removes that mechanism's whole premise.
+
+            The old note here argued the diamond was defensible because the
+            objection to it was about the DOCUMENT, and the document had not
+            changed. That is still true and it still holds for the carousel:
+            below `deck:`, under reduced motion and with JavaScript off this is
+            `CardRail`'s ordinary four-card row, exactly as it is on The Record
+            §07 and /partnerships §06. Only the held choreography changed, and
+            it changed toward the object the rest of the site already uses.
 
             ⚠ `CardRail` IS NOT MODIFIED. It already wraps each child in a cell
             that goes `display: contents` from 640 up, so the slot below is the
-            grid item there and the desktop row is what it was. The Record §07,
+            flex item of the held row there — as it was the grid item of the
+            diamond's — and the desktop row is what it was. The Record §07,
             /partnerships §06 and ContactDoors are untouched. */}
         <div data-ab4-loop className={`${COLUMN} relative pt-10 pb-16 lg:pt-20 lg:pb-24`}>
-          {/* The spiral the four sit on. Ground artwork in flow, the loop's own
-              structure when held — which is why it moves out of the section's
-              artwork layer and into the stage here.
+          {/* The ring behind the row. GROUND ARTWORK, in both builds since
+              15 September 2026 — while there was a diamond this was the loop's
+              own structure, re-centred on it and raised to 0.55 so the reader
+              could see what four cards were standing on. Nothing stands on it
+              now, so it is texture again and about.css no longer moves it.
+
+              It stays in the stage rather than the section's artwork layer
+              because the seam still rides it.
 
               Seam 04 → 05 rides it: "the closed ring becomes the bullet of
               COUNTRY FIRST. Not C2 — Living Work's aperture already spent it."
@@ -1083,12 +1266,31 @@ export function WhatWeDo() {
             />
           </div>
 
-          {/* The fourth position on the loop. Drawn and empty by design — the
-              draft's sentence has three clauses, and a fourth would be
-              invented. It carries no mark of its own: what closes the loop
-              visually is the spiral, not a connector rule. */}
-          <div aria-hidden data-ab4-connector="empty" className="pointer-events-none absolute" />
+          {/* ---- the track -------------------------------------------------
+              ⚠ THE ROW TRAVELS AND THIS IS WHAT TRAVELS — user direction,
+              15 September 2026 ("four cards in horizontally, no need to
+              shrink, scroll carousel to the left upon scrolling"), with the
+              homepage Pathways rail named as the style. One `x` on this
+              wrapper, computed the way `homeHeroDissolve` computes Pathways'
+              own: `min(0, mask − gutter − track)`, scrubbed with `ease:
+              "none"`, so the row walks left exactly far enough to bring its
+              last card to the mask's edge and retraces on the way back up.
 
+              ⚠ IT IS A WRAPPER AND NOT `CardRail` ITSELF, deliberately.
+              `CardRail` is shared with The Record §07, /partnerships §06 and
+              ContactDoors, and the diamond's own rule was that it is never
+              modified. So the travel goes on a box of ours OUTSIDE it, and the
+              held flex line is a descendant selector in about.css. Nothing
+              about `CardRail` changes; its cells are already
+              `display: contents` from 640 up, so the slots are this line's
+              flex items exactly as they were the grid's items before.
+
+              What used to be here was the fourth position on the loop — drawn
+              and left empty because the draft's sentence has three clauses and
+              a fourth would be invented. A row has no empty position to draw:
+              the fourth card simply arrives without a clause of its own, which
+              is the same statement made by the layout instead of by a mark. */}
+          <div data-ab4-track>
           <CardRail columns="sm:grid-cols-2 lg:grid-cols-4">
             {whatWeDo.areas.map((area, i) => {
               const photo = photoById(AREA_PHOTOS[i]);
@@ -1121,13 +1323,30 @@ export function WhatWeDo() {
                       <h3 className="headline text-2xl leading-[1.2] sm:text-[1.75rem]">
                         {area.title}
                       </h3>
-                      {/* THE BODY AND THE LABEL ARE WHAT A CARD GIVES UP when
-                          it compacts onto the loop. At the scale four cards
-                          fit on the spiral this copy lands near 8px and is
-                          unreadable, so a card is read WHOLE and then keeps
-                          only its photograph and its title — which is exactly
-                          what the board seats on the ring. Grouped so one
-                          opacity carries both; never hidden in the document. */}
+                      {/* THE SUBTEXT, EMPHASISED IN THE MIDDLE — user
+                          direction, 15 September 2026 ("make the subtext that
+                          appears only appear in the middle right next to the
+                          cards that refer to it"), corrected the same day
+                          ("why are the original descriptions lost inside the
+                          cards?"). Its opacity is derived from this card's own
+                          distance from the mask's centre, so the emphasis
+                          follows the card in front of the reader as the row
+                          travels; off the middle it rests quieter rather than
+                          going dark, so all four descriptions are readable and
+                          the section's own headline — four things holding each
+                          other up — is not contradicted by a screen showing
+                          one of them. It is inside its own card, so it cannot
+                          float away from what it describes.
+
+                          Under the diamond this copy was DELETED at the moment
+                          its card seated: at the 0.475 scale four cards needed
+                          to fit the spiral it measured about 8px, so a card was
+                          read whole and then kept only its photograph and
+                          title. Nothing is shrunk now, so nothing has to be
+                          given up — it is only ever dimmed. Grouped so one
+                          opacity carries the body and the label; never hidden
+                          in the document, and never `visibility: hidden`,
+                          because the label's link is a tab stop either way. */}
                       <div data-ab4-card-body className="flex flex-1 flex-col">
                         <p className="mt-3.5 text-[0.9375rem] leading-[1.5] text-canvas/86">
                           {area.body}
@@ -1143,6 +1362,7 @@ export function WhatWeDo() {
               );
             })}
           </CardRail>
+          </div>
         </div>
       </div>
     </section>
@@ -1758,18 +1978,21 @@ export function ThePeople() {
         </div>
 
         {/* ---- the rail ----------------------------------------------------
-            One face whole at a time. Held, every frame is lifted onto one row
-            and driven from the section's read — see `theRoster`. In flow this
-            is an ordinary column of portraits, each with its name under it and
-            its marker on it, which is the document at every width the hold does
-            not apply to.
+            Four squares in a row. Held, the cards are laid out four to the
+            column and the whole row travels left with the read — see
+            `theRoster`. In flow this is an ordinary column of squares, each
+            with its name and role under it and its marker on it, which is the
+            document at every width the hold does not apply to.
 
-            ⚠ THE PLATE AND THE LABEL ARE SEPARATE ELEMENTS, and that is the
-            layout. Only the plate scales; the name under it must not, or it
-            arrives at 2.3× the size of every other label on the page. The plate
-            grows from `bottom center` so the name never moves either. */}
+            ⚠ NOTHING HERE CHANGES SIZE SINCE 15 SEPTEMBER 2026 (user
+            direction, "no shrinking"). This note used to explain why the plate
+            and the label had to be separate elements — the plate grew to ×2.3
+            from `bottom center` so the name under it would neither grow nor
+            move. They are still separate, because the caption is now a block in
+            the card's own flow and the picture is a fixed square, which is a
+            simpler reason for the same markup. */}
         <div data-ab7-rail className={`${COLUMN} relative mt-16`}>
-          {/* ⚠ A SWIPE RAIL BELOW `lg`, A WALKED ROW ABOVE IT — user direction,
+          {/* ⚠ A SWIPE RAIL BELOW `lg`, A CAROUSEL ABOVE IT — user direction,
               13 September 2026. Stacked, two portraits measured 984px on a
               phone and the roster is built to grow: every face added another
               ~500px of column. Here the frames run horizontally, one to a
@@ -1787,10 +2010,18 @@ export function ThePeople() {
               /our-people and /wonder. These are the same handful of classes,
               local, and `lg:` hands the frames back to about.css.
 
-              ⚠ UNPOSITIONED, deliberately: the held layout makes each frame
-              `position: absolute`, and their offset parent has to stay the
-              RAIL. A `relative` here would re-parent every frame's travel to a
-              box that is 100% wide instead of the column. */}
+              ⚠ `lg:block` IS THE UN-HELD STATE, NOT DEAD CODE. about.css makes
+              the track a flex row under `[data-ab-held]`, and it wins twice
+              over: the sheet is UNLAYERED, so it outranks everything Tailwind
+              writes into `@layer utilities` whatever the specificity, and the
+              selector is three attribute selectors deep besides. So the held
+              build is the carousel. Without the flag — JavaScript off, reduced
+              motion, a window too small or too short — `lg:block` is what
+              stands the cards back up as an ordinary column, which is this
+              screen's finished document. It used to carry a note about staying
+              unpositioned so that absolutely-placed frames kept the rail as
+              their offset parent; the frames are in flex flow since
+              15 September 2026, so there is nothing left to re-parent. */}
           <div
             data-ab7-track
             className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-6 scroll-px-6 sm:-mx-10 sm:px-10 sm:scroll-px-10 lg:mx-0 lg:block lg:snap-none lg:overflow-visible lg:px-0"
@@ -1805,9 +2036,20 @@ export function ThePeople() {
                 data-ab7-index={i}
                 className="flex w-[78vw] shrink-0 snap-start flex-col items-center lg:mt-10 lg:w-auto lg:shrink lg:first:mt-0"
               >
+                {/* ⚠ A SQUARE, 15 September 2026, user direction ("make the
+                    team cards horizontal squares rather than the Figma layout
+                    copied literally"). It is square in BOTH builds — the swipe
+                    rail below `lg` and the held carousel above it — so the
+                    picture a reader sees on a phone is the picture they see on
+                    a laptop, cropped the same way.
+
+                    Still `frame` grade and still never re-proportioned: the
+                    crop is set once by `object-cover` against a fixed ratio and
+                    nothing animates it. What changed is the ratio; what did not
+                    change is that no transform reaches an image plane. */}
                 <div
                   data-ab7-plate
-                  className="relative aspect-[3/4] w-full max-w-[22rem] overflow-hidden rounded-sm"
+                  className="relative aspect-square w-full max-w-[22rem] overflow-hidden rounded-sm"
                 >
                   <div
                     data-motion={photo?.grade ?? "frame"}
@@ -1816,36 +2058,29 @@ export function ThePeople() {
                     <MediaOrField
                       src={photo?.src ?? null}
                       alt={frame.alt}
-                      /* ⚠ `sizes` MUST DESCRIBE THE PLATE AT FULL FOCUS, NOT AT
-                         REST, AND THAT IS NOT AN OPTIMISATION — IT IS WHY THE
-                         PICTURE IS SHARP. A `transform: scale()` is invisible to
-                         the browser's image selection: it sizes the request from
-                         the LAYOUT box, which here is the resting plate, and then
-                         CSS paints that image 2.3× larger at focus. The first cut
-                         also wrote `36vh`, which resolved to 324px on a 900px
-                         window, so both portraits were fetched at 324 and
-                         upscaled past 2× on screen — reported as "why is the
-                         second image blurry", and it was both of them
-                         (12 September 2026).
+                      /* ⚠ RE-DERIVED 15 September 2026, AND IT IS SMALLER
+                         NOW BECAUSE THE SCALE IS GONE. The note this replaces
+                         is worth keeping in summary because it is the reason
+                         the number was ever 720: a `transform: scale()` is
+                         invisible to the browser's image selection, which sizes
+                         the request from the LAYOUT box, so the old rail's
+                         resting plate fetched a picture that CSS then painted
+                         2.3× larger — reported as "why is the second image
+                         blurry", and it was both of them (12 September 2026).
+                         720 was that scale, plus the tax for cropping a
+                         landscape master into a 3/4 portrait frame.
 
-                         ⚠ AND THE BINDING DIMENSION IS HEIGHT, NOT WIDTH. Both
-                         masters are landscape at about 1.9:1 and the plate is a
-                         3/4 portrait, so `object-cover` crops away most of the
-                         width and it is the source's HEIGHT that has to reach
-                         the plate's. A focused plate is ≈352px tall on a 900px
-                         window, so the source needs ≈352 × 1.9 ≈ 670px of width
-                         before it stops being upscaled — a `sizes` of 420 picked
-                         the 640 variant, which is only 336px tall, and the
-                         portrait was still stretched. 720 picks 750, which is
-                         393 tall, and leaves the browser room to go up again for
-                         a 2× display.
+                         Nothing scales any more. The painted box IS the layout
+                         box: a quarter of the column, capped at 30svh, which is
+                         292px at 1440 × 900 and 270 once the cap bites. 320
+                         covers the widest of those with room for the browser to
+                         step up on a 2× display, and the square crop needs less
+                         of a landscape master's width than the portrait did.
 
-                         It is ~60% more image than the painted box needs, and
-                         that is the tax for cropping a landscape master into a
-                         portrait frame. The real fix is a portrait derivative
-                         per face; until those exist this is the honest number.
-                         Raise it if `--ab7-gain` or `--ab7-rest` goes up. */
-                      sizes="(min-width: 1024px) 720px, 100vw"
+                         Below `lg` the card is 78vw of the swipe rail, which is
+                         what the second clause says — it was `100vw`, which
+                         over-fetched by a third on every phone. */
+                      sizes="(min-width: 1024px) 320px, 78vw"
                       // X6 clears inline motion styles, including Next's fill
                       // positioning; utilities preserve the crop in that cut.
                       className="absolute inset-0 h-full w-full object-cover"
@@ -1853,11 +2088,14 @@ export function ThePeople() {
                     />
                   </div>
                   {"standIn" in frame && frame.standIn && (
-                    /* ⚠ COUNTER-SCALED, so it is exactly as legible when the
-                       face is small as when it is large. A marker that shrank
-                       with the plate would be least readable at the moment the
-                       photograph is least identifiable, which is backwards.
-                       `--ab7-s` is the plate's own scale, inherited. */
+                    /* It used to be counter-scaled, so that it stayed legible
+                       while the plate it sits on grew and shrank underneath it.
+                       Nothing on the rail changes size since 15 September 2026,
+                       so there is no scale left to counter and it is simply a
+                       label at its own size — see the note in about.css, where
+                       the counter-scale was removed with the scale that caused
+                       it. It still does not come off until his photograph
+                       arrives. */
                     <p
                       data-ab7-marker
                       data-placeholder="stand-in"
@@ -1867,18 +2105,48 @@ export function ThePeople() {
                     </p>
                   )}
                 </div>
-                {/* Larger than the page's other eyebrows on purpose (user
+                {/* ---- THE CAPTION, INSIDE THE CARD ---------------------
+                    ⚠ NAME AND ROLE, AND IT BELONGS TO THIS SQUARE — user
+                    report, 15 September 2026: "the subtext that appears should
+                    show in the middle, immediately beside the card it refers
+                    to — not floating away from it". It is a block in the card's
+                    own flow, the card's own width, directly under the square,
+                    so it travels with the card because it is PART of the card.
+                    What it floated away from was the old ×2.3 focus: the plate
+                    grew and the caption stayed the resting card's width, so the
+                    name sat under a photograph more than twice its size.
+
+                    Larger than the page's other eyebrows on purpose (user
                     direction, 12 September 2026): every other use of this
                     utility is a label ABOUT something, and this one is a
                     person's name. It is the only thing on the rail that says
-                    who the reader is looking at, so it is set to read as a
-                    caption rather than as furniture. */}
-                <p
+                    who the reader is looking at.
+
+                    ⚠ THE ROLE IS OMITTED WHERE IT IS NOT YET KNOWN, not filled
+                    in. `roleUnconfirmed` is set on Graham Ambridge in
+                    src/content/our-people.ts and his role reads "Role to
+                    confirm" — a placeholder marker, not a role, and printing it
+                    on a card under a stand-in photograph would say less than
+                    nothing. The ⟡ Stand-in marker above already carries what is
+                    unresolved about that frame. Never fill an unresolved slot
+                    from a draft. */}
+                <div
                   data-ab7-label
-                  className="eyebrow mt-4 text-sm tracking-[0.08em] text-burnt sm:text-base"
+                  className="mt-4 flex flex-col items-center text-center"
                 >
-                  {person?.name ?? frame.person}
-                </p>
+                  <p className="eyebrow text-sm tracking-[0.08em] text-burnt sm:text-base">
+                    {person?.name ?? frame.person}
+                  </p>
+                  {/* The `in` guard, not a plain property read: `personOf`
+                      resolves across three rosters and only the team's entries
+                      carry the flag at all. */}
+                  {person?.role &&
+                    !("roleUnconfirmed" in person && person.roleUnconfirmed) && (
+                    <p className="mt-1.5 max-w-[22rem] text-sm leading-[1.35] text-charcoal/70">
+                      {person.role}
+                    </p>
+                  )}
+                </div>
               </div>
             );
           })}
