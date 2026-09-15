@@ -345,6 +345,17 @@ export function LivingWorkSeam() {
   return (
     <div data-lw="seam" aria-hidden className="relative h-10 sm:h-26">
       <WaveDivider ground="var(--color-canvas)" hook="lw-wave" seat="inline" />
+      {/* ⚑ The hairline, 15 September 2026 (user mobile screenshots, twice).
+          The `inline` seat has no 1px pull, so the ink's foot and §02's top
+          edge meet exactly, and where a browser rounds the two to different
+          device pixels the photograph shows through as a dark line across
+          the join. A 1px canvas shadow was the first fix and was not enough
+          on the reporter's screen, so this is a solid canvas strip instead:
+          from 2px above the wave's foot to 8px below it. Canvas on canvas, so
+          it is invisible except where a gap would be. §02 is later in the
+          DOM and paints over the part below the join; the part above sits
+          inside the ink's full-width foot. Below lg only, user direction. */}
+      <div className="pointer-events-none absolute inset-x-0 -bottom-2 h-2.5 bg-canvas lg:hidden" />
     </div>
   );
 }
@@ -772,7 +783,13 @@ export function LivingWorkChallenges() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          className="absolute -top-24 -right-32 h-[420px] w-[420px] opacity-75 lg:-top-48 lg:-right-72 lg:h-[1000px] lg:w-[1000px]"
+          /* ⚑ top-6 below lg, 15 September 2026 (user mobile screenshot: "fix
+             the artwork that is cropped"). On a phone §03's top edge sits
+             under §02's handed-off header, and -top-24 put the ring's upper
+             arcs above that edge, where the section's overflow-hidden cut
+             them off in a hard horizontal line across the lede. Seated inside
+             the section, the ring is whole. lg keeps -top-48. */
+          className="absolute top-6 -right-32 h-[420px] w-[420px] opacity-75 lg:-top-48 lg:-right-72 lg:h-[1000px] lg:w-[1000px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />
