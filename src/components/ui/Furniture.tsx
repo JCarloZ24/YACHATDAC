@@ -525,6 +525,7 @@ export function RingArtwork({
   piece,
   className = "",
   tone = "canvas",
+  drift = false,
 }: {
   piece: "a" | "b" | "c";
   className?: string;
@@ -535,11 +536,26 @@ export function RingArtwork({
    * Only piece `a` has a roasted cut, which is the only one canvas asks for.
    */
   tone?: "canvas" | "roasted";
+  /**
+   * Opt this ring into the scroll-linked turn — `driftArtwork` in
+   * src/lib/motion/recipes.ts, the same one /living-work's countdown uses.
+   * Grammar row: "what radiates, the artist's ring grounds under scroll".
+   *
+   * ⚠ OFF BY DEFAULT, AND THAT IS THE POINT OF THE PROP. /living-work writes
+   * `data-artwork-drift` on hand-rolled wrappers because its rings are raw
+   * `<img>` with their own sizing; every OTHER ring on the site comes through
+   * this component, and before 15 September 2026 there was no way to opt one in
+   * without abandoning it. Defaulting to `false` means every existing caller
+   * renders byte-identically — a ring turns only where a recipe has asked for
+   * it and cited the row.
+   */
+  drift?: boolean;
 }) {
   return (
     <div
       aria-hidden
       data-artwork={`ring-${piece}`}
+      {...(drift ? { "data-artwork-drift": "" } : {})}
       className={`pointer-events-none absolute ${className}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}

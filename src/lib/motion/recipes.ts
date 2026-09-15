@@ -36,6 +36,18 @@ const qa = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
  * counter-clockwise at the same tempo. `data-artwork-drift` opts an artwork
  * wrapper in. Whole vectors only, never redrawn (F2); the reduced cut clears
  * the transform with everything else.
+ *
+ * Grammar row: "what radiates, the artist's ring grounds under scroll" — added
+ * to the table on 15 September 2026. It had none before, which by this
+ * document's own rule made a built behaviour decoration; the row records what
+ * was already here rather than licensing anything new.
+ *
+ * ⚠ EXPORTED, 15 September 2026, FOR /about §03 — the two rings the question is
+ * read against once the front has risen past them (user direction: "the rings
+ * should rotate under scrolling, the way /living-work does it"). It is a
+ * helper, not a registered effect, and it is deliberately NOT one: it takes a
+ * timeline and a root and adds one tween, which is all a caller needs and all
+ * it has ever done. Callers on this page are unaffected.
  */
 /**
  * The width below which a screen gives up its PIN. `lg` — the same breakpoint
@@ -56,7 +68,7 @@ const qa = <T extends HTMLElement>(root: HTMLElement, sel: string) =>
  */
 const DESKTOP = "64rem";
 
-function driftArtwork(tl: gsap.core.Timeline, root: HTMLElement) {
+export function driftArtwork(tl: gsap.core.Timeline, root: HTMLElement) {
   const rings = qa(root, "[data-artwork-drift]");
   if (rings.length) {
     tl.to(rings, { rotation: 30, ease: "none", duration: 1 }, 0);

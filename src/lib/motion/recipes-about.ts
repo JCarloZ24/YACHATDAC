@@ -70,6 +70,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { WAVE_ROLL } from "@/components/ui/Furniture";
 import { clearAll, composition } from "@/lib/motion/compose";
 import { registerYachatdacEffects } from "@/lib/motion/effects";
+// /living-work's ring turn, reused rather than rewritten — see §03 below.
+import { driftArtwork } from "@/lib/motion/recipes";
 import { pointerScene } from "@/lib/motion/scene";
 import {
   clampScrollTo,
@@ -877,7 +879,8 @@ export function heroQuiet(root: HTMLElement, span = 110): MotionModule {
  *   [data-ab-eyebrow]              THE heading — never leaves, never moves
  *                                  except with the road
  *   [data-ab2-headwrap]            its wrapper; the stylesheet's travel only
- *   [data-ab2-decode]              the legal name's aria-hidden run
+ *   [data-ab2-decode] ×3           the legal name's aria-hidden runs, one per
+ *                                  fixed line (15 Sep 2026 — see Sections.tsx)
  *   [data-ab2-short]               "Most people say YACHATDAC."
  *   [data-ab2-body] ×2             the two paragraphs
  *   [data-ab2-band] [data-ab2-plane]  the road, and the plane inside it
@@ -896,7 +899,11 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       const stage = q(root, "[data-ab-stage]");
       const nameBlock = q(root, '[data-ab2-block="name"]');
       const registerBlock = q(root, '[data-ab2-block="register"]');
-      const legal = q(root, "[data-ab2-decode]");
+      // ⚠ THE LEGAL NAME IS SEVERAL RUNS NOW, ONE PER LINE (15 September 2026
+      // — see the note in Sections.tsx). `legalP` is still the one paragraph
+      // that carries the dim and the accessible string.
+      const legalRuns = qa(root, "[data-ab2-decode]");
+      const legalP = legalRuns[0]?.parentElement ?? null;
       const short = q(root, "[data-ab2-short]");
       const bodies = qa(root, "[data-ab2-body]");
       const rule = q(root, "[data-ab2-rule]");
@@ -932,17 +939,45 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
         { autoAlpha: 0 },
       );
       if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
-      if (legal) gsap.set(legal.parentElement, { opacity: 1 });
+      if (legalP) gsap.set(legalP, { opacity: 1 });
 
       // ---- 01 → 02 · the name ------------------------------------------
       // The decode runs first and alone; nothing else is on the screen, which
       // is the board's own frame 01.
-      // ⚠ .13, NOT .18 (pacing pass, 14 September 2026, two readings). The
-      // decode is this screen's one loud moment and was also its most generous
-      // beat; what it gives up is spent below on DWELL — see the next block,
-      // which is where this section was actually failing. At /about's 0.55
-      // wheel weight .13 is still ~425px of wheel to resolve one name.
-      if (legal) tl.decode(legal, { duration: 0.13 }, 0);
+      //
+      // ⚠ .07, AND ONE RUN PER LINE — 15 September 2026, user report ("the
+      // acronym reveal is too slow and exceeds the section width"). Two things
+      // changed and they are the same change:
+      //
+      //   · The name is now three fixed lines (Sections.tsx), each its own
+      //     `decode` target, because ScrambleText rewrites the whole string
+      //     every frame and one wrapping paragraph therefore RE-BREAKS under
+      //     the reader for the length of the resolve. That is what put 1238px
+      //     of noise inside a 1240px column at 1440 and four lines of noise
+      //     where two lines of name were going to land at 1366.
+      //   · .07 rather than .13. The pass of 14 September had already halved
+      //     this once for pace and it was still the longest single beat on the
+      //     screen. ScrambleText reveals a string left to right, so three runs
+      //     offset by the page's own line ratio read as ONE sweep travelling
+      //     down the block rather than as three effects — the sequential read
+      //     asked for on 12 September, now spread over half the scroll.
+      //
+      // Everything that followed the decode moves up with it and NOTHING after
+      // .28 moves, so the dwell the 14 September note defends is kept and
+      // lengthened rather than re-opened: the short name now stands from ~.13
+      // to .28 instead of from .19.
+      //
+      // The stagger is the line stagger carried across as a ratio, the way
+      // every other split beat on this page does it — see `lineBeat`, which
+      // cannot be used directly here because `decode` splits nothing and takes
+      // no stagger of its own.
+      const DECODE_FOR = 0.07;
+      if (legalRuns.length) {
+        const each = DECODE_FOR / (1 + LINE_STAGGER * (legalRuns.length - 1));
+        legalRuns.forEach((run, i) => {
+          tl.decode(run, { duration: each }, each * LINE_STAGGER * i);
+        });
+      }
 
       // It resolves, and dims as the short name lands under it — "two lines,
       // one gesture: this is what we are called, and this is what you will
@@ -954,11 +989,16 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       // reported defect (user, 13 September 2026). Removing the class dimmer
       // was most of the fix; 0.45 is the rest of it, on the same direction. The
       // dim now lives in exactly one place, which is this line.
-      if (legal?.parentElement) {
+      //
+      // It sits on the decode's END, wherever that is — .07 since 15 September
+      // 2026. The paragraph is the dim's target and always was: there are three
+      // runs inside it now and dimming them one at a time would make the name
+      // fade off in strips.
+      if (legalP) {
         tl.to(
-          legal.parentElement,
+          legalP,
           { opacity: 0.45, duration: 0.08, ease: EASE.country },
-          0.13,
+          DECODE_FOR,
         );
       }
       /* ⚠ THE ARRIVAL IS HALVED AND THE DWELL IS THE POINT (user direction,
@@ -979,10 +1019,16 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
          after it. So the arrival is .06 (~196px of wheel at 0.55) and the line
          then STANDS from .19 to .28 with nothing else moving — ~295px of wheel
          on a screen that is not itself travelling. Every reading beat below is
-         budgeted the same way, and none of them clears before it has landed. */
+         budgeted the same way, and none of them clears before it has landed.
+
+         ⚠ IT LANDS ON THE DECODE'S END, WHICH MOVED TO .07 ON 15 SEPTEMBER
+         2026 — so the arrival is unchanged at .06 and the STAND is now .13 →
+         .28 rather than .19 → .28. The dwell this note defends is not re-opened
+         by the pacing pass above it; it is half again as long. Nothing after
+         .28 moved, so the rest of the sheet reads exactly as it did. */
       if (short) {
-        tl.set(short, { autoAlpha: 1 }, 0.13);
-        tl.settle(short, lineBeat(0.06), 0.13);
+        tl.set(short, { autoAlpha: 1 }, DECODE_FOR);
+        tl.settle(short, lineBeat(0.06), DECODE_FOR);
       }
 
       // ---- the name goes BEFORE the prose arrives ------------------------
@@ -1210,10 +1256,12 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
       // one effect that rewrites content, so the reduced-motion and
       // too-small-window branches have to put the name back themselves or a
       // resize across the breakpoint can strand a reader on scrambled copy.
-      const decoded = el.querySelector<HTMLElement>("[data-ab2-decode]");
-      if (decoded?.dataset.decodeText) {
-        decoded.textContent = decoded.dataset.decodeText;
-      }
+      // ⚠ EVERY RUN, NOT THE FIRST — the name is three of them since
+      // 15 September 2026, and restoring only one leaves two lines of noise
+      // standing under a resolved first line.
+      el.querySelectorAll<HTMLElement>("[data-ab2-decode]").forEach((run) => {
+        if (run.dataset.decodeText) run.textContent = run.dataset.decodeText;
+      });
       clearAll(el);
     },
   });
@@ -1228,8 +1276,11 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
  * 2653:19669, whose layer names are this beat sheet almost verbatim.
  *
  * Grammar rows: "the screen clears" (`vacate`), "a change of ground, the
- * ground goes out under the question", "the page holding its ground, the
- * interior scrub without a read clock", "what endures" (`settle`).
+ * ground goes out under the question" — as amended on 15 September 2026, "now
+ * through a WAVE edge" — "the page holding its ground, the interior scrub
+ * without a read clock", "what endures" (`settle`), and "what radiates, the
+ * artist's ring grounds under scroll" (`driftArtwork`, added 15 September
+ * 2026).
  *
  * ⚠ WHY THERE IS NO PIN HERE. §03 is a slide in `coverSeams`' deck, which
  * already pins this very section at its foot — two ScrollTriggers pinning one
@@ -1277,7 +1328,9 @@ export function theRegister(root: HTMLElement, span = 200): MotionModule {
  * Markup:
  *   [data-ab-eyebrow]       the header — holds, then leaves as the ground does
  *   [data-ab-claim] ×2      the two claims: one replaces the other, both leave
- *   [data-ab-ground]        the rising front (one custom property)
+ *   [data-ab-ground]        the rising front's window; carries the one custom
+ *                           property, `--ab-front`, unitless and read as svh
+ *   [data-ab-front]           the body that travels — wave crest, then ground
  *   [data-ab-plate]         IMG-03 — "at rest it is already gone"
  *   [data-ab-question]      D96, line masks, 90ms
  *   [data-ab-rule="quote"]  the thread's first appearance
@@ -1318,11 +1371,46 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       });
       if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
 
+      // ---- the ground the question is read against ----------------------
+      /* ⚠ THE RINGS TURN — user direction, 15 September 2026 ("the background
+         ring SVGs behind 'What does it leave for the generations who come after
+         us' should rotate under scrolling, the way /living-work does it").
+
+         This is /living-work's own helper, exported for the purpose rather than
+         written a second time: one tween, `rotation: 30`, `ease: "none"`,
+         across this whole read — so it winds clockwise as the reader descends
+         and unwinds at the same tempo on the way back, because it is scrub-
+         linked rather than looped. `drift` on the two `RingArtwork`s in
+         Sections.tsx is what opts them in.
+
+         It is FIRST, and at position 0, for two reasons. It is ground: it has
+         been turning since before the first claim is read, so nothing about it
+         reads as an event. And its tween ends at exactly 1.0, which is the
+         invariant the last beat of this timeline is annotated to protect — a
+         beat that ran past 1.0 would make every position below mean something
+         other than the fraction of the read it looks like.
+
+         Quiet by construction, so §03 is still loud in TYPE and `uses` gains
+         nothing from compose.ts's LOUD table. The rings sit ABOVE the rising
+         front (Sections.tsx) so they emerge out of it as it passes; turning
+         them does not change which side of it they are on. */
+      driftArtwork(tl, root);
+
       // ---- the ground -------------------------------------------------
       // LINEAR, one-for-one with scroll. The grammar row is explicit about
       // why: eased, a ramp stands still through the first third and then
-      // lurches, which reads as broken rather than eased. 130% → −30% so the
+      // lurches, which reads as broken rather than eased. 130 → −30 so the
       // front is genuinely off-screen at both ends — see about.css.
+      //
+      // ⚠ THE NUMBERS ARE THE SAME AND THE UNIT IS GONE (15 September 2026,
+      // the wave pass). The front's leading edge is now the Wave / Divider's
+      // contour rather than a gradient stop, so what reads `--ab-front` is a
+      // `translate3d` and no longer a set of gradient stops — and a PERCENTAGE
+      // translate resolves against the moving element's own height rather than
+      // against the screen, which would have quietly changed what every number
+      // here means. Unitless, read as `svh` by the stylesheet, 130 and −30 are
+      // the same two positions they always were. The stylesheet carries the
+      // arithmetic.
       //
       // ⚠ IT STARTS AFTER THE SCREEN HAS CLEARED, and that ordering is the
       // rule, not the taste. The claims are `text-charcoal` and the front is
@@ -1339,14 +1427,14 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
       if (ground) {
         tl.fromTo(
           ground,
-          { "--ab-front": "130%" },
+          { "--ab-front": 130 },
           // ⚠ .14, NOT .18. The crossing runs on an empty screen by design —
           // the grammar row is explicit that dark ink on a darkening ground
           // reads as a rendering fault — but the span was set against a 900px
           // screen and at 643 it left the reader looking at nothing for about a
           // fifth of the read (measured, 13 September 2026). Shorter, and the
           // question follows it in rather than waiting on it.
-          { "--ab-front": "-30%", duration: 0.14, ease: "none" },
+          { "--ab-front": -30, duration: 0.14, ease: "none" },
           0.58,
         );
       }
@@ -1538,52 +1626,72 @@ export function theQuestion(root: HTMLElement, span = 200): MotionModule {
  *
  * Grammar row: "accumulating, the loop closes".
  *
- * THE SECTION'S CLAIM IS THAT FOUR THINGS HOLD EACH OTHER UP, and this draws
- * it rather than asserting it. The lede is a chain of three clauses; each
- * arrives at reading size, folds down onto its place on the artist's spiral,
- * and the card that clause names seats there on a short overshoot. The fourth
- * position is drawn and left empty, because the draft has three clauses and a
- * fourth would be invented. When all four stand the loop is closed — the only
- * state in which the claim is true — and it holds there before contracting
- * into §05's first bullet.
+ * ⚠ REBUILT AS A TRAVELLING ROW, 15 SEPTEMBER 2026, USER DIRECTION: "four
+ * cards in horizontally, no need to shrink, scroll carousel to the left upon
+ * scrolling · make the subtext that appears only appear in the middle right
+ * next to the cards that refer to it", with the homepage Pathways rail named
+ * as the style to follow. Grammar row: "accumulating, About §04's four stand
+ * in a ROW that travels".
  *
- * ⚠ ONE CARD IS WHOLE AT A TIME. A card carries a photograph, a title, a body
- * and a label, and at the scale four fit on the spiral the body lands near 8px.
- * So a card arrives WHOLE and centred, is read, and then becomes a compact
- * version of itself — photograph and title only, which is exactly what the
- * board seats on the ring — as the next one arrives. It is never rendered
- * twice for this: a second copy of a link is a second tab stop, and
- * `aria-hidden` does not take an element out of the tab order.
+ * The lede is still a chain of three clauses, each read on its own, and the
+ * card each clause names still arrives after it — that is the ACCUMULATION
+ * this recipe is named for and it is kept. What the cards do once they are
+ * there is what changed: they stand in a horizontal row inside a clipped mask
+ * and the row travels left with the read.
  *
- * ⚠ ONE WRITER FOR EVERY SLOT TRANSFORM. Each card is moved by TWO things —
- * its own seating, and the turn of the whole loop — and two tweens writing
- * `x`/`y` to one element is the last frame to run winning. So the tweens move
- * a plain state object and a single `onUpdate` computes every slot's position
- * from it. Same reason the band in §02 is one custom property rather than
- * three tweens.
+ * ⚠ WHAT LEFT, AND WHY IT LEFT TOGETHER. The diamond placed four cards on the
+ * artist's spiral at 0.475 scale, each seating on a `catch` overshoot, each
+ * losing its body and its label to a `clip-path` that closed the card's foot
+ * behind them, with the whole ring turning a quarter per card. Those were not
+ * five decisions, they were one: fitting four WHOLE cards onto a ring. At that
+ * scale a card's body measured about 8px, so it HAD to be given up, which is
+ * why the compaction existed at all. "No need to shrink" removes the premise,
+ * so the scale, the overshoot, the compaction, the turn and the drawn-empty
+ * fourth position all go with it. `catch` is not lost to the site — the F9
+ * ledger still budgets it at §09's doors.
  *
- * ⚠ POSITION-SCRUBBED, NOT VELOCITY-DRIVEN. The board asks for the turn to
- * take the reader's scroll velocity and be parkable mid-turn (IMG-01, released
- * by F9). Bound to scroll position instead, on user direction, so the section
- * retraces exactly on the way back — the contract §02 and §03 keep. The
- * velocity pattern lives in `src/lib/motion/orbit.ts` if this is revisited; it
- * is a `/v2` sketch and must not be extended.
+ * ⚠ THE SUBTEXT BELONGS TO THE CARD IN THE MIDDLE. A card's body and label are
+ * legible only while that card is at the mask's CENTRE, derived from that
+ * card's own distance to the centre rather than from an index — so the copy on
+ * screen is always the copy for the card in front of the reader, and the lit
+ * body walks along the row as the row travels. It lives inside its own card,
+ * in that card's flow, so it cannot float away from what it describes. Nothing
+ * is rendered twice for this and nothing is hidden: a second copy of a link is
+ * a second tab stop, `aria-hidden` does not take an element out of the tab
+ * order, and `visibility` would leave a keyboard reader an invisible
+ * destination. It is only ever dimmed.
  *
- * ⚠ NEVER ON THE CARD PHOTOGRAPHS. The board is explicit: the turn applies to
- * the ring and its connectors, "never on the photographs inside the cards,
- * which are frame grade". Nothing here touches a plate — a card's slot travels
- * and the photograph rides it without a transform of its own.
+ * ⚠ ONE WRITER PER ELEMENT. The track takes the travel — one `x`, and nothing
+ * else writes the track's transform — and each body takes its own opacity. §04
+ * is where this law was learned: three `quickSetter`s on one element's
+ * transform did not compose, and `scale` silently stayed at 1 for a whole
+ * sequence. Same reason the band in §02 is one custom property.
+ *
+ * ⚠ POSITION-SCRUBBED, NOT VELOCITY-DRIVEN. The board asks for the motion to
+ * take the reader's scroll velocity and be parkable (IMG-01, released by F9).
+ * Bound to scroll position instead, on user direction, so the section retraces
+ * exactly on the way back — the contract §02 and §03 keep, and the reason
+ * `ease: "none"` is right here. The velocity pattern lives in
+ * `src/lib/motion/orbit.ts` if this is revisited; it is a `/v2` sketch and
+ * must not be extended.
+ *
+ * ⚠ NEVER ON THE CARD PHOTOGRAPHS. The board is explicit: "never on the
+ * photographs inside the cards, which are frame grade". Nothing here touches a
+ * plate — the TRACK travels and every photograph rides it without a transform
+ * of its own, which is now true by construction rather than by care.
  *
  * Span 300 − 100 = 200; the deck's BUFFER does not come off it. See the
  * arithmetic written out at `theQuestion`.
  *
  * Markup:
  *   [data-ab4-head]              eyebrow + headline, hold then leave
- *   [data-ab4-clause] ×3         read at size, then folded onto the loop
- *   [data-ab4-loop]              the positioning context the diamond is measured in
- *   [data-ab4-ring]              the spiral
- *   [data-ab4-slot] ×4           the cards
- *   [data-ab4-card-body]         what a card gives up when it compacts
+ *   [data-ab4-clause] ×3         read on its own, then clears
+ *   [data-ab4-loop]              the MASK — the clipped window the row is read
+ *                                through, and the box its centre is measured in
+ *   [data-ab4-track]               the row; takes the travel, and nothing else
+ *   [data-ab4-slot] ×4               one card; in flex flow, fixed width
+ *   [data-ab4-card-body]               body + label; lit only in the middle
+ *   [data-ab4-ring]              the spiral, ground artwork behind the row
  *   [data-ab4-ground]            the rising roasted front
  */
 export function theLoop(root: HTMLElement, span = 200): MotionModule {
@@ -1609,54 +1717,61 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
       // frame's pixels, so the diamond holds at every size the held build is
       // allowed at. The board's proportions are kept: its ring is 172 wide by
       // 260 tall, so the horizontal radius is two thirds of the vertical.
-      const SEAT = 0.5; // the board's slot card is 152 against the rail's 298
-      const CLAUSE_SEAT = 0.55; // a connector is a label, not a paragraph
-      // How much of a card is kept when it compacts. The body and the label go,
-      // and the card's foot closes behind them — but not so far that it eats
-      // the title, which is the half of the card that has to survive. Measured
-      // against a two-line title at seat scale.
-      const KEEP = 0.7;
-      const loopBox = loop.getBoundingClientRect();
-      const box = loopBox;
-      const card = slots[0].getBoundingClientRect();
-      const ry = Math.max(
-        120,
-        (box.height - card.height * SEAT) / 2 - 10,
-      );
-      const rx = Math.min(
-        (box.width - card.width * SEAT) / 2 - 10,
-        ry * 0.66,
-      );
+      /* ⚠ THE ROW'S TRAVEL IS MEASURED, ONCE, AND IT IS PATHWAYS' FORMULA WITH
+         ONE TERM ADDED. `homeHeroDissolve` carries the homepage's pathway rail
+         with
 
-      // Top, right, bottom, left — the order the cards are authored in and the
-      // order the clauses name them.
-      const base = [0, 1, 2, 3].map((i) => (i * Math.PI) / 2);
+             min(0, mask.clientWidth - paddingLeft - track.scrollWidth)
 
-      const state = { seat: [0, 0, 0, 0], orbit: 0 };
-      // Three numbers, not three transform properties — see the note on the
-      // slot in about.css. Custom properties compose; three `quickSetter`s on
-      // one element's transform do not.
-      const setters = slots.map((slot) => ({
-        x: gsap.quickSetter(slot, "--ab4-x") as (v: number) => void,
-        y: gsap.quickSetter(slot, "--ab4-y") as (v: number) => void,
-        s: gsap.quickSetter(slot, "--ab4-s") as (v: number) => void,
-      }));
+         which reads as: walk the track left by exactly the amount it overruns
+         its window, and no further. That is reused rather than re-derived,
+         because the user named that rail as the style to follow.
 
-      // THE ONE WRITER. A card at `seat = 0` is whole and centred on the loop;
-      // at `seat = 1` it is compact and standing on the ring at its own angle,
-      // which the turn then carries round. Everything in between is the card
-      // travelling out to its place.
-      const paint = () => {
-        slots.forEach((_, i) => {
-          const seated = state.seat[i];
-          const angle = base[i] + state.orbit;
-          setters[i].x(Math.sin(angle) * rx * seated);
-          setters[i].y(-Math.cos(angle) * ry * seated);
-          setters[i].s(1 - (1 - SEAT) * seated);
-        });
+         ⚠ BOTH GUTTERS COME OFF HERE, NOT ONE, AND THAT IS A REAL DIFFERENCE
+         FROM PATHWAYS. Pathways subtracts only the left gutter because its
+         TRACK carries its own `pr-16`, so the right-hand margin is already
+         inside its `scrollWidth`. This row's padding sits on CardRail's line,
+         which is not what `scrollWidth` is read from, so the right margin has
+         to be a term in the arithmetic instead. Measured 15 September 2026
+         with only the left gutter subtracted: travel came out −228 and the
+         last card's right edge landed at exactly 1440 — flush against the
+         viewport, with no gutter at all. CLAUDE.md is explicit that only
+         full-bleed media may touch the viewport edge, and a link card is not
+         that. Subtracting both gives −328 and the row finishes inside the
+         column it started in.
+
+         `clientWidth` is the PADDING box, so the two subtractions turn it into
+         the column's own content width — the box the row must end up inside.
+         `min(0, …)` is the whole safety story: a row that already fits returns
+         0 and simply stands, so a narrower card cap on a short screen or a
+         future fifth area behave without a branch.
+
+         Measured once per build, not per frame: it changes only when the window
+         does, and a `scrollWidth` read on a scrub tick is a forced layout three
+         times a frame. `gsap.matchMedia` rebuilds the composition on a
+         breakpoint change and `ScrollTrigger.refresh` re-runs `build`, so the
+         number cannot go stale behind a resize. */
+      const travelFor = () => {
+        const track = q(root, "[data-ab4-track]");
+        if (!track) return 0;
+        const cs = getComputedStyle(loop);
+        const left = parseFloat(cs.paddingLeft) || 0;
+        const right = parseFloat(cs.paddingRight) || 0;
+        return Math.min(0, loop.clientWidth - left - right - track.scrollWidth);
       };
+
+      /* THE PITCH — one card plus one gap, in px, read off the built row rather
+         than recomputed from the tokens. Two cards is the only measurement this
+         needs: their left edges are exactly a pitch apart, and taking the
+         difference means the module never has to know what `--ab4-card` and
+         `--ab4-gap` currently resolve to. */
+      const slotBox = slots.map((s) => s.getBoundingClientRect());
+      const pitch =
+        slots.length > 1
+          ? slotBox[1].left - slotBox[0].left
+          : slotBox[0].width;
+
       hideReachable(slots);
-      paint();
 
       // ---- the head ----------------------------------------------------
       if (head) tl.set(head, { autoAlpha: 1 }, 0);
@@ -1694,14 +1809,21 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
       const CLAUSE_AT = 0.09;
       const STEP = 0.17;
       const CARD_IN = 0.025; // after its clause
-      // ⚠ THE GAP BETWEEN THESE TWO IS THE READ, and it is the point of the
-      // whole card existing. A card arrives with its photograph, its title and
-      // its description, and the reader is given ~18vh of held scroll to take
-      // that in before it is put away on the ring. Closing this up turns the
-      // whole state into a flicker and there is no reason to have shown the
-      // description at all (user direction, 12 September 2026).
-      const CARD_SEAT = 0.115; // ~18vh later — the whole card's dwell
-      const CLAUSE_FOLD = 0.175; // last, once its card is compact
+      // ⚠ THE GAP BETWEEN THESE TWO WAS THE READ, and it is now WHEN THE ROW
+      // STARTS WALKING. The original argument: a card arrives with its
+      // photograph, its title and its description, and the reader is given
+      // ~18vh of held scroll to take that in before it is put away on the ring
+      // — close it up and the whole state is a flicker, and there was no
+      // reason to have shown the description at all (user direction,
+      // 12 September 2026). Nothing is put away any more, so what the gap buys
+      // is that the FIRST card is read standing still before the carousel
+      // begins. The number is unchanged, so the dwell that note defends
+      // survives the rebuild intact.
+      const CARD_SEAT = 0.115;
+      // How long a clause stands before it clears. It was the mark the FOLD
+      // ran on — "last, once its card is compact" — and it is kept at the same
+      // number so the section's rhythm does not move with the rebuild.
+      const CLAUSE_FOLD = 0.175;
 
       clauses.forEach((clause, i) => {
         const at = CLAUSE_AT + i * STEP;
@@ -1709,102 +1831,166 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
         tl.set(clause, { autoAlpha: 1 }, at);
         tl.settle(clause, lineBeat(0.06), at);
 
-        // It folds onto its place BETWEEN the card it names and the next —
-        // the sentence the reader has just finished becoming the thing that
-        // physically holds the cards together. The element that was read is
-        // the one that folds; nothing is set twice.
+        // ⚠ IT CLEARS; IT NO LONGER FOLDS (15 September 2026). Its destination
+        // used to be a point on a clearing ellipse around the diamond — the
+        // sentence the reader had just finished becoming the thing that
+        // physically held the cards together — and there is no diamond to hold
+        // together. So the clause is read where the reader is reading it and
+        // then goes, which is what every other clause chain on this page does.
         //
-        // ⚠ THE TARGET IS TWO BOXES APART, so it is computed from both. Every
-        // clause is absolute at the same origin — the top-left of the
-        // paragraph they came out of — which is right for reading them one at
-        // a time and useless as a destination. The delta from that origin to a
-        // point on the loop has to cross from the paragraph's coordinate space
-        // into the loop's. Getting this wrong stacked all three on the left of
-        // the screen, on top of each other and unreadable (12 September 2026).
-        // ⚠ ON AN ELLIPSE THAT CLEARS THE CARDS, not on the ring itself. The
-        // midpoint between two cards looks like the obvious place and is not:
-        // a seated card is half its own width either side of its point, so a
-        // label at the ring's own radius lands underneath one. Measured, the
-        // three ran into each other and into the cards (12 September 2026).
-        // The clearing ellipse is the ring plus half a seated card plus air.
-        const mid = base[i] + Math.PI / 4;
-        const clauseRx = rx + (card.width * SEAT) / 2 + 36;
-        const clauseRy = Math.min(ry + 110, loopBox.height / 2 - 30);
-        const target = {
-          x: loopBox.left + loopBox.width / 2 + Math.sin(mid) * clauseRx,
-          y: loopBox.top + loopBox.height / 2 - Math.cos(mid) * clauseRy,
-        };
-        const from = clause.getBoundingClientRect();
+        // That retired the worst arithmetic in the section, and it is worth
+        // recording why rather than just deleting it: the fold had to cross
+        // from the paragraph's coordinate space into the loop's, because every
+        // clause is absolute at the same origin. Getting it wrong stacked all
+        // three on the left of the screen on top of each other, and getting
+        // the radius wrong landed them underneath the photographs they named
+        // (both 12 September 2026). Neither failure has anywhere left to
+        // happen.
+        //
+        // It goes on the same mark the fold used, so the rhythm the section
+        // was tuned to is untouched — a clause still stands for `CLAUSE_FOLD`
+        // of the read before it leaves.
         tl.to(
           clause,
-          {
-            // Centred on its point rather than hung off its corner: the
-            // measured box is the unscaled one, so half of it is scaled too.
-            x: target.x - from.left - (from.width * CLAUSE_SEAT) / 2,
-            y: target.y - from.top - (from.height * CLAUSE_SEAT) / 2,
-            scale: CLAUSE_SEAT,
-            autoAlpha: 0.72,
-            duration: 0.05,
-            ease: EASE.country,
-          },
+          { autoAlpha: 0, duration: 0.05, ease: EASE.country },
           at + CLAUSE_FOLD,
         );
       });
 
       // ---- the cards ----------------------------------------------------
-      // Whole, read, then compact. `catch` is the site's first overshoot and
-      // the F9 ledger budgets it exactly here and at §09's doors — "a thing
-      // that holds has to catch".
+      /* Each card still arrives AFTER the clause that names it, and that is
+         the half of the old sequence worth keeping: it is the accumulation the
+         grammar row is named for, and it is what still builds the section's
+         claim rather than asserting it. The fourth arrives with no clause of
+         its own, as it always did.
+         ⚠ WHAT LEFT: the seating onto the spiral, its `catch` overshoot, the
+         `clip-path` that closed the card's foot behind its own body, and the
+         quarter-turn orbit. All four were one mechanism — fitting four WHOLE
+         cards onto a ring — and the user's direction removes its premise
+         ("no need to shrink"). `catch` is not lost to the site; the F9 ledger
+         still budgets it at §09's doors. */
       slots.forEach((slot, i) => {
         const base4 = CLAUSE_AT + i * STEP;
         const arrives = base4 + CARD_IN;
-        const seats = base4 + CARD_SEAT;
 
         tl.to(
           slot,
           { opacity: 1, pointerEvents: "auto", duration: 0.02, ease: "none" },
           arrives,
         );
-        tl.to(
-          state.seat,
-          { [i]: 1, duration: 0.07, ease: EASE.catch, onUpdate: paint },
-          seats,
-        );
-        if (bodies[i]) {
-          tl.to(
-            bodies[i],
-            { autoAlpha: 0, duration: 0.04, ease: EASE.country },
-            seats,
-          );
-        }
-        // The card's foot closes with its body so the compact card is tight
-        // rather than a whole card with a hole in it.
+        /* It rises the last few pixels into place on a custom property rather
+           than on `y`, because about.css owns this element's transform — the
+           law this very section taught the page. A whole card arriving whole
+           is the entire beat now, so `settle`'s own 16px-and-a-fade shape is
+           what it borrows. */
         tl.fromTo(
           slot,
-          { clipPath: "inset(0% 0% 0% 0% round 1.5rem)" },
-          {
-            // `round` keeps the card's own 1.5rem corner on the new foot.
-            // A plain inset cuts a straight edge and the compact card ends in
-            // two square corners against three round ones (reported
-            // 12 September 2026).
-            clipPath: `inset(0% 0% ${Math.round((1 - KEEP) * 100)}% 0% round 1.5rem)`,
-            duration: 0.05,
-            ease: EASE.country,
-          },
-          seats,
+          { "--ab4-in": 18 },
+          { "--ab4-in": 0, duration: 0.06, ease: EASE.country },
+          arrives,
         );
       });
 
-      // ---- the turn -----------------------------------------------------
-      // One quarter per card, so each new card arrives at the top of the loop
-      // and the one before it has moved round to make room.
+      // ---- the row travels ------------------------------------------------
+      /* ⚠ A CAROUSEL, NOT A TURN — user direction, 15 September 2026 ("scroll
+         carousel to the left upon scrolling"), with the homepage Pathways rail
+         named as the style. One `x` on the track, over the WINDOW THE ORBIT
+         USED (`CLAUSE_AT + CARD_SEAT` for .56), so the section's pacing is
+         inherited rather than re-tuned: the row begins walking as the first
+         card finishes being read and stops at the empty hold.
+
+         ⚠ ONE TWEEN, ONE ELEMENT, ONE PROPERTY, and on this page that is a law
+         — §04 is where it was learned. Nothing else writes the track's
+         transform, so there is no `quickSetter` cache to lose and nothing for a
+         later tween to clobber. A single scrubbed value also means the row
+         retraces EXACTLY on the way back up, the contract every held screen on
+         this page keeps.
+
+         `ease: "none"` is Pathways' own and it is right for a rail: an eased
+         carousel stands still through the first third of the reader's scroll
+         and then lurches, which reads as broken rather than eased — the same
+         argument §03's grammar row makes about the rising front.
+
+         The travel is a FUNCTION, so GSAP evaluates it at build and again on
+         every `invalidate`/refresh; a row that fits its window returns 0 and
+         the tween is a no-op that still occupies its place in the timeline. */
+      const track = q(root, "[data-ab4-track]");
+      if (track) {
+        tl.to(
+          track,
+          { x: travelFor, duration: 0.56, ease: "none" },
+          CLAUSE_AT + CARD_SEAT,
+        );
+      }
+
+      // ---- the subtext belongs to the card in the middle -----------------
+      /* ⚠ THE REPORTED FIX (user direction, 15 September 2026: "make the
+         subtext that appears only appear in the middle right next to the cards
+         that refer to it"). A card's body and its verb-led label come up to
+         FULL strength while that card is at the mask's CENTRE, and "the
+         centre" is DERIVED — from that card's own distance to the middle of
+         the window, in pitches — rather than taken from an index. That is what
+         makes the emphasis on screen always follow the card in front of the
+         reader, and what makes it walk along the row as the row travels; an
+         index-based rule emphasises the wrong card the moment the travel is
+         anything but a whole number of pitches.
+
+         ⚠ IT IS AN EMPHASIS, NOT A SWITCH, and that correction is the user's
+         (same day: "why are the original descriptions lost inside the
+         cards?"). Off the middle a body rests at `BODY_REST`, not at 0 — every
+         description stays legible and no card is ever an empty coloured slab.
+         The note on that constant carries the argument.
+
+         Under the diamond this copy was deleted outright when its card seated,
+         because at seat scale it measured about 8px. Nothing is shrunk now, so
+         nothing has to be given up at all. */
+      const bodySetters = bodies.map((b) =>
+        b ? (gsap.quickSetter(b, "--ab4-o") as (v: number) => void) : null,
+      );
+      /* ⚠ EVERY BOX IS MEASURED HERE, AT BUILD, AND NOTHING IS MEASURED ON A
+         TICK. The first cut of this read `loop.getBoundingClientRect()` inside
+         the per-card loop, which is a forced layout per card per frame — four
+         of them, three times a frame, for two numbers that only change when the
+         window does. These are the same two the travel uses. */
+      const loopLeft = loop.getBoundingClientRect().left;
+      const gutter = parseFloat(getComputedStyle(loop).paddingLeft) || 0;
+      // Each card's centre at rest, measured from the mask's own left edge.
+      const cardCentre = slotBox.map(
+        (b) => b.left - loopLeft + b.width / 2,
+      );
+      // The middle of the window the row is read through.
+      const windowCentre = gutter + (loop.clientWidth - gutter) / 2;
+
+      const litFor = (x: number) => {
+        slots.forEach((_, i) => {
+          // Where this card has got to, in pitches from the middle.
+          const d = Math.abs(cardCentre[i] + x - windowCentre) / pitch;
+          const u =
+            d <= BODY_FLAT
+              ? 1
+              : d >= BODY_FADE
+                ? 0
+                : 1 - (d - BODY_FLAT) / (BODY_FADE - BODY_FLAT);
+          /* Smoothstepped, so a body neither snaps on nor creeps in — and
+             lifted off a FLOOR rather than run to zero. See `BODY_REST`: a
+             card off the middle is quieter than the one being read, never
+             blank. */
+          const s = u * u * (3 - 2 * u);
+          bodySetters[i]?.(BODY_REST + (1 - BODY_REST) * s);
+        });
+      };
+      /* It is driven by the SAME cursor the travel is, on a plain object, so
+         the two cannot drift: one clock, and the lit card is a pure function of
+         where the row has got to. */
+      const cursor = { x: 0 };
+      litFor(0);
       tl.to(
-        state,
+        cursor,
         {
-          orbit: Math.PI * 2,
+          x: travelFor,
           duration: 0.56,
           ease: "none",
-          onUpdate: paint,
+          onUpdate: () => litFor(cursor.x),
         },
         CLAUSE_AT + CARD_SEAT,
       );
@@ -1837,12 +2023,26 @@ export function theLoop(root: HTMLElement, span = 200): MotionModule {
       // than handed over. So it shrinks about its own centre and goes with the
       // clauses, on the same curve — the screen empties into §05's ground
       // instead of posting something into it.
+      /* ⚠ THE 0.16 CONTRACTION IS GONE AND THE FADE STAYS (15 September 2026).
+         Shrinking the whole block about its centre WAS the loop closing — the
+         figure the section's claim rested on, collapsing into §05's first
+         bullet. A ROW does not close; a row of four cards contracting to a dot
+         reads as the layout being dragged off rather than as anything handing
+         over, which is the same objection the 12 September note records against
+         travelling it to a corner. So what is left is the departure that note
+         actually argued for: the screen empties on the same curve as the
+         clauses, into §05's ground, instead of posting something into it.
+
+         The `scale` had one other job and it is worth naming because it is now
+         done differently: it guaranteed nothing of §04 was still painting when
+         the roasted front had passed. `autoAlpha` ends at 0, which does that
+         on its own, and it leaves `x` — the travel's property, on the track
+         inside — untouched, so the reverse scrub retraces cleanly instead of
+         unwinding a scale and a translate against each other. */
       tl.to(
         loop,
         {
-          scale: 0.16,
           autoAlpha: 0,
-          transformOrigin: "center center",
           duration: 0.14,
           ease: EASE.country,
         },
@@ -2404,35 +2604,44 @@ export function boardLift(root: HTMLElement, span = 245): MotionModule {
    ------------------------------------------------------------------------- */
 
 /**
- * "The people", held, with the portraits walked one face at a time.
+ * "The people", held, as a row of four squares that carousels.
  *
  * Grammar rows: "the page holding its ground, the interior scrub without a read
- * clock", "the world opening, one face at a time". User direction, 12 September
- * 2026, replacing the static three-column row.
+ * clock", "the world opening, one face at a time" — as amended on 15 September
+ * 2026, "About §07 squared". User direction, 12 September 2026, replacing the
+ * static three-column row; rebuilt 15 September 2026, replacing the walk.
  *
  * The header arrives in reading order and then STANDS for the whole section,
- * like §05's and §06's. Underneath it the roster is one row: the reader's
- * scroll walks a FOCUS along it, the frame it is on grows to full size and
- * carries a legible name, and the ones either side wait small and unnamed.
+ * like §05's and §06's. Underneath it the roster is one row of equal SQUARES,
+ * four to the column, and the reader's scroll travels the row left.
  *
- * ⚠ CONTINUOUS, NOT STEPPED. There is no snap and no index: `focus` is a real
- * number and every frame's scale falls off smoothly from it, so the rail
- * retraces exactly on the way back — the contract the five held screens before
- * this one keep, and the reason none of them needed a played-once guard the way
- * §06's dots did.
+ * ⚠ NOTHING ON THIS RAIL CHANGES SIZE — user direction, 15 September 2026
+ * ("four cards in a row, no shrinking"). What went with the scale went because
+ * it only ever existed to survive the scale: the plate's `transform-origin:
+ * bottom center`, which kept a growing plate from shoving the name under it
+ * down, and the stand-in marker's counter-scale, which kept a label legible on
+ * a shrinking card. A `frame`-grade portrait of an identifiable person now
+ * cannot be re-proportioned by its own motion by construction rather than by a
+ * rule.
  *
- * ⚠ THE GEOMETRY IS IN CSS, IN svh. This writes two unitless numbers per frame
- * and measures nothing: `--ab7-x` (how many pitches from the focus) and
- * `--ab7-s` (the plate's scale), plus `--ab7-o` on the label. A rail that read
- * `offsetWidth` every tick would be a layout read per frame per frame, for a
- * number that only changes when the window does.
+ * ⚠ CONTINUOUS, NOT STEPPED. There is no snap and no index: the travel is a
+ * real number of card widths and every caption's legibility falls off smoothly
+ * from the rail's centre, so the rail retraces exactly on the way back — the
+ * contract the five held screens before this one keep, and the reason none of
+ * them needed a played-once guard the way §06's dots did.
  *
- * ⚠ THE TRAVEL AND THE SCALE ARE ON DIFFERENT ELEMENTS ON PURPOSE. §04 proved
- * that three `quickSetter`s on one element's transform do not compose — `scale`
- * silently stayed at 1 for its whole sequence. Here the frame takes the travel,
- * the plate takes the scale and the label takes the opacity, so each element
- * has exactly one property and nothing can be clobbered. It is also what keeps
- * the name from arriving at 2.3× the size of every other label on the page.
+ * ⚠ THE GEOMETRY IS IN CSS AND THIS MEASURES NOTHING. It writes ONE unitless
+ * number to the track (`--ab7-travel`, in card widths) and one per caption
+ * (`--ab7-o`), and nothing at all per frame — the cards are in flex flow, so
+ * their places are the stylesheet's arithmetic. A rail that read `offsetWidth`
+ * every tick would be a layout read three times a frame for a number that only
+ * changes when the window does.
+ *
+ * ⚠ THE TRAVEL AND THE LEGIBILITY ARE ON DIFFERENT ELEMENTS ON PURPOSE. §04
+ * proved that several `quickSetter`s on one element's transform do not compose
+ * — `scale` silently stayed at 1 for its whole sequence. The track takes the
+ * travel, each label takes its own opacity, so every element has exactly one
+ * property and nothing can be clobbered.
  *
  * ⚠ THE SEAM NEEDS NO CODE. 06 → 07's off-white wave is statically seated on
  * this section's crest and rides `coverSeams`; `peopleWave`, which this
@@ -2443,9 +2652,10 @@ export function boardLift(root: HTMLElement, span = 245): MotionModule {
  * Markup:
  *   [data-ab-stage]        the sticky screen — paints nothing, or the rings go
  *   [data-ab7-head]        eyebrow (`data-arrive`), claim, body — stands
- *   [data-ab7-frame] ×n    one per person; takes the travel
- *   [data-ab7-plate]         the picture; takes the scale
- *   [data-ab7-label]         the name; takes the opacity
+ *   [data-ab7-track]       the row; takes the travel, and nothing else
+ *   [data-ab7-frame] ×n      one per person; in flow, a quarter of the column
+ *   [data-ab7-plate]           the square picture; static
+ *   [data-ab7-label]           the name and role; takes the opacity
  *   [data-ab7-cta]         "Meet the people"
  */
 export function theRoster(root: HTMLElement, span = 200): MotionModule {
@@ -2466,7 +2676,9 @@ export function theRoster(root: HTMLElement, span = 200): MotionModule {
 
       root.dataset.abHeld = "true";
 
-      const plates = frames.map((f) => q(f, "[data-ab7-plate]"));
+      // ⚠ NO `plates` ANY MORE. It existed to hand every plate a `--ab7-s`
+      // setter, and nothing on this rail scales since 15 September 2026.
+      const track = q(root, "[data-ab7-track]");
       const labels = frames.map((f) => q(f, "[data-ab7-label]"));
 
       // Rest state is the finished document, so everything the sequence brings
@@ -2489,20 +2701,22 @@ export function theRoster(root: HTMLElement, span = 200): MotionModule {
       }
 
       // ---- the rail seats ------------------------------------------------
-      // The frames arrive where the walk will find them: the first already in
-      // focus, the rest already waiting beside it, so the walk begins on a row
-      // that is standing rather than on one still assembling itself.
+      // The cards arrive where the carousel will find them — the row already
+      // laid out and already centred in the column — so the travel begins on a
+      // row that is standing rather than on one still assembling itself.
       /* ⚠ THE RISE IS A CUSTOM PROPERTY, NOT `y`, AND THAT IS NOT A STYLE
-         CHOICE. A frame's horizontal place on the rail is a `transform` written
-         by the STYLESHEET from `--ab7-x`; GSAP's `y` writes an inline
-         `transform` of its own, which does not merge with it — it replaces it.
-         Measured: with `y` here, every frame's travel silently froze at
-         whatever `--ab7-x` held when the tween first rendered, and the whole
-         rail scaled in place without ever moving (12 September 2026). The
-         scales looked perfect in the numbers, which is why this only showed up
-         on screen. §04 states the same law from the other side: "no tween ever
-         writes `transform` to a slot, so nothing can be clobbered by a later
-         one." One property per element, and transforms are composed in CSS. */
+         CHOICE. A card's own transform is written by the STYLESHEET from
+         `--ab7-in`; GSAP's `y` would write an inline `transform` of its own,
+         which does not merge with it — it replaces it. Measured on the walked
+         rail this replaces: with `y` here, every frame's travel silently froze
+         at whatever the stylesheet held when the tween first rendered, and the
+         whole rail scaled in place without ever moving (12 September 2026). The
+         numbers looked perfect, which is why it only showed up on screen. The
+         travel has since moved to the track, so the clobber would now be the
+         rise against nothing — but the law is the same one §04 states from the
+         other side ("no tween ever writes `transform` to a slot, so nothing can
+         be clobbered by a later one"), it is what keeps the track's single
+         property single, and it costs nothing to keep. */
       tl.fromTo(
         frames,
         { autoAlpha: 0, "--ab7-in": 24 },
@@ -2516,51 +2730,87 @@ export function theRoster(root: HTMLElement, span = 200): MotionModule {
         0.24,
       );
 
-      // ---- the walk ------------------------------------------------------
-      /* `focus` runs 0 → frames.length − 1 across this window, so the window is
-         divided by the roster and adding a face costs every other face a little
-         of its beat rather than costing the page any scroll.
-         ⚠ PAST ABOUT SIX FACES, GROW THE SPAN INSTEAD. At two the beat is a
-         comfortable .28 of the read; at six it is .09, which is about as brisk
-         as a portrait can be looked at. This is the number to change, and the
-         `span` argument in Motion.tsx is the other half of it. */
+      // ---- the carousel --------------------------------------------------
+      /* ⚠ A CAROUSEL, NOT A WALK — 15 September 2026, user direction: "four
+         cards in a row, no shrinking, and a carousel that scrolls left as the
+         reader scrolls". What this replaces walked a FOCUS along the row and
+         grew whichever plate it landed on to ×2.3, writing two numbers per
+         frame every tick. The row now holds four equal squares and the whole
+         TRACK travels left; nothing changes size, so the only per-frame numbers
+         left are the travel itself and one opacity per caption.
+
+         ⚠ IT IS STILL ONE SCRUBBED CURSOR, and that is the contract rather than
+         a leftover. A scrub maps the reader's position onto the timeline in
+         both directions, so a rail derived from a single tweened value retraces
+         EXACTLY on the way back up — which is why none of the six held screens
+         needs a played-once guard the way §06's dots did. Anything that
+         advanced the carousel by its own arithmetic would not come back.
+
+         ⚠ AND IT IS STILL ONE PROPERTY PER ELEMENT. The track takes the travel
+         and nothing else writes the track's transform; each label takes its own
+         opacity. §04 proved that several setters on one element's transform do
+         not compose — `scale` silently stayed at 1 for a whole sequence — and
+         the walked rail carried the same note from the other side. The
+         stylesheet composes; the module writes variables. */
       const RAIL_AT = 0.3;
       const RAIL_FOR = 0.56;
-      const last = frames.length - 1;
 
-      const x = frames.map((f) => gsap.quickSetter(f, "--ab7-x") as Setter);
-      const s = plates.map((p) =>
-        p ? (gsap.quickSetter(p, "--ab7-s") as Setter) : null,
-      );
+      /** How many cards the column holds. Mirrors the quarter in about.css. */
+      const ACROSS = 4;
+      /* ⚠ `max(0, cards − 4)` IS THE WHOLE TRAVEL RULE, and it is why this is
+         safe to ship against today's roster of two. A row that fits the column
+         travels ZERO pitches and stands centred; the moment a fifth face is
+         added the same code walks it one pitch, and a sixth, two. There is no
+         branch and no second layout — adding a face is a content change. */
+      const TRAVEL = Math.max(0, frames.length - ACROSS);
+      const onScreen = Math.min(frames.length, ACROSS);
+
+      const travelTo = track
+        ? (gsap.quickSetter(track, "--ab7-travel") as Setter)
+        : null;
       const o = labels.map((l) =>
         l ? (gsap.quickSetter(l, "--ab7-o") as Setter) : null,
       );
 
-      const walk = (focus: number) => {
+      /* The caption of the card in the middle is the one that is legible, and
+         "the middle" is derived rather than indexed — `(onScreen − 1) / 2`
+         is the centre of the cards actually on screen, in card widths, and the
+         travel slides it along the roster. With two faces centred in the column
+         the centre is 0.5 and both captions are lit, because both cards ARE in
+         the middle; with four it is 1.5 and the two inner captions are lit;
+         with five it walks from 1.5 to 2.5 as the row travels. An index-based
+         rule gets all three of those wrong. */
+      const walk = (travel: number) => {
+        const centre = (onScreen - 1) / 2 + travel;
         frames.forEach((_, i) => {
-          const d = Math.abs(i - focus);
-          // Smoothstep over one pitch either side: flat at the extremes, so a
-          // frame neither snaps into focus nor creeps out of it.
-          const near = d >= 1 ? 0 : (1 - d) * (1 - d) * (3 - 2 * (1 - d));
-          x[i](i - focus);
-          s[i]?.(1 + GAIN * near);
-          o[i]?.(near);
+          const d = Math.abs(i - centre);
+          const u =
+            d <= CAPTION_FLAT
+              ? 1
+              : d >= CAPTION_FADE
+                ? 0
+                : 1 - (d - CAPTION_FLAT) / (CAPTION_FADE - CAPTION_FLAT);
+          // Smoothstepped, so a caption neither snaps on nor creeps in.
+          o[i]?.(u * u * (3 - 2 * u));
         });
+        travelTo?.(travel);
       };
       walk(0);
 
-      // One tween on a plain object, so the walk is a single scrubbed value and
-      // the per-frame numbers are derived from it rather than tweened
-      // separately — n frames cannot drift out of step with each other if there
-      // is only one clock.
-      const cursor = { focus: 0 };
+      // One tween on a plain object, so the carousel is a single scrubbed value
+      // and every number on the rail is derived from it — n cards cannot drift
+      // out of step with each other if there is only one clock. It runs even
+      // when `TRAVEL` is 0: the beat still belongs to the rail, the captions
+      // are already lit by `walk(0)`, and the timeline's shape does not change
+      // with the length of the roster.
+      const cursor = { travel: 0 };
       tl.to(
         cursor,
         {
-          focus: last,
+          travel: TRAVEL,
           duration: RAIL_FOR,
           ease: "none",
-          onUpdate: () => walk(cursor.focus),
+          onUpdate: () => walk(cursor.travel),
         },
         RAIL_AT,
       );
@@ -2584,8 +2834,61 @@ export function theRoster(root: HTMLElement, span = 200): MotionModule {
   });
 }
 
-/** How much bigger the focused plate is. Mirrors `--ab7-gain` in about.css. */
-const GAIN = 1.3;
+/* How near the rail's centre a card has to be for its caption to be fully
+   legible, and how far out it goes dark — both in card widths. ¾ and 1½ are
+   the numbers a four-up row asks for: the two inner cards sit exactly 0.5 from
+   the centre and are flat-on, the two outer ones sit exactly 1.5 and are flat-
+   off, and nothing in between is left half-lit by arithmetic. Grammar row: "the
+   world opening, one face at a time", as amended 15 September 2026. */
+const CAPTION_FLAT = 0.75;
+const CAPTION_FADE = 1.5;
+
+/* §04's twin of the pair above: how near the mask's centre a card has to be
+   for its SUBTEXT to be fully legible, and how far out it goes dark — both in
+   card pitches. Grammar row: "accumulating, About §04's four stand in a ROW
+   that travels", 15 September 2026.
+
+   ⚠ MUCH TIGHTER THAN §07's, AND HALF A PITCH IS THE WHOLE ARGUMENT. Card
+   centres are exactly one pitch apart, so a threshold of half a pitch can
+   contain AT MOST ONE CARD — which is precisely the instruction ("only appear
+   in the middle"). §07's ¾-and-1½ is right for §07 because its four square
+   plates divide the column and two genuinely share the middle, and a name is a
+   short label two of which can be read at once. A body here is a paragraph and
+   a verb-led link: two lit at once is two things asking to be read, which is
+   the defect being fixed.
+   Measured first at 0.5/1.15, which lit two — with a 1340px window and a 408px
+   pitch the centre falls BETWEEN two cards, so the nearer read 1.0 and its
+   neighbour 0.63. Geometry, not tuning: no pair of thresholds wider than half
+   a pitch can light one card on a row whose centre is not on a card. 0.2 flat
+   keeps a card fully lit while it is the middle one and hands over through a
+   brief dark crossing rather than through a dissolve of two paragraphs. */
+const BODY_FLAT = 0.2;
+const BODY_FADE = 0.5;
+
+/* ⚠ WHAT A CARD OFF THE MIDDLE KEEPS, AND IT IS NOT ZERO (user report,
+   15 September 2026: "why are the original descriptions lost inside the
+   cards?").
+
+   The first cut of this ran the thresholds above all the way to 0, on a
+   literal reading of "only appear in the middle". It worked and it was wrong,
+   for two reasons the report makes obvious the moment it is on screen:
+
+     · Three of the four cards became empty coloured slabs — a title on a
+       440px block of evergreen with nothing under it. The copy was still in
+       the document and still in the accessible tree, so nothing was LOST, but
+       the sighted desktop reader could not see three quarters of the section.
+     · It argued against the headline. This section's claim is "Four things,
+       and they hold each other up", and a build that shows one description at
+       a time says the opposite of that.
+
+   So the middle card is EMPHASISED rather than the others ERASED: every
+   description is legible at all times, and the one in the middle comes up to
+   full. 0.55 against `text-canvas/86` on these four grounds is quiet and still
+   comfortably readable — measured on evergreen, roasted, charcoal and navy,
+   which are the four the cards use. This is the number to move if the emphasis
+   wants to be stronger or softer; 1 here turns the emphasis off entirely and
+   leaves a plain row, which is also a legitimate answer. */
+const BODY_REST = 0.55;
 
 type Setter = (value: number) => void;
 

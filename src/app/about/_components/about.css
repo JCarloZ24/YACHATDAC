@@ -278,11 +278,111 @@
     grid-row: 1;
     grid-column: 1;
   }
+
+  /* THE ROW'S GEOMETRY, declared once on the section and read by the mask, the
+     track and every card. All three agree because they read the same tokens;
+     the module measures the built row and never these.
+
+       --ab4-card   one card's width — not a grid division, so four of them
+                    overflow the mask on purpose; that overflow IS the travel
+       --ab4-gap    the daylight between two cards, Pathways' own 4rem
+
+     The row's right-hand gutter is NOT a token: it is the column's own
+     `padding-right`, read off the mask by `travelFor` in the recipe. It was a
+     `--ab4-bleed` token applied as padding on the line, which measured as
+     nothing — see the note on the line rule below.
+
+     ⚠ These are on the SECTION, not on the mask. `--ab4-card` is used in a
+     `flex-basis` and a `width` on the card and in nothing height-side, so
+     there is no percentage in it to re-resolve against the wrong axis — the
+     trap §07's rail hit and records. */
+  [data-ab="what-we-do"][data-ab-held] {
+    /* ⚠ 40svh, NOT 34 — MEASURED 15 September 2026. At 34 the cap bit on an
+       ordinary 1440 × 900 laptop and handed the row 306px cards: four of those
+       plus their gaps came to 1416 against a 1340 window, so the carousel had
+       76px of travel, which is a twitch and not a carousel. The cap is there
+       for a SHORT window, not for a normal one. At 40svh the 21.5rem value
+       wins at every height from 860 up and the cap only starts governing below
+       that, which is what it was for. */
+    --ab4-card: min(21.5rem, 40svh);
+    --ab4-gap: 4rem;
+  }
+  /* THE MASK. What the row travels inside — the clipped window the carousel is
+     read through, and the box its centre is measured against.
+
+     ⚠ REBUILT 15 SEPTEMBER 2026, USER DIRECTION: "four cards in horizontally,
+     no need to shrink, scroll carousel to the left upon scrolling · make the
+     subtext that appears only appear in the middle right next to the cards
+     that refer to it", with the homepage Pathways rail named as the style to
+     follow. What this replaces is THE DIAMOND: four cards placed on the
+     artist's spiral at 0.475 scale, each seating on an overshoot, losing its
+     body to a `clip-path` because at that size the body landed near 8px, with
+     the whole ring turning a quarter per card. The spiral, the seating, the
+     compaction, the turn and the drawn-and-empty fourth position all leave
+     together, because every one of them existed only to fit four WHOLE cards
+     onto a ring. Nothing here changes size any more.
+
+     ⚠ `clip`, NEVER `hidden`, AND X ONLY — the same reading as §07's rail and
+     §03's section box. `hidden` would make this a scroll CONTAINER, which is a
+     thing a focus landing inside it can scroll programmatically, and would
+     force the other axis to `auto`; `clip` cuts and creates nothing. It
+     matters more here than anywhere else on the page because every card is a
+     LINK: tab to the fourth card of a row that is mid-travel and a scroll
+     container would jump the cards sideways out from under the transform.
+     Pathways' own stylesheet records the same guard from the other side — "it
+     must never scroll itself, or the transform and the scroll position would
+     both be moving the same cards."
+
+     ⚠ THE COLUMN'S PADDING IS LEFT ALONE, AND IT IS DOING TWO JOBS. `overflow`
+     clips at the PADDING box, not the content box, so the row starts at the
+     column's left text edge and is cut at the section's outer edge — which
+     means a travelling card crosses the right-hand gutter before it
+     disappears. That is Pathways' own composition (its mask is padded left and
+     its track padded right) and it is what says "there is more of this row than
+     you can see" before anything has moved. Cancelling the right padding to
+     get that effect, which the first cut did with a negative margin, widened
+     the column's own box and is exactly how a section starts overflowing the
+     viewport. The bleed lives on the track instead. */
   [data-ab="what-we-do"][data-ab-held] [data-ab4-loop] {
     grid-row: 2;
     grid-column: 1;
     position: relative;
     min-height: 0;
+    display: flex;
+    align-items: center;
+    overflow-x: clip;
+  }
+
+  /* THE TRACK — the one thing that travels.
+     ⚠ ONE PROPERTY, ONE ELEMENT. GSAP writes `x` here and nothing else writes
+     this element's transform, which on this page is a law rather than a
+     preference: §04 is where it was learned that several setters on one
+     element's transform do not compose. The cards are in flex flow inside it,
+     so their places are the layout's arithmetic and the module measures the
+     row once per build rather than per frame. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-track] {
+    width: 100%;
+    will-change: transform;
+  }
+
+  /* CardRail's own row, turned back into a flex line. It is `sm:grid
+     lg:grid-cols-4` by default, which would divide the column into four and
+     leave nothing to travel; a carousel needs the row to be WIDER than its
+     mask. `CardRail` is NOT modified — this is a descendant selector from the
+     held section, so The Record §07, /partnerships §06 and ContactDoors are
+     untouched, which is the same contract the diamond kept. */
+  /* ⚠ NO `padding-right` HERE, deliberately. The first cut put the row's
+     right-hand bleed on this element and it did nothing: `track.scrollWidth`
+     is read from the TRACK, and padding on the line inside it is not part of
+     that measurement, so the travel overshot and finished with the last card
+     flush against the viewport. The right gutter is a term in `travelFor`
+     instead — see the note there. Putting it back here would double it. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-track] > div {
+    display: flex;
+    grid-template-columns: none;
+    gap: var(--ab4-gap);
+    margin-inline: 0;
+    overflow: visible;
   }
 
   /* THE CLAUSES COME OUT OF THE PARAGRAPH. In flow they are inline spans and
@@ -299,86 +399,116 @@
        out of flow, which is what gives the loop its room. */
     position: relative;
   }
+  /* ⚠ THEY STACK IN PLACE NOW; THEY NO LONGER FOLD (15 September 2026). Each
+     clause is still taken out of the line and read on its own — that is the
+     accumulation the row is named for and it is kept — but its destination was
+     a point on the clearing ellipse around the diamond, and there is no
+     ellipse. So a clause is read where the reader is reading it and then
+     clears, and the recipe no longer computes a cross-box delta for it.
+
+     That deleted the single worst piece of arithmetic in this section: the
+     fold had to cross from the paragraph's coordinate space into the loop's,
+     and getting it wrong stacked all three clauses on top of each other on the
+     left of the screen (12 September 2026), then landed them under the
+     photographs they belonged to once they did travel. Neither failure has
+     anywhere to happen now.
+
+     `max-width` was 16rem — wide enough to read, narrow enough to sit between
+     two seated cards. Nothing sits between two cards any more, so it takes the
+     paragraph's own measure and reads as the sentence it is. */
   [data-ab="what-we-do"][data-ab-held] [data-ab4-clause] {
     position: absolute;
     top: 0;
     left: 0;
     display: block;
-    /* Wide enough to read as a sentence where it is read, narrow enough to sit
-       between two cards once it has folded — at seat scale this is about 141px
-       across, against roughly 190 of clear air between neighbours. */
-    max-width: 16rem;
-    transform-origin: left top;
-    will-change: transform;
+    max-width: 44rem;
   }
 
-  /* THE SPIRAL IS THE LOOP'S OWN STRUCTURE when held, not the section's ground
-     artwork, so it is centred on the diamond and sized to it rather than
-     bleeding off the right of the section. A shade less faint than the ground
-     version too: at 9% behind a row of cards it is texture, and here it is the
-     thing the four are standing on. */
-  [data-ab="what-we-do"][data-ab-held] [data-ab4-ring] > div {
-    top: 50%;
-    left: 50%;
-    width: 36rem;
-    /* ⚠ NOT GROUND-ARTWORK OPACITY. Behind a row of cards the rings sit at
-       7–9% and read as texture; here the ring is the thing four cards are
-       STANDING ON, and the section's claim is unreadable if the reader cannot
-       see what holds them. Raised twice on report (12 September 2026): 16% and
-       then 30% were both still effectively invisible — roasted on off-white is
-       a low-contrast pair, and the artwork is fine dots rather than solid
-       shape, so it loses far more than a flat fill would at the same value.
-       The board's own 22% is measured against its dark board ground, not
-       against canvas. */
-    opacity: 0.55;
-    /* ⚠ ONE ROTATION, NOT TWO. Tailwind's `-rotate-6` is the INDEPENDENT
-       `rotate` property, which composes with `transform` rather than being
-       replaced by it — left alone the ring turned twice and drifted off the
-       centre it is supposed to share with the diamond. */
-    rotate: none;
-    transform: translate(-50%, -50%) rotate(-6deg);
-  }
+  /* ⚠ THE HELD RING RE-CENTRING IS GONE, 15 September 2026. While there was a
+     diamond, the spiral was the loop's own structure: centred on it, sized to
+     it, and raised to 0.55 because the section's claim was unreadable if the
+     reader could not see what four cards were STANDING on (it was reported
+     invisible twice on 12 September — roasted on off-white is a low-contrast
+     pair and the artwork is fine dots, so 16% and then 30% both read as
+     nothing). Nothing stands on it now. It goes back to the ground-artwork
+     treatment the section's own markup gives it — `top-[26%] left-[52%]`, 9%,
+     `-rotate-6` — which is what every other ring behind a row of cards on this
+     site uses, and the reason the re-centring existed no longer does.
 
-  /* THE DIAMOND. Each card leaves the row and is placed on the loop; absolute
-     takes it out of `CardRail`'s grid without touching `CardRail`, so the row
-     it renders everywhere else is untouched. 18.625rem is the desktop rail
-     card's own width, so a card at rest here is the size it is on every other
-     four-card row on the site — it is only ever SCALED from that. */
+     The `rotate: none` guard is kept as a comment for the next person: the
+     markup's `-rotate-6` is Tailwind's INDEPENDENT `rotate` property, which
+     composes with `transform` rather than being replaced by it. Nothing writes
+     a transform to this element any more, so there is no longer a second
+     rotation for it to compose with. */
+
+  /* A CARD ON THE ROW. In flex flow, a fixed width, and it neither grows nor
+     shrinks: `flex: 0 0 var(--ab4-card)` rather than a basis the line can
+     redistribute, because four equal cards wider than their mask IS the
+     layout — a flex line that negotiated widths would shrink them to fit and
+     hand back exactly the re-proportioning the rebuild removed.
+
+     ⚠ THE WIDTH IS WHAT MAKES IT A CAROUSEL. 18.625rem is the desktop rail
+     card's own width and it is what the diamond used, but four of those plus
+     three gaps come to 1384 against a 1240 column — 144px of travel, which is
+     a twitch rather than a carousel. 21.5rem gives 1568 against the same
+     column: 328px, about one card, so the row visibly walks and the fourth
+     card is genuinely off-frame at rest. Pathways sizes its own cards the same
+     way, in a fraction of the viewport (`lg:basis-[21vw]`) rather than to a
+     grid division, for exactly this reason. Capped in `svh` so a short window
+     cannot be handed a card taller than the screen it has to fit in. */
   [data-ab="what-we-do"][data-ab-held] [data-ab4-slot] {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 18.625rem;
+    position: static;
+    flex: 0 0 var(--ab4-card);
+    width: var(--ab4-card);
     height: auto;
-    transform-origin: center center;
-    will-change: transform;
-    /* ⚠ THE TRANSFORM IS COMPOSED HERE AND WRITTEN AS THREE NUMBERS, not as
-       three GSAP transform properties. A card is moved by two things — its own
-       seating and the turn of the whole loop — and three `quickSetter`s on one
-       element's transform do not compose: measured, `x` and `y` applied and
-       `scale` silently stayed at 1 for the whole sequence (12 September 2026).
-       Custom properties have no such cache, and it also means no tween ever
-       writes `transform` to a slot, so nothing can be clobbered by a later
-       one. `translate(-50%,-50%)` before the scale centres the card on its
-       point whatever size it is. */
-    --ab4-x: 0;
-    --ab4-y: 0;
-    --ab4-s: 1;
-    transform: translate(calc(var(--ab4-x) * 1px), calc(var(--ab4-y) * 1px))
-      translate(-50%, -50%) scale(var(--ab4-s));
+    /* The seat-in rise. A custom property and not GSAP's `y`, because the
+       stylesheet owns this element's transform — the law annotated on the
+       track above, and the one this section taught the page. */
+    --ab4-in: 0;
+    transform: translateY(calc(var(--ab4-in) * 1px));
   }
 
-  /* What a card gives up when it compacts: the body and the verb-led label.
-     The card's foot is clipped with it so the compact card is tight rather
-     than a whole card with a hole in it — both driven by the recipe. */
   [data-ab="what-we-do"][data-ab-held] [data-ab4-slot] > a {
     min-height: 0;
+    height: 100%;
   }
 
-  /* The ring is the loop's own structure when held, not the section's ground
-     artwork, so it is measured and turned with the slots. */
+  /* THE SUBTEXT — the card's body and its verb-led label.
+
+     ⚠ IT IS EMPHASISED AT THE MIDDLE, NOT SWITCHED ON THERE (user direction,
+     15 September 2026: "make the subtext that appears only appear in the
+     middle right next to the cards that refer to it", corrected the same day
+     by "why are the original descriptions lost inside the cards?"). The module
+     writes ONE number per body, derived from that card's own distance from the
+     mask's CENTRE rather than from an index — which is what makes the emphasis
+     follow the card in front of the reader as the row travels. Off the middle
+     it rests at `BODY_REST` and not at 0, so every description stays legible
+     and no card is ever a title on an empty coloured slab; the constant in
+     recipes-about.ts carries that argument.
+
+     ⚠ THE DEFAULT HERE IS 1 AND MUST STAY 1. Without the held build — JS off,
+     reduced motion, below `lg` — nothing writes this property, so the fallback
+     IS the document: all four descriptions at full strength.
+
+     It sits inside its own card, in that card's flow, so it travels with the
+     card it describes and cannot float away from it. Under the diamond this
+     copy was DELETED at the moment the card seated, because at 0.475 scale it
+     measured about 8px; nothing is shrunk now, so it is only ever dimmed, and
+     the card underneath it stays whole. `visibility` is untouched: the link in
+     the label is a tab stop either way, and a reader arriving by keyboard must
+     not find an invisible destination. */
+  [data-ab="what-we-do"][data-ab-held] [data-ab4-card-body] {
+    --ab4-o: 1;
+    opacity: var(--ab4-o);
+  }
+
+  /* The ring goes back to being the section's GROUND artwork. It was the
+     loop's own structure while there was a loop — centred on the diamond, at
+     0.55 so the reader could see what four cards were standing on. There is
+     nothing standing on it now, so it is texture again and it is clipped by
+     its own box rather than bleeding out of it. */
   [data-ab="what-we-do"][data-ab-held] [data-ab4-ring] {
-    overflow: visible;
+    overflow: hidden;
   }
 
   [data-ab="what-we-do"][data-ab-held] [data-ab4-ground] {
@@ -674,99 +804,169 @@
     padding-bottom: 0;
   }
 
-  /* THE RAIL.
+  /* THE RAIL — FOUR SQUARES IN A ROW THAT CAROUSELS.
 
-     ALL THE GEOMETRY IS HERE, IN svh, AND THE MODULE WRITES TWO UNITLESS
-     NUMBERS PER FRAME — `--ab7-x`, how many pitches this frame is from the
-     focus, and `--ab7-s`, its plate's scale. Nothing is measured per frame and
-     nothing is measured per frame-of-animation: a rail that read `offsetWidth`
-     every scrub tick would be a layout read three times a frame for a number
-     that only changes when the window does.
+     ⚠ REBUILT 15 SEPTEMBER 2026, USER DIRECTION: "make the team cards
+     horizontal SQUARES rather than the Figma layout copied literally · four
+     cards in a row, no shrinking, and a carousel that scrolls left as the
+     reader scrolls · the subtext should show in the middle, immediately beside
+     the card it refers to". What this replaces is the WALKED rail: 3/4
+     portraits absolutely positioned on one baseline, each pushed sideways by
+     its own distance from a focus, the focused one grown to ×2.3 and its name
+     faded up under it. Three things went with it and each was load-bearing for
+     the thing above it, so they leave together:
 
-       --ab7-rest    a plate's height at rest; 3/4 gives its width, 15svh
-       --ab7-gain    how much bigger the focused plate is; 1.3 → ×2.3
-       --ab7-pitch   centre-to-centre between frames
+       · the plate's `scale()`, and so `--ab7-gain`;
+       · the marker's counter-scale, which existed ONLY to survive that scale;
+       · `transform-origin: bottom center` on the plate, which existed only so
+         that growing a plate did not push the name under it down.
 
-     ⚠ PITCH IS 24 AND THAT IS ARITHMETIC, NOT TASTE. A focused plate is
-     12.75 × 2.3 = 29.3svh wide, so it reaches 14.66 either side of its centre;
-     a resting neighbour reaches 6.38. At a pitch of 24 that leaves 2.96svh of
-     daylight between them. Anything under 21.1 and the focused face overlaps
-     the one waiting beside it, which would need a z-index that changes as the
-     focus moves — solved here by not creating the problem.
+     Nothing on this rail changes size any more, so a `frame`-grade portrait of
+     an identifiable person cannot be re-proportioned by its own motion — by
+     construction now rather than by a rule.
 
-     ⚠ AND THE REST HEIGHT IS 17, NOT 20, FOR THE 820px FLOOR. At 20 the head,
-     the rail and the link measured 848 against an 820 viewport and the link sat
-     below it; at 18 they fit with three pixels to spare top and bottom, which
-     is not a fit, it is a coincidence waiting for a font metric to change.
-     Everything on this screen is sized in svh so the whole block scales with
-     the window, and 17 is what gives the shortest window the hold applies to
-     some actual air. */
+     ALL THE GEOMETRY IS STILL HERE AND THE MODULE STILL MEASURES NOTHING. It
+     writes ONE unitless number to the track (`--ab7-travel`, in pitches) and
+     one to each label (`--ab7-o`). It no longer writes anything per frame: the
+     cards are in flex flow, so their places are the layout's arithmetic rather
+     than a number pushed at them three times a frame.
+
+       --ab7-gap     the daylight between two cards
+       --ab7-side    a card's side — it is a SQUARE, so this is both dimensions
+       --ab7-pitch   centre-to-centre, which for a flex row is side + gap
+
+     ⚠ FOUR ACROSS IS THE DIVISION, AND THE CAP IS THE SHORT WINDOW. `--ab7-side`
+     is the quarter of the column that four cards and their three gaps leave —
+     so the row fills the column exactly at any width the hold applies to —
+     capped in `svh` so a short window cannot be handed a card taller than the
+     screen it has to fit inside. At 1440 × 900 the quarter is 292px and the cap
+     is 270; at the 820px floor the hold itself sets, the cap is 246 and the
+     rail measures 246 + the caption, which is comfortably less than the 364 the
+     grown rail needed. The cap is what keeps the head, the rail and the link on
+     one 820px screen. */
   [data-ab="the-people"][data-ab-held] [data-ab7-rail] {
-    --ab7-rest: 17svh;
-    --ab7-gain: 1.3;
-    --ab7-pitch: 24svh;
+    --ab7-gap: 1.5rem;
+    --ab7-side: min(
+      calc((100% - 3 * var(--ab7-gap)) / 4),
+      30svh
+    );
+    --ab7-pitch: calc(var(--ab7-side) + var(--ab7-gap));
     position: relative;
-    /* Tall enough for the focused plate plus the name under it. The row does
-       not resize as the focus moves — the plates grow into space that is always
-       reserved, so nothing below them ever shifts. */
-    height: calc(var(--ab7-rest) * (1 + var(--ab7-gain)) + 2.75rem);
+    /* ⚠ THE RAIL TAKES ITS HEIGHT FROM ITS CONTENT, AND IT MUST NOT BE GIVEN
+       ONE IN TERMS OF `--ab7-side`. Measured 15 September 2026: written as
+       `height: calc(var(--ab7-side) + 4.25rem)` the rail came out 144.8px tall
+       against a 338px row, and the cards hung out of it into the link below.
+       A custom property is substituted as TOKENS and re-resolved per property,
+       so the `100%` inside `--ab7-side` means the containing block's WIDTH in
+       `width` and `flex-basis` — which is what it is for — and its HEIGHT the
+       moment the same token is used in a `height`. The three width-side uses
+       agree with each other; a height would silently mean something else.
+
+       Auto is also simply correct here, which it was not on the rail this
+       replaces. That one reserved room for a plate that grew to ×2.3, so its
+       height had to be stated or the row resized under the focus. Nothing on
+       this rail changes size, so the content height is already constant and
+       there is nothing for a stated height to protect. */
+    /* ⚠ `clip`, NEVER `hidden`, and X ONLY. The travelling track has to be cut
+       at the column's edge or the cards walk out across the section; `hidden`
+       would make this a scroll CONTAINER, which is a thing that can be scrolled
+       programmatically by a focus landing inside it and would also force the
+       other axis to `auto`. `clip` cuts and creates nothing, and on one axis it
+       leaves the other genuinely `visible`. Same reading as §03's section box,
+       annotated in Sections.tsx. */
+    overflow-x: clip;
   }
 
-  /* Every frame stands on the same baseline at the centre of the rail and is
-     pushed sideways by how far it is from the focus. `translateX(-50%)` after
-     the travel centres it on its own point whatever it measures. */
+  /* THE TRACK — the one thing that travels.
+
+     ⚠ ONE PROPERTY, ONE ELEMENT, and on this page that is a law rather than a
+     preference: §04 proved that several setters writing one element's transform
+     do not compose, and the walked rail this replaces carried the same note. The
+     track's transform is written HERE and reads exactly one variable; the module
+     writes that variable and touches nothing else on this element.
+
+     ⚠ `safe center` IS THE UNDER-FILLED ROW. A roster that does not fill four
+     slots is centred in the column rather than hung off the left edge — which
+     is today's page, with two faces. The moment it overflows, `safe` falls back
+     to `start`, so a roster of five begins on card one and travels from there
+     instead of starting already half out of frame. The unprefixed `center`
+     above it is the fallback for anything that does not know the keyword; with
+     four or fewer cards the two agree exactly, and with more the carousel is
+     what puts the right cards on screen anyway. */
+  [data-ab="the-people"][data-ab-held] [data-ab7-track] {
+    --ab7-travel: 0;
+    display: flex;
+    gap: var(--ab7-gap);
+    justify-content: center;
+    justify-content: safe center;
+    align-items: flex-start;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    transform: translate3d(
+      calc(var(--ab7-travel) * var(--ab7-pitch) * -1),
+      0,
+      0
+    );
+    will-change: transform;
+  }
+
+  /* A CARD. In flow, a quarter of the column wide, and it does not grow or
+     shrink — `flex: 0 0 var(--ab7-side)` rather than a basis the row can
+     redistribute, because four equal squares IS the layout and a flex line that
+     negotiated widths would hand back exactly the re-proportioning the squares
+     were brought in to remove. */
   [data-ab="the-people"][data-ab-held] [data-ab7-frame] {
-    --ab7-x: 0;
     /* The seat-in rise. It is a property and not GSAP's `y` because `y` writes
        an inline transform that REPLACES this one — see the note at `theRoster`,
-       where that cost the rail its entire travel. */
+       where that once cost the rail its entire travel. */
     --ab7-in: 0;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
+    position: static;
+    flex: 0 0 var(--ab7-side);
+    width: var(--ab7-side);
     margin-top: 0;
-    width: auto;
-    will-change: transform;
-    transform: translateX(calc(var(--ab7-x) * var(--ab7-pitch)))
-      translateY(calc(var(--ab7-in) * 1px)) translateX(-50%);
+    transform: translateY(calc(var(--ab7-in) * 1px));
   }
 
-  /* ⚠ `bottom center`, AND THAT IS THE WHOLE REASON THE NAME HOLDS STILL. A
-     plate scaled about its middle would push its own bottom edge down into the
-     label as it grew and pull it back up as it shrank, so every name on the
-     rail would bob. Growing from the baseline the labels sit on, nothing below
-     a plate ever moves.
-
-     ⚠ AND THE ASPECT IS FIXED. These are `frame`-grade portraits of
-     identifiable people: a plate that changed proportion as it grew would
-     re-crop the picture, which on a portrait means the crop travelling across
-     somebody's face. It scales uniformly or not at all. */
+  /* THE SQUARE. `aspect-ratio` and not a height, so the card and its picture
+     are one number — the card's width — and there is no second place for the
+     two to disagree when the column resizes. */
   [data-ab="the-people"][data-ab-held] [data-ab7-plate] {
-    --ab7-s: 1;
-    height: var(--ab7-rest);
-    width: auto;
+    height: auto;
+    width: 100%;
     max-width: none;
-    transform-origin: bottom center;
-    transform: scale(var(--ab7-s));
-    will-change: transform;
+    aspect-ratio: 1 / 1;
   }
 
-  /* Counter-scaled, so the marker is exactly as legible when the face is small
-     as when it is large — a marker that shrank with the plate would be least
-     readable at the moment the photograph is least identifiable. */
+  /* Nothing scales now, so the marker is simply a marker: it sits at its own
+     size on a card that is always the same size. The counter-scale it used to
+     carry has no scale left to counter. */
   [data-ab="the-people"][data-ab-held] [data-ab7-marker] {
-    transform-origin: top left;
-    transform: scale(calc(1 / var(--ab7-s)));
+    transform: none;
   }
 
-  /* The name belongs to the face, so it is only legible while that face is the
-     one being read — derived from the frame's own focus rather than given its
-     own tween, the same correction §02's and §05's captions both needed. */
+  /* THE CAPTION — the person's name, and their role under it.
+
+     ⚠ IT IS INSIDE THE CARD AND IT IS THE FIX. The reported defect was subtext
+     "floating away from the card it refers to": under the old rail the plate
+     grew to ×2.3 while the caption stayed the resting card's width, so the name
+     sat under a photograph two and a bit times its own size and read as
+     belonging to nothing in particular. Here it is a block in the card's own
+     flow, the card's own width, and it travels with the card because it is part
+     of it — it cannot float away from a square it is inside of.
+
+     Legibility is the module's one per-label number, derived from that card's
+     distance from the RAIL'S CENTRE rather than from its index, which is what
+     makes the caption in the middle the caption of the card in the middle.
+     `white-space` is NOT `nowrap` any more: a role is a phrase, the card is a
+     quarter of the column, and a long role wraps inside its card rather than
+     running out across its neighbours. */
   [data-ab="the-people"][data-ab-held] [data-ab7-label] {
     --ab7-o: 0;
-    margin-top: 0.75rem;
+    margin-top: 0.85rem;
     opacity: var(--ab7-o);
-    white-space: nowrap;
+    white-space: normal;
+    text-align: center;
   }
 
   /* -------------------------------------------------------------------------
@@ -963,7 +1163,7 @@
 
 
 /* ---------------------------------------------------------------------------
-   THE RISING FRONT — "the ground goes out UNDER it".
+   THE RISING FRONT — "the ground goes out UNDER it", now through a WAVE EDGE.
 
    The dark comes up from the foot of the screen and climbs past its head, so
    the light goes out of the bottom of the photograph first. Evergreen is the
@@ -971,28 +1171,102 @@
    front has not reached yet — which is why green is the CROSSING and never the
    destination. Bottom-to-top by user direction, 12 September 2026.
 
-   ONE CUSTOM PROPERTY MOVES. `--ab-front` is the front's position in the
-   screen and every stop is a `calc()` offset from it, so the per-frame write
-   is a single CSS variable and never a rebuilt gradient string — the per-frame
+   ⚠ THE EDGE IS THE SITE'S WAVE, AND IT IS A CROPPED REVEAL — user direction,
+   15 September 2026. Until now the front was a soft gradient stop; it is now
+   the Wave / Divider's own contour, so the incoming charcoal is REVEALED
+   THROUGH a wave rather than faded in behind one.
+
+   The distinction is the whole instruction and it is structural, not stylistic.
+   BOTH halves of this screen carry figures — the photograph and its scrim above
+   the edge, the artist's rings that emerge out of the front below it — so an
+   opaque wave SVG laid over the top would delete exactly what the section is
+   composed of. What rises is the GROUND, wearing the wave as its own top edge:
+   everything above the contour is the claims screen, untouched, and everything
+   below it is the answer screen's charcoal.
+
+   ONE CUSTOM PROPERTY STILL MOVES, and the per-frame write is now cheaper than
+   it was: `--ab-front` is the front's position in the screen and it is read by
+   a single `translate3d` rather than by four gradient stops, so a frame is one
+   composited transform instead of a repainted gradient string. The per-frame
    budget in CLAUDE.md is transform, opacity, clip-path and custom properties.
 
-   The travel is 130% → −30%, not 100% → 0%. At 130% the softest stop
-   (`front − 26%`) is still at 104% and nothing has reached the screen; at
-   −30% the charcoal stop (`front + 22%`) is at −8% and the screen is solid.
-   Stopping at the obvious 100/0 would show green at the foot on arrival and
-   leave canvas at the head on departure.
+   ⚠ `--ab-front` IS UNITLESS NOW, read as `svh`, and that is arithmetic rather
+   than taste. A percentage `translate` resolves against the ELEMENT'S OWN
+   height, not its parent's, so a body tall enough to cover the screen at the
+   end of the travel would have made every number mean something different from
+   what it says. In `svh` the number is the number: 130 is a front one and a
+   third of a screen below the crown, −30 is a front a third of a screen above
+   it. Both the travel and the two endpoints are the ones the gradient used.
+
+   The travel is 130 → −30, not 100 → 0. At 130 the crest is a full screen
+   below the fold and nothing has reached the screen; at −30 the body's charcoal
+   has climbed past the head and the screen is solid. Stopping at the obvious
+   100/0 would show the crest sitting on the foot on arrival and leave canvas at
+   the head on departure.
 
    Hidden until the module claims the section — see the flag note above.
    --------------------------------------------------------------------------- */
 [data-ab-ground] {
   display: none;
-  --ab-front: 130%;
+  /* The window the front rises through. It is the claims screen's box, so the
+     200svh body below is clipped to the screen and never paints outside it.
+     Safe to make a scroll container: nothing sticky lives inside it — that is
+     the stage, two levels up. */
+  overflow: hidden;
+  --ab-front: 130;
+}
+
+/* THE BODY OF THE FRONT. 200svh so that at the end of the travel (−30) it
+   still reaches the foot of the screen with 70svh to spare; taller than that is
+   layer for nothing. `translate3d` rather than `translateY` so the front is
+   composited, and no `will-change`: the element is already a 200svh × 100vw
+   box and hinting it is asking for a very large raster to be kept warm for a
+   fifth of one section's read. */
+[data-ab-front] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200svh;
+  transform: translate3d(0, calc(var(--ab-front) * 1svh), 0);
+}
+
+/* THE EDGE. The same drawing every seam on this page uses — `WaveInk` through
+   `WAVE_PATH`'s own viewBox crop — stretched to the full width with
+   `preserveAspectRatio="none"`, exactly as `WaveDivider` does it. Inline SVG
+   and not a CSS mask, on Furniture.tsx's own rule: the path is filled directly,
+   so there is no mask-support question and no second wave language on /about.
+
+   9svh is the crest's depth against a screen rather than against a section
+   join, where the seams draw it at 104px. It is the FRONT of a ground that is
+   crossing a whole viewport, so it is read at that scale. */
+[data-ab-front-crest] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 9svh;
+  display: block;
+}
+
+/* WHAT THE EDGE IS THE EDGE OF. Evergreen for the first stretch, then charcoal
+   — the crossing and the destination, in the order the row describes, and a
+   STATIC gradient: nothing rewrites it, the whole body simply travels.
+
+   It starts a pixel INSIDE the crest so the two cannot part along an
+   antialiased seam as the block moves subpixel amounts. */
+[data-ab-front-body] {
+  position: absolute;
+  top: calc(9svh - 1px);
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-image: linear-gradient(
     180deg,
-    transparent calc(var(--ab-front) - 26%),
-    var(--color-evergreen) var(--ab-front),
-    var(--color-charcoal) calc(var(--ab-front) + 22%),
-    var(--color-charcoal) 300%
+    var(--color-evergreen) 0,
+    var(--color-evergreen) 5svh,
+    var(--color-charcoal) 26svh,
+    var(--color-charcoal) 100%
   );
 }
 
