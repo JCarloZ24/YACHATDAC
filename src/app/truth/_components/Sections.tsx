@@ -1096,9 +1096,21 @@ function EntryBlock({
          pass that does not know why it is there. §06 — "the page stops moving
          here, on purpose" (Figma). §17 — older than the record; the stillness
          is the argument. */
-      {...(isStill
-        ? { "data-v2-static": true }
-        : { "data-descent-arrive": true })}
+      /* ⚠ THE ARRIVAL HOOK IS NOT ON THIS ARTICLE, and that is deliberate.
+         `data-v2-static` stays here because holding is an ANCESTOR test —
+         `isHeld()` walks the chain — but `data-descent-arrive` moved down onto
+         the record's own wrapper below (14 September 2026). Both paths that
+         read it fade the hooked element ITSELF: `wireArrivals` in
+         truth-descent.ts off the deck and `arriveRest` in truth-scenes.ts on
+         it, each running `brighten` from 0.4. On this article the first child
+         is the `HandoffWave` that hands the count into the 1840s, so a fade on
+         the article took the DIVIDER with it: measured on a phone, the wave
+         rode its parent 0.400 -> 0.588 -> 0.906 -> 1 across `top 88%` ->
+         `top 48%` with its own opacity at 1 and its fill never leaving canvas,
+         so a white crest on the charcoal count read as grey warming to white —
+         reported as the wave changing colour. A structural divider does not
+         arrive; the record does. */
+      {...(isStill ? { "data-v2-static": true } : {})}
       {...(isAheadCard ? { "data-truth-card": true } : {})}
       /* The 1950s band is the one ground that DETERIORATES as it is read. The
          dim has to ride the slide, not the section around it: once the deck
@@ -1142,7 +1154,14 @@ function EntryBlock({
           hook="truth-wave"
         />
       ) : null}
-      <div {...(withinDeck ? {} : { "data-truth-deck-viewport": true })}>
+      {/* The record itself is what emerges (see the note on the article). This
+          wrapper exists on every entry — it only takes the deck attributes
+          when the entry owns its own slide — so the hook lands in one place
+          either way, and the divider above stays outside the fade. */}
+      <div
+        {...(isStill ? {} : { "data-descent-arrive": true })}
+        {...(withinDeck ? {} : { "data-truth-deck-viewport": true })}
+      >
         <div
           {...(withinDeck ? {} : { "data-truth-deck-track": true })}
           className={entryLayout}
@@ -1514,10 +1533,15 @@ function EntryPlate({
              `inset-0` rather than a matching `top-[46svh]`: the band above is
              opaque where it sits, so one full-section ground needs no second
              copy of the band's height to keep in step with. */
-          <div
-            aria-hidden
-            className="absolute inset-0 z-0 bg-charcoal lg:hidden"
-          />
+          /* NO GROUND OF ITS OWN ANY MORE (user direction, 15 September
+             2026: "the same styling as other white sections"). The band path
+             used to paint this charcoal so the plate's white ink could carry
+             below the photograph; the record now reads as every other white
+             record on the page — the "return" band's own egg-white ::before
+             is the ground, and the ink below changes with it. Kept as a
+             comment rather than deleted so the next reader knows the dark
+             band was a decision that was reversed, not an omission. */
+          null
         ) : null}
         <div
           data-v2-plate
@@ -1574,13 +1598,32 @@ function EntryPlate({
               : `relative z-30 ${deep ? "pb-[24svh]" : "pb-[16svh]"}`
             }`}
         >
-          <p className="eyebrow text-lg text-gold sm:text-2xl">{eyebrow}</p>
+          {/* ⚠ THE INK IS BREAKPOINT-SCOPED, AND ONLY ON THE BAND PATH.
+              `EntryPlate` also serves TODAY, whose record rises over a
+              photograph at every width and must stay light — so the light
+              ink is still the default and only `bandOnMobile` overrides it
+              below `lg`, where that record now stands on egg white. The
+              values are the ones every other white record uses (EntryBlock:
+              `text-evergreen` head, `text-ochre-deep` accent), not new
+              choices. */}
+          <p
+            className={`eyebrow text-lg sm:text-2xl ${bandOnMobile ? "text-ochre-deep lg:text-gold" : "text-gold"
+              }`}
+          >
+            {eyebrow}
+          </p>
           {kicker ? (
-            <p className="eyebrow mt-1 text-ochre sm:text-base">{kicker}</p>
+            <p
+              className={`eyebrow mt-1 sm:text-base ${bandOnMobile ? "text-ochre-deep lg:text-ochre" : "text-ochre"
+                }`}
+            >
+              {kicker}
+            </p>
           ) : null}
           <h2
             data-descent-heading
-            className="headline mt-6 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl"
+            className={`headline mt-6 max-w-4xl text-4xl leading-[1.2] sm:text-6xl ${bandOnMobile ? "text-evergreen lg:text-canvas" : "text-canvas"
+              }`}
           >
             {title}
           </h2>
@@ -1712,22 +1755,22 @@ export function EraSection({
           {/* The plate's own line (client direction, 11 September 2026). It
               replaces the `when` + `body[0]` pair this used to set; the draft
               sentence it displaces is flagged on the entry in truth.ts. */}
-          <p className="mt-8 max-w-3xl leading-relaxed text-canvas">
+          <p className="mt-8 max-w-3xl leading-relaxed text-charcoal/92 lg:text-canvas">
             {deed.plateCaption ?? `${deed.when}. ${deed.body[0]}`}
           </p>
           {deed.coda ? (
-            <p className="mt-6 max-w-3xl text-xl font-medium leading-relaxed text-canvas sm:text-2xl">
+            <p className="mt-6 max-w-3xl text-xl font-medium leading-relaxed text-charcoal sm:text-2xl lg:text-canvas">
               {deed.coda}
             </p>
           ) : null}
           {deed.source && deed.cta ? (
             <div className="mt-10 flex flex-wrap items-baseline gap-x-16 gap-y-4">
-              <p className="eyebrow text-sm font-normal text-ochre">
+              <p className="eyebrow text-sm font-normal text-ochre-deep lg:text-ochre">
                 {deed.source}
               </p>
               <Link
                 href={deed.cta.href}
-                className="group eyebrow text-sm text-gold transition-transform duration-300 hover:translate-x-1"
+                className="group eyebrow text-sm text-ochre-deep transition-transform duration-300 hover:translate-x-1 lg:text-gold"
               >
                 <span className="link-line group-hover:link-line-on">{deed.cta.label}</span> &rarr;
               </Link>
