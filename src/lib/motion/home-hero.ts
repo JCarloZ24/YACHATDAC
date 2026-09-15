@@ -11,6 +11,7 @@ import { HOME_SCENE } from "./effects/home";
 import { registerYachatdacEffects } from "./effects";
 import { createLandMaterial } from "./home-land";
 import { createSunUpdater } from "./home-sun";
+import { createHomeHandStars } from "./home-hand-stars";
 import { HOME_PORTAL } from "@/content/kit";
 import { awaitEntry, routeEntryPending } from "./route-entry";
 
@@ -117,6 +118,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
     let breeze: gsap.core.Timeline | undefined;
     let syncBreeze = () => {};
     let geometry: PlaneGeometry | undefined;
+    let handStars: ReturnType<typeof createHomeHandStars> | undefined;
     const textures: Texture[] = [];
     const materials: ShaderMaterial[] = [];
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -140,6 +142,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
       materials.forEach((material) => material.dispose());
       textures.forEach((texture) => texture.dispose());
       geometry?.dispose();
+      handStars?.dispose();
       renderer?.dispose();
       canvas.removeEventListener("webglcontextlost", onLost);
       preference.removeEventListener("change", init);
@@ -275,6 +278,14 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
         landscapeReady = true;
         land.uniforms.landscapeReady.value = 1;
 
+        // "The sky answers the hand", 15 September 2026, user direction:
+        // Truth's star field, in this canvas, after the plate. Fine pointers
+        // only, as on Truth; reduced motion never reaches this build at all.
+        if (window.matchMedia("(pointer: fine)").matches) {
+          handStars = createHomeHandStars(land, renderer.getPixelRatio());
+          scene.add(handStars.points);
+        }
+
         // Figma places both sequence layers against the scene at its own
         // height, so this is what makes the measured offsets mean pixels.
         land.uniforms.sceneHeight.value = HOME_PORTAL.height;
@@ -323,6 +334,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           // Maps this plate into the old top-900 crop the shader thresholds
           // were calibrated against. See the HOME_PORTAL note in kit.ts.
           land.uniforms.legacyScale.value = HOME_PORTAL.height / HOME_PORTAL.legacyHeight;
+          handStars?.update();
           renderer?.render(scene, camera);
         };
 
@@ -337,7 +349,26 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
           }
         };
         scrollCue?.addEventListener("click", goToWonder);
-        clearListeners = () => { scrollCue?.removeEventListener("click", goToWonder); };
+        // Measured against the hero, not the canvas: the copy and buttons sit
+        // over it, and the sky should answer wherever the reader's hand is.
+        const onHandMove = (event: PointerEvent) => {
+          const box = root.getBoundingClientRect();
+          const inside = event.clientX >= box.left && event.clientX <= box.right
+            && event.clientY >= box.top && event.clientY <= box.bottom;
+          handStars?.setPointer(inside ? event.clientX - box.left : null, event.clientY - box.top);
+        };
+        const onHandLeave = () => handStars?.setPointer(null);
+        if (handStars) {
+          window.addEventListener("pointermove", onHandMove, { passive: true });
+          document.addEventListener("pointerleave", onHandLeave);
+          window.addEventListener("blur", onHandLeave);
+        }
+        clearListeners = () => {
+          scrollCue?.removeEventListener("click", goToWonder);
+          window.removeEventListener("pointermove", onHandMove);
+          document.removeEventListener("pointerleave", onHandLeave);
+          window.removeEventListener("blur", onHandLeave);
+        };
         intersection = new IntersectionObserver(([entry]) => {
           offscreen = !entry.isIntersecting;
           syncBreeze();
@@ -358,6 +389,7 @@ export function createHomeHero(root: HTMLElement, canvas: HTMLCanvasElement): Mo
             Math.min(1, aspect / landscapeAspect), Math.min(1, landscapeAspect / aspect),
           );
           renderer?.setSize(width, height, false);
+          handStars?.setSize(width, height);
           render();
         };
         // SCR-09, 12 September 2026: only adopt the pinned layout after all

@@ -17,14 +17,18 @@
  * timeline, and it owns no scroll. It mounts only for a fine pointer without
  * reduced motion, renders only while the band is on screen, and releases its
  * GL context on unmount.
+ *
+ * The star itself — geometry, parting lens, twinkle, size and colour — lives
+ * in src/lib/motion/hand-stars.ts since 15 September 2026, when the homepage
+ * night sky took the same field. Only the arrival sweep is Truth's own.
  */
 import { useEffect, useRef } from "react";
 import {
-  AdditiveBlending, BufferGeometry, Float32BufferAttribute, OrthographicCamera,
-  Points, Scene, ShaderMaterial, Vector2, WebGLRenderer,
+  AdditiveBlending, OrthographicCamera, Points, Scene, ShaderMaterial, Vector2, WebGLRenderer,
 } from "three";
-
-const COUNT = 1400;
+import {
+  createHandStarGeometry, HAND_STARS, handStarFragment, handStarVertex,
+} from "@/lib/motion/hand-stars";
 
 const vertexShader = `
   uniform vec2 pointer;     // CSS px, origin top-left
@@ -37,13 +41,10 @@ const vertexShader = `
   attribute float seed;
   varying float vGlow;
   varying float vTwinkle;
+  ${handStarVertex}
   void main() {
-    vec2 p = position.xy * size;
-    vec2 d = p - pointer;
-    float dist = length(d);
-    float reach = 170.0;
-    float near = 1.0 - smoothstep(0.0, reach, dist);
-    p += normalize(d + 0.0001) * near * near * 18.0 * (0.4 + depth);
+    float near;
+    vec2 p = handStarPart(position.xy * size, pointer, depth, near);
     // THE ARRIVAL (user, 14 Sep 2026): while the band rises over the shelter
     // the field lights on its own — a front travelling down from the crest,
     // with a quieter wash behind it — and hands back to the pointer once the
@@ -52,22 +53,18 @@ const vertexShader = `
     float wash = step(p.y, sweep) * 0.35;
     float arrive = entry * max(front, wash) * (0.5 + 0.5 * seed);
     vGlow = max(near, arrive);
-    vTwinkle = 0.65 + 0.35 * sin(time * (0.6 + seed * 1.8) + seed * 40.0);
+    vTwinkle = handStarTwinkle(time, seed);
     gl_Position = vec4(p.x / size.x * 2.0 - 1.0, 1.0 - p.y / size.y * 2.0, 0.0, 1.0);
-    gl_PointSize = (mix(1.0, 2.8, depth) + vGlow * 2.5) * ratio;
+    gl_PointSize = handStarSize(depth, vGlow) * ratio;
   }
 `;
 
 const fragmentShader = `
   varying float vGlow;
   varying float vTwinkle;
+  ${handStarFragment}
   void main() {
-    float r = length(gl_PointCoord - 0.5) * 2.0;
-    float disc = 1.0 - smoothstep(0.2, 1.0, r);
-    float alpha = disc * (0.35 * vTwinkle + vGlow * 0.9);
-    vec3 warm = vec3(1.0, 0.86, 0.62);
-    vec3 cool = vec3(0.78, 0.86, 1.0);
-    gl_FragColor = vec4(mix(cool, warm, vGlow), alpha);
+    gl_FragColor = handStarLight(gl_PointCoord, vGlow, vTwinkle);
   }
 `;
 
@@ -93,20 +90,7 @@ export function GalaxyField() {
     renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%";
     host.appendChild(renderer.domElement);
 
-    const positions = new Float32Array(COUNT * 3);
-    const depth = new Float32Array(COUNT);
-    const seed = new Float32Array(COUNT);
-    for (let i = 0; i < COUNT; i++) {
-      // Overscan by 6% so parallax never walks an empty edge into frame.
-      positions[i * 3] = Math.random() * 1.12 - 0.06;
-      positions[i * 3 + 1] = Math.random() * 1.12 - 0.06;
-      depth[i] = Math.pow(Math.random(), 2.2);
-      seed[i] = Math.random();
-    }
-    const geometry = new BufferGeometry();
-    geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-    geometry.setAttribute("depth", new Float32BufferAttribute(depth, 1));
-    geometry.setAttribute("seed", new Float32BufferAttribute(seed, 1));
+    const geometry = createHandStarGeometry();
 
     const uniforms = {
       pointer: { value: new Vector2(-9999, -9999) },
@@ -166,7 +150,7 @@ export function GalaxyField() {
       const p = uniforms.pointer.value;
       if (!inside) p.set(-9999, -9999);
       else if (p.x < -9000) p.copy(glowAt);
-      else p.lerp(glowAt, 0.18);
+      else p.lerp(glowAt, HAND_STARS.follow);
       renderer.render(scene, camera);
       raf = requestAnimationFrame(frame);
     };
