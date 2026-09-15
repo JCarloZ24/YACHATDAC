@@ -62,30 +62,43 @@ export function WayForwardStatement() {
           two carry as classes. Animate the wrapper, never the images.
           13 September 2026, user hover request: independent inner wrappers
           take pointer drift so it cannot overwrite the scroll entrance or
-          the placement/centring on the outer wrappers. Type stays still. */}
+          the placement/centring on the outer wrappers. Type stays still.
+          15 September 2026, user direction: a third, innermost wrapper
+          (`data-home-pattern-turn`) takes the scroll-scrubbed turn Living
+          Work's rings make, across the offer beat. Its own element, because
+          the hover drift already writes `rotation` on `data-home-pattern`. */}
+      {/* Below lg, 15 September 2026, user direction: at 60vw / 34vw a
+          phone showed two small marks — ~230px and ~130px — lost on a tall
+          screen. Phones and tablets now take 130vw / 80vw, pushed further off
+          their edges so the rings still run off the panel the way the frame
+          has them; the `lg:` values are the desktop numbers, unchanged. */}
       <div data-way-forward-ground aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-[18vw] top-1/2 w-[60vw] -translate-y-1/2">
+        <div className="absolute -right-[55vw] top-1/2 w-[130vw] -translate-y-1/2 lg:-right-[18vw] lg:w-[60vw]">
           <div data-home-pattern>
+            <div data-home-pattern-turn>
             <Image
               src="/artwork/ring-b.svg"
               alt=""
               width={465}
               height={470}
-              sizes="60vw"
+              sizes="(min-width: 1024px) 60vw, 130vw"
               className="block h-auto w-full max-w-none opacity-[0.28]"
             />
+            </div>
           </div>
         </div>
-        <div className="absolute -bottom-[10vw] -left-[8vw] w-[34vw]">
+        <div className="absolute -bottom-[22vw] -left-[30vw] w-[80vw] lg:-bottom-[10vw] lg:-left-[8vw] lg:w-[34vw]">
           <div data-home-pattern>
+            <div data-home-pattern-turn>
             <Image
               src="/artwork/ring-a.svg"
               alt=""
               width={416}
               height={375}
-              sizes="34vw"
+              sizes="(min-width: 1024px) 34vw, 80vw"
               className="block h-auto w-full max-w-none opacity-[0.28]"
             />
+            </div>
           </div>
         </div>
       </div>

@@ -402,10 +402,11 @@ export function registerHome(): void {
       // Ordered by where each plate actually SITS rather than by DOM order.
       // homeOfferMedia lists them at 21%, 68.2%, 6.5% and 68%, so a plain
       // stagger crossed the panel left, right, left, right. Read off the
-      // inline style, not layout: the plates are `display:none` below lg and
-      // would every one of them measure offsetLeft 0.
+      // plate's `data-left`/`data-top` (its desktop composition), not layout:
+      // below lg the plates sit in flow rows, where offsetLeft would describe
+      // a different arrangement (15 September 2026).
       const offerPlates = Array.from(root.querySelectorAll<HTMLElement>("[data-offer-plate]"))
-        .sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left));
+        .sort((a, b) => Number(a.dataset.left) - Number(b.dataset.left));
       // Closed at the TOP of the timeline, not left to the effect's own
       // from-state. `frameOpen` builds a NESTED timeline, and a nested fromTo
       // positioned forty-odd units into a `paused: true` parent cannot be
@@ -415,13 +416,35 @@ export function registerHome(): void {
       // exactly how it looked. The old rise-and-fade never showed this up
       // because it was a direct child of the parent and its autoAlpha: 0
       // immediate-rendered. Zero duration, so it reverses on scrub.
-      timeline.set(offerPlates, { clipPath: "inset(0% 100% 0% 0%)" }, 0);
+      //
+      // ⚑ 15 September 2026, user direction: the upper-right and lower-left
+      // plates unroll from the TOP instead; the other two keep the left-edge
+      // wipe. Chosen by where each plate sits (its inline top/left), so the
+      // pairing follows the composition, not the list order.
+      const offerEdge = (plate: HTMLElement) => {
+        const left = Number(plate.dataset.left), top = Number(plate.dataset.top);
+        return (left >= 50) !== (top >= 50) ? "top" : "left";
+      };
+      offerPlates.forEach((plate) => {
+        timeline.set(plate, {
+          clipPath: offerEdge(plate) === "top" ? "inset(0% 0% 100% 0%)" : "inset(0% 100% 0% 0%)",
+        }, 0);
+      });
       offerPlates.forEach((plate, index) => {
-        timeline.frameOpen(plate, { edge: "left", scale: 1, duration: 0.9 },
+        timeline.frameOpen(plate, { edge: offerEdge(plate), scale: 1, duration: 0.9 },
           offerAt + 1.4 + index * 0.18);
       });
       // A held screen before the last one arrives.
       timeline.to({}, { duration: 1.3 }, offerAt + 2.9);
+      // ⚑ THE GROUND TURNS, 15 September 2026, user direction: the spirals
+      // behind the offer turn like Living Work's rings do under its
+      // countdown — clockwise, linear, scrubbed, so scrolling back winds them
+      // the other way — for the whole of the offer beat, at Living Work's own
+      // tempo (10° per half unit). Innermost wrapper only; the hover drift
+      // owns `data-home-pattern` and the entrance owns the ground.
+      const turnFor = timeline.duration() - offerAt;
+      timeline.fromTo(root.querySelectorAll("[data-home-pattern-turn]"),
+        { rotation: 0 }, { rotation: 20 * turnFor, duration: turnFor, ease: "none" }, offerAt);
       // The pathways, and the end of the page (deck 24, 9 September 2026,
       // user direction — they were briefly a section below the canvas). The
       // offer and the spirals both clear, and the row comes up a viewport the

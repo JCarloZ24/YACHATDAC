@@ -194,21 +194,34 @@ export const homeInvitationMedia = [
  * see the `sizes` comment there. Record what the file is; a wrong number here
  * silently under-serves the plate.
  */
+/**
+ * `compact` — below lg only, 15 September 2026, user direction ("show the 4
+ * photos" on mobile; they were `hidden` there). The panel stacks a row of two
+ * above the paragraph and a row of two below, in flow, so no length of copy
+ * can run into them. Percentages of the ROW's width: `w` the plate, and the
+ * margins that stagger each row the way the deck staggers the desktop set.
+ * The desktop numbers above them are untouched.
+ */
 export type HomeOfferSlot = {
   src: string; origin: string; grade: "frame";
   width: number; height: number;
   left: number; top: number; w: number; aspect: number;
+  compact: { row: "above" | "below"; w: number; mt?: number; mb?: number; mr?: number };
 };
 
 export const homeOfferMedia: HomeOfferSlot[] = [
   { src: "/media/library/partnerships/pt-breath.webp", origin: "/media/library/partnerships/pt-breath.webp",
-    grade: "frame", width: 2000, height: 1126, left: 21, top: 5, w: 31.5, aspect: 1.8 },
+    grade: "frame", width: 2000, height: 1126, left: 21, top: 5, w: 31.5, aspect: 1.8,
+    compact: { row: "above", w: 56 } },
   { src: "/media/library/about/about-road.webp", origin: "/media/library/about/about-road.webp",
-    grade: "frame", width: 2000, height: 1124, left: 68.2, top: 14.3, w: 24, aspect: 1.68 },
+    grade: "frame", width: 2000, height: 1124, left: 68.2, top: 14.3, w: 24, aspect: 1.68,
+    compact: { row: "above", w: 38, mt: 12 } },
   { src: "/media/library/record/therecord-hero.webp", origin: "/media/library/record/therecord-hero.webp",
-    grade: "frame", width: 3840, height: 2024, left: 6.5, top: 57, w: 22.5, aspect: 1.48 },
+    grade: "frame", width: 3840, height: 2024, left: 6.5, top: 57, w: 22.5, aspect: 1.48,
+    compact: { row: "below", w: 50, mb: 10 } },
   { src: "/media/library/elder-portrait.webp", origin: "/media/library/elder-portrait.webp",
-    grade: "frame", width: 2000, height: 1054, left: 68, top: 59, w: 13.75, aspect: 0.79 },
+    grade: "frame", width: 2000, height: 1054, left: 68, top: 59, w: 13.75, aspect: 0.79,
+    compact: { row: "below", w: 34, mr: 6 } },
 ];
 
 /**

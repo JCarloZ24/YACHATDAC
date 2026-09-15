@@ -70,6 +70,7 @@ export function registerMedia(): void {
       // inset(top right bottom left) — collapsing the OPPOSITE side to 100%
       // pins the visible sliver at the named edge, so animating back to 0
       // unrolls the picture from where it already sits.
+      // "top" is also the Home offer's edge (15 September 2026).
       const fromClip =
         edge === "left"
           ? "inset(0% 100% 0% 0%)"
