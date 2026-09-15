@@ -1,6 +1,6 @@
 # Open questions & blockers
 
-*Last updated: 10 September 2026*
+*Last updated: 15 September 2026*
 
 Live list. Resolve upward — anything marked **blocking** stops real work.
 Cross-referenced to section 17 of the build documentation.
@@ -384,6 +384,27 @@ the co-worker's shipped work and a page-wide migration is its own decision.
 **Needs: a call on whether Truth migrates wholesale, and either a check-type
 that understands the scale or an honest note in its output that it does not.**
 
+
+---
+
+## Home's second timeline line takes Burnt Ochre — raised 15 September 2026
+
+Figma frame 05 (`2048:11158`) draws Home's chronology as two dotted lines, and
+the second one, Rail A (`2048:12273`), is **`#CB7722` — V2's named
+`Colour/Burnt Ochre`**. That is the exact value `globals.css:28-30` already
+carries as outstanding against `--color-burnt` (`#d97804`): *"Raised, not
+reconciled: they are a palette decision."*
+
+The line renders in `var(--color-burnt)`, so this adds no new literal and
+**reconciling that token moves the line with it** — nothing here needs a second
+edit. Recorded only so the substitution is on the record rather than a silent
+approximation. No new question: it closes when the existing `--color-burnt`
+item does.
+
+Frame 05's Rail B carries a second, unnamed gold (`#EFB35C`) for its
+scroll-progress run. Home does not use it — its line is Rail B *unfilled*, in
+canvas — so nothing is owed here. It will matter to /truth if that page ever
+fills its rail.
 
 ---
 
