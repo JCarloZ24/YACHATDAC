@@ -86,11 +86,17 @@ const FILLS = [78, 58, 42, 26, 0];
 /**
  * §08's vessel size — one continuous ramp, and it has to be.
  *
- * The names are `whitespace-nowrap` inside an `overflow-hidden` box, so a size
- * the column cannot hold is not a reflow — it is a word silently cut in half,
- * and the fill layer, the track and the gold tick all inherit the same box, so
- * the proportion reads wrong with it. That hazard is live again now the two
- * drawing layers are back (restored 8 Sep), which is what this ramp is for.
+ * A name that does not fit is a wrap, not a silent truncation — the
+ * `whitespace-nowrap` and the `overflow-hidden` box went with the stroked
+ * layer (8 Sep, and again on 15 Sep after the 9af3b15 revert). The ramp still
+ * exists so the names do not wrap at tablet and desktop widths.
+ *
+ * ⚑ PHONES, 15 September 2026, user direction ("make the white titles bigger
+ * so eyes can focus on them" — mobile only): below sm the names take the
+ * mobile Heading 3 token, 32px, instead of the ramp's ~22px. That is where the
+ * ramp itself reaches 32 (at 640 it is 33), so there is no jump at sm. At 32
+ * "Biological Sequestration" wraps to two lines on a phone; that is accepted,
+ * since the size is the point, and the rule beneath runs the full column.
  *
  * The original fault was a `clamp(…,6.4vw,2.25rem) sm:text-6xl` that stepped
  * from 36px straight to 60px at exactly 640. The longest name, "Biological
@@ -104,7 +110,7 @@ const FILLS = [78, 58, 42, 26, 0];
  * clears every one of them. If a longer name is ever added, re-run the
  * arithmetic — do not just raise the cap.
  */
-const VESSEL_SIZE = "text-[clamp(1.25rem,calc(0.39rem+4.2vw),3.75rem)]";
+const VESSEL_SIZE = "text-[clamp(1.25rem,calc(0.39rem+4.2vw),3.75rem)] max-sm:text-h3 max-sm:leading-[1.1]";
 
 /**
  * The page column — the house column, verbatim.
@@ -1528,41 +1534,25 @@ export function LivingWorkOutputs() {
                   {outputsRestsOn[output.title] ?? ""}
                 </p>
 
-                {/* THE VESSEL — solid to where the work has got, outline for
-                    what is still to come. Rest state IS the final fill; the
-                    motion pass sweeps toward it, never past it.
-
-                    RESTORED 8 Sep on Ivy's call, after a pass that collapsed
-                    this to one solid name wiped in left to right. The partial
-                    fill is the design: a name half-drawn is the section's
-                    whole argument, and Rainbow Credits standing entirely
-                    hollow is how "not started" reads without a word for it. */}
+                {/* THE NAME — one solid text node, wiped in left to right.
+                    ⚑ RESTORED 15 September 2026, user direction ("bring back
+                    the version where the whites are filling up all the way
+                    and remove the stroked lines", every width). This is
+                    209f403's markup again, undoing 9af3b15's revert: the
+                    aria-hidden stroked outline, the clipped solid copy and
+                    the sr-only name collapse to one <h3>, every name arrives
+                    whole, and the proportion lives on the rule below — gold
+                    to the stop, grey after it, the tick on the boundary.
+                    Rainbow Credits reads as unstarted by its empty track and
+                    muted blob. */}
                 <div className="mt-3 inline-block max-w-full align-top">
-                  <div
-                    data-vessel
-                    data-fill={fill}
-                    className="relative overflow-hidden whitespace-nowrap"
-                  >
-                    <span
-                      aria-hidden
-                      className={`headline block ${VESSEL_SIZE} text-transparent [-webkit-text-stroke:1px_rgba(246,246,236,0.32)]`}
-                    >
-                      {output.title}
-                    </span>
-                    <span
-                      data-vessel-fill
-                      className="absolute inset-0 overflow-hidden"
-                      style={{ width: `${fill}%` }}
-                    >
-                      <span className={`headline block ${VESSEL_SIZE} whitespace-nowrap text-canvas`}>
-                        {output.title}
-                      </span>
-                    </span>
-                    {/* Accessible name, once — the two layers above are drawing. */}
-                    <span className="sr-only">{output.title}</span>
-                  </div>
+                  <h3 data-vessel className={`headline block ${VESSEL_SIZE} text-canvas`}>
+                    {output.title}
+                  </h3>
 
-                  {/* The track: the whole word is the whole job. */}
+                  {/* The track: the whole word is the whole job. Gold to where
+                      the work has got, grey after it, and the tick on the
+                      boundary. */}
                   <div className="relative mt-3 h-px w-full bg-canvas/20">
                     {empty ? null : (
                       <>

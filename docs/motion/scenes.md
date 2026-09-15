@@ -978,7 +978,7 @@ yet, and the two should be reconciled before this page is signed off.
 | 06 | V | The work — seven streams | 3 | 360 | **media** | P5 | — |
 | 07 | V | Infrastructure — what it takes, met two at a time | 2 | 160 | **none** | — | — |
 | 07b | V | **BREATH** — held, no caption | 1 | 47 | **none** | P8 | ✓✓ |
-| 08 | V | What the work produces — five vessels, four filling | 2 | 120 | **none** | — | — |
+| 08 | V | What the work produces — five names wiped in whole, four tracks filling (solid names restored, no stroked outline, 15 Sep 2026 user direction) | 2 | 120 | **none** | — | — |
 | 09 | V | Get involved — three paths | 2 | 100 | **type** | — | — |
 
 **Reads as:** media · type · transition · media · media · media · none · none ·

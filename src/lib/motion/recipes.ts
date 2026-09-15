@@ -1018,10 +1018,15 @@ export function breath(root: HTMLElement, span = 47): MotionModule {
  * movement is proportional and quiet. The section's weight comes from what it
  * says, which is the correct answer for a page's final claim.
  *
+ * ⚑ 15 September 2026, user direction: the names no longer fill to their
+ * percentage over a stroked outline. Each name wipes in WHOLE and ends solid;
+ * the percentage is carried by the gold track and its tick alone. Timing,
+ * trigger, cascade and rewind are unchanged. The paragraphs above describe
+ * the spec as drawn and are kept as its record.
+ *
  * Markup:
- *   [data-vessel]       each vessel word, carrying data-fill="78"
- *   [data-vessel-fill]  the clipped solid layer inside it (rest width = fill)
- *   [data-vessel-track] the gold underline beside it, grown with the fill
+ *   [data-vessel]       each name, one solid <h3>, wiped in by clip-path
+ *   [data-vessel-track] the gold underline beneath it, grown with the wipe
  */
 export function vessels(root: HTMLElement, span = 120): MotionModule {
   return composition("vessels", root, {
@@ -1034,34 +1039,31 @@ export function vessels(root: HTMLElement, span = 120): MotionModule {
       const marks = qa(root, "[data-vessel]");
       if (!marks.length) return;
 
-      // THE PARTIAL FILL IS THE DESIGN. Restored 8 Sep on Ivy's call after a
-      // pass that made every name arrive whole: a name half-drawn is the
-      // section's argument, and Rainbow Credits standing entirely hollow is
-      // how "not started" reads without a word for it.
-      //
-      // Every word starts hollow. Each row owns one paused sweep: 700ms left
-      // to right, eased out, played when the row passes 65% of the viewport —
-      // and REWOUND, at its own speed, when the row scrolls back out. A rewind
-      // rather than a scrub: the fill keeps its tempo in both directions
-      // instead of dragging with the wheel.
+      // THE NAME ARRIVES WHOLE. ⚑ Restored 15 September 2026, user direction
+      // ("the whites are filling up all the way … remove the stroked lines"):
+      // 209f403's sweep again, after 9af3b15 had reverted it to partial fills
+      // over a stroked outline. Every name wipes in left to right and ends
+      // solid; the proportion is the rule underneath, which is what a rule
+      // is for. Each row owns one paused sweep: 700ms, eased out, played when
+      // the row passes 65% of the viewport and REWOUND at its own speed when
+      // it scrolls back out.
+      const WIPE_FROM = "inset(0% 100% 0% 0%)";
+      const WIPE_TO = "inset(0% 0% 0% 0%)";
+
       const sweeps: { mark: HTMLElement; sweep: gsap.core.Timeline }[] = [];
       marks.forEach((mark) => {
-        const inner = q(mark, "[data-vessel-fill]");
-        if (!inner) return;
-        gsap.set(inner, { width: "0%" });
+        gsap.set(mark, { clipPath: WIPE_FROM });
+        // The track is a sibling of the name, inside their shared box.
         const track = mark.parentElement?.querySelector<HTMLElement>(
           "[data-vessel-track]",
         );
         if (track) gsap.set(track, { scaleX: 0, transformOrigin: "left center" });
 
-        // The sweep stops ON the line marker — the gold tick at data-fill% is
-        // the boundary, and the fill runs exactly to it, never past.
-        const fill = Number(mark.dataset.fill ?? 0);
         const sweep = gsap.timeline({ paused: true });
         sweep.fromTo(
-          inner,
-          { width: "0%" },
-          { width: `${fill}%`, duration: 0.7, ease: EASE.country },
+          mark,
+          { clipPath: WIPE_FROM },
+          { clipPath: WIPE_TO, duration: 0.7, ease: EASE.country },
           0,
         );
         if (track) {
