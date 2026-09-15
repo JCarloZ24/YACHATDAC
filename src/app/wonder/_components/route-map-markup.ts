@@ -36,15 +36,31 @@ function inlineSvg(
     : svg;
 }
 
+/**
+ * The location pin's shadow — the one canvas-coloured (#F6F6EC) shape in the
+ * export, the small dot the pin (Vector_8) stands on — is painted BLACK
+ * (August, 15 September 2026: "change the color of location pin's shadow to
+ * black"). Done here, at inline time, so the supplied file stays as supplied;
+ * both cuts are the same drawing, so both take it. Anchored on the fill and
+ * not the id because the id is prefixed per cut above.
+ */
+function blackPinShadow(svg: string): string {
+  return svg.replace(/fill="#F6F6EC"/, 'fill="black"');
+}
+
 /** §04 Getting here — 3238:34130 at 1440, 2576:22808 on the phone. */
 export function routeMapMarkup() {
   return {
-    desktop: inlineSvg(
-      "getting-here-map.svg",
-      "absolute top-0 left-0 block h-[1580px] w-[2278px] max-w-none",
-      "gh-",
+    desktop: blackPinShadow(
+      inlineSvg(
+        "getting-here-map.svg",
+        "absolute top-0 left-0 block h-[1580px] w-[2278px] max-w-none",
+        "gh-",
+      ),
     ),
-    mobile: inlineSvg("getting-here-map-mobile.svg", "block h-full w-full", "ghm-"),
+    mobile: blackPinShadow(
+      inlineSvg("getting-here-map-mobile.svg", "block h-full w-full", "ghm-"),
+    ),
   };
 }
 

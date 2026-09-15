@@ -141,10 +141,12 @@ export function WonderMotion() {
       wire("highlights", (el) => createCardPop(el));
       wire("getting-here", (el) => gettingHereCopy(el, 180));
       wire("country", wonderLandscape);
-      wire("itinerary", (el) => itinerary(el));
       // The itinerary holds at its foot while §07 rides up over it, wave
       // first — the hero → facts read, at the page's far end (14 Sep 2026).
+      // Register the pin first: the itinerary's pinnedContainer must be able
+      // to revert it when remeasuring during a hold (15 Sep 2026).
       wire("itinerary", (el) => holdAtFoot(el));
+      wire("itinerary", (el) => itinerary(el));
       // From Country holds under Take it with you — the same hold, same day
       // (user direction: "use the same motion on Take it with you section").
       // NOT on Take it with you itself: the footer does not ride over it

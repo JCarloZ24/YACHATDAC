@@ -78,9 +78,16 @@ export default function RootLayout({
             tabbing from the top reached the four footer links and nothing else
             (13 September 2026). /about carries a second one past its deck; see
             `AboutSkip`. */}
+        {/* `focus-visible:`, not `focus:` (August, 15 September 2026: the link
+            appeared on its own after closing DevTools). Closing the inspector
+            hands focus back to the document, and Chrome then lands it on the
+            first focusable thing — this link — without a keystroke. `:focus`
+            revealed it for that programmatic focus; `:focus-visible` shows it
+            only when the reader arrives by keyboard, which is the only time a
+            skip link is for anyone. Tab from the top still reveals it. */}
         <a
           href="#content"
-          className="eyebrow sr-only rounded-xs bg-charcoal px-4 py-2 text-sm tracking-[0.08em] text-canvas focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100"
+          className="eyebrow sr-only rounded-xs bg-charcoal px-4 py-2 text-sm tracking-[0.08em] text-canvas focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-100"
         >
           {skipLinks.content}
         </a>

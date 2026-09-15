@@ -17,8 +17,12 @@ import type { MotionModule } from "../motion-controller";
  * `scrollLeft`: every few seconds it moves on by one card, the same way a
  * swipe would, and from the last card it returns to the first.
  *
- * It STOPS FOR THE READER. A pointer over the rail, a finger or mouse on it,
- * or keyboard focus in it holds the advance; it resumes when they leave. A
+ * It STOPS FOR THE READER — but NOT under a hovering pointer (August,
+ * 15 September 2026: "do not stop the carousel on hover"; the first cut
+ * paused on `pointerenter`, and a reader resting a mouse on the rail saw the
+ * clock stand still). Keyboard focus in the rail holds the advance, since
+ * the rail moving under a focused reader is a different thing from a mouse
+ * resting on it; it resumes when focus leaves. A
  * dot press or a swipe SPILLS the ink first (below), then the sequence
  * starts over on the card they chose. It runs only while the rail is on
  * screen. Reduced motion never advances — the rail is then the plain swipe
@@ -31,15 +35,36 @@ import type { MotionModule } from "../motion-controller";
  * THE DOT IS THE CLOCK (user direction, 14 September 2026: "use the
  * sliderdots as indicator when the images move, put animation on the dots
  * like ink filling in the dots"). The wait between cards is a tween on
- * `--stay-fill`, 0 → 1, set on the section so the dots below the rail
- * inherit it; SliderDots draws the lit dot's gold as ink rising inside the
- * artist's shape to that height. A hold pauses the tween where it is, so the
- * ink stands. When the reader takes over — a dot pressed, a swipe, a drag —
- * the ink SPILLS: it drains in 0.35s, the rail moves to their card, and the
- * fill begins again from empty there. SliderDots hands a dot press over
- * through a cancelable `rail:go` event on the scroller, so a rail with no
- * marquee scrolls itself as before and its dot renders full (the variable's
- * fallback is 1).
+ * `--stay-fill`, set on the section so the dots below the rail inherit it;
+ * SliderDots draws the lit dot's gold as ink standing inside the artist's
+ * shape to that height. A hold pauses the tween where it is, so the ink
+ * stands.
+ *
+ * ⚠ IT RUNS FULL → EMPTY, reversed on 15 September 2026 (August: "slider
+ * dots should be highlighted when user moves through the images … reverse
+ * the animation, it starts full then the colour reduces before it moves to
+ * the next dot, so even when the user moves the images the sequence is
+ * continuous"). The first cut rose 0 → 1 and spilled to 0 whenever the
+ * reader took over, which meant the dot under a finger or a hovering
+ * pointer was EMPTY — the one moment the reader looks at the dots, the lit
+ * one was not lit. Now every card's dot starts full, drains over the wait,
+ * and the rail moves on when it is empty. When the reader takes over — a dot
+ * pressed, a swipe, a drag — the clock simply starts over: the dot on their
+ * card is full at once and drains from there, so a manual move joins the
+ * same sequence rather than interrupting it. The drain IS the spill; there
+ * is no separate one.
+ *
+ * THE REFILL WAITS FOR THE ARRIVAL (August, 15 September 2026: "I'm seeing
+ * a full coloured dot before it moves to the next dot"). The rail's smooth
+ * scroll takes a few hundred milliseconds, and the dots follow the scroll
+ * position — so refilling the instant the clock ran out lit the OLD card's
+ * dot full for that beat, before the highlight had moved on. The dot now
+ * stays empty while the rail travels and refills only once the scroller
+ * has come to rest on the next card, so the next thing to be full is the
+ * next card's dot. SliderDots hands a dot press over through a
+ * cancelable `rail:go` event on the scroller, so a rail with no marquee
+ * scrolls itself as before and its dot renders full (the variable's fallback
+ * is 1, which is also this clock's resting state).
  */
 export function createStayMarquee(
   root: HTMLElement,
@@ -56,65 +81,81 @@ export function createStayMarquee(
         const cells = Array.from(scroller.children) as HTMLElement[];
         if (cells.length < 2) return;
 
-        let held = 0;          // pointers / focus holding the rail
+        let held = 0;          // focus holding the rail
         let visible = false;
         let ours = false;      // a scroll we started, not the reader
         let settleTimer = 0;
-        let spilling: gsap.core.Tween | undefined;
+        let arrival = 0;       // rAF watching a scroll we started
 
-        const scrollToCell = (index: number) => {
+        // Move the scroller to a card and call back once it has ARRIVED
+        // there — the scroll position within a pixel of the target, or a
+        // 900ms ceiling in case smooth scrolling is cut short. Watched on
+        // rAF rather than `scrollend`, which Safari did not have when this
+        // was written.
+        const scrollToCell = (index: number, then?: () => void) => {
           const cell = cells[Math.max(0, Math.min(index, cells.length - 1))];
+          const target = Math.min(
+            cell.offsetLeft - cells[0].offsetLeft,
+            scroller.scrollWidth - scroller.clientWidth,
+          );
           ours = true;
-          scroller.scrollTo({ left: cell.offsetLeft - cells[0].offsetLeft, behavior: "smooth" });
-          window.setTimeout(() => { ours = false; }, 800);
+          window.cancelAnimationFrame(arrival);
+          scroller.scrollTo({ left: target, behavior: "smooth" });
+          const started = performance.now();
+          const watch = () => {
+            if (Math.abs(scroller.scrollLeft - target) < 1 || performance.now() - started > 900) {
+              ours = false;
+              then?.();
+              return;
+            }
+            arrival = window.requestAnimationFrame(watch);
+          };
+          arrival = window.requestAnimationFrame(watch);
         };
         const advance = () => {
           const max = scroller.scrollWidth - scroller.clientWidth;
           const step = cells[1].offsetLeft - cells[0].offsetLeft;
           // The next card, or home from the end.
           const at = Math.round(scroller.scrollLeft / step);
-          scrollToCell(scroller.scrollLeft >= max - 1 ? 0 : at + 1);
+          scrollToCell(scroller.scrollLeft >= max - 1 ? 0 : at + 1, again);
         };
 
-        // The wait, drawn: the ink rises over `every` seconds and the card
-        // moves on when it reaches the top.
-        gsap.set(root, { "--stay-fill": 0 });
-        const tick = gsap.fromTo(root, { "--stay-fill": 0 }, {
-          "--stay-fill": 1, duration: every, ease: "none", paused: true,
-          onComplete: () => { advance(); tick.restart(); },
+        // The wait, drawn: the ink stands full and drains over `every`
+        // seconds; the card moves on when the dot is empty, and the next
+        // card's dot starts full. `restart` on the tween is the whole reset:
+        // it re-renders the from value, so the dot is full the instant it
+        // is called, whether or not the clock is then allowed to run.
+        gsap.set(root, { "--stay-fill": 1 });
+        // Empty → travel → arrive → full, in that order; see the refill
+        // note in the module comment.
+        const tick = gsap.fromTo(root, { "--stay-fill": 1 }, {
+          "--stay-fill": 0, duration: every, ease: "none", paused: true,
+          onComplete: () => advance(),
         });
         const settle = () => {
           if (visible && held === 0) tick.play(); else tick.pause();
         };
-        // Start the sequence over from an empty dot.
-        const again = () => { spilling?.kill(); tick.restart(); settle(); };
+        // Start the sequence over from a full dot. `function`, not `const`:
+        // `advance` above calls it before this line runs.
+        function again() { tick.restart(); settle(); }
 
-        // THE SPILL (user direction, 14 September 2026: "if the user clicked
-        // on other dots or skips, the animation will be reversed — the golden
-        // dot will spill, then move to next image and repeats the original
-        // sequence"). The ink drains, quicker than it rose, and only then
-        // does the rail move; the fill begins again on the new card.
-        const spill = (then?: () => void) => {
-          tick.pause();
-          spilling?.kill();
-          spilling = gsap.to(root, {
-            "--stay-fill": 0, duration: 0.35, ease: "power2.in", onComplete: then,
-          });
-        };
-
-        // A dot was pressed: spill, go there, start over. SliderDots asks
-        // through this event and only scrolls itself if nobody answers.
+        // A dot was pressed: go there, start over. SliderDots asks through
+        // this event and only scrolls itself if nobody answers.
         const onGo = (event: Event) => {
           const index = (event as CustomEvent<{ index: number }>).detail?.index;
           if (typeof index !== "number") return;
           event.preventDefault();
-          spill(() => { scrollToCell(index); again(); });
+          // Full at once — the reader chose this dot — and the clock waits
+          // for the rail to get there before it starts draining.
+          tick.restart().pause();
+          scrollToCell(index, again);
         };
-        // The reader swiped or dragged: spill while it moves, start over
-        // once the scroller has come to rest.
+        // The reader swiped or dragged: the dot they land on is full while
+        // it moves, and the drain starts over once the scroller has come to
+        // rest. (`ours` covers a scroll this module started.)
         const onScroll = () => {
           if (ours) return;
-          if (!spilling?.isActive()) spill();
+          tick.restart().pause();
           window.clearTimeout(settleTimer);
           settleTimer = window.setTimeout(again, 200);
         };
@@ -122,8 +163,6 @@ export function createStayMarquee(
         const release = () => { held = Math.max(0, held - 1); settle(); };
 
         scroller.addEventListener("rail:go", onGo);
-        scroller.addEventListener("pointerenter", hold);
-        scroller.addEventListener("pointerleave", release);
         scroller.addEventListener("focusin", hold);
         scroller.addEventListener("focusout", release);
         scroller.addEventListener("scroll", onScroll, { passive: true });
@@ -136,12 +175,10 @@ export function createStayMarquee(
         return () => {
           trigger.kill();
           tick.kill();
-          spilling?.kill();
           window.clearTimeout(settleTimer);
+          window.cancelAnimationFrame(arrival);
           gsap.set(root, { clearProps: "--stay-fill" });
           scroller.removeEventListener("rail:go", onGo);
-          scroller.removeEventListener("pointerenter", hold);
-          scroller.removeEventListener("pointerleave", release);
           scroller.removeEventListener("focusin", hold);
           scroller.removeEventListener("focusout", release);
           scroller.removeEventListener("scroll", onScroll);

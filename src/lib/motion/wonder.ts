@@ -159,6 +159,10 @@ export function holdAtFoot(root: HTMLElement): MotionModule {
           end: () => `+=${window.innerHeight}`,
           pin: true,
           pinSpacing: false,
+          // 15 Sep 2026, reported downward jump at the evergreen seam:
+          // engage just ahead of a fast scroll crossing so the browser
+          // cannot paint the section past its seat and then snap it back.
+          anticipatePin: 1,
           invalidateOnRefresh: true,
         });
       }, root);

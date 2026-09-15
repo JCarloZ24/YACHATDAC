@@ -276,11 +276,26 @@ export function WonderHero() {
        facts section — wave first — scrolls up over it. Sticky makes its own
        stacking context, so the copy and sound button stay inside the hero
        and every later section, being positioned, paints on top. */
+    /* THE FILM IS `h-lvh` TALL AND THE HEADER IS NOT CLIPPED (August,
+       15 September 2026, Samsung A50 screenshots: "sticky sections having a
+       brown section below it"). The header is `min-h-svh`, the SMALL
+       viewport — the screen with the browser's bar showing. On Android the
+       bar retracts as the reader scrolls and the visible screen grows by the
+       bar's height, but `svh` does not: the header stays the shorter size,
+       and the band beneath its foot — where §02's canvas has not yet begun,
+       because its first 40px are the transparent wave band — showed the
+       roasted page ground. The same band is what the landscape screens
+       leaked over (see Landscape.module.css). So the film and its scrim run
+       to the LARGE viewport, `lvh`, which is the screen with the bar gone:
+       the header's flow height is unchanged (the copy still sits where it
+       did), the extra strip lies under §02 and only ever shows through the
+       wave band, and the clip is dropped so it can. On desktop `lvh` and
+       `svh` are the same number and nothing here changes. */
     <header
       data-wonder="hero"
-      className="sticky top-0 flex min-h-svh items-end overflow-hidden bg-roasted"
+      className="sticky top-0 flex min-h-svh items-end bg-roasted"
     >
-      <div className="absolute inset-0">
+      <div className="absolute inset-x-0 top-0 h-lvh">
         {film && poster ? (
           <HeroVideo
             /* The three landscape widths fall back to whichever encode is
@@ -308,7 +323,7 @@ export function WonderHero() {
       <div
         aria-hidden
         data-wonder-scrim
-        className="absolute inset-0 bg-linear-to-t from-charcoal/70 via-charcoal/20 to-charcoal/10"
+        className="absolute inset-x-0 top-0 h-lvh bg-linear-to-t from-charcoal/70 via-charcoal/20 to-charcoal/10"
       />
       <div className={`relative z-10 w-full pb-24 lg:pb-[120px] ${GUTTER}`}>
         <Container>
@@ -680,7 +695,19 @@ export function WonderGettingHere() {
               <p data-eyebrow className={`${H5} text-burnt`}>
                 Getting here
               </p>
-              <h2 className={H2}>{gettingHere.title}</h2>
+              {/* A 300px measure on the phone (August, 15 September 2026:
+                  "move 'part of it' on a new line"): the 335px column broke
+                  the title "Getting here is part / of it". `text-balance`
+                  was tried first and measured "Getting here / is part of
+                  it", which is not the break asked for, so the measure is
+                  narrowed instead: at 36px Block Berthold "Getting here is"
+                  is 240px and "Getting here is part" 320px, so 300 breaks
+                  before "part" and leaves "part of it" whole on line two.
+                  No break is written into copy the CMS owns (D12). Off from
+                  `lg`, where the title is one line and the frame's own;
+                  `settle` splits by line after layout, so it reads these
+                  lines. */}
+              <h2 className={`${H2} max-w-[300px] lg:max-w-none`}>{gettingHere.title}</h2>
               <div className="flex flex-col gap-5 text-base leading-normal lg:gap-7 lg:text-xl">
                 {gettingHere.body.map((para) => (
                   <p key={para}>{para}</p>
@@ -729,8 +756,17 @@ export function WonderGettingHere() {
                 {gettingHere.coda}
               </p>
             </div>
-            {/* The frame's 240px image slot on the phone; the map rides over it. */}
-            <div aria-hidden className="h-[240px] w-full lg:hidden" />
+            {/* The phone's image slot, which the map rides over. THE MAP'S OWN
+                HEIGHT, not the frame's 240 (August, 15 September 2026: "text
+                and map overlap" on every phone wider than the SE). The map is
+                `aspect-square` on the container's width, so it is 335 tall
+                at 375 and 372 at 412 — a fixed 240 slot was only ever the
+                frame's number for the frame's width. This spacer is the same
+                square; `-mb-20` takes back the wrapper's own `pb-20`, so
+                the map's top edge lands exactly on the spacer's and the coda
+                clears it by the column's gap at every width. At 375 that is
+                255px of flow, within 15 of the frame's 240. */}
+            <div aria-hidden className="aspect-square w-full -mb-20 lg:hidden" />
           </Container>
         </div>
       </div>
@@ -937,7 +973,12 @@ export function WonderStay() {
     <section
       id="experience"
       data-wonder="itinerary"
-      className={`${itineraryStyles.itinerary} relative flex flex-col items-center gap-20 bg-canvas px-5 py-10 text-charcoal lg:px-[200px] lg:pt-28 lg:pb-[164px]`}
+      /* `pb-28` on the phone, not the frame's 40 (August, 15 September
+         2026): §07's evergreen wave overhangs this foot by its own 40px
+         height and the section is held here while §07 rides over it, so a
+         40px foot put the wave straight on top of the last stop before it
+         had entered. 112px keeps the last stop clear of the crest. */
+      className={`${itineraryStyles.itinerary} relative flex flex-col items-center gap-20 bg-canvas px-5 pt-10 pb-28 text-charcoal lg:px-[200px] lg:pt-28 lg:pb-[164px]`}
     >
       <div data-itinerary-screen className="w-full">
         <Container

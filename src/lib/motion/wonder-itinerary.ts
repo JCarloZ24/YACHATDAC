@@ -39,7 +39,46 @@ export function itinerary(root: HTMLElement): MotionModule {
       const details = Array.from(root.querySelectorAll<HTMLDetailsElement>("[data-stage]"));
       let active: gsap.core.Timeline | undefined;
       let finishState: (() => void) | undefined;
+      // ScrollTrigger wraps the held section; its next ground is then the
+      // spacer's sibling, not the section's (including accordion toggles).
+      const nextSection = () => (root.parentElement?.classList.contains("pin-spacer")
+        ? root.parentElement : root).nextElementSibling;
 
+      // Finish BEFORE THE CREST, not just the foot's hold (August,
+      // 15 September 2026). The wave overhangs §07: at its first appearance
+      // the old closing rule was only 61% drawn. Reserve its actual height
+      // and 2vh of stillness; direct scrub cannot lag behind that deadline.
+      // Grammar: "the world opening", itinerary rule.
+      const MIN_RUN = 0.3;
+      const wave = nextSection()?.querySelector<SVGSVGElement>(
+        "[data-seam='wonder-wave-before']",
+      );
+      const finishBeforeWave = () =>
+        root.getBoundingClientRect().bottom + window.scrollY - window.innerHeight
+        - (wave?.getBoundingClientRect().height ?? 0) - window.innerHeight * 0.02;
+      const capped = (el: HTMLElement, startAt: number, endAt: number) => {
+        // The row's reveal and accordion can translate ancestors of a rule.
+        // Layout offsets exclude those transforms when a refresh remeasures.
+        const top = () => {
+          let offset = 0;
+          for (let node: HTMLElement | null = el; node && node !== root; node = node.offsetParent as HTMLElement | null) {
+            offset += node.offsetTop;
+          }
+          return root.getBoundingClientRect().top + window.scrollY + offset;
+        };
+        const end = () => Math.min(top() - window.innerHeight * endAt, finishBeforeWave());
+        return {
+          // Never spend the reveal below the viewport just to retain 30vh:
+          // the closing rule has a shorter visible run before the crest.
+          start: () => Math.max(top() - window.innerHeight,
+            Math.min(top() - window.innerHeight * startAt, end() - window.innerHeight * MIN_RUN)),
+          end,
+          // Revert the parent's hold before measuring, including mid-hold
+          // refreshes. The hold must be registered before these triggers.
+          pinnedContainer: root,
+          invalidateOnRefresh: true,
+        };
+      };
       const enter = (trigger: HTMLElement, targets: HTMLElement[]) => {
         if (!targets.length) return;
         const tl = gsap.timeline({ paused: true }).arrive(targets);
@@ -48,9 +87,8 @@ export function itinerary(root: HTMLElement): MotionModule {
         ScrollTrigger.create({
           trigger,
           animation: tl,
-          start: "top 88%",
-          end: "top 20%",
-          scrub: 0.8,
+          ...capped(trigger, 0.88, 0.2),
+          scrub: true,
         });
       };
       const heading = root.querySelector<HTMLElement>("h2");
@@ -76,7 +114,7 @@ export function itinerary(root: HTMLElement): MotionModule {
         if (end) following.push(end);
         // The following sections share the same document displacement. Move
         // their containers too so the evergreen wave stays joined to the list.
-        let sibling = root.nextElementSibling;
+        let sibling = nextSection();
         while (sibling instanceof HTMLElement) {
           following.push(sibling);
           sibling = sibling.nextElementSibling;
@@ -138,13 +176,15 @@ export function itinerary(root: HTMLElement): MotionModule {
       // Every rule draws, the one above day 1 and the closing rule included
       // (both were skipped before and hid under the drawn layer).
       root.dataset.rulesDraw = "";
+      // Capped before the crest like the rows above — the closing rule on desktop
+      // and the rule above day 6 on the phone both sit within a screen of the
+      // foot and used to be covered by §07's wave half-drawn.
       root.querySelectorAll<HTMLElement>("[data-stage-fill]").forEach((fill) => {
         ScrollTrigger.create({
           trigger: fill,
           animation: gsap.effects.stageRule(fill),
-          start: "top bottom-=12%",
-          end: "top 55%",
-          scrub: 0.6,
+          ...capped(fill, 0.88, 0.55),
+          scrub: true,
         });
       });
 

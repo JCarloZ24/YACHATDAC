@@ -64,10 +64,21 @@
     grid-row: 1 / 3;
   }
 
+  /* 100lvh, NOT 100svh (August, 15 September 2026, Samsung A50: a brown band
+     under Turraburra, and the hero "showing through a broken roof"). This is
+     the photograph's window, stuck to the top of the screen; the scene
+     around it has no ground of its own. At `svh` — the screen with the
+     browser bar up — the window stopped short of the foot once Android
+     retracted the bar, and the strip beneath it was transparent all the way
+     down to the sticky hero and the roasted page ground. `lvh` is the screen
+     with the bar gone, the tallest it can be, so the window always reaches
+     the foot; with the bar up the extra strip is simply off-screen. The
+     reading screen keeps `min-height: 100svh` — copy must stay reachable
+     with the bar up. On desktop the two units agree. */
   .scene[data-landscape-motion] .viewport {
     position: sticky;
     top: 0;
-    height: 100svh;
+    height: 100lvh;
   }
 
   .scene[data-landscape-hold] .section {

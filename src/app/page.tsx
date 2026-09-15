@@ -1,6 +1,5 @@
 import { FooterGround } from "@/components/layout/FooterGround";
 import { HomeHero } from "./_components/HomeHero";
-import { ThreadLine } from "@/components/ui/ThreadLine";
 import { beats } from "@/content/homepage";
 import { HomeLoader } from "./_components/HomeLoader";
 import { HomeMotion } from "./_components/Motion";
@@ -61,7 +60,8 @@ export default function HomePage() {
           outgoing page — see Motion.tsx, which carries the measurements. */}
       <HomeMotion />
       <HomeLoader />
-      <ThreadLine />
+      {/* ThreadLine (the fixed left progress hairline) removed 15 Sep 2026,
+          user direction. */}
       <HomeHero beat={hero} wonder={rest[0]} truth={rest[1]} belonging={rest[2]} />
       {/* Follows the statement panel's ground, not the retired evergreen one. */}
       <FooterGround color="var(--color-charcoal)" />

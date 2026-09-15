@@ -132,9 +132,9 @@ export function SliderDots({
     const cell = rail.children[i];
     if (!(cell instanceof HTMLElement)) return;
     // A self-advancing rail (lib/motion/stay-marquee.ts) answers this and
-    // moves itself — spilling the lit dot's ink first (August, 14 September
-    // 2026). Nobody listening means the rail is the reader's alone, and the
-    // dot scrolls it exactly as it always did.
+    // moves itself, restarting the lit dot's clock full (August, 14 and 15
+    // September 2026). Nobody listening means the rail is the reader's
+    // alone, and the dot scrolls it exactly as it always did.
     const asked = rail.dispatchEvent(
       new CustomEvent("rail:go", { detail: { index: i }, cancelable: true }),
     );
@@ -179,14 +179,16 @@ export function SliderDots({
             <path d={DOT_PATH} fill="#090E12" fillOpacity={0.1} />
             {i === active ? (
               /* THE INK (August, 14 September 2026: "like ink filling in the
-                 dots"). The lit dot is not a flat swap of fill: gold rises
+                 dots"). The lit dot is not a flat swap of fill: gold stands
                  inside the artist's shape to `--stay-fill`, the clock a
                  self-advancing rail keeps on its section (lib/motion/
-                 stay-marquee.ts). The fallback is 1, so on a rail that only
-                 the reader moves — Highlights, From Country — the dot is
-                 simply full, exactly as it was. The gold rect is clipped to
-                 the same path, and scales from its own foot so the ink reads
-                 as filling up, not sliding in. */
+                 stay-marquee.ts). Since 15 September 2026 that clock runs
+                 full → empty, so a dot the reader has just moved to is lit
+                 at once and drains while the rail waits. The fallback is 1,
+                 so on a rail that only the reader moves — Highlights, From
+                 Country — the dot is simply full, exactly as it was. The
+                 gold rect is clipped to the same path, and scales from its
+                 own foot so the ink reads as a level, not a slide. */
               <>
                 <clipPath id={clipId}>
                   <path d={DOT_PATH} />
