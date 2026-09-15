@@ -1,6 +1,6 @@
 # Content status board
 
-*Last updated: 11 September 2026*
+*Last updated: 14 September 2026*
 
 One row per document. Update it in the same commit that moves a file between
 folders.
@@ -8,6 +8,11 @@ folders.
 **Circle** is the internal governance tag (build documentation §12) — `open`,
 `shared with care`, or `held by community`. It is never shown to visitors, but
 it decides who has to sign off.
+
+**Info request (14 Sep 2026):** every visible placeholder a client can answer is
+collected in one form, [`requests/YACHATDAC-Website-Info-Form.md`](requests/YACHATDAC-Website-Info-Form.md).
+Holds with no client answer, round-2 items and where each answer lands are in
+[`requests/info-request-internal.md`](requests/info-request-internal.md).
 
 ## Documents
 

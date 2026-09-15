@@ -10,6 +10,11 @@ Every item carries its **D**/**R** number from
 written up to paste straight into Proyekto's Decisions and Risks & Issues
 sections. That file is the detail; this one is the glance.
 
+**Info request (14 Sep 2026):** the client-answerable items that show as placeholders
+(R1, R15, R14, R19, R23, R24 and the contact details) are gathered into one form,
+[`content/requests/YACHATDAC-Website-Info-Form.md`](content/requests/YACHATDAC-Website-Info-Form.md).
+Round-2 items are listed in [`content/requests/info-request-internal.md`](content/requests/info-request-internal.md) §C.
+
 **Ownership:** every item owned by Marc is co-owned by August (19 Aug).
 
 **Renumbered (25 Aug):** D13–D19 and R13–R15 raised on the lo-fi branch are now
