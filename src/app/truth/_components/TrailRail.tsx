@@ -70,6 +70,22 @@ const STEP_X = 78; // Rail B's centre-of-wander — RECORD, the frame's 38px gap
 const ART_W = 27.57;
 const ART_H = 1087.7;
 const ART_MID = 12.7;
+/** THE LEGEND IS PART OF RAIL A, in Rail A's own coordinates (user redesign,
+ *  16 September 2026: Figma `Layer_1` 3874:30134 inside `Rail A` 2048:12273,
+ *  file 7XBvi0Mdbtmym10nkF9IGp). Read off the frame, not fitted: the lettering
+ *  is 26.49 × 113.72 at (4.36, 99) from Rail A's origin. Positioning it off
+ *  the same origin as the strand is what keeps the two from drifting apart —
+ *  the placement it replaces was a separate number derived from a sine fit to
+ *  the strand's wander, and it sat ~5.7px left and 8px low of the frame. */
+const LEGEND_X = 4.36;
+const LEGEND_Y = 99;
+const LEGEND_W = 26.49;
+const LEGEND_H = 113.72;
+/** Where Rail A's dots begin: the redesign hides the strand's top 23 dots
+ *  (2048:12339…12361, y 0 → 214) so the rail STARTS at its lettering. 221 is
+ *  the midpoint between the last hidden dot's foot (214.17 + 4.5 = 218.67) and
+ *  the first kept dot (2048:12338 at 224.29). */
+const RAIL_A_START = 221;
 /** rail-b.svg's own wander, for the invisible guide the pointer samples:
  *  x(y) = STEP_X + AMPLITUDE · sin(2πy / WAVELENGTH + GUIDE_PHASE). */
 const AMPLITUDE = 10.2;
@@ -265,24 +281,34 @@ export function TruthTrailRail() {
         data-truth-rail-screen
         className="sticky top-0 h-svh w-full overflow-visible"
       >
-        {/* The legend rides at the head of the sticky rail. Marc's hand-set
-            LORE · CONTINUOUS cut (2026-09-02), laid ALONG Rail A's own
-            wander (user direction, 15 September 2026 — it used to sit
-            diagonally ACROSS the strand). Measured off the committed
-            rail-a.svg: its dots fit x = 12.7 + 10.2·sin(2πy/216.2 + 1.505)
-            at 1.6px rms, the steepest down-right run centres at y ≈ 164,
-            and over the art's 114px span the strand stays within ±2.5px of
-            that chord — whose ~10° lean is the art's own baked angle. So:
-            top = 164 − 57, left = the strand's centre (INK_X = 40) − half
-            the 27px box. The box's foot clears the rosette laterally
-            (legend right ≈ 53, rosette's left edge ≈ 62 at the travel
-            head). */}
+        {/* The legend rides at the head of the sticky rail — Marc's hand-set
+            LORE · CONTINUOUS cut (2026-09-02) — and RAIL A BEGINS AT IT (user
+            redesign in Figma, 16 September 2026). It is seated in Rail A's
+            own coordinates (see LEGEND_X / LEGEND_Y), off the same origin the
+            strand's mask uses, so the lettering cannot drift off the line it
+            heads.
+
+            What this replaced, and why it never lined up: the legend was
+            placed by a separate number fitted to the strand's wander
+            (`left: 26, top: 107`) while Rail A drew all 112 dots from the top
+            of the screen, so the strand ran up past and behind the lettering
+            ("the first line extends too much"). Measured before the change at
+            1440 × 900: 86 painted rows of Rail A above the lettering's foot.
+
+            The frame's colours were already right and stay: the lettering is
+            Colour/Yellow Gold #FBAE3D (baked into the asset), the dots Colour/
+            Burnt Ochre #CB7722 (LORE_COLOR). */}
         {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
         <img
           src="/artwork/lore-legend.svg"
           alt={loreMarker}
-          className="absolute w-7"
-          style={{ left: 26, top: 107 }}
+          className="absolute"
+          style={{
+            left: INK_X - ART_MID + LEGEND_X,
+            top: LEGEND_Y,
+            width: LEGEND_W,
+            height: LEGEND_H,
+          }}
           loading="lazy"
         />
 
@@ -308,14 +334,28 @@ export function TruthTrailRail() {
           </svg>
 
           {/* Rail A — LORE · continuous. The artist's jittered dots
-              (rail-a.svg) in the frame's own ochre, the full height of the
-              rail; it never breaks, not even at the count (#CB7722 stands
-              on both the egg white and the charcoal). */}
+              (rail-a.svg) in the frame's own ochre. It STARTS at its
+              lettering (RAIL_A_START) and then runs unbroken to the foot, not
+              even breaking at the count (#CB7722 stands on both the egg white
+              and the charcoal).
+
+              ⚠ THE HEAD IS CLIPPED, NOT DELETED FROM THE ASSET. The redesign
+              hides the strand's top 23 dots, and editing them out of
+              rail-a.svg would reproduce that at the head — but the mask
+              repeats down the screen every ART_H (1087.7px), so every tile
+              would carry the same 221px hole. On a screen taller than that
+              (2560 × 1440 at 100%, a 4K panel at 150%) the second tile's hole
+              lands at 1088 → 1309, inside the opaque band above the foot
+              fade. The clip removes the head of the FIRST tile only, leaves
+              every later tile continuous, and leaves the exported strand as
+              the artist drew it. Static style; nothing here moves. */}
           <div
             className="absolute top-0 h-full"
             style={{
               left: INK_X - ART_MID,
               color: LORE_COLOR,
+              clipPath: `inset(${RAIL_A_START}px 0 0 0)`,
+              WebkitClipPath: `inset(${RAIL_A_START}px 0 0 0)`,
               ...strandMask("/artwork/rail-a.svg"),
             }}
           />

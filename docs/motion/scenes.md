@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 15 September 2026*
+*Last updated: 16 September 2026*
 
 Home closing-pattern hover, 13 September 2026 (user screenshot, **what radiates**, Home closing ground): the existing two spiral assets respond to mouse position with shallow opposing drift and turn. The headline, offer photographs, original artwork, resting placement and scroll timing do not change. Hover owns inner wrappers; the original ground wrapper still owns the scroll entrance. Input is enabled only once that entrance has seated and the panel is visible, then resets on exit, blur, hidden tab or leaving the beat. Controller teardown removes listeners, observers and tweens. Fine hover pointers only; reduced-motion, touch and failed-canvas fallback remain still.
 
@@ -556,9 +556,16 @@ tangent; it never teleports between endpoints.
 (user direction, 15 September 2026).** This supersedes the document-height strand of 8–14
 September, which ran the full 2229vh and broke at the count. Both strands now stand one
 viewport tall inside the traveller's own sticky screen, cut at the head and the foot under a
-gradient opacity mask so the cut never reads as a cut; the legend rides at the rail's head,
-its hand-set lettering laid along Rail A's own wander (realigned 15 September 2026 — it used
-to sit diagonally across the strand).
+gradient opacity mask so the cut never reads as a cut; the legend rides at the rail's head.
+**Rail A begins at its lettering (user redesign in Figma, 16 September 2026)** — the lettering
+is now a child of Rail A (`Layer_1` 3874:30134 inside `Rail A` 2048:12273) and the strand's
+top 23 dots are hidden, so nothing runs above or beside the words. The build seats the legend
+in Rail A's own coordinates (26.49 × 113.72 at 4.36, 99 from the strand's origin) instead of
+the separately fitted `26, 107` that never quite met the line, and cuts the strand's head with
+a static `clip-path: inset(221px 0 0 0)` rather than deleting the dots from `rail-a.svg`: the
+mask tiles every 1087.7px, so an edited asset would repeat the 221px hole down the screen and
+open it at 1088 → 1309 on anything taller than 1087px. The clip cuts the first tile only.
+(Of 15 September: the lettering was laid along the wander instead of diagonally across it.)
 The strands are Rail A (LORE · continuous, left) and Rail B (RECORD, right) from the hi-fi's
 `05 · TODAY montage` frame — the Figma pull landed 15 September 2026: the exported assets are
 committed as `public/artwork/rail-a.svg` / `rail-b.svg` (Figma-exported generated artwork,
