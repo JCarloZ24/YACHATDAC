@@ -610,7 +610,19 @@ they are. They withdraw only where a full-bleed photograph takes the screen (a p
 the runtime `coverFractions` test: ramped out across the first ~30% of a cover revealing a
 plate-led slide, hidden across the plate, caught again once the record covers it) and at
 the terminal fade into Before people. Rewinding above the first era clears them; the hero
-never carries one. With no sub-line the year sits centred on the arrow's axis; when an era
+never carries one.
+
+**The 2026 section is the exception to that persistence (user direction, 16 September 2026).**
+The deed plate prints its own year ("2026 · Bought back"), so the rail's mark there is a
+redundant second copy — measured before the change, the pointer carried the retained
+"Today / Now" (the rail's 2026 anchor) across the whole plate, never a literal "2026". Across
+`#deed` the arrow and its era take the plate-phase withdraw: out over the first ~30% of the
+cover revealing it, bare across its read, back over the last ~30% of the cover leaving it —
+the reverse crossing plays the same ramps backwards, so it holds in both scroll directions.
+The whole dress goes, not the label alone: an arrow pointing at nothing over the photograph
+reads as a label that failed to load. The dot remains, and every other era is unchanged.
+`gated-deck.ts` takes the slide as `railSilentSlides`, fed from `truth-rail-map.ts`'s
+`SELF_DATED_SLIDE`. With no sub-line the year sits centred on the arrow's axis; when an era
 carries one, the pair animates into the stacked layout (.25s transform transition on the
 box's `data-has-sub` flag — event-driven, never per-frame).
 
@@ -668,12 +680,29 @@ draws the pair over dark photography and its baked #FCF7F0 dots vanish on egg wh
 Rail B takes ochre, Rail A burnt, and the marker and its year wear the desktop pointer's
 own `--rail-ink` — ochre-deep on light, canvas over the dark bands (user correction,
 15 September 2026). The section carries "Before people · about 100 million years ago" in full;
-the bar says only "Before people", word-marks a size below the years. The marker's x is page progress,
-LINEAR through the chronology's own extent — the to-scale chronological spacing stays the
-desktop's (user ruling, 15 September 2026: the phone travels by webpage progress) — under
-the same eased follow, and the rosette rides the line's own measured wander
-(y = 20.78 + 16.64·sin(2πx/354 + 1.650), fit off the committed artwork). The era anchors
-still decide which year the arrow points at, swapping on a short crossfade; the words
+the bar says only "Before people", word-marks a size below the years.
+
+**The bar follows the section on screen (user direction, 16 September 2026)** — superseding
+the 15 September page-progress marker, whose era anchors swapped the year only as each
+section's middle passed. The chronology is cut into era stretches measured off the live
+layout: one opens at the head of every slide that names an era (its own `[data-era-label]`,
+the string the desktop deck reads, cut by `shortMark`) or at the row of a later era inside
+one (the count's 1886 figure), and runs to the next; a slide naming none keeps the standing
+era. **Whichever stretch is most visible on screen owns the bar** (user direction, same day:
+"make [it] match whichever section is the most visible on screen") — the stretch with the most
+pixels inside the viewport; a tie keeps the current owner, so a boundary cannot flicker the
+year. This replaced a first cut owned by the viewport's reading line (half its height), which
+agreed for sections taller than the screen but not for short ones — the dated plates and the
+sections the carousels shorten — where a section filling most of the screen could still wear
+its neighbour's year. Its mark is the year, and the marker crosses that stretch's equal share
+of the line as the reading line (still half the viewport's height) crosses the stretch. Re-measured on
+every ScrollTrigger refresh, never a page fraction, so sections a carousel shortens only
+speed the marker up. The 2026 deed plate names no era in its markup (the desktop pointer
+falls silent there), so its stretch carries the deed's own year derived from its `when`, and
+the bar reads 2026 on it. The to-scale chronological spacing stays the desktop's. The marker
+glides under the same eased follow, and the rosette rides the line's own measured wander
+(y = 20.78 + 16.64·sin(2πx/354 + 1.650), fit off the committed artwork). The year swaps on a
+short crossfade; the words
 clamp inside the viewport at the line's ends; the year sits at the homepage's own mobile
 scale, word-marks a step down. A straight transparent-into-ground scrim backs the bar —
 a gradient sanctioned by explicit user direction (15 September 2026), the second

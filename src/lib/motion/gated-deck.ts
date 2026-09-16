@@ -97,6 +97,15 @@ export type GatedDeckOptions = {
    * (/truth passes truth-rail-map's `shortMark`). Identity when omitted.
    */
   railLabelText?: (text: string) => string;
+  /**
+   * Slides that print their own year on the section, where the pointer's
+   * era would be a second copy (user direction, 16 September 2026 — /truth
+   * passes its 2026 deed plate, truth-rail-map's `SELF_DATED_SLIDE`). The
+   * arrow and its label withdraw across these exactly as across a plate
+   * phase — out over the cover revealing the slide, back over the cover
+   * leaving it, in either direction — and the dot remains. None when omitted.
+   */
+  railSilentSlides?: string;
   siteHeader?: string;
   bufferVh?: number;
   openingReadVh?: number;
@@ -260,6 +269,7 @@ export function createGatedDeck({
   railLabel = "[data-era-label]",
   railLabelSub = "[data-era-sub]",
   railLabelText = (text: string) => text,
+  railSilentSlides,
   siteHeader = "[data-site-header]",
   bufferVh = 20,
   openingReadVh = 20,
@@ -428,6 +438,15 @@ export function createGatedDeck({
               const rampRailIndex = slides.findIndex((slide) =>
                 slide.matches(railRampSlide),
               );
+              /* Slides that date themselves: the pointer stands bare there
+                 (`railSilentSlides`). */
+              const silentRailIndexes = new Set(
+                railSilentSlides
+                  ? slides.flatMap((slide, index) =>
+                      slide.matches(railSilentSlides) ? [index] : [],
+                    )
+                  : [],
+              );
               /**
                * A slide's era labels, in reading order. Most slides carry one
                * (or none — no era, no tail); the count's figures screen
@@ -568,6 +587,11 @@ export function createGatedDeck({
               ) => {
                 if (firstLabelledIndex < 0 || index < firstLabelledIndex)
                   return 0;
+                // A section that prints its own year keeps the pointer bare
+                // for its whole read (user direction, 16 September 2026) —
+                // the plate phase's hidden state, held; the covers either
+                // side carry the ramps (`standingAtStart` / `standingAtEnd`).
+                if (silentRailIndexes.has(index)) return 0;
                 const p = clamp01(progress);
                 if (coverFractions[index] > 0)
                   return afterCover(index, p, entry);
@@ -582,16 +606,26 @@ export function createGatedDeck({
               /* The pointer's state at a slide's two boundaries, for the
                  gate covers: entering a plate-led slide it is hidden (the
                  photograph is about to take the screen); entering any other
-                 slide past the first era it is already dressed; leaving any
-                 slide past the first era it is dressed (a plate slide ends
-                 covered by its record, `afterCover` holding 1). */
+                 slide past the first era it is already dressed; leaving a
+                 slide it is dressed exactly when that slide's read ENDS
+                 dressed — `tailAt(index, 1)`, not an assumption. A plate
+                 slide usually ends covered by its record (`afterCover`
+                 holding 1), but the Today plate's record lands on the read's
+                 last pixel (coverFraction measured 1.000 at 1440×900), so
+                 its read ends bare; while the deed kept the retained Today
+                 up, the seam between them popped it on, and with the deed
+                 silent it would flash it on and out (16 September 2026). A
+                 slide that dates itself is bare at both ends
+                 (`railSilentSlides`), so the cover into it ramps the pointer
+                 out and the cover out of it ramps it back — the plate's own
+                 seam, both directions. */
               const standingAtStart = (index: number) =>
                 firstLabelledIndex >= 0 &&
                 index > firstLabelledIndex &&
                 index < slides.length &&
-                coverFractions[index] === 0;
-              const standingAtEnd = (index: number) =>
-                firstLabelledIndex >= 0 && index >= firstLabelledIndex;
+                coverFractions[index] === 0 &&
+                !silentRailIndexes.has(index);
+              const standingAtEnd = (index: number) => tailAt(index, 1) >= 1;
 
               /**
                * PAGE PROGRESS, mapped. The pointer's y inside the sticky rail

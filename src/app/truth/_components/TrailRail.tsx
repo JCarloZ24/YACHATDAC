@@ -482,8 +482,9 @@ export function TruthTrailRail() {
  * "Before people · about 100 million years ago"; the full line lives in the
  * section. Geometry and colours in truth.css.
  *
- * Everything that MOVES — the marker's x (page progress through the same
- * chronological map as the desktop rail), the year swaps, the bar's own
+ * Everything that MOVES — the marker's x and the year (both following the
+ * section most visible on screen, measured off the live layout: user
+ * direction, 16 September 2026), the year swaps, the bar's own
  * arrival with the chronology — is truth-mobile-rail.ts's. At rest the bar
  * is invisible (`opacity-0`); under reduced motion the module never runs
  * and the bar simply never shows, the same absence as the desktop

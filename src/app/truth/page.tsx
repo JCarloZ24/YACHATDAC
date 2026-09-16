@@ -70,8 +70,8 @@ export default function TruthPage() {
             row "the guide leading the eye, Truth mobile cut"). Below lg the
             chronology is the homepage's two-line rail, one bar sticky at
             the viewport's foot — the marker's arrow points at the current
-            era's short mark and travels with page progress
-            (truth-mobile-rail.ts). The full era lines live in the sections
+            era's short mark and travels with the section on screen
+            (truth-mobile-rail.ts; 16 September 2026). The full era lines live in the sections
             themselves (the gutter blocks, mobile-visible since the same
             direction). */}
         <TruthTrailBar />

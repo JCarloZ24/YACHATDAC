@@ -14,6 +14,7 @@ import {
   shortMark,
   RAIL_TRAVEL_BOTTOM_INSET,
   RAIL_TRAVEL_TOP,
+  SELF_DATED_SLIDE,
 } from "@/lib/motion/truth-rail-map";
 import { markEntered } from "@/lib/site-entry";
 
@@ -78,6 +79,9 @@ export function V2TruthMotion() {
               /* The gutter holds the full era line; the pointer wears only
                  the short mark — the same cut the mobile wave prints. */
               railLabelText: shortMark,
+              /* The 2026 deed plate prints its own year, so the pointer
+                 stands bare across it (user direction, 16 September 2026). */
+              railSilentSlides: SELF_DATED_SLIDE,
               railTravel: {
                 top: RAIL_TRAVEL_TOP,
                 bottomInset: RAIL_TRAVEL_BOTTOM_INSET,

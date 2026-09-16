@@ -47,7 +47,10 @@
  * neighbours, so a fraction out of story order would run it backwards.
  * This is why the deed slide (#deed, signed June 2026) carries NO anchor:
  * the page tells that beat between 2022 and 2020, and a 2026 fraction
- * there would fold the map. The pointer simply interpolates across it.
+ * there would fold the map. The pointer simply interpolates across it —
+ * and since 16 September 2026 it does so BARE: the deed is the one section
+ * that dates itself, so the arrow and its era withdraw there
+ * (`SELF_DATED_SLIDE`, below).
  */
 
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -128,6 +131,22 @@ export const RAIL_MARKS: readonly RailMark[] = [
 ];
 
 /**
+ * THE SECTION THAT DATES ITSELF (user direction, 16 September 2026). The
+ * deed plate prints its own year on the section ("2026 · Bought back"), so
+ * on the desktop the pointer's era there is a redundant second copy — it
+ * was carrying the retained "Today", the rail's 2026 anchor — and the deck
+ * withdraws the arrow and its label across this slide (gated-deck's
+ * `railSilentSlides`). The phone has no pointer beside the plate, only the
+ * bottom bar, and the deed names no era in its markup for the bar to read;
+ * the bar's mark there is this year, derived from the deed's own `when`
+ * with the same `\d{4}s?` cut as every dated mark (D5 — never retyped).
+ */
+export const SELF_DATED_SLIDE = "#deed";
+export const SELF_DATED_MARK = yearOf(
+  boughtBack.entries.find((entry) => entry.id === "deed"),
+);
+
+/**
  * The pointer's travel box inside the sticky screen, px from its head and
  * foot. The head clears the wordmark and the legend; both ends stay inside
  * the strand mask's fully-opaque zone so the pointer never rides a fading
@@ -138,9 +157,8 @@ export const RAIL_MARKS: readonly RailMark[] = [
 export const RAIL_TRAVEL_TOP = 176;
 export const RAIL_TRAVEL_BOTTOM_INSET = 176;
 
-/** One anchor pair: absolute document scroll → designed rail fraction, and
- *  which mark it belongs to (the bottom bar's year swaps on it). */
-type AnchorPair = { scroll: number; fraction: number; mark: number };
+/** One anchor pair: absolute document scroll → designed rail fraction. */
+type AnchorPair = { scroll: number; fraction: number };
 
 let buildAnchors: (() => AnchorPair[]) | null = null;
 let pairs: AnchorPair[] | null = null;
@@ -150,9 +168,9 @@ const invalidate = () => {
   pairs = null;
 };
 
-/** One calibrator at a time — the deck's above `lg`, the sections' below —
- *  and the media queries that own them are complements, so a handover is a
- *  release followed by an engage, never a fight. */
+/** One calibrator at a time. Only the deck calibrates now: below `lg` the
+ *  bottom bar follows the section on screen instead of this map
+ *  (truth-mobile-rail.ts, user direction, 16 September 2026). */
 const engage = (builder: () => AnchorPair[]) => {
   buildAnchors = builder;
   pairs = null;
@@ -175,7 +193,7 @@ export function calibrateRailMap(
 ): () => void {
   return engage(() => {
     const built: AnchorPair[] = [];
-    RAIL_MARKS.forEach((mark, index) => {
+    RAIL_MARKS.forEach((mark) => {
       for (const span of deckSpans) {
         if (!span.slide.matches(mark.slide)) continue;
         const start = span.read.start;
@@ -183,7 +201,6 @@ export function calibrateRailMap(
         built.push({
           scroll: start + (end - start) * mark.at,
           fraction: mark.fraction,
-          mark: index,
         });
         break;
       }
@@ -191,46 +208,6 @@ export function calibrateRailMap(
     built.sort((a, b) => a.scroll - b.scroll);
     return built;
   });
-}
-
-/**
- * The mobile calibration (user direction, 15 September 2026 — the bottom
- * bar). No deck runs below `lg`, so the read clocks are the era sections'
- * own document positions: the reader is "at" a mark when the marked point
- * of its section crosses the middle of the viewport. Re-measured lazily on
- * every ScrollTrigger refresh, same as the deck path.
- */
-export function calibrateRailMapFromSections(): () => void {
-  return engage(() => {
-    const built: AnchorPair[] = [];
-    RAIL_MARKS.forEach((mark, index) => {
-      const el = document.querySelector<HTMLElement>(mark.slide);
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const top = rect.top + window.scrollY;
-      const anchor = top + rect.height * mark.at - window.innerHeight * 0.5;
-      built.push({
-        scroll: Math.max(0, anchor),
-        fraction: mark.fraction,
-        mark: index,
-      });
-    });
-    built.sort((a, b) => a.scroll - b.scroll);
-    return built;
-  });
-}
-
-/** Which mark the reader is AT — the last anchor crossed; -1 before the
- *  first. The bottom bar swaps its year on this. */
-export function railMarkIndexAt(scrollY: number): number {
-  if (!buildAnchors) return -1;
-  if (!pairs) pairs = buildAnchors();
-  let mark = -1;
-  for (const pair of pairs) {
-    if (scrollY >= pair.scroll) mark = pair.mark;
-    else break;
-  }
-  return mark;
 }
 
 /**
@@ -249,7 +226,7 @@ export function railProgressAt(scrollY: number): number {
   if (!pairs) pairs = buildAnchors();
   if (!pairs.length) return doc;
 
-  let previous: AnchorPair = { scroll: 0, fraction: 0, mark: -1 };
+  let previous: AnchorPair = { scroll: 0, fraction: 0 };
   for (const pair of pairs) {
     if (scrollY <= pair.scroll) {
       const span = pair.scroll - previous.scroll;
