@@ -32,9 +32,11 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  *
  * ⚑ THE WHOLE PAGE MOVES NOW (user direction, 11 September 2026), scored from
  * the wireframe's side-notes. This replaces the "§02 down are static by
- * decision" note that stood here from 9 September; §04b and §07 are the only
- * still screens left and both are still by instruction — the breath is a held
- * photograph, the protocol screen "cites hold".
+ * decision" note that stood here from 9 September. ⚑ 16 September 2026: the
+ * two rest screens that note left are gone too — §04b is now the transition
+ * into §05 (`partnershipsBreath`) and §07's rings turn like the rest of the
+ * page's; the hero plate is sticky under a wave that rolls, every seam rolls,
+ * and §05 answers the pointer. Each change is written at its section.
  *
  * The scores are at src/lib/motion/partnerships.ts (§02, §03, §05, §06, §08),
  * `hosting` in src/lib/motion/recipes.ts (§04) and the hero's own overture.
@@ -106,6 +108,15 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * card with about 244px across the copy, and 32 wraps a short title to three
  * lines there. Body copy stays at `text-lg`, which is the ramp the rest of the
  * codebase already uses (`the-record/…:168`).
+ *
+ * ⚑ THE PHONE PASS OF 17 SEPTEMBER 2026 was driven in a headless Chrome at
+ * 320, 375 and 414 wide (no horizontal overflow at any of them) and walked
+ * at 375 x 812. What it found is written where it was fixed: §03's display
+ * headings broke inside a word (effects/core.ts), §04's answers opened after
+ * the rail had left the screen (`hosting`, recipes.ts), and §04b's plate
+ * left a strip under the Android browser bar (`h-lvh`, below). The 24px
+ * gutter above stands, and for the reason it gives: the footer is still on
+ * 24, and a page 4px off its own footer is the worse disagreement.
  */
 
 /**
@@ -160,8 +171,14 @@ const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
  */
 const SCREEN = {
   obligation: "lg:flex lg:min-h-[100vh] lg:flex-col lg:justify-center",
-  openResearch: "lg:flex lg:min-h-[120vh] lg:flex-col lg:justify-center",
-  openQuestions: "lg:flex lg:min-h-[190vh] lg:flex-col lg:justify-center",
+  /* 100 and 160, down from 120 and 190 — user direction, 16 September 2026:
+     "too much white space between Still to be found and Open research". Both
+     sections centred a column shorter than its budget, and the surplus fell
+     as a screen of empty canvas at the seam between them. The budgets now sit
+     a breath above the content each holds at 1440 x 900; `hosting`'s span in
+     ./Motion.tsx follows §04's figure. */
+  openResearch: "lg:flex lg:min-h-[100vh] lg:flex-col lg:justify-center",
+  openQuestions: "lg:flex lg:min-h-[160vh] lg:flex-col lg:justify-center",
   partners: "lg:flex lg:min-h-[130vh] lg:flex-col lg:justify-center",
   waysIn: "lg:flex lg:min-h-[140vh] lg:flex-col lg:justify-center",
   /* ⚠ NO CENTRING ON THE HERO. Every other budget here centres its column in
@@ -187,6 +204,35 @@ const EYEBROW_DARK =
 
 /** boomerang, circle, starburst — the frame's rotation, in repo glyph names. */
 const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
+
+/**
+ * ⚑ THE RINGS ON THIS PAGE ARE QUIETER THAN THEIR EXPORT — user direction,
+ * 16 September 2026 ("reduce opacity to all similar elements in partnerships
+ * page"). §03's note below records why every opacity utility was stripped on
+ * 10 September: the export bakes the artist's 0.08 and nothing should multiply
+ * it. This is the one deliberate multiplication since — 0.6 x 0.08 = 0.048 —
+ * scoped to this page by being a constant HERE rather than a change to the
+ * export, which every other route shares. If the page-level figure ever
+ * becomes the site's, move it into the export and delete this.
+ *
+ * Every ring also turns under scroll (`drift`, grammar row "what radiates,
+ * the artist's ring grounds under scroll" — the same turn /living-work and
+ * /about §03 carry) EXCEPT §05's pair, which answer the pointer instead
+ * (`createRecordPatterns`); both effects write `rotation`, so a ring gets one
+ * or the other, never both.
+ */
+const RING = "opacity-60";
+
+/**
+ * Wonder's blob hover, verbatim (wonder Sections.tsx `BLOB_HOVER`) — user
+ * direction, 16 September 2026: "re-use the pop animation on blob buttons
+ * from wonder". The one-shot pop when a button is first seen is Wonder's
+ * `ctaPop` on `[data-cta]` (§06, §08) and, for the hero, a `pop` beat inside
+ * the overture itself (partnerships.ts) so it lands with the action row
+ * rather than under the entry gate. Grammar: "pops", Wonder call to action.
+ */
+const BLOB_HOVER =
+  "hover:-translate-y-1 hover:scale-[1.03] [&>svg]:transition-transform [&>svg]:duration-(--dur-small) [&>svg]:ease-quiet hover:[&>svg]:translate-x-1";
 
 /** Naive sentence split; no abbreviation or decimal appears in these strings. */
 const sentences = (para: string): string[] =>
@@ -312,6 +358,13 @@ export function PartnershipsHero() {
           `frame` (kit.ts, `pt-hero`) and carries no motion hook, so this box
           holds still under everything the overture does around it.
 
+          ⚑ REPLACED AGAIN on 16 September 2026 (user direction): the batch-3
+          crew group portrait, enhanced and exported at 2880 — see `pt-hero`
+          in kit.ts for the recipe and the ⚠ consent note: twenty-five
+          identifiable faces on the first screen, R24 open. The plate still
+          holds (`frame`), which is also the right grade for a crowd of real
+          people. The note below records the previous swap.
+
           ⚑ THE PHOTOGRAPH WAS REPLACED on 11 September 2026 (user direction):
           a drone frame looking straight down on a track through scrub, one
           vehicle on it, straightened so the road reads level. The note that
@@ -329,13 +382,21 @@ export function PartnershipsHero() {
           ⚠ AND IT IS STILL AN AERIAL WITH A TRACK LEGIBLE, so batch-3's rule
           binds on the alt text above as much as on any caption: no
           coordinates, names or boundaries. */}
-      <div className="relative h-[58svh] w-full overflow-hidden lg:h-screen">
+      {/* ⚑ STICKY, 16 September 2026 (user direction: "hero image full bleed
+          and sticky, animate the green wave on scroll like Wonder"). The plate
+          holds at the top of the viewport while the evergreen ground below —
+          wave first — rides up over it, exactly Wonder's §01 → §02 join. The
+          photograph still does not move (`frame`); the world moves over it.
+          `overflow-hidden` stays on the plate, never on the section: the wave
+          lives above its own box and a clipping ancestor deletes it. */}
+      <div className="sticky top-0 h-[58svh] w-full overflow-hidden lg:h-screen">
         <div data-motion={HERO?.grade ?? "frame"} className="absolute inset-0">
           <MediaOrField
             src={HERO?.src ?? null}
-            alt="A drone view looking straight down on a dirt track running through scrub, a single vehicle on it"
+            alt="A crew of about twenty-five people standing in a grassy clearing with their arms raised to the camera, a white four-wheel drive and scrub behind them"
             sizes="100vw"
             priority
+            quality={90}
             fieldClass="bg-evergreen"
           />
         </div>
@@ -378,20 +439,36 @@ export function PartnershipsHero() {
           here. It stays a SIBLING of the photo box, never a child: a parent
           `overflow-hidden` would delete a divider that lives entirely above
           its own box. */}
+      {/* THE GROUND, as one block the motion can name. `data-pt-hero-ground`
+          is the root `createWaveRoll` scrubs the crest across ("a change of
+          ground", Record wave / SCR-11 — the cut Wonder and The Record carry):
+          the ink rolls as this block's top travels from the viewport's foot to
+          its crown, which is the whole of the plate being covered. `relative`
+          and its own evergreen so it paints OVER the sticky plate. `lg:min-h-[50vh]`
+          is the section's 150vh floor less the plate's 100: with the plate
+          sticky, any floor the block does not fill shows the plate again as a
+          strip under the copy, which the first cut of this did. */}
+      <div data-pt-hero-ground className="relative bg-evergreen lg:min-h-[50vh]">
       <div className="relative">
         <div
           data-pt-wave
           className="pointer-events-none absolute inset-x-0 top-0 h-10 sm:h-26"
         >
-          <WaveDivider ground="var(--color-evergreen)" />
+          <WaveDivider ground="var(--color-evergreen)" hook="pt-wave-hero" />
         </div>
       </div>
 
       {/* THE COPY, on the page's own evergreen — the wireframe's arrangement.
           The wave is pulled entirely ABOVE this block (onto the picture), so
           it costs no height here and `pt` is ordinary breathing space under
-          the seam rather than divider clearance. */}
-      <div className={`${COLUMN} relative pt-14 pb-20 lg:pt-3 lg:pb-12`}>
+          the seam rather than divider clearance.
+
+          `lg:pt-20` was `lg:pt-3` (user direction, 16 September 2026: "apply
+          correct spacing on hero section's texts near green wave"). The 3
+          came from the frame's 912 eyebrow under a 900 wave foot, but the
+          crest's dip reaches well below its own box's foot, so 12px put the
+          eyebrow in the water. 80 clears the deepest dip at 1440. */}
+      <div className={`${COLUMN} relative pt-14 pb-20 lg:pt-20 lg:pb-16`}>
         <p data-pt-eyebrow className={EYEBROW_DARK}>
           Work with us
         </p>
@@ -435,9 +512,17 @@ export function PartnershipsHero() {
               centred. Measured off the readout, not guessed — the button was
               rendering a 12px label centred at 73/73, which is why it read as
               floating in the blob. */}
-          <BlobButton href="#ways-in" tone="burnt" size="cta" align="frame">
-            See the ways in →
-          </BlobButton>
+          <span data-pt-pop className="inline-block">
+            <BlobButton
+              href="#ways-in"
+              tone="burnt"
+              size="cta"
+              align="frame"
+              className={BLOB_HOVER}
+            >
+              See the ways in →
+            </BlobButton>
+          </span>
           <a
             href="#open-questions"
             className="eyebrow inline-block text-sm tracking-[0.28em] text-gold underline-offset-4 transition-transform duration-(--dur-small) ease-quiet hover:underline motion-safe:hover:translate-x-1"
@@ -445,6 +530,7 @@ export function PartnershipsHero() {
             → Four open questions
           </a>
         </div>
+      </div>
       </div>
     </section>
   );
@@ -476,9 +562,14 @@ export function TheObligation() {
       data-pt="obligation"
       className={`relative overflow-hidden bg-evergreen text-canvas ${SCREEN.obligation}`}
     >
+      {/* Whole, and quieter — user direction, 16 September 2026 ("the circle
+          element's top part is cut, complete it"). It sat at `-top-32` at
+          1000px inside a 100vh clipped section, so the crown was gone and
+          the foot was too. 48rem from 6% down fits a 900 screen entire. */}
       <RingArtwork
         piece="b"
-        className="-top-32 left-[44%] w-[62.5rem]"
+        drift
+        className={`top-[6%] left-[46%] w-[48rem] ${RING}`}
       />
       <div className={`${COLUMN} relative py-16 lg:py-28`}>
         <p className={EYEBROW_DARK}>The obligation</p>
@@ -526,9 +617,14 @@ export function OpenResearch() {
       id="research-opportunities"
       className={`relative scroll-mt-28 bg-canvas text-charcoal ${SCREEN.openResearch}`}
     >
-      <WaveDivider ground="var(--color-canvas)" />
+      <WaveDivider ground="var(--color-canvas)" hook="pt-wave-research" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* ⚑ ROASTED, AND AT ITS OWN OPACITY — corrected 10 September 2026
+        {/* ⚑ WHOLE — user direction, 16 September 2026 ("the circle element
+            is cut on Open research"). The a ring sat at `-left-48` and the b
+            ring ran 900px from 62% across, so both were clipped by the
+            section; each now sits entirely inside it. §04's pair follow.
+
+            ⚑ ROASTED, AND AT ITS OWN OPACITY — corrected 10 September 2026
             against the frame's `rings` node (3003:27158: 900.01 x 909.984,
             fill #4E3524, opacity 0.08).
 
@@ -562,12 +658,14 @@ export function OpenResearch() {
         <RingArtwork
           piece="b"
           tone="roasted"
-          className="top-[6%] left-[62%] w-[56.25rem]"
+          drift
+          className={`top-[6%] right-[3%] w-[40rem] ${RING}`}
         />
         <RingArtwork
           piece="a"
           tone="roasted"
-          className="-left-48 bottom-[8%] w-[40rem]"
+          drift
+          className={`left-[2%] bottom-[6%] w-[30rem] ${RING}`}
         />
       </div>
 
@@ -588,7 +686,14 @@ export function OpenResearch() {
             {DISCIPLINES.map((discipline) => (
               <div key={discipline} className="border-t border-charcoal/14 py-8">
                 {/* One `display` target per line — the effect splits only its
-                    first element, so three lines are three calls. */}
+                    first element, so three lines are three calls.
+
+                    At 375 the first discipline wraps to two lines, and until
+                    17 September 2026 it wrapped INSIDE "archaeology": the
+                    character split made every letter its own inline-block and
+                    a run of those breaks anywhere. `display` now splits words
+                    as well as characters (effects/core.ts), so the heading
+                    breaks between words like the prose around it. */}
                 <p
                   data-pt-display
                   className="headline text-2xl leading-[1.2] text-evergreen sm:text-[2.5rem]"
@@ -667,6 +772,17 @@ export function OpenResearch() {
  * ⚠ GAP 1 HAS NO PHOTOGRAPH and is not missing one. No cleared frame of Marra
  * Wonga exists, so the card stays typographic and says so on its face. The
  * row does not restyle around the gap.
+ *
+ * ⚑ ON A PHONE THE SHUTTERS OPEN AS THE RAIL RISES (17 September 2026). The
+ * desktop scrub runs from the section's top across 160vh, which suits the
+ * two-column grid; on a phone the cards are one swipe row about 460px lower,
+ * and that scrub opened card one's answer a quarter of the way as the row
+ * left the screen and the other three after the section had gone. Below `lg`
+ * `hosting` now opens each answer ONCE, when its own card is viewed — card
+ * one as the rail rises, two to four as each is swiped in (user direction,
+ * 17 September 2026: "reveal the text on swipe when user views the card").
+ * See its header in recipes.ts. Nothing in this markup changed for it: the
+ * rail and its cards are found from the `[data-shutter]`s.
  */
 const GAP_PHOTOS = ["engravings-hand", "work-seed", "pt-soil", "about-fire"] as const;
 const GAP_GROUNDS = [
@@ -691,12 +807,14 @@ export function OpenQuestions() {
         <RingArtwork
           piece="b"
           tone="roasted"
-          className="top-[4%] left-[64%] w-[56.25rem]"
+          drift
+          className={`top-[3%] right-[3%] w-[40rem] ${RING}`}
         />
         <RingArtwork
           piece="a"
           tone="roasted"
-          className="-left-48 bottom-[16%] w-[40rem]"
+          drift
+          className={`left-[2%] bottom-[4%] w-[30rem] ${RING}`}
         />
       </div>
 
@@ -848,28 +966,81 @@ export function OpenQuestions() {
    04b · BREATH — one photograph, no words · 55vh
    ------------------------------------------------------------------------- */
 
-/** No caption, by design: a caption would make the breath an argument. */
+/**
+ * ⚑ THE BREATH IS THE TRANSITION INTO §05 — user direction, 16 September 2026
+ * ("remove the black wave above the partners section, create unique transition
+ * to partners section"). The charcoal wave that used to overhang §04's canvas
+ * is gone; nothing on this seam is a wave. Instead the photograph does the
+ * work, which is what its `full` grade is for:
+ *
+ *   1  it OPENS — on the approach, the plate breaks out of a framed inset
+ *      to full bleed (`breakOut`, grammar "the world opening", frame gone);
+ *   2  it HOLDS — the section is sticky at the top of the screen, a whole
+ *      viewport of scrub seen through a screen of trees;
+ *   3  it GOES DARK UNDER §05 — as the charcoal section rides up over it, a
+ *      charcoal scrim ramps up so the photograph has already become §05's
+ *      ground by the time the section's edge crosses it (`scrimRamp`).
+ *
+ * That is a change of ground with the picture as the crest, and it is the
+ * only seam on the site made that way — see the grammar row "a change of
+ * ground, Partnerships breath → partners". Score: `partnershipsBreath` in
+ * src/lib/motion/partnerships.ts. Loud channel: MEDIA (breakOut), the page's
+ * second and last after §04.
+ *
+ * FULL SCREEN, not the frame's 55svh band: a held plate that a section covers
+ * has to be the whole screen or the page ground shows between the plate's
+ * foot and the incoming edge. Quality 90, up from next/image's 75 — the
+ * 2000px master is now drawn at 1920 full-bleed, and the default compression
+ * blocked the grass (user: "increase the image's quality"). There is no
+ * larger master in the repo to re-export from; see `pt-breath` in kit.ts.
+ *
+ * No caption, by design: a caption would make the breath an argument.
+ *
+ * ⚠ THE MARKUP IS THE FINISHED DOCUMENT: the plate renders unclipped and the
+ * scrim at opacity 0, and the score animates FROM the inset and TO the dark —
+ * reduced motion and no-JS see the open photograph.
+ */
 export function Breath() {
   return (
-    <section className="relative bg-charcoal">
-      <WaveDivider ground="var(--color-charcoal)" />
+    <section data-pt="breath" className="sticky top-0 h-svh bg-canvas">
+      {/* `h-lvh`, NOT `inset-0` (17 September 2026, the phone pass). The
+          section is `h-svh` — the SMALL viewport, the screen with the
+          browser bar showing — and it is sticky. On Android the bar
+          retracts as the reader scrolls and the visible screen grows by the
+          bar's height, but `svh` does not, so a strip of page ground showed
+          under the plate's foot until §05 arrived over it. Wonder's hero hit
+          the same band on 15 September (Samsung A50) and fixed it the same
+          way: the plate and its scrim run to the LARGE viewport, the section's
+          flow height is unchanged, and the extra strip lies under §05. On
+          desktop `lvh` and `svh` are the same number. The `breakOut` inset is
+          measured against this box, so the open is unaffected. */}
       <div
+        data-pt-breath-media
         data-motion={BREATH?.grade ?? "full"}
-        className="relative h-[55svh] w-full overflow-hidden"
+        className="absolute inset-x-0 top-0 h-lvh overflow-hidden"
       >
         <MediaOrField
           src={BREATH?.src ?? null}
           alt="A wide plain of low green scrub seen through a screen of slender trees"
-          sizes="(min-width: 1024px) 100vw, 260vw"
+          sizes="100vw"
+          quality={90}
           fieldClass="bg-evergreen/40"
         />
+        {/* Top-right, per the frame (2955:26144): 60 from the top of the image
+            and 113 from its right edge. Inside the plate so it opens with it.
+            The 113 is a 1440 number — on a 375 phone it put the glyph a third
+            of the way across the picture (user, 17 September 2026), so below
+            `lg` it sits 24 from the edge, the inset the card glyphs use. */}
+        <SeamGlyph motif="a" className="top-[60px] right-6 w-11 lg:right-[113px]" />
       </div>
-      {/* Top-right, per the frame (2955:26144): 60 from the top of the image
-          and 113 from its right edge, not the 24 the card glyphs use. The
-          build had it bottom-right at 40/32. The image is `h-[55svh]` — 495 at
-          a 900 viewport, against the frame's 493 — so the frame's own pixel
-          insets land in the right place without being converted. */}
-      <SeamGlyph motif="a" className="top-[60px] right-[113px] w-11" />
+      {/* The charcoal §05 arrives on. Opacity 0 at rest; `scrimRamp` takes it
+          to 0.85 across §05's approach so the picture darkens INTO the
+          incoming ground rather than being cut off by it. */}
+      <div
+        data-pt-breath-scrim
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-lvh bg-charcoal opacity-0"
+      />
     </section>
   );
 }
@@ -913,8 +1084,12 @@ export function AlreadyWorkingWith() {
       className={`relative overflow-hidden bg-charcoal text-canvas ${SCREEN.partners}`}
     >
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" className="top-[8%] left-[62%] w-[62.5rem]" />
-        <RingArtwork piece="a" className="-left-52 bottom-[6%] w-[45rem]" />
+        {/* No `drift` on these two: they follow the pointer instead — "what
+            radiates", The Record's question ground, via `createRecordPatterns`
+            in ./Motion.tsx (user direction, 16 September 2026: "the section is
+            too flat"). Both effects write `rotation`; see RING. */}
+        <RingArtwork piece="b" className={`top-[8%] left-[62%] w-[62.5rem] ${RING}`} />
+        <RingArtwork piece="a" className={`-left-52 bottom-[6%] w-[45rem] ${RING}`} />
       </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
@@ -941,8 +1116,18 @@ export function AlreadyWorkingWith() {
             <div
               key={group.title}
               data-pt-card
-              className={`relative rounded-3xl ${PARTNER_GROUNDS[i]} p-6 lg:min-h-[27.5rem] lg:p-8`}
+              data-record-card
+              tabIndex={0}
+              /* `data-record-card` + the inner `data-card-hover` wrapper are
+                 The Record's card-lift contract (INT-05, `createRecordCardHover`
+                 — the same cut Wonder's highlights take): the INNER box lifts
+                 6px under a fine pointer or focus while `scatterResolve` owns
+                 the card's own transform, so the two never fight. `tabIndex`
+                 because a group of names is otherwise unreachable and the lift
+                 answers focus too. User direction, 16 September 2026. */
+              className={`relative rounded-3xl ${PARTNER_GROUNDS[i]} p-6 outline-none focus-visible:ring-2 focus-visible:ring-gold lg:min-h-[27.5rem] lg:p-8`}
             >
+              <div data-card-hover>
               {/* ⚑ THE FRAME'S CARD, 10 September 2026 (node 0-1).
                   Three things changed and each was wrong on its own terms:
 
@@ -980,6 +1165,7 @@ export function AlreadyWorkingWith() {
                   </li>
                 ))}
               </ul>
+              </div>
             </div>
           ))}
         </div>
@@ -1049,10 +1235,10 @@ export function WaysIn() {
       id="ways-in"
       className={`relative scroll-mt-28 bg-evergreen text-canvas ${SCREEN.waysIn}`}
     >
-      <WaveDivider ground="var(--color-evergreen)" />
+      <WaveDivider ground="var(--color-evergreen)" hook="pt-wave-ways-in" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" className="top-[10%] left-[64%] w-[56.25rem]" />
-        <RingArtwork piece="a" className="-left-48 bottom-[14%] w-[40rem]" />
+        <RingArtwork piece="b" drift className={`top-[10%] left-[64%] w-[56.25rem] ${RING}`} />
+        <RingArtwork piece="a" drift className={`-left-48 bottom-[14%] w-[40rem] ${RING}`} />
       </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
@@ -1181,8 +1367,14 @@ export function WaysIn() {
             size + align are the hero's, and the frame's numbers agree: label
             inset 26 from the left and 16 from the top, 24 tall, which is
             `Nav & CTA/16` at 150%. */}
-        <div data-pt-arrive className="mt-16 lg:mt-[107px]">
-          <BlobButton href="/connect" tone="burnt" size="cta" align="frame">
+        <div data-pt-arrive data-cta className="mt-16 lg:mt-[107px]">
+          <BlobButton
+            href="/connect"
+            tone="burnt"
+            size="cta"
+            align="frame"
+            className={BLOB_HOVER}
+          >
             Get in touch →
           </BlobButton>
         </div>
@@ -1210,11 +1402,14 @@ export function HowWorkIsAgreed() {
   const protocol = documents.find((d) => d.title.includes("research protocol"));
 
   return (
-    <section className={`relative bg-roasted text-canvas ${SCREEN.protocol}`}>
-      <WaveDivider ground="var(--color-roasted)" />
+    <section
+      data-pt="protocol"
+      className={`relative bg-roasted text-canvas ${SCREEN.protocol}`}
+    >
+      <WaveDivider ground="var(--color-roasted)" hook="pt-wave-protocol" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="a" className="-left-52 top-[30%] w-[47.5rem]" />
-        <RingArtwork piece="b" className="top-[8%] left-[66%] w-[56.25rem]" />
+        <RingArtwork piece="a" drift className={`-left-52 top-[30%] w-[47.5rem] ${RING}`} />
+        <RingArtwork piece="b" drift className={`top-[8%] left-[66%] w-[56.25rem] ${RING}`} />
       </div>
 
       {/* THE FRAME'S MEASURE (2944:25996 — 1440 x 900 on #4E3524, which is
@@ -1231,93 +1426,14 @@ export function HowWorkIsAgreed() {
           {protocol?.summary}
         </p>
 
-        {/* ⚑ THE CONTAINER IS THE FULL COLUMN, not a 900 box. The frame runs it
-            x=100 to x=1340 — the same 1240 the rest of the page sits in — and
-            300 tall with 40 of padding. It was `max-w-[900px]` with `lg:p-9`,
-            which made the one element on the page whose whole job is to look
-            like an empty space read as a narrow aside instead.
-
-            Still drawn, never filled: the protocol does not exist, so this
-            container must not either. */}
-        <div
-          data-placeholder="protocol-in-preparation"
-          className="relative mt-12 rounded-3xl p-6 lg:mt-[38px] lg:min-h-[300px] lg:p-10"
-        >
-          {/* ⚑ THE STROKE IS AN SVG, NOT A CSS BORDER, and it had to become one.
-              The frame gives it weight 1.5, inside, #FBAE3D at 55%, radius 24.
-              `border-[1.5px]` cannot deliver that: Chrome floors border-width
-              to 1px and reports 1px even at devicePixelRatio 2, so the drawn
-              stroke was two device pixels where the frame asks for three — a
-              third of the weight missing on the one element that is nothing
-              BUT its outline. CSS also gives no control over dash length at
-              all, and the frame's dashes are visibly longer than the browser
-              default for a hairline.
-
-              An SVG stroke fixes both: 1.5 renders as 1.5, and the dash is a
-              number rather than a guess by the engine.
-
-              GEOMETRY. The svg box is inset 0.75 — half the stroke — and the
-              rect fills it, so a centred stroke spans 0 to 1.5 from the
-              container's own edge. That is what Figma means by "Inside".
-              `overflow-visible` is required or the root clips the outer half.
-              `rx` is 24 minus the same 0.75.
-
-              ⚠ REMOVING THE CSS BORDER MOVED THE CONTENT 1.5px, and in the
-              right direction: the border no longer occupies layout, so `p-10`
-              now puts the pill at x=140 rather than 141.5. That is the frame's
-              number exactly.
-
-              ⚠ THE DASH IS THE ONE VALUE I DO NOT HAVE. Figma's dash/gap sits
-              in the advanced stroke panel, which the readout does not show, so
-              10/7 is read off the export rather than quoted. Everything else
-              here is a stated value. */}
-          <svg
-            aria-hidden
-            /* ⚠ THE WIDTH AND HEIGHT ARE NOT REDUNDANT WITH THE INSET. An
-               <svg> is a REPLACED element: with `width: auto` it falls back to
-               its 300x150 intrinsic size no matter how many insets are set, so
-               `inset-[0.75px]` alone drew a 300x150 rect in the corner rather
-               than a 1240x300 one. The inset positions it; the calc sizes it. */
-            className="pointer-events-none absolute inset-[0.75px] h-[calc(100%-1.5px)] w-[calc(100%-1.5px)] overflow-visible"
-          >
-            <rect
-              width="100%"
-              height="100%"
-              rx="23.25"
-              fill="none"
-              stroke="var(--color-gold)"
-              strokeOpacity="0.55"
-              strokeWidth="1.5"
-              strokeDasharray="10 7"
-            />
-          </svg>
-          <SeamGlyph motif="a" className="right-6 bottom-6 hidden w-11 lg:block" />
-          {/* ⚠ THE PILL IS FILLED IN THE FRAME, and the build had it outlined.
-              An outlined pill inside an already-dashed container gave two
-              weights of the same dashed idea and neither read as a status.
-
-              Every value here is off the supplied export (243 x 34, rx 17):
-                fill  #FBAE3D — `--color-gold`
-                ink   #090E12 — `--color-charcoal`, and NOT the roasted ground
-                      it sits on. I had used `text-roasted` from the section's
-                      own colour, which was a guess; the export is explicit.
-                rx    17 on a 34 box, so it is a true pill — `rounded-full`.
-                type  12px, from the glyph paths' 8.5 cap height. 10 above and
-                      11 below in the layer readout, so `py-2.5` with a 14px
-                      line box lands the pill on 34.
-
-              ⚑ RENDERED AS TEXT, NOT AS THE SVG. The export is the reference,
-              not the asset — dropping it in as an image would make the one
-              status label on the page uneditable at launch (D12) and unreadable
-              to a screen reader. The rect and the type are reproducible from
-              tokens, so they are. */}
-          <p className="eyebrow inline-block rounded-full bg-gold px-4 py-2.5 text-sm leading-[14px] tracking-[0.28em] text-charcoal">
-            In preparation
-          </p>
-          <p className="mt-6 max-w-[1120px] text-base leading-[1.5] text-canvas/85 lg:mt-9 lg:text-[22px]">
-            {partnershipsHiFi.protocol.note}
-          </p>
-        </div>
+        {/* ⚑ THE CONTAINER IS GONE — user direction, 16 September 2026
+            ("remove this highlighted component and text"). The dashed 1240 x
+            300 box, its gold IN PREPARATION pill and the note explaining that
+            the protocol is unwritten were all removed. The eyebrow above still
+            says "In preparation" and the summary still describes the document
+            rather than quoting it, so the page does not imply the protocol
+            exists; it just stops drawing the hole. The header note on this
+            section records the reasoning the container used to carry. */}
       </div>
     </section>
   );
@@ -1346,14 +1462,15 @@ export function TheEnding() {
       data-pt="ending"
       className={`relative bg-canvas text-charcoal ${SCREEN.ending}`}
     >
-      <WaveDivider ground="var(--color-canvas)" />
+      <WaveDivider ground="var(--color-canvas)" hook="pt-wave-ending" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Canvas ground, so roasted — the same off-white-on-off-white fault
             §03 carried, and the second of the two on this page. */}
         <RingArtwork
           piece="b"
           tone="roasted"
-          className="top-[7%] left-[78%] w-[35rem]"
+          drift
+          className={`top-[7%] left-[78%] w-[35rem] ${RING}`}
         />
       </div>
 
@@ -1379,7 +1496,7 @@ export function TheEnding() {
           </div>
         </div>
 
-        <div data-pt-arrive className="lg:justify-self-end">
+        <div data-pt-arrive data-cta className="lg:justify-self-end">
           {/* OXIDE RED, matching the frame — user direction, 10 September 2026.
 
               ⚑ THIS REVERSES A CALL MADE MINUTES EARLIER in the same session,
@@ -1415,6 +1532,7 @@ export function TheEnding() {
             size="cta"
             align="frame"
             shape="narrow"
+            className={BLOB_HOVER}
           >
             Get in touch →
           </BlobButton>

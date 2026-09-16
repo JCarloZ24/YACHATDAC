@@ -60,7 +60,11 @@ export function wireSplitReveal(
   }
 
   const split = SplitText.create(el, {
-    type: mode === "lines" ? "lines" : mode === "words" ? "lines,words" : "chars",
+    /* "words,chars", not bare "chars" — a character is an inline-block and a
+       run of them wraps anywhere; the word box keeps the line breaks where
+       the prose would put them. Same correction as `display` in
+       effects/core.ts, 17 September 2026. */
+    type: mode === "lines" ? "lines" : mode === "words" ? "lines,words" : "words,chars",
     ...(mode === "chars" ? {} : { mask: "lines" as const }),
     autoSplit: true,
     aria: "auto",

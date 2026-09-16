@@ -4,14 +4,20 @@ import { useEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { register, start, stop, watchVisibility } from "@/lib/motion-controller";
 import {
+  partnershipsBreath,
   partnershipsEnding,
   partnershipsHero,
   partnershipsObligation,
   partnershipsOpenResearch,
   partnershipsPartners,
+  partnershipsProtocol,
   partnershipsWaysIn,
 } from "@/lib/motion/partnerships";
 import { hosting } from "@/lib/motion/recipes";
+import { createRecordCardHover } from "@/lib/motion/record-card-hover";
+import { createRecordPatterns } from "@/lib/motion/record-patterns";
+import { createWaveRoll } from "@/lib/motion/wave-roll";
+import { ctaPop } from "@/lib/motion/wonder";
 import { markEntered } from "@/lib/site-entry";
 
 /**
@@ -28,8 +34,12 @@ import { markEntered } from "@/lib/site-entry";
  *
  * WIRED HERE: §01's arrival overture, §02's settle, §03's character display,
  * §04's disclosure (`hosting`), §05's card resolve, §06's arrivals and §08's.
- * §04b and §07 are the page's two rest screens and stay still on purpose — the
- * breath is a held photograph and the protocol screen "cites hold".
+ * ⚑ 16 September 2026 (user direction): also every seam's wave roll
+ * (`createWaveRoll`, the cut Wonder and The Record carry), §04b as the
+ * transition into §05 (`partnershipsBreath`), §05's pointer-following rings
+ * and card lift (The Record's own modules, reused), and §07's ring turn.
+ * The two rest screens the note above used to name are no longer rest
+ * screens.
  *
  * Built at 1440 × 900 first (user direction, 9 September 2026). Nothing here
  * is width-gated — an arrival and a divider cost no scroll and do not argue
@@ -92,11 +102,47 @@ export function PartnershipsMotion() {
         // scrolling it takes to pass a 190vh section, so the shutters open as
         // their own cards reach the reader. That is closer to what the note
         // describes — "as the reader scrolls" — than a held screen was.
-        ["#open-questions", (el: HTMLElement) => hosting(el, 190, false)],
+        // 160, with SCREEN.openQuestions (16 September 2026 — the budget came
+        // down to close the blank screen between §03 and §04).
+        // ⚑ Below `lg` each shutter opens once when its card is viewed —
+        // swiped into the rail — not on this span; the recipe carries both
+        // branches (17 September 2026).
+        ["#open-questions", (el: HTMLElement) => hosting(el, 160, false)],
+        ['[data-pt="breath"]', partnershipsBreath],
         ['[data-pt="partners"]', partnershipsPartners],
+        // "The section is too flat" (user, 16 September 2026): the rings
+        // answer a fine pointer and the cards lift under it, both The Record's
+        // own modules on The Record's own hooks. Rows: "what radiates", Record
+        // question ground / AMB-04, and INT-05.
+        ['[data-pt="partners"]', createRecordPatterns],
+        ['[data-pt="partners"]', createRecordCardHover],
         ["#ways-in", partnershipsWaysIn],
+        // Wonder's one-shot blob pop on each conversion point's `[data-cta]`
+        // (user direction, 16 September 2026). The hero's blob pops inside
+        // its own overture instead — see partnershipsHero.
+        ["#ways-in", (el: HTMLElement) => ctaPop(el, { pinned: false })],
+        ['[data-pt="protocol"]', partnershipsProtocol],
         ['[data-pt="ending"]', partnershipsEnding],
+        ['[data-pt="ending"]', (el: HTMLElement) => ctaPop(el, { pinned: false })],
       ];
+      // EVERY SEAM ROLLS (user direction, 16 September 2026: "animate all
+      // waves"). One module per wave, scrubbed across the owning section's
+      // approach, exactly as /wonder wires its seams — the join belongs to
+      // neither section's composition and claims no channel. The hero's is
+      // scrubbed on the evergreen ground block, not the section: the section
+      // begins at scroll 0 and the block is what rides up over the sticky
+      // plate. Grammar: "a change of ground", Record wave / SCR-11.
+      const seams: Array<[string, string]> = [
+        ["[data-pt-hero-ground]", "pt-wave-hero"],
+        ["#research-opportunities", "pt-wave-research"],
+        ["#ways-in", "pt-wave-ways-in"],
+        ['[data-pt="protocol"]', "pt-wave-protocol"],
+        ['[data-pt="ending"]', "pt-wave-ending"],
+      ];
+      for (const [selector, hook] of seams) {
+        const el = document.querySelector<HTMLElement>(selector);
+        if (el) unregister.push(register(createWaveRoll(el, hook)));
+      }
       for (const [selector, build] of sections) {
         const el = document.querySelector<HTMLElement>(selector);
         if (el) unregister.push(register(build(el)));

@@ -143,6 +143,20 @@ export type CompositionSpec = {
   enterStart?: string;
   /** Tie entry progress to scroll and retrace it on return. Grammar: X4. */
   enterScrub?: boolean;
+  /**
+   * Play the one-shot entrance AGAIN when the reader comes back to the
+   * screen (Partnerships, user direction 17 September 2026: "some sections
+   * might be boring"). Grammar: "arriving quietly", replay.
+   *
+   * ⚠ NOT A REVERSE. The entrance is reset only once the whole screen has
+   * gone back BELOW the viewport (its top under the fold), and replays on
+   * the next downward crossing of `enterStart`. Scrolling up a few pixels to
+   * re-read never hides anything: text that is on screen stays on screen.
+   * A screen the reader scrolls past and back up into from below is left
+   * exactly as it was. Ignored when `enterScrub` is set — a scrubbed entry
+   * already retraces.
+   */
+  enterReplay?: boolean;
   /** End of a scrubbed entry. Default "top 20%". */
   enterEnd?: string;
   /** The cut. Final state, instantly. No tweens with a duration, no pins. */
@@ -278,6 +292,7 @@ export function composition(
       // Entry motion has its own range, before the section's reading span.
       let entryTl: gsap.core.Timeline | null = null;
       let entryTrigger: ScrollTrigger | null = null;
+      let replayTrigger: ScrollTrigger | null = null;
       let ungate: (() => void) | undefined;
       if (spec.enter) {
         // Build before attaching the trigger so it sees the full duration.
@@ -325,6 +340,19 @@ export function composition(
         });
         };
         ungate = awaitEntry(attach);
+        // `enterReplay`: its OWN trigger on the fold, not a branch of the
+        // entry trigger's onLeaveBack — that fires at "top 82%", where the
+        // screen's crown is still on screen and must not vanish, and never
+        // again after. This one rewinds the entrance only once the screen's
+        // top has gone back under the viewport's foot; the next downward
+        // crossing of the entry line then plays it from the start.
+        if (spec.enterReplay && !spec.enterScrub) {
+          replayTrigger = ScrollTrigger.create({
+            trigger: root,
+            start: "top bottom",
+            onLeaveBack: () => entryTl?.pause(0),
+          });
+        }
       }
 
       assertChannel(name, spec, spec.uses);
@@ -336,6 +364,7 @@ export function composition(
         ungate?.();
         tl.kill();
         entryTrigger?.kill();
+        replayTrigger?.kill();
         entryTl?.kill();
       };
     };

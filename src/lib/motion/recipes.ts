@@ -1338,12 +1338,51 @@ export function gathering(root: HTMLElement, span = 330): MotionModule {
  *
  * Measure before pinning: content height ≤ viewport, or do not pass `true`.
  */
+/**
+ * ⚑ THE SHUTTERS HAVE TWO TRIGGERS, ONE PER GRID (17 September 2026, found
+ * on /partnerships at 375 and fixed the same day).
+ *
+ * The composition's own scrub runs from the ROOT's top across `span` — which
+ * is right at 1440, where the four cards sit in a two-column grid under the
+ * heading and are all on screen while that span is read. On a phone the same
+ * cards are one row in a swipe rail (`CardRail`) about 460px below the
+ * section's top, and the rail is on screen for far less scrolling than the
+ * span asks for: measured at 375 x 812, card one's answer was a quarter open
+ * as the rail left the screen and cards two to four opened after the whole
+ * section had gone. Every "What is running" on a phone was a label over
+ * nothing.
+ *
+ * So the shutters are scrubbed on their OWN trigger, in two width branches
+ * that GSAP's matchMedia swaps on a resize across `DESKTOP`:
+ *
+ *   ≥ 64rem  the root's top, across `span` — the geometry the composition
+ *            always had, so the 1440 build is unchanged;
+ *   < 64rem  PER CARD, ON VIEWING IT (user direction, 17 September 2026:
+ *            "reveal the text on swipe when user views the card"). No scroll
+ *            span at all: each shutter is closed up front and opens once,
+ *            on its own clock, the first time its card is at least 60%
+ *            visible — an IntersectionObserver against the viewport, which
+ *            counts the rail's own clipping, so a card off to the right is
+ *            not "in view" until the reader swipes to it. Card one opens as
+ *            the rail rises; two to four open as each is swiped in. It
+ *            plays once and stays open: this is reading, not a toy.
+ *            (The first cut scrubbed all four on the rail's foot, which
+ *            answered cards the reader had not looked at yet.)
+ *
+ * The rail is found, not hooked: the nearest ancestor holding every shutter.
+ * At 1440 that is the grid, on a phone the scroller — the same element
+ * `CardRail` renders either way — so the contract below is unchanged.
+ *
+ * The composition keeps the ring drift and the heading's settle at every
+ * width; only the shutters moved out of it. `revealOnFocus` no longer sees
+ * them, which costs nothing here: the cards carry nothing focusable.
+ */
 export function hosting(
   root: HTMLElement,
   span = 190,
   pin = true,
 ): MotionModule {
-  return composition("hosting", root, {
+  const screen = composition("hosting", root, {
     channel: "media",
     span,
     pin,
@@ -1352,18 +1391,9 @@ export function hosting(
     pinMinWidth: DESKTOP,
     uses: ["flattenReveal", "settle"],
     build: (tl) => {
-      const shutters = qa(root, "[data-shutter]");
-
-      // Staggered across the pinned span rather than fired together: the reader
-      // opens them one at a time, which is what makes it reading rather than a
-      // reveal animation. 0.12 apart on a 0-1 timeline = four beats over ~48%.
-      shutters.forEach((shutter, i) => {
-        // Closed at progress 0 — see the rest-state note above. A plain `set`
-        // rather than markup, so the shut state exists only where the timeline
-        // that opens it does.
-        tl.set(shutter, { scaleY: 1 }, 0);
-        tl.flattenReveal(shutter, { duration: DUR.medium }, 0.1 + i * 0.12);
-      });
+      // Any ring that opted in turns across the span (Partnerships §04,
+      // 16 September 2026); a host without `data-artwork-drift` is untouched.
+      driftArtwork(tl, root);
     },
     enter: (tl) => {
       const heading = q(root, "[data-heading]");
@@ -1371,6 +1401,105 @@ export function hosting(
     },
     cut: clearAll,
   });
+
+  /** The nearest ancestor that holds every shutter — the grid or the rail. */
+  const railOf = (shutters: HTMLElement[]): HTMLElement | null => {
+    let el: HTMLElement | null = shutters[0]?.parentElement ?? null;
+    while (el && el !== root && !shutters.every((s) => el!.contains(s))) {
+      el = el.parentElement;
+    }
+    return el;
+  };
+
+  // Staggered rather than fired together: the reader opens them one at a
+  // time, which is what makes it reading rather than a reveal animation.
+  // 0.12 apart = four beats over about half the trigger's travel.
+  const disclose = (
+    trigger: HTMLElement,
+    start: string,
+    end: string,
+    shutters: HTMLElement[],
+  ) => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger,
+        start,
+        end,
+        scrub: SCRUB.normal,
+        invalidateOnRefresh: true,
+      },
+    });
+    shutters.forEach((shutter, i) => {
+      // Closed at progress 0 — see the rest-state note above. A plain `set`
+      // rather than markup, so the shut state exists only where the timeline
+      // that opens it does.
+      tl.set(shutter, { scaleY: 1 }, 0);
+      tl.flattenReveal(shutter, { duration: DUR.medium }, 0.1 + i * 0.12);
+    });
+    return () => {
+      tl.kill();
+      gsap.set(shutters, { clearProps: "all" });
+      gsap.set(qa(root, "[data-vessel-source]"), { clearProps: "opacity" });
+    };
+  };
+
+  let mm: gsap.MatchMedia | null = null;
+  return {
+    init() {
+      screen.init?.();
+      mm?.revert();
+      mm = gsap.matchMedia();
+      const shutters = qa(root, "[data-shutter]");
+      if (!shutters.length) return;
+      mm.add(
+        `(prefers-reduced-motion: no-preference) and (min-width: ${DESKTOP})`,
+        () => disclose(root, "top top", `+=${span}%`, shutters),
+      );
+      // `not (min-width)`, not a max-width: exactly complementary at the
+      // boundary, the same reasoning compose.ts gives for its own branches.
+      mm.add(
+        `(prefers-reduced-motion: no-preference) and (not (min-width: ${DESKTOP}))`,
+        () => {
+          const rail = railOf(shutters);
+          if (!rail) return;
+          /** The rail's direct child that holds this shutter — its card. */
+          const cardOf = (shutter: HTMLElement) => {
+            let el: HTMLElement = shutter;
+            while (el.parentElement && el.parentElement !== rail) el = el.parentElement;
+            return el;
+          };
+          const tweens: gsap.core.Animation[] = [];
+          gsap.set(shutters, { scaleY: 1 });
+          const io = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                const shutter = shutters.find((s) => cardOf(s) === entry.target);
+                if (!shutter) continue;
+                io.unobserve(entry.target);
+                tweens.push(gsap.timeline().flattenReveal(shutter, { duration: DUR.medium }));
+              }
+            },
+            { threshold: 0.6 },
+          );
+          shutters.forEach((s) => io.observe(cardOf(s)));
+          return () => {
+            io.disconnect();
+            tweens.forEach((t) => t.kill());
+            gsap.set(shutters, { clearProps: "all" });
+            gsap.set(qa(root, "[data-vessel-source]"), { clearProps: "opacity" });
+          };
+        },
+      );
+      // Reduced motion: no branch builds, and the markup's open shutter is
+      // the rest state the composition's cut already hands back.
+    },
+    destroy() {
+      mm?.revert();
+      mm = null;
+      screen.destroy?.();
+    },
+  };
 }
 
 /** Everything, for the lab. */

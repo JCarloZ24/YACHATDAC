@@ -709,7 +709,24 @@ export const PHOTOS: Photo[] = [
      raising it to `full` is a motion decision for a person rather than a
      consequence of swapping an image. Raise it if someone asks; do not assume
      it. */
-  { id: "pt-hero", src: "/media/library/partnerships/pt-hero-track.webp", width: 2880, height: 1588, grade: "frame", batch: 3, master: "NECI_TurraBurra_AStudios_March22-0267", subject: "Drone view straight down on a red dirt track through scrub, one vehicle on it — no people in frame" },
+  /* ⚑ REPLACED 16 September 2026 (user direction: "replace the hero image
+     with this one, enhance the photo and increase quality"). The master is
+     the batch-3 `crew-group-portrait` — the drone group shot, arms raised,
+     the white ute behind. Derivative: 2880 wide (lanczos) from the 4267 x
+     3200 master, median-3 to lift the compression blocking, +8% contrast,
+     +2% brightness, +16% saturation, a fine and a wide unsharp pass, WebP
+     q82 (brand/photography/partnerships/crew-group-portrait.webp, gitignored).
+     ⚠ THE MASTER IS SOFT. At 1:1 it is a small frame upscaled and heavily
+     compressed — the `_1_105_c` suffix is Apple Photos' medium export. No
+     processing recovers detail that is not there; the fix is the drone's
+     own file (or the video frame) from the photographer. Not AI-upscaled:
+     inventing detail in twenty-five real faces is not a call to make here.
+     ⚠ CONSENT: PHOTO-INDEX calls this frame "around twenty-five adults, the
+     largest single consent block in the project" — every face is
+     identifiable and identification consent has not been recorded (R24).
+     It sits on the page's first screen. Cleared or replaced before launch.
+     The track aerial it replaces stays on disk as pt-hero-track.webp. */
+  { id: "pt-hero", src: "/media/library/partnerships/pt-hero-crew.webp", width: 2880, height: 2160, grade: "frame", batch: 3, master: "crew-group-portrait", subject: "A crew of about twenty-five people in a clearing, arms raised to the drone, a white ute and scrub behind — ⚠ CONSENT UNRESOLVED, every face identifiable" },
   /* ⚠ CONSENT UNRESOLVED. The one research frame in the collection, and its
      subject's face is visible and identifiable (batch-1.md). R24 applies here
      exactly as it does on Our People and About §07: use was cleared,

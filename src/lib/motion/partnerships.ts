@@ -11,7 +11,12 @@
  * its Sections and Motion modules, and `docs/motion/scenes.md`.
  *
  * §01's score is below; §02, §03, §05, §06 and §08 are at the foot of this
- * file; §04 is `hosting` in recipes.ts. §04b and §07 hold still by instruction.
+ * file; §04 is `hosting` in recipes.ts. ⚑ 16 September 2026 (user direction):
+ * §04b is `partnershipsBreath`, the page's own transition into §05, and §07
+ * is `partnershipsProtocol` — its rings turn. Neither holds still any more.
+ * The hero plate is STICKY under its wave, and the wave's ink rolls on the
+ * ordinary scroll (`createWaveRoll`, wired in Motion.tsx) — the overture
+ * below is unchanged; it lifts the wave's box, the roll moves the ink.
  *
  * §01 · THE HERO — an overture, not a scroll scene (user direction,
  * 9 September 2026). The hero opens at the top of the document, so there is no
@@ -26,6 +31,7 @@
  *   the eyebrow      arriving quietly · X4        `arrive`        t = 0
  *   the headline     what endures · B5, BY LINE   `settle`        t = 0.20
  *   standfirst + action row · X4                  `arrive`        t = 0.75
+ *   the blob button · "pops"                      `pop`           t = 0.75 + one beat
  *   the wave at the photograph's foot             `waveHandoff`   t = 0.75
  *
  * ⚠ THE PHOTOGRAPH HOLDS STILL, and that is the direction, not an omission.
@@ -62,15 +68,20 @@
  *   [data-pt-eyebrow]   the gold eyebrow
  *   [data-pt-heading]   the H1 — split by LINE, never by character
  *   [data-pt-arrive]    the standfirst and the action row, one beat later
+ *   [data-pt-pop]       the blob button's box — Wonder's one-shot pop, in the
+ *                       overture rather than on a scroll trigger because the
+ *                       hero is on screen before the entry gate lifts
  *   [data-pt-wave]      the wrapper box around the divider, wave-height tall
  */
 
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { registerYachatdacEffects, revertSplits } from "@/lib/motion/effects";
 import { awaitEntry } from "@/lib/motion/route-entry";
 import { clearAll, composition } from "@/lib/motion/compose";
+import { driftArtwork } from "@/lib/motion/recipes";
 import { scopedScene } from "@/lib/motion/scene";
-import { DUR } from "@/lib/motion/tokens";
+import { DUR, EASE } from "@/lib/motion/tokens";
 import type { MotionModule } from "@/lib/motion-controller";
 
 /**
@@ -97,6 +108,7 @@ export function partnershipsHero(root: HTMLElement): MotionModule {
         const eyebrow = q("[data-pt-eyebrow]");
         const heading = q("[data-pt-heading]");
         const wave = q("[data-pt-wave]");
+        const blob = q("[data-pt-pop]");
         const arrivals = Array.from(
           root.querySelectorAll<HTMLElement>("[data-pt-arrive]"),
         );
@@ -141,6 +153,7 @@ export function partnershipsHero(root: HTMLElement): MotionModule {
           if (heading) tl.settle(heading, {}, HEADLINE_AT);
           if (arrivals.length) tl.arrive(arrivals, {}, HEADLINE_AT + BEAT);
           if (wave) tl.waveHandoff(wave, {}, HEADLINE_AT + BEAT);
+          if (blob) tl.pop(blob, {}, HEADLINE_AT + BEAT * 2);
 
           ungate = awaitEntry(() => tl?.play());
         });
@@ -150,7 +163,7 @@ export function partnershipsHero(root: HTMLElement): MotionModule {
           ungate?.();
           tl?.kill();
           revertSplits(root);
-          gsap.set([...copy, ...(wave ? [wave] : [])], { clearProps: "all" });
+          gsap.set([...copy, ...(wave ? [wave] : []), ...(blob ? [blob] : [])], { clearProps: "all" });
         };
       },
       () => {
@@ -213,6 +226,26 @@ export function partnershipsHero(root: HTMLElement): MotionModule {
  *   [data-pt-media]     a photograph that is deliberately held
  */
 
+/**
+ * ⚑ REPLAY — user direction, 17 September 2026 ("some sections might be
+ * boring"; asked which entrances should come back). Four of the page's
+ * eight entrances replay when the reader returns to their screen:
+ *
+ *   §02 the obligation      the settle of one sentence alone on a screen
+ *   §03 still to be found   the character display, the page's type moment
+ *   §05 partners            the three cards' scatter-resolve
+ *   §06 ways in             the four cards' arrive
+ *
+ * They are the mid-page screens whose only motion is their entrance, so
+ * once played they held still on every later pass. NOT replayed, on
+ * purpose: the hero (an arrival, gated on entry — arriving twice is a
+ * contradiction), §04 (its loud channel is the shutters, which already
+ * scrub), and §08 (a close; the pop is one-shot by nature). Every replay is
+ * `enterReplay` in compose.ts: a screen is rewound only once it has fully
+ * left below the fold, so scrolling back a little to re-read never hides a
+ * line. Grammar row: "arriving quietly", replay.
+ */
+
 const qa = (root: HTMLElement, sel: string) =>
   Array.from(root.querySelectorAll<HTMLElement>(sel));
 const q1 = (root: HTMLElement, sel: string) =>
@@ -221,6 +254,8 @@ const q1 = (root: HTMLElement, sel: string) =>
 /** §02 · the obligation — one sentence on a screen. Note: settle B5, line masks. */
 export function partnershipsObligation(root: HTMLElement): MotionModule {
   return composition("partnerships/obligation", root, {
+    // Replays when the reader comes back to it — see REPLAY below.
+    enterReplay: true,
     channel: "none",
     span: 100,
     uses: ["settle", "arrive", "hold"],
@@ -229,6 +264,10 @@ export function partnershipsObligation(root: HTMLElement): MotionModule {
          at the foot is what carries it into canvas. Nothing to scrub. */
       const held = q1(r, "[data-pt-settle]");
       if (held) tl.hold(held, {}, 0);
+      /* The ring behind the sentence turns across the reading span — "what
+         radiates, the artist's ring grounds under scroll", 16 September 2026,
+         with every other ring on the page. */
+      driftArtwork(tl, r);
     },
     enter: (tl, r) => {
       const claim = q1(r, "[data-pt-settle]");
@@ -258,6 +297,8 @@ export function partnershipsObligation(root: HTMLElement): MotionModule {
  */
 export function partnershipsOpenResearch(root: HTMLElement): MotionModule {
   return composition("partnerships/open-research", root, {
+    // Replays when the reader comes back to it — see REPLAY below.
+    enterReplay: true,
     channel: "type",
     span: 120,
     uses: ["display", "hold"],
@@ -266,6 +307,7 @@ export function partnershipsOpenResearch(root: HTMLElement): MotionModule {
          `frame` in kit.ts and it holds, like the hero's crew. */
       const media = qa(r, "[data-pt-media]");
       if (media.length) tl.hold(media, {}, 0);
+      driftArtwork(tl, r);
     },
     enter: (tl, r) => {
       qa(r, "[data-pt-display]").forEach((line, i) => {
@@ -285,6 +327,8 @@ export function partnershipsOpenResearch(root: HTMLElement): MotionModule {
  */
 export function partnershipsPartners(root: HTMLElement): MotionModule {
   return composition("partnerships/partners", root, {
+    // Replays when the reader comes back to it — see REPLAY below.
+    enterReplay: true,
     channel: "none",
     span: 130,
     uses: ["settle", "scatterResolve", "hold"],
@@ -305,12 +349,15 @@ export function partnershipsPartners(root: HTMLElement): MotionModule {
 /** §06 · ways in — four cards. Note: arrive X4 with a grid stagger. */
 export function partnershipsWaysIn(root: HTMLElement): MotionModule {
   return composition("partnerships/ways-in", root, {
+    // Replays when the reader comes back to it — see REPLAY below.
+    enterReplay: true,
     channel: "none",
     span: 140,
     uses: ["settle", "arrive", "hold"],
     build: (tl, r) => {
       const heading = q1(r, "[data-pt-settle]");
       if (heading) tl.hold(heading, {}, 0);
+      driftArtwork(tl, r);
     },
     enter: (tl, r) => {
       const heading = q1(r, "[data-pt-settle]");
@@ -333,6 +380,7 @@ export function partnershipsEnding(root: HTMLElement): MotionModule {
     build: (tl, r) => {
       const arrivals = qa(r, "[data-pt-arrive]");
       if (arrivals.length) tl.hold(arrivals[0], {}, 0);
+      driftArtwork(tl, r);
     },
     enter: (tl, r) => {
       const arrivals = qa(r, "[data-pt-arrive]");
@@ -340,4 +388,114 @@ export function partnershipsEnding(root: HTMLElement): MotionModule {
     },
     cut: clearAll,
   });
+}
+
+/**
+ * §07 · how work is agreed — scored only so its rings turn with the rest of
+ * the page (user direction, 16 September 2026). The copy still holds; the
+ * protocol container that used to sit under it was removed the same day.
+ */
+export function partnershipsProtocol(root: HTMLElement): MotionModule {
+  return composition("partnerships/protocol", root, {
+    channel: "none",
+    span: 100,
+    uses: ["hold"],
+    build: (tl, r) => {
+      const heading = q1(r, "h2");
+      if (heading) tl.hold(heading, {}, 0);
+      driftArtwork(tl, r);
+    },
+    cut: clearAll,
+  });
+}
+
+/* -------------------------------------------------------------------------
+   §04b — the breath, which is the transition into §05 · 16 September 2026
+   ------------------------------------------------------------------------- */
+
+/**
+ * The seam between the four questions and the partners, made of the
+ * photograph rather than a wave (user direction, 16 September 2026: "remove
+ * the black wave above the partners section, create unique transition to
+ * partners section"). Grammar row: "a change of ground, Partnerships breath →
+ * partners". Three movements, two of them scrubbed here:
+ *
+ *   OPEN   `breakOut` from a 10% inset to full bleed, across the section's
+ *          own approach (its top from the viewport's foot to its crown). The
+ *          plate is `full` grade; this is what the grade permits.
+ *   HOLD   the section is `sticky top-0 h-svh` in the markup. No code.
+ *   DARKEN `scrimRamp` on the charcoal scrim, 0 → 0.85, across §05's
+ *          approach — the NEXT section's top from the foot to a quarter down
+ *          — so the picture is already charcoal where the incoming edge
+ *          crosses it and the join reads as the ground going dark, not as a
+ *          card sliding over a photograph.
+ *
+ * ⚠ NOT A `composition()`, for the same reason `createWaveRoll` is not: the
+ * two triggers hang off two different elements' approaches, and a composition
+ * scrubs one span from its root's top. LOUD CHANNEL: MEDIA — `breakOut` is in
+ * compose.ts's media list, and the ledger row says so. Nothing else on this
+ * screen is loud.
+ *
+ * ⚠ ONE sticky section, measured un-stuck. ScrollTrigger scrolls to the top
+ * during refresh, where the section sits in flow, so "top bottom" / "top top"
+ * are the flow positions. The plate holds still relative to the viewport once
+ * stuck, which is the point; the triggers have already been computed.
+ *
+ * Reduced motion: the markup is the open photograph with the scrim at 0.
+ */
+export function partnershipsBreath(root: HTMLElement): MotionModule {
+  let cleanup: (() => void) | undefined;
+  return {
+    init() {
+      cleanup?.();
+      registerYachatdacEffects();
+      const media = gsap.matchMedia();
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        const plate = root.querySelector<HTMLElement>("[data-pt-breath-media]");
+        const scrim = root.querySelector<HTMLElement>("[data-pt-breath-scrim]");
+        const next = root.nextElementSibling as HTMLElement | null;
+        const triggers: ScrollTrigger[] = [];
+
+        if (plate) {
+          /* `machine` (linear), not the effect's `country` default: this is
+             scrubbed, and an ease-out on a scrub spends the whole open in the
+             first fifth of the approach — measured at inset 1.4% with the
+             section still 646px from the top. Linear reads across it. */
+          const open = gsap.effects.breakOut(plate, { from: 10, ease: EASE.machine }) as gsap.core.Tween;
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: root,
+              start: "top bottom",
+              end: "top top",
+              animation: open,
+              scrub: 0.3,
+              invalidateOnRefresh: true,
+            }),
+          );
+        }
+        if (scrim && next) {
+          const dim = gsap.effects.scrimRamp(scrim, { from: 0, to: 0.85 }) as gsap.core.Tween;
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: next,
+              start: "top bottom",
+              end: "top 25%",
+              animation: dim,
+              scrub: 0.3,
+              invalidateOnRefresh: true,
+            }),
+          );
+        }
+        return () => {
+          triggers.forEach((t) => t.kill());
+          gsap.set([plate, scrim].filter(Boolean) as HTMLElement[], { clearProps: "all" });
+        };
+      }, root);
+      cleanup = () => media.revert();
+    },
+    destroy() {
+      cleanup?.();
+      cleanup = undefined;
+    },
+  };
 }
