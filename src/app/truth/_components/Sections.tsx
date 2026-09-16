@@ -310,6 +310,37 @@ const TILE_FURNITURE: readonly { glyph: string; className: string; wave?: boolea
   { glyph: "/artwork/glyph-b.svg", className: "bottom-4 right-4 w-10" },
 ];
 
+/**
+ * The precinct's swipe rail, factored out so every photograph collection on
+ * Truth wears the same one below `lg` (user direction, 16 September 2026: on a
+ * phone the stacked galleries made the page far too long to scroll). TODAY's
+ * montage, the 2020 and 2019 diptychs and both evidence strips each stood a
+ * column-wide photograph per row; they now run across with the next peeking.
+ *
+ * `SNAP_TRACK` is the MECHANISM only — bleed, gutter, snap, overscroll
+ * containment, and the `lg` revert of each. Display, gap and the `lg` layout
+ * stay with the caller, because they are the part that differs: Ahead is a flex
+ * row of cards, the research strip a two-row grid. ⚠ It does NOT revert `py-2`
+ * at `lg`. Ahead has always carried it there and dropping it would move Ahead's
+ * desktop 16px; the galleries that were never rails add `lg:py-0` themselves,
+ * which is what keeps their desktop exactly as it was.
+ *
+ * `SNAP_CARD` is Ahead's card: `78vw` is the peek that says another photograph
+ * is there. It restores no width at `lg` — each caller names `lg:w-auto` or its
+ * frame's own width, because two `lg:w-*` on one element resolve by stylesheet
+ * order and not by intent.
+ *
+ * ⚠ MOTION OFF THE DECK IS KEYED TO THE RAIL, NEVER TO A TILE IN IT. The
+ * record's M1 `brighten` and the `data-v2-camera` push-in both ride the whole
+ * collection's vertical travel, so a tile swiped into view is always in the
+ * state its neighbours are in; nothing here hides a tile until it scrolls in
+ * horizontally. The deck's `layTiles` only runs at `lg`, where these are grids
+ * again. Grammar: "the world opening, swiped, Truth galleries off the deck".
+ */
+const SNAP_TRACK =
+  "-mx-6 snap-x snap-mandatory overflow-x-auto overscroll-x-contain px-6 py-2 scroll-px-6 lg:mx-0 lg:snap-none lg:overflow-visible lg:px-0";
+const SNAP_CARD = "w-[78vw] shrink-0 snap-start lg:shrink";
+
 function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }) {
   return (
     <figure className="mt-10 max-w-4xl">
@@ -322,10 +353,12 @@ function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string
 
           NO JAVASCRIPT IN THE MECHANISM below `lg`: native scroll-snap, which
           is the house pattern (Ivy, 2026-09-05) and works with JS off. That is
-          the "draggable on mobile, no animations" half of the direction. */}
+          the "draggable on mobile, no animations" half of the direction.
+          The mechanism is `SNAP_TRACK` since 16 September 2026, shared with
+          the page's other collections; the class set here is unchanged. */}
       <div
         data-truth-focus-row
-        className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-6 py-2 scroll-px-6 lg:mx-0 lg:grid lg:grid-cols-2 lg:items-end lg:gap-10 lg:snap-none lg:overflow-visible lg:px-0"
+        className={`${SNAP_TRACK} flex gap-4 lg:grid lg:grid-cols-2 lg:items-end lg:gap-10`}
       >
         {slots.map((slot, index) => {
           const furniture = TILE_FURNITURE[index];
@@ -335,7 +368,7 @@ function FeatureMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string
               data-truth-tile={index}
               /* `w-[78vw]` is the peek that says a second plate is there; from
                  `lg` the grid cell sizes it and the walk scales it. */
-              className="relative aspect-3/2 w-[78vw] shrink-0 snap-start overflow-hidden rounded-2xl lg:w-auto lg:shrink"
+              className={`relative aspect-3/2 ${SNAP_CARD} overflow-hidden rounded-2xl lg:w-auto`}
             >
               <MediaOrField
                 src={presentSrc(slot.src)}
@@ -406,22 +439,36 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
     <figure className="mt-10 max-w-4xl">
       <div
         {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
-        className="grid items-start gap-6 sm:grid-cols-[13fr_9fr]"
+        /* A swipe rail below `lg` (16 September 2026, user direction — see
+           `SNAP_TRACK`), the frame's two-column grid from `lg`. The grid used
+           to open at `sm`; it now opens where the rail closes, so 640–1023
+           swipes too. `items-start` is load-bearing in the rail: a stretched
+           flex item overrides its own `aspect-*`, and the tunnel's 8:5 would
+           be pulled to its 3:2 neighbours' height. */
+        className={`${SNAP_TRACK} flex items-start gap-4 lg:grid lg:grid-cols-[13fr_9fr] lg:gap-6 lg:py-0`}
       >
         {/* data-truth-tile carries the LAYING order, which is not DOM order:
             the grid reads down its left column then its right, and the frame
             lays the montage lead → tunnel → hand → picker. The module wants
             the order a hand would put them down in, so it is stated here
-            rather than inferred from the column split. */}
-        <div className="space-y-6">
+            rather than inferred from the column split.
+
+            Below `lg` the two columns are `display: contents`, so the four
+            tiles are the rail's own items, in the order the phone already
+            read them (lead, hand, tunnel, picker). `lg:space-y-6` rather than
+            `space-y-6`: the column's block margin would otherwise land on the
+            flattened tiles and pad the rail's foot. */}
+        <div className="contents lg:block lg:space-y-6">
           <div
             data-truth-tile="0"
-            className="relative aspect-3/2 overflow-hidden rounded-2xl"
+            className={`relative aspect-3/2 ${SNAP_CARD} overflow-hidden rounded-2xl lg:w-auto`}
           >
             <MediaOrField
               src={presentSrc(lead.src)}
               alt={lead.expects}
-              sizes="(min-width: 640px) 50vw, 100vw"
+              /* 99vw below `lg`: a 78vw 3:2 card cut from a 1.9:1 source needs
+                 78 × 1.9 / 1.5 of crop. */
+              sizes="(min-width: 1024px) 50vw, 99vw"
               fieldClass={FIELD_CLASS[lead.tone]}
             />
             {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
@@ -441,26 +488,28 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
                also applied on a phone, where the grid is a single column, so
                this one photograph rendered 196px wide between three 327px
                siblings and the montage read as ragged rather than laid. The
-               width now breaks where the grid it belongs to breaks. */
-            className="relative aspect-3/2 overflow-hidden rounded-2xl sm:w-3/5"
+               width now breaks where the grid it belongs to breaks — which is
+               `lg` since the rail (16 September 2026); below it the tile is a
+               rail card like its three siblings. */
+            className={`relative aspect-3/2 ${SNAP_CARD} overflow-hidden rounded-2xl lg:w-3/5`}
           >
             <MediaOrField
               src={presentSrc(hand.src)}
               alt={hand.expects}
-              sizes="(min-width: 640px) 25vw, 60vw"
+              sizes="(min-width: 1024px) 25vw, 78vw"
               fieldClass={FIELD_CLASS[hand.tone]}
             />
           </div>
         </div>
-        <div className="space-y-6">
+        <div className="contents lg:block lg:space-y-6">
           <div
             data-truth-tile="1"
-            className="relative aspect-8/5 overflow-hidden rounded-2xl"
+            className={`relative aspect-8/5 ${SNAP_CARD} overflow-hidden rounded-2xl lg:w-auto`}
           >
             <MediaOrField
               src={presentSrc(tunnel.src)}
               alt={tunnel.expects}
-              sizes="(min-width: 640px) 35vw, 100vw"
+              sizes="(min-width: 1024px) 35vw, 78vw"
               fieldClass={FIELD_CLASS[tunnel.tone]}
             />
             {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
@@ -474,12 +523,12 @@ function TodayMontage({ slots }: { slots: MediaSlot[] }) {
           </div>
           <div
             data-truth-tile="3"
-            className="relative aspect-3/2 overflow-hidden rounded-2xl"
+            className={`relative aspect-3/2 ${SNAP_CARD} overflow-hidden rounded-2xl lg:w-auto`}
           >
             <MediaOrField
               src={presentSrc(picker.src)}
               alt={picker.expects}
-              sizes="(min-width: 640px) 35vw, 100vw"
+              sizes="(min-width: 1024px) 35vw, 99vw"
               fieldClass={FIELD_CLASS[picker.tone]}
             />
           </div>
@@ -516,7 +565,11 @@ function Diptych({
     <figure className="mt-10 max-w-4xl">
       <div
         {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
-        className="grid gap-6 sm:grid-cols-[539fr_359fr] sm:items-start"
+        /* A swipe rail below `lg` (16 September 2026, user direction — see
+           `SNAP_TRACK`); the unbalanced pair from `lg`, where it used to open
+           at `sm`. `items-start` holds each frame's own aspect in the rail —
+           stretched, the anchor would be pulled to the taller detail. */
+        className={`${SNAP_TRACK} flex items-start gap-4 lg:grid lg:grid-cols-[539fr_359fr] lg:gap-6 lg:py-0`}
       >
         {/* `data-truth-tile` carries the laying order for the montage cut
             ("the world opening, laid by hand, Truth montage cut", 15 September
@@ -527,12 +580,15 @@ function Diptych({
             the attribute states the sequence, the module chooses it. */}
         <div
           data-truth-tile="0"
-          className="relative aspect-539/341 overflow-hidden rounded-3xl"
+          className={`relative aspect-539/341 ${SNAP_CARD} overflow-hidden rounded-3xl lg:w-auto`}
         >
           <MediaOrField
             src={presentSrc(anchor.src)}
             alt={anchor.expects}
-            sizes="(min-width: 640px) 40vw, 100vw"
+            /* Below `lg` both pairs' anchors (1.5:1 and 1.33:1 sources) are
+               narrower than this 1.58 frame, so the card's own 78vw is the
+               crop. The detail's 1.5:1 source in a 1.33 frame needs 88vw. */
+            sizes="(min-width: 1024px) 40vw, 78vw"
             fieldClass={FIELD_CLASS[anchor.tone]}
           />
           {variant === "seam" ? (
@@ -560,15 +616,17 @@ function Diptych({
           )}
         </div>
         {/* The detail drops 80px on the 342-high stage (~23%) — self-start
-            plus a top margin, so it never stretches to the anchor's height. */}
+            plus a top margin, so it never stretches to the anchor's height.
+            The drop is the pair's `lg` composition; in the rail both cards
+            hang from one top line. */}
         <div
           data-truth-tile="1"
-          className="relative aspect-359/270 overflow-hidden rounded-3xl sm:mt-[21%]"
+          className={`relative aspect-359/270 ${SNAP_CARD} overflow-hidden rounded-3xl lg:mt-[21%] lg:w-auto`}
         >
           <MediaOrField
             src={presentSrc(detail.src)}
             alt={detail.expects}
-            sizes="(min-width: 640px) 27vw, 130vw"
+            sizes="(min-width: 1024px) 27vw, 88vw"
             fieldClass={FIELD_CLASS[detail.tone]}
           />
           {variant === "seam" ? (
@@ -895,19 +953,31 @@ function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }
   /* Six or more slots render as the hi-fi's square filmstrip (the 2022
      frame's Research & discovery strip), not the stacked grid. */
   const strip = slots.length >= 6;
+  /* ⚠ BELOW `lg` EVERY COLLECTION HERE SWIPES (16 September 2026, user
+     direction — see `SNAP_TRACK`). §18's five stood a column-wide 4:3 each,
+     1,331px of photographs at 390. Two or more slots become Ahead's rail; the
+     six-up strip keeps the contact-sheet look it was liked for — two rows of
+     squares — but flows them into COLUMNS of a fixed `9rem`, so on a phone the
+     third column peeks (54px at 390). A fixed rem and not Ahead's `vw`: a
+     `38vw` square measured 304px at 800, and the six stood 636px tall where
+     the `sm` row had been 77. At `9rem` the three columns simply fit from
+     about 504px up, so a wider screen gets a still 3 × 2 sheet rather than a
+     taller one. One slot stays as it was. Every grid that opened at `sm` now
+     opens at `lg`, where the rail closes, so 640–1023 swipes too. */
+  const rail = !strip && slots.length >= 2;
   const cols = strip
-    ? "grid-cols-3 sm:grid-cols-6"
+    ? "grid grid-flow-col grid-rows-2 auto-cols-[9rem] gap-3 lg:grid-flow-row lg:grid-rows-none lg:auto-cols-auto lg:grid-cols-6"
     : slots.length >= 3
-      ? "sm:grid-cols-3"
+      ? "flex gap-4 lg:grid lg:grid-cols-3 lg:gap-3"
       : slots.length === 2
-        ? "sm:grid-cols-2"
-        : "";
+        ? "flex gap-4 lg:grid lg:grid-cols-2 lg:gap-3"
+        : "grid gap-3";
   return (
     <figure className={strip ? "mt-8 max-w-4xl" : "mt-8 max-w-3xl"}>
       <div
         {...(anyFrameGraded ? {} : { "data-v2-camera": true })}
         {...(strip ? { "data-truth-strip": true } : {})}
-        className={`grid gap-3 ${cols}`}
+        className={strip || rail ? `${SNAP_TRACK} ${cols} lg:py-0` : cols}
       >
         {/* Both six-up strips share this component; the interior recipe is
             chosen by the article the strip sits in, not here. §07 pulls across
@@ -927,16 +997,22 @@ function EntryMedia({ slots, caption }: { slots: MediaSlot[]; caption?: string }
                photo tiles; the strip keeps `lg` because its squares are a
                third of the size. */
             className={`relative overflow-hidden ${strip
-              ? "aspect-square rounded-lg"
+              ? "aspect-square snap-start rounded-lg"
               : slots.length === 1
                 ? "aspect-video max-w-xl rounded-2xl"
-                : "aspect-4/3 rounded-2xl"
+                : `aspect-4/3 ${SNAP_CARD} rounded-2xl lg:w-auto`
               }`}
           >
             <MediaOrField
               src={presentSrc(slot.src)}
               alt={slot.expects}
-              sizes={strip ? "(min-width: 640px) 15vw, 55vw" : "(min-width: 640px) 33vw, 100vw"}
+              /* Both batches are 1.9:1 sources. Below `lg` a 144px square needs
+                 144 × 1.9 of crop, a 78vw 4:3 card 78 × 1.9 / 1.33. */
+              sizes={strip
+                ? "(min-width: 1024px) 15vw, 274px"
+                : rail
+                  ? "(min-width: 1024px) 33vw, 111vw"
+                  : "(min-width: 640px) 33vw, 100vw"}
               fieldClass={FIELD_CLASS[slot.tone]}
             />
           </div>

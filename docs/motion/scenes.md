@@ -1020,6 +1020,37 @@ argument. **Nothing above `lg` changed** — measured after: 1440 `scrollWidth` 
 height 17,639px, both identical to before, and the Ahead phases still stack into one cell
 with the copy column at its full `max-w-2xl` 672.
 
+**Every photograph collection swipes below `lg` — 16 September 2026, user direction.** On a
+phone the stacked galleries made the page far too long to scroll. The precinct's rail is now
+`SNAP_TRACK` / `SNAP_CARD` in Sections.tsx, and four more collections wear it: TODAY's montage
+(its two columns go `display: contents`, so the four tiles are the rail's own items, in the order
+the phone already read them), the 2020 and 2019 diptychs (both cards hang from one top line; the
+detail's 21% drop is the `lg` composition), and §18's open-research five. Research &
+discovery's six keep the contact sheet they were liked for — two rows of squares flowing into
+columns of a fixed `9rem`, the third column peeking on a phone. It is a fixed rem, not the rails'
+`vw`, because a `38vw` square measured 304px at 800 and stood the six 636px tall where the `sm`
+row had been 77. Grammar: "the world opening, swiped, Truth galleries off the deck".
+
+⚠ **Motion off the deck is keyed to the rail, never to a tile in it.** The only things that reach
+a tile below `lg` are the record's M1 `brighten` and the `data-v2-camera` push-in, and both ride
+the whole collection's vertical travel, so nothing holds a tile dim or clipped until a swipe
+brings it in. Measured at 390×844: each rail scrolled to its end with every tile, its plane and
+every ancestor at opacity 1 and no `clip-path`, and a screenshot of each tile swiped into view
+is painted (21 of 21). Under reduced motion every tile is at 1 too. Real touch drags move one
+card per swipe, snap to a card start, and do not scroll the page.
+
+Measured at 390×844 against `main` (b19cd06): page **21,937 → 19,686px**. TODAY 970 → 219,
+each diptych 498 → 245, open research 1,331 → 244, the research strip 224 → 316 (taller,
+because two rows of 144px squares replace two rows of 106px ones, and that is the cost of it
+swiping), precinct unchanged at 219. `scrollWidth` stayed 390 at all 31 depths sampled. **Nothing
+above `lg` changed**: at 1440, in flow and on the deck, the page height (17,757 / 41,461), every
+gallery's box, every tile's rect and the computed display, grid, gap, margin, padding, overflow
+and snap of each container match `main`. The only difference is the `sizes` strings, whose
+`lg` values are unchanged. ⚠ **640–1023 swipes now as well**, because every grid that opened at
+`sm` now opens at `lg`, where the rail closes. At 800 the rails are `78vw` (624px) cards like
+the precinct's, and the research strip is a still 3 × 2 sheet of 144px squares (its three columns
+fit from about 504px up). The page there went 18,157 → 19,296px.
+
 **§08 BREAK Country Now IS WITHDRAWN, 11 September 2026 (client direction)** — the
 section was removed from the page the same day the work below landed, so none of it
 renders. The present band now runs straight into the 2026 deed plate and that plate's own
