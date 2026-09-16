@@ -136,6 +136,13 @@ export type MediaSlot = {
    * kept in people's heads.
    */
   alternates?: readonly MediaAlternate[];
+  /**
+   * Where the picture's subject is, as a CSS `object-position` ("33% 52%"),
+   * for a cover crop that must keep it in frame at every box shape. Added
+   * 17 September 2026 (user report: the vehicle on Wonder's Ground plate fell
+   * outside the phone's centre crop). Omitted means centred, as before.
+   */
+  focus?: string;
 };
 
 /**

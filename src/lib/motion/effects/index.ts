@@ -138,6 +138,8 @@ export type EffectName =
   | "waveClamp"
   | "brighten"
   | "arrive"
+  | "tally"
+  | "pop"
   | "emanate"
   | "triad"
   | "dim"

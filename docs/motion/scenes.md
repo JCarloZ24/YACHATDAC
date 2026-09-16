@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 16 September 2026*
+*Last updated: 17 September 2026*
 
 Home closing-pattern hover, 13 September 2026 (user screenshot, **what radiates**, Home closing ground): the existing two spiral assets respond to mouse position with shallow opposing drift and turn. The headline, offer photographs, original artwork, resting placement and scroll timing do not change. Hover owns inner wrappers; the original ground wrapper still owns the scroll entrance. Input is enabled only once that entrance has seated and the panel is visible, then resets on exit, blur, hidden tab or leaving the beat. Controller teardown removes listeners, observers and tweens. Fine hover pointers only; reduced-motion, touch and failed-canvas fallback remain still.
 
@@ -2201,19 +2201,49 @@ where the same fact appears in both, the hub frames it differently.
 
 | § | Section | ⚡ | vh | Ground | Loud | Built with |
 |---|---|---|---|---|---|---|
-| 01 | Hero — FULL BLEED · *a guest on Country* | 4 | 150 | photo → evergreen | **none** | `partnershipsHero` |
+| 01 | Hero — FULL BLEED · *a guest on Country* — ⚑ sticky plate, rolling wave (16 Sep) | 4 | 150 | photo → evergreen | **none** | `partnershipsHero` + `createWaveRoll` |
 | 02 | **The obligation** — alone on a screen | 4 | 100 | evergreen | **none** | `partnershipsObligation` |
-| 03 | Open research — three disciplines resolve | 3 | 120 | canvas | **type** | `partnershipsOpenResearch` |
-| 04 | **Four open questions** — ⚑ the gaps as an OFFER | 5 | 190 | canvas | **media** | `hosting` |
-| 04b | BREATH | 1 | 55 | full bleed | **none** | — held |
-| 05 | Who we already work with — nine names | 3 | 130 | charcoal | **none** | `partnershipsPartners` |
+| 03 | Open research — three disciplines resolve | 3 | 100 | canvas | **type** | `partnershipsOpenResearch` |
+| 04 | **Four open questions** — ⚑ the gaps as an OFFER | 5 | 160 | canvas | **media** | `hosting` |
+| 04b | BREATH — ⚑ the transition into §05 (16 Sep): opens, holds, goes dark | 3 | 100 | full bleed → charcoal | **media** | `partnershipsBreath` |
+| 05 | Who we already work with — nine names; rings and cards answer the pointer | 3 | 130 | charcoal | **none** | `partnershipsPartners` + Record's pattern/card modules |
 | 06 | **Ways in** — ⚑ the section the site never had | 4 | 140 | evergreen | **none** | `partnershipsWaysIn` |
-| 07 | How work is agreed — the container never fills | 2 | 100 | roasted | **none** | — held |
+| 07 | How work is agreed — ⚑ the container is gone (16 Sep) | 2 | 100 | roasted | **none** | `partnershipsProtocol` |
 | 08 | Get in touch — one address, one action | 3 | 70 | canvas → dark | **none** | `partnershipsEnding` |
 | 09 | Footer | 1 | 135 | charcoal | **none** | shared |
 
-**Reads as:** none · none · type · media · none · none · none · none · none · none.
+**Reads as:** none · none · type · media · media · none · none · none · none · none.
 
+⚑ **16 September 2026, user direction, one pass.** The hero plate is sticky and its wave rolls;
+every seam rolls; §03/§04's budgets came down from 120/190 to 100/160 to close the blank
+screen between them; every ring is whole, at 60% of its export, and turns (or, on §05,
+follows the pointer); §04b's charcoal wave is gone and the breath itself is the transition into
+§05 — the page's second media screen, two sections apart from §04; §05's cards lift; §07's
+dashed "in preparation" container and its note were removed. Rows are in
+`motion-grammar.md` under *Partnerships — 16 September 2026*. Later the same day: the three
+blob buttons take Wonder's pop — the hover verbatim, the one-shot pop via Wonder's `ctaPop` on
+§06 and §08, and a `pop` beat inside the hero overture for §01 (grammar "pops", Wonder call to
+action).
+
+⚑ **17 September 2026 — the phone pass**, driven in a headless Chrome at 320, 375 and 414
+wide (no horizontal overflow at any of them) and walked at 375 × 812. Three defects, each
+written where it was fixed: §03's three display headings broke *inside* a word — the
+character split let a run of inline-block letters wrap anywhere — so `display` and the split
+engine now split `words,chars` (grammar *what endures, display cut — words wrap whole*);
+§04's four answers opened after the rail had left the screen, so below `lg` `hosting` opens
+each answer **once, when its card is viewed** — swiped into the rail — rather than scrubbing
+on the section's top (user direction the same day: "reveal the text on swipe when user views
+the card"; grammar *accumulating, Partnerships §04 on a phone*; the 1440 geometry is unchanged); and §04b's plate was `inset-0`
+inside an `h-svh` sticky section, which showed a strip of page ground under the Android
+browser bar as it retracted — the plate and scrim now run `h-lvh`, Wonder's own 15 September
+fix. The 24px phone gutter stands: the footer is still on 24, and a page 4px off its own
+footer is the worse disagreement. The hero's sticky plate, every rolling seam, the breath's
+open-hold-darken and the blob pops all run unchanged at 375.
+
+Later the same day (user direction: "some sections might be boring"): §02, §03, §05 and §06's
+entrances **replay** when the reader returns to them — `enterReplay` in `compose.ts`, which rewinds
+a screen only once it has wholly left below the fold, so nothing on screen ever hides. The hero,
+§04 and §08 stay one-shot. Grammar *arriving quietly, replay*.
 ⚠ **THE LOUD COLUMN WAS CORRECTED ON 11 SEPTEMBER 2026, when the page was actually
 built.** It previously read media · type · type · media · none · type · transition · none ·
 transition · none — written from the frame, before a line of this page's motion existed. What
@@ -2449,9 +2479,9 @@ page deepens. There is no WebGL on this route.
 | 04 | Getting here — the route map | 300 | charcoal, sticky span | **media** | the same draw and flare; the copy arrives in stop order |
 | 05 | Turraburra | 180 | full bleed | **media** | landscape behind Getting here's outgoing wave; `landscapeApproach` on entry, `landscapeGyroscope` on mouse hover; image and copy hold for 80vh before exit (user direction 9 September 2026) |
 | 06 | What a stay looks like | — | canvas, ordinary flow | **transition** | one manual accordion, day 1 open; `disclose` on click, line, copy and picture entrances; held screen and automatic stops removed 14 Sep 2026 |
-| 07 | Before you come | 100 | evergreen | **none** | `hold`, cells arrive, one beat on the call to action |
-| 08 | Where you stay | 120 | canvas | **media** | heading and copy enter; the ten-frame carousel does not — no card entrance (10 Sep 2026) |
-| 09 | What it is like out here | 450 | full bleed | **type** | same landscape entry and mouse drift as §05, then the five conditions step one per 70vh, each on its own photograph, cross-faded; no sweep |
+| 07 | Before you come | 100 + 80 still + 100 hold | evergreen, held at its foot | **none** | `hold`; cells arrive and their figures `tally` up, paragraphs arrive after; the call to action `pop`s once on its own clock; then the section holds at its foot while §08 rides over it, cream crest first (16 Sep 2026) |
+| 08 | Where you stay | 120 + 100 hold | canvas, cream crest overhanging (was the frame's evergreen drip, 16 Sep 2026), held at its foot | **media** | heading and copy enter; the ten-frame carousel does not — no card entrance (10 Sep 2026); holds at its foot while §09's photograph rides over it (16 Sep 2026) |
+| 09 | What it is like out here | 450 | full bleed | **type** | rides up over held §08 as a plain plate, no crest (a canvas drip was tried and removed, 16 Sep 2026); same landscape entry and mouse drift as §05, then the five conditions step one per 70vh, each on its own photograph, cross-faded; no sweep |
 | 10 | Your hosts | 100 | canvas | **none** | the copy arrives; the pointer names three of the eight, and the faces hold |
 | 11 | From Country | 100 | white | **media** | same entrance-only card rail; stays settled and opaque under the closing wave (15 Sep 2026) |
 | 12 | Come and see it | 100 | roasted | **none** | the quietest screen, and the second conversion point |

@@ -16,6 +16,7 @@ export function MediaOrField({
   quality,
   className = "object-cover",
   fieldClass = "bg-evergreen/40",
+  focus,
 }: {
   src: string | null;
   alt: string;
@@ -25,6 +26,9 @@ export function MediaOrField({
   quality?: number;
   className?: string;
   fieldClass?: string;
+  /** The slot's `focus`, applied as `object-position` so a cover crop keeps
+      the subject in frame. Inline, not a class: the value is content. */
+  focus?: string;
 }) {
   if (!src) {
     return (
@@ -46,6 +50,7 @@ export function MediaOrField({
       quality={quality}
       sizes={sizes}
       className={className}
+      style={focus ? { objectPosition: focus } : undefined}
     />
   );
 }

@@ -96,10 +96,18 @@ export function registerCore(): void {
       assertEase("display", config.ease);
       const els = gsap.utils.toArray<HTMLElement>(targets);
       const tooLong = els.some((el) => (el.textContent ?? "").trim().length > 48);
+      /* ⚠ "words,chars", NEVER BARE "chars" (corrected 17 September 2026,
+         found on /partnerships §03 at 375). Each character becomes its own
+         inline-block, and a run of inline-blocks may wrap between ANY two of
+         them — so "palaeontology and archaeology", one line at 1440, broke
+         as "…archaeolog / y" on a phone. Splitting words as well keeps every
+         character inside a word box, and the heading wraps where the prose
+         would. The tween still targets `split.chars`; the word boxes exist
+         only to hold the line breaks where they belong. */
       return splitTween(
         els[0],
         {
-          type: tooLong ? "lines" : "chars",
+          type: tooLong ? "lines" : "words,chars",
           ...(tooLong ? { mask: "lines" as const } : {}),
           autoSplit: true,
           aria: "auto",
@@ -189,6 +197,84 @@ export function registerCore(): void {
         stagger: config.stagger as number,
       });
     },
+  });
+
+  /* --- arriving quietly, a figure counts up -------------------------------
+     Grammar: "arriving quietly", Wonder §07 figures (user direction,
+     16 September 2026: "animate the numbers"). Every integer in a fact
+     value — 120, 8,870 — is wrapped in a span at build and counted from 0
+     to itself as its cell arrives. YEARS ARE LEFT ALONE: 2020 counting up
+     from nothing is a stopwatch, not a fact. The figures-of-loss ban
+     (grammar §"No count-up on figures of loss") does not reach these —
+     distance and hectares held, not people lost or land taken — and the
+     module that spends this row says so where it does.
+
+     The wrapper holds its FINAL width, so the sentence around the figure
+     never reflows as the digits change (Our People's invisible-sibling
+     precedent, reduced to a min-width). The thousands separator follows the
+     source string, so "8,870" counts as "8,870" and "8870" would count as
+     "8870". `immediateRender: false`: the text is untouched until the
+     playhead reaches it, and a scrub back renders 0 rather than stranding a
+     part-counted figure. Idempotent — a second build re-uses the spans. */
+  gsap.registerEffect({
+    name: "tally",
+    extendTimeline: true,
+    defaults: { duration: DUR.large, ease: EASE.country, stagger: STAGGER.grid },
+    effect: (targets: object, config: Record<string, unknown>) => {
+      assertEase("tally", config.ease);
+      const figures = wrapFigures(gsap.utils.toArray<HTMLElement>(targets));
+      const tl = gsap.timeline();
+      figures.forEach((figure, i) => {
+        const final = Number(figure.dataset.final);
+        const grouped = figure.dataset.grouped === "";
+        const counter = { n: 0 };
+        tl.to(counter, {
+          n: final,
+          duration: config.duration as number,
+          ease: config.ease as string,
+          immediateRender: false,
+          onUpdate: () => {
+            const whole = Math.round(counter.n);
+            figure.textContent = grouped ? whole.toLocaleString("en-AU") : String(whole);
+          },
+        }, i * (config.stagger as number));
+      });
+      return tl;
+    },
+  });
+
+  /* --- pops, once -----------------------------------------------------------
+     Grammar: "pops", Wonder §07 call to action (user direction, 16 September
+     2026: "pop the cta button once when user views this section"). One
+     seat with the `catch` overshoot, from a little smaller and a little
+     lower, and then never again on that visit: a button that keeps popping
+     on a coloured band is an advertisement. The hover pop (`createCardPop`)
+     is a different thing and stays on the cards. */
+  gsap.registerEffect({
+    name: "pop",
+    extendTimeline: true,
+    defaults: { from: 0.86, y: 12, duration: DUR.medium, ease: EASE.catch },
+    /* ⚠ `fromTo`, NOT `from` (16 September 2026, found on /partnerships). A
+       from-tween's end is whatever the target holds when the tween is built,
+       and a host that builds twice — the controller's register() then
+       start(), or React's dev double-effect — builds the second beat on a
+       button the first beat has already parked at scale 0.86 / y 12, so it
+       popped from there to there and stood small for good. A pop is a beat
+       TO REST; the rest is stated. `stagger` is honoured now, too. */
+    effect: (targets: object, config: Record<string, unknown>) =>
+      gsap.fromTo(
+        targets,
+        { scale: config.from as number, y: config.y as number, opacity: 0 },
+        {
+          scale: 1,
+          y: 0,
+          opacity: 1,
+          transformOrigin: "50% 50%",
+          duration: config.duration as number,
+          ease: config.ease as string,
+          stagger: (config.stagger as number) ?? 0,
+        },
+      ),
   });
 
   /* --- what radiates from a source ---------------------------------------
@@ -313,4 +399,67 @@ export function registerCore(): void {
     effect: (targets: object, config: Record<string, unknown>) =>
       gsap.to(targets, { duration: config.duration as number }),
   });
+}
+
+/**
+ * Wrap every countable integer in `[data-figure]` spans and return them.
+ * Countable: a run of digits with optional thousands commas that is NOT a
+ * four-digit year (1000–2999). A wrapper already present is returned as it
+ * is, so a rebuild (resize, matchMedia revert) does not nest spans.
+ */
+function wrapFigures(hosts: HTMLElement[]): HTMLElement[] {
+  const out: HTMLElement[] = [];
+  const pattern = /\d{1,3}(?:,\d{3})+|\d+/g;
+  hosts.forEach((host) => {
+    const existing = Array.from(host.querySelectorAll<HTMLElement>("[data-figure]"));
+    if (existing.length) { out.push(...existing); return; }
+    const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+    const texts: Text[] = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) texts.push(node as Text);
+    texts.forEach((text) => {
+      const source = text.data;
+      let last = 0;
+      const pieces: Array<string | HTMLElement> = [];
+      for (const match of source.matchAll(pattern)) {
+        const raw = match[0];
+        const value = Number(raw.replace(/,/g, ""));
+        const isYear = !raw.includes(",") && raw.length === 4 && value >= 1000 && value < 3000;
+        if (isYear || Number.isNaN(value)) continue;
+        pieces.push(source.slice(last, match.index));
+        const span = document.createElement("span");
+        span.dataset.figure = "";
+        span.dataset.final = String(value);
+        if (raw.includes(",")) span.dataset.grouped = "";
+        span.textContent = raw;
+        // The final width is the box; the count never reflows its sentence.
+        // Right-aligned inside it, so a shorter figure keeps its unit
+        // attached ("94km", not "94 km") and the slack sits before it.
+        span.style.display = "inline-block";
+        span.style.textAlign = "right";
+        span.style.minWidth = "0";
+        pieces.push(span);
+        last = (match.index ?? 0) + raw.length;
+      }
+      if (!pieces.length) return;
+      pieces.push(source.slice(last));
+      const parent = text.parentNode;
+      if (!parent) return;
+      pieces.forEach((piece) => {
+        parent.insertBefore(typeof piece === "string" ? document.createTextNode(piece) : piece, text);
+        if (typeof piece !== "string") out.push(piece);
+      });
+      parent.removeChild(text);
+    });
+  });
+  // Measure once the final strings are in place, then hold that width — and
+  // START FROM 0. The count begins at what the page already shows (Our
+  // People's rule, 14 Sep 2026): a figure that rests at its final value and
+  // leaps down to nothing when the playhead reaches it is not a count. The
+  // wrap only happens in the motion branch, so no-JS and reduced motion
+  // keep the served number.
+  out.forEach((span) => {
+    span.style.minWidth = `${span.getBoundingClientRect().width}px`;
+    span.textContent = "0";
+  });
+  return out;
 }

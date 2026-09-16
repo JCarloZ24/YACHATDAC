@@ -173,25 +173,48 @@ export function factsCopy(root: HTMLElement, span: number): MotionModule {
  * The end is measured on refresh, so an accordion stop opening or closing
  * (which Motion.tsx already answers with a debounced refresh) re-seats it.
  */
-export function holdAtFoot(root: HTMLElement): MotionModule {
+export function holdAtFoot(
+  root: HTMLElement,
+  /**
+   * `still`: extra viewports of NOTHING HAPPENING before the next section
+   * starts to ride over (16 Sep 2026, user direction on §07: "add more
+   * scroll effort before Where you stay"). The pin runs `still` + 1
+   * viewports; the first `still` are bought by a top margin on the next
+   * element, which scrolls up unseen behind the held section, so the
+   * reader turns the wheel and the screen holds — then the cover begins.
+   * Applied and cleared here so the markup carries no number.
+   */
+  { still = 0 }: { still?: number } = {},
+): MotionModule {
   let cleanup: (() => void) | undefined;
   return {
     init() {
       cleanup?.();
       const media = gsap.matchMedia();
       media.add("(prefers-reduced-motion: no-preference)", () => {
+        // The next thing in flow — the sibling of the pin-spacer once the
+        // pin has wrapped this section, which is why it is read lazily.
+        const next = () => (root.parentElement?.classList.contains("pin-spacer")
+          ? root.parentElement : root)?.nextElementSibling as HTMLElement | null;
+        const gap = () => {
+          const el = next();
+          if (el && still > 0) gsap.set(el, { marginTop: still * window.innerHeight });
+        };
         ScrollTrigger.create({
           trigger: root,
           start: "bottom bottom",
-          end: () => `+=${window.innerHeight}`,
+          end: () => `+=${window.innerHeight * (1 + still)}`,
           pin: true,
           pinSpacing: false,
+          onRefreshInit: gap,
           // 15 Sep 2026, reported downward jump at the evergreen seam:
           // engage just ahead of a fast scroll crossing so the browser
           // cannot paint the section past its seat and then snap it back.
           anticipatePin: 1,
           invalidateOnRefresh: true,
         });
+        gap();
+        return () => { const el = next(); if (el) gsap.set(el, { clearProps: "marginTop" }); };
       }, root);
       cleanup = () => media.revert();
     },
@@ -246,13 +269,34 @@ export { itinerary } from "./wonder-itinerary";
  * coloured band is the fastest way to make a page look like an advertisement,
  * and both of these screens are asking somebody to get in touch.
  *
- * Hooks: `[data-cell]` the fact cells, `[data-cta]` the button row.
+ * §07 IS EMPHASISED, 16 September 2026 (user direction: "emphasize Before you
+ * come — make it sticky, animate the numbers and texts on reveal, and pop the
+ * cta button once when user views this section, then overlap the next section
+ * on scroll like the hero"). With `emphasis` on:
+ *   - the figures in the fact cells COUNT UP as their cell arrives (`tally`,
+ *     grammar "arriving quietly", Wonder §07 figures) — 120km and 8,870
+ *     hectares, figures of distance and of land HELD, so the count-up ban on
+ *     figures of loss does not reach them; the year 2020 is left alone;
+ *   - the body paragraphs arrive after the cells, which they did not before;
+ *   - the call to action's beat leaves this scrubbed entrance and becomes
+ *     `ctaPop` below, a one-shot that plays when the button is first seen;
+ *   - the section holds at its foot while §08 rides over it — that is
+ *     `holdAtFoot`, wired in Motion.tsx before this module.
+ * §12 keeps the original quiet cut: nothing rides over it, and the footer is
+ * not allowed to (user direction, 14 September 2026).
+ *
+ * Hooks: `[data-cell]` the fact cells, `[data-cell] dd` the values counted,
+ * `[data-body] p` the paragraphs, `[data-cta]` the button row.
  */
-export function conversion(root: HTMLElement, span: number): MotionModule {
+export function conversion(
+  root: HTMLElement,
+  span: number,
+  { emphasis = false }: { emphasis?: boolean } = {},
+): MotionModule {
   return composition("wonder/conversion", root, {
     channel: "none",
     span,
-    uses: ["settle", "arrive", "hold"],
+    uses: emphasis ? ["settle", "arrive", "hold", "tally"] : ["settle", "arrive", "hold"],
     build: (tl) => {
       tl.hold(root, { duration: DUR.large });
     },
@@ -260,20 +304,110 @@ export function conversion(root: HTMLElement, span: number): MotionModule {
       const eyebrow = q(root, "[data-eyebrow]");
       const heading = q(root, "h2");
       const cells = qa(root, "[data-cell]");
-      const cta = q(root, "[data-cta]");
       if (eyebrow) tl.arrive(eyebrow);
       if (heading) tl.settle(heading, {}, 0.1);
       if (cells.length) tl.arrive(cells, { stagger: 0.06 }, 0.3);
+      if (emphasis) {
+        const values = qa(root, "[data-cell] dd");
+        const paras = qa(root, "[data-body] p");
+        // The figures count as their cells land: same start, same stagger,
+        // so a number is never seen counting in a cell that is not there.
+        if (values.length) tl.tally(values, { stagger: 0.06 }, 0.36);
+        if (paras.length) tl.arrive(paras, { stagger: 0.08 }, 0.5);
+        return;
+      }
+      const cta = q(root, "[data-cta]");
       if (cta) {
         // The single beat. `back` is permitted since F8 lifted the overshoot
         // ban; one seat, not a pulse, and it plays after everything else has
-        // stopped so it reads as an offer rather than an alarm.
+        // stopped so it reads as an offer rather than an alarm. §12 only —
+        // §07's button pops on its own clock (`ctaPop`) and returned above.
+        // (A same-day extension of the pop to §12 was reverted on user
+        // direction, 16 September 2026.)
         tl.from(cta, { y: 12, opacity: 0, duration: DUR.medium, ease: "back.out(1.4)" }, 0.5);
       }
     },
     enterStart: "top 78%",
     cut: clearAll,
   });
+}
+
+/**
+ * §07's call to action POPS ONCE when the reader first sees it (user
+ * direction, 16 September 2026). Grammar: "pops", Wonder §07 call to action.
+ * Pops every child of the row, a beat apart, should a row ever hold two.
+ *
+ * Not part of `conversion`'s entrance because every Wonder entrance is
+ * scrubbed and reversible (9 September 2026), and a pop that scrubs is a
+ * button growing under the wheel. This plays on its own clock the first time
+ * the button crosses 88% of the viewport and does not reverse; a later
+ * crossing asks a finished tween to play, which costs nothing. Restored
+ * scroll positions past the button land on its final state (`onRefresh`),
+ * so a hash link or a reload cannot leave it hidden.
+ *
+ * `pinnedContainer`: §07 is held at its foot by `holdAtFoot`, registered
+ * before this in Motion.tsx, so a refresh mid-hold measures the button
+ * unpinned. Reduced motion: the button simply stands.
+ *
+ * Hook: `[data-cta]`.
+ *
+ * `pinned: false` (Partnerships, 16 September 2026) omits `pinnedContainer`:
+ * on a host nothing pins, naming it as one left the trigger's start unset and
+ * the pop never played. Wonder's callers keep the default.
+ */
+export function ctaPop(root: HTMLElement, { pinned = true } = {}): MotionModule {
+  let cleanup: (() => void) | undefined;
+  return {
+    init() {
+      cleanup?.();
+      const media = gsap.matchMedia();
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        const cta = q(root, "[data-cta]");
+        if (!cta) return;
+        // Each button on its own, a short stagger between them; a row that
+        // has one child pops as one.
+        const buttons = Array.from(cta.children) as HTMLElement[];
+        // ⚠ CLEARED ON COMPLETION (16 September 2026, Partnerships: "get in
+        // touch blob buttons don't have hover effects"). GSAP leaves inline
+        // `translate: none; scale: none; transform: …` on the button once the
+        // pop has landed, and Tailwind v4's hover lift is the `translate` and
+        // `scale` properties — so the inline rest state overrode the hover
+        // for good. At rest the button's own styles are the finished state;
+        // clearing hands it back. `progress(1)` in onRefresh completes too.
+        const targets = buttons.length ? buttons : cta;
+        // ⚠ NO CSS TRANSITION WHILE IT POPS (Wonder, 16 September 2026:
+        // "the cta button in before you come is not popping"). BlobButton
+        // carries `transition-transform` for its hover, and a CSS
+        // transition on the property GSAP writes every frame smears the
+        // overshoot into a plain fade — the button eased in, it never
+        // popped. Switched off for the beat only; the `clearProps` in
+        // onComplete hands the hover transition back once it has landed.
+        //
+        // ⚠ INSIDE THE BEAT, NOT IN onEnter (Partnerships, 17 September
+        // 2026: "the hover effect on these 2 buttons is not the same as see
+        // the ways in"). onEnter fires on EVERY downward crossing of 88%, and
+        // `play()` on a finished timeline does nothing — so a reader who
+        // scrolled past the button, back up and down again got `transition:
+        // none` written a second time with no completion to clear it, and
+        // the hover lift snapped instead of easing. As a step at 0 the
+        // switch-off exists only while the beat runs, and a replay that goes
+        // nowhere writes nothing.
+        const beat = gsap
+          .timeline({ paused: true, onComplete: () => gsap.set(targets, { clearProps: "all" }) })
+          .set(targets, { transition: "none" }, 0)
+          .pop(targets, { stagger: 0.12 }, 0);
+        ScrollTrigger.create({
+          trigger: cta,
+          start: "top 88%",
+          ...(pinned ? { pinnedContainer: root } : {}),
+          onEnter: () => beat.play(),
+          onRefresh: (self) => { if (self.scroll() >= self.start) beat.progress(1); },
+        });
+      }, root);
+      cleanup = () => media.revert();
+    },
+    destroy() { cleanup?.(); cleanup = undefined; },
+  };
 }
 
 /**

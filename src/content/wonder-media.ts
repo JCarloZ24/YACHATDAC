@@ -543,6 +543,14 @@ export const outHereGrounds: readonly MediaSlot[] = [
     expects: "Aerial straight down on a vivid red-earth road, one vehicle, green scrub below",
     src: `${WONDER}/wonder-red-road-aerial.webp`,
     tone: "burnt",
+    // The vehicle sits a third of the way in from the left, on the road's
+    // centre line. A centred cover crop at phone width lost it (August,
+    // 17 September 2026: "the car is not visible in frame"); this keeps it
+    // beside the display word rather than under it: at 375 the crop is
+    // height-fitted, so only the horizontal aim moves the vehicle, and 15%
+    // lands it to the right of "Ground" with the copy clear of it. Desktop
+    // is barely affected — the plate is width-fitted there.
+    focus: "15% 52%",
   },
   {
     id: "wonder-out-here-weather",

@@ -1,6 +1,6 @@
 # 01 · Wonder — the motion plan
 
-*Last updated: 15 September 2026*
+*Last updated: 16 September 2026*
 
 **Latest responsive correction, 9 September 2026:** desktop itinerary selection
 depends on available width and reading space, not pointer type. DevTools touch
@@ -279,6 +279,24 @@ This supersedes the short-window and all-stops-must-fit fallback above.
 
 ### 07 · Before you come — convert, do not decorate
 
+**Amendment, 16 September 2026 (user direction: "emphasize Before you come").**
+Four things, in order of the read. The figures in the fact cells count up
+from 0 as their cell arrives — 120km, 8,870 hectares — in a span that holds
+its final width so nothing reflows; the year 2020 is left alone (grammar:
+"arriving quietly", Wonder §07 figures; the count-up ban on figures of loss
+does not reach distance or land held). The body paragraphs, which never
+entered before, arrive after the cells. The call to action's single beat
+leaves the scrubbed entrance and becomes a one-shot POP on its own clock the
+first time the button is seen ("pops", Wonder §07 call to action) — the
+scrubbed beat read as a button growing under the wheel. And the section HOLDS
+AT ITS FOOT while Where you stay rides up over it, cream crest first — the
+frame's evergreen drip (2033:6770) became an overhanging `WaveDivider` on user
+direction the same day, so the join reads like the itinerary's — the
+hero → facts read again (`holdAtFoot`; "a change of ground", Wonder §07 and
+§08 hold) — with 80vh of stillness first, on the same day's "add more scroll
+effort before Where you stay". §12 Come and see it keeps the original quiet cut.
+
+
 Informational and the first conversion point, so it stays nearly still:
 `hold`, with `arrive` on the four fact cells and the eyebrow. The one moving
 thing is the call to action, which gets a single attention beat once the
@@ -287,31 +305,23 @@ band is the fastest way to make a page look like an ad.
 
 ### 08 · Where you sleep — the quiet twin of §03
 
-**Amendment, 14 September 2026 (user direction):** the swipe carousel now
-advances on its own — one card every four seconds, no buttons, back to the
-first from the last (grammar row "what drifts"). It drives the rail's own
-scroller, so the snap, the mouse drag and the dots are exactly as they were
-("you just need to make it move"); it pauses for a pointer, a touch, focus
-or the reader's own scroll and resumes five seconds later, and only runs on
-screen. Reduced motion keeps the plain swipe carousel. The heading and copy
-still enter as before; the frames still stage no entrance of their own.
-Same day: the lit slider dot is the clock — gold ink rises inside the
-artist's dot over the four seconds and the card moves on when it is full
-("like ink filling in the dots"). Rails the reader moves keep a full dot.
-And when the reader takes over — a dot pressed, a swipe or a drag — the ink
-spills first (0.35s), then the rail moves to their card and the fill starts
-over there ("the golden dot will spill then move to next image and repeats
-the original sequence"). The five-second resume delay went with this: the
-sequence simply begins again on the chosen card.
-
-Same instrument, lower volume: `frameOpen` on the two cards at `scale: 1`.
-The heading and body arrive first. Two cards, so no `emanate`. A spread of
-two is just a stagger. The 9 September 2026 image-quality pass removed the
-6% parallax and overscale: the supplied photographs contain people and have
-limited resolution. The frame opens around a held image, then `hold` leaves
-it still. The cards have no text overlay, so the dark scrim was removed too.
+**Amendment, 16 September 2026 (user direction): held.** The section holds at
+its foot for one viewport while What it is like out here rides up over it —
+the same `holdAtFoot` as §06, §07 and §11 — so the self-advancing rail keeps
+drifting on screen through the hand-off. The join to §09 stays as the frame
+draws it, a straight cut into the photograph; a canvas drip was tried there
+and removed the same day. See §09.
 
 ### 09 · What it is like out here — the landscape, and no sweep
+
+**Amendment, 16 September 2026 (user direction, twice).** First "create a
+transition to What it is like out here": a canvas `WaveDrip` was seated at
+the scene's crown and rolled like every other seam. Then "replace the
+transition animation here": the drip came out. The transition is now the
+photograph itself — §08 holds at its foot and this full-bleed plate rides up
+over it with its existing `landscapeApproach` push, which is what the frame
+draws. **Still no `ground` sweep.**
+
 
 Built with the `ground` sweep this plan asked for, and **removed the same day
 on user report**: drawn as a translucent evergreen band rising up the foot of

@@ -18,6 +18,7 @@ import {
   holdAtFoot,
   outHereTrack,
   sleepCards,
+  ctaPop,
 } from "@/lib/motion/wonder";
 import { wonderLandscape } from "@/lib/motion/wonder-landscape";
 import { createWaveRoll } from "@/lib/motion/wave-roll";
@@ -154,7 +155,21 @@ export function WonderMotion() {
       // NOT on Take it with you itself: the footer does not ride over it
       // (user direction, same day, "do not make the footer overlap").
       wire("stories", (el) => holdAtFoot(el)); // BEFORE the stories pass — see record-masonry.ts
-      wire("before", (el) => conversion(el, 100));
+      // §07 AND §08 HOLD TOO (16 September 2026, user direction: "make it
+      // sticky … then overlap the next section on scroll, like in hero
+      // section" for Before you come, and "make it sticky as well" for
+      // Where you stay). Same hold, same grammar row, registered before each
+      // section's own modules so their triggers can name it as
+      // pinnedContainer. §08 rides over held §07 evergreen-drip first; §09's
+      // photograph rides over held §08 as a plain full-bleed plate — a
+      // canvas drip was tried and removed the same day (Sections.tsx).
+      // 80vh of stillness before §08 begins to cover (16 Sep 2026, user
+      // direction: "add more scroll effort before Where you stay").
+      wire("before", (el) => holdAtFoot(el, { still: 0.8 }));
+      wire("before", (el) => conversion(el, 100, { emphasis: true }));
+      // The one-shot pop on §07's button, on its own clock — see wonder.ts.
+      wire("before", (el) => ctaPop(el));
+      wire("sleep", (el) => holdAtFoot(el));
       wire("sleep", (el) => sleepCards(el, 120));
       // The accommodation carousel advances on its own, one card every few
       // seconds, and pauses for the reader. It drives the rail's own

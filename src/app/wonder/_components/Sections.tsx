@@ -127,6 +127,7 @@ function Slot({
       quality={quality}
       className={className}
       fieldClass={FIELD_CLASS[slot.tone]}
+      focus={slot.focus}
     />
   );
 }
@@ -1090,7 +1091,14 @@ export function WonderStay() {
                   </div>
                 );
               })}
-              <div data-stage-end className="hidden lg:block">
+              {/* At every width since 16 September 2026 (user report, iPhone
+                  SE: "day 6 itinerary missing dots below on mobile"). The
+                  phone frame (2576:22530) stops at day 6's row and drew no
+                  closing rule, so this was `hidden lg:block`; but every other
+                  stop on the phone has its rule beneath it and the last one
+                  read as unfinished. It draws and retracts like the rest
+                  (wonder-itinerary.ts caps it before §07's crest). */}
+              <div data-stage-end>
                 <DottedLine />
               </div>
             </div>
@@ -1146,7 +1154,9 @@ export function WonderBeforeYouCome() {
                 ))}
               </dl>
             ))}
-            <div className="flex flex-col gap-5 text-center text-base leading-normal lg:gap-7 lg:text-xl">
+            {/* `data-body`: the paragraphs arrive after the cells since
+                16 September 2026 (wonder.ts `conversion`, emphasis). */}
+            <div data-body className="flex flex-col gap-5 text-center text-base leading-normal lg:gap-7 lg:text-xl">
               {beforeYouCome.body.map((para) => (
                 <p key={para}>{para}</p>
               ))}
@@ -1154,8 +1164,10 @@ export function WonderBeforeYouCome() {
           </div>
         </div>
       </Container>
-      {/* One attention beat when the section has settled, never a loop —
-          this is the page's first conversion point. */}
+      {/* One attention beat when the button is first seen, never a loop —
+          this is the page's first conversion point. Since 16 September 2026
+          it is a one-shot pop on its own clock (wonder.ts `ctaPop`), and the
+          section holds at its foot while §08 rides over it (`holdAtFoot`). */}
       <div data-cta>
         <BlobButton
           href={beforeYouCome.action.href}
@@ -1183,8 +1195,17 @@ export function WonderWhereYouStay() {
       data-wonder="sleep"
       className={`relative bg-canvas py-10 text-charcoal lg:pt-[120px] lg:pb-28 ${GUTTER}`}
     >
-      {/* The evergreen drips down into the canvas (frame wave 2033:6770). */}
-      <WaveDrip ground="var(--color-evergreen)" hook="wonder-wave-sleep" />
+      {/* A CREAM CREST RISING OVER THE HELD EVERGREEN, not the frame's drip
+          (16 September 2026, user direction, with the itinerary → Before you
+          come join as the reference: "it should look like that, no stray box
+          behind the wave"). The frame draws 2033:6770 as the evergreen
+          dripping down into the canvas, which was right while the two
+          sections flowed. Now §07 holds at its foot and this section rides up
+          over it, and a drip seated INSIDE the incoming section's top reads
+          as a box with a wavy lining rather than as a crest; the incoming
+          ground has to lead, as every other seam on the page does. Same
+          furniture, same hook, same roll as the itinerary's wave. */}
+      <WaveDivider ground="var(--color-canvas)" hook="wonder-wave-sleep" />
       <Container className="flex flex-col gap-6 lg:gap-10">
         <div className="flex w-[720px] max-w-full flex-col gap-5 lg:gap-4">
           <h2 className={H2}>{whereYouStay.title}</h2>
@@ -1280,10 +1301,15 @@ export function WonderOutHere() {
   const points = whatItIsLike.points;
   return (
     <div data-wonder="out-here" className={landscapeStyles.scene}>
+      {/* THE JOIN IS THE PHOTOGRAPH (16 September 2026, user direction —
+          twice in one afternoon). §08 is held at its foot and this scene
+          rides up over it as one full-bleed plate: the picture's own
+          straight edge, arriving with `landscapeApproach`'s shallow push,
+          is the transition. A canvas WaveDrip was tried here first the same
+          day and taken out on direction ("replace the transition animation
+          here"); the frame draws no wave at this join either (the next
+          Wave Line is 2033's at y=8265, Your hosts rising). */}
       <LandscapeBackdrop slot={outHereGrounds} />
-      {/* No wave at this join — the frame runs Where you sleep straight
-          into the photo (the next Wave Line is 2033's at y=8265, which is
-          Your hosts rising). */}
       <section
         data-wonder="out-here-track"
         data-landscape-section
