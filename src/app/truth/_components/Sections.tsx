@@ -1124,10 +1124,10 @@ function EntryBlock({
      burnt-deep for warm accents — the only warm the measured table clears on
      #f6f6ec (6.31:1, where gold is 1.72 and ochre 2.30).
 
-     The 1950s is the exception, because its ground MOVES. Its band walks from
-     egg white to the count's charcoal as it is read, so its type cannot be a
-     fixed utility in either palette — it rides the same ramped custom
-     properties the ground does and crosses over with it.
+     The 1950s is the exception, because its ground MOVES. On the deck a
+     charcoal fill rises up the band behind a wave crest (16 September 2026,
+     user direction), so its type cannot be a fixed utility in either palette —
+     each block rides `--truth-ink` and steps over as the crest passes it.
 
      Oxide is deliberately absent: it is the count's red, spent once, and the
      canvas tone set in tone.ts would have handed it to every eyebrow here.
@@ -1140,9 +1140,9 @@ function EntryBlock({
   /* The heading is the SAME dark green in the 1950s as everywhere else (client
      direction, 11 September 2026) — it used to take the band's travelling ink,
      which meant it opened charcoal rather than evergreen. It cannot simply stay
-     evergreen, though: this band's ground walks to charcoal and evergreen is
-     1.52:1 there. `nineteenFifties` steps it to off-white at the band's own
-     0.53 crossover, the same instant the body ink crosses. */
+     evergreen, though: this band's ground goes to charcoal and evergreen is
+     1.52:1 there. `nineteenFifties` steps it to off-white the moment the
+     rising fill's crest passes it, the same way every block below it crosses. */
   const inkHead = "text-evergreen";
   /* In the 1950s the accent IS the ink. No warm in the palette clears 4.5:1
      across that band's travel — burnt-deep wants a near-white ground and gold
@@ -1154,8 +1154,58 @@ function EntryBlock({
   const accentHover = isArtGallery
     ? "hover:text-[color:var(--truth-ink)]"
     : "hover:text-ochre-deep";
+  /* The 1950s track is a whole screen tall at lg (16 September 2026, user
+     direction) so its coda and record label can be seated in the space the
+     withdrawn photograph left — see the coda note below. On the deck the slide
+     is already 100svh, so this adds no travel; it only gives the copy column a
+     height to centre them within. */
   const entryLayout = `relative grid gap-6 md:grid-cols-[180px_1fr] md:gap-12 ${isPartner ? "py-16 md:py-24" : "py-10"
-    }`;
+    }${isArtGallery ? " lg:min-h-svh" : ""}`;
+  /* The record label and its CTA. Built once because the 1950s seats it
+     beneath its coda instead of under the body (see the coda note below);
+     every other record keeps it where it was. */
+  const recordLabel =
+    entry.source && entry.cta ? (
+      /* The wireframe sets the record label and the CTA on one row. */
+      <div
+        className={`mt-8 flex flex-wrap items-baseline justify-between gap-4${isArtGallery ? " lg:mb-auto" : ""
+          }`}
+      >
+        <p className={`eyebrow text-sm font-normal ${accent}`}>
+          {entry.source}
+        </p>
+        <Link
+          href={entry.cta.href}
+          /* The ground frames (17, 18) set the CTA at Yellow Gold. */
+          className={`group eyebrow text-sm transition-transform duration-300 hover:translate-x-1 ${accent
+            }`}
+        >
+          <span className="link-line group-hover:link-line-on">{entry.cta.label}</span> &rarr;
+        </Link>
+      </div>
+    ) : (
+      <>
+        {entry.source ? (
+          /* The ground frames (10–12) set the tag in Burnt Ochre with or
+             without a CTA; elsewhere it stays quiet. */
+          <p
+            className={`eyebrow mt-8 text-sm font-normal ${isGroundFrame ? accent : inkMuted
+              }`}
+          >
+            {entry.source}
+          </p>
+        ) : null}
+        {entry.cta ? (
+          <Link
+            href={entry.cta.href}
+            className={`group eyebrow mt-6 inline-block text-sm transition-transform duration-300 hover:translate-x-1 ${accent
+              }`}
+          >
+            <span className="link-line group-hover:link-line-on">{entry.cta.label}</span> &rarr;
+          </Link>
+        ) : null}
+      </>
+    );
   const article = (
     <article
       id={entry.id}
@@ -1229,6 +1279,37 @@ function EntryBlock({
              unable to move, because this component had no ink group. */
           hook="truth-wave"
         />
+      ) : null}
+      {/* THE 1950s FILL — the light going out as a WAVE rising up the band
+          (user direction, 16 September 2026, superseding the egg-white →
+          charcoal colour walk). The dark comes up from the foot of the screen
+          and takes the band from underneath, its leading edge the same Wave /
+          Divider crest every seam on this page draws, rolling as they roll.
+
+          On the ARTICLE, not the section around it, for the reason the
+          `data-truth-deteriorates` note above gives: the deck pins the article
+          and the section stays behind in flow. A sibling of the deck viewport,
+          which clips to the column; this box clips to the slide's own height
+          and escapes the column the way the slide's `::before` ground does.
+
+          The geometry is ./truth.css and the clock is `nineteenFifties`
+          (truth-scenes.ts). Nothing paints here unless the deck is running:
+          off the deck the band rests at its end state, already dark, and a
+          static crest carries the seam instead (EraSection). `WaveInk` is the
+          shared three-tile strip, so the roll has tiles to travel onto. */}
+      {isArtGallery && !withinDeck ? (
+        <div aria-hidden data-truth-fifties-fill>
+          <div data-truth-fifties-front>
+            <svg
+              data-truth-fifties-crest
+              viewBox="1.00123 0 1467.84877 105.324"
+              preserveAspectRatio="none"
+            >
+              <WaveInk fill="var(--color-charcoal)" />
+            </svg>
+            <div data-truth-fifties-body />
+          </div>
+        </div>
       ) : null}
       {/* The record itself is what emerges (see the note on the article). This
           wrapper exists on every entry — it only takes the deck attributes
@@ -1305,7 +1386,14 @@ function EntryBlock({
               It belongs here and not on the figure: with `min-w-0` on the
               figure alone the overflow was unchanged at 274px, because the
               grid item above it was still the constraint. */}
-          <div data-truth-entry-copy className="min-w-0 max-w-2xl">
+          <div
+            data-truth-entry-copy
+            className={
+              isArtGallery
+                ? "min-w-0 max-w-2xl lg:flex lg:flex-col"
+                : "min-w-0 max-w-2xl"
+            }
+          >
             {isPartner ? (
               <p className={`eyebrow mb-6 font-normal ${accent}`}>{entry.when}</p>
             ) : null}
@@ -1383,8 +1471,9 @@ function EntryBlock({
               </p>
             ) : null}
             {/* The coda is the record's large statement (the 05 and 2022
-            frames) — it reads before the photographs. */}
-            {entry.coda ? (
+            frames) — it reads before the photographs. The 1950s seats its own
+            below the record label instead; see there. */}
+            {entry.coda && !isArtGallery ? (
               <p
                 className={`mt-8 max-w-2xl text-xl leading-snug ${inkBody} sm:text-2xl ${isGroundFrame ? "font-medium leading-relaxed" : ""
                   }`}
@@ -1431,44 +1520,41 @@ function EntryBlock({
                 {footnote}
               </p>
             ))}
-            {entry.source && entry.cta ? (
-              /* The wireframe sets the record label and the CTA on one row. */
-              <div className="mt-8 flex flex-wrap items-baseline justify-between gap-4">
-                <p className={`eyebrow text-sm font-normal ${accent}`}>
-                  {entry.source}
-                </p>
-                <Link
-                  href={entry.cta.href}
-                  /* The ground frames (17, 18) set the CTA at Yellow Gold. */
-                  className={`group eyebrow text-sm transition-transform duration-300 hover:translate-x-1 ${accent
-                    }`}
-                >
-                  <span className="link-line group-hover:link-line-on">{entry.cta.label}</span> &rarr;
-                </Link>
-              </div>
-            ) : (
-              <>
-                {entry.source ? (
-                  /* The ground frames (10–12) set the tag in Burnt Ochre with or
-                     without a CTA; elsewhere it stays quiet. */
-                  <p
-                    className={`eyebrow mt-8 text-sm font-normal ${isGroundFrame ? accent : inkMuted
-                      }`}
-                  >
-                    {entry.source}
-                  </p>
-                ) : null}
-                {entry.cta ? (
-                  <Link
-                    href={entry.cta.href}
-                    className={`group eyebrow mt-6 inline-block text-sm transition-transform duration-300 hover:translate-x-1 ${accent
-                      }`}
-                  >
-                    <span className="link-line group-hover:link-line-on">{entry.cta.label}</span> &rarr;
-                  </Link>
-                ) : null}
-              </>
-            )}
+            {isArtGallery ? null : recordLabel}
+            {/* THE 1950s CODA, moved into the space the withdrawn photograph
+                left (client report via user direction, 16 September 2026: "a
+                significant gap" between the 1950s and 1902). It was set under
+                the body, with nothing beneath the record label but empty
+                ground; seated in that space the emptiness reads as the pause
+                before the line rather than as a missing picture.
+
+                The record label and its CTA travel WITH it, directly beneath
+                (user direction, same day: move "Written record" and "Who named
+                it…" together with the coda, and centre the text a bit more).
+                The first cut left them under the body at the top of the screen,
+                stranded half a screen above the line they belong to. At lg the
+                pair is centred vertically in the column's free space — the coda
+                takes `mt-auto`, the row `mb-auto` — where the coda alone used
+                to sit low on `mb-[16svh]`. They stay two siblings, not one
+                wrapper: `nineteenFifties` steps the ink per direct child of the
+                copy column, so each keeps its own step as the crest passes.
+
+                Read the way Suzanne's 2003 quotation is read — `WordEmphasis`
+                (Y2), words undimming from 0.28 with no movement, on the same
+                clock: `testimony` on the deck, the `[data-y2]` ramp in
+                truth-descent-v2 off it. It is narration, not testimony, and
+                the grammar row records it as the second non-testimony use.
+                Wording verbatim from the content module (D5). */}
+            {isArtGallery && entry.coda ? (
+              <WordEmphasis
+                as="p"
+                text={entry.coda}
+                /* `leading-snug`: the old paragraph carried both snug and relaxed,
+                   and snug is what rendered (measured 27.5px at 20px). */
+                className={`mt-16 max-w-2xl text-xl font-medium leading-snug sm:text-2xl lg:mt-auto ${inkBody}`}
+              />
+            ) : null}
+            {isArtGallery ? recordLabel : null}
           </div>
         </div>
       </div>
@@ -2024,6 +2110,19 @@ export function EraSection({
        frame's own number — no-JS and reduced motion both read as drawn. */
     return (
       <section id={era.id} className="relative bg-canvas">
+        {/* THE SEAM INTO THE DARK, OFF THE DECK (user direction, 16 September
+            2026). Off the deck the band rests at its end state — charcoal from
+            its first row (./truth.css) — so it met the egg-white 2003 record
+            above it as a hard edge, the one seam below lg without a wave. This
+            is the same static `HandoffWave` the other phone seams wear,
+            overhanging up onto the egg white. No scrub and no roll here.
+
+            ⚠ HIDDEN ON THE DECK by ./truth.css, keyed on the hook: there the
+            band OPENS on egg white and the wave that takes it dark is the
+            rising fill on the slide itself, so a charcoal crest at its head
+            would be a dark lip on a light seam. The hook is not `truth-wave`,
+            so the deck never tries to roll it. */}
+        <HandoffWave to="charcoal" placement="leading" hook="truth-fifties-seam" />
         {inner}
       </section>
     );
@@ -2273,7 +2372,13 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
         className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
         loading="lazy"
       />
-      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-36 lg:px-24">
+      {/* `pt-24` below lg, was `pt-36` (user direction, 16 September 2026 — the
+          "significant gap" between the 1950s and 1902). With the 1950s coda
+          moved to the foot of that band, the phone still measured 196px of bare
+          charcoal between the coda and this marker against 64px above the
+          coda; 48px comes off here. The deck keeps its 144px — there the gap
+          is the band's own screen, which the coda now occupies. */}
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-24 lg:px-24 lg:pt-36">
         {head}
       </div>
     </div>

@@ -505,12 +505,17 @@ export function createGatedDeck({
               /**
                * Is the ground under the sticky rail dark here? The count's
                * screens (and the escarpment break between them) for their
-               * whole read; the 1950s from its own 0.53 crossover — the same
-               * instant the band's type steps (`nineteenFifties`,
-               * truth-scenes.ts). A STEP, not a tween: walked across, ink
-               * and ground meet in the mid-greys and vanish.
+               * whole read; the 1950s from the moment its rising wave fill
+               * passes the pointer's label (`nineteenFifties`, truth-scenes.ts
+               * — .80 → 1.00 of the band's read). Was 0.53, the colour walk's
+               * luminance crossover; the walk went on 16 September 2026 (user
+               * direction) and a step that early put canvas ink on the egg
+               * white for the whole last half of the read. Measured at
+               * 1440x900: the fill's edge crosses the label's middle (y≈450,
+               * x≈320) at .90 and the pointer (y≈412) at .91. A STEP, not a
+               * tween: walked across, ink and ground meet in the mid-greys.
                */
-              const INK_CROSS = 0.53;
+              const INK_CROSS = 0.9;
               const railDarkAt = (index: number, progress: number) => {
                 if (darkRailIndexes.has(index)) return true;
                 if (index === rampRailIndex) {

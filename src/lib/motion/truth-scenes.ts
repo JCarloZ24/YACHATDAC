@@ -28,6 +28,8 @@
  *   [data-truth-attribution]       a speaker's name, held until they finish
  *   [data-truth-strata-layer="n"]  a seabed layer, built top → bottom
  *   [data-truth-deteriorates]      a ground that deteriorates as it is read
+ *   [data-truth-fifties-front]     the dark that rises up it, crest first
+ *   [data-truth-fifties-crest]     that front's wave, whose [data-wave-ink] rolls
  *   [data-v2-dissolve]             a shot lying over another, fading out
  *   [data-truth-break-wave]        the box a break's closing crest travels in
  *   [data-v2-camera] / [data-v2-plate]   ordinary movable image frames
@@ -967,110 +969,195 @@ const testimony: Recipe = (timeline, slide) => {
       { opacity: 1, ease: "none", duration: 0.1 },
       0.8,
     );
+  } else {
+    /* THE ATTRIBUTION'S SLOT IS HELD EVEN WITH NO NAME TO FILL IT (16 September
+       2026). A scrubbed timeline spreads its OWN length over the read, and the
+       attribution is what makes this one .90 long; without it the clock ended
+       on the last word (.71) and every word landed later in the read than the
+       same word does in the 2003 quotation — measured on the 1950s coda, 9 of
+       14 words lit at .70 of its read where the quotation's pace lights them
+       well before. An empty tween in the name's place keeps the recipe's shape
+       whatever the slide carries, so "read the way Suzanne's quotation is
+       read" is the same fractions of the read, not the same numbers on a
+       shorter clock. */
+    timeline.to({}, { duration: 0.1 }, 0.8);
   }
 };
 
 /**
- * §13 1950s — "the light is going out of this band".
- *
- * The one ground on the page that MOVES: it opens on the page's egg white and
- * walks down to the count's charcoal as the band is read, so the reader
- * arrives at the hard stop already in the dark.
- *
- * It ramps the ground COLOUR rather than dimming it. Over the old roasted-brown
- * ground a charcoal wash read as a light going out; over egg white the same
- * wash renders grey — a bruise, not a dusk.
- *
- * Ground, ink and accent all cross, because this palette has no middle tier
- * (tone.ts): charcoal type is 17.83:1 on egg white and invisible on charcoal,
- * off-white is the exact inverse, and the warm accents fail in opposite
- * directions — burnt-deep needs a ground lighter than ~L 0.56, gold needs one
- * darker than ~L 0.08, and the ramp spends most of its length between them.
- * Move one without the others and the band is unreadable for half its span.
- *
- * Grammar: "a change of ground", the row `groundRamp` carries — but written as
- * plain `fromTo`s, because `groundRamp` builds its own root timeline and
- * nested inside a scrubbed parent it renders at its end stop for the whole
- * span: the band sat charcoal from the first frame and never travelled.
+ * §13's fill, as fractions of the band's own read. The dark starts rising at
+ * .80 and holds the whole screen at 1.00 (user direction, 16 September 2026).
  */
-const nineteenFifties: Recipe = (timeline, slide) => {
+const FIFTIES_FILL_FROM = 0.8;
+
+/**
+ * Where the crest's ink edge sits over the reading column, as a fraction of
+ * the crest's box measured down from its top — the reference each block's ink
+ * steps against.
+ *
+ * Not a single height, because the crest is a wave: over the copy column
+ * (~x 470–1160 at 1440) the drawn curve sits between about .47 and .85 of the
+ * box, the roll slides that window sideways while the fill travels, and the
+ * crest's own `scaleY` swell lowers it early on. Sampled across the stretch of
+ * the fill that actually crosses the copy (fill .2–.7), the midpoint of that
+ * spread holds at about .55. A block stepping here is half-crossed when it
+ * steps, which is as close as one ink per block can get to a slanted edge.
+ */
+const FIFTIES_EDGE = 0.55;
+
+/**
+ * The seams' own scrub for `recordWaveRoll` — the grammar row's "scrub 0.3s",
+ * the same number gated-deck.ts (`WAVE_SCRUB`) and wave-roll.ts use. The fill
+ * rides it too, and so do the ink steps, so all three share one lag.
+ */
+const WAVE_SCRUB = 0.3;
+
+/** A step's length on the fill clock — a near-zero `fromTo`, see below. */
+const FIFTIES_STEP = 0.004;
+
+/**
+ * §13 1950s — "the light is going out of this band", as a WAVE THAT FILLS IT.
+ *
+ * User direction, 16 September 2026, superseding the colour walk of 9 September
+ * (egg white → charcoal ramped across the whole read through the slide's
+ * `::before`). The band now opens on the page's egg white and is READ on it;
+ * over the last fifth of its read the count's charcoal rises from the foot of
+ * the screen to its head, its leading edge the Wave / Divider crest rolling
+ * exactly as the seams roll. At 1.00 the band is charcoal from edge to edge, so
+ * it hands into the count dark on dark; scrolling back lowers it again.
+ *
+ * Grammar: "a change of ground, the light going out — now a WAVE FILL"
+ * (motion-grammar.md), with /about §03's rising front as its prior art.
+ *
+ * THREE WRITES, ONE CLOCK:
+ *   · the front travels on `transform` alone — `yPercent` 100 → 0, LINEAR, the
+ *     walk's own finding (an eased scrubbed ground stands still, then lurches);
+ *   · the crest's ink group takes `recordWaveRoll` untouched — the registered
+ *     effect, its x −15% → 0 and its 0.6 → 1 swell, restating none of it;
+ *   · the ink STEPS block by block as the crest passes each one.
+ * They share a timeline so the type cannot cross ahead of, or behind, the
+ * ground it is crossing for — which is what "legible" means on a moving edge.
+ *
+ * THE INK STILL STEPS, for the walk's reason: the palette has no middle tier
+ * (tone.ts). Charcoal type is 17.83:1 on egg white and invisible on charcoal,
+ * off-white the exact inverse, and the warm accents fail one way or the other,
+ * so the labels keep taking the ink (Sections.tsx). What changed is WHEN. One
+ * crossover at .53 was right for a ground that changed everywhere at once; a
+ * front passes the copy from the bottom up, so each block — the gutter, the
+ * title, the body, the record row, the coda — now steps as the crest's edge
+ * reaches its own middle. Those instants are measured from layout and re-seated
+ * on every refresh, because they are pixels on a clock kept in fractions.
+ *
+ * A near-zero `fromTo`, never a pair of `set`s: a `set` is a zero-duration
+ * tween with immediateRender on, so both would fire at build time and the later
+ * would win — off-white ink on the egg-white opening ground.
+ *
+ * The coda's words are `testimony`'s (RECIPES), exactly as the 2003 quotation's
+ * are. The rail's ink is the painter's (gated-deck `railDarkAt`), stepped at
+ * the fill's passage of the pointer rather than written from here — a scrub
+ * parked at its end cannot undo an inline colour, which is how the old rail
+ * write stranded (15 September 2026).
+ */
+const nineteenFifties: Recipe = (_timeline, slide, span) => {
   const [band] = within(slide, "[data-truth-deteriorates]");
   if (!band) return;
 
-  // The CSS rest state is the END of this journey, so no-JS, reduced motion
-  // and the unpinned flow path all read "the light has gone out" as a
-  // statement. On the deck it has to be put back to its opening first, or the
-  // band shows dark while the cover reveals it and then jumps back to light.
-  gsap.set(band, { "--truth-slide-ground": CANVAS, "--truth-ink": CHARCOAL });
+  const front = band.querySelector<HTMLElement>("[data-truth-fifties-front]");
+  const crest = band.querySelector<SVGSVGElement>("[data-truth-fifties-crest]");
+  const ink = crest?.querySelector<SVGGElement>("[data-wave-ink]");
+  const track = band.querySelector<HTMLElement>("[data-truth-deck-track]");
+  const copy = band.querySelector<HTMLElement>("[data-truth-entry-copy]");
+  // No fill, no opening: leave the band at its CSS rest state, which is the
+  // dark END (globals.css), rather than opening it on egg white with nothing
+  // to take it dark before the count.
+  if (!front || !crest || !ink || !track) return;
 
-  // Egg white straight down to charcoal, linear, no intermediate stop (user,
-  // 9 Sep 2026). A version routed through Roasted Brown measured better —
-  // worst contrast 5.89:1 against this one's 3.47:1 — but read as a third
-  // ground appearing halfway down. `power3.inOut` was tried for the same
-  // reason and rejected: it left the ground visibly still for the first third
-  // and scrubbed motion that sits still while you scroll reads as broken.
-  timeline.fromTo(
-    band,
-    { "--truth-slide-ground": CANVAS },
-    { "--truth-slide-ground": CHARCOAL, ease: "none", duration: 1 },
+  // The rest state is the end state, so no-JS, reduced motion and the flow path
+  // all read "the light has gone out". On the deck the band is put back to its
+  // opening; from here on the dark is the fill's, not the ground's.
+  gsap.set(band, { "--truth-slide-ground": CANVAS, "--truth-ink": CHARCOAL });
+  gsap.set(front, { yPercent: 100 });
+
+  const steps: Array<{ block: HTMLElement; tween: gsap.core.Tween }> = [];
+  let clock: gsap.core.Timeline | null = null;
+
+  const seatSteps = () => {
+    if (!clock || !steps.length) return;
+    const screen = slide.clientHeight;
+    const crestDepth = crest.getBoundingClientRect().height;
+    // `yPercent` resolves against the front's OWN box, so its height is the
+    // distance it travels (screen + crest + 1px, truth.css).
+    const rise = front.offsetHeight;
+    // The copy itself only moves if the record outgrows its screen; the deck's
+    // track then slides it up by `travel` across the read.
+    const travel = Math.max(0, track.scrollHeight - screen);
+    const trackTop = track.getBoundingClientRect().top;
+    steps.forEach(({ block, tween }) => {
+      const box = block.getBoundingClientRect();
+      const middle = box.top - trackTop + box.height / 2;
+      // At fill progress t the front's top is −crest + rise·(1 − t) and its
+      // ink edge FIFTIES_EDGE of a crest below that; the block's middle is at
+      // middle − travel·(FROM + (1 − FROM)·t). Solved for t where they meet.
+      const at =
+        (rise -
+          (1 - FIFTIES_EDGE) * crestDepth -
+          middle +
+          travel * FIFTIES_FILL_FROM) /
+        (rise - travel * (1 - FIFTIES_FILL_FROM));
+      tween.startTime(gsap.utils.clamp(0, 1 - FIFTIES_STEP, at));
+    });
+    // Re-render through the moved steps, so a refresh mid-read cannot leave a
+    // block in the ink of its old position.
+    const progress = clock.progress();
+    clock.progress(0).progress(progress);
+  };
+
+  clock = gsap.timeline({
+    scrollTrigger: {
+      trigger: span.runway,
+      start: () =>
+        span.read.start +
+        (span.read.end - span.read.start) * FIFTIES_FILL_FROM,
+      end: () => span.read.end,
+      scrub: WAVE_SCRUB,
+      invalidateOnRefresh: true,
+      refreshPriority: span.index * 10 + 6,
+      onRefresh: seatSteps,
+    },
+  });
+
+  clock.fromTo(
+    front,
+    { yPercent: 100 },
+    { yPercent: 0, ease: "none", duration: 1 },
     0,
   );
+  clock.add(gsap.effects.recordWaveRoll(ink) as gsap.core.Tween, 0);
 
-  // The ink STEPS rather than travelling with it. Crossed linearly, ink and
-  // ground both arrive at grey at the midpoint — measured rgb(133,135,132) on
-  // rgb(122,125,122), 1.05:1, the whole middle of the band invisible. Stepping
-  // where the ground's luminance passes ~0.16 keeps both states above ~4.3:1.
-  // A hard swap of type colour would be crude anywhere else; here the ground
-  // is already moving under it, so the reader reads a change of light.
-  //
-  // The accent steps with it rather than staying warm, because no warm in this
-  // palette clears 4.5:1 across the middle of the ramp — carrying gold through
-  // put the eyebrow at 2.08:1 on its own ground. The colour draining out of
-  // the labels is the argument, not a compromise.
-  //
-  // A near-zero `fromTo`, not two `set`s: a `set` is a zero-duration tween
-  // with immediateRender on, so both would fire at build time and the later
-  // would win — off-white ink on the off-white opening ground.
-  const CROSS_AT = 0.53;
-  timeline.fromTo(
-    band,
-    { "--truth-ink": CHARCOAL },
-    { "--truth-ink": CANVAS, ease: "none", duration: 0.004 },
-    CROSS_AT,
-  );
-
-  // THE RAIL'S OWN STEP LEFT THIS FILE (15 September 2026). This recipe used
-  // to write the same crossover inline onto the traveller's label nodes —
-  // the traveller is a sibling of the section, so `--truth-ink` above never
-  // reached it — and the write stranded: a scrub parked at its end cannot
-  // undo itself, so the colour outlived the era. The finite rail's ink is
-  // now the painter's business — gated-deck's `railDarkAt` flips
-  // `data-rail-dark` on the rail root at this same 0.53 crossover
-  // (`railRampSlide`), and truth.css owns the values. One clock, two
-  // owners, no stranded inline colour.
-
-  // AND THE HEADING, which is the dark green of the section above it (client
-  // direction, 11 September 2026) rather than the band's travelling ink. It
-  // steps at the same instant for the same reason everything else in here does:
-  // evergreen is 11.71:1 on the opening egg white and 1.52:1 on the charcoal
-  // this band walks to, so a heading that simply stayed green would be gone for
-  // the whole second half of its own section.
-  /* `[data-descent-heading]` is NOT what this band's title is — the entry
-     title is a plain `<h3 class="headline …">` and the descent hook sits on
-     era headlines, of which this folded band has none. Targeting it found zero
-     elements and the step silently never ran (measured 12 September 2026: the
-     heading stayed evergreen straight into the charcoal, at 1.52:1, which is
-     the exact failure this step exists to prevent). Both the title and the
-     coda beneath it carry `inkHead`, so both are taken. */
-  const heading = query<HTMLElement>(band, ".headline, [data-descent-heading]");
-  if (heading.length) {
-    timeline.fromTo(
-      heading,
-      { color: EVERGREEN },
-      { color: CANVAS, ease: "none", duration: 0.004 },
-      CROSS_AT,
+  // Every block that carries ink: the gutter (transparent at lg, but still in
+  // the tree), then each child of the copy column. The title is the one set in
+  // the display face at evergreen (`inkHead`, client direction 11 September
+  // 2026), so it steps its colour; everything else steps `--truth-ink`, which
+  // its utilities already read.
+  const blocks = [
+    ...Array.from(track.children).filter((el) => el !== copy),
+    ...(copy ? Array.from(copy.children) : []),
+  ].filter((el): el is HTMLElement => el instanceof HTMLElement);
+  blocks.forEach((block) => {
+    const title = block.matches(".headline");
+    const tween = gsap.fromTo(
+      block,
+      title ? { color: EVERGREEN } : { "--truth-ink": CHARCOAL },
+      {
+        ...(title ? { color: CANVAS } : { "--truth-ink": CANVAS }),
+        ease: "none",
+        duration: FIFTIES_STEP,
+      },
     );
-  }
+    clock.add(tween, 0);
+    steps.push({ block, tween });
+  });
+  seatSteps();
 };
 
 /**
@@ -1368,6 +1455,12 @@ const RECIPES: ReadonlyArray<{ match: string; recipe: Recipe }> = [
   { match: "#break-country-now", recipe: breakDissolve },
   { match: "#father", recipe: testimony },
   { match: "#art-gallery", recipe: nineteenFifties },
+  /* The 1950s coda is read the way Suzanne's 2003 quotation is — the SAME
+     recipe, so the same effect on the same clock (words .10 → .71 of the read,
+     from 0.28, no movement), not a copy of its numbers that could drift (user
+     direction, 16 September 2026). It finds the band's one `[data-y2]` block;
+     the band has no attribution, so that half of the recipe finds nothing. */
+  { match: "#art-gallery", recipe: testimony },
   /* §14 kept its slide and its wave when the client withdrew its photographs
      on 11 September 2026, but it has no image plane left to move and its wave
      is the count deck's leading crest, not a trailing one — so it is listed

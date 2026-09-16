@@ -49,8 +49,9 @@
    a touch laptop, an iPad in landscape, or a tab left in device emulation.
 
    ⚠ GATED ON THE DECK BEING OFF, and that is not belt-and-braces. On the deck
-   the band OPENS on egg white and ramps to charcoal across its read; painting
-   the section charcoal up front would give that ramp nothing to travel from.
+   the band OPENS on egg white and a charcoal fill rises over it across the end
+   of its read (16 September 2026); painting the section charcoal up front would
+   give that fill nothing to rise over.
    `:has()` rather than a new markup hook — the band is already identifiable by
    the slide it contains, and `data-truth-deteriorates` is the thing that
    decides the ground in the first place.
@@ -69,14 +70,97 @@
 }
 
 /* ---------------------------------------------------------------------------
+   THE 1950s FILL — a wave rising up the band (user direction, 16 September
+   2026, superseding the egg-white → charcoal colour walk).
+   Grammar row: "a change of ground, the light going out — now a WAVE FILL".
+
+   The prior art is /about §03's front (about.css, `[data-ab-front]`): the dark
+   is a body that TRAVELS, wearing the Wave / Divider contour as its top edge,
+   so the per-frame write is one composited transform rather than a repainted
+   colour. What differs is the clock (`nineteenFifties`, truth-scenes.ts:
+   .80 → 1.00 of the band's own read) and the roll, which is the seams'
+   `recordWaveRoll` on the crest's ink group.
+
+   ⚠ DECK ONLY. Off the deck the band rests charcoal (above), so a fill has
+   nothing to rise over; the box is not even laid out there.
+
+   The window is the slide: `inset-block: 0` against the pinned 100svh
+   article, `inset-inline` escaping the reading column exactly as the slide's
+   own `::before` ground does (globals.css). `z-index: -1` inside the slide's
+   `isolation: isolate` puts it over that ground — it follows `::before` in
+   tree order — and under every line of copy. */
+[data-truth-fifties-fill] {
+  display: none;
+}
+
+[data-descent-root][data-deck-active] [data-truth-fifties-fill] {
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  inset-inline: calc(50% - 50vw);
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* THE FRONT: crest, then body. It starts one crest ABOVE the window and is one
+   crest (plus a pixel) taller than it, so the module's `yPercent` travel reads
+   exactly: at 100 the crest's top sits on the window's foot and nothing shows;
+   at 0 the crest is wholly above the head, clipped, and the body covers the
+   screen to a pixel past its foot — the finished state has no row of egg white
+   at either edge for a seam to find. `yPercent` resolves against this box's
+   own height, which is why the height is the travel and not the window's.
+
+   No CSS transform here on purpose: GSAP parses an existing transform into
+   `y` and would add its own `yPercent` on top. The module seats the start
+   state before first paint (`gsap.set`), in the same task that shows the box.
+
+   6.5rem is the crest the seams draw at 1440 — `WaveDivider`'s `sm:h-26`,
+   the Wave / Divider's own 104px — so this reads as the same wave, not a
+   larger cousin of it. */
+[data-truth-fifties-front] {
+  position: absolute;
+  top: -6.5rem;
+  left: 0;
+  right: 0;
+  height: calc(100% + 6.5rem + 1px);
+}
+
+[data-truth-fifties-crest] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 6.5rem;
+}
+
+/* A pixel INSIDE the crest, so the two cannot part along an antialiased seam
+   as the front moves by subpixel amounts (about.css does the same). */
+[data-truth-fifties-body] {
+  position: absolute;
+  top: calc(6.5rem - 1px);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-charcoal);
+}
+
+/* The static seam the band wears OFF the deck (EraSection) stands down ON it:
+   there the band opens on egg white and the fill above is its wave. */
+[data-descent-root][data-deck-active] [data-seam="truth-fifties-seam"] {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
    THE FINITE RAIL'S INKS AND END MASKS — user direction, 15 September 2026.
    Grammar row: "the guide leading the eye, Truth cut".
 
    The module owns the flag, the stylesheet owns the values (the same
    agreement as [data-deck-active] above): gated-deck's painter toggles
    `data-rail-dark` on the rail root when the ground under the sticky rail is
-   charcoal — across the count's three screens, and from the 1950s band's own
-   0.53 luminance crossover, the same instant its type steps — and these
+   charcoal — across the count's three screens, and from the moment the 1950s
+   band's rising fill passes the pointer (16 September 2026) — and these
    custom properties do the rest. The label is NEVER gold: ochre-deep is the
    page's compliant warm on egg white (the same colour the gutter labels
    wear), canvas the only readable ink on charcoal.
@@ -293,10 +377,9 @@
 
    `inkHead` in Sections.tsx is `text-evergreen` for every record on the page,
    and on the deck that is right at the start and corrected on the way down:
-   `nineteenFifties` tweens this heading evergreen → canvas as the ground walks
-   egg white → charcoal (the EVERGREEN constant in truth-scenes.ts), so the
-   display face crosses over with the ink. Measured on the deck: 11.71:1 at the
-   read's start and 14.20:1 at 90%.
+   `nineteenFifties` steps this heading evergreen → canvas as the rising fill's
+   crest passes it (the EVERGREEN constant in truth-scenes.ts; the wave fill of
+   16 September 2026), so the display face crosses over with the ink.
 
    Off the deck that tween never runs and the band rests at charcoal, so the
    heading kept evergreen on near-black — measured 1.52:1, which is not a

@@ -640,8 +640,9 @@ transparent at `lg` exactly like every other era gutter — the same `opacity-0`
 treatment, strings still read from those blocks — because a mark the rail already wears is
 furniture beside it. Below `lg` they all stay visible; the bottom bar's marker carries only
 the band's short mark. And the
-rail's ink STEPS at the 1950s' 0.53 luminance crossover, the same instant the band's type
-crosses (burnt-deep/charcoal on egg white, canvas on charcoal; the label is NEVER gold). The
+rail's ink STEPS as the 1950s' rising fill passes the pointer, at .90 of that band's read
+(16 September 2026; it was the colour walk's 0.53 crossover) — the same passage the band's type
+steps at (burnt-deep/charcoal on egg white, canvas on charcoal; the label is NEVER gold). The
 step belongs to the painter (`railDarkAt` flipping `data-rail-dark`), not to a scene tween: the old inline write from the
 1950s recipe parked at its end and stranded its colour, which is the bug this replaces. The
 traveller still fades permanently over the final fifth of Before people, before the closing
@@ -694,8 +695,8 @@ to use if the copy grows past it.
 **THE GROUND NO LONGER FALLS — one egg white, 9 September 2026 (client direction, D26).**
 `/truth` renders on a single ground, Off-White `#f6f6ec`, the same one /about uses. Two
 exceptions carry what is left of the descent: **the hard stop keeps its charcoal**, and **the
-1950s band travels** from the egg white down to that charcoal as it is read, so the reader
-arrives at the count already in the dark. The 1950s is now the only ground on the site that
+1950s band goes dark** as it is read — since 16 September 2026 a charcoal wave fills it from the
+foot over the last fifth of its read — so the reader arrives at the count already in the dark. The 1950s is now the only ground on the site that
 moves.
 
 What that costs is worth keeping written down. Truth has no dated photographs, so chronology had
@@ -827,8 +828,8 @@ because it is a boundary between an image and the record laid over it rather tha
 
 ⚠ **THE 1950s → COUNT CREST CANNOT BE SEEN, and was left alone.** Asked for on 14 September 2026
 and not built, because measured it would animate nothing: the crest is `HandoffWave to="charcoal"`
-and by the time it arrives the 1950s band has already ramped its own ground from egg white to
-charcoal, so it is charcoal on charcoal on charcoal (screenshot at scrollY 18200). It is also
+and by the time it arrives the 1950s band has already gone from egg white to charcoal (a ramp
+then; the wave fill since 16 September 2026, which reaches the head at 1.00), so it is charcoal on charcoal on charcoal (screenshot at scrollY 18200). It is also
 seated INSIDE `[data-truth-deck-viewport]`, which the deck sets `overflow: hidden`, so on the deck
 path it is clipped away regardless. This is the case the "four waves that survive" note above
 already rules on — a divider filled with the colour it introduces has nothing to carry — reached
@@ -844,7 +845,13 @@ this work is 84–136px — and it is invisible, because the band is painted by 
 `bg-canvas` behind it and by the crest over it (the paint stack under the worst frame reads
 `SECTION rgb(246,246,236)`). Recorded rather than fixed: it is the scrubbed exit tween lagging a
 0.9s reverse commit, it belongs to the deck rather than to the dividers, and nothing on screen
-shows it.
+shows it. ⚠ **Except at the 1950s → count seam** (measured 16 September 2026, while the 1950s wave
+fill landed): there both slides are charcoal and what shows through is still egg white — a
+full-width strip at the viewport's head going down (42 → 26 → 8 → 0px across the commit) and at
+its foot going back up (up to 63px). Painting the page behind magenta turns the strips magenta,
+so they are holes in the slide stack, about one frame of the cover's scroll deep, and not the
+header, the waves or the fill. Identical on the commit before the fill, because the colour walk
+also ended charcoal. Still the deck's to fix, and now visible.
 
 **Every active entrance is scroll-scrubbed and reversible, AGAINST ITS OWN SECTION'S READING
 SPAN** (9 September 2026). B5 headings retain their line masks; Truth-local M1 entries use
@@ -869,7 +876,7 @@ What each beat does with its span:
 | 07 | The strip pulls across L→R (~.012 apart), then drifts 40px left over the remainder. |
 | 08, 14 | The breaks **pull back**, 1.06 → 1.00, where ordinary media pushes in. The page has already stopped; advancing the camera into a held image while the scroll is locked reads as impatience. |
 | 12 | Words undim at speaking pace; the attribution is held to .78 of the span, so the speaker is named only after the last word lands. The portrait is **held**, per this ledger's own "the portrait is held" — it previously took the default push, which is the ordinary-media treatment and this is not ordinary media. |
-| 13 | The ground **deteriorates** — and since D26 it does so by changing colour, not by dimming: the band walks Off-White → Charcoal across its read span, through the slide's own `::before` painter. Straight, with no intermediate stop (user direction). A version routed via Roasted Brown was built and rejected — it measured better, 5.89:1 worst against 3.47:1, but the brown read as a third ground appearing halfway down. An alpha wash was right over roasted brown and reads as grey over egg white, a bruise rather than a dusk. The ink steps with it at the crossover (charcoal → off-white), and the warm accent is dropped in this band because no warm in the palette clears the middle — the colour drains out of the labels as the light goes out. The ramp is LINEAR — an eased version was built and rejected: it held the ground still for the first third of the section and then lurched, which reads as broken rather than eased, and `machine` is the token rule for scrubbed media anyway. Measured 17.83:1 at both ends and 4.67:1 at its worst, so the band clears AA the whole way down. The photograph still takes no push. |
+| 13 | ⚠ **SUPERSEDED 16 September 2026, user direction — the ground no longer walks, a WAVE FILLS it.** The band is read on the page's egg white; across .80 → 1.00 of its read the count's charcoal rises from the foot of the screen to its head behind the Wave / Divider crest, which rolls with `recordWaveRoll` exactly as the seams do (x −15% → 0, swell 0.6 → 1, scrub 0.3). The front is a body travelling on `transform` (`yPercent` 100 → 0, linear) inside a box that clips to the pinned ARTICLE, so the fill rides the slide rather than the section left behind in flow; at 1.00 the band is charcoal edge to edge and hands into the count dark on dark, and scrolling back lowers it. The ink still steps (no middle tier in this palette), but block by block as the crest passes each one — measured from layout, re-seated on refresh — and the warm accent stays dropped. The rail's ink steps as the front passes the pointer's label, at .90. **The coda moved** (client report via user direction, same day: "a significant gap" between the 1950s and 1902, the space the withdrawn photograph left): "Nobody corrected them…" now sits below the record row, seated low in the screen at lg (the track is `lg:min-h-svh`, the coda `mt-auto` with a 16svh foot) and after a 64px pause below lg, and it is read exactly as the 2003 quotation is — `WordEmphasis`, the same `testimony` recipe on the deck (words .10 → .71), the same `[data-y2]` ramp off it. Measured before → after: at 1440 the band's copy ended at y 314 of its 900px screen, so 586px of empty ground plus the 144px lead into the 1902 screen — 730px — stood between the record and her title; the coda now sits at y 650–716, leaving 434px above it and 184 + 144 below. On a 390 phone the coda follows the record row after 64px, and the 1902 band's top padding comes down from 144px to 96px below lg, so the bare charcoal between the coda and the 1902 marker is 148px (it was 196px between the record row and the marker). The testimony recipe now holds its attribution's .80–.90 slot even with no name to fill it: a scrubbed timeline spreads its own length over the read, and without that slot the coda's clock ended on its last word and every word landed late (9 of 14 lit at .70). Measured after: 21% / 50% / 86% of the coda's words lit at .29 / .50 / .72, against 21% / 52% / 86% of the 2003 quotation's. Off the deck there is no fill: the band rests at its dark end state and its head wears the static charcoal `HandoffWave` the other phone seams wear, hidden on the deck. History: from 9 September (D26) the band walked Off-White → Charcoal across its whole read through the slide's own `::before`, linear, ink stepping once at .53 — measured 17.83:1 at both ends and 4.67:1 at its worst; a Roasted Brown midpoint and a `power3.inOut` ease were both built and rejected. The photograph still takes no push — it is withdrawn. |
 | 19 | The seabed **builds downward**, top → middle → bottom: the one section that accumulates in the same direction as the scroll. |
 | 21 | Footer links fade up once, together, no stagger. |
 
