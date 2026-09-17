@@ -358,6 +358,16 @@ export function PartnershipsHero() {
           `frame` (kit.ts, `pt-hero`) and carries no motion hook, so this box
           holds still under everything the overture does around it.
 
+          ⚑ REPLACED on 17 September 2026 (user direction): batch-2
+          `March22-1547`, ochre-marked palms held out over a grinding stone
+          toward a child's hands, the frame About §07 carries as
+          `about-reciprocity`. No faces, so the R24 block below no longer
+          sits on the first screen; the plate still holds (`frame`). The
+          scrim reads differently on it — the foot of this frame is a
+          warm-lit stone rather than lit scrub — but the stops are the
+          frame's own and are left as they are. The notes below record the
+          two previous swaps.
+
           ⚑ REPLACED AGAIN on 16 September 2026 (user direction): the batch-3
           crew group portrait, enhanced and exported at 2880 — see `pt-hero`
           in kit.ts for the recipe and the ⚠ consent note: twenty-five
@@ -393,7 +403,7 @@ export function PartnershipsHero() {
         <div data-motion={HERO?.grade ?? "frame"} className="absolute inset-0">
           <MediaOrField
             src={HERO?.src ?? null}
-            alt="A crew of about twenty-five people standing in a grassy clearing with their arms raised to the camera, a white four-wheel drive and scrub behind them"
+            alt="Ochre-marked adult palms held out over a grinding stone toward a child's hands"
             sizes="100vw"
             priority
             quality={90}

@@ -726,7 +726,18 @@ export const PHOTOS: Photo[] = [
      identifiable and identification consent has not been recorded (R24).
      It sits on the page's first screen. Cleared or replaced before launch.
      The track aerial it replaces stays on disk as pt-hero-track.webp. */
-  { id: "pt-hero", src: "/media/library/partnerships/pt-hero-crew.webp", width: 2880, height: 2160, grade: "frame", batch: 3, master: "crew-group-portrait", subject: "A crew of about twenty-five people in a clearing, arms raised to the drone, a white ute and scrub behind — ⚠ CONSENT UNRESOLVED, every face identifiable" },
+  /* ⚑ REPLACED 17 September 2026 (user direction: "replace the hero image on
+     partnerships with this attached image"). The master is batch-2
+     `March22-1547` — ochre-marked adult palms held out over a grinding stone
+     toward a child's hands. The same 2000 x 1334 export About already
+     carries as `about-reciprocity`; copied as supplied, no processing. No
+     adult face is in frame, and PHOTO-INDEX lists the child as present but
+     unidentifiable, so the R24 consent block the crew portrait carried is
+     lifted from the first screen. The crew portrait stays on disk as
+     pt-hero-crew.webp with its note above. Grade stays `frame` for the
+     reason the track note gives: the hero's score holds the plane still,
+     and hands over a grinding stone are cultural material anyway. */
+  { id: "pt-hero", src: "/media/library/partnerships/pt-hero-hands.webp", width: 2000, height: 1334, grade: "frame", batch: 2, master: "March22-1547", subject: "Ochre-marked adult palms held out over a grinding stone toward a child's hands — no faces in frame" },
   /* ⚠ CONSENT UNRESOLVED. The one research frame in the collection, and its
      subject's face is visible and identifiable (batch-1.md). R24 applies here
      exactly as it does on Our People and About §07: use was cleared,

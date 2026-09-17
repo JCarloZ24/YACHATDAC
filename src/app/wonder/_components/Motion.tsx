@@ -68,11 +68,11 @@ const RAIL_HOOKS = {
  *   §02 facts         media       420vh   the Queensland map draws · copy in tiers
  *                                            · the canvas crest rolls up over the film
  *   §03 highlights    media       —       the cards pass, The Record's way (scrubbed)
- *   §04 getting here  media       300vh   the route map draws in stages
+ *   §04 getting here  media       420vh   the route map draws, then holds finished — §02's span, equalised 17 Sep 2026
  *   §05 turraburra    media       180vh   landscape + copy hold, mouse tilt and drift
  *   §06 itinerary     transition  —       the manual accordion, day 1 open; entrances only; holds at its foot under §07 (14 Sep 2026)
- *   §07 before        none        100vh   the hold, and one beat on the CTA
- *   §08 sleep         media       120vh   the copy enters; the carousel advances itself
+ *   §07 before        none        100vh   the hold, and one beat on the CTA; still 80vh (30 on the phone) then held under §08
+ *   §08 sleep         media       120vh   the copy enters; the carousel advances itself; still 60vh on the phone, then held under §09
  *   §09 out here      type        450vh   the landscape seats, then five conditions
  *                                         step one per 70vh of scroll
  *   §10 hosts         none        100vh   the copy arrives, the faces hold
@@ -142,7 +142,9 @@ export function WonderMotion() {
       // the masonry keeps the card's own transform. Grammar: "pops", Wonder
       // rail card (14 Sep 2026).
       wire("highlights", (el) => createCardPop(el));
-      wire("getting-here", (el) => gettingHereCopy(el, 180));
+      // 420, as §02 (17 Sep 2026, user direction: "extend the animation on
+      // getting here map both mobile/desktop, equally to first map section").
+      wire("getting-here", (el) => gettingHereCopy(el, 420));
       wire("country", wonderLandscape);
       // The itinerary holds at its foot while §07 rides up over it, wave
       // first — the hero → facts read, at the page's far end (14 Sep 2026).
@@ -164,12 +166,18 @@ export function WonderMotion() {
       // photograph rides over held §08 as a plain full-bleed plate — a
       // canvas drip was tried and removed the same day (Sections.tsx).
       // 80vh of stillness before §08 begins to cover (16 Sep 2026, user
-      // direction: "add more scroll effort before Where you stay").
-      wire("before", (el) => holdAtFoot(el, { still: 0.8 }));
+      // direction: "add more scroll effort before Where you stay") — 30vh on
+      // the phone (17 Sep 2026, user direction: "reduce scroll effort on
+      // before you come" on mobile), where 80 read as the page stalling.
+      wire("before", (el) => holdAtFoot(el, { still: { wide: 0.8, phone: 0.3 } }));
       wire("before", (el) => conversion(el, 100, { emphasis: true }));
       // The one-shot pop on §07's button, on its own clock — see wonder.ts.
       wire("before", (el) => ctaPop(el));
-      wire("sleep", (el) => holdAtFoot(el));
+      // The phone holds still for 60vh before §09 covers (17 Sep 2026, user
+      // direction: "add scroll effort on where you stay" on mobile) — the
+      // one-card rail is read in a glance there; the desktop's two cards
+      // are not, so it keeps the plain one-viewport hold.
+      wire("sleep", (el) => holdAtFoot(el, { still: { wide: 0, phone: 0.6 } }));
       wire("sleep", (el) => sleepCards(el, 120));
       // The accommodation carousel advances on its own, one card every few
       // seconds, and pauses for the reader. It drives the rail's own

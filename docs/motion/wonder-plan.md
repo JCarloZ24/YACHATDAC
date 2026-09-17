@@ -1,6 +1,6 @@
 # 01 · Wonder — the motion plan
 
-*Last updated: 16 September 2026*
+*Last updated: 17 September 2026*
 
 **Latest responsive correction, 9 September 2026:** desktop itinerary selection
 depends on available width and reading space, not pointer type. DevTools touch
@@ -35,7 +35,14 @@ cross their headings or fade under the outgoing section's hold during rapid
 reversals. The Record's continuing masonry drift is unchanged.
 
 The facts section grows from 320vh to 420vh on desktop, adding 100vh after
-the original map draw. Its panel now sizes to its content and holds at its
+the original map draw. **Getting here matches it from 17 September 2026**
+(user direction: extend the route map's animation on both cuts, equally to
+the first map section): the same 420vh span, the road tagged to draw over
+0.06–0.8 as the state outline does, the stops lighting at 0.70–0.86 as the
+facts features do — so the phone, which measures each map against its own
+box, is paced alike as well. The same day's phone pass shortens Before you
+come's stillness to 30vh and gives Where you stay 60vh of its own, below
+`lg` only (`holdAtFoot`, `still: { wide, phone }`). Its panel now sizes to its content and holds at its
 foot when taller than the viewport. The full-journey review found two answers
 clipped at 1280 × 720 by the former fixed-height panel. Mobile and reduced
 motion retain ordinary flow, with all six answers accessible.

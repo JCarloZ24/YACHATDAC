@@ -183,15 +183,24 @@ export function holdAtFoot(
    * element, which scrolls up unseen behind the held section, so the
    * reader turns the wheel and the screen holds — then the cover begins.
    * Applied and cleared here so the markup carries no number.
+   *
+   * ONE NUMBER PER BREAKPOINT since 17 Sep 2026 (user direction, the phone
+   * pass: "reduce scroll effort on Before you come, add scroll effort on
+   * Where you stay"). A viewport of stillness is a different length of thumb
+   * on a phone than of wheel on a desktop, so `still` may be `{ wide, phone }`
+   * — `wide` above Tailwind's `lg` (64rem), `phone` below it — and a plain
+   * number is both. The two branches are separate matchMedia contexts, so a
+   * window crossing the breakpoint re-seats the hold at the other length.
    */
-  { still = 0 }: { still?: number } = {},
+  { still = 0 }: { still?: number | { wide: number; phone: number } } = {},
 ): MotionModule {
   let cleanup: (() => void) | undefined;
+  const stillness = typeof still === "number" ? { wide: still, phone: still } : still;
   return {
     init() {
       cleanup?.();
       const media = gsap.matchMedia();
-      media.add("(prefers-reduced-motion: no-preference)", () => {
+      const hold = (query: string, still: number) => media.add(query, () => {
         // The next thing in flow — the sibling of the pin-spacer once the
         // pin has wrapped this section, which is why it is read lazily.
         const next = () => (root.parentElement?.classList.contains("pin-spacer")
@@ -216,6 +225,10 @@ export function holdAtFoot(
         gap();
         return () => { const el = next(); if (el) gsap.set(el, { clearProps: "marginTop" }); };
       }, root);
+      // 1023.98px is the complement of `lg` (64rem = 1024px), the one
+      // breakpoint the V2 file has; the two queries never both match.
+      hold("(prefers-reduced-motion: no-preference) and (min-width: 64rem)", stillness.wide);
+      hold("(prefers-reduced-motion: no-preference) and (max-width: 1023.98px)", stillness.phone);
       cleanup = () => media.revert();
     },
     destroy() { cleanup?.(); cleanup = undefined; },

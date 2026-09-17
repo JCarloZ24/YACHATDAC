@@ -62,9 +62,10 @@ function useDrawnMap(hostRef: RefObject<HTMLDivElement | null>) {
             // 15 Sep 2026: §02 buys another 100vh to read the finished map.
             // Subtract viewport pixels on refresh; a trigger percentage
             // here would scale against the whole 420vh section instead.
-            end: span.dataset.wonder === "facts"
-              ? () => `bottom-=${window.innerHeight} bottom`
-              : "bottom bottom",
+            // BOTH MAPS since 17 Sep 2026 (user direction: the route map's
+            // animation extended "equally to first map section") — §04 is
+            // 420vh too now, drawn over 320 and held finished for 100.
+            end: () => `bottom-=${window.innerHeight} bottom`,
           } : {}),
         })
       : createRouteMap(host, {
@@ -197,9 +198,10 @@ export function RouteMap({
             the roads leave the legend icons behind, because those are laid on
             the frame (3238:34149 / 34151 / 34154 / 34158) and not on the map.
 
-            The scrolling complaint that prompted the scale is answered where
-            it actually lived: the span is 180vh, not 300, and the pins light
-            at 0.50–0.68 rather than 0.76–0.91. */}
+            The scrolling complaint that prompted the scale was answered where
+            it actually lived, in the span and the pin timing (10 Sep 2026);
+            both were re-equalised with §02 on 17 Sep 2026 — see
+            WonderGettingHere and MAP_PINS in Sections.tsx. */}
         <div className="absolute top-[calc(50%+57px)] left-[calc(50%-1252.5px)] h-[1580px] w-[2278px] -translate-y-1/2">
           <div
             className="absolute inset-0"

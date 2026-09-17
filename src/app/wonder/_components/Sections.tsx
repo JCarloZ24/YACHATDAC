@@ -604,14 +604,18 @@ const STOP_ICONS = [
     the icon GRAPHICS keep their frame pixel size, so when the roads under
     them shrank they read a third too large and too close together.
 
-    `at` PULLED FORWARD from 0.76–0.91. The legends were the last thing the
-    scrub reached, so the reader had to scroll nearly the whole section
-    before the four stops they had just read about appeared on the map. */
+    `at` was pulled forward to 0.50–0.68 from 0.76–0.91 on 10 Sep 2026 (the
+    legends were the last thing a short scrub reached). SEATED AT 0.70–0.86
+    since 17 Sep 2026, equalised with the facts map: those are the exact
+    marks its features arrive on (facts-map.svg `data-at`), and the road now
+    inks to 0.8 as the state does, so on both maps the last thing to appear
+    lands at the same point of the same-length span — with 100vh of the
+    finished map held after it, the stops are no longer at the far end. */
 const MAP_PINS = [
-  { icon: 0, left: 76.6, top: 39.24, at: 0.5 },
-  { icon: 1, left: 73.73, top: 42.15, at: 0.56 },
-  { icon: 2, left: 75.88, top: 44.43, at: 0.62 },
-  { icon: 3, left: 78.58, top: 41.27, at: 0.68 },
+  { icon: 0, left: 76.6, top: 39.24, at: 0.7 },
+  { icon: 1, left: 73.73, top: 42.15, at: 0.74 },
+  { icon: 2, left: 75.88, top: 44.43, at: 0.8 },
+  { icon: 3, left: 78.58, top: 41.27, at: 0.86 },
 ] as const;
 
 /**
@@ -627,19 +631,25 @@ const MAP_PINS = [
  * Layout positions inside one drawing. Never a geographic coordinate.
  */
 const MOBILE_MAP_PINS = [
-  { icon: 0, left: 61.52, top: 27.11, w: 3.5, at: 0.5 },
-  { icon: 1, left: 53.64, top: 32.65, w: 3.5, at: 0.56 },
-  { icon: 2, left: 59.48, top: 37.03, w: 4.08, at: 0.62 },
-  { icon: 3, left: 66.76, top: 30.76, w: 3.5, at: 0.68 },
+  { icon: 0, left: 61.52, top: 27.11, w: 3.5, at: 0.7 },
+  { icon: 1, left: 53.64, top: 32.65, w: 3.5, at: 0.74 },
+  { icon: 2, left: 59.48, top: 37.03, w: 4.08, at: 0.8 },
+  { icon: 3, left: 66.76, top: 30.76, w: 3.5, at: 0.86 },
 ] as const;
 
 export function WonderGettingHere() {
   return (
     /* Sticky span at 1440, as §02: the screen is held while the map forms. */
-    /* 180vh — was 300 (August, 10 Sep 2026). Three viewports of scroll to
-       ink one map is longer than the drawing is interesting, and the legends
-       sat at the far end of it. It draws in stages across 180 and finishes
-       with the section still on screen. */
+    /* 420vh, AS §02 (17 Sep 2026, user direction: "extend the animation on
+       getting here map both mobile/desktop, equally to first map section").
+       Same shape as the facts span: the map draws across the first 320vh and
+       the last 100vh holds it finished (RouteMap.tsx subtracts the viewport
+       from the draw's end for both maps now). This supersedes the 180 of
+       10 Sep 2026 (itself down from 300, "longer than the drawing is
+       interesting"): the road now inks over the same 0.06–0.8 window and
+       the stops light at the same 0.7–0.86 as the facts map's features, so
+       the two maps are paced alike on both cuts rather than this one
+       finishing at two-thirds of a shorter run. */
     /* ⚠ `deck:` NOT `lg:` (August, 10 Sep 2026, reported from a 2560 × 1680
        laptop). The held screen is `h-svh` + `overflow-hidden`, so a column
        taller than the viewport is cut off with no scroll that can reach it —
@@ -652,7 +662,7 @@ export function WonderGettingHere() {
     <section
       data-sticky-span
       data-wonder="getting-here"
-      className="relative bg-charcoal text-canvas deck:h-[180vh]"
+      className="relative bg-charcoal text-canvas deck:h-[420vh]"
     >
       {/* Wave Line 2033:5432 / 2576:22626 — charcoal rising over the white
           highlights ground. Above the top edge, so it sits on the section
