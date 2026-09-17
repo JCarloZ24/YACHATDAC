@@ -78,11 +78,12 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
           {browserCopy.clearLabel}
         </Link>
       ) : null}
-      <div className="columns-1 gap-8 lg:columns-3">
+      {/* User direction 2026-09-17: two cards per row on mobile. */}
+      <div className="columns-2 gap-4 lg:columns-3 lg:gap-8">
         {visible.map((item, index) => {
           const slot = media[item.slug];
           return (
-            <div key={item.slug} data-record-tile className="mb-8 break-inside-avoid lg:mb-12">
+            <div key={item.slug} data-record-tile className="mb-4 break-inside-avoid lg:mb-12">
             <Link href={`/the-record/${item.slug}`} prefetch={true} data-record-card
               /* X7 / SYS-02, 11 September 2026: the shared loader covers
                  navigation and the actual responsive article image decode. */
@@ -105,7 +106,7 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
                   <>
                     <span aria-hidden className="absolute inset-0 bg-canvas/6" />
                     <span data-placeholder="no-image"
-                      className="absolute inset-0 px-9 pt-24 text-[0.8125rem] leading-relaxed text-canvas/45">
+                      className="absolute inset-0 px-4 pt-10 text-[0.6875rem] leading-relaxed text-canvas/45 lg:px-9 lg:pt-24 lg:text-[0.8125rem]">
                       [ no image supplied in the draft &mdash; this card carries type only ]
                     </span>
                   </>
@@ -114,18 +115,19 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
               </div>
               {/* User direction 2026-09-09: the full editorial caption sits on
                   the card's own ground, not on the page's cream. */}
-              <div className="flex flex-1 flex-col px-9 pt-6 pb-9">
+              <div className="flex flex-1 flex-col px-4 pt-4 pb-5 lg:px-9 lg:pt-6 lg:pb-9">
                 {/* User direction 2026-09-14: the type · source line is set at
                     14px. */}
-                <p className="eyebrow text-[14px] leading-[1.5] tracking-[0.06em] text-gold">
+                <p className="eyebrow text-[12px] leading-[1.4] tracking-[0.06em] text-gold lg:text-[14px] lg:leading-[1.5]">
                   {item.type}&ensp;&middot;&ensp;{item.source}
                 </p>
-                <h3 className="headline mt-4 text-h3 leading-[1.12]"><span className="link-line group-hover:link-line-on group-focus-visible:link-line-on">{item.title}</span></h3>
+                <h3 className="headline mt-2 text-h5 leading-[1.15] lg:mt-4 lg:text-h3 lg:leading-[1.12]"><span className="link-line group-hover:link-line-on group-focus-visible:link-line-on">{item.title}</span></h3>
                 {/* Clamped at five lines so one long summary cannot run a
-                    column away from the ones beside it. */}
-                <p className="mt-5 line-clamp-5 text-base leading-[1.6] text-canvas/85">{item.summary}</p>
+                    column away from the ones beside it. User direction
+                    2026-09-17: hidden on mobile, kept from lg up. */}
+                <p className="mt-5 hidden line-clamp-5 text-base leading-[1.6] text-canvas/85 lg:block">{item.summary}</p>
                 {item.subjects.length > 0 ? (
-                  <p className="eyebrow mt-auto pt-10 text-[14px] leading-[1.6] tracking-[0.06em] text-gold">
+                  <p className="eyebrow mt-auto hidden pt-10 text-[14px] leading-[1.6] tracking-[0.06em] text-gold lg:block">
                     {item.subjects.join(" · ")}
                   </p>
                 ) : null}
