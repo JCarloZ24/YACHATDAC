@@ -41,6 +41,7 @@ const fragmentShader = `
   uniform sampler2D aperture;
   uniform vec2 crop;
   uniform vec2 offset;
+  uniform vec2 heroOffset;
   uniform vec2 size;
   uniform float radius;
   uniform float masked;
@@ -54,7 +55,20 @@ const fragmentShader = `
   uniform vec4 inset;
   varying vec2 vUv;
   void main() {
+    // Top corners of the existing portrait card. Its body supplies the
+    // bottom corners in HTML; the photo must not acquire four round corners.
+    vec2 p = vec2(vUv.x, 1.0 - vUv.y) * size;
     vec2 sampleUv = (vUv - 0.5) * crop + 0.5 + offset;
+    // heroOffset (the held photo's own crop bias, e.g. mobile's left-shift
+    // on Our People's hero) only applies inside the O's own box — user
+    // report, 17 September 2026: adding it to the whole title's sample
+    // shifted every other letter's picture too.
+    if (masked > 0.5) {
+      vec2 prefixCheck = (p - prefixBox.xy) / prefixBox.zw;
+      if (prefixCheck.x >= 0.0 && prefixCheck.x <= 1.0 && prefixCheck.y >= 0.0 && prefixCheck.y <= 1.0) {
+        sampleUv += heroOffset;
+      }
+    }
     // An aperture may cross the edge of the held photograph while gathering.
     // Reveal the ground there instead of stretching the edge pixels.
     if (any(lessThan(sampleUv, vec2(0.0))) || any(greaterThan(sampleUv, vec2(1.0)))) discard;
@@ -62,9 +76,6 @@ const fragmentShader = `
     if (gl_FragCoord.y < floorPx) discard;
     vec4 ink = texture2D(picture, sampleUv);
     float alpha = 1.0;
-    // Top corners of the existing portrait card. Its body supplies the
-    // bottom corners in HTML; the photo must not acquire four round corners.
-    vec2 p = vec2(vUv.x, 1.0 - vUv.y) * size;
     // "The world opening" (15 Sep 2026): Living Work's frameOpen clip,
     // inset(top right bottom left) as fractions of the box, drawn here
     // because the canvas, not the HTML image, paints this photograph.
@@ -98,6 +109,7 @@ function material(width: number, height: number, blank: Texture, radius = 0) {
     uniforms: {
       picture: { value: blank }, mask: { value: blank }, aperture: { value: blank },
       crop: { value: new Vector2(1, 1) }, offset: { value: new Vector2() },
+      heroOffset: { value: new Vector2() },
       size: { value: new Vector2(width, height) },
       radius: { value: radius }, masked: { value: 0 },
       apertureBox: { value: new Vector4(0, 0, 1, 1) }, closing: { value: 0 },
@@ -271,7 +283,20 @@ export function createPeopleWorld(
       surface.uniforms.picture.value = texture;
       const aspect = element.naturalWidth / element.naturalHeight;
       const boxAspect = box.width / box.height;
-      (surface.uniforms.crop.value as Vector2).set(Math.min(1, boxAspect / aspect), Math.min(1, aspect / boxAspect));
+      const cropX = Math.min(1, boxAspect / aspect);
+      const cropY = Math.min(1, aspect / boxAspect);
+      (surface.uniforms.crop.value as Vector2).set(cropX, cropY);
+      // User report, 17 September 2026: on phones the hero's tight portrait
+      // crop (~35% of the frame's width) centred on the tree, cutting both
+      // rangers out of frame. Shift the sample window toward the
+      // photograph's left edge below `lg` so both figures stay in the held
+      // crop. HERO_MOBILE_OFFSET_BIAS holds it just short of the true left
+      // edge (user follow-up, 17 September 2026: full-left over-favoured the
+      // nearer figure) so the second ranger isn't hugging the right edge.
+      if (cropX < 1 && box.width < 1024 && element.closest('[data-people-scene="hero"]')) {
+        const HERO_MOBILE_OFFSET_BIAS = 0.85;
+        (surface.uniforms.offset.value as Vector2).x = (cropX / 2 - 0.5) * HERO_MOBILE_OFFSET_BIAS;
+      }
       mesh.visible = true;
       element.dataset.peopleTexture = "true";
       invalidate();
@@ -396,6 +421,13 @@ export function createPeopleWorld(
           (titleBox.left + titleBox.width / 2 - photo.left - photo.width / 2) / photo.width * crop.x,
           (heldTop + photo.height / 2 - titleScreenTop - titleBox.height / 2) / photo.height * crop.y,
         );
+        // The O carries the hero's own held offset (mobile's left bias,
+        // [[our-people-hero-mobile-crop]]) so it matches the picture the
+        // aperture is closing over — the fragment shader applies this only
+        // inside the O's own box, leaving the rest of "Our people" as before
+        // (user report, 17 September 2026: applying it to the whole title
+        // broke every other letter's crop).
+        (ink.heroOffset.value as Vector2).copy(aperture.offset.value as Vector2);
         ink.prefixHidden.value = k < 1 ? 1 : 0;
         ink.letterReveal.value = phase(0.76, 0.96, k);
       } else {

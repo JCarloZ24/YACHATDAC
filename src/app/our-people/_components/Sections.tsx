@@ -274,6 +274,7 @@ export function OurPeopleHero() {
             sizes="(min-width: 1024px) max(100vw, 171svh), max(100vw, 134svh)"
             quality={PHOTO_QUALITY}
             priority
+            className="object-cover"
             fieldClass="bg-charcoal"
           />
         </div>
