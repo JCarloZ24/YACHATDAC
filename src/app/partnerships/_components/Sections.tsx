@@ -221,6 +221,16 @@ const CARD_GLYPHS: SeamGlyphMotif[] = ["c", "a", "b"];
  * (`createRecordPatterns`); both effects write `rotation`, so a ring gets one
  * or the other, never both.
  */
+/**
+ * ⚑ ONE RING PER SCREEN AT 375, AND SMALLER — user direction, 17 September
+ * 2026 ("dotted radial elements too crowded, no spacing between radial
+ * elements"). The exports carry their own dot spacing, so the crowding was
+ * never in the artwork: it was two rings sized for 1440 (40–62.5rem each)
+ * laid over a 375px viewport, where they overlap edge to edge and their
+ * dots interleave. Below `lg:` every section now shows its first ring only,
+ * at a mobile width that fits the viewport, and the second ring is
+ * `hidden lg:block`. Desktop renders exactly as before.
+ */
 const RING = "opacity-60";
 
 /**
@@ -404,7 +414,12 @@ export function PartnershipsHero() {
           <MediaOrField
             src={HERO?.src ?? null}
             alt="Ochre-marked adult palms held out over a grinding stone toward a child's hands"
-            sizes="100vw"
+            /* Portrait viewports are sized by HEIGHT — user direction,
+               17 September 2026 ("image quality is low"). The plate is 58svh
+               tall at 375 and the source is 3:2, so object-cover needs
+               ~155vw of image to fill it; `100vw` asked for a 750px cut at
+               DPR 2 and next/image upscaled it. Landscape stays 100vw. */
+            sizes="(orientation: portrait) 160vw, 100vw"
             priority
             quality={90}
             fieldClass="bg-evergreen"
@@ -579,7 +594,7 @@ export function TheObligation() {
       <RingArtwork
         piece="b"
         drift
-        className={`top-[6%] left-[46%] w-[48rem] ${RING}`}
+        className={`top-[6%] left-[46%] w-[30rem] lg:w-[48rem] ${RING}`}
       />
       <div className={`${COLUMN} relative py-16 lg:py-28`}>
         <p className={EYEBROW_DARK}>The obligation</p>
@@ -669,13 +684,13 @@ export function OpenResearch() {
           piece="b"
           tone="roasted"
           drift
-          className={`top-[6%] right-[3%] w-[40rem] ${RING}`}
+          className={`top-[6%] right-[3%] w-[28rem] lg:w-[40rem] ${RING}`}
         />
         <RingArtwork
           piece="a"
           tone="roasted"
           drift
-          className={`left-[2%] bottom-[6%] w-[30rem] ${RING}`}
+          className={`hidden lg:block left-[2%] bottom-[6%] w-[30rem] ${RING}`}
         />
       </div>
 
@@ -725,7 +740,18 @@ export function OpenResearch() {
                 <MediaOrField
                   src={RESEARCH?.src ?? null}
                   alt="A man working a pestle in a stone mortar on a ute tray"
-                  sizes="(min-width: 1024px) 448px, 100vw"
+                  /* Sized by HEIGHT, not width — user direction, 17 September
+                     2026 ("fix image quality on partners section"). The
+                     source is 2000 x 1054 and this crop is 420:300, so
+                     object-cover fits the frame's height and the width
+                     overflows. A `sizes` of 100vw asked for ~750px at 375 x2,
+                     which only reaches 395px tall — next/image was
+                     upscaling by ~1.4. 140vw / 660px request the width the
+                     height actually needs at DPR 2. Quality 90 like the
+                     page's plates, so the crushed shadows behind the bench
+                     do not block at 75. */
+                  sizes="(min-width: 1024px) 660px, 140vw"
+                  quality={90}
                   fieldClass="bg-evergreen/40"
                 />
               </div>
@@ -818,13 +844,13 @@ export function OpenQuestions() {
           piece="b"
           tone="roasted"
           drift
-          className={`top-[3%] right-[3%] w-[40rem] ${RING}`}
+          className={`top-[3%] right-[3%] w-[28rem] lg:w-[40rem] ${RING}`}
         />
         <RingArtwork
           piece="a"
           tone="roasted"
           drift
-          className={`left-[2%] bottom-[4%] w-[30rem] ${RING}`}
+          className={`hidden lg:block left-[2%] bottom-[4%] w-[30rem] ${RING}`}
         />
       </div>
 
@@ -1032,7 +1058,10 @@ export function Breath() {
         <MediaOrField
           src={BREATH?.src ?? null}
           alt="A wide plain of low green scrub seen through a screen of slender trees"
-          sizes="100vw"
+          /* Same height-governed sizing as the hero: a 16:9 source filling a
+             full-height portrait viewport needs ~320vw. See the hero's note
+             (17 September 2026). */
+          sizes="(orientation: portrait) 320vw, 100vw"
           quality={90}
           fieldClass="bg-evergreen/40"
         />
@@ -1098,8 +1127,8 @@ export function AlreadyWorkingWith() {
             radiates", The Record's question ground, via `createRecordPatterns`
             in ./Motion.tsx (user direction, 16 September 2026: "the section is
             too flat"). Both effects write `rotation`; see RING. */}
-        <RingArtwork piece="b" className={`top-[8%] left-[62%] w-[62.5rem] ${RING}`} />
-        <RingArtwork piece="a" className={`-left-52 bottom-[6%] w-[45rem] ${RING}`} />
+        <RingArtwork piece="b" className={`top-[8%] left-[62%] w-[32rem] lg:w-[62.5rem] ${RING}`} />
+        <RingArtwork piece="a" className={`hidden lg:block -left-52 bottom-[6%] w-[45rem] ${RING}`} />
       </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
@@ -1247,8 +1276,8 @@ export function WaysIn() {
     >
       <WaveDivider ground="var(--color-evergreen)" hook="pt-wave-ways-in" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="b" drift className={`top-[10%] left-[64%] w-[56.25rem] ${RING}`} />
-        <RingArtwork piece="a" drift className={`-left-48 bottom-[14%] w-[40rem] ${RING}`} />
+        <RingArtwork piece="b" drift className={`top-[10%] left-[64%] w-[32rem] lg:w-[56.25rem] ${RING}`} />
+        <RingArtwork piece="a" drift className={`hidden lg:block -left-48 bottom-[14%] w-[40rem] ${RING}`} />
       </div>
 
       <div className={`${COLUMN} relative pt-16 pb-16 lg:pt-24 lg:pb-24`}>
@@ -1418,8 +1447,8 @@ export function HowWorkIsAgreed() {
     >
       <WaveDivider ground="var(--color-roasted)" hook="pt-wave-protocol" />
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <RingArtwork piece="a" drift className={`-left-52 top-[30%] w-[47.5rem] ${RING}`} />
-        <RingArtwork piece="b" drift className={`top-[8%] left-[66%] w-[56.25rem] ${RING}`} />
+        <RingArtwork piece="a" drift className={`hidden lg:block -left-52 top-[30%] w-[47.5rem] ${RING}`} />
+        <RingArtwork piece="b" drift className={`top-[8%] left-[66%] w-[32rem] lg:w-[56.25rem] ${RING}`} />
       </div>
 
       {/* THE FRAME'S MEASURE (2944:25996 — 1440 x 900 on #4E3524, which is
@@ -1480,7 +1509,7 @@ export function TheEnding() {
           piece="b"
           tone="roasted"
           drift
-          className={`top-[7%] left-[78%] w-[35rem] ${RING}`}
+          className={`top-[7%] left-[78%] w-[24rem] lg:w-[35rem] ${RING}`}
         />
       </div>
 

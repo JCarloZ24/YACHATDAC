@@ -1,6 +1,7 @@
 import { Children } from "react";
 import type { ReactNode } from "react";
 import { SliderDots } from "./SliderDots";
+import { RailDrag } from "./RailDrag";
 
 /**
  * One row of cards: a swipe rail on a phone, the house grid from `sm` up.
@@ -11,7 +12,9 @@ import { SliderDots } from "./SliderDots";
  * (2026-09-05). From 640 up nothing changes — the same grid, the same
  * columns, the same gaps as before.
  *
- * ⚠ NO JAVASCRIPT IN THE MECHANISM. The row itself is native touch scrolling
+ * ⚠ NO JAVASCRIPT IN THE MECHANISM. (Since 17 September 2026 `RailDrag`
+ * adds mouse-only drag on top — additive, and the row is unchanged without
+ * it; see that file.) The row itself is native touch scrolling
  * and CSS scroll-snap only: no drag handler, no arrows, no scroll listener on
  * the scroller's own behaviour. It renders and works identically with JS off,
  * which is why it is NOT built on `RangerCarousel` — that component's CSS
@@ -140,6 +143,10 @@ export function CardRail({
           items" to the accessibility tree at every width — a change to the
           desktop rendering — and `display: contents` on an `li` is the one
           case with lingering list-semantics bugs. */}
+      {/* Mouse drag, and only mouse — see ui/RailDrag. Additive: the row
+          scrolls and snaps without it. The span is `hidden` so it is not a
+          flex item and never takes a gap. (17 September 2026.) */}
+      <RailDrag />
       {Children.map(children, (card) => (
         /* Literal both ways — Tailwind cannot see a computed class. `w-full`
            is the frame's one-card slider (100% of the scroller's content box,

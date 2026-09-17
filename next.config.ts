@@ -15,8 +15,10 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     // Next 16 allowlists qualities (default [75] only). 85 is for photographs
     // that are heavily cover-cropped — The Record's cards — where 75 showed
-    // visible softening on the crop.
-    qualities: [75, 85],
+    // visible softening on the crop. 90 added 17 September 2026 for the
+    // full-bleed plates on /partnerships, which already passed `quality={90}`
+    // and were silently served at 85 because it was not on this list.
+    qualities: [75, 85, 90],
   },
 
   // Australian English throughout, and the org is an Australian corporation.
