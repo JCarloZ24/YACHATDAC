@@ -11,10 +11,12 @@ export function registerRecordMasonry() {
       const timeline = gsap.timeline();
       // SCR-12, Wonder correction, 15 Sep 2026: a rail arrives into its
       // layout slot. Continuing above it crosses the section heading.
+      // 17 September 2026, user direction: columns drift in at different
+      // rates but settle to the same y (0) — the catalogue reads as one
+      // aligned row once a card has fully entered, not offset per column.
       timeline.fromTo(targets,
         { y: () => config.travel(), ...(config.entranceOnly ? { opacity: 0 } : {}) },
-        { y: () => config.entranceOnly ? 0 : -config.travel(),
-          ...(config.entranceOnly ? { opacity: 1 } : {}), duration: 1, ease: "none" }, 0);
+        { y: 0, ...(config.entranceOnly ? { opacity: 1 } : {}), duration: 1, ease: "none" }, 0);
       // The catalogue's opacity still follows actual viewport overlap in
       // the module; entrance-only rails share the timeline above instead.
       return timeline;

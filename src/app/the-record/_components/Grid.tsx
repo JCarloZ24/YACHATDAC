@@ -111,7 +111,7 @@ export function RecordGrid({ items, media, initialType = "", initialSource = "",
                     </span>
                   </>
                 )}
-                <SeamGlyph motif={PHOTO_GLYPHS[index % PHOTO_GLYPHS.length]} className="top-8 left-9 w-11" />
+                <SeamGlyph motif={PHOTO_GLYPHS[index % PHOTO_GLYPHS.length]} className="top-4 left-4 w-7 lg:top-8 lg:left-9 lg:w-11" />
               </div>
               {/* User direction 2026-09-09: the full editorial caption sits on
                   the card's own ground, not on the page's cream. */}
