@@ -78,8 +78,14 @@ export function createStayMarquee(
       media.add("(prefers-reduced-motion: no-preference)", () => {
         const scroller = root.querySelector<HTMLElement>(rail);
         if (!scroller) return;
-        const cells = Array.from(scroller.children) as HTMLElement[];
-        if (cells.length < 2) return;
+        // READ LIVE, NOT ONCE (18 Sep 2026). Since the rail loops
+        // (`DragScrollRail loop`) it carries inert clones of its end cards,
+        // added and rebuilt by that component on its own clock — so the
+        // scroller's children are not the cards, and child 0 is a clone.
+        const laidOut = () => (Array.from(scroller.children) as HTMLElement[])
+          .filter((cell) => !cell.hidden);
+        const realCells = () => laidOut().filter((cell) => !cell.dataset.railClone);
+        if (realCells().length < 2) return;
 
         let held = 0;          // focus holding the rail
         let visible = false;
@@ -92,10 +98,10 @@ export function createStayMarquee(
         // 900ms ceiling in case smooth scrolling is cut short. Watched on
         // rAF rather than `scrollend`, which Safari did not have when this
         // was written.
-        const scrollToCell = (index: number, then?: () => void) => {
-          const cell = cells[Math.max(0, Math.min(index, cells.length - 1))];
+        const scrollToCell = (cell: HTMLElement, then?: () => void) => {
+          // Offsets from whatever is laid out first — a clone, on a loop.
           const target = Math.min(
-            cell.offsetLeft - cells[0].offsetLeft,
+            cell.offsetLeft - laidOut()[0].offsetLeft,
             scroller.scrollWidth - scroller.clientWidth,
           );
           ours = true;
@@ -113,11 +119,26 @@ export function createStayMarquee(
           arrival = window.requestAnimationFrame(watch);
         };
         const advance = () => {
-          const max = scroller.scrollWidth - scroller.clientWidth;
-          const step = cells[1].offsetLeft - cells[0].offsetLeft;
-          // The next card, or home from the end.
-          const at = Math.round(scroller.scrollLeft / step);
-          scrollToCell(scroller.scrollLeft >= max - 1 ? 0 : at + 1, again);
+          const cells = realCells();
+          const origin = laidOut()[0].offsetLeft;
+          // Whichever card stands on the leading edge now.
+          let at = 0;
+          let best = Infinity;
+          cells.forEach((cell, i) => {
+            const distance = Math.abs(cell.offsetLeft - origin - scroller.scrollLeft);
+            if (distance < best) { best = distance; at = i; }
+          });
+          // The next card. From the last one, ON to the first's clone where
+          // the rail loops — the row keeps travelling forward and the loop
+          // stands it on the real first card once it rests — or home to the
+          // first where it does not.
+          const onward = cells[cells.length - 1].nextElementSibling;
+          const next = at + 1 < cells.length
+            ? cells[at + 1]
+            : onward instanceof HTMLElement && onward.dataset.railClone === "0"
+              ? onward
+              : cells[0];
+          scrollToCell(next, again);
         };
 
         // The wait, drawn: the ink stands full and drains over `every`
@@ -148,7 +169,8 @@ export function createStayMarquee(
           // Full at once — the reader chose this dot — and the clock waits
           // for the rail to get there before it starts draining.
           tick.restart().pause();
-          scrollToCell(index, again);
+          const cells = realCells();
+          scrollToCell(cells[Math.max(0, Math.min(index, cells.length - 1))], again);
         };
         // The reader swiped or dragged: the dot they land on is full while
         // it moves, and the drain starts over once the scroller has come to

@@ -58,6 +58,28 @@ function findRail(dots: HTMLElement | null): HTMLElement | null {
   return previous.querySelector<HTMLElement>("[data-drag-rail], [role='group']");
 }
 
+/**
+ * The rail's cells as the dots must count them (18 September 2026, user
+ * report: "slider indicator not working properly" — the SECOND dot lit on the
+ * first card and no dot lit on the last).
+ *
+ * `rail.children` stopped being the cards on 17 September, when CardRail took
+ * `RailDrag`: its `<span hidden>` is child 0, measures as a rect at 0,0, and
+ * every index here was one out — `go(0)` scrolled to the span, which is to
+ * say nowhere. Hidden children are not cells.
+ *
+ * A looping rail (`DragScrollRail loop`) also carries inert CLONES of its end
+ * cards, marked `data-rail-clone="<index of the card it copies>"`. `real` is
+ * the cards; `all` includes the clones so a row resting on one still lights
+ * the dot of the card it stands for.
+ */
+function cellsOf(rail: HTMLElement) {
+  const all = [...rail.children].filter(
+    (cell): cell is HTMLElement => cell instanceof HTMLElement && !cell.hidden,
+  );
+  return { all, real: all.filter((cell) => !cell.dataset.railClone) };
+}
+
 export function SliderDots({
   count,
   label,
@@ -98,23 +120,22 @@ export function SliderDots({
     // cards are not all the same width still lands on the right dot, and the
     // scroller's padding (the gutter it bleeds back in) is accounted for.
     const sync = () => {
-      const cells = [...rail.children].filter(
-        (cell): cell is HTMLElement => cell instanceof HTMLElement,
-      );
-      if (!cells.length) return;
+      const { all, real } = cellsOf(rail);
+      if (!all.length) return;
       const edge =
         rail.getBoundingClientRect().left +
         parseFloat(getComputedStyle(rail).paddingLeft);
-      let nearest = 0;
+      let nearest = all[0];
       let best = Infinity;
-      cells.forEach((cell, i) => {
+      all.forEach((cell) => {
         const distance = Math.abs(cell.getBoundingClientRect().left - edge);
         if (distance < best) {
           best = distance;
-          nearest = i;
+          nearest = cell;
         }
       });
-      setActive(nearest);
+      const clone = nearest.dataset.railClone;
+      setActive(clone ? Number(clone) : Math.max(0, real.indexOf(nearest)));
     };
 
     sync();
@@ -129,8 +150,8 @@ export function SliderDots({
   const go = (i: number) => {
     const rail = findRail(ref.current);
     if (!rail) return;
-    const cell = rail.children[i];
-    if (!(cell instanceof HTMLElement)) return;
+    const cell = cellsOf(rail).real[i];
+    if (!cell) return;
     // A self-advancing rail (lib/motion/stay-marquee.ts) answers this and
     // moves itself, restarting the lit dot's clock full (August, 14 and 15
     // September 2026). Nobody listening means the rail is the reader's

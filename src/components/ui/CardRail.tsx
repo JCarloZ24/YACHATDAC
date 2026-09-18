@@ -131,7 +131,13 @@ export function CardRail({
       {...(label
         ? { tabIndex: 0, role: "group", "aria-label": label }
         : null)}
-      className={`${bleed} -my-2 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain py-2 sm:mx-0 sm:my-0 sm:grid sm:snap-none sm:overflow-visible sm:px-0 sm:py-0 ${gap} ${columns} ${className}`}
+      /* `gap-5` under `dots` (18 September 2026, user report: "center the
+         cards"). A dots card is the full container width, so the next card
+         starts one gap past it — and with a 16px gap inside /wonder's 20px
+         gutter, 4px of the next plate showed at the screen's right edge and
+         the card read as sitting left of centre. A gap equal to the gutter
+         puts the neighbour exactly off-screen. Literal both ways. */
+      className={`${bleed} -my-2 flex snap-x snap-mandatory ${dots ? "gap-5" : "gap-4"} overflow-x-auto overscroll-x-contain py-2 sm:mx-0 sm:my-0 sm:grid sm:snap-none sm:overflow-visible sm:px-0 sm:py-0 ${gap} ${columns} ${className}`}
     >
       {/* The cell exists for equal heights and nothing else. A flex item
           stretches but its block child does not, so `[&>*]:h-full` squares the

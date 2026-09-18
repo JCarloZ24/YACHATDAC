@@ -72,7 +72,11 @@ export function StayRail({
       {/* `label` is a real tab stop at every width: the cards hold no
           focusable child, so without it a keyboard cannot reach anything past
           card two. */}
-      <DragScrollRail>
+      {/* `loop` since 18 Sep 2026 (August: "loop the cards"): the row comes
+          round in both directions, and the marquee now travels FORWARD from
+          the last frame onto the first's clone instead of rewinding through
+          all ten. */}
+      <DragScrollRail loop>
         <div
           data-drag-rail
           tabIndex={0}

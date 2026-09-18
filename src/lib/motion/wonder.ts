@@ -209,6 +209,17 @@ export function holdAtFoot(
           const el = next();
           if (el && still > 0) gsap.set(el, { marginTop: still * window.innerHeight });
         };
+        // A HELD SECTION IS NEVER SHORTER THAN THE SCREEN (18 Sep 2026, user
+        // report with a 534 × 1096 capture: "bugs in those 3 overlapping
+        // sections, the hero section got out"). Pinned at its foot, a section
+        // shorter than the viewport leaves a band above itself that nothing
+        // owns; once the section before it un-pins and scrolls away, that
+        // band showed the sticky hero film behind the page. §08 on a tall
+        // phone is ~750px. `lvh` for the reason the hero's film is (Android's
+        // retracting bar); `vh` first for a browser without it. Set here, not
+        // in markup, so ordinary flow (reduced motion) keeps natural heights.
+        root.style.minHeight = "100vh";
+        root.style.minHeight = "100lvh";
         ScrollTrigger.create({
           trigger: root,
           start: "bottom bottom",
@@ -223,7 +234,10 @@ export function holdAtFoot(
           invalidateOnRefresh: true,
         });
         gap();
-        return () => { const el = next(); if (el) gsap.set(el, { clearProps: "marginTop" }); };
+        return () => {
+          root.style.minHeight = "";
+          const el = next(); if (el) gsap.set(el, { clearProps: "marginTop" });
+        };
       }, root);
       // 1023.98px is the complement of `lg` (64rem = 1024px), the one
       // breakpoint the V2 file has; the two queries never both match.

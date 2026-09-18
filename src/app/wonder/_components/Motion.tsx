@@ -150,7 +150,10 @@ export function WonderMotion() {
       // first — the hero → facts read, at the page's far end (14 Sep 2026).
       // Register the pin first: the itinerary's pinnedContainer must be able
       // to revert it when remeasuring during a hold (15 Sep 2026).
-      wire("itinerary", (el) => holdAtFoot(el));
+      // 40vh of stillness on the phone before §07 begins to cover (18 Sep
+      // 2026, user direction: "the scroll is too sensitive in transition to
+      // green section" — one thumb flick took day 6 under the evergreen).
+      wire("itinerary", (el) => holdAtFoot(el, { still: { wide: 0, phone: 0.4 } }));
       wire("itinerary", (el) => itinerary(el));
       // From Country holds under Take it with you — the same hold, same day
       // (user direction: "use the same motion on Take it with you section").

@@ -49,8 +49,14 @@ export default function WonderPage() {
           nothing; every screen is a composition with a declared channel. */}
       <WonderMotion />
       <div className="relative">
-        <WonderHero />
-        <WonderFacts />
+        {/* The sticky hero is bounded to the one section that rides over it
+            (18 Sep 2026). Loose in the page wrapper it stayed pinned behind
+            EVERY section, so any gap lower down — a held section shorter
+            than a tall phone — showed the film ("the hero section got out"). */}
+        <div className="relative">
+          <WonderHero />
+          <WonderFacts />
+        </div>
         <WonderHighlights />
         <WonderCountry />
         <WonderStay />

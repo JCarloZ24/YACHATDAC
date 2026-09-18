@@ -329,7 +329,9 @@ export function WonderHero() {
       <div className={`relative z-10 w-full pb-24 lg:pb-[120px] ${GUTTER}`}>
         <Container>
           <div className="flex w-[900px] max-w-full flex-col gap-5 text-canvas lg:gap-6">
-            <p className={H5}>{wonderHero.eyebrow}</p>
+            {/* Yellow Ochre, as Truth's and Our People's hero eyebrows
+                (August, 18 September 2026) — it was the column's canvas. */}
+            <p className={`${H5} text-ochre`}>{wonderHero.eyebrow}</p>
             <h1 data-wonder-title className={H1}>
               {wonderHero.title}
             </h1>
@@ -485,7 +487,9 @@ export function WonderHighlights() {
             up, where the row does not overflow — the cursor stays a pointer
             and nothing drags, correctly. If Highlights should be a carousel
             at desktop too, that is a layout decision, not this. */}
-        <DragScrollRail>
+        {/* `loop` since 18 Sep 2026 (August: "loop the cards") — see the
+            prop. Phone only, for the same reason as the drag. */}
+        <DragScrollRail loop>
           <CardRail
             bleed={RAIL_BLEED}
             columns="sm:grid-cols-2 lg:grid-cols-3"
@@ -990,8 +994,12 @@ export function WonderStay() {
          2026): §07's evergreen wave overhangs this foot by its own 40px
          height and the section is held here while §07 rides over it, so a
          40px foot put the wave straight on top of the last stop before it
-         had entered. 112px keeps the last stop clear of the crest. */
-      className={`${itineraryStyles.itinerary} relative flex flex-col items-center gap-20 bg-canvas px-5 pt-10 pb-28 text-charcoal lg:px-[200px] lg:pt-28 lg:pb-[164px]`}
+         had entered. 112px kept the last stop clear of the crest; 160 since
+         18 September 2026 (August: "add more spacing between day 6 and green
+         wave, since day 6 might be skipped") — with the phone's new 40vh of
+         stillness on this hold (Motion.tsx), day 6 is read before the
+         evergreen starts to cover it. */
+      className={`${itineraryStyles.itinerary} relative flex flex-col items-center gap-20 bg-canvas px-5 pt-10 pb-40 text-charcoal lg:px-[200px] lg:pt-28 lg:pb-[164px]`}
     >
       <div data-itinerary-screen className="w-full">
         <Container
@@ -1132,7 +1140,7 @@ export function WonderBeforeYouCome() {
   return (
     <section
       data-wonder="before"
-      className="relative flex flex-col items-center gap-12 bg-evergreen px-5 py-16 text-canvas lg:gap-14 lg:px-[120px] lg:py-24"
+      className="relative flex flex-col items-center justify-center gap-12 bg-evergreen px-5 py-16 text-canvas lg:gap-14 lg:px-[120px] lg:py-24"
     >
       <WaveDivider ground="var(--color-evergreen)" hook="wonder-wave-before" />
       <Container className="flex flex-col items-center">
@@ -1203,7 +1211,10 @@ export function WonderWhereYouStay() {
   return (
     <section
       data-wonder="sleep"
-      className={`relative bg-canvas py-10 text-charcoal lg:pt-[120px] lg:pb-28 ${GUTTER}`}
+      /* `flex … justify-center`: `holdAtFoot` raises a held section to the
+         screen's height (18 Sep 2026), and on a tall phone this one is
+         shorter — the column sits mid-screen rather than over a blank foot. */
+      className={`relative flex flex-col justify-center bg-canvas py-10 text-charcoal lg:pt-[120px] lg:pb-28 ${GUTTER}`}
     >
       {/* A CREAM CREST RISING OVER THE HELD EVERGREEN, not the frame's drip
           (16 September 2026, user direction, with the itinerary → Before you
@@ -1482,8 +1493,9 @@ export function WonderStories() {
             (§03) and Where you sleep — August, 9 Sep 2026. The peek was
             leaving a sliced second plate under the phone's 375 gutter. */}
         {/* Mouse drag, as Highlights — wrapped at the call site so CardRail
-            stays untouched for the three static pages. See §03. */}
-        <DragScrollRail>
+            stays untouched for the three static pages. See §03. Looped, as
+            §03 (18 Sep 2026). */}
+        <DragScrollRail loop>
           <CardRail
             bleed={RAIL_BLEED}
             columns="sm:grid-cols-2 lg:grid-cols-3"

@@ -75,12 +75,105 @@ function findRail(scope: HTMLElement | null): HTMLElement | null {
   );
 }
 
-export function DragScrollRail({ children }: { children: ReactNode }) {
+/** Marks a loop clone, and carries the index of the card it copies —
+    `SliderDots` and `stay-marquee` both read it. */
+const CLONE = "data-rail-clone";
+
+/** Motion hooks a clone must not carry: the page's modules would otherwise
+    find it on a later init and stage an entrance for a copy. */
+const HOOKS = [
+  "data-card",
+  "data-card-tile",
+  "data-card-hover",
+  "data-card-copy",
+  "data-frame-media",
+  "data-motion",
+];
+
+/**
+ * An inert, static copy of a card for the loop's ends.
+ *
+ * Hidden from the accessibility tree and from focus (`inert`), so a screen
+ * reader and a keyboard meet every card exactly once. Inline styles are
+ * dropped because GSAP writes its entrance state there and a clone taken
+ * mid-entrance would be stuck at it — except on `img`, where the inline style
+ * is next/image's own fill layout and the slot's `object-position`.
+ */
+function cloneCell(cell: HTMLElement, index: number): HTMLElement {
+  const clone = cell.cloneNode(true) as HTMLElement;
+  [clone, ...clone.querySelectorAll<HTMLElement>("*")].forEach((el) => {
+    if (el.tagName !== "IMG") el.removeAttribute("style");
+    el.removeAttribute("id");
+    HOOKS.forEach((hook) => el.removeAttribute(hook));
+  });
+  clone.setAttribute(CLONE, String(index));
+  clone.setAttribute("aria-hidden", "true");
+  clone.setAttribute("inert", "");
+  return clone;
+}
+
+export function DragScrollRail({
+  children,
+  loop = false,
+}: {
+  children: ReactNode;
+  /**
+   * The row comes round again: past the last card is the first, and before
+   * the first is the last (August, 18 September 2026: "loop the cards").
+   *
+   * STILL NO JAVASCRIPT IN THE MECHANISM. The scroller stays native touch
+   * scrolling and scroll-snap. On mount this adds inert clones of the end
+   * cards (`cloneCell`) — one before the first, a screenful after the last —
+   * and when the row comes to REST on a clone it is moved, in one frame and
+   * with nothing visibly changing, to the card the clone copies. With JS off
+   * there are no clones and the row is the plain rail it was.
+   *
+   * Only while the row is actually a rail: CardRail is the house grid from
+   * 640 up, where a clone would be a stray fourth grid item, so the clones
+   * are taken out again whenever the scroller stops being one (`measure`).
+   */
+  loop?: boolean;
+}) {
   const scope = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const rail = findRail(scope.current);
     if (!rail) return;
+
+    /** Cells the row lays out — CardRail's `RailDrag` span is `hidden` and is
+        not one (it was being measured as a card at 0,0 until 18 Sep 2026). */
+    const cellsOf = () =>
+      [...rail.children].filter(
+        (cell): cell is HTMLElement =>
+          cell instanceof HTMLElement && !cell.hidden,
+      );
+    const realOf = () => cellsOf().filter((cell) => !cell.hasAttribute(CLONE));
+    /** The snapport's leading edge — see `settleToCard` for why not the box. */
+    const edgeOf = () => {
+      const style = getComputedStyle(rail);
+      const inset =
+        parseFloat(style.scrollPaddingLeft) ||
+        parseFloat(style.paddingLeft) ||
+        0;
+      return rail.getBoundingClientRect().left + inset;
+    };
+    const nearestOf = (cells: HTMLElement[]) => {
+      const edge = edgeOf();
+      let nearest = cells[0];
+      let best = Infinity;
+      cells.forEach((cell) => {
+        const distance = Math.abs(cell.getBoundingClientRect().left - edge);
+        if (distance < best) {
+          best = distance;
+          nearest = cell;
+        }
+      });
+      return { nearest, distance: best };
+    };
+    /** Put a cell on the snap edge in one frame, no animation. */
+    const alignTo = (cell: HTMLElement) => {
+      rail.scrollLeft += cell.getBoundingClientRect().left - edgeOf();
+    };
 
     let active = false;
     let startX = 0;
@@ -101,7 +194,94 @@ export function DragScrollRail({ children }: { children: ReactNode }) {
      * classes are set here rather than in React state so that this component
      * renders no attributes of its own and the server markup is untouched.
      */
+    /** What the clones were last built for, so a resize rebuilds only when
+        the answer changed (crossing 640 or 1024, not every pixel). */
+    let built = "";
+    let touching = false;
+    let wrapTimer = 0;
+    /** See the note at the foot of `buildLoop`. */
+    let homeWatch = 0;
+    let touched = false;
+    const onTouched = () => { touched = true; };
+
+    const buildLoop = () => {
+      if (!loop) return;
+      const real = realOf();
+      const style = getComputedStyle(rail);
+      const isRail =
+        real.length > 1 &&
+        style.display === "flex" &&
+        /auto|scroll/.test(style.overflowX);
+      // Cards per screen: one on a phone, two on StayRail from 1024. That
+      // many clones follow the last card, so a row resting on the first
+      // clone is a FULL screen and looks exactly like the row at card one.
+      const step = isRail
+        ? real[1].getBoundingClientRect().left - real[0].getBoundingClientRect().left
+        : 0;
+      const perView = step > 0 ? Math.max(1, Math.round(rail.clientWidth / step)) : 0;
+      const want = isRail ? `loop:${perView}` : "";
+      if (want === built) return;
+
+      // Hold the reader's place across the rebuild.
+      const { nearest } = nearestOf(cellsOf());
+      const at = nearest.hasAttribute(CLONE)
+        ? Number(nearest.getAttribute(CLONE))
+        : Math.max(0, real.indexOf(nearest));
+      rail.querySelectorAll(`:scope > [${CLONE}]`).forEach((el) => el.remove());
+      built = want;
+      if (isRail) {
+        real[0].before(cloneCell(real[real.length - 1], real.length - 1));
+        const tail = Array.from({ length: perView }, (_, i) =>
+          cloneCell(real[i % real.length], i % real.length),
+        );
+        real[real.length - 1].after(...tail);
+      }
+      const home = real[at] ?? real[0];
+      alignTo(home);
+      // ⚠ THE WRITE ABOVE DOES NOT ALWAYS SURVIVE PAGE LOAD (measured 18 Sep
+      // 2026: §08 and §11 were left at scrollLeft 0, standing on the leading
+      // clone with the LAST dot lit; §03 was fine). Those two sections are
+      // pinned by `holdAtFoot`, and ScrollTrigger wraps a pinned element in
+      // a pin-spacer when it is created — moving a node in the DOM resets
+      // every scroller inside it to 0, silently, with no scroll event. That
+      // happens once, a beat after mount (the page's motion waits on fonts),
+      // so the row is watched for its first few seconds and put back. A
+      // reader cannot REST at 0 themselves — that is the leading clone, and
+      // `wrap` moves them off it — so until they touch the row, 0 is only
+      // ever the reset.
+      window.clearInterval(homeWatch);
+      if (!isRail) return;
+      let checks = 0;
+      homeWatch = window.setInterval(() => {
+        if (touched || (checks += 1) > 16) return window.clearInterval(homeWatch);
+        if (rail.scrollLeft < 1) alignTo(home);
+      }, 250);
+    };
+
+    /** The row has stopped on a clone: stand it on the real card instead. */
+    const wrap = () => {
+      if (!built || active || touching) return;
+      const { nearest, distance } = nearestOf(cellsOf());
+      const index = nearest?.getAttribute(CLONE);
+      // Not at rest on it yet — a later scroll event will ask again.
+      if (index == null || distance > 2) return;
+      // Untouched and on the LEADING clone is the pin-spacer reset, not a
+      // reader going backwards (nothing automatic travels that way): home.
+      const leading = nearest === cellsOf()[0];
+      const real = realOf()[leading && !touched ? 0 : Number(index)];
+      if (real) alignTo(real);
+    };
+    const wrapSoon = () => {
+      window.clearTimeout(wrapTimer);
+      wrapTimer = window.setTimeout(wrap, 120);
+    };
+    // A finger still down owns the row; moving it under the finger drops the
+    // gesture on iOS. The wrap waits for the lift.
+    const onTouchStart = () => { touching = true; touched = true; };
+    const onTouchEnd = () => { touching = false; wrapSoon(); };
+
     const measure = () => {
+      buildLoop();
       rail.classList.toggle("cursor-grab", rail.scrollWidth > rail.clientWidth);
     };
 
@@ -165,26 +345,12 @@ export function DragScrollRail({ children }: { children: ReactNode }) {
      * by that — the same correction `SliderDots` makes to light the right dot.
      */
     const settleToCard = () => {
-      const cells = [...rail.children].filter(
-        (cell): cell is HTMLElement => cell instanceof HTMLElement,
-      );
+      // Clones included: a pull past the last card settles on the first's
+      // clone, and `wrap` then stands the row on the real one.
+      const cells = cellsOf();
       if (!cells.length) return;
-      const style = getComputedStyle(rail);
-      const inset =
-        parseFloat(style.scrollPaddingLeft) ||
-        parseFloat(style.paddingLeft) ||
-        0;
-      const edge = rail.getBoundingClientRect().left + inset;
-
-      let index = 0;
-      let best = Infinity;
-      cells.forEach((cell, i) => {
-        const distance = Math.abs(cell.getBoundingClientRect().left - edge);
-        if (distance < best) {
-          best = distance;
-          index = i;
-        }
-      });
+      const edge = edgeOf();
+      let index = cells.indexOf(nearestOf(cells).nearest);
 
       if (Math.abs(velocity) > 0.5) {
         // `velocity` is the pointer's; the row travels the other way.
@@ -273,7 +439,26 @@ export function DragScrollRail({ children }: { children: ReactNode }) {
     rail.addEventListener("pointerup", onUp);
     rail.addEventListener("pointercancel", onUp);
     rail.addEventListener("dragstart", onDragStart);
+    if (loop) {
+      rail.addEventListener("scroll", wrapSoon, { passive: true });
+      rail.addEventListener("touchstart", onTouchStart, { passive: true });
+      rail.addEventListener("touchend", onTouchEnd);
+      rail.addEventListener("touchcancel", onTouchEnd);
+      for (const type of ["pointerdown", "wheel", "keydown", "rail:go"]) {
+        rail.addEventListener(type, onTouched, { passive: true });
+      }
+    }
     return () => {
+      window.clearTimeout(wrapTimer);
+      window.clearInterval(homeWatch);
+      for (const type of ["pointerdown", "wheel", "keydown", "rail:go"]) {
+        rail.removeEventListener(type, onTouched);
+      }
+      rail.removeEventListener("scroll", wrapSoon);
+      rail.removeEventListener("touchstart", onTouchStart);
+      rail.removeEventListener("touchend", onTouchEnd);
+      rail.removeEventListener("touchcancel", onTouchEnd);
+      rail.querySelectorAll(`:scope > [${CLONE}]`).forEach((el) => el.remove());
       observer.disconnect();
       rail.removeEventListener("pointerdown", onDown);
       rail.removeEventListener("pointermove", onMove);
@@ -283,12 +468,15 @@ export function DragScrollRail({ children }: { children: ReactNode }) {
       rail.classList.remove("cursor-grab", "cursor-grabbing", "select-none");
       if (settle !== null) cancelAnimationFrame(settle);
     };
-  }, []);
+  }, [loop]);
 
   /* `contents` so this has no box and the rail keeps its own place in the
-     row's flex column. SliderDots looks through it for the scroller. */
+     row's flex column. SliderDots looks through it for the scroller.
+     `data-drag-scope` tells CardRail's own `RailDrag` to stand down: since
+     17 Sep 2026 both were attached to the Wonder rails, and RailDrag's
+     next-frame snap restore turned this one's animated settle into a jump. */
   return (
-    <div ref={scope} className="contents">
+    <div ref={scope} data-drag-scope className="contents">
       {children}
     </div>
   );

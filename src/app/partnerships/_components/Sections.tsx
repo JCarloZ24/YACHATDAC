@@ -552,7 +552,9 @@ export function PartnershipsHero() {
             href="#open-questions"
             className="eyebrow inline-block text-sm tracking-[0.28em] text-gold underline-offset-4 transition-transform duration-(--dur-small) ease-quiet hover:underline motion-safe:hover:translate-x-1"
           >
-            → Four open questions
+            {/* Arrow on the right, as the button above it (August,
+                18 September 2026). */}
+            Four open questions →
           </a>
         </div>
       </div>

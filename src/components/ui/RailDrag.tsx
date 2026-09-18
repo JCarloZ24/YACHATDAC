@@ -35,6 +35,9 @@ export function RailDrag() {
   useEffect(() => {
     const rail = ref.current?.parentElement;
     if (!rail) return;
+    // /wonder wraps its rails in `DragScrollRail`, which already drags them
+    // (and settles, and loops). Two handlers on one row fight over snap.
+    if (rail.closest("[data-drag-scope]")) return;
 
     let down = false;
     let moved = false;
