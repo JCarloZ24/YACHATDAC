@@ -5,6 +5,7 @@ import { getInvolved } from "@/content/living-work";
 import { documents, knowledgeGaps } from "@/content/the-record";
 import { partnershipsHiFi } from "@/content/partnerships";
 import { CardRail } from "@/components/ui/CardRail";
+import { DragScrollRail } from "@/components/ui/DragScrollRail";
 import { MediaOrField } from "@/components/ui/MediaOrField";
 import {
   BlobButton,
@@ -913,11 +914,18 @@ export function OpenQuestions() {
             with nothing focusable inside them, so without a tab stop on the
             rail a keyboard cannot reach questions two to four on a phone.
             The other three rails are rows of links and need none. */}
+        {/* One card at a time with slider dots on the phone, looped and
+            mouse-draggable — /wonder's Highlights rail, by direction (August,
+            18 September 2026). The spacing moved to the wrapper because with
+            `dots` CardRail's `className` lands on the scroller, inside the
+            rail-plus-dots column. */}
+        <div className="mt-12 lg:mt-16">
+        <DragScrollRail loop>
         <CardRail
-          className="mt-12 lg:mt-16"
           columns="lg:grid-cols-2"
           gap="sm:gap-8"
           label="The four open questions"
+          dots
         >
           {knowledgeGaps.gaps.map((gap, i) => {
             const photo = GAP_PHOTOS[i] ? photoById(GAP_PHOTOS[i]!) : undefined;
@@ -959,41 +967,20 @@ export function OpenQuestions() {
                     {gap.detail}
                   </p>
 
-                  {/* THE DISCLOSURE. Rest state is OPEN — the answer is plain
-                      text and the shutter is `scale-y-0` — and `hosting` closes
-                      the shutter only for readers whose timeline actually runs.
-                      Authoring it shut would hide the answer with JavaScript
-                      off and under reduced motion, where the cut clears every
-                      inline style. See the contract note on `hosting`.
-
-                      The shutter wears the card's OWN ground, not a new tone:
-                      it is the card closing over its answer, not a panel
-                      arriving on top of one. It is a sibling of
-                      [data-vessel-source] because flattenReveal looks for the
-                      source in the shutter's parentElement. */}
-                  <div className="mt-auto pt-10">
-                    <p className="eyebrow text-sm leading-[1.3] tracking-[0.5em] text-gold">
-                      What is running
-                    </p>
-                    <div className="relative mt-2">
-                      <p
-                        data-vessel-source
-                        className="text-[1.0625rem] leading-[1.4] font-medium"
-                      >
-                        {gap.running}
-                      </p>
-                      <span
-                        data-shutter
-                        aria-hidden
-                        className={`pointer-events-none absolute inset-0 origin-bottom-left scale-y-0 ${GAP_GROUNDS[i]}`}
-                      />
-                    </div>
-                  </div>
+                  {/* THE "WHAT IS RUNNING" DISCLOSURE IS GONE (August,
+                      18 September 2026: "remove the what is running and text
+                      description below"). The eyebrow, `gap.running` and the
+                      shutter over it are out of the markup; the field stays
+                      in the content module, which follows the draft (D5).
+                      `hosting` (lib/motion/recipes.ts) returns early when it
+                      finds no `[data-shutter]`, so nothing dangles. */}
                 </div>
               </article>
             );
           })}
         </CardRail>
+        </DragScrollRail>
+        </div>
 
       </div>
     </section>

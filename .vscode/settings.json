@@ -1,0 +1,7 @@
+{
+  // The hi-fi sections write the Figma frames' own pixel numbers as arbitrary
+  // values on purpose (`lg:pt-[120px]`, not `lg:pt-30`) so markup can be read
+  // against the frame readout. The canonical-class hint flags every one of
+  // them; the compiled CSS is identical either way. (18 September 2026.)
+  "tailwindCSS.lint.suggestCanonicalClasses": "ignore"
+}
