@@ -1,6 +1,13 @@
 # Open questions & blockers
 
-*Last updated: 15 September 2026*
+*Last updated: 18 September 2026*
+
+**Truth portrait quality follow-up — 18 September 2026, user report (R24):**
+Suzanne Thompson's portrait beside “And I'm a descendant of one of those 37”
+appears blurry in the supplied screenshot. Review the `truthCountPortrait`
+slot in `src/content/truth-media.ts` and its delivered image size; use a
+sharper supplied source or replacement if needed. Logged for a later image
+pass; no image replacement has been made.
 
 Live list. Resolve upward — anything marked **blocking** stops real work.
 Cross-referenced to section 17 of the build documentation.

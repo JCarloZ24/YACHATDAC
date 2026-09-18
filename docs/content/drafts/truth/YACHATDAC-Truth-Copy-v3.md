@@ -1,5 +1,7 @@
 # Truth — draft copy v3
 
+*Last updated: 18 September 2026*
+
 > **Page:** Truth · **Version:** v3 · **State:** draft ·
 > **Governance circle:** held by community
 >
@@ -78,7 +80,7 @@ Work with us
 
 #### Partnerships
 
-A researcher on Country is a guest on Country. Partnerships here are expected to give something back to the land and the people.
+A researcher on-Country is a guest on-Country. Partnerships here are expected to give something back to the land and the peoples.
 
 [Partner with us →](/connect)
 
@@ -90,7 +92,7 @@ Now
 
 #### [Fire-stick farming, springs, and two flux towers](/resources/fire-stick-farming-and-the-carbon-in-the-soil)
 
-The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on Country managed this way, one on grazed land, checked against each other.
+The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on-Country managed this way, one on grazed land, checked against each other.
 
 They can do this work because, seven years ago, this stopped being someone else's station.
 
@@ -313,7 +315,7 @@ Still to be found
 
 #### Open research
 
-Most of this Country has never been studied. We are looking for researchers in palaeontology and archaeology, ecology and biodiversity, and medicinal botany.
+Most of this Country has never been studied. We are looking for researchers in palaeontology and archaeology, ecology and biodiversity, astronomy, and native foods and botanicals.
 
 [Explore research opportunities →](/partnerships/#research-opportunities)
 

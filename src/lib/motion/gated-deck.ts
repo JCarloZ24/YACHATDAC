@@ -705,7 +705,12 @@ export function createGatedDeck({
                 // The gutter holds the full era line; the pointer wears the
                 // short mark (grammar row "the guide leading the eye, Truth
                 // cut" — the caller's cut, /truth's `shortMark`).
-                const text = railLabelText(source?.textContent?.trim() ?? "");
+                // Content-only suppression: keep the pointer's existing
+                // movement and arrow while omitting repeated plate labels.
+                const omitLabel = slide?.hasAttribute("data-truth-rail-no-label");
+                const text = omitLabel
+                  ? ""
+                  : railLabelText(source?.textContent?.trim() ?? "");
                 if (labelNode) {
                   // A decade reads "1950s", not "1950S" — the eyebrow
                   // uppercases, so a label opening on a digit opts out.
@@ -779,7 +784,7 @@ export function createGatedDeck({
                     gsap.set(labelNode, { scale: 1 });
                   }
                 }
-                const subText = sub?.textContent?.trim() ?? "";
+                const subText = omitLabel ? "" : sub?.textContent?.trim() ?? "";
                 if (subNode) subNode.textContent = subText;
                 // The label box's layout flag: with no sub-line the year
                 // centres on the arrow's axis, with one the pair stacks —

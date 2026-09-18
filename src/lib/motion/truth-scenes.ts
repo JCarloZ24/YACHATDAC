@@ -1138,7 +1138,9 @@ const nineteenFifties: Recipe = (_timeline, slide, span) => {
   // the tree), then each child of the copy column. The title is the one set in
   // the display face at evergreen (`inkHead`, client direction 11 September
   // 2026), so it steps its colour; everything else steps `--truth-ink`, which
-  // its utilities already read.
+  // its utilities already read. The warm accents (record label, CTA, era
+  // mark) are gold on both sides of the crest (18 September 2026) and do not
+  // step.
   const blocks = [
     ...Array.from(track.children).filter((el) => el !== copy),
     ...(copy ? Array.from(copy.children) : []),
@@ -1218,17 +1220,29 @@ const WAVE_RISE = 0.3;
 /**
  * §19 100 million years. The only section that builds downward, with the
  * scroll — top, middle, bottom, the way the strata were laid.
+ *
+ * Grammar: "the world opening, laid by hand, Truth seabed" (18 September
+ * 2026, user direction: reveal like the open-research field). The montage
+ * cut replaces the brightness arrival — each stratum's window unrolls from
+ * the edge it is against, measured by `wipeEdges` like every other field —
+ * but the layers are NOT shuffled through `layTiles`: building downward is
+ * this section's verb, so top → middle → bottom is kept, on the windows the
+ * brightness cut already used. Quiet length; §19's loud channel is
+ * transition.
  */
 const strata: Recipe = (timeline, slide) => {
   pushMedia(timeline, slide);
-  query<HTMLElement>(slide, "[data-truth-strata-layer]")
-    .filter((layer) => !isHeld(layer))
-    .forEach((layer) => {
-      const order = Number(layer.dataset.truthStrataLayer ?? 0);
-      const at =
-        STRATA_WINDOWS[order] ?? STRATA_WINDOWS[STRATA_WINDOWS.length - 1];
-      brightenAt(timeline, [layer], at[0], at[1]);
-    });
+  const layers = query<HTMLElement>(slide, "[data-truth-strata-layer]").filter(
+    (layer) => !isHeld(layer),
+  );
+  if (!layers.length) return;
+  const edges = wipeEdges(layers);
+  layers.forEach((layer, position) => {
+    const order = Number(layer.dataset.truthStrataLayer ?? position);
+    const at =
+      STRATA_WINDOWS[order] ?? STRATA_WINDOWS[STRATA_WINDOWS.length - 1];
+    wipeAt(timeline, layer, at[0], WIPE_QUIET, edges[position]);
+  });
 };
 
 /* -------------------------------------------------------------------------

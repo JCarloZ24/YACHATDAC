@@ -70,6 +70,25 @@
 }
 
 /* ---------------------------------------------------------------------------
+   THE DARK RUNWAYS PAINT FULL BLEED (user screenshot, 18 September 2026: a
+   1px egg-white hairline either side of the reading column, scrolling up out
+   of the count). A runway is the reading column — 960px at 1920 — so its own
+   `bg-charcoal` stops at the column's edges and the section's egg white shows
+   in the antialiased seam between two travelling slides. This ::before is the
+   slide ground's own construction (globals.css), on the runway. */
+[data-truth-runway-dark] {
+  isolation: isolate;
+}
+[data-truth-runway-dark]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block: 0;
+  inset-inline: calc(50% - 50vw);
+  background-color: var(--color-charcoal);
+}
+
+/* ---------------------------------------------------------------------------
    THE 1950s FILL — a wave rising up the band (user direction, 16 September
    2026, superseding the egg-white → charcoal colour walk).
    Grammar row: "a change of ground, the light going out — now a WAVE FILL".
@@ -161,9 +180,11 @@
    `data-rail-dark` on the rail root when the ground under the sticky rail is
    charcoal — across the count's three screens, and from the moment the 1950s
    band's rising fill passes the pointer (16 September 2026) — and these
-   custom properties do the rest. The label is NEVER gold: ochre-deep is the
-   page's compliant warm on egg white (the same colour the gutter labels
-   wear), canvas the only readable ink on charcoal.
+   custom properties do the rest. The era label is Yellow Ochre (#D69828) on
+   EVERY ground (user direction, 18 September 2026, revised from gold the
+   same day; overturns the 15 September ruling). ⚠ Ochre is 2.30:1 on the
+   egg white; the user chose the brand colour over the ratio, knowingly. The sub-line and the
+   strands still step charcoal / canvas.
 
    The strands are cut at the sticky screen's head and foot under a gradient
    opacity mask so the finite rail's ends dissolve rather than stop. The
@@ -177,13 +198,13 @@
    fully-drawn strand: opaque from 175px in to 175px off the foot. Change
    the travel box and these stops together. */
 [data-truth-trail-rail] {
-  --rail-ink: var(--color-ochre-deep);
+  --rail-ink: var(--color-ochre);
   --rail-ink-sub: var(--color-charcoal);
   --rail-base-ink: var(--color-charcoal);
 }
 
 [data-truth-trail-rail][data-rail-dark] {
-  --rail-ink: var(--color-canvas);
+  --rail-ink: var(--color-ochre);
   --rail-ink-sub: var(--color-canvas);
   --rail-base-ink: var(--color-canvas);
 }

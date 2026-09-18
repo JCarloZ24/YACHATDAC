@@ -97,8 +97,10 @@ const SAMPLE = 12;
  *  lands at +71; the label clears it by a space. */
 const LABEL_X = 86;
 const LABEL_W_MAX = 200;
-/** Narrower than this and the label is not worth the collision. */
-const LABEL_W_MIN = 120;
+/** User correction, 18 September 2026: the 1024px laptop leaves ~77px
+ * beside the arrow. Keep its era and description, wrapping within the
+ * measured gutter instead of hiding both below the former 120px cutoff. */
+const LABEL_W_MIN = 64;
 
 /** LORE · continuous — the record, static. The frame's own ochre; deliberately
  *  NOT `--color-ochre` (#d69828), which is a different colour. */
@@ -424,12 +426,14 @@ export function TruthTrailRail() {
               section's own gutter block (or the count's own figure years), so
               there is one source for what the era is.
 
-              NEVER GOLD. The artwork beside it is baked gold at 1.72:1 on the
-              light ground (open-questions.md) and is already flagged for a
-              light-ground cut; type must not inherit that. The colours ride
-              `--rail-ink` / `--rail-ink-sub` — ochre-deep/charcoal on the egg
-              white, canvas on the dark bands — stepped by the painter at the
-              1950s' own crossover (truth.css, `[data-rail-dark]`). */}
+              YELLOW OCHRE ON EVERY GROUND (user direction, 18 September 2026,
+              revised from gold the same day), which overturns the earlier
+              "never gold" ruling: 2.30:1 on the egg white, a
+              ratio the user accepted knowingly (open-questions.md still
+              carries the flag). The year rides `--rail-ink`; the sub-line
+              rides `--rail-ink-sub`, charcoal on the egg white and canvas on
+              the dark bands, stepped by the painter at the 1950s' own
+              crossover (truth.css, `[data-rail-dark]`). */}
           {/* Always rendered, even with no room for it — the deck looks these
               nodes up once at init, so a box that only appears after a resize
               would never be found and the label would stay blank until a
@@ -446,14 +450,18 @@ export function TruthTrailRail() {
               user direction, 15 September 2026). */}
           <div
             data-truth-trail-label-box
-            className="absolute top-0 -translate-y-1/2 overflow-hidden py-3"
+            className="absolute top-0 -translate-y-1/2 overflow-hidden py-3 wrap-anywhere"
             style={{ left: LABEL_X, width: labelWidth }}
           >
             <div data-truth-trail-label-stack>
               <p
                 data-truth-trail-label
                 className="eyebrow text-xl"
-                style={{ color: "var(--rail-ink)" }}
+                style={{
+                  color: "var(--rail-ink)",
+                  // Keep short era names whole in the laptop's narrow gutter.
+                  fontSize: labelWidth < 120 ? "var(--text-sm)" : undefined,
+                }}
               />
               <p
                 data-truth-trail-sub

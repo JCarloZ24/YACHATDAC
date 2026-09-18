@@ -143,7 +143,7 @@ export const beats: Beat[] = [
     // Welcome to Country eyebrow whose wording is still blocked on Suzanne
     // (R1), so rewriting it first risks doing it twice.
     // D5: screenshot copy revision, 11 September 2026; recorded quotations stay as spoken.
-    headline: "Reconnection across time and people.",
+    headline: "Reconnection across time and peoples.",
     body: [
       "You are entering Turraburra: story held in stone and starlight, still being lived today.",
     ],
@@ -183,7 +183,7 @@ export const beats: Beat[] = [
       subject: "Iningai Nation",
       subjectLabel: "1861",
       subjectDetail: [
-        "Nineteen and a half thousand square miles, from the Great Dividing Range west to Longreach, north to Muttaburra and Aramac",
+        "Nineteen and a half thousand square miles, from the Great Dividing Range west to Longreach, north to Muttaburra and Aramac.",
         "Sandy plains, wooded country, and the Alice and the Thomson running through it",
         "Our people living into their nineties",
       ],

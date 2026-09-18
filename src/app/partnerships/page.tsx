@@ -11,14 +11,14 @@ import {
   OpenResearch,
   PartnershipsHero,
   TheEnding,
-  TheObligation,
+  TheResponsibility,
   WaysIn,
 } from "./_components/Sections";
 
 export const metadata: Metadata = {
   title: "Partnerships",
   description:
-    "Research and partnership opportunities on Turraburra. A researcher on Country is a guest on Country.",
+    "Research and partnership opportunities on Turraburra. A researcher on-Country is a guest on-Country.",
 };
 
 /**
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
  * Desktop · the page hosts), promoted onto the real route the way /truth,
  * /living-work, /the-record, /our-people and /about were.
  *
- * The page's verb is HOSTS. Greeting carries no obligation; hosting does, and
- * the obligation is the argument — §02 states it alone on a screen and every
+ * The page's verb is HOSTS. Greeting carries no responsibility; hosting does, and
+ * the responsibility is the argument — §02 states it alone on a screen and every
  * section after is a way of meeting it.
  *
  * Ten frames, 1,190vh. The tenth is the site footer, already built to Marc's
@@ -78,7 +78,7 @@ export default function PartnershipsPage() {
       {/* Renders nothing; see ./_components/Motion.tsx. */}
       <PartnershipsMotion />
       <PartnershipsHero />
-      <TheObligation />
+      <TheResponsibility />
       <OpenResearch />
       <OpenQuestions />
       <Breath />

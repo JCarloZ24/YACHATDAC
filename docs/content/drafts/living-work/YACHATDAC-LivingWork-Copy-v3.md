@@ -267,12 +267,12 @@ per D5.
 | Connectivity | Starlink satellite uplink | Router → Mesh 1, Mesh 2, Mesh 3 | house · shed · campground |
 | Radio | UHF radio | house, shed, vehicles, ~10 handhelds | ~5km range; further from high ground |
 | Water | Bore — 480m (pollen found at 60m) | Tanks · Camp · Stock | filters changed six-monthly |
-| Power & monitoring | Solar & regulators (data readable over wifi) | Flux towers · Recorders | monitoring runs off site power; data held with QUT |
+| Power & monitoring | Solar & regulators (data readable over Wi-Fi) | Flux towers · Recorders | monitoring runs off site power; data held with QUT |
 
 ##### Communications
 
 - Starlink uplink bridged to an external router
-- Wifi mesh — three extenders plus one in the campground
+- Wi-Fi mesh — three extenders plus one in the campground
 - UHF radio in the house, the shed and nearly every vehicle
 - About ten UHF handhelds, roughly 5km range from the house
 
@@ -287,7 +287,7 @@ Direct-to-handset satellite messaging is expected to change this within a couple
 
 ##### Power
 
-- Solar with wifi-enabled regulators
+- Solar with Wi-Fi-enabled regulators
 - Data can be pulled off the regulators remotely
 - 240 volt supply to the mesh network
 - Petrol and diesel in tanks on site
@@ -329,7 +329,7 @@ The register is the reason a town run can be planned in one trip.
 
 ##### Coming
 
-- Secure Ranger Base
+- Secure ranger base
 - Research facilities and nurseries
 - Walking tracks and camping facilities
 - Staff housing

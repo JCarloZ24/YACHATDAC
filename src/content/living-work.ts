@@ -303,7 +303,7 @@ export const infrastructure: readonly InfrastructureBlock[] = [
     title: "Communications",
     points: [
       "Starlink uplink bridged to an external router",
-      "Wifi mesh — three extenders plus one in the campground",
+      "Wi-Fi mesh — three extenders plus one in the campground",
       "UHF radio in the house, the shed and nearly every vehicle",
       "About ten UHF handhelds, roughly 5km range from the house",
     ],
@@ -321,7 +321,7 @@ export const infrastructure: readonly InfrastructureBlock[] = [
   {
     title: "Power",
     points: [
-      "Solar with wifi-enabled regulators",
+      "Solar with Wi-Fi-enabled regulators",
       "Data can be pulled off the regulators remotely",
       "240 volt supply to the mesh network",
       /** CR5 — Steve, 10:19, stated as fact about the property. */
@@ -357,7 +357,7 @@ export const infrastructure: readonly InfrastructureBlock[] = [
   {
     title: "Coming",
     points: [
-      "Secure Ranger Base",
+      "Secure ranger base",
       "Research facilities and nurseries",
       "Walking tracks and camping facilities",
       "Staff housing",

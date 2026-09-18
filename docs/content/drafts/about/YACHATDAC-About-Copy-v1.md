@@ -1,6 +1,6 @@
 # About — draft copy v1
 
-*Last updated: 11 September 2026*
+*Last updated: 18 September 2026*
 
 > **Page:** About · **Version:** v1 · **State:** draft ·
 > **Governance circle:** open
@@ -98,7 +98,7 @@ Two-way science with universities, and a public record of what is known about th
 
 **Iningai-led** — Iningai people lead. Governance, employment and benefit flow to community. Slower than contracting the work out, and the only version worth doing.
 
-**Reciprocity** — Relationships with partners, funders and visitors carry mutual obligation. Everyone who comes here gives something back to the land and the people, not only takes.
+**Reciprocity** — Relationships with partners, funders and visitors carry mutual responsibility. Everyone who comes here gives something back to the land and the peoples, not only takes.
 
 > [ Three of the seven values in the Strategic Plan. The others — sharing and learning, respect, integrity, resilience — are claimed by every organisation and read as filler in public. These three constrain actual decisions. Also: the plan describes reciprocity as the Ngapartji-Ngapartji principle, which is Western Desert language, not Iningai. Confirm with Suzanne. ]
 

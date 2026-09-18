@@ -48,7 +48,7 @@ export const partnershipsHiFi = {
    *
    * Truth v3 (`drafts/truth/YACHATDAC-Truth-Copy-v3.md:310`) carries them
    * inside a running sentence — "…looking for researchers in palaeontology and
-   * archaeology, ecology and biodiversity, and medicinal botany" — and the
+   * archaeology, ecology and biodiversity, and native foods and botanicals" — and the
    * frame sets that same sentence's tail as three rows, still lowercase. The
    * build had title-cased them, which is the one reading BOTH sources
    * disagree with. Frame and draft agree here, so this is the settled kind.
@@ -58,7 +58,7 @@ export const partnershipsHiFi = {
     items: [
       "palaeontology and archaeology",
       "ecology and biodiversity",
-      "medicinal botany",
+      "native foods and botanicals",
     ],
   },
 

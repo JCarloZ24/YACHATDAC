@@ -6,6 +6,7 @@ import {
   DissolveBreak,
   EraSection,
   SuzanneBand,
+  CountRing,
   SuzanneCount,
   SuzanneTestimony,
   TruthHeroV2,
@@ -124,6 +125,8 @@ export default function TruthPage() {
             here (15 September 2026): it stays visible on the charcoal in
             canvas ink, and the figures screen names its own eras. */}
         <section data-descent-band="count" className="bg-charcoal">
+          {/* The dark run's one ring, fixed; see CountRing. */}
+          <CountRing />
           <SuzanneCount />
           <SuzanneTestimony />
         </section>

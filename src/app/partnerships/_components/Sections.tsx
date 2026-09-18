@@ -20,7 +20,7 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * 1440 x 10,710px = 1,190vh across ten frames. The verb is HOSTS.
  *
  *   01  Hero — the aerial, the wave, then the copy on evergreen
- *   02  THE OBLIGATION — the page's thesis, alone on a screen
+ *   02  THE RESPONSIBILITY — the page's thesis, alone on a screen
  *   03  Open research — the three disciplines
  *   04  FOUR OPEN QUESTIONS — the inversion: the gaps as an offer
  *   04b BREATH — one photograph, no words
@@ -64,7 +64,7 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * WHY THE PAGE EXISTS AT ALL — it is a HUB. The audit that shaped it found
  * /about#partners carrying more partnership content than /partnerships did:
  * the commercial offer was on Living Work, the research protocol on The
- * Record, the roster and the obligation sentence on About, and the guest
+ * Record, the roster and the responsibility sentence on About, and the guest
  * principle was hand-copied three times byte-identical. The spokes keep their
  * excerpt and their link; this is the only place the whole set sits together.
  *
@@ -81,7 +81,7 @@ import type { SeamGlyphMotif } from "@/components/ui/Furniture";
  * removed on 2 September. Partnerships persuades, Connect transacts.
  *
  * WHAT IS HELD: R12 names, never logos · R9/R15 no form and no live contact
- * field · R22 the obligation is framed as Ngapartji-Ngapartji, Western Desert
+ * field · R22 the responsibility is framed as Ngapartji-Ngapartji, Western Desert
  * language and not Iningai · R24 §03's frame shows an identifiable face and
  * consent to identify was never sought · the research protocol is in
  * preparation and its container never fills · gap 1 has no cleared photograph
@@ -170,7 +170,7 @@ const COLUMN = "mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-25";
  * furniture at Marc's styling and every route would move with it.
  */
 const SCREEN = {
-  obligation: "lg:flex lg:min-h-[100vh] lg:flex-col lg:justify-center",
+  responsibility: "lg:flex lg:min-h-[100vh] lg:flex-col lg:justify-center",
   /* 100 and 160, down from 120 and 190 — user direction, 16 September 2026:
      "too much white space between Still to be found and Open research". Both
      sections centred a column shorter than its budget, and the surplus fell
@@ -259,10 +259,10 @@ const sentences = (para: string): string[] =>
  * reason. If the draft changes, change it in both places.
  */
 const PRINCIPLE =
-  "A researcher on Country is a guest on Country. Partnerships here are expected to give something back to the land and the people.";
+  "A researcher on-Country is a guest on-Country. Partnerships here are expected to give something back to the land and the peoples.";
 
 /**
- * The obligation, from About's Reciprocity value (about.ts). The whole page
+ * The responsibility, from About's Reciprocity value (about.ts). The whole page
  * hangs off this sentence, and it is not written for this page either — it is
  * the client's own words about how partnerships work here, borrowed from the
  * page whose draft carries them.
@@ -287,7 +287,7 @@ const BREATH = photoById("pt-breath");
  * across the top two-thirds with the copy on evergreen beneath it, 1350px in
  * all; Ivy moved the copy ONTO the picture on 2026-09-05 because that left a
  * whole screen of image carrying no words; and the frame's arrangement is now
- * restored on the user's own reading of the wireframe. THE OBLIGATION NEVER
+ * restored on the user's own reading of the wireframe. THE RESPONSIBILITY NEVER
  * MOVED through any of it: §02 still states it alone on evergreen, which is
  * the page's argument.
  *
@@ -352,7 +352,7 @@ const BREATH = photoById("pt-breath");
  * arrives around this picture, the picture never moves.
  */
 export function PartnershipsHero() {
-  const [claim, obligation] = sentences(PRINCIPLE);
+  const [claim, responsibility] = sentences(PRINCIPLE);
 
   return (
     <section
@@ -521,7 +521,7 @@ export function PartnershipsHero() {
           data-pt-arrive
           className="mt-10 max-w-[1000px] text-lg leading-[1.5] font-medium sm:text-2xl lg:mt-[26px]"
         >
-          {obligation}
+          {responsibility}
         </p>
 
         {/* 21px between the blob and the quiet link, not the 32 this row used
@@ -562,12 +562,12 @@ export function PartnershipsHero() {
 }
 
 /* -------------------------------------------------------------------------
-   02 · THE OBLIGATION — ⚑ the page's thesis, alone on a screen · 100vh
+   02 · THE RESPONSIBILITY — ⚑ the page's thesis, alone on a screen · 100vh
    ------------------------------------------------------------------------- */
 
 /**
  * One sentence on a screen, and it is the page's whole argument: hosting
- * carries an obligation, which greeting does not, and the obligation is what
+ * carries a responsibility, which greeting does not, and the responsibility is what
  * makes this a partnerships page rather than a contact page.
  *
  * Source is about.ts — the Reciprocity value, split at its own sentence
@@ -579,13 +579,13 @@ export function PartnershipsHero() {
  * the term, which is the safe rendering while it is unresolved — but the risk
  * is not closed by omitting the word here.
  */
-export function TheObligation() {
+export function TheResponsibility() {
   const [claim, consequence] = sentences(RECIPROCITY_BODY);
 
   return (
     <section
-      data-pt="obligation"
-      className={`relative overflow-hidden bg-evergreen text-canvas ${SCREEN.obligation}`}
+      data-pt="responsibility"
+      className={`relative overflow-hidden bg-evergreen text-canvas ${SCREEN.responsibility}`}
     >
       {/* Whole, and quieter — user direction, 16 September 2026 ("the circle
           element's top part is cut, complete it"). It sat at `-top-32` at
@@ -597,7 +597,7 @@ export function TheObligation() {
         className={`top-[6%] left-[46%] w-[30rem] lg:w-[48rem] ${RING}`}
       />
       <div className={`${COLUMN} relative py-16 lg:py-28`}>
-        <p className={EYEBROW_DARK}>The obligation</p>
+        <p className={EYEBROW_DARK}>The responsibility</p>
         <h2
           data-pt-settle
           className="headline mt-8 max-w-[1180px] text-4xl leading-[1.2] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]"

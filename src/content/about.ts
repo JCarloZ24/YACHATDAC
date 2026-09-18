@@ -130,7 +130,7 @@ export const howWeWork = {
     },
     {
       title: "Reciprocity",
-      body: "Relationships with partners, funders and visitors carry mutual obligation. Everyone who comes here gives something back to the land and the people, not only takes.",
+      body: "Relationships with partners, funders and visitors carry mutual responsibility. Everyone who comes here gives something back to the land and the peoples, not only takes.",
     },
   ],
   /**

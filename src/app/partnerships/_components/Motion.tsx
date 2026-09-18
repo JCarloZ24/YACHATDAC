@@ -7,7 +7,7 @@ import {
   partnershipsBreath,
   partnershipsEnding,
   partnershipsHero,
-  partnershipsObligation,
+  partnershipsResponsibility,
   partnershipsOpenResearch,
   partnershipsPartners,
   partnershipsProtocol,
@@ -78,11 +78,11 @@ export function PartnershipsMotion() {
       // cheapest correct answer. Keep new sections in their true position.
       // ⚠ `data-pt` RATHER THAN NEW IDS on the three sections that have none.
       // The page header names exactly three anchors as load-bearing, and an id
-      // is a link target: minting `#obligation` so a motion host can find a
+      // is a link target: minting `#responsibility` so a motion host can find a
       // section would publish a URL nobody decided to publish and that nothing
       // links to. `data-pt` is what the hero already uses.
       const sections: Array<[string, (el: HTMLElement) => ReturnType<typeof partnershipsHero>]> = [
-        ['[data-pt="obligation"]', partnershipsObligation],
+        ['[data-pt="responsibility"]', partnershipsResponsibility],
         ["#research-opportunities", partnershipsOpenResearch],
         // §04 — the gaps disclose. `hosting` was written for this section and
         // had no consumer outside /lab/compose until now; the markup contract

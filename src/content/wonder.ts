@@ -30,7 +30,7 @@ export const wonderHero = {
    * mirrored into the v3 draft in the same pass.
    */
   standfirst:
-    "Come spend a few days with us on Turraburra. We welcome you onto our Country, share our stories and knowledge, and look after you while you are here.",
+    "Come spend a few days with us on Turraburra. We welcome you onto Country, share our stories and knowledge, and look after you while you are here.",
   /**
    * The draft's summary line. Kept as separate items rather than one string so
    * it can be set as chips or as a run of text without re-splitting it.
@@ -271,7 +271,7 @@ export const stayStages: readonly StayStage[] = [
      * ... tens of thousands of years": first person, and a measure counted in
      * people rather than in a number nobody here has verified.
      */
-    title: "Finding food on Country",
+    title: "Finding food on-Country",
     body: [
       "What can look empty from the road is full of food.",
       "Seeds, fruits, herbs, nuts and plants have sustained our people on this Country for thousands of generations.",
@@ -466,7 +466,7 @@ export const whatItIsLike = {
 export const whoYouAreWith = {
   title: "Who you are with",
   body: [
-    "You will be hosted by the Traditional Custodians of this Country and the Iningai Rangers who care for and work on Country.",
+    "You will be hosted by the Traditional Custodians of this Country and the Iningai Rangers who care for and work on-Country.",
     "The people with you may change from visit to visit, but you will always be spending time with people who know this Country, work on it and have a connection to the stories and places they share with you.",
   ],
   image: "Suzanne talking with a small group out on Country.",
@@ -505,7 +505,7 @@ export const wonderStories = {
       tag: "#country",
       title: "A season of bush foods",
       summary:
-        "What comes on when, across the year, and the country each one grows out of.",
+        "What comes on when, across the year, and the Country each one grows out of.",
       href: "/the-record/a-season-of-bush-foods",
     },
     {
@@ -558,7 +558,7 @@ export const beforeYouCome = {
     },
     {
       label: "Dates",
-      value: "Arranged with you. May to September is the comfortable stretch.",
+      value: "Arranged with you. May to September is the comfortable stretch",
     },
   ],
   body: [

@@ -263,7 +263,7 @@ export const stayStageMedia: Record<string, MediaSlot> = {
    * sits under is about food on Country. Close, not the same thing. Raised
    * with August 10 Sep 2026 — it may belong under "Hands in the work".
    */
-  "Finding food on Country": {
+  "Finding food on-Country": {
     id: "stay-food",
     bucket: "work",
     expects: "Collecting seed into a tub, three people working through scrub",

@@ -139,7 +139,7 @@ export const erasBefore: readonly TruthEra[] = [
         when: "Work with us",
         title: "Partnerships",
         body: [
-          "A researcher on Country is a guest on Country. Partnerships here are expected to give something back to the land and the people.",
+          "A researcher on-Country is a guest on-Country. Partnerships here are expected to give something back to the land and the peoples.",
         ],
         /*
           Was /connect, which routes every intent and holds no partnership
@@ -167,7 +167,7 @@ export const erasBefore: readonly TruthEra[] = [
         title: "Fire-stick farming, springs, and two flux towers",
         href: "/the-record/fire-stick-farming-and-the-carbon-in-the-soil",
         body: [
-          "The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on Country managed this way, one on grazed land, checked against each other.",
+          "The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on-Country managed this way, one on grazed land, checked against each other.",
         ],
         coda: "They can do this work because, seven years ago, this stopped being someone else's station.",
         image: "People at work — fire-stick farming, seed collecting, or the flux tower.",
@@ -503,7 +503,7 @@ export const erasAfter: readonly TruthEra[] = [
         when: "Still to be found",
         title: "Open research",
         body: [
-          "Most of this Country has never been studied. We are looking for researchers in palaeontology and archaeology, ecology and biodiversity, and medicinal botany.",
+          "Most of this Country has never been studied. We are looking for researchers in palaeontology and archaeology, ecology and biodiversity, astronomy, and native foods and botanicals.",
         ],
         cta: {
           label: "Explore research opportunities",
@@ -548,7 +548,7 @@ export const wattanuri = {
   id: "underneath-all-of-it",
   marker: "Underneath all of it",
   title: "Wattanuri, and the sisters he followed",
-  body: "The Seven Sisters travel across the sky and across the country, pursued. What they did on that journey shaped landforms that are still standing, and one figure at the southern end of the shelter is the pursuer himself.",
+  body: "The Seven Sisters travel across the sky and across Country, pursued. What they did on that journey shaped landforms that are still standing, and one figure at the southern end of the shelter is the pursuer himself.",
   floor:
     "This is not at the bottom of the page because it is the oldest thing on it. Lore is not a date. It is the floor everything above has been resting on the whole way down — which is why the band has run beside the reader since the first screen.",
   cta: {

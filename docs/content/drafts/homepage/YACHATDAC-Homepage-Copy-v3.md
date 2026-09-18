@@ -1,6 +1,13 @@
 # Homepage — draft copy v3
 
-*Last updated: 11 September 2026*
+*Last updated: 18 September 2026*
+
+**Welcome heading amendment — 18 September 2026, user direction (D5):**
+the heading now reads “Reconnection across time and peoples.”
+
+**Shared footer amendment — 18 September 2026, user direction (D5):** removed
+X from the social icon row. The row contains Facebook, Instagram, LinkedIn
+and YouTube; the Follow text links remain Facebook and Instagram.
 
 **Site-wide loading interface — 11 September 2026, August (X7 / SYS-02):**
 “You’re viewing” followed by the destination name is the shared loading
@@ -9,7 +16,7 @@ hard refresh. The homepage's existing first-visit film follows this readiness
 cover. This interface amendment adds no narrative copy.
 
 **Heading amendment — 11 September 2026:** the welcome heading reads
-“Reconnection across time and people.”, as requested in the user's screenshot.
+“Reconnection across time and peoples.”, as requested in the user's screenshot.
 This changes the display heading only, not Suzanne's recorded core narrative.
 
 **Painting text amendment ? 9 September 2026:** the screenshot sequence adds ?You are entering?, then ?Turraburra? at the upper left, followed by ?Story held in stone and starlight? at the lower right while the painting reveals. These are display excerpts; the complete hero paragraph remains unchanged.
@@ -61,7 +68,7 @@ below verbatim; only their layout and timed entrance change.
 
 [ Image — A red dirt road running out through low scrub under a wide sky. ]
 
-## Reconnection across time and people.
+## Reconnection across time and peoples.
 
 You are entering Turraburra: story held in stone and starlight, still being lived today.
 
@@ -82,7 +89,7 @@ Nation
 
 1861
 
-Nineteen and a half thousand square miles, from the Great Dividing Range west to Longreach, north to Muttaburra and Aramac
+Nineteen and a half thousand square miles, from the Great Dividing Range west to Longreach, north to Muttaburra and Aramac.
 
 Sandy plains, wooded country, and the Alice and the Thomson running through it
 

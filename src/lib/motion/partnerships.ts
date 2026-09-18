@@ -231,7 +231,7 @@ export function partnershipsHero(root: HTMLElement): MotionModule {
  * boring"; asked which entrances should come back). Four of the page's
  * eight entrances replay when the reader returns to their screen:
  *
- *   §02 the obligation      the settle of one sentence alone on a screen
+ *   §02 the responsibility  the settle of one sentence alone on a screen
  *   §03 still to be found   the character display, the page's type moment
  *   §05 partners            the three cards' scatter-resolve
  *   §06 ways in             the four cards' arrive
@@ -251,9 +251,9 @@ const qa = (root: HTMLElement, sel: string) =>
 const q1 = (root: HTMLElement, sel: string) =>
   root.querySelector<HTMLElement>(sel);
 
-/** §02 · the obligation — one sentence on a screen. Note: settle B5, line masks. */
-export function partnershipsObligation(root: HTMLElement): MotionModule {
-  return composition("partnerships/obligation", root, {
+/** §02 · the responsibility — one sentence on a screen. Note: settle B5, line masks. */
+export function partnershipsResponsibility(root: HTMLElement): MotionModule {
+  return composition("partnerships/responsibility", root, {
     // Replays when the reader comes back to it — see REPLAY below.
     enterReplay: true,
     channel: "none",

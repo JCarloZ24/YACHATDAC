@@ -193,11 +193,13 @@ export function TruthHeroV2() {
           className="absolute inset-0 bg-linear-to-t from-charcoal/85 via-charcoal/55 to-charcoal/25"
         />
 
-        {/* Spec column: text block ~225px in from the frame edge, lines running
-            to ~1035px — wider than the body container, so the hero opens up. */}
-        <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pt-24 lg:px-12">
+        {/* User overlap correction, 18 September 2026: share the header's
+            1440px container and reserve 224px for the logo-aligned artwork.
+            This keeps every line clear of the rail even at 1024px, while
+            retaining the spec's ~225px desktop text origin. */}
+        <div className="relative z-10 mx-auto w-full max-w-360 px-6 pt-24 lg:pl-56 lg:pr-12">
           {/* Gold here is the spec's hero accent — eyebrow and cue only. */}
-          <p className="eyebrow text-gold">
+          <p className="eyebrow text-ochre">
             {truthHero.eyebrow}
           </p>
           <h1 className="headline mt-8 max-w-4xl text-h1 text-canvas lg:max-w-none">
@@ -677,7 +679,7 @@ function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
            ~1.66 stays inside what `sizes` already asks for, which is why this
            box can change without touching a measured `sizes` string. Go below
            5/3 and the photograph softens and `sizes` has to rise with it. */
-        className="relative aspect-16/9 overflow-hidden rounded-lg lg:aspect-23/8"
+        className="relative aspect-video overflow-hidden rounded-lg lg:aspect-23/8"
       >
         <MediaOrField
           src={presentSrc(country.src)}
@@ -705,7 +707,7 @@ function CountryAndDocument({ slots }: { slots: MediaSlot[] }) {
       {documentSrc ? (
         <div
           data-motion={MOTION_GRADE[document.bucket]}
-          className="relative mt-6 aspect-[768/420] max-w-3xl overflow-hidden rounded"
+          className="relative mt-6 aspect-768/420 max-w-3xl overflow-hidden rounded"
         >
           <MediaOrField
             src={documentSrc}
@@ -825,7 +827,7 @@ function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
   const documentSrc = presentSrc(document?.src ?? null);
   return (
     <figure data-v2-static className="mt-10 max-w-4xl">
-      <div className="relative aspect-[920/300] overflow-hidden rounded-lg">
+      <div className="relative aspect-920/300 overflow-hidden rounded-lg">
         <div data-motion={MOTION_GRADE[visitor.bucket]} className="absolute inset-0">
           <MediaOrField
             src={presentSrc(visitor.src)}
@@ -855,7 +857,7 @@ function WrittenRecordFrame({ slots }: { slots: MediaSlot[] }) {
       </div>
       <div className="mt-6 max-w-3xl">
         {documentSrc ? (
-          <div className="relative aspect-[768/180] overflow-hidden rounded-sm border border-current/30">
+          <div className="relative aspect-768/180 overflow-hidden rounded-sm border border-current/30">
             <MediaOrField
               src={documentSrc}
               alt={document.expects}
@@ -913,7 +915,7 @@ function StrataStack({ slots }: { slots: MediaSlot[] }) {
           data-motion={MOTION_GRADE[slot.bucket]}
           data-truth-strata-layer={i}
           {...(MOTION_GRADE[slot.bucket] === "frame" ? {} : { "data-v2-camera": true })}
-          className={`relative aspect-[699/221] w-full overflow-hidden rounded-2xl sm:w-[76%] ${offset} ${i > 0 ? "mt-6 sm:mt-9" : ""
+          className={`relative aspect-699/221 w-full overflow-hidden rounded-2xl sm:w-[76%] ${offset} ${i > 0 ? "mt-6 sm:mt-9" : ""
             }`}
         >
           <MediaOrField
@@ -1144,16 +1146,25 @@ function EntryBlock({
      1.52:1 there. `nineteenFifties` steps it to off-white the moment the
      rising fill's crest passes it, the same way every block below it crosses. */
   const inkHead = "text-evergreen";
-  /* In the 1950s the accent IS the ink. No warm in the palette clears 4.5:1
-     across that band's travel — burnt-deep wants a near-white ground and gold
-     a near-black one, and the band spends its middle between the two. The
-     colour drains out of the labels as the light goes out of the band. */
-  const accent = isArtGallery
-    ? "text-[color:var(--truth-ink)]"
-    : "text-ochre-deep";
-  const accentHover = isArtGallery
-    ? "hover:text-[color:var(--truth-ink)]"
-    : "hover:text-ochre-deep";
+  /* THE WARM ACCENT IS YELLOW OCHRE, #D69828, ON EVERY GROUND (user direction,
+     18 September 2026, revised from Yellow Gold the same day): the era mark, the kicker, the record label, the CTA
+     and the title's hover. ⚠ This is a deliberate override of the measured
+     table — ochre is 2.30:1 on the egg white, which the earlier ochre-deep /
+     burnt-deep choices existed to avoid. The user chose the brand colour
+     over the ratio; if a reviewer raises legibility, this is the line to
+     revisit. The 1950s no longer needs a travelling accent because gold
+     reads the same on both sides of its crest.
+
+     THE LABELS ARE BURNT OCHRE, a second ruling the same day: the kicker
+     and the when above the title ("More of this", "Work with us", "What is
+     being built" — the last matches "Work with us" per 13 September) and the
+     record label under the images ("Written record", "Living memory") take
+     the kit's raw `--color-burnt`, #D97804. The CTA, the era mark and the
+     title's hover stay gold. Burnt is 2.91:1 on the egg white — the same
+     knowing override as above. */
+  const accent = "text-ochre";
+  const accentHover = "hover:text-ochre";
+  const labelInk = "text-burnt";
   /* The 1950s track is a whole screen tall at lg (16 September 2026, user
      direction) so its coda and record label can be seated in the space the
      withdrawn photograph left — see the coda note below. On the deck the slide
@@ -1171,7 +1182,7 @@ function EntryBlock({
         className={`mt-8 flex flex-wrap items-baseline justify-between gap-4${isArtGallery ? " lg:mb-auto" : ""
           }`}
       >
-        <p className={`eyebrow text-sm font-normal ${accent}`}>
+        <p className={`eyebrow text-sm font-normal ${labelInk}`}>
           {entry.source}
         </p>
         <Link
@@ -1189,7 +1200,7 @@ function EntryBlock({
           /* The ground frames (10–12) set the tag in Burnt Ochre with or
              without a CTA; elsewhere it stays quiet. */
           <p
-            className={`eyebrow mt-8 text-sm font-normal ${isGroundFrame ? accent : inkMuted
+            className={`eyebrow mt-8 text-sm font-normal ${isGroundFrame ? labelInk : inkMuted
               }`}
           >
             {entry.source}
@@ -1395,7 +1406,7 @@ function EntryBlock({
             }
           >
             {isPartner ? (
-              <p className={`eyebrow mb-6 font-normal ${accent}`}>{entry.when}</p>
+              <p className={`eyebrow mb-6 font-normal ${labelInk}`}>{entry.when}</p>
             ) : null}
             {kicker || whenKicker ? (
               /* Undated whens ("More of this") are Link-weight, not ExtraBold —
@@ -1411,7 +1422,7 @@ function EntryBlock({
                  now open identically, which is the point of splitting them
                  into two phases of one screen. */
               <p
-                className={`eyebrow mb-6 ${accent} ${(whenKicker && !kicker) || isAheadCard ? "font-normal" : ""}`}
+                className={`eyebrow mb-6 ${labelInk} ${(whenKicker && !kicker) || isAheadCard ? "font-normal" : ""}`}
               >
                 {kicker ?? whenKicker}
               </p>
@@ -1561,8 +1572,24 @@ function EntryBlock({
     </article>
   );
   if (withinDeck) return article;
+  /* THE 1950s RUNWAY IS CHARCOAL (user report, 18 September 2026: a white
+     strip seen scrolling up out of the count). The band paints its own
+     ground on the article, so the runway behind it only ever shows in the
+     hand-off — and on the way back up, as the count slides down off the
+     pinned band, the seam between the two opened on the section's egg
+     white for a beat. The band ends dark and hands into a dark count, so
+     everything behind that seam is charcoal: this runway, and the section's
+     foot below it (`endsFlush` in EraSection). Same move as the escarpment
+     break's runway. `data-truth-runway-dark` (truth.css) paints it FULL
+     BLEED: the runway is the reading column, and a 1px hairline of section
+     egg white showed either side of it at 1920 (user screenshot, 18
+     September 2026). */
   return (
-    <div data-truth-slide-runway className="relative">
+    <div
+      data-truth-slide-runway
+      {...(isArtGallery ? { "data-truth-runway-dark": true } : {})}
+      className={isArtGallery ? "relative bg-charcoal" : "relative"}
+    >
       {article}
     </div>
   );
@@ -1671,6 +1698,9 @@ function EntryPlate({
         id={id}
         data-truth-slide
         data-truth-slide-label={title}
+        // User direction, 18 September 2026: Today/Now stays on the plate,
+        // but its desktop pointer carries no repeated era or description.
+        data-truth-rail-no-label={id === "researched" ? true : undefined}
         data-truth-ground={id === "deed" ? "return" : "present"}
         className={`relative min-h-svh overflow-hidden ${hasDeckContent
           ? ""
@@ -1752,8 +1782,12 @@ function EntryPlate({
              record deck's opaque canvas, so the mobile plate showed a
              photograph with nothing on it. Below lg the block is hung from
              84svh and pulled back by its own height, which is where
-             `bottom-[16svh]` puts it in a 100svh box. */
-          className={`mx-auto w-full max-w-6xl px-6 lg:px-24 ${hasDeckContent
+             `bottom-[16svh]` puts it in a 100svh box.
+             User spacing correction, 18 September 2026: Today and the deed
+             share the hero's 1440px container and 224px desktop inset so
+             their labels, headings and captions clear the logo-aligned rail
+             at 1024px as well as on the full desktop frame. */
+          className={`mx-auto w-full max-w-360 px-6 lg:pl-56 lg:pr-12 ${hasDeckContent
             ? "absolute inset-x-0 top-[84svh] z-10 -translate-y-full lg:bottom-[16svh] lg:top-auto lg:translate-y-0"
             : bandOnMobile
               ? `relative z-30 pt-10 pb-16 lg:pt-0 ${deep ? "lg:pb-[24svh]" : "lg:pb-[16svh]"}`
@@ -1767,17 +1801,18 @@ function EntryPlate({
               below `lg`, where that record now stands on egg white. The
               values are the ones every other white record uses (EntryBlock:
               `text-evergreen` head, `text-ochre-deep` accent), not new
-              choices. */}
+              choices. The kicker under the era ("The work going on") is
+              Burnt Ochre on every ground (user direction, 18 September
+              2026), the same `--color-burnt` the record labels wear. */}
           <p
-            className={`eyebrow text-lg sm:text-2xl ${bandOnMobile ? "text-ochre-deep lg:text-gold" : "text-gold"
+            className={`eyebrow text-lg sm:text-2xl ${bandOnMobile ? "text-ochre-deep lg:text-ochre" : "text-ochre"
               }`}
           >
             {eyebrow}
           </p>
           {kicker ? (
             <p
-              className={`eyebrow mt-1 sm:text-base ${bandOnMobile ? "text-ochre-deep lg:text-ochre" : "text-ochre"
-                }`}
+              className="eyebrow mt-1 text-burnt sm:text-base"
             >
               {kicker}
             </p>
@@ -1927,12 +1962,12 @@ export function EraSection({
           ) : null}
           {deed.source && deed.cta ? (
             <div className="mt-10 flex flex-wrap items-baseline gap-x-16 gap-y-4">
-              <p className="eyebrow text-sm font-normal text-ochre-deep lg:text-ochre">
+              <p className="eyebrow text-sm font-normal text-burnt">
                 {deed.source}
               </p>
               <Link
                 href={deed.cta.href}
-                className="group eyebrow text-sm text-ochre-deep transition-transform duration-300 hover:translate-x-1 lg:text-gold"
+                className="group eyebrow text-sm text-ochre transition-transform duration-300 hover:translate-x-1"
               >
                 <span className="link-line group-hover:link-line-on">{deed.cta.label}</span> &rarr;
               </Link>
@@ -1998,13 +2033,17 @@ export function EraSection({
      own ::after — the article — not by the section around it, which is
      bg-canvas. Off-deck the section's bottom padding is therefore a strip of
      egg white between the band going dark and the escarpment break it hands
-     into (user screenshot, 11 September 2026). On the deck the break covers
-     it, which is why it has never shown at 1440. */
+     into (user screenshot, 11 September 2026). It used to keep `lg:pb-20`
+     because "on the deck the break covers it" — but the deck's hand-off
+     runs BOTH ways, and scrolling back up out of the count the strip showed
+     at 1440 too (user report, 18 September 2026). Flush at every width now;
+     the count's own screen brings the breathing room. `lg:pb-0` as well as
+     `pb-0`, because `lg:py-20` two classes up would otherwise win at lg. */
   const endsFlush = titleInGutter;
   const inner = (
     <div
       className={`relative mx-auto max-w-6xl px-6 py-10 lg:px-24 lg:py-20 ${startsFlush ? "pt-0 lg:pt-20" : ""
-        } ${endsFlush ? "pb-0 lg:pb-20" : ""}`}
+        } ${endsFlush ? "pb-0 lg:pb-0" : ""}`}
     >
       {/* The era marker, the lore line, and the entry whens all live on the
           trail rail now (2026-09-02) — repeating them here doubled the
@@ -2211,7 +2250,7 @@ function CountScreen({
   children: React.ReactNode;
 }) {
   return (
-    <div data-truth-slide-runway className="relative">
+    <div data-truth-slide-runway data-truth-runway-dark className="relative">
       <section
         id={id}
         data-truth-slide
@@ -2221,17 +2260,10 @@ function CountScreen({
         data-descent-arrive
         className="relative min-h-svh overflow-hidden bg-charcoal"
       >
-        {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B, static, behind
-            the copy. Spec: x900 y90 of the 1440 frame, 465 wide, 0.1 — the
-            delivered cut is off-white; the opacity is applied here. */}
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-        <img
-          src="/artwork/ring-b.svg"
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
-          loading="lazy"
-        />
+        {/* 15 · HARD STOP — PENDING-MOTIF · Artwork Ring B used to be drawn
+            here, once per screen. Since 18 September 2026 (user direction)
+            the dark run shares ONE ring, fixed and drifting — `CountRing`,
+            rendered once in page.tsx. */}
         {/* The deck pins a slide at exactly 100svh and clips it, so a screen
             whose content is taller than the viewport loses the overflow —
             measured, her testimony ran 1,053px into a 900px box and the first
@@ -2330,7 +2362,13 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
             <MediaOrField
               src={presentSrc(truthCountPortrait.src)}
               alt={truthCountPortrait.expects}
-              sizes="(min-width: 640px) 320px, 100vw"
+              /* ⚠ The file is a 3840×2024 LANDSCAPE cropped to a 4:5 window, so
+                 a `sizes` of 320px asked next/image for a 384px-wide render
+                 — 202px tall, then stretched to 400 and blurred (user report,
+                 18 September 2026). The width requested has to cover the
+                 HEIGHT: 400px tall on a 1.9:1 file wants ~760px wide, and
+                 the srcset doubles it for retina. */
+              sizes="(min-width: 640px) 768px, 100vw"
               quality={85}
               className="object-cover object-center"
               fieldClass={FIELD_CLASS[truthCountPortrait.tone]}
@@ -2364,14 +2402,7 @@ export function SuzanneBand({ withinDeck = false }: { withinDeck?: boolean }) {
       data-descent-band="count"
       className="relative overflow-hidden bg-charcoal"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
-      <img
-        src="/artwork/ring-b.svg"
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
-        loading="lazy"
-      />
+      {/* Ring B is no longer drawn per screen — see `CountRing`. */}
       {/* `pt-24` below lg, was `pt-36` (user direction, 16 September 2026 — the
           "significant gap" between the 1950s and 1902). With the 1950s coda
           moved to the foot of that band, the phone still measured 196px of bare
@@ -2458,7 +2489,7 @@ export function SuzanneCount() {
           </div>
         ))}
       </dl>
-      <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50 md:pl-[calc(180px+3rem)]">
+      <p className="mt-16 max-w-2xl text-sm leading-relaxed text-canvas/50 md:pl-57">
         <a
           href={suzanne.citation.href}
           className="underline decoration-canvas/30 underline-offset-4 transition-colors hover:text-canvas/80"
@@ -2501,7 +2532,7 @@ export function SuzanneTestimony() {
       <span data-era-label aria-hidden hidden>
         {suzanne.figures[1].year}
       </span>
-      <div className="max-w-3xl pb-10 md:pl-[calc(180px+3rem)] lg:py-28">
+      <div className="max-w-3xl pb-10 md:pl-57 lg:py-28">
         {/* The first of these carries the unratified CR4 word. Steve's note of
             7 Sep is explicit that as a bare pull quote it "reads as our copy —
             it isn't", so this one is attributed on the spot rather than relying
@@ -2786,7 +2817,11 @@ export function DissolveBreak({ deckContent }: { deckContent?: React.ReactNode }
        and land bottom-flush against it; with nothing to cover, it was simply a
        blank charcoal screen to scroll past before the words. The reader now
        arrives on the words. */
-    <div data-truth-slide-runway className="relative bg-charcoal">
+    <div
+      data-truth-slide-runway
+      data-truth-runway-dark
+      className="relative bg-charcoal"
+    >
       <section
         id={truthBreaks.escarpment.id}
         data-truth-slide
@@ -2871,10 +2906,10 @@ function RewindArrow() {
       {/* The rule is what fills the width; the mark is just the mark. */}
       <div className="flex items-center gap-4">
         <span className="h-px flex-1 bg-gold/45" />
-        <span className="block h-[13px] w-[23px] shrink-0 rotate-180 bg-gold [mask-image:url(/artwork/chevron-down.svg)] [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]" />
+        <span className="block h-3.25 w-5.75 shrink-0 rotate-180 bg-gold mask-[url(/artwork/chevron-down.svg)] mask-center mask-no-repeat mask-contain" />
         <span className="h-px flex-1 bg-gold/45" />
       </div>
-      <p className="eyebrow mt-4 text-center text-sm text-gold">
+      <p className="eyebrow mt-4 text-center text-sm text-ochre">
         {rewindCue.hint}
       </p>
     </div>
@@ -2974,7 +3009,7 @@ export function WattanuriBand() {
               as far as the type allows. */}
           <div
             aria-hidden
-            className="absolute inset-0 bg-linear-to-b from-black/0 via-black/[0.25] to-black/[0.68]"
+            className="absolute inset-0 bg-linear-to-b from-black/0 via-black/25 to-black/68"
           />
           {/* The sky answers a fine pointer — GalaxyField.tsx (13 Sep 2026). */}
           <GalaxyField />
@@ -3043,7 +3078,7 @@ export function WattanuriBand() {
                  1,560 — and 240px of it was empty. The frame's proportion is kept
                  from lg up, where the plate is its own screen. */
               className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-[calc(12svh+14vw)] pt-[22svh] lg:px-24 lg:pt-[36svh]">
-              <p className="eyebrow text-lg text-gold sm:text-2xl">{wattanuri.marker}</p>
+              <p className="eyebrow text-lg text-ochre sm:text-2xl">{wattanuri.marker}</p>
               <h2 className="headline mt-4 max-w-4xl text-4xl leading-[1.2] text-canvas sm:text-6xl">
                 {wattanuri.title}
               </h2>
@@ -3058,7 +3093,7 @@ export function WattanuriBand() {
                   actually commissioned. */}
               <Link
                 href={wattanuri.cta.href}
-                className="eyebrow mt-10 inline-block text-sm text-gold transition-transform duration-300 hover:translate-x-1"
+                className="eyebrow mt-10 inline-block text-sm text-ochre transition-transform duration-300 hover:translate-x-1"
               >
                 {wattanuri.cta.label} &rarr;
               </Link>
@@ -3066,6 +3101,37 @@ export function WattanuriBand() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+/**
+ * The count's one ring — Artwork Ring B, fixed to the viewport for the length
+ * of the dark run and drifting against the scroll (user direction, 18
+ * September 2026: "one low-opacity radial dotted element" that stays through
+ * the black sections). Grammar: "the ground drifting, Truth count ring";
+ * clock and fade in truth-count-ring.ts. Rendered ONCE, in page.tsx.
+ *
+ * Seated where the frame put it on each screen (x900 y90 of 1440, 465 wide)
+ * and above every slide — see the module for why an overlay is the right
+ * layer. Rests invisible: the module shows it, and with no JavaScript the
+ * screens simply have no ring, which is the artwork's decorative status.
+ * `overflow-hidden` on the fixed box, so the drift never adds a scrollbar.
+ */
+export function CountRing() {
+  return (
+    <div
+      aria-hidden
+      data-truth-count-ring
+      className="pointer-events-none fixed inset-0 z-30 overflow-hidden opacity-0"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG artwork */}
+      <img
+        src="/artwork/ring-b.svg"
+        alt=""
+        className="absolute right-[5%] top-24 w-[32%] max-w-116 opacity-10"
+        loading="lazy"
+      />
     </div>
   );
 }

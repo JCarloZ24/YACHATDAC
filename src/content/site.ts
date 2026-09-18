@@ -296,11 +296,11 @@ export const footerNav: { title: string; links: NavChild[] }[] = [
  * ⚠ Social profiles — the hi-fi footer lists these (FOLLOW column and the icon
  * row), but no profile URLs have been supplied. `href: null` renders each as a
  * held placeholder rather than a dead link; fill in the URL and it becomes one.
+ * X removed at the user's request, 18 September 2026 (D5).
  */
 export const socialLinks: { title: string; href: string | null }[] = [
   { title: "Facebook", href: null },
   { title: "Instagram", href: null },
-  { title: "X", href: null },
   { title: "LinkedIn", href: null },
   { title: "YouTube", href: null },
 ];

@@ -8,6 +8,7 @@ import { createGatedDeck } from "@/lib/motion/gated-deck";
 import { bindTruthScenes } from "@/lib/motion/truth-scenes";
 import { createTruthRewind } from "@/lib/motion/truth-rewind";
 import { createTruthMobileRail } from "@/lib/motion/truth-mobile-rail";
+import { createTruthCountRing } from "@/lib/motion/truth-count-ring";
 import {
   calibrateRailMap,
   railProgressAt,
@@ -100,6 +101,9 @@ export function V2TruthMotion() {
              the bar is the chronology, riding the same map through its own
              section calibration. */
           register(createTruthMobileRail()),
+          /* The count's one ring, drifting across the dark run (18 September
+             2026). Runway-triggered, so it runs on both paths. */
+          register(createTruthCountRing()),
         ];
         start();
         unwatch = watchVisibility();

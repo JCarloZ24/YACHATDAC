@@ -114,7 +114,7 @@ const WAYS = [
     /* Verbatim from the Truth v3 draft, the same sentence /partnerships opens
        on. Quoted rather than imported for the reason recorded there: reaching
        into Truth's era model for one string couples this page to it. */
-    body: "A researcher on Country is a guest on Country. Partnerships here are expected to give something back to the land and the people.",
+    body: "A researcher on-Country is a guest on-Country. Partnerships here are expected to give something back to the land and the peoples.",
     label: "Research opportunities",
     href: "/partnerships",
   },
