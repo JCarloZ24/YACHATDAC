@@ -789,13 +789,11 @@ export function LivingWorkChallenges() {
         <div
           data-artwork="ring-c"
           data-artwork-drift
-          /* ⚑ top-6 below lg, 15 September 2026 (user mobile screenshot: "fix
-             the artwork that is cropped"). On a phone §03's top edge sits
-             under §02's handed-off header, and -top-24 put the ring's upper
-             arcs above that edge, where the section's overflow-hidden cut
-             them off in a hard horizontal line across the lede. Seated inside
-             the section, the ring is whole. lg keeps -top-48. */
-          className="absolute top-6 -right-32 h-[420px] w-[420px] opacity-75 lg:-top-48 lg:-right-72 lg:h-[1000px] lg:w-[1000px]"
+          /* ⚑ Keep the ring running off the right side, but seat its upper
+             edge inside the section (18 September 2026, user direction). The
+             former negative top offset cut the upper arcs; the side crop is
+             intentional and remains part of the composition. */
+          className="absolute top-6 -right-32 h-[420px] w-[420px] opacity-75 lg:-right-72 lg:h-[1000px] lg:w-[1000px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/artwork/ring-c.svg" alt="" className="h-full w-full brightness-0" />

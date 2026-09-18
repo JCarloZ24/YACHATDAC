@@ -1,6 +1,6 @@
 # The scene ledger
 
-*Last updated: 17 September 2026*
+*Last updated: 18 September 2026*
 
 Home closing-pattern hover, 13 September 2026 (user screenshot, **what radiates**, Home closing ground): the existing two spiral assets respond to mouse position with shallow opposing drift and turn. The headline, offer photographs, original artwork, resting placement and scroll timing do not change. Hover owns inner wrappers; the original ground wrapper still owns the scroll entrance. Input is enabled only once that entrance has seated and the panel is visible, then resets on exit, blur, hidden tab or leaving the beat. Controller teardown removes listeners, observers and tweens. Fine hover pointers only; reduced-motion, touch and failed-canvas fallback remain still.
 
@@ -1150,6 +1150,12 @@ yet, and the two should be reconciled before this page is signed off.
 
 **Reads as:** media · type · transition · media · media · media · none · none ·
 none · type.
+
+**§03 disclosures, 18 September 2026.** The phone rule now applies at every
+width: only the first challenge in each labelled group opens automatically as
+it reaches the reading line. The remaining rows stay closed until selected.
+This keeps the section's ground descent while preventing the desktop from
+turning every passed row into an expanded wall of text.
 
 ⚠ **Corrected 8 Sep 2026 — §07 was missing from this ledger.** The page has
 built ten sections since the hi-fi; this table listed nine, and §06's row was

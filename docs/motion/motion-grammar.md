@@ -8,7 +8,11 @@ separate route/article covers described below.
 | --- | --- | --- | --- | --- |
 | **the page is ready**, every public route | One charcoal cover shows the supplied wordmark and dot sweep, then “You're viewing” and the destination name. Runs on link navigation, browser history, direct arrival, refresh and hard refresh. Waits for fonts, opening image decoding, video frame readiness, the motion build and stable layout; lower-page lazy media loads as needed. Entrances wait until the cover clears. | 200ms dim on navigation; readiness-paced count; 700ms name dwell; 260ms fade out. 12s readiness ceiling, Escape/Tab release and CSS backstop. Reduced motion retains a static readiness cover without animated transitions. | August, 11 September 2026 | `RouteLoader`, `PageLoader`; owned CSS transition, no cross-route GSAP timeline |
 
-*Last updated: 17 September 2026*
+*Last updated: 18 September 2026*
+
+| Living Work challenges — 18 September 2026 | Behaviour | Timing | Authority | Implementation |
+| --- | --- | --- | --- | --- |
+| **accumulating**, challenge disclosures | At every viewport width, only the first challenge in each labelled group opens automatically. Every later row remains closed until the reader chooses it; scrolling past does not expand the rest into a wall of text. Native disclosure controls remain keyboard- and pointer-operable, and no-JS/reduced-motion keep the same first-row-open document state. | First row opens once when its top reaches 30% of the viewport; later rows have no automatic trigger. The existing 450ms CSS disclosure transition and debounced layout refresh are unchanged. | User direction, 18 September 2026 (“only the first part automatically shows up while the rest remains hidden, just like on the mobile view”) | `clusterDescent` in `recipes.ts`; `details[data-line]` |
 
 | Partnerships — 16 September 2026 | Behaviour | Timing | Authority | Implementation |
 | --- | --- | --- | --- | --- |

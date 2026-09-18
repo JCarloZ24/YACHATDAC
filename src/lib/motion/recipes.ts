@@ -582,16 +582,12 @@ export function clusterDescent(
       // there — so every row starts closed here and opens the moment it
       // crosses the line; the CSS transition alone paces the unfold.
       //
-      // ⚑ Below lg, 15 September 2026, user direction ("only automatically
-      // open the first ones, and leave the rest closed" — mobile only): on a
-      // phone every row unfolding in turn made the section a long wall of
-      // text. There only the first row of each band opens itself; the rest
-      // stay closed until tapped. Read once at build, like the rest of this
-      // recipe; lg and up are unchanged.
-      const firstOnly = window.matchMedia("(max-width: 1023.98px)").matches;
+      // ⚑ Every width, 18 September 2026, user direction: use the phone's
+      // first-row-only behaviour on desktop too. Opening every passed row made
+      // the section a wall of text; later rows now remain reader-controlled.
       qa<HTMLDetailsElement>(root, "details[data-line]").forEach((row) => {
         row.open = false;
-        if (firstOnly && row.parentElement?.querySelector("details[data-line]") !== row) return;
+        if (row.parentElement?.querySelector("details[data-line]") !== row) return;
         ScrollTrigger.create({
           trigger: row,
           start: "top 30%",
@@ -1518,4 +1514,3 @@ export const RECIPES = {
 } as const;
 
 export type RecipeName = keyof typeof RECIPES;
-
