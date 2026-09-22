@@ -10,7 +10,23 @@ import { ClickBloom } from "@/components/motion/ClickBloom";
 import { org } from "@/content/site";
 import "./globals.css";
 
+/**
+ * Absolute base for every URL-shaped metadata field — the `opengraph-image`
+ * and `twitter-image` files under each route resolve against it, and chat
+ * apps ignore a relative og:image. Vercel sets VERCEL_PROJECT_PRODUCTION_URL
+ * on every build; the fallback is the current share link (22 September 2026)
+ * and the local dev port. Set NEXT_PUBLIC_SITE_URL once the custom domain lands.
+ */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.NODE_ENV === "production"
+      ? "https://yachatdac.vercel.app"
+      : "http://localhost:3001");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: `${org.name} — ${org.legalName}`,
     template: `%s — ${org.name}`,

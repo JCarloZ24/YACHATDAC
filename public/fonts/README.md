@@ -10,6 +10,16 @@ The three faces above the fold are preloaded in the root layout.
 | Body | Work Sans | `WorkSans-Variable.woff2`, `WorkSans-Italic-Variable.woff2` | ✅ SIL OFL 1.1 — `WorkSans-OFL.txt` |
 | Callouts | GoodDog Plain / Good Dog Cool | `GoodDogPlain.woff2`, `GoodDogCool.woff2` | ✅ freeware — `GoodDog-LICENCE.txt` |
 
+## Link-preview (Open Graph) copies — 22 September 2026
+
+`next/og` (Satori) reads ttf/otf/woff only, so `src/lib/og/fonts/` holds
+`BantayogSans-ExtraBold.ttf` and `WorkSans-Regular.ttf` (Work Sans variable
+instanced at wght 400), converted from the woff2 above with fontTools. Same
+outlines, same licences — Bantayog's commercial licence and Work Sans's OFL
+both cover the conversion. Block Berthold is not copied: its licence is Adobe
+Fonts hosted delivery only, so the cards set titles in Bantayog Sans. If the
+repo ever goes public, purge these copies with the woff2 ones.
+
 ## Licensing — resolved 2026-09-02 (from admin)
 
 **Block Berthold** is licensed through **Adobe Fonts**, web project `qqn2php`

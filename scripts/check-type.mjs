@@ -55,6 +55,10 @@ const walk = (p) => {
   }
   if (s.isDirectory()) {
     if (/node_modules|\.next|\.git/.test(p)) return;
+    // src/lib/og renders link-preview PNGs through next/og (Satori), which has
+    // no stylesheet and no utilities — font-family can only be inline there,
+    // and it embeds the same licensed faces. Exempted 22 September 2026.
+    if (/src[\\/]lib[\\/]og$/.test(p)) return;
     for (const e of readdirSync(p)) walk(join(p, e));
   } else if (/\.(tsx|jsx)$/.test(p)) files.push(p);
 };

@@ -1,6 +1,6 @@
 # Brand assets
 
-*Last updated: 11 September 2026*
+*Last updated: 22 September 2026*
 
 ## Logo
 
@@ -11,7 +11,7 @@ dot-painting motifs in Yellow Ochre and Burnt Ochre.
 | File | Use | Status |
 | --- | --- | --- |
 | `logo-wordmark.svg` | Wordmark only — header, loader, small sizes | ✅ **in** |
-| `logo-stacked.png` | Supplied stacked raster lockup — footer; source for the favicon symbol | ✅ **in** |
+| `logo-stacked.png` | Supplied stacked raster lockup — footer; source for the favicon symbol and the link-preview cards | ✅ **in** |
 | `logo-full.svg` | Wordmark + motifs + legal-name lockup | not supplied |
 | `logo-mono.svg` | Single-colour version | not supplied |
 
@@ -27,6 +27,17 @@ or restyling it does not — do neither.
 The SVG is the wordmark **only**. The full lockup is available as
 `logo-stacked.png`; a full vector lockup and the single-colour cut still have
 to come from the brand team.
+
+### Link-preview cards — 22 September 2026
+
+User direction: chat apps (WhatsApp, Messenger, iMessage, Slack, X) show the
+stacked lockup with every shared link, and each page path gets its own
+branded banner. `src/lib/og/banner.tsx` renders them through `next/og`; every
+route carries an `opengraph-image.tsx` and `twitter-image.tsx`. The lockup is
+served from `src/lib/og/logo-stacked.png`, a 640px sharp downscale of this
+file with nothing redrawn, kept out of `public/` because it is a build input,
+not a page asset. The lockup's wordmark is white, so the card sets it on
+charcoal, the ground it was drawn for.
 
 ### Site icons — 11 September 2026
 
