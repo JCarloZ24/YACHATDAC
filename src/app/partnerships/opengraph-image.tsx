@@ -9,7 +9,7 @@ export default function Image() {
   return renderBanner({
     eyebrow: "Partnerships",
     title: "Research and partnership opportunities on Turraburra",
-    standfirst: "A researcher on-Country is a guest on-Country.",
+    standfirst: "A researcher On-Country is a guest On-Country.",
     ground: "roasted",
     path: "/partnerships",
   });

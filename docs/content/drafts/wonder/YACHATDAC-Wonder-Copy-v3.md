@@ -182,7 +182,7 @@ Its traces are still here in stone: ancient footprints, petrified trees and othe
 
 We take you out to see them.
 
-**Finding food on-Country**
+**Finding food On-Country**
 
 What can look empty from the road is full of food.
 
@@ -264,7 +264,7 @@ Cabins and a lodge may come later. For now, this is how we stay — simple, shar
 
 ### Who you are with
 
-You will be hosted by the Traditional Custodians of this Country and the Iningai Rangers who care for and work on-Country.
+You will be hosted by the Traditional Custodians of this Country and the Iningai Rangers who care for and work On-Country.
 
 The people with you may change from visit to visit, but you will always be spending time with people who know this Country, work on it and have a connection to the stories and places they share with you.
 

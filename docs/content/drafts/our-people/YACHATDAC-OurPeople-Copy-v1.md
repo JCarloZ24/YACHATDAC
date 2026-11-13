@@ -26,11 +26,11 @@
 
 Aboriginal and Torres Strait Islander readers are advised that this page contains images and names of people who have passed away.
 
-**Iningai custodians, Rangers and Elders**
+**Iningai Custodians & Caring for Country Teams**
 
 ## Our people
 
-YACHATDAC is run by Iningai Traditional Custodians, with Rangers doing the work on Country and Elders guiding what can be shared.
+YACHATDAC is led by Iningai Traditional Custodians, with the Rangers & Caring for Country Teams.
 
 ### Suzanne Thompson
 

@@ -80,7 +80,7 @@ Work with us
 
 #### Partnerships
 
-A researcher on-Country is a guest on-Country. Partnerships here are expected to give something back to the land and the peoples.
+A researcher On-Country is a guest On-Country. Partnerships here are expected to give something back to the land and the peoples.
 
 [Partner with us →](/connect)
 
@@ -92,7 +92,7 @@ Now
 
 #### [Fire-stick farming, springs, and two flux towers](/resources/fire-stick-farming-and-the-carbon-in-the-soil)
 
-The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on-Country managed this way, one on grazed land, checked against each other.
+The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one On-Country managed this way, one on grazed land, checked against each other.
 
 They can do this work because, seven years ago, this stopped being someone else's station.
 

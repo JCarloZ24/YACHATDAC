@@ -18,7 +18,7 @@ import {
 export const metadata: Metadata = {
   title: "Partnerships",
   description:
-    "Research and partnership opportunities on Turraburra. A researcher on-Country is a guest on-Country.",
+    "Research and partnership opportunities on Turraburra. A researcher On-Country is a guest On-Country.",
 };
 
 /**

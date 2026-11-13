@@ -32,4 +32,4 @@ It isn’t an isolated fix. Across the property, new springs have started appear
 
 ## Sources
 
-Suzanne Thompson, recorded on Country, 2026. Spring hydrology detail from on-Country accounts and ongoing research with Queensland University of Technology.
+Suzanne Thompson, recorded on Country, 2026. Spring hydrology detail from On-Country accounts and ongoing research with Queensland University of Technology.

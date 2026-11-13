@@ -27,10 +27,10 @@
  */
 
 export const ourPeopleHero = {
-  eyebrow: "Iningai custodians, Rangers and Elders",
+  eyebrow: "Iningai Custodians & Caring for Country Teams",
   title: "Our people",
   standfirst:
-    "YACHATDAC is run by Iningai Traditional Custodians, with Rangers doing the work on Country and Elders guiding what can be shared.",
+    "YACHATDAC is led by Iningai Traditional Custodians, with the Rangers & Caring for Country Teams.",
 } as const;
 
 /**

@@ -139,7 +139,7 @@ export const erasBefore: readonly TruthEra[] = [
         when: "Work with us",
         title: "Partnerships",
         body: [
-          "A researcher on-Country is a guest on-Country. Partnerships here are expected to give something back to the land and the peoples.",
+          "A researcher On-Country is a guest On-Country. Partnerships here are expected to give something back to the land and the peoples.",
         ],
         /*
           Was /connect, which routes every intent and holds no partnership
@@ -167,7 +167,7 @@ export const erasBefore: readonly TruthEra[] = [
         title: "Fire-stick farming, springs, and two flux towers",
         href: "/the-record/fire-stick-farming-and-the-carbon-in-the-soil",
         body: [
-          "The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one on-Country managed this way, one on grazed land, checked against each other.",
+          "The Iningai Rangers burn, fence, collect seed and bring springs back. Two towers measure what that does to the carbon in the soil — one On-Country managed this way, one on grazed land, checked against each other.",
         ],
         coda: "They can do this work because, seven years ago, this stopped being someone else's station.",
         image: "People at work — fire-stick farming, seed collecting, or the flux tower.",

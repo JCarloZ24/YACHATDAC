@@ -395,6 +395,23 @@ export const wayForward = {
  * her behalf, and do not paste the draft's version in as a stopgap. Steve
  * (FNAN) reviews the jurisdiction; Suzanne owns the words.
  */
+/**
+ * Footer Traditional Acknowledgement. Heading and wording supplied by the
+ * YACHATDAC team via the site-wide review (comments GA2, GA5; 13 Nov 2026).
+ * The closing line is the v3 draft's, added at the reviewer's request.
+ * ⚠ A1 — confirming Suzanne wrote or approved this wording is still open.
+ */
+export const traditionalAcknowledgement = {
+  heading: "Traditional Acknowledgement",
+  paragraphs: [
+    "YACHATDAC deeply acknowledges Country and honours the Iningai Ancestors of the lands, waters, and skies to which we are born, live upon, and care for. We also pay respect to the ancestors of everyone we walk alongside and engage with.",
+    "We recognise that no matter where we come from —across Australia or around the globe— we each carry the bloodlines, stories, and wisdom of those who came before us. When these diverse pathways of knowledge converge, something powerful is born.",
+    "With deep gratitude, we thank all ancestors for guiding our steps, sharing their enduring wisdom, and entrusting us to carry this living knowledge forward into the future.",
+    "Whether you come here in person or arrive on this page, you are welcome.",
+  ],
+};
+
+/** Superseded by `traditionalAcknowledgement`; kept as the record of the hold. */
 export const welcomeToCountry = {
   status: "awaiting-suzanne" as const,
   /* The hi-fi footer's own hold wording (2137:2623) — rendered verbatim,

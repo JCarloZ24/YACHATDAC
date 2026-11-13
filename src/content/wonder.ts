@@ -271,7 +271,7 @@ export const stayStages: readonly StayStage[] = [
      * ... tens of thousands of years": first person, and a measure counted in
      * people rather than in a number nobody here has verified.
      */
-    title: "Finding food on-Country",
+    title: "Finding food On-Country",
     body: [
       "What can look empty from the road is full of food.",
       "Seeds, fruits, herbs, nuts and plants have sustained our people on this Country for thousands of generations.",
@@ -466,7 +466,7 @@ export const whatItIsLike = {
 export const whoYouAreWith = {
   title: "Who you are with",
   body: [
-    "You will be hosted by the Traditional Custodians of this Country and the Iningai Rangers who care for and work on-Country.",
+    "You will be hosted by the Traditional Custodians of this Country and the Iningai Rangers who care for and work On-Country.",
     "The people with you may change from visit to visit, but you will always be spending time with people who know this Country, work on it and have a connection to the stories and places they share with you.",
   ],
   image: "Suzanne talking with a small group out on Country.",

@@ -260,7 +260,7 @@ const sentences = (para: string): string[] =>
  * reason. If the draft changes, change it in both places.
  */
 const PRINCIPLE =
-  "A researcher on-Country is a guest on-Country. Partnerships here are expected to give something back to the land and the peoples.";
+  "A researcher On-Country is a guest On-Country. Partnerships here are expected to give something back to the land and the peoples.";
 
 /**
  * The responsibility, from About's Reciprocity value (about.ts). The whole page

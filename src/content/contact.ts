@@ -47,7 +47,7 @@ export const contactDetails: readonly ContactDetail[] = [
     href: "mailto",
   },
   { label: "Phone", value: "To be confirmed", pending: true, href: "tel" },
-  { label: "Registration", value: "ICN — · ABN —", pending: true },
+  { label: "Registration", value: "ICN 8437 · ABN 19 845 146 793" },
 ];
 
 /**

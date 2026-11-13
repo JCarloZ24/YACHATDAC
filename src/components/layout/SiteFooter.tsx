@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { welcomeToCountry } from "@/content/homepage";
+import { traditionalAcknowledgement } from "@/content/homepage";
 import {
   footerNav,
   legalLinks,
@@ -17,9 +17,9 @@ import {
  * the legal row.
  *
  * Held content, all visibly marked so none of it can ship by accident:
- *   ⚠ R1  — the Acknowledgement / Welcome to Country wording is Suzanne
- *           Thompson's to give. The bracketed hold renders verbatim.
- *   ⚠ R15 — ICN and ABN not yet supplied; bracketed holds plus a warning.
+ *   R1  — Traditional Acknowledgement supplied 13 Nov 2026 (site-wide
+ *         review GA2/GA5); Suzanne's sign-off (A1) still to be confirmed.
+ *   R15 — ICN and ABN supplied 13 Nov 2026 (GA4).
  *   ⚠ Social profile URLs not supplied — the FOLLOW column and the icon row
  *           render as inert placeholders until site.ts carries real hrefs.
  *
@@ -168,15 +168,14 @@ export function SiteFooter() {
           {/* Acknowledgement — first, centred, above the navigation. Placement
               per open decision 3: footer, text only, no ceremony element. */}
           <div className="text-center">
-            <h2 className="eyebrow text-gold">Acknowledgement of Country</h2>
-            {welcomeToCountry.status === "awaiting-suzanne" ? (
-              <p
-                className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-canvas/90 sm:mt-8 sm:text-lg"
-                data-placeholder="welcome-to-country"
-              >
-                {welcomeToCountry.placeholder}
-              </p>
-            ) : null}
+            <h2 className="eyebrow text-gold">
+              {traditionalAcknowledgement.heading}
+            </h2>
+            <div className="mx-auto mt-6 max-w-2xl space-y-4 text-base leading-relaxed text-canvas/90 sm:mt-8 sm:text-lg">
+              {traditionalAcknowledgement.paragraphs.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
           </div>
 
           {/* The gold dot wave — the artist's divider, whole. */}
@@ -205,13 +204,16 @@ export function SiteFooter() {
               {/* Phones, 15 September 2026, user direction: below md, where
                   the lockup sits on a row of its own, it is centred and the
                   registration block is not shown. md and up are unchanged. */}
-              <Image
-                src="/brand/logo-stacked.png"
-                alt={`${org.name} — ${org.legalName}`}
-                width={1990}
-                height={2338}
-                className="w-44 max-md:mx-auto"
-              />
+              {/* Links home — site-wide review comment GA8, 13 Nov 2026. */}
+              <Link href="/" className="block w-44 max-md:mx-auto">
+                <Image
+                  src="/brand/logo-stacked.png"
+                  alt={`${org.name} — ${org.legalName}. Home`}
+                  width={1990}
+                  height={2338}
+                  className="w-44"
+                />
+              </Link>
 
               {/* Registration — the 21 frame: label, ICN, then ABN with the
                   R15 flag on the same line. ⚠ Hidden below md (see above):

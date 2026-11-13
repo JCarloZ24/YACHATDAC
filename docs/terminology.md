@@ -1,11 +1,14 @@
 # Terminology sheet
 
-*Last updated: 18 September 2026*
+*Last updated: 13 November 2026*
+
+**On-Country** takes a capital O everywhere, mid-sentence included — branding
+direction from the site-wide review (GA14, 13 November 2026).
 
 **Partnerships, About and Living Work copy — 18 September 2026, user direction (D5):**
 “Wi-Fi” is hyphenated and capitalised (Living Work communications and power
 lists). “Secure ranger base” takes lower-case r and b. The Partnerships hero
-and the Connect card use “A researcher on-Country is a guest on-Country … the
+and the Connect card use “A researcher On-Country is a guest On-Country … the
 land and the peoples”, matching Truth. The About Reciprocity value and the
 Partnerships §02 read “carry mutual responsibility … the land and the peoples”,
 and the §02 eyebrow is “The responsibility”. The third research discipline is
@@ -13,8 +16,8 @@ and the §02 eyebrow is “The responsibility”. The third research discipline 
 and in Truth's Open research paragraph.
 
 **Truth copy — 18 September 2026, user direction (D5):** the Partnerships
-paragraph uses “A researcher on-Country is a guest on-Country” and ends
-“the land and the peoples.” The Rangers paragraph uses “one on-Country
+paragraph uses “A researcher On-Country is a guest On-Country” and ends
+“the land and the peoples.” The Rangers paragraph uses “one On-Country
 managed this way”. These edits apply to narration, not recorded speech.
 
 **Welcome heading — 18 September 2026, user direction (D5):** use
@@ -25,7 +28,7 @@ the “A season of bush foods” description uses “the Country each one grows
 out of.” X is removed from the shared footer's social links.
 
 **Wonder formatting — 18 September 2026, user direction (D5):** use
-“Finding food on-Country” and “care for and work on-Country” in the stay heading
+“Finding food On-Country” and “care for and work On-Country” in the stay heading
 and hosts paragraph. The Dates field ends “comfortable stretch” without a
 trailing full stop, matching the other practical details.
 

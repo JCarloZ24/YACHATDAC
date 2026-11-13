@@ -730,7 +730,7 @@ export const recordArticles: Readonly<Record<string, RecordArticle>> = {
     ],
     "sources": [
       {
-        "text": "Suzanne Thompson, recorded on Country, 2026. Spring hydrology detail from on-Country accounts and ongoing research with Queensland University of Technology."
+        "text": "Suzanne Thompson, recorded on Country, 2026. Spring hydrology detail from On-Country accounts and ongoing research with Queensland University of Technology."
       }
     ]
   },
@@ -770,7 +770,7 @@ export const recordArticles: Readonly<Record<string, RecordArticle>> = {
     ],
     "sources": [
       {
-        "text": "Geological and fossil detail drawn from the Queensland Museum, the University of Queensland Dinosaur Lab, and Queensland Government records on the Winton Formation and Muttaburrasaurus langdoni. Property soil and footprint detail from Tilly’s on-Country account."
+        "text": "Geological and fossil detail drawn from the Queensland Museum, the University of Queensland Dinosaur Lab, and Queensland Government records on the Winton Formation and Muttaburrasaurus langdoni. Property soil and footprint detail from Tilly’s On-Country account."
       }
     ]
   }

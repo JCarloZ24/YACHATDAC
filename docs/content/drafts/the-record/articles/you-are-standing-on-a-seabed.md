@@ -26,4 +26,4 @@ The escarpment above Marra Wonga is younger than all of it. Before anyone marked
 
 ## Sources
 
-Geological and fossil detail drawn from the Queensland Museum, the University of Queensland Dinosaur Lab, and Queensland Government records on the Winton Formation and Muttaburrasaurus langdoni. Property soil and footprint detail from Tilly’s on-Country account.
+Geological and fossil detail drawn from the Queensland Museum, the University of Queensland Dinosaur Lab, and Queensland Government records on the Winton Formation and Muttaburrasaurus langdoni. Property soil and footprint detail from Tilly’s On-Country account.

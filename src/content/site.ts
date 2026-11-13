@@ -306,12 +306,12 @@ export const socialLinks: { title: string; href: string | null }[] = [
 ];
 
 /**
- * ⚠ R15 — corporation registration numbers, not yet supplied. The footer
- * renders bracketed holds and a visible warning until both are filled.
+ * R15 — corporation registration numbers. Supplied by the YACHATDAC team in
+ * the site-wide review (comment GA4, received 13 Nov 2026).
  */
 export const registration: { icn: string | null; abn: string | null } = {
-  icn: null,
-  abn: null,
+  icn: "8437",
+  abn: "19 845 146 793",
 };
 
 /**
