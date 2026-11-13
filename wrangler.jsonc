@@ -1,0 +1,29 @@
+{
+	// Cloudflare Workers deploy via @opennextjs/cloudflare. Moved off Vercel on
+	// 8 November 2026 after Vercel paused the deployment ("This deployment is
+	// temporarily paused"). See docs/deploy-cloudflare.md.
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"main": ".open-next/worker.js",
+	"name": "yachatdac-web",
+	"compatibility_date": "2026-11-01",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS"
+	},
+	"services": [
+		{
+			// Self-reference binding the adapter requires; service must equal "name".
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "yachatdac-web"
+		}
+	],
+	// next/image optimisation (AVIF/WebP, qualities 75/85/90 in next.config.ts).
+	// https://opennext.js.org/cloudflare/howtos/image
+	"images": {
+		"binding": "IMAGES"
+	}
+	// No R2 incremental cache on purpose: no route uses ISR or revalidate, and
+	// the-record/[slug] is fully prerendered via generateStaticParams. Add the
+	// r2_buckets block from the adapter template if that ever changes.
+}

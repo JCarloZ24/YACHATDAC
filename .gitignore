@@ -98,3 +98,8 @@ next-env.d.ts
 
 # Playwright MCP session dumps — regenerated per run
 .playwright-mcp/
+
+# cloudflare / opennext build output
+/.open-next/
+/.wrangler/
+.dev.vars*

@@ -1,7 +1,10 @@
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { org } from "@/content/site";
+import {
+  bantayogExtraBoldBase64,
+  logoStackedBase64,
+  workSansRegularBase64,
+} from "./assets.generated";
 
 /**
  * Link-preview banners — the image a chat app (WhatsApp, Messenger, iMessage,
@@ -63,25 +66,41 @@ export type BannerProps = {
   path: string;
 };
 
-const root = process.cwd();
+/** base64 → ArrayBuffer without Node's Buffer, so it runs on Workers too. */
+function toArrayBuffer(b64: string): ArrayBuffer {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes.buffer;
+}
 
-async function assets() {
-  const [logo, bantayog, workSans] = await Promise.all([
-    readFile(join(root, "src/lib/og/logo-stacked.png")),
-    readFile(join(root, "src/lib/og/fonts/BantayogSans-ExtraBold.ttf")),
-    readFile(join(root, "src/lib/og/fonts/WorkSans-Regular.ttf")),
-  ]);
+/**
+ * Assets are embedded, not read from disk: Workers have no filesystem, and the
+ * card 500'd there when this used readFile (8 Nov 2026, Cloudflare move).
+ * Regenerate `assets.generated.ts` with scripts/embed-og-assets.mjs.
+ */
+function assets() {
   return {
-    logoSrc: `data:image/png;base64,${logo.toString("base64")}`,
+    logoSrc: `data:image/png;base64,${logoStackedBase64}`,
     fonts: [
-      { name: "Bantayog Sans", data: bantayog, weight: 800 as const, style: "normal" as const },
-      { name: "Work Sans", data: workSans, weight: 400 as const, style: "normal" as const },
+      {
+        name: "Bantayog Sans",
+        data: toArrayBuffer(bantayogExtraBoldBase64),
+        weight: 800 as const,
+        style: "normal" as const,
+      },
+      {
+        name: "Work Sans",
+        data: toArrayBuffer(workSansRegularBase64),
+        weight: 400 as const,
+        style: "normal" as const,
+      },
     ],
   };
 }
 
 export async function renderBanner(props: BannerProps) {
-  const { logoSrc, fonts } = await assets();
+  const { logoSrc, fonts } = assets();
   const bg = ground[props.ground];
   const light = LIGHT.has(props.ground);
   const ink = light ? ground.charcoal : ground.canvas;

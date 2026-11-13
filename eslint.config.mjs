@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Cloudflare build output (opennextjs-cloudflare) — generated, hundreds of MB.
+    ".open-next/**",
+    ".wrangler/**",
     // Skill templates, not application source. They are reference code meant
     // to be copied from, and they intentionally show unused imports.
     ".claude/**",
