@@ -8,7 +8,7 @@ export const contentType = BANNER_CONTENT_TYPE;
 
 export default function Image() {
   return renderBanner({
-    eyebrow: "Welcome to Country",
+    eyebrow: "Welcome to Turraburra", // GA1/GA13, 13 Nov 2026
     title: org.legalName,
     standfirst: org.coreNarrative,
     ground: "canvas",

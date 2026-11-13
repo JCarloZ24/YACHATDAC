@@ -285,6 +285,8 @@ export const footerNav: { title: string; links: NavChild[] }[] = [
   {
     title: "Get in touch",
     links: [
+      // GA6, 13 Nov 2026 — destination provisional.
+      { title: "General enquiries", href: "/connect" },
       { title: "Guesting enquiries", href: "/connect" },
       { title: "Research & partnerships", href: "/connect" },
       { title: "Ranger exchange", href: "/connect" },

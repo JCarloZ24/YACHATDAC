@@ -7,7 +7,6 @@ import { createPageReadiness, isPublicRoute, PAGE_LOAD_START } from "@/lib/page-
 import { beginRoute, markRouteSettled } from "@/lib/motion/route-entry";
 import { markEntered } from "@/lib/site-entry";
 import { footerNav, legalLinks, org, pillars, primaryAction, primaryNav, resourcesFooterLinks } from "@/content/site";
-import { culturalAdvice as ourPeopleAdvice } from "@/content/our-people";
 
 /** X7 / SYS-02, August, 11 September 2026: the named cover runs for every
  * visit, including a warm link navigation, back/forward and hard refresh.
@@ -54,7 +53,9 @@ const ROUTE_TITLES: [href: string, title: string][] = [
  * the announcement holds before the cover lifts: long enough to read the
  * sentence, where the default 700ms is only long enough to see a name.
  */
-const ROUTE_ADVICE: [href: string, advice: string][] = [["/our-people", ourPeopleAdvice]];
+// Emptied 13 Nov 2026 (GA9): the advice is now the site-wide first-visit
+// pop-up, CulturalAdviceNotice. The mechanism stays for any route that needs it.
+const ROUTE_ADVICE: [href: string, advice: string][] = [];
 const ADVICE_DWELL_MS = 2800;
 
 function adviceFor(pathname: string): string | undefined {

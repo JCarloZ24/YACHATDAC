@@ -6,6 +6,7 @@ import { IntroGate } from "@/components/layout/IntroGate";
 import { TransitionProvider } from "@/components/motion/TransitionProvider";
 import { RouteBlink } from "@/components/motion/RouteBlink";
 import { RouteLoader } from "@/components/layout/RouteLoader";
+import { CulturalAdviceNotice } from "@/components/layout/CulturalAdviceNotice";
 import { ClickBloom } from "@/components/motion/ClickBloom";
 import { org } from "@/content/site";
 import "./globals.css";
@@ -112,6 +113,8 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
+        {/* GA9, 13 Nov 2026 — first-visit cultural advice, site-wide. */}
+        <CulturalAdviceNotice />
       </body>
     </html>
   );

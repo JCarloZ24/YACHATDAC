@@ -137,7 +137,7 @@ export const beats: Beat[] = [
     // because build documentation §3 names this section and the client's own
     // homepage slides label it — but it is a design-level call, so the
     // wireframes decide whether it renders.
-    eyebrow: "Welcome to Country",
+    eyebrow: "Welcome to Turraburra", // GA1/GA13, 13 Nov 2026
     // ⚠ CR8 — FNAN asked for "maybe something more heroic?" against this line.
     // Not applied. It is a direction rather than a brief, and it sits under a
     // Welcome to Country eyebrow whose wording is still blocked on Suzanne
@@ -425,4 +425,6 @@ export const welcomeToCountry = {
  * copy at the top of that page because the risk is concentrated there.
  */
 export const culturalAdvice =
-  "Aboriginal and Torres Strait Islander readers are advised that this website contains images and names of people who have passed away.";
+  // Site-wide pop-up (GA9, 13 Nov 2026): phrased after the ABC TV advice.
+  // Provisional until the team confirms the wording.
+  "Aboriginal and Torres Strait Islander people are advised that this website may contain images, voices and names of people who have died.";
